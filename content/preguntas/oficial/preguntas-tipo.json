@@ -33,7 +33,8 @@
       "vigencia": "no-aplica",
       "estado": "validada",
       "notas": [
-        "conflicto de clave: letra d en negritas, texto a en negritas"
+        "conflicto de clave: letra d en negritas, texto a en negritas",
+        "clave confirmada con el manual AMIB 1, objetivo 9.7.3 (premisas de la Teoría Dow)"
       ]
     },
     {
@@ -131,7 +132,8 @@
       "vigencia": "no-aplica",
       "estado": "validada",
       "notas": [
-        "conflicto de clave: letra a en negritas, texto d en negritas"
+        "conflicto de clave: letra a en negritas, texto d en negritas",
+        "clave confirmada con el manual AMIB 1, objetivos 9.7.4 y 9.7.6 (formaciones de continuación y de cambio)"
       ]
     },
     {
@@ -325,7 +327,8 @@
       "vigencia": "no-aplica",
       "estado": "validada",
       "notas": [
-        "conflicto de clave: letra c en negritas, texto a en negritas"
+        "conflicto de clave: letra c en negritas, texto a en negritas",
+        "clave confirmada por cálculo (tasa real 1.94 %)"
       ]
     },
     {
@@ -551,7 +554,8 @@
       "vigencia": "no-aplica",
       "estado": "validada",
       "notas": [
-        "conflicto de clave: letra a en negritas, texto d en negritas"
+        "conflicto de clave: letra a en negritas, texto d en negritas",
+        "clave confirmada con el manual AMIB 1, capítulo 7 (riesgo de mercado)"
       ]
     },
     {
@@ -713,7 +717,8 @@
       "vigencia": "no-aplica",
       "estado": "validada",
       "notas": [
-        "conflicto de clave: letra a en negritas, texto c en negritas"
+        "conflicto de clave: letra a en negritas, texto c en negritas",
+        "clave confirmada con el manual AMIB 1, objetivos 6.1.10 y 6.3.1 (operación en directo)"
       ]
     },
     {
@@ -1032,10 +1037,11 @@
       "cita": {
         "documento": "AMIB Data/Preguntas Tipo.docx"
       },
-      "vigencia": "no-aplica",
+      "vigencia": "por-verificar",
       "estado": "validada",
       "notas": [
-        "conflicto de clave: letra d en negritas, texto a en negritas"
+        "conflicto de clave: letra d en negritas, texto a en negritas",
+        "pendiente de verificar contra la regulación vigente: el manual (7.3.7) no indica quién aprueba el mecanismo de sobrevaluación y subvaluación"
       ]
     },
     {

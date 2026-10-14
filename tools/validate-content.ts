@@ -1,4 +1,4 @@
-/** `npm run validate:content`: valida todo `content/**\/*.json` con los esquemas de `core/contenido`. Sale con 1 si hay errores. */
+/** `npm run validate:content`: valida todo `content/**\/*.json` (y el Markdown de guías y lecciones) con los esquemas de `core/contenido`. Sale con 1 si hay errores. */
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative, sep } from 'node:path'
 import { CONTENIDO, RAIZ } from './rutas'
@@ -8,7 +8,7 @@ function jsonDe(dir: string): string[] {
   return readdirSync(dir).flatMap((nombre) => {
     const ruta = join(dir, nombre)
     if (statSync(ruta).isDirectory()) return jsonDe(ruta)
-    return ruta.endsWith('.json') ? [ruta] : []
+    return ruta.endsWith('.json') || (ruta.endsWith('.md') && /[\\/]content[\\/](?:guias|lecciones)[\\/]/.test(ruta)) ? [ruta] : []
   })
 }
 
@@ -17,7 +17,8 @@ const errores: string[] = []
 for (const ruta of jsonDe(CONTENIDO).sort()) {
   const rel = relative(RAIZ, ruta).split(sep).join('/')
   try {
-    archivos.push({ ruta: rel, datos: JSON.parse(readFileSync(ruta, 'utf8')) as unknown })
+    const texto = readFileSync(ruta, 'utf8')
+    archivos.push({ ruta: rel, datos: rel.endsWith('.md') ? texto : (JSON.parse(texto) as unknown) })
   } catch (e) {
     errores.push(`${rel}: JSON ilegible (${e instanceof Error ? e.message : String(e)})`)
   }

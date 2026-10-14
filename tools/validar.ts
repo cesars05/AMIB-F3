@@ -3,6 +3,7 @@
  * La lectura de disco y el código de salida viven en `validate-content.ts`.
  */
 import { ArchivoPreguntasSchema, IndiceManualSchema, TaxonomiaSchema, idsDuplicados, type IndiceManual, type Pregunta, type Taxonomia } from '../app/src/core/contenido'
+import { ClavesLibroSchema, type ClavesLibro } from './claves-libro'
 
 export interface ArchivoContenido {
   /** Ruta relativa a la raíz del repo, con `/`. */
@@ -18,6 +19,39 @@ export interface ResumenContenido {
   porFuente: Record<string, number>
   taxonomia?: { temas: number; subtemas: number; objetivos: number }
   manual?: { secciones: number; porCapitulo: Record<string, number>; vinculadas: number; exclusivasFig3: number; archivos: string[] }
+}
+
+// ─── Estilo de redacción (regla de Cesar, ver CLAUDE.md) ─────────────────────
+
+/** Caracteres prohibidos en el contenido que se redacta: guion largo, guion medio, punto medio, viñeta, grado y asterisco. */
+const RE_CARACTER_PROHIBIDO = /[—–·•°*]/g
+/** Guion usado como viñeta: al inicio de línea, seguido de espacio. */
+const RE_VINETA_GUION = /^[ \t]*-[ \t]/m
+/** Contenido redactado por nosotros (lo extraído del OCR oficial queda exento). */
+const RE_RUTA_REDACTADA = /^content\/(?:guias|lecciones)\//
+const FUENTES_REDACTADAS: ReadonlySet<string> = new Set(['generada', 'generada-en-vivo'])
+
+/** Problemas de estilo de un texto: cada caracter prohibido distinto y el guion como viñeta. Vacío = cumple. */
+export function problemasDeEstilo(texto: string): string[] {
+  // `**texto**` es marcado interno de negritas (core/leccion.ts): nunca se muestra, así que no cuenta como asterisco.
+  const visible = texto.replace(/\*\*/g, '')
+  const problemas = [...new Set(visible.match(RE_CARACTER_PROHIBIDO) ?? [])].map((c) => `caracter prohibido "${c}"`)
+  if (RE_VINETA_GUION.test(visible)) problemas.push('guion usado como viñeta')
+  return problemas
+}
+
+/** Todas las cadenas de un valor JSON (valores, no claves). */
+function cadenas(valor: unknown, ruta = ''): { ruta: string; texto: string }[] {
+  if (typeof valor === 'string') return [{ ruta, texto: valor }]
+  if (Array.isArray(valor)) return valor.flatMap((v, i) => cadenas(v, `${ruta}[${i}]`))
+  if (valor && typeof valor === 'object') return Object.entries(valor).flatMap(([k, v]) => cadenas(v, ruta ? `${ruta}.${k}` : k))
+  return []
+}
+
+/** Markdown de guías y lecciones: se ignora el encabezado YAML (`---`), donde las listas con guion son sintaxis. */
+function cuerpoMarkdown(texto: string): string {
+  const m = /^---\r?\n[\s\S]*?\r?\n---\r?\n?/.exec(texto)
+  return m ? texto.slice(m[0].length) : texto
 }
 
 const contar = <T extends string>(items: readonly T[]): Record<string, number> => {
@@ -50,6 +84,7 @@ export function validarContenido(archivos: readonly ArchivoContenido[]): { error
   const preguntas: { ruta: string; p: Pregunta }[] = []
   let taxonomia: { ruta: string; t: Taxonomia } | undefined
   let manual: { ruta: string; m: IndiceManual } | undefined
+  let claves: ClavesLibro | undefined
 
   for (const { ruta, datos } of archivos) {
     if (ruta.endsWith('taxonomia.json')) {
@@ -68,6 +103,14 @@ export function validarContenido(archivos: readonly ArchivoContenido[]): { error
       const r = ArchivoPreguntasSchema.safeParse(datos)
       if (!r.success) errores.push(`${ruta}: ${r.error.issues.slice(0, 5).map((i) => `${i.path.join('.')} ${i.message}`).join('; ')}`)
       else for (const p of r.data.preguntas) preguntas.push({ ruta, p })
+    } else if (ruta.startsWith('content/claves/')) {
+      const r = ClavesLibroSchema.safeParse(datos)
+      if (!r.success) errores.push(`${ruta}: ${r.error.issues.slice(0, 5).map((i) => `${i.path.join('.')} ${i.message}`).join('; ')}`)
+      else claves = r.data
+    } else if (RE_RUTA_REDACTADA.test(ruta)) {
+      // Guías y lecciones (JSON o Markdown): todo el texto es redactado, así que se revisa completo.
+      const textos = typeof datos === 'string' ? [{ ruta: '', texto: cuerpoMarkdown(datos) }] : cadenas(datos)
+      for (const t of textos) for (const pr of problemasDeEstilo(t.texto)) errores.push(`${ruta}${t.ruta ? ` ${t.ruta}` : ''}: ${pr} (estilo de redacción)`)
     } else {
       errores.push(`${ruta}: archivo de contenido no reconocido`)
     }
@@ -76,6 +119,33 @@ export function validarContenido(archivos: readonly ArchivoContenido[]): { error
   for (const id of idsDuplicados(preguntas.map((x) => x.p))) {
     const donde = preguntas.filter((x) => x.p.id === id).map((x) => x.ruta)
     errores.push(`id de pregunta repetido: ${id} (${donde.join(', ')})`)
+  }
+
+  // Estilo: las preguntas generadas (por nosotros o en vivo) se redactan; las oficiales y las del OCR están exentas.
+  for (const { ruta, p } of preguntas) {
+    if (!FUENTES_REDACTADAS.has(p.fuente)) continue
+    const campos: { campo: string; texto: string | undefined }[] = [
+      { campo: 'enunciado', texto: p.enunciado },
+      { campo: 'explicacion', texto: p.explicacion },
+      ...p.opciones.flatMap((o, i) => [
+        { campo: `opciones[${i}].texto`, texto: o.texto },
+        { campo: `opciones[${i}].porQueNo`, texto: o.porQueNo }
+      ])
+    ]
+    for (const { campo, texto } of campos) for (const pr of problemasDeEstilo(texto ?? '')) errores.push(`${ruta}: ${p.id} ${campo}: ${pr} (estilo de redacción)`)
+  }
+
+  // Claves del libro: ninguna pregunta del repaso lleva clave sin su número del libro, y la clave coincide con la oficial.
+  for (const { ruta, p } of preguntas) {
+    const m = /^manual-repaso\.c(\d{2})\.q\d{2}$/.exec(p.id)
+    if (!m || p.clave === null) continue
+    if (p.numeroLibro === undefined) {
+      errores.push(`${ruta}: ${p.id} tiene clave sin numeroLibro`)
+      continue
+    }
+    const oficial = claves?.capitulos.find((c) => c.capitulo === Number(m[1]))?.claves[p.numeroLibro - 1]
+    if (claves && oficial === undefined) errores.push(`${ruta}: ${p.id} apunta a la pregunta ${p.numeroLibro} del libro, que no existe en la clave oficial`)
+    else if (oficial !== undefined && 'abcd'.indexOf(oficial) !== p.clave) errores.push(`${ruta}: ${p.id} (libro ${p.numeroLibro}) tiene clave ${'abcd'[p.clave]} pero la oficial es ${oficial}`)
   }
 
   if (taxonomia) {

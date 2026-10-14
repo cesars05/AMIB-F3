@@ -82,3 +82,33 @@ Regla nueva: antes de preguntarle a Cesar, se consulta `AMIB_1_completo.md`. Res
 4. tipo.17 (volatilidad de precios en un fondo): clave d) "de mercado". **Confirmada**: el manual define riesgo de mercado como pérdida ante movimientos de precios (cap. 7).
 5. tipo.22 (derechos del instrumento hasta el vencimiento): clave c) "compra en directo". **Confirmada**: el manual (6.1.10 y 6.3.1) describe la operación en directo hasta el vencimiento.
 6. tipo.32 (quién aprueba sobrevaluación y subvaluación): clave a) "el contralor normativo así como el responsable de la administración integral de riesgos". **No verificable en las fuentes**: el manual (7.3.7) explica el mecanismo pero no quién lo aprueba, y el manual 2023 no lo trata. Se mantiene el texto en negritas; queda pendiente de consultar a Cesar o la regulación vigente.
+
+## 2026-10-14 · Claves del libro en los repasos y validador de estilo
+- **Hecho:**
+  - Entrada nueva `content/claves/respuestas-libro-amib1.json` (clave oficial de la p. 359, transcrita a mano; no se edita). Va por **número de pregunta del libro**.
+  - `PreguntaSchema.numeroLibro` (opcional, entero positivo). `parse-repaso.ts` lo determina con tres reglas: detección de páginas que el libro repite, posición cuando las preguntas distintas igualan al cuadernillo, y números impresos junto al enunciado como anclas. Sin certeza, `numeroLibro` queda vacío y no hay clave.
+  - `tools/claves-libro.ts` aplica la clave por `numeroLibro` dentro de `construirContenido`. Nota nueva `clave: Respuestas Cuestionarios - Libro, p. 359`.
+  - Mejoras al extractor: marcadores `d`, `di`, `ej`, `e)`, `£)` y `5)`; opción d) pegada a la c) (`de Cupón`); marcadores `a) b) c) d)` en líneas sueltas seguidos de cuatro textos; viñeta inicial de opciones; enunciados sin comienzo se omiten.
+  - `tools/validar.ts`: regla de estilo (`— – · • ° *` y guion como viñeta) para `content/guias/**`, `content/lecciones/**` y preguntas `generada`/`generada-en-vivo`; y comprobación de que ninguna pregunta tiene clave sin `numeroLibro` y de que coincide con la oficial. `validate-content` también lee el Markdown de guías y lecciones.
+- **Resultado por capítulo** (extraídas / con número del libro / con clave / validadas / borradores / retiradas por copia): c1 25/25/25/5/20/0, c2 19/19/14/0/14/5, c3 9/9/9/0/9/0, c4 12/12/12/2/10/0, c5 23/23/23/1/22/0, c6 21/21/21/3/18/0, c7 4/4/4/0/4/0, c8 22/22/22/2/20/0, c9 11/11/11/1/10/0. Total 146 extraídas (antes 130), 141 con clave, 14 `validada`, 127 `borrador`, 5 `retirada`. Las 34 preguntas del libro que no se extrajeron (de 175) siguen sin clave utilizable.
+- **Hallazgos:**
+  - **Capítulo 2:** el OCR trae 21 preguntas porque la pág. 69 repite la pág. 67 (preguntas 10 a 15, con distinto ruido). Son 15 distintas. Las copias con más ruido pasan a `retirada` (q10, q11, q13, q14, q18).
+  - **Capítulo 7:** las preguntas 1 a 8 de la pág. 238 vienen con las dos columnas mezcladas en cada renglón (no se pueden separar) y las 14 y 15 de la pág. 239 tienen las opciones en líneas partidas. Solo se extraen 10 a 13 (la 13 reuniendo marcadores sueltos). El ordinal del id no coincide con el número del libro: c07.q06 es la 10, q07 la 11, q08 la 12 y q09 la 13.
+  - En los capítulos 1, 3, 4, 5, 6, 8 y 9 el ordinal coincide con el número del libro (se comprobó con los números impresos y los pies de columna); ningún capítulo tiene la clave desfasada: las discrepancias son aisladas.
+  - La clave se contrastó con el manual y con cálculos propios para cada pregunta extraída. Pares sospechosos (la clave oficial se conserva y la pregunta queda en `borrador` con la nota `clave por revisar`):
+
+| Pregunta (libro) | Clave del libro | Lo que dice el manual o el cálculo |
+|---|---|---|
+| 1.19, objeto de lograr un mercado eficiente, equitativo, transparente, seguro y de calidad | a (Código de Ética) | d (Autorregulación), manual 1.3.5 |
+| 2.7, quién aprueba la Guía de Servicios de Inversión | c (Comité de Análisis de Productos) | a (responsable de supervisar el cumplimiento), manual 2.2 |
+| 2.8, actualización del perfilamiento de los Productos Financieros | d (cada 2 años) | a (en todo momento), manual 2.1.3 |
+| 2.14, obligaciones al prestar servicios de inversión | a (1 y 4) | d (1 y 2); el punto 4 mezcla recomendar con ejecución de operaciones |
+| 4.10, TIR de los flujos del enunciado | d (15.23%) | la TIR con las cifras del OCR es 10.21% y ninguna opción lo es; revisar cifras en la página |
+| 4.1, monto con capitalización bimestral | c ($119,509.25) | cuadra con 12% anual; el OCR dice 22% |
+| 4.5, interpolación lineal a 75 días | b (5204444) | cuadra con 5.244444; falta un dígito en el OCR |
+| 4.12, VPN (no se extrajo) | a ($51,867.46) | cuadra con inversión de $100,000; el OCR dice $200,000 |
+
+  - Las demás claves extraídas son coherentes con el manual o con el cálculo (se verificaron por ejemplo 4.3, 4.4, 4.7, 4.8, 4.9, 4.11, 5.17, 5.19, 5.20, 5.25, 6.16, 6.23, 8.3, 8.24).
+  - `validada` es un criterio mecánico de texto limpio (vocabulario, símbolos, cifras verificadas) más la lectura de la clave; Cesar debe revisarlas contra la página antes de usarlas en el simulacro.
+  - Hay otra herramienta, `tools/validar-lecciones.ts`, que tolera `**` en las lecciones. La regla de `validar.ts` es la de CLAUDE.md (el asterisco está prohibido), así que habrá que alinear una con la otra.
+- **Pendiente:** consultar a Cesar las 5 claves del libro que contradicen el manual o las cifras; limpiar el OCR de los borradores y validarlos; extraer a mano las preguntas 1 a 8 del capítulo 7 y las demás omitidas (en especial 6.1, 6.24, 6.25 con columnas mezcladas).

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { validarContenido, type ArchivoContenido } from './validar'
+import { problemasDeEstilo, validarContenido, type ArchivoContenido } from './validar'
 
 const pregunta = (id: string, extra: Record<string, unknown> = {}) => ({
   id,
@@ -118,5 +118,88 @@ describe('validarContenido: índice del manual', () => {
     expect(validarContenido([tax, indice([bien])]).errores).toEqual([])
     const mal = seccion('6.1.1', { objetivoId: 'deuda.t.s.o99', objetivoCandidato: 'deuda.t.s.o99', confianza: 0.9 })
     expect(validarContenido([tax, indice([mal])]).errores.some((e) => /objetivoId inexistente/.test(e))).toBe(true)
+  })
+})
+
+describe('validarContenido: estilo de redacción', () => {
+  const generada = (extra: Record<string, unknown> = {}) => pregunta('gen.01', { fuente: 'generada', ...extra })
+  const errores = (...ps: unknown[]) => validarContenido([archivoPreguntas('content/preguntas/generadas/a.json', ps)]).errores
+
+  it('problemasDeEstilo detecta cada caracter prohibido y el guion como viñeta', () => {
+    expect(problemasDeEstilo('Texto normal: con comas, punto y coma; (paréntesis) 1. lista y rangos "de 20 a 25"')).toEqual([])
+    for (const c of ['—', '–', '·', '•', '°', '*']) expect(problemasDeEstilo(`antes ${c} después`), c).toEqual([`caracter prohibido "${c}"`])
+    expect(problemasDeEstilo('- primer elemento\n- segundo')).toEqual(['guion usado como viñeta'])
+    expect(problemasDeEstilo('Introducción:\n  - elemento con sangría')).toEqual(['guion usado como viñeta'])
+  })
+  it('el guion dentro de una palabra, un número negativo y las flechas de proceso se permiten', () => {
+    expect(problemasDeEstilo('Bono cupón-cero, tasa de -3.5% y secuencia A → B → C, CNBV-AMIB')).toEqual([])
+  })
+
+  it('rechaza caracteres prohibidos en enunciado, opciones, explicación y porQueNo de preguntas generadas', () => {
+    const e = errores(
+      generada({
+        enunciado: '¿Cuál es el rendimiento — anual?',
+        opciones: [{ texto: 'a * b' }, { texto: 'b', porQueNo: 'Mal – por 5°' }, { texto: 'c' }, { texto: 'd' }],
+        explicacion: '- Primero\n- Segundo'
+      })
+    )
+    expect(e).toHaveLength(5)
+    expect(e.some((x) => x.includes('gen.01 enunciado') && x.includes('—'))).toBe(true)
+    expect(e.some((x) => x.includes('opciones[0].texto') && x.includes('*'))).toBe(true)
+    expect(e.some((x) => x.includes('opciones[1].porQueNo') && x.includes('–'))).toBe(true)
+    expect(e.some((x) => x.includes('opciones[1].porQueNo') && x.includes('°'))).toBe(true)
+    expect(e.some((x) => x.includes('explicacion') && x.includes('viñeta'))).toBe(true)
+    expect(e.every((x) => x.endsWith('(estilo de redacción)'))).toBe(true)
+  })
+  it('también aplica a las generadas en vivo', () => {
+    expect(errores(generada({ fuente: 'generada-en-vivo', enunciado: 'Texto · con punto medio' }))).toHaveLength(1)
+  })
+  it('las preguntas oficiales y las del OCR están exentas', () => {
+    for (const fuente of ['oficial-ejemplo', 'manual-ensayo', 'manual-repaso', 'externa']) {
+      expect(errores(pregunta(`x.${fuente}`, { fuente, enunciado: 'Texto — con * y ° del OCR', estado: 'borrador', clave: null })), fuente).toEqual([])
+    }
+  })
+
+  it('revisa todo el texto de las guías y lecciones en JSON, incluso anidado', () => {
+    const r = validarContenido([
+      { ruta: 'content/guias/deuda.json', datos: { titulo: 'Deuda', secciones: [{ texto: 'Cupón — tasa' }, { texto: 'Limpio' }] } },
+      { ruta: 'content/lecciones/uno.json', datos: { texto: 'Con asterisco *' } }
+    ])
+    expect(r.errores).toEqual(['content/guias/deuda.json secciones[0].texto: caracter prohibido "—" (estilo de redacción)', 'content/lecciones/uno.json texto: caracter prohibido "*" (estilo de redacción)'])
+  })
+  it('revisa el Markdown de guías y lecciones, salvo el encabezado YAML', () => {
+    const md = (texto: string): ArchivoContenido => ({ ruta: 'content/guias/a.md', datos: texto })
+    expect(validarContenido([md('---\ntitulo: Guía\netiquetas:\n  - deuda\n---\n# Guía\n\nTexto limpio, con comas.')]).errores).toEqual([])
+    // `**negritas**` es marcado permitido; un asterisco suelto no.
+    expect(validarContenido([md('---\ntitulo: Guía\n---\n# Guía\n\n- viñeta\n**negritas** y nota*')]).errores).toEqual([
+      'content/guias/a.md: caracter prohibido "*" (estilo de redacción)',
+      'content/guias/a.md: guion usado como viñeta (estilo de redacción)'
+    ])
+  })
+  it('el manual en OCR y la taxonomía no se revisan', () => {
+    const manual = validarContenido([{ ruta: 'content/manual/cap01/01-a.md', datos: 'texto — con * y •' }])
+    expect(manual.errores).toEqual(['content/manual/cap01/01-a.md: archivo de contenido no reconocido'])
+  })
+})
+
+describe('validarContenido: claves del libro', () => {
+  const clavesLibro = { fuente: 'f', pagina: 359, titulo: 't', nota: 'n', capitulos: [{ capitulo: 6, nombre: 'Deuda', claves: ['a', 'c', 'd'] }] }
+  const repaso = (extra: Record<string, unknown>) => pregunta('manual-repaso.c06.q09', { fuente: 'manual-repaso', area: 'deuda', estado: 'borrador', ...extra })
+  const validar = (p: unknown) => validarContenido([{ ruta: 'content/claves/respuestas-libro-amib1.json', datos: clavesLibro }, archivoPreguntas('content/preguntas/repasos/a.json', [p])]).errores
+
+  it('acepta una clave que coincide con la oficial de su número del libro', () => {
+    expect(validar(repaso({ numeroLibro: 2, clave: 2 }))).toEqual([])
+  })
+  it('rechaza una clave sin numeroLibro', () => {
+    expect(validar(repaso({ clave: 2 }))).toEqual(['content/preguntas/repasos/a.json: manual-repaso.c06.q09 tiene clave sin numeroLibro'])
+  })
+  it('rechaza una clave distinta de la oficial o de un número que no existe', () => {
+    expect(validar(repaso({ numeroLibro: 2, clave: 0 }))).toEqual(['content/preguntas/repasos/a.json: manual-repaso.c06.q09 (libro 2) tiene clave a pero la oficial es c'])
+    expect(validar(repaso({ numeroLibro: 9, clave: 0 }))[0]).toContain('no existe en la clave oficial')
+  })
+  it('sin clave no se exige nada, y un archivo de claves inválido se reporta', () => {
+    expect(validar(repaso({ clave: null }))).toEqual([])
+    const r = validarContenido([{ ruta: 'content/claves/x.json', datos: { capitulos: [] } }])
+    expect(r.errores[0]).toContain('content/claves/x.json')
   })
 })

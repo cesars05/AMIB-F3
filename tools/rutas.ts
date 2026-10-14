@@ -19,3 +19,6 @@ export const SALIDA_REPASOS_MANUAL = 'content/preguntas/repasos/manual-amib1.jso
 export const SALIDA_INDICE_MANUAL = 'content/manual/indice.json'
 /** Carpeta de las secciones del manual: `content/manual/capNN/NN-<slug>.md`. */
 export const CARPETA_MANUAL = 'content/manual'
+
+/** Clave oficial de los cuestionarios del libro (transcrita a mano de la p. 359 del PDF). Es una entrada, no se regenera. */
+export const RUTA_CLAVES_LIBRO = 'content/claves/respuestas-libro-amib1.json'

@@ -150,7 +150,11 @@ describe('Preguntas Tipo.docx real', () => {
     expect(conflictos).toEqual(CONFLICTOS_ESPERADOS)
     expect(archivo.preguntas.find((p) => p.id === 'tipo.34')?.notas).toEqual([])
     const p1 = archivo.preguntas[0]!
-    expect(p1.notas).toEqual(['conflicto de clave: letra d en negritas, texto a en negritas'])
+    expect(p1.notas[0]).toBe('conflicto de clave: letra d en negritas, texto a en negritas')
+    expect(p1.notas[1]).toMatch(/confirmada con el manual/)
+    const p32 = archivo.preguntas.find((p) => p.id === 'tipo.32')!
+    expect(p32.vigencia).toBe('por-verificar')
+    expect(p32.notas.some((n) => n.startsWith('pendiente de verificar'))).toBe(true)
   })
 
   it('marca cálculo (tipo y formato) al menos en 10, 11, 16, 23, 24, 29 y 30', () => {

@@ -197,14 +197,33 @@ export function esCalculo(enunciado: string): boolean {
   return (enunciado.match(/\d+(?:[.,]\d+)*/g) ?? []).length >= 2
 }
 
+/**
+ * Verificación manual de las claves en conflicto contra el manual AMIB 1 (ver docs/bitacora.md).
+ * Las verificadas conservan su clave; las no verificables quedan con vigencia por verificar.
+ */
+const VERIFICACION_MANUAL: Readonly<Record<string, { nota: string; porVerificar?: boolean }>> = {
+  'tipo.01': { nota: 'clave confirmada con el manual AMIB 1, objetivo 9.7.3 (premisas de la Teoría Dow)' },
+  'tipo.04': { nota: 'clave confirmada con el manual AMIB 1, objetivos 9.7.4 y 9.7.6 (formaciones de continuación y de cambio)' },
+  'tipo.10': { nota: 'clave confirmada por cálculo (tasa real 1.94 %)' },
+  'tipo.17': { nota: 'clave confirmada con el manual AMIB 1, capítulo 7 (riesgo de mercado)' },
+  'tipo.22': { nota: 'clave confirmada con el manual AMIB 1, objetivos 6.1.10 y 6.3.1 (operación en directo)' },
+  'tipo.32': {
+    nota: 'pendiente de verificar contra la regulación vigente: el manual (7.3.7) no indica quién aprueba el mecanismo de sobrevaluación y subvaluación',
+    porVerificar: true
+  }
+}
+
 export function parsearPreguntasTipo(bloques: readonly BloqueDocx[], fuente: string, generado: string) {
   const preguntas: PreguntaEntrada[] = extraerPreguntasCrudas(bloques).map((c) => {
     const destino = seccionAArea(c.seccion)
     if (!destino) throw new Error(`Pregunta ${c.numero}: sección desconocida "${c.seccion}"`)
-    const { clave, notas } = decidirClave(c)
+    const { clave, notas: notasClave } = decidirClave(c)
+    const id = `tipo.${String(c.numero).padStart(2, '0')}`
+    const verificacion = notasClave.length ? VERIFICACION_MANUAL[id] : undefined
+    const notas = verificacion ? [...notasClave, verificacion.nota] : notasClave
     const calculo = esCalculo(c.enunciado)
     return {
-      id: `tipo.${String(c.numero).padStart(2, '0')}`,
+      id,
       area: destino.area,
       ...(destino.extra ? { seccionOriginal: c.seccion } : {}),
       enunciado: c.enunciado,
@@ -215,6 +234,7 @@ export function parsearPreguntasTipo(bloques: readonly BloqueDocx[], fuente: str
       extra: destino.extra,
       fuente: 'oficial-ejemplo',
       cita: { documento: 'AMIB Data/Preguntas Tipo.docx' },
+      ...(verificacion?.porVerificar ? { vigencia: 'por-verificar' as const } : {}),
       estado: clave === null ? 'borrador' : 'validada',
       notas
     }

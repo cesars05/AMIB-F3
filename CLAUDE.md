@@ -52,10 +52,10 @@ Las tareas medianas o grandes llevan ficha en `docs/fichas/`. Al cerrar una tare
 
 ## Estilo de redacción del contenido (regla de Cesar)
 Todo texto visible para Cesar (lecciones, láminas, preguntas, explicaciones, guías exportadas y textos de la interfaz) sigue un **estilo serio, educativo y académico**:
-- **Prohibido:** guion largo (—), guion medio (–) usado como separador o viñeta, guion (-) como viñeta, punto medio o viñeta suelta (·, •) como separador, el símbolo °, y el asterisco (*).
+- **Prohibido:** guion largo (—), guion medio (–) usado como separador o viñeta, guion (-) como viñeta, punto medio o viñeta suelta (·, •) como separador, el símbolo °, y el asterisco suelto (*). El marcado interno `**negritas**` de las lecciones sí se permite porque nunca se muestra.
 - **Permitido:** oraciones completas, dos puntos, comas, punto y coma, paréntesis, listas numeradas (1., 2.) y tablas. Para separar elementos breves se usan comas o dos puntos.
 - Los rangos numéricos se escriben con palabras ("de 20 a 25 preguntas") o con "a". Las flechas de proceso (→) se permiten solo en diagramas de secuencia.
-- Un validador de contenido debe rechazar esos caracteres en `content/` (pendiente de implementar en `tools/validar.ts`).
+- `tools/validar.ts` rechaza esos caracteres en `content/guias/**`, `content/lecciones/**` y en las preguntas generadas (`generada`, `generada-en-vivo`). El OCR y las preguntas oficiales quedan exentos.
 
 ## Antes de preguntarle a Cesar
 Toda duda de contenido (claves, cifras, plazos, definiciones) se resuelve primero en `AMIB Data/AMIB_1_completo.md` (base principal); después en el manual 2023 y en las notas de Cesar. Solo si ninguna fuente lo resuelve, se le pregunta, indicando qué se consultó.
@@ -64,7 +64,7 @@ Toda duda de contenido (claves, cifras, plazos, definiciones) se resuelve primer
 - `Preguntas Tipo.docx`: la clave es el **texto** de la opción en negritas. En 6 preguntas (1, 4, 10, 17, 22, 32) la **letra** en negritas no coincide con ese texto. Manda el texto.
 - Convenciones de cálculo del examen (de las preguntas oficiales): año de 360 días, interés simple, tasas del periodo, rendimientos de fondos sin anualizar.
 - **Los problemas numéricos del examen en línea muestran 4 decimales** (indicación de Cesar). Las plantillas de cálculo calculan con precisión completa y formatean la clave y los distractores a 4 decimales (p. ej. `7.7040%`). Los distractores deben salir de errores de método reales (360/365, descuento/rendimiento, periodo/anual), nunca de un redondeo distinto, y no puede haber dos opciones iguales a 4 decimales. Las preguntas oficiales de ejemplo traen 2 decimales: se conservan tal cual.
-- Los repasos de los manuales **no traen clave**. Hay que resolverlos y validarlos.
+- Los repasos del manual AMIB 1 traen su clave en la p. 359 del PDF (`content/claves/respuestas-libro-amib1.json`), **por número de pregunta del libro**, no por ordinal del OCR (el cap. 2 repite una página y el cap. 7 pierde las preguntas 1 a 8). Los repasos de otros manuales no traen clave: hay que resolverlos y validarlos.
 - `AMIB_1_completo.md` es OCR: numeración y cifras pueden estar mal. Toda limpieza debe conservar las cifras (verifícalo con un diff).
 - El preload con `sandbox: true` debe compilarse a **CommonJS** (`index.cjs`). El proceso principal es ESM y define `__dirname` con `import.meta.url`.
 - En xvfb, si la ventana es más grande que la pantalla virtual, salen artefactos en las capturas. Usa `-screen 0 1920x1080x24`.
