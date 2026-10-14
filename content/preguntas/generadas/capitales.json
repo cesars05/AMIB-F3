@@ -1,0 +1,4638 @@
+{
+  "fuente": "Generadas por Claude (Opus) a partir de AMIB Data/AMIB_1_completo.md, cap. 5 (páginas 153 a 179), con apoyo del manual 2023",
+  "generado": "2026-10-14",
+  "preguntas": [
+    {
+      "id": "g.capitales.l1.q01",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o08",
+      "enunciado": "Según el manual, la relación que tiene el inversionista con el emisor en el mercado de deuda es:",
+      "opciones": [
+        {
+          "texto": "acreedora."
+        },
+        {
+          "texto": "de propiedad.",
+          "porQueNo": "La relación de propiedad corresponde al mercado de capitales, donde el inversionista es socio.",
+          "etiquetaError": "confunde-capitales-deuda"
+        },
+        {
+          "texto": "de copropiedad fiduciaria.",
+          "porQueNo": "Describe la figura de los certificados de participación, no la relación general en el mercado de deuda.",
+          "etiquetaError": "confunde-instrumento"
+        },
+        {
+          "texto": "de socio patrimonial.",
+          "porQueNo": "Los derechos patrimoniales son de los accionistas; en deuda el tenedor es acreedor.",
+          "etiquetaError": "confunde-capitales-deuda"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "En el mercado de deuda el tenedor participa en un crédito colectivo a cargo del emisor: su relación es acreedora. En el de capitales, la relación es de propiedad.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 154,
+        "textual": "tiene una relación acreedora con el emisor en el mercado de deuda"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l1.q02",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o03",
+      "enunciado": "De acuerdo con el manual, en el mercado primario el emisor coloca por primera vez los títulos mediante:",
+      "opciones": [
+        {
+          "texto": "oferta pública, oferta privada o subasta."
+        },
+        {
+          "texto": "oferta pública, cruce o subasta.",
+          "porQueNo": "El cruce es una operación del mercado secundario en la que una misma casa de bolsa tiene al comprador y al vendedor.",
+          "etiquetaError": "confunde-primario-secundario"
+        },
+        {
+          "texto": "oferta pública registrada en el RNV, exclusivamente.",
+          "porQueNo": "El manual también admite oferta privada y subasta; la palabra \"exclusivamente\" altera el conjunto.",
+          "etiquetaError": "altera-cuantificador"
+        },
+        {
+          "texto": "oferta pública, préstamo de valores o subasta.",
+          "porQueNo": "El préstamo de valores transfiere valores ya existentes; no es un mecanismo de colocación primaria.",
+          "etiquetaError": "confunde-operacion"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Mercado primario: el emisor coloca por primera vez los títulos mediante oferta pública, oferta privada o subasta, y recibe los recursos aportados por el público.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 154,
+        "textual": "mediante oferta pública, oferta privada o subasta"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l1.q03",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o06",
+      "enunciado": "Los ETF referenciados a materias primas, como el oro o el petróleo, y al tipo de cambio pertenecen a la:",
+      "opciones": [
+        {
+          "texto": "primera generación.",
+          "porQueNo": "La primera generación se refiere a índices de renta variable y de renta fija.",
+          "etiquetaError": "confunde-generacion-etf"
+        },
+        {
+          "texto": "tercera generación.",
+          "porQueNo": "La tercera generación entrega el doble, el triple o el inverso diario del subyacente.",
+          "etiquetaError": "confunde-generacion-etf"
+        },
+        {
+          "texto": "cuarta generación.",
+          "porQueNo": "La cuarta generación está basada en logaritmos matemáticos.",
+          "etiquetaError": "confunde-generacion-etf"
+        },
+        {
+          "texto": "segunda generación."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Clasificación de los ETF por sofisticación: primera, índices de renta variable y renta fija; segunda, materias primas y tipo de cambio; tercera, apalancados e inversos; cuarta, basados en logaritmos.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 157,
+        "textual": "Referenciados a materias primas (oro, petróleo) y tipo de cambio"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l1.q04",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o06",
+      "enunciado": "Según la ficha de las acciones del manual, su valor nominal:",
+      "opciones": [
+        {
+          "texto": "lo fija la CNBV al inscribirlas en el RNV.",
+          "porQueNo": "La CNBV supervisa e inscribe, pero no fija el valor nominal de las acciones.",
+          "etiquetaError": "confunde-entidad"
+        },
+        {
+          "texto": "es fijado por la oferta y la demanda."
+        },
+        {
+          "texto": "es de $100 por acción, como en los títulos de deuda.",
+          "porQueNo": "El valor de $100 es propio de muchos títulos de deuda; en acciones lo fija el mercado.",
+          "etiquetaError": "confunde-capitales-deuda"
+        },
+        {
+          "texto": "lo determina el prestigio del emisor según sus antecedentes.",
+          "porQueNo": "El prestigio del emisor es la garantía de la acción, no su valor nominal.",
+          "etiquetaError": "confunde-campo-ficha"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Ficha de acciones: emisor SAB y SAPIB; colocación por oferta pública; valor nominal fijado por la oferta y la demanda; plazo indefinido; garantía, el prestigio del emisor.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 155,
+        "textual": "Valor nominal: Fijado por la oferta y demanda"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l1.q05",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o02",
+      "enunciado": "El manual enumera como componentes del mercado de renta variable los siguientes instrumentos, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "certificados de proyectos de inversión (CERPIS).",
+          "porQueNo": "Los CERPIS sí figuran en la lista de renta variable del manual.",
+          "etiquetaError": "no-reconoce-instrumento"
+        },
+        {
+          "texto": "certificados de depósito bancario de dinero a plazo."
+        },
+        {
+          "texto": "obligaciones convertibles en acciones.",
+          "porQueNo": "Aunque son deuda, el manual las incluye en el mercado de renta variable porque se canjean por acciones.",
+          "etiquetaError": "no-reconoce-instrumento"
+        },
+        {
+          "texto": "títulos opcionales (warrants).",
+          "porQueNo": "Los títulos opcionales forman parte de la lista de renta variable.",
+          "etiquetaError": "no-reconoce-instrumento"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "La lista del manual: acciones, CKDs, CERPIS, FIBRAS, ETFs, warrants y obligaciones convertibles en acciones. Los certificados de depósito bancario son instrumentos bancarios del mercado de deuda, con rendimiento conocido.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 153,
+        "textual": "Obligaciones convertibles en acciones"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l1.q06",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o06",
+      "enunciado": "Al extinguirse el fideicomiso base de la emisión, los certificados de participación no amortizables:",
+      "opciones": [
+        {
+          "texto": "pagan el valor nominal a cada tenedor con cargo al patrimonio que queda en el fideicomiso.",
+          "porQueNo": "Eso describe a los certificados amortizables, que se estudian como deuda.",
+          "etiquetaError": "confunde-amortizable"
+        },
+        {
+          "texto": "se canjean por acciones representativas del capital social de la sociedad emisora.",
+          "porQueNo": "El canje por acciones al vencimiento es propio de las obligaciones convertibles.",
+          "etiquetaError": "confunde-instrumento"
+        },
+        {
+          "texto": "se reembolsan al valor de la canasta de valores que replican, igual que un ETF.",
+          "porQueNo": "El reembolso de participaciones ocurre en el mercado primario de los ETF.",
+          "etiquetaError": "confunde-instrumento"
+        },
+        {
+          "texto": "no pagan el valor nominal: se adjudican o venden los bienes y se reparte el producto neto."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "CP no amortizables: al extinguirse el fideicomiso, la sociedad emisora no paga el valor nominal, sino que adjudica o vende los bienes fideicomitidos y distribuye entre los tenedores el producto neto de la venta.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 155,
+        "textual": "la sociedad emisora no paga el valor nominal sino que adjudica o vende los bienes fideicomitidos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l1.q07",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o06",
+      "enunciado": "Los certificados de participación inmobiliarios (CPI) se distinguen de los ordinarios (CPO) porque el fideicomiso contiene:",
+      "opciones": [
+        {
+          "texto": "valores, bienes o derechos de naturaleza mueble.",
+          "porQueNo": "Esa es la composición de los CPO, los certificados ordinarios.",
+          "etiquetaError": "confunde-cpo-cpi"
+        },
+        {
+          "texto": "acciones de una sola emisora y sus derechos de voto.",
+          "porQueNo": "El manual no limita los CPO ni los CPI a una sola emisora; el contenido mueble corresponde al CPO.",
+          "etiquetaError": "confunde-cpo-cpi"
+        },
+        {
+          "texto": "bienes inmuebles."
+        },
+        {
+          "texto": "créditos hipotecarios bursatilizados.",
+          "porQueNo": "La bursatilización de cartera hipotecaria se hace con certificados bursátiles fiduciarios, no con CPI.",
+          "etiquetaError": "confunde-instrumento"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Los certificados de participación pueden ser ordinarios (CPO), con bienes muebles como valores, bienes o derechos, o inmobiliarios (CPI), con bienes inmuebles.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 155,
+        "textual": "Ordinarios (CPO"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l1.q08",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o06",
+      "enunciado": "¿Cuál es la diferencia que el manual señala entre los CERPIS y los CKDs?",
+      "opciones": [
+        {
+          "texto": "Los CERPIS se dirigen al gran público y los CKDs a AFORES y aseguradoras.",
+          "porQueNo": "El manual dice que ambos se dirigen a los mismos inversionistas: AFORES y compañías de seguros.",
+          "etiquetaError": "confunde-participantes"
+        },
+        {
+          "texto": "En los CERPIS no se requiere aprobación del comité técnico o de la asamblea para invertir."
+        },
+        {
+          "texto": "Los CERPIS tienen plazo indefinido y los CKDs un plazo específico.",
+          "porQueNo": "El plazo específico distingue a los CKDs del capital puro, no de los CERPIS.",
+          "etiquetaError": "confunde-rasgo"
+        },
+        {
+          "texto": "Los CERPIS financian bienes raíces destinados al arrendamiento.",
+          "porQueNo": "El financiamiento de bienes raíces para arrendamiento describe a las FIBRAS.",
+          "etiquetaError": "confunde-instrumento"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "El manual describe a los CERPIS como instrumentos en esencia iguales a los CKDs, con los mismos participantes e inversionistas, con una diferencia: no se requiere aprobación del comité técnico o de la asamblea de tenedores para realizar las inversiones (total discrecionalidad).",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 156,
+        "textual": "No se requiere aprobación del Comité Técnico o la asamblea de tenedores"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l1.q09",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o06",
+      "enunciado": "Los títulos opcionales (warrants) otorgan a sus tenedores, a cambio del pago de una prima de emisión:",
+      "opciones": [
+        {
+          "texto": "el derecho de comprar o vender al emisor acciones, una canasta o recibir dinero por la variación de un índice."
+        },
+        {
+          "texto": "la obligación de comprar o vender al emisor acciones, una canasta o recibir dinero por un índice.",
+          "porQueNo": "El warrant otorga un derecho, no una obligación, a quien paga la prima.",
+          "etiquetaError": "derecho-por-obligacion"
+        },
+        {
+          "texto": "el derecho de suscribir acciones nuevas a un precio menor que el de mercado.",
+          "porQueNo": "Eso describe la suscripción de acciones, un evento corporativo dirigido a los accionistas actuales.",
+          "etiquetaError": "confunde-instrumento"
+        },
+        {
+          "texto": "el derecho de comprar o vender a la bolsa acciones, una canasta o recibir dinero por un índice.",
+          "porQueNo": "La contraparte del warrant es el emisor, no la bolsa de valores.",
+          "etiquetaError": "confunde-contraparte"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Warrants: documentos que otorgan, a cambio de una prima de emisión, el derecho de comprar o vender al emisor un número determinado de acciones, un grupo o canasta, o de recibir del emisor una suma de dinero por la variación de un índice, a un precio de ejercicio y durante un periodo o en una fecha determinada.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 156,
+        "textual": "a cambio del pago de una prima de emisión"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l1.q10",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o06",
+      "enunciado": "Un inversionista busca una posición tan diversificada como el IPC, que pueda comprar y vender en tiempo real durante la sesión al precio de mercado y con el tratamiento fiscal de las acciones. Según el manual, el instrumento adecuado es:",
+      "opciones": [
+        {
+          "texto": "un fondo de inversión de renta variable tradicional.",
+          "porQueNo": "El manual contrasta al ETF con el fondo tradicional precisamente porque el ETF cotiza en tiempo real como una acción.",
+          "etiquetaError": "confunde-etf-fondo"
+        },
+        {
+          "texto": "un certificado de capital de desarrollo (CKD).",
+          "porQueNo": "El CKD invierte en proyectos de infraestructura o capital privado; no replica un índice.",
+          "etiquetaError": "confunde-instrumento"
+        },
+        {
+          "texto": "un ETF como el NAFTRAC."
+        },
+        {
+          "texto": "un certificado de participación ordinario (CPO).",
+          "porQueNo": "El CPO da derechos sobre bienes de un fideicomiso, pero no está diseñado para replicar el IPC.",
+          "etiquetaError": "confunde-instrumento"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El NAFTRAC es un ETF que cotiza en la BMV y busca imitar al IPC; sus participaciones se negocian en tiempo real al precio de mercado y está sujeto al tratamiento fiscal de las acciones.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": false,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 157,
+        "textual": "el ETF se comporta como una acción"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l1.q11",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o06",
+      "enunciado": "Un ETF que busca entregar el doble del inverso del rendimiento diario de su subyacente pertenece a la:",
+      "opciones": [
+        {
+          "texto": "cuarta generación.",
+          "porQueNo": "La cuarta generación se basa en logaritmos matemáticos; los apalancados e inversos son de tercera.",
+          "etiquetaError": "confunde-generacion-etf"
+        },
+        {
+          "texto": "tercera generación."
+        },
+        {
+          "texto": "segunda generación.",
+          "porQueNo": "La segunda generación se refiere a materias primas y tipo de cambio.",
+          "etiquetaError": "confunde-generacion-etf"
+        },
+        {
+          "texto": "primera generación.",
+          "porQueNo": "La primera generación solo replica índices de renta variable o renta fija.",
+          "etiquetaError": "confunde-generacion-etf"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Tercera generación: proporcionan el doble, el triple, el inverso, el doble del inverso, etc., diario de los subyacentes.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 157,
+        "textual": "Tercera generación. Proporcionan el doble"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l1.q12",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o06",
+      "enunciado": "Son características de las acciones según la ficha del manual, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "emisores: sociedades anónimas bursátiles y promotoras de inversión bursátil.",
+          "porQueNo": "Es correcta: SAB y SAPIB son los emisores de acciones en la ficha.",
+          "etiquetaError": "no-reconoce-caracteristica"
+        },
+        {
+          "texto": "plazo indefinido, en función de la vida de la empresa.",
+          "porQueNo": "Es correcta: el plazo de la acción depende de la vida de la empresa.",
+          "etiquetaError": "no-reconoce-caracteristica"
+        },
+        {
+          "texto": "garantía: el prestigio del emisor según sus antecedentes financieros.",
+          "porQueNo": "Es correcta, aunque suene extraña: la acción no tiene garantía real.",
+          "etiquetaError": "no-reconoce-caracteristica"
+        },
+        {
+          "texto": "colocación por oferta privada exclusiva para inversionistas institucionales."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "La ficha del manual señala colocación por oferta pública. La oferta restringida a institucionales y calificados es propia de la SAPIB según el manual 2023, pero no es la característica general de colocación de las acciones.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 155,
+        "textual": "Colocación: Oferta pública"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l1.q13",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o06",
+      "enunciado": "Las sociedades extranjeras que soliciten la inscripción de los valores representativos de su capital social en el RNV deben acreditar a la CNBV que sus derechos de minorías son:",
+      "opciones": [
+        {
+          "texto": "equivalentes a los de su mercado de origen, aunque sean inferiores a los de las SAB.",
+          "porQueNo": "El parámetro es la SAB mexicana, no el mercado de origen.",
+          "etiquetaError": "confunde-referencia"
+        },
+        {
+          "texto": "superiores en al menos 25% a los exigidos para las sociedades anónimas bursátiles.",
+          "porQueNo": "El manual pide que sean equivalentes o superiores; no fija un porcentaje adicional.",
+          "etiquetaError": "inventa-cuantificador"
+        },
+        {
+          "texto": "los reconocidos por su bolsa de origen, sin necesidad de acreditarlos ante la CNBV.",
+          "porQueNo": "El manual exige acreditarlo precisamente ante la CNBV.",
+          "etiquetaError": "confunde-entidad"
+        },
+        {
+          "texto": "equivalentes o superiores a los exigidos para las sociedades anónimas bursátiles."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Las sociedades extranjeras que soliciten inscribir su capital en el RNV deberán acreditar a la CNBV que cuentan con derechos de minorías equivalentes o superiores a los exigidos para las SAB, y órganos sociales con organización, funcionamiento y controles al menos equivalentes.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 156,
+        "textual": "derechos de minorías equivalentes o superiores a los exigidos para las sociedades anónimas bursátiles"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l1.q14",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o08",
+      "enunciado": "¿Cuál de las siguientes afirmaciones distingue correctamente al mercado de capitales del mercado de deuda?",
+      "opciones": [
+        {
+          "texto": "En capitales el rendimiento está predeterminado y el inversionista es propietario; en deuda el riesgo varía según el emisor.",
+          "porQueNo": "Invierte los rasgos: el rendimiento predeterminado es propio de la deuda.",
+          "etiquetaError": "invierte-rasgos"
+        },
+        {
+          "texto": "En capitales el riesgo varía según el emisor y el inversionista es acreedor; en deuda el rendimiento está predeterminado.",
+          "porQueNo": "Cambia una sola palabra: en capitales la relación es de propiedad, no acreedora.",
+          "etiquetaError": "confunde-capitales-deuda"
+        },
+        {
+          "texto": "En capitales el riesgo varía según el emisor y el inversionista es propietario; en deuda el rendimiento está predeterminado."
+        },
+        {
+          "texto": "En capitales se negocia solo a corto plazo; en deuda solo a largo plazo con rendimientos variables.",
+          "porQueNo": "El mercado de capitales es de mediano o largo plazo, y la deuda tiene rendimientos predeterminados.",
+          "etiquetaError": "invierte-rasgos"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Mercado de capitales: mediano o largo plazo, distintos grados de riesgo y rendimiento, el riesgo varía según el emisor y la relación es de propiedad. Mercado de deuda: rendimientos predeterminados a un plazo dado y relación acreedora.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 154,
+        "textual": "El riesgo varía dependiendo del emisor"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l1.q15",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o06",
+      "enunciado": "Un fideicomiso adquiere centros comerciales para arrendarlos y entrega a los tenedores pagos periódicos de rentas, con la posibilidad de una ganancia por plusvalía. Según el manual, el instrumento descrito es:",
+      "opciones": [
+        {
+          "texto": "una FIBRA."
+        },
+        {
+          "texto": "un certificado de participación inmobiliario (CPI).",
+          "porQueNo": "El CPI da derechos sobre inmuebles fideicomitidos, pero el manual describe como vehículo de financiamiento de bienes raíces para arrendamiento, con rentas y plusvalía, a la FIBRA.",
+          "etiquetaError": "confunde-fibra-cpi"
+        },
+        {
+          "texto": "un certificado de capital de desarrollo (CKD).",
+          "porQueNo": "El CKD financia proyectos de infraestructura, minería o capital privado, no el arrendamiento de inmuebles.",
+          "etiquetaError": "confunde-instrumento"
+        },
+        {
+          "texto": "un certificado de proyectos de inversión (CERPI).",
+          "porQueNo": "El CERPI financia proyectos e inversiones en sociedades con total discrecionalidad, no el arrendamiento de inmuebles.",
+          "etiquetaError": "confunde-instrumento"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "FIBRAS: vehículos para el financiamiento de bienes raíces que ofrecen pagos periódicos (rentas) y la posibilidad de ganancias de capital (plusvalía); son fideicomisos que adquieren o construyen inmuebles destinados al arrendamiento.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 156,
+        "textual": "Ofrecen pagos periódicos (rentas)"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l2.q01",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o09",
+      "enunciado": "Un inversionista compró acciones en $41.35 y las vendió en $44.10. ¿Cuál fue su rendimiento efectivo?",
+      "opciones": [
+        {
+          "texto": "6.2358%",
+          "porQueNo": "Divide la ganancia entre el precio de venta: (44.10 − 41.35) ÷ 44.10.",
+          "etiquetaError": "divide-entre-valor-final"
+        },
+        {
+          "texto": "−6.2358%",
+          "porQueNo": "Invierte el cociente: 41.35 ÷ 44.10 − 1.",
+          "etiquetaError": "invierte-cociente"
+        },
+        {
+          "texto": "2.7500%",
+          "porQueNo": "Reporta la ganancia en pesos (44.10 − 41.35) como si fuera un porcentaje.",
+          "etiquetaError": "confunde-pesos-porcentaje"
+        },
+        {
+          "texto": "6.6505%"
+        }
+      ],
+      "clave": 3,
+      "explicacion": "%TEFEC = (VFIN ÷ VINI − 1) × 100 = (44.10 ÷ 41.35 − 1) × 100 = 6.6505%.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 158,
+        "textual": "Para determinar el rendimiento efectivo de una acción utilizamos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l2.q02",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o10",
+      "enunciado": "Según el manual, en un cruce:",
+      "opciones": [
+        {
+          "texto": "coinciden comprador y vendedor de distintas casas de bolsa, de acuerdo en monto y precio, y se formaliza en la Bolsa.",
+          "porQueNo": "Cambia un solo elemento: en el cruce ambas puntas están en la misma casa de bolsa.",
+          "etiquetaError": "altera-elemento"
+        },
+        {
+          "texto": "coinciden en una misma casa de bolsa comprador y vendedor, de acuerdo en monto y precio, y se formaliza en la Bolsa."
+        },
+        {
+          "texto": "coinciden en una misma casa de bolsa comprador y vendedor, de acuerdo solo en monto, y la Bolsa fija el precio.",
+          "porQueNo": "El acuerdo es en monto y en precio; la Bolsa solo da formalidad.",
+          "etiquetaError": "altera-elemento"
+        },
+        {
+          "texto": "coinciden en una misma casa de bolsa comprador y vendedor, de acuerdo en monto y precio, y se formaliza fuera de la Bolsa.",
+          "porQueNo": "La formalidad se da precisamente a través de la Bolsa.",
+          "etiquetaError": "altera-elemento"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Cruce: en esta operación coinciden en una misma casa de bolsa el comprador y el vendedor, están de acuerdo en monto y precio y le dan formalidad a la operación a través de la Bolsa.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 158,
+        "textual": "coinciden en una misma Casa de Bolsa el comprador y vendedor"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l2.q03",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o07",
+      "enunciado": "En la BMV, la postura para ejecutarse al mejor precio que se pueda encontrar en el mercado sin rebasar el precio límite establecido en ella es la postura:",
+      "opciones": [
+        {
+          "texto": "a mercado.",
+          "porQueNo": "La postura a mercado se ejecuta al mejor precio disponible, sin precio límite.",
+          "etiquetaError": "confunde-postura"
+        },
+        {
+          "texto": "a mercado con protección."
+        },
+        {
+          "texto": "limitada.",
+          "porQueNo": "La limitada se ejecuta a un precio determinado, no al mejor precio del mercado.",
+          "etiquetaError": "confunde-postura"
+        },
+        {
+          "texto": "mejor postura limitada.",
+          "porQueNo": "Esta postura sigue los precios de referencia o posturas del libro electrónico.",
+          "etiquetaError": "confunde-postura"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "A mercado con protección: postura para ejecutarse al mejor precio que se pueda encontrar en el mercado sin rebasar el precio límite establecido en la postura.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 158,
+        "textual": "SIN REBASAR EL Protección PRECIO LÍMITE"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l2.q04",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o07",
+      "enunciado": "En BIVA, la combinación de una postura limitada y una activada al nivel, en la que al ejecutarse una la otra se cancela, se denomina:",
+      "opciones": [
+        {
+          "texto": "postura cancela postura (PCP)."
+        },
+        {
+          "texto": "postura activada al nivel (PAN).",
+          "porQueNo": "La PAN es solo la postura stop-loss que se activa al alcanzar un nivel; no combina dos posturas.",
+          "etiquetaError": "confunde-postura-biva"
+        },
+        {
+          "texto": "postura pegada (PP).",
+          "porQueNo": "La pegada aplica un diferencial al mejor precio visible de una limitada de su mismo lado.",
+          "etiquetaError": "confunde-postura-biva"
+        },
+        {
+          "texto": "postura limitada por precio (LIMT).",
+          "porQueNo": "La LIMT es una sola postura similar a la limitada de la BMV.",
+          "etiquetaError": "confunde-postura-biva"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Postura cancela postura (PCP), también conocida como stop-loss y take-profit: combinación de una postura limitada y una activada al nivel; al ejecutarse una, la otra se cancela.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 159,
+        "textual": "Se trata de la combinación de dos Posturas, una Limitada y una Activada"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l2.q05",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.ventas-en-corto-y-prestamo-de-valores",
+      "objetivoId": "capitales.mercado-de-capitales-ii.ventas-en-corto-y-prestamo-de-valores.o02",
+      "enunciado": "En el préstamo de valores, el prestamista otorga los valores a cambio de un premio con la condición de que:",
+      "opciones": [
+        {
+          "texto": "permanezcan depositados sin venderse hasta el vencimiento.",
+          "porQueNo": "El préstamo existe precisamente para que el prestatario los venda en corto.",
+          "etiquetaError": "invierte-condicion"
+        },
+        {
+          "texto": "el prestatario los liquide en efectivo al vencimiento.",
+          "porQueNo": "El prestatario debe restituir los valores mismos, no su importe en efectivo.",
+          "etiquetaError": "confunde-restitucion"
+        },
+        {
+          "texto": "se entreguen como garantía de una operación de reporto.",
+          "porQueNo": "El manual no condiciona el préstamo a un reporto; lo condiciona a la operación en corto.",
+          "etiquetaError": "confunde-operacion"
+        },
+        {
+          "texto": "sean operados en corto."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Prestamista: propietario original de valores prestables, quien los otorga en préstamo a cambio de un premio, con la condición de ser operados en corto.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 160,
+        "textual": "quien los otorga en préstamo a cambio de un premio"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l2.q06",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o09",
+      "enunciado": "Una acción se compró en $63.80 y se vendió 128 días después en $66.25. Con interés simple y año de 360 días, ¿cuál fue el rendimiento anualizado?",
+      "opciones": [
+        {
+          "texto": "10.8004%"
+        },
+        {
+          "texto": "3.8401%",
+          "porQueNo": "Es el rendimiento efectivo del periodo, sin anualizar.",
+          "etiquetaError": "sin-anualizar"
+        },
+        {
+          "texto": "10.9504%",
+          "porQueNo": "Anualiza con un año de 365 días.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "1.3654%",
+          "porQueNo": "Multiplica por días ÷ 360 en lugar de 360 ÷ días.",
+          "etiquetaError": "invierte-factor-anualizacion"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Paso 1: %TEFEC = (66.25 ÷ 63.80 − 1) × 100 = 3.840125%. Paso 2: anualizado = 3.840125 × 360 ÷ 128 = 10.8004%.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 158,
+        "textual": "Un inversionista compró acciones de una emisora cuya cotización"
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "La sección 5.3.1 pide el rendimiento anualizado pero no imprime la fórmula; se usa interés simple con año de 360 días."
+      ]
+    },
+    {
+      "id": "g.capitales.l2.q07",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o07",
+      "enunciado": "En la BMV, cuando se ejecuta la parte expuesta de una postura con volumen oculto, la porción adicional que muestra el sistema:",
+      "opciones": [
+        {
+          "texto": "conserva el primer lugar de prelación que tenía la parte expuesta.",
+          "porQueNo": "Invierte la regla: la porción adicional pierde la prioridad.",
+          "etiquetaError": "invierte-prelacion"
+        },
+        {
+          "texto": "se cancela automáticamente y debe ingresarse de nuevo.",
+          "porQueNo": "El sistema muestra la porción adicional; no la cancela.",
+          "etiquetaError": "confunde-efecto"
+        },
+        {
+          "texto": "ocupa el último lugar en la prelación de las posturas al mismo precio."
+        },
+        {
+          "texto": "se ejecuta al precio promedio del día al final de la sesión.",
+          "porQueNo": "Eso describe la postura al precio promedio del día, no el volumen oculto.",
+          "etiquetaError": "confunde-postura"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Volumen oculto: postura que muestra únicamente una parte de su volumen total; al ejecutarse la parte expuesta, el sistema muestra la porción adicional, que ocupa el último lugar en la prelación de las posturas al mismo precio.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 159,
+        "textual": "ocupando esta el último lugar en la prelación de ejecución"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l2.q08",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.ventas-en-corto-y-prestamo-de-valores",
+      "objetivoId": "capitales.mercado-de-capitales-ii.ventas-en-corto-y-prestamo-de-valores.o02",
+      "enunciado": "De acuerdo con el manual, las sociedades de inversión y las SIEFORES pueden celebrar operaciones de préstamo de valores:",
+      "opciones": [
+        {
+          "texto": "solo como prestatarias, con autorización previa del Banco de México.",
+          "porQueNo": "El manual no las limita a prestatarias ni exige esa autorización; la condición es su régimen de inversión.",
+          "etiquetaError": "inventa-requisito"
+        },
+        {
+          "texto": "sin restricción alguna, en los mismos términos que las casas de bolsa.",
+          "porQueNo": "Sí hay una condición: que el préstamo esté previsto en su régimen de inversión.",
+          "etiquetaError": "omite-condicion"
+        },
+        {
+          "texto": "con acciones o valores, siempre que esté previsto en su régimen de inversión."
+        },
+        {
+          "texto": "únicamente con valores gubernamentales y con garantía en efectivo.",
+          "porQueNo": "Pueden prestar acciones o valores; la restricción a gubernamentales es inventada.",
+          "etiquetaError": "altera-conjunto"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Las sociedades de inversión y las SIEFORES podrán celebrar préstamo de valores con acciones o valores, en los términos de su ley y disposiciones, siempre que estén previstos en su régimen de inversión.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 160,
+        "textual": "siempre que estén previstos en su régimen de inversión"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l2.q09",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.ventas-en-corto-y-prestamo-de-valores",
+      "objetivoId": "capitales.mercado-de-capitales-ii.ventas-en-corto-y-prestamo-de-valores.o02",
+      "enunciado": "Para realizar préstamos de valores sobre acciones de mínima bursatilidad, o sobre acciones sin clasificación conforme a los criterios de la BMV, se requiere:",
+      "opciones": [
+        {
+          "texto": "la previa autorización de la CNBV."
+        },
+        {
+          "texto": "la previa autorización del Banco de México.",
+          "porQueNo": "Banxico regula el préstamo de valores en general, pero esta autorización específica corresponde a la CNBV.",
+          "etiquetaError": "confunde-entidad"
+        },
+        {
+          "texto": "la aprobación de la Bolsa Mexicana de Valores.",
+          "porQueNo": "La BMV establece los criterios de bursatilidad; la autorización la otorga la CNBV.",
+          "etiquetaError": "confunde-entidad"
+        },
+        {
+          "texto": "el consentimiento previo de la emisora de las acciones.",
+          "porQueNo": "El manual no exige el consentimiento de la emisora.",
+          "etiquetaError": "inventa-requisito"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Para realizar préstamos de valores sobre acciones de mínima bursatilidad, o sin clasificación con base en los criterios de la BMV, deberá obtenerse la previa autorización de la CNBV.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 160,
+        "textual": "deberá obtenerse la previa autorización de la CNBY"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l2.q10",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.ventas-en-corto-y-prestamo-de-valores",
+      "objetivoId": "capitales.mercado-de-capitales-ii.ventas-en-corto-y-prestamo-de-valores.o01",
+      "enunciado": "El préstamo de valores, base de las ventas en corto, está regulado en las \"Reglas a las que deberán sujetarse las instituciones de crédito, casas de bolsa, sociedades de inversión, SIEFORES y la Financiera Rural\", emitidas por:",
+      "opciones": [
+        {
+          "texto": "la Comisión Nacional Bancaria y de Valores.",
+          "porQueNo": "La CNBV interviene en la autorización de préstamos sobre acciones de mínima bursatilidad, pero las Reglas son de Banxico.",
+          "etiquetaError": "confunde-entidad"
+        },
+        {
+          "texto": "el Banco de México."
+        },
+        {
+          "texto": "la Bolsa Mexicana de Valores.",
+          "porQueNo": "La BMV opera la venta en corto como modalidad de postura, pero no emite esas Reglas.",
+          "etiquetaError": "confunde-entidad"
+        },
+        {
+          "texto": "la Secretaría de Hacienda y Crédito Público.",
+          "porQueNo": "La SHCP no emite las Reglas de préstamo de valores.",
+          "etiquetaError": "confunde-entidad"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Reglamentación: el préstamo de valores está regulado por el Banco de México en las \"Reglas a las que deberán sujetarse las instituciones de crédito; casas de bolsa; sociedades de inversión; SIEFORES y la Financiera Rural en sus operaciones de préstamo de valores\".",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 160,
+        "textual": "El préstamo de valores está regulado por el Banco de México"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l2.q11",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o09",
+      "enunciado": "Un inversionista compró acciones en $38.40, cobró un dividendo en efectivo de $0.85 por acción y las vendió en $39.10. Considerando dividendo y ganancia de capital, ¿cuál fue su rendimiento efectivo?",
+      "opciones": [
+        {
+          "texto": "1.8229%",
+          "porQueNo": "Solo considera la ganancia de capital y omite el dividendo.",
+          "etiquetaError": "omite-dividendo"
+        },
+        {
+          "texto": "−0.3906%",
+          "porQueNo": "Resta el dividendo del precio de venta, como si fuera un costo.",
+          "etiquetaError": "resta-dividendo"
+        },
+        {
+          "texto": "4.0365%"
+        },
+        {
+          "texto": "9.6875%",
+          "porQueNo": "Anualiza a 150 días cuando se pide el rendimiento efectivo del periodo.",
+          "etiquetaError": "anualiza-sin-pedirlo"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El rendimiento de la acción proviene de dividendos y ganancia de capital. %TEFEC = ((39.10 + 0.85) ÷ 38.40 − 1) × 100 = (39.95 ÷ 38.40 − 1) × 100 = 4.0365%.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 155,
+        "textual": "El rendimiento para el inversionista se presenta de dos formas"
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "La fórmula del manual (5.3.1) no incluye dividendos; se suma el dividendo al valor final porque el manual (p. 155) señala que el rendimiento se compone de dividendos y ganancias de capital. Dato del plazo: 150 días, solo para el distractor anualizado."
+      ]
+    },
+    {
+      "id": "g.capitales.l2.q12",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o07",
+      "enunciado": "En la BMV, la postura con precio límite de ejecución que sigue los precios de referencia o las posturas ingresadas en el libro electrónico sobre el mismo tipo de valor es la:",
+      "opciones": [
+        {
+          "texto": "postura pegada.",
+          "porQueNo": "La postura pegada es de BIVA y aplica un diferencial al mejor precio visible de una limitada de su mismo lado.",
+          "etiquetaError": "confunde-bmv-biva"
+        },
+        {
+          "texto": "postura a mercado con protección.",
+          "porQueNo": "Esta busca el mejor precio sin rebasar su límite, pero no sigue los precios de referencia del libro.",
+          "etiquetaError": "confunde-postura"
+        },
+        {
+          "texto": "mejor postura limitada."
+        },
+        {
+          "texto": "postura a precio medio.",
+          "porQueNo": "Se ejecuta al precio medio que registre el mercado.",
+          "etiquetaError": "confunde-postura"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Mejor postura limitada (BMV): postura con precio límite de ejecución que sigue los precios de referencia o posturas ingresadas en el libro electrónico sobre el mismo tipo de valor.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 159,
+        "textual": "Mejor Postura Limitada"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l2.q13",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o07",
+      "enunciado": "En la BMV, la postura que se ingresa para ejecutarse al precio medio que registre el mercado es la postura:",
+      "opciones": [
+        {
+          "texto": "al precio promedio del día.",
+          "porQueNo": "Esta se ejecuta al final de la sesión al precio promedio del día determinado por la Bolsa; difiere en una palabra.",
+          "etiquetaError": "confunde-postura"
+        },
+        {
+          "texto": "a precio medio."
+        },
+        {
+          "texto": "al cierre.",
+          "porQueNo": "Se ejecuta al final del remate al precio de cierre determinado por la Bolsa.",
+          "etiquetaError": "confunde-postura"
+        },
+        {
+          "texto": "mejor postura limitada.",
+          "porQueNo": "Sigue los precios de referencia o posturas del libro electrónico.",
+          "etiquetaError": "confunde-postura"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "A precio medio: postura que se ingresa para ejecutarse al precio medio que registre el mercado. No debe confundirse con la postura al precio promedio del día, que se ejecuta al final de la sesión.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 158,
+        "textual": "PRECIO MEDIO QUE REGISTRE EL MERCADO"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l2.q14",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.ventas-en-corto-y-prestamo-de-valores",
+      "objetivoId": "capitales.mercado-de-capitales-ii.ventas-en-corto-y-prestamo-de-valores.o01",
+      "enunciado": "Sobre las ventas en corto, el manual señala lo siguiente, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "buscan ganar en un mercado a la baja y dar más volumen al mercado.",
+          "porQueNo": "Es correcta: es la utilidad que señala el manual.",
+          "etiquetaError": "no-reconoce-caracteristica"
+        },
+        {
+          "texto": "la liquidación del vendedor se realiza con valores obtenidos en préstamo.",
+          "porQueNo": "Es correcta: es la definición de venta en corto.",
+          "etiquetaError": "no-reconoce-caracteristica"
+        },
+        {
+          "texto": "su riesgo principal es que el mercado baje antes de que se recompren los valores."
+        },
+        {
+          "texto": "el prestatario vende los valores el mismo día en que los recibe en préstamo.",
+          "porQueNo": "Es correcta: el manual dice que los vende ese mismo día porque espera una baja.",
+          "etiquetaError": "no-reconoce-caracteristica"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El riesgo de la venta en corto es que el mercado evolucione al alza, porque el vendedor tendría que recomprar más caro. Una baja es precisamente lo que busca.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 160,
+        "textual": "El riesgo de este tipo de operaciones es que el mercado evolucione al alza"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l2.q15",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.ventas-en-corto-y-prestamo-de-valores",
+      "objetivoId": "capitales.mercado-de-capitales-ii.ventas-en-corto-y-prestamo-de-valores.o01",
+      "enunciado": "Un prestatario recibe en préstamo 2,000 acciones y las vende en $84.37; días después las recompra en $80.92, las devuelve y paga un premio de $312.45. ¿Cuál es su resultado neto?",
+      "opciones": [
+        {
+          "texto": "$7,212.4500",
+          "porQueNo": "Suma el premio en lugar de restarlo.",
+          "etiquetaError": "suma-premio"
+        },
+        {
+          "texto": "$6,587.5500"
+        },
+        {
+          "texto": "$6,900.0000",
+          "porQueNo": "Omite el premio pactado que paga el prestatario.",
+          "etiquetaError": "omite-premio"
+        },
+        {
+          "texto": "−$6,587.5500",
+          "porQueNo": "Invierte el signo: vender caro y recomprar barato genera ganancia en corto.",
+          "etiquetaError": "invierte-signo"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Resultado = (precio de venta − precio de recompra) × acciones − premio = (84.37 − 80.92) × 2,000 − 312.45 = 6,900.00 − 312.45 = $6,587.5500.",
+      "tipo": "calculo",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 160,
+        "textual": "ganando con el diferencial en precios entre la venta y compra"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l3.q01",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o12",
+      "enunciado": "En la BMV, el periodo de cancelación de posturas antes de la sesión de remates es de:",
+      "opciones": [
+        {
+          "texto": "07:50 a 08:00 horas.",
+          "porQueNo": "Es el periodo de cancelación de BIVA.",
+          "etiquetaError": "confunde-bmv-biva"
+        },
+        {
+          "texto": "08:00 a 08:25 horas.",
+          "porQueNo": "Es la preapertura para warrants y valores de renta fija en la BMV.",
+          "etiquetaError": "confunde-etapa"
+        },
+        {
+          "texto": "07:50 a 07:59:59 horas."
+        },
+        {
+          "texto": "08:00 a 08:29:59 horas.",
+          "porQueNo": "Es el horario de las subastas de apertura en la BMV.",
+          "etiquetaError": "confunde-etapa"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "BMV: cancelación de posturas de 07:50 a 07:59:59 horas. BIVA: periodo de cancelación de 07:50 a 08:00 horas.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 161,
+        "textual": "Cancelación de posturas de 07:50 a 07:59:59 horas"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l3.q02",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o16",
+      "enunciado": "En el mercado accionario, la puja aplicable a una acción cuyo precio es menor o igual a $1.00 es de:",
+      "opciones": [
+        {
+          "texto": "$0.001"
+        },
+        {
+          "texto": "$0.01",
+          "porQueNo": "Esa puja aplica cuando el precio es mayor o igual a $1.01.",
+          "etiquetaError": "confunde-rango-puja"
+        },
+        {
+          "texto": "$0.005",
+          "porQueNo": "El manual no contempla una puja de medio centavo.",
+          "etiquetaError": "inventa-cifra"
+        },
+        {
+          "texto": "$0.0001",
+          "porQueNo": "El manual fija la puja mínima en una milésima de peso, no en una diezmilésima.",
+          "etiquetaError": "inventa-cifra"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Pujas del mercado accionario: $0.01 si el precio de la acción es mayor o igual a $1.01; $0.001 si es menor o igual a $1.00.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 162,
+        "textual": "el precio de la acción es menor o igual a $1.00"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l3.q03",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o13",
+      "enunciado": "El receso administrativo es:",
+      "opciones": [
+        {
+          "texto": "una acción correctiva en la que la Bolsa suspende la cotización de un solo valor.",
+          "porQueNo": "La suspensión de un valor por fluctuación extraordinaria es otra figura; el receso alcanza a todos los valores y es preventivo.",
+          "etiquetaError": "confunde-receso-suspension"
+        },
+        {
+          "texto": "la pausa de 15 minutos que se aplica cuando un precio cae 7% en nivel 1.",
+          "porQueNo": "Esa es la suspensión de BIVA por movimientos inusitados.",
+          "etiquetaError": "confunde-receso-suspension"
+        },
+        {
+          "texto": "una acción preventiva en la que la Bolsa suspende la cotización de todos los valores."
+        },
+        {
+          "texto": "el periodo diario en que la Bolsa cancela las posturas no ejecutadas.",
+          "porQueNo": "El periodo de cancelación de posturas es una etapa ordinaria de la sesión.",
+          "etiquetaError": "confunde-etapa"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Receso administrativo: acción preventiva en donde la Bolsa suspende la cotización de todos los valores, para evitar distorsiones en el mercado y mantener el principio de equidad entre sus participantes.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 162,
+        "textual": "para evitar distorsiones en el mercado y mantener el principio de equidad"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l3.q04",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o15",
+      "enunciado": "El filtro pretransaccional por precio que aplica el sistema electrónico de negociación a las acciones es un parámetro de:",
+      "opciones": [
+        {
+          "texto": "15% de variación sobre el último hecho del momento o, sin operaciones, sobre el cierre anterior.",
+          "porQueNo": "El 15% es el porcentaje de fluctuación extraordinaria que causa suspensión en la BMV.",
+          "etiquetaError": "confunde-filtro-suspension"
+        },
+        {
+          "texto": "5% de variación sobre el último hecho del momento o, sin operaciones, sobre el cierre anterior."
+        },
+        {
+          "texto": "5% de variación sobre el precio de apertura del día, sin importar si hubo operaciones.",
+          "porQueNo": "La base de cálculo es el último hecho del momento, no el precio de apertura.",
+          "etiquetaError": "altera-base"
+        },
+        {
+          "texto": "7% de variación sobre el precio de cierre anterior en todos los casos.",
+          "porQueNo": "El 7% corresponde al nivel 1 de suspensión en BIVA y la base es el último hecho.",
+          "etiquetaError": "confunde-filtro-suspension"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Filtro de mercado por precio: parámetro de 5% de variación de precio, tomando como base de cálculo el último hecho del momento y, si no hubo operación durante la sesión, el precio de cierre anterior.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 163,
+        "textual": "un parámetro de 5% de variación de precio"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l3.q05",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o11",
+      "enunciado": "¿A través de qué sistema opera el SIC-BIVA y cuál es su horario de mercado continuo?",
+      "opciones": [
+        {
+          "texto": "OPEL-E, de 8:30 a 15:00 horas.",
+          "porQueNo": "El horario de 8:30 a 15:00 es el mercado continuo del SIC-BMV.",
+          "etiquetaError": "confunde-bmv-biva"
+        },
+        {
+          "texto": "Sistema Electrónico de Negociación, de 8:30:01 a 14:50:00 horas.",
+          "porQueNo": "El Sistema Electrónico de Negociación es el del SIC-BMV.",
+          "etiquetaError": "confunde-bmv-biva"
+        },
+        {
+          "texto": "SENTRA Capitales, de 8:30 a 14:40 horas.",
+          "porQueNo": "SENTRA es el sistema de la BMV y 14:40 es una hora de la BMV.",
+          "etiquetaError": "confunde-bmv-biva"
+        },
+        {
+          "texto": "OPEL-E, de 8:30:01 a 14:50:00 horas."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "SIC-BIVA: opera vía OPEL-E, mercado continuo de 8:30:01 a 14:50:00 horas, lote de 1 acción, puja de $0.01, cotiza y liquida en moneda nacional.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 162,
+        "textual": "Mercado continuo (8:30:01"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l3.q06",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o12",
+      "enunciado": "En la BMV, la etapa 2 de registro de posturas al precio de cierre transcurre:",
+      "opciones": [
+        {
+          "texto": "de 8:30 a 14:40 horas, con ejecución de operaciones a las 15:00.",
+          "porQueNo": "Ese es el horario de la etapa 1.",
+          "etiquetaError": "confunde-etapa"
+        },
+        {
+          "texto": "de 14:50:01 a 15:00:00 horas, con ejecución a las 15:00.",
+          "porQueNo": "Son las subastas de cierre de BIVA.",
+          "etiquetaError": "confunde-bmv-biva"
+        },
+        {
+          "texto": "de 15:01:00 a 15:05:59 horas, con ejecución a más tardar a las 15:06."
+        },
+        {
+          "texto": "de 15:01:00 a 15:05:59 horas, aunque no haya concluido la asignación de la etapa 1.",
+          "porQueNo": "El manual condiciona la etapa 2 a que haya concluido la asignación de la etapa 1.",
+          "etiquetaError": "omite-condicion"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "BMV: registro de posturas al precio de cierre, etapa 2, de 15:01:00 (siempre y cuando haya concluido la asignación de la etapa 1) a 15:05:59 horas, con ejecución a más tardar a las 15:06 horas.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 161,
+        "textual": "a 15:05:59 horas y ejecución, a más tardar, a las 15:06 horas"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l3.q07",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o16",
+      "enunciado": "En la BMV, el precio de cierre de una acción es, en primer lugar:",
+      "opciones": [
+        {
+          "texto": "el último precio promedio ponderado por volumen de los últimos 30 minutos de la jornada.",
+          "porQueNo": "Cambia la cifra: son 20 minutos.",
+          "etiquetaError": "altera-cifra"
+        },
+        {
+          "texto": "el precio teórico de cierre determinado en la subasta de cierre.",
+          "porQueNo": "Ese es el criterio de BIVA.",
+          "etiquetaError": "confunde-bmv-biva"
+        },
+        {
+          "texto": "el último hecho de compraventa registrado en la sesión correspondiente.",
+          "porQueNo": "Es el criterio supletorio, solo en defecto del promedio ponderado.",
+          "etiquetaError": "confunde-orden-criterios"
+        },
+        {
+          "texto": "el último precio promedio ponderado por volumen de los últimos 20 minutos de la jornada."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Precio de cierre BMV: último precio promedio ponderado por volumen, calculado durante los últimos 20 minutos de la jornada; en su defecto, el último hecho de la sesión; a falta de ambos, el último precio de cierre conocido.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 162,
+        "textual": "calculado durante los últimos 20"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l3.q08",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o14",
+      "enunciado": "En BIVA, un movimiento inusitado en el precio de menos 13% en nivel 2 provoca:",
+      "opciones": [
+        {
+          "texto": "la suspensión por el resto de la sesión de negociación.",
+          "porQueNo": "Esa consecuencia corresponde a un movimiento de menos 20%.",
+          "etiquetaError": "confunde-nivel"
+        },
+        {
+          "texto": "la suspensión de la sesión de negociación por un lapso de 15 minutos."
+        },
+        {
+          "texto": "la suspensión de la sesión de negociación por un lapso de 1 hora.",
+          "porQueNo": "Una hora es la duración de las subastas de mantenimiento y por inactividad, no de la suspensión.",
+          "etiquetaError": "confunde-duracion"
+        },
+        {
+          "texto": "un receso administrativo con suspensión de todos los valores de BMV y BIVA.",
+          "porQueNo": "El receso administrativo es una medida preventiva distinta y no abarca a ambas bolsas.",
+          "etiquetaError": "confunde-receso-suspension"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "BIVA podrá suspender la sesión por 15 minutos si hay movimientos inusitados de menos 7% en nivel 1 o de menos 13% en nivel 2, y por el resto de la sesión si el movimiento es de menos 20%.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 163,
+        "textual": "menos 7% en nivel 1 0 de menos 13% en nivel 2"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l3.q09",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o15",
+      "enunciado": "El filtro pretransaccional por importe de $1,400,000,000 de pesos aplica a los siguientes valores, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "AMX L."
+        },
+        {
+          "texto": "NAFTRAC 02.",
+          "porQueNo": "Sí aplica: el NAFTRAC 02 encabeza la lista de $1,400 millones.",
+          "etiquetaError": "no-reconoce-lista"
+        },
+        {
+          "texto": "SPY.",
+          "porQueNo": "Sí aplica: SPY figura en la lista de $1,400 millones.",
+          "etiquetaError": "no-reconoce-lista"
+        },
+        {
+          "texto": "IVV.",
+          "porQueNo": "Sí aplica: IVV figura en la lista de $1,400 millones.",
+          "etiquetaError": "no-reconoce-lista"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "AMX L pertenece a la lista con filtro de $500,000,000 (junto con CEMEX CPO, GMEXICO B, FEMSA UBD, WALMEX V y SANMEX B). El filtro de $1,400,000,000 aplica a NAFTRAC 02 y a los ETF DIA, DLN, DVY, EWJ, EWZ, IVV, QQQ y SPY.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 163,
+        "textual": "Para los siguientes valores el filtro de importe será de $1,400,000,000 de pesos"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l3.q10",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o11",
+      "enunciado": "De acuerdo con la LMV y las disposiciones, los valores que cotizan en el SIC:",
+      "opciones": [
+        {
+          "texto": "están inscritos en el RNV y obtienen reconocimiento directo de la CNBV o promovido.",
+          "porQueNo": "Cambia una palabra: en el SIC cotizan valores no inscritos en el RNV.",
+          "etiquetaError": "altera-elemento"
+        },
+        {
+          "texto": "no están inscritos en el RNV y obtienen reconocimiento directo del Banco de México.",
+          "porQueNo": "El reconocimiento directo lo otorga la CNBV, no Banxico.",
+          "etiquetaError": "confunde-entidad"
+        },
+        {
+          "texto": "no están inscritos en el RNV y obtienen reconocimiento directo de la CNBV o promovido."
+        },
+        {
+          "texto": "no están inscritos en el RNV y cotizan y liquidan en dólares de los Estados Unidos.",
+          "porQueNo": "El SIC cotiza y liquida en moneda nacional.",
+          "etiquetaError": "confunde-moneda"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "En el SIC cotizan valores no inscritos en el RNV que cumplen con las disposiciones y pueden obtener reconocimiento directo de la CNBV o reconocimiento promovido por las bolsas de valores o intermediarios que los patrocinen.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 161,
+        "textual": "Cotizan valores no inscritos en el RNV"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l3.q11",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o11",
+      "enunciado": "¿Cuál de las siguientes combinaciones describe correctamente al SIC-BMV?",
+      "opciones": [
+        {
+          "texto": "Lote de 5 acciones, 1 acción para fijar precio, puja de $0.01; cotiza y liquida en M.N.",
+          "porQueNo": "Invierte las cifras: el lote es de 1 acción y se requieren 5 para fijar precio.",
+          "etiquetaError": "invierte-cifras"
+        },
+        {
+          "texto": "Lote de 1 acción, 5 acciones para fijar precio, puja de $0.001; cotiza y liquida en M.N.",
+          "porQueNo": "La puja del SIC es de $0.01.",
+          "etiquetaError": "altera-cifra"
+        },
+        {
+          "texto": "Lote de 1 acción, 5 acciones para fijar precio, puja de $0.01; cotiza y liquida en dólares.",
+          "porQueNo": "El SIC cotiza y liquida en moneda nacional.",
+          "etiquetaError": "confunde-moneda"
+        },
+        {
+          "texto": "Lote de 1 acción, 5 acciones para fijar precio, puja de $0.01; cotiza y liquida en M.N."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "SIC-BMV: opera vía el Sistema Electrónico de Negociación; mercado continuo de 8:30 a 15:00 horas; cotiza y liquida en moneda nacional; el lote es de 1 acción, para fijar precio de 5 acciones; puja de $0.01.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 162,
+        "textual": "para fijar precio de 5 acciones"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l3.q12",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o14",
+      "enunciado": "En la BMV, la variación de 15% sobre el límite de rango estático se considera fluctuación extraordinaria y causa de suspensión para los siguientes valores, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "títulos opcionales (warrants)."
+        },
+        {
+          "texto": "FIBRA E.",
+          "porQueNo": "Sí está en la lista del 15%, junto con las FIBRAS.",
+          "etiquetaError": "no-reconoce-lista"
+        },
+        {
+          "texto": "valores de la sección SIC Capitales.",
+          "porQueNo": "Sí están en la lista del 15%.",
+          "etiquetaError": "no-reconoce-lista"
+        },
+        {
+          "texto": "cupones.",
+          "porQueNo": "Sí están en la lista del 15%, junto con acciones, CPO y TRACs.",
+          "etiquetaError": "no-reconoce-lista"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El 15% aplica, según el manual, a acciones, CPO, TRACs, cupones, FIBRAS, FIBRA E y valores de la sección SIC Capitales. Los warrants aparecen en la lista del filtro de precio de 5%, pero no en la del 15% de suspensión.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 163,
+        "textual": "así como FIBRAS, FIBRA E y"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l3.q13",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o16",
+      "enunciado": "En BIVA, si el precio teórico de cierre no puede determinarse por falta de actividad en la subasta, pero el valor sí operó durante el día, el precio de cierre será:",
+      "opciones": [
+        {
+          "texto": "el promedio ponderado por volumen de los últimos 20 minutos.",
+          "porQueNo": "Ese es el criterio principal de la BMV, no el supletorio de BIVA.",
+          "etiquetaError": "confunde-bmv-biva"
+        },
+        {
+          "texto": "el del último hecho del valor durante el mismo día."
+        },
+        {
+          "texto": "el precio de cierre del día anterior.",
+          "porQueNo": "Solo se usa si no hubo operaciones en el día.",
+          "etiquetaError": "confunde-orden-criterios"
+        },
+        {
+          "texto": "el precio de apertura determinado en la subasta de apertura.",
+          "porQueNo": "El manual no usa el precio de apertura como criterio de cierre.",
+          "etiquetaError": "inventa-criterio"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Precio de cierre BIVA: es el precio teórico de cierre (PTC) de la subasta de cierre; si el PTC no puede determinarse por falta de actividad, será el del último hecho del valor durante el mismo día; si no hay operaciones ese día, el precio de cierre del día anterior.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 162,
+        "textual": "el precio de cierre será el del último hecho del Valor durante el mismo día"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l3.q14",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o12",
+      "enunciado": "En BIVA, las subastas de mantenimiento y por inactividad tienen una duración de:",
+      "opciones": [
+        {
+          "texto": "15 minutos y se celebran de 8:00 a 14:50 horas.",
+          "porQueNo": "Los 15 minutos son la suspensión por movimientos de menos 7% o menos 13%.",
+          "etiquetaError": "confunde-duracion"
+        },
+        {
+          "texto": "1 hora y se celebran de 8:30 a 14:00 horas.",
+          "porQueNo": "De 8:30 a 14:00 son las subastas de CKDs.",
+          "etiquetaError": "confunde-horario"
+        },
+        {
+          "texto": "1 hora y se celebran de 8:00 a 14:50 horas."
+        },
+        {
+          "texto": "30 minutos y se celebran de 14:50:01 a 15:00:00 horas.",
+          "porQueNo": "De 14:50:01 a 15:00:00 son las subastas de cierre.",
+          "etiquetaError": "confunde-horario"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "BIVA: subastas de mantenimiento y por inactividad, con duración de 1 hora, de 8:00 a 14:50 horas.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 161,
+        "textual": "Subastas de mantenimiento y por inactividad (duración de 1 hora)"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l3.q15",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o16",
+      "enunciado": "Una acción A cotiza en $1.00 y una acción B en $1.01. Considerando las pujas del mercado accionario, ¿cuál es el precio inmediato superior que puede ofrecerse en cada una?",
+      "opciones": [
+        {
+          "texto": "A: $1.01; B: $1.02",
+          "porQueNo": "A $1.00 la puja es de $0.001, no de $0.01.",
+          "etiquetaError": "confunde-rango-puja"
+        },
+        {
+          "texto": "A: $1.001; B: $1.02"
+        },
+        {
+          "texto": "A: $1.001; B: $1.011",
+          "porQueNo": "A partir de $1.01 la puja es de $0.01.",
+          "etiquetaError": "confunde-rango-puja"
+        },
+        {
+          "texto": "A: $1.01; B: $1.011",
+          "porQueNo": "Invierte las pujas de ambos rangos.",
+          "etiquetaError": "invierte-rango-puja"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Puja de $0.001 si el precio es menor o igual a $1.00: A pasa de $1.00 a $1.001. Puja de $0.01 si el precio es mayor o igual a $1.01: B pasa de $1.01 a $1.02.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 162,
+        "textual": "importe mínimo en el que puede variar el precio unitario de cada título"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l4.q01",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.indices",
+      "objetivoId": "capitales.mercado-de-capitales-ii.indices.o01",
+      "enunciado": "Un índice de rendimiento simple cerró ayer en 48,250.60 puntos. Sus tres series pesan 40%, 35% y 25% y hoy rindieron 2.10%, −1.50% y 0.80%, respectivamente. ¿En cuántos puntos cierra hoy?",
+      "opciones": [
+        {
+          "texto": "48,475.7695",
+          "porQueNo": "Usa el promedio simple de los rendimientos (0.4667%) e ignora los pesos.",
+          "etiquetaError": "ignora-ponderacion"
+        },
+        {
+          "texto": "48,926.1084",
+          "porQueNo": "Suma los rendimientos sin ponderarlos (1.40%).",
+          "etiquetaError": "suma-sin-ponderar"
+        },
+        {
+          "texto": "48,499.0906"
+        },
+        {
+          "texto": "48,251.1150",
+          "porQueNo": "Suma el rendimiento de 0.515 como si fueran puntos.",
+          "etiquetaError": "suma-porcentaje-como-puntos"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Paso 1: R = 0.40 × 2.10 + 0.35 × (−1.50) + 0.25 × 0.80 = 0.84 − 0.525 + 0.20 = 0.515%. Paso 2: I1 = 48,250.60 × (1 + 0.515 ÷ 100) = 48,499.0906 puntos.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 165,
+        "textual": "promedio ponderado de la muestra"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l4.q02",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.indices-accionarios",
+      "objetivoId": "capitales.mercado-de-capitales-i.indices-accionarios.o02",
+      "enunciado": "La muestra del S&P/BMV IPC está compuesta por:",
+      "opciones": [
+        {
+          "texto": "35 series, pudiendo incluir varias series de una misma emisora.",
+          "porQueNo": "El manual señala que solo se incluye una serie accionaria por emisora.",
+          "etiquetaError": "altera-regla"
+        },
+        {
+          "texto": "35 emisoras, con una sola serie accionaria por emisora."
+        },
+        {
+          "texto": "20 series, con una emisora y sus diferentes series.",
+          "porQueNo": "Esa es la muestra del S&P/BMV INMEX.",
+          "etiquetaError": "confunde-indice"
+        },
+        {
+          "texto": "30 series accionarias de mediana capitalización.",
+          "porQueNo": "Esa es la muestra del S&P/BMV IMC30.",
+          "etiquetaError": "confunde-indice"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "S&P/BMV IPC: está compuesto por 35 emisoras, seleccionando la serie accionaria más bursátil de cada una; solo se incluye una serie por emisora.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 165,
+        "textual": "Solo será incluida una serie accionaria por Emisora"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l4.q03",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.indices-accionarios",
+      "objetivoId": "capitales.mercado-de-capitales-i.indices-accionarios.o09",
+      "enunciado": "De las metodologías para seleccionar la canasta de un índice, la más utilizada internacionalmente es la:",
+      "opciones": [
+        {
+          "texto": "de liquidez, que mide la facilidad de comprar o vender a un precio justo.",
+          "porQueNo": "Es una de las tres metodologías, pero no la más utilizada.",
+          "etiquetaError": "confunde-metodologia"
+        },
+        {
+          "texto": "de capitalización bursátil, que mide el valor de las empresas a mercado.",
+          "porQueNo": "Es una de las tres metodologías, pero no la más utilizada.",
+          "etiquetaError": "confunde-metodologia"
+        },
+        {
+          "texto": "de ponderación, que asigna mayor importancia a las empresas más activas.",
+          "porQueNo": "La ponderación es el segundo paso de la construcción, no una metodología de selección.",
+          "etiquetaError": "confunde-paso"
+        },
+        {
+          "texto": "mixta, que combina liquidez y capitalización bursátil."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Metodologías de selección: por liquidez, por capitalización bursátil y mixta. La mixta, que considera ambos criterios de manera conjunta, es la más utilizada internacionalmente.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 164,
+        "textual": "Esta es la metodología más utilizada internacionalmente"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l4.q04",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.indices-accionarios",
+      "objetivoId": "capitales.mercado-de-capitales-i.indices-accionarios.o05",
+      "enunciado": "La diferencia entre el S&P/BMV IPC y el S&P/BMV IRT consiste en que:",
+      "opciones": [
+        {
+          "texto": "el IRT incorpora todos los eventos corporativos, incluidos los dividendos en efectivo."
+        },
+        {
+          "texto": "el IPC incorpora todos los eventos corporativos, incluidos los dividendos en efectivo.",
+          "porQueNo": "Invierte los índices: el IPC es de rendimiento simple.",
+          "etiquetaError": "invierte-indices"
+        },
+        {
+          "texto": "el IRT solo considera las fluctuaciones de precios derivadas de movimientos del mercado.",
+          "porQueNo": "Esa es la definición de índice de rendimiento simple, que corresponde al IPC.",
+          "etiquetaError": "invierte-indices"
+        },
+        {
+          "texto": "el IRT incorpora los dividendos en acciones, pero excluye los dividendos en efectivo.",
+          "porQueNo": "El manual dice expresamente que el IRT incluye los dividendos en efectivo.",
+          "etiquetaError": "altera-elemento"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El IPC es un índice de rendimiento simple: solo toma las fluctuaciones de precios derivadas de movimientos del mercado. El IRT es la variación de rendimiento total del IPC, porque incorpora todos los eventos corporativos, incluidos los dividendos en efectivo.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 166,
+        "textual": "incluyendo las dividendos en efectivo"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l4.q05",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.indices-accionarios",
+      "objetivoId": "capitales.mercado-de-capitales-i.indices-accionarios.o04",
+      "enunciado": "La clasificación sectorial de la BMV tiene cuatro niveles. ¿Cuál es la combinación correcta?",
+      "opciones": [
+        {
+          "texto": "10 sectores, 24 subsectores, 78 ramos y 192 subramos."
+        },
+        {
+          "texto": "10 sectores, 78 subsectores, 24 ramos y 192 subramos.",
+          "porQueNo": "Intercambia el número de subsectores y de ramos.",
+          "etiquetaError": "intercambia-cifras"
+        },
+        {
+          "texto": "24 sectores, 10 subsectores, 78 ramos y 192 subramos.",
+          "porQueNo": "Intercambia el número de sectores y de subsectores.",
+          "etiquetaError": "intercambia-cifras"
+        },
+        {
+          "texto": "10 sectores, 24 subsectores, 192 ramos y 78 subramos.",
+          "porQueNo": "Intercambia el número de ramos y de subramos.",
+          "etiquetaError": "intercambia-cifras"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "La nueva estructura considera cuatro niveles de clasificación: 10 sectores, 24 subsectores, 78 ramos y 192 subramos.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 167,
+        "textual": "24 Sub-Sectores, 78 Ramos y 192 Sub-Ramos"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l4.q06",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.indices",
+      "objetivoId": "capitales.mercado-de-capitales-ii.indices.o01",
+      "enunciado": "Un índice cerró en 54,812.37 puntos. Sus cinco series pesan 30%, 26%, 19%, 15% y 10%, y en la jornada rindieron 1.85%, −2.40%, 0.95%, −0.60% y 3.10%. ¿Cuál es el cierre de la jornada?",
+      "opciones": [
+        {
+          "texto": "55,130.2817",
+          "porQueNo": "Promedia los rendimientos sin ponderar (0.58%).",
+          "etiquetaError": "ignora-ponderacion"
+        },
+        {
+          "texto": "54,630.6670",
+          "porQueNo": "Aplica el rendimiento con signo contrario, como una baja de 0.3315%.",
+          "etiquetaError": "invierte-signo"
+        },
+        {
+          "texto": "54,812.7015",
+          "porQueNo": "Suma 0.3315 como si fueran puntos.",
+          "etiquetaError": "suma-porcentaje-como-puntos"
+        },
+        {
+          "texto": "54,994.0730"
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Paso 1: R = 0.30 × 1.85 + 0.26 × (−2.40) + 0.19 × 0.95 + 0.15 × (−0.60) + 0.10 × 3.10 = 0.555 − 0.624 + 0.1805 − 0.09 + 0.31 = 0.3315%. Paso 2: I1 = 54,812.37 × (1 + 0.3315 ÷ 100) = 54,994.0730 puntos.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 165,
+        "textual": "100 puntos + 1.007%"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l4.q07",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.indices-accionarios",
+      "objetivoId": "capitales.mercado-de-capitales-i.indices-accionarios.o02",
+      "enunciado": "En el S&P/BMV IPC, el peso máximo de una serie al inicio de la vigencia de la muestra y el peso conjunto máximo de las cinco series más grandes son, respectivamente:",
+      "opciones": [
+        {
+          "texto": "10% y 60%.",
+          "porQueNo": "El 10% es la ponderación máxima de una emisora en el INMEX.",
+          "etiquetaError": "confunde-indice"
+        },
+        {
+          "texto": "25% y 60%."
+        },
+        {
+          "texto": "25% y 50%.",
+          "porQueNo": "El límite conjunto de las cinco mayores es 60%.",
+          "etiquetaError": "altera-cifra"
+        },
+        {
+          "texto": "15% y 60%.",
+          "porQueNo": "El 15% es el máximo del IMC30 y del FTSE BIVA.",
+          "etiquetaError": "confunde-indice"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "IPC: el peso máximo que una serie puede tener al inicio de la vigencia de la muestra es de 25%; las cinco series más grandes no podrán tener en conjunto más del 60%.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 165,
+        "textual": "no podrán tener un peso relativo en conjunto de más del 60%"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l4.q08",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.indices-accionarios",
+      "objetivoId": "capitales.mercado-de-capitales-i.indices-accionarios.o02",
+      "enunciado": "¿Qué índice nacional limita al 10% la ponderación máxima de una emisora en su muestra?",
+      "opciones": [
+        {
+          "texto": "S&P/BMV IMC30",
+          "porQueNo": "El IMC30 permite hasta 15% por serie.",
+          "etiquetaError": "confunde-indice"
+        },
+        {
+          "texto": "FTSE BIVA",
+          "porQueNo": "El FTSE BIVA permite hasta 15% por emisora.",
+          "etiquetaError": "confunde-indice"
+        },
+        {
+          "texto": "S&P/BMV IPC",
+          "porQueNo": "El IPC permite hasta 25% por serie.",
+          "etiquetaError": "confunde-indice"
+        },
+        {
+          "texto": "S&P/BMV INMEX"
+        }
+      ],
+      "clave": 3,
+      "explicacion": "S&P/BMV INMEX: muestra de 20 series, compuesto por series que integran el IPC; la ponderación máxima de una emisora en la muestra será del 10%.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 166,
+        "textual": "La ponderación máxima de una emisora en la muestra será del 10%"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l4.q09",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.indices-accionarios",
+      "objetivoId": "capitales.mercado-de-capitales-i.indices-accionarios.o07",
+      "enunciado": "Las siguientes descripciones de índices internacionales coinciden con el manual, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "DAX: las 30 principales empresas de la Bolsa de Frankfurt.",
+          "porQueNo": "Coincide con el manual.",
+          "etiquetaError": "no-reconoce-caracteristica"
+        },
+        {
+          "texto": "CAC 40: los 40 valores más significativos de entre las 100 mayores de París.",
+          "porQueNo": "Coincide con el manual.",
+          "etiquetaError": "no-reconoce-caracteristica"
+        },
+        {
+          "texto": "Nikkei 225: pondera por capitalización los 225 valores más líquidos de Tokio."
+        },
+        {
+          "texto": "Hang Seng: 33 compañías que representan el 65% de la bolsa de Hong Kong.",
+          "porQueNo": "Coincide con el manual.",
+          "etiquetaError": "no-reconoce-caracteristica"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El Nikkei 225 se compone de los 225 valores más líquidos de la Bolsa de Tokio, pero sus valores ponderan por precios y no por capitalización.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 168,
+        "textual": "Los valores del indice Nikkei ponderan por precios y no por capitalización"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l4.q10",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+      "objetivoId": "capitales.mercado-de-capitales-i.conceptos-basicos.o04",
+      "enunciado": "Entre las características más relevantes del MILA está que:",
+      "opciones": [
+        {
+          "texto": "los mercados ceden su autonomía regulatoria a un regulador único y se negocia en dólares.",
+          "porQueNo": "Invierte ambos rasgos: cada mercado conserva su autonomía y se opera en moneda local.",
+          "etiquetaError": "invierte-rasgos"
+        },
+        {
+          "texto": "ningún mercado pierde independencia, pero toda operación se liquida en dólares en Lima.",
+          "porQueNo": "Las negociaciones se hacen en moneda local, sin salir de cada país.",
+          "etiquetaError": "confunde-moneda"
+        },
+        {
+          "texto": "los inversionistas deben abrir cuenta con un intermediario en cada país para operar.",
+          "porQueNo": "Basta un intermediario local, con anotaciones en cuenta.",
+          "etiquetaError": "altera-mecanica"
+        },
+        {
+          "texto": "ningún mercado pierde independencia ni autonomía regulatoria y se negocia en moneda local."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "En el MILA ningún mercado pierde su independencia ni su autonomía regulatoria; todas las negociaciones se hacen en moneda local, sin salir de cada país y con anotaciones en cuenta a través del intermediario local.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 169,
+        "textual": "las negociaciones en MILA se hacen en moneda local"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l4.q11",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.indices",
+      "objetivoId": "capitales.mercado-de-capitales-ii.indices.o01",
+      "enunciado": "Un índice ponderado por capitalización vale 1,250.00 puntos y tiene tres series: A ($45.20 a $46.10, 1,200 millones de acciones), B ($118.60 a $116.30, 450 millones) y C ($23.75 a $24.40, 2,800 millones). ¿Cuál es el nuevo valor del índice?",
+      "opciones": [
+        {
+          "texto": "1,261.6196",
+          "porQueNo": "Promedia los rendimientos de las tres series sin ponderarlas por capitalización.",
+          "etiquetaError": "ignora-ponderacion"
+        },
+        {
+          "texto": "1,263.3895"
+        },
+        {
+          "texto": "1,245.0013",
+          "porQueNo": "Pondera por precios (suma de precios finales entre suma de iniciales), como un índice de precios.",
+          "etiquetaError": "pondera-por-precio"
+        },
+        {
+          "texto": "1,263.8968",
+          "porQueNo": "Calcula los pesos con la capitalización final en lugar de la inicial.",
+          "etiquetaError": "pesos-con-capitalizacion-final"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Paso 1: capitalizaciones iniciales: A 54,240; B 53,370; C 66,500; total 174,110 (millones). Pesos: 31.1527%, 30.6530% y 38.1942%. Rendimientos: 1.9912%, −1.9393% y 2.7368%. R = 1.071162%. Paso 2: I1 = 1,250 × (1 + 1.071162 ÷ 100) = 1,263.3895 puntos (igual a 1,250 × capitalización final ÷ capitalización inicial).",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 164,
+        "textual": "Un índice ponderado asigna a las empresas más activas y representativas"
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "El manual da los pesos ya calculados; aquí se derivan de la capitalización, lo que el objetivo pide (ponderación de las acciones) pero el manual no ejemplifica."
+      ]
+    },
+    {
+      "id": "g.capitales.l4.q12",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.indices",
+      "objetivoId": "capitales.mercado-de-capitales-ii.indices.o01",
+      "enunciado": "Un índice pasó de 61,437.82 a 61,750.54 puntos. Cuatro de sus cinco series pesan 28%, 24%, 21% y 15% y rindieron 1.40%, −0.85%, 2.10% y 0.60%. ¿Qué rendimiento tuvo la quinta serie, que pesa 12%?",
+      "opciones": [
+        {
+          "texto": "−0.2100%",
+          "porQueNo": "Obtiene la contribución de la quinta serie, pero no la divide entre su peso de 12%.",
+          "etiquetaError": "no-divide-entre-peso"
+        },
+        {
+          "texto": "−0.7050%",
+          "porQueNo": "Trata el índice como un promedio simple de las cinco series.",
+          "etiquetaError": "ignora-ponderacion"
+        },
+        {
+          "texto": "0.5090%",
+          "porQueNo": "Reporta el rendimiento del índice, no el de la quinta serie.",
+          "etiquetaError": "confunde-indice-serie"
+        },
+        {
+          "texto": "−1.7500%"
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Paso 1: R del índice = (61,750.54 ÷ 61,437.82 − 1) × 100 = 0.509002%. Contribución de las cuatro series = 0.28 × 1.40 + 0.24 × (−0.85) + 0.21 × 2.10 + 0.15 × 0.60 = 0.719. Paso 2: r5 = (0.509002 − 0.719) ÷ 0.12 = −1.7500%.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 165,
+        "textual": "promedio ponderado de la muestra"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l4.q13",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.indices-accionarios",
+      "objetivoId": "capitales.mercado-de-capitales-i.indices-accionarios.o02",
+      "enunciado": "En el S&P/BMV IPC, la reponderación bianual tiene fecha efectiva después del cierre de mercado del:",
+      "opciones": [
+        {
+          "texto": "tercer viernes de marzo y septiembre.",
+          "porQueNo": "Esas son las fechas efectivas de la reconstitución de la muestra.",
+          "etiquetaError": "confunde-reconstitucion-reponderacion"
+        },
+        {
+          "texto": "último día hábil de enero y julio.",
+          "porQueNo": "Son las fechas de referencia de cada reconstitución.",
+          "etiquetaError": "confunde-fecha-referencia"
+        },
+        {
+          "texto": "tercer viernes de junio y diciembre."
+        },
+        {
+          "texto": "tercer viernes de septiembre, una vez al año.",
+          "porQueNo": "La reconstitución anual en septiembre es la del IMC30.",
+          "etiquetaError": "confunde-indice"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "IPC: reconstitución dos veces al año, efectiva tras el cierre del tercer viernes de marzo y septiembre, con referencia al último día hábil de enero y julio; reponderación bianual, efectiva tras el cierre del tercer viernes de junio y diciembre.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 165,
+        "textual": "tercer viernes de Junio y Diciembre"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l4.q14",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.indices-accionarios",
+      "objetivoId": "capitales.mercado-de-capitales-i.indices-accionarios.o06",
+      "enunciado": "Son características del índice FTSE BIVA según el manual, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "incluye grandes, medianas y pequeñas empresas listadas en cualquier bolsa del país.",
+          "porQueNo": "Es correcta para el FTSE BIVA.",
+          "etiquetaError": "no-reconoce-caracteristica"
+        },
+        {
+          "texto": "no tiene un número fijo de integrantes y se rebalancea semestralmente.",
+          "porQueNo": "Es correcta para el FTSE BIVA.",
+          "etiquetaError": "no-reconoce-caracteristica"
+        },
+        {
+          "texto": "pondera por valor de capitalización con un máximo de 15% por emisora.",
+          "porQueNo": "Es correcta para el FTSE BIVA.",
+          "etiquetaError": "no-reconoce-caracteristica"
+        },
+        {
+          "texto": "excluye de su universo elegible a las FIBRAS y a los fideicomisos hipotecarios."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "La exclusión de FIBRAS y fideicomisos hipotecarios es un criterio del universo elegible del S&P/BMV IPC. El FTSE BIVA, al contrario, incluye a las FIBRAS como sector relevante de la economía.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 166,
+        "textual": "inclusión de FIBRAs como sector relevante"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l4.q15",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.indices-accionarios",
+      "objetivoId": "capitales.mercado-de-capitales-i.indices-accionarios.o03",
+      "enunciado": "Entre los criterios de selección del S&P/BMV IPC, el valor de capitalización de mercado flotante mínimo y la mediana del valor diario de transacciones (MDTV) mínima para series múltiples son, respectivamente:",
+      "opciones": [
+        {
+          "texto": "50 mil millones de pesos y 10 millones de pesos.",
+          "porQueNo": "Intercambia las cifras de ambos criterios.",
+          "etiquetaError": "intercambia-cifras"
+        },
+        {
+          "texto": "10 mil millones de pesos y 95 millones de pesos.",
+          "porQueNo": "El 95% es el porcentaje de días operados en los últimos 6 meses, no un monto.",
+          "etiquetaError": "confunde-criterio"
+        },
+        {
+          "texto": "100 millones de dólares y 50 millones de pesos.",
+          "porQueNo": "Los 100 millones de dólares son un dato del INMEX en el manual 2023, no del IPC.",
+          "etiquetaError": "confunde-indice"
+        },
+        {
+          "texto": "10 mil millones de pesos y 50 millones de pesos."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Criterios del IPC: historial de 3 meses y 95% de días operados en los últimos 6 meses; capitalización de mercado flotante de 10 mil millones de pesos; para series múltiples, MDTV de al menos 50 millones de pesos.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 167,
+        "textual": "10 mil millones de pesos de capitalización"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l5.q01",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.formador-de-mercado",
+      "objetivoId": "capitales.mercado-de-capitales-i.formador-de-mercado.o01",
+      "enunciado": "De acuerdo con su definición, el formador de mercado interviene en el mercado de capitales con:",
+      "opciones": [
+        {
+          "texto": "recursos propios."
+        },
+        {
+          "texto": "recursos de la emisora con la que tiene contrato.",
+          "porQueNo": "Compartir resultados con la emisora le está prohibido; opera con recursos propios.",
+          "etiquetaError": "confunde-origen-recursos"
+        },
+        {
+          "texto": "recursos de sus clientes, mediante órdenes discrecionales.",
+          "porQueNo": "La definición indica recursos propios, no de terceros.",
+          "etiquetaError": "confunde-origen-recursos"
+        },
+        {
+          "texto": "recursos de un fondo de estabilización administrado por la Bolsa.",
+          "porQueNo": "El manual no menciona ese fondo; los recursos son propios.",
+          "etiquetaError": "inventa-mecanismo"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Formador de mercado: miembro integral (casa de bolsa) aprobado por la Bolsa que con recursos propios interviene en el mercado de capitales para promover la liquidez, establecer precios de referencia y contribuir a la estabilidad y continuidad de precios.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 170,
+        "textual": "aprobado por la Bolsa que con recursos propios interviene"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l5.q02",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.formador-de-mercado",
+      "objetivoId": "capitales.mercado-de-capitales-i.formador-de-mercado.o02",
+      "enunciado": "Para actuar como formador de mercado, el miembro integral debe acreditar ante la Bolsa que la CNBV lo tiene clasificado, por su índice de consumo de capital, en la categoría:",
+      "opciones": [
+        {
+          "texto": "I."
+        },
+        {
+          "texto": "II.",
+          "porQueNo": "El manual exige la categoría I.",
+          "etiquetaError": "altera-categoria"
+        },
+        {
+          "texto": "III.",
+          "porQueNo": "La categoría III es causa de revocación, no requisito de entrada.",
+          "etiquetaError": "confunde-requisito-revocacion"
+        },
+        {
+          "texto": "IV.",
+          "porQueNo": "La categoría IV es causa de revocación, no requisito de entrada.",
+          "etiquetaError": "confunde-requisito-revocacion"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Requisito: acreditar ante la Bolsa que, a la fecha de la solicitud, está clasificado por la CNBV dentro de la categoría I atendiendo a su índice de consumo de capital. La clasificación en categoría III o IV es causa de revocación.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 170,
+        "textual": "atendiendo 5 su índice de consumo de capital"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l5.q03",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.formador-de-mercado",
+      "objetivoId": "capitales.mercado-de-capitales-i.formador-de-mercado.o03",
+      "enunciado": "Es un derecho del formador de mercado:",
+      "opciones": [
+        {
+          "texto": "satisfacer los parámetros de importe mínimo y diferencial máximo.",
+          "porQueNo": "Es una obligación, no un derecho.",
+          "etiquetaError": "confunde-derecho-obligacion"
+        },
+        {
+          "texto": "informar a la Bolsa la prórroga o renovación de su contrato.",
+          "porQueNo": "Es una obligación, no un derecho.",
+          "etiquetaError": "confunde-derecho-obligacion"
+        },
+        {
+          "texto": "obtener exenciones o cuotas preferenciales a los aranceles de la Bolsa."
+        },
+        {
+          "texto": "celebrar operaciones de cruce con los valores que atiende.",
+          "porQueNo": "Celebrar cruces le está prohibido.",
+          "etiquetaError": "confunde-derecho-prohibicion"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Derechos del formador: dar a conocer sus actividades y servicios; brindar el servicio respecto de varios tipos de valor y diferentes emisoras; obtener exenciones o cuotas preferenciales a los aranceles de la Bolsa en las operaciones en que participe como formador.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 170,
+        "textual": "Obtener exenciones o cuotas preferenciales"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l5.q04",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.analista-independiente",
+      "objetivoId": "capitales.mercado-de-capitales-i.analista-independiente.o02",
+      "enunciado": "En el reporte de cobertura de análisis, el analista independiente debe revelar que:",
+      "opciones": [
+        {
+          "texto": "es autorizado y supervisado por la CNBV.",
+          "porQueNo": "Invierte el sentido: debe revelar que no lo autoriza ni supervisa la CNBV.",
+          "etiquetaError": "invierte-sentido"
+        },
+        {
+          "texto": "su análisis se basa en información privilegiada de la emisora.",
+          "porQueNo": "Debe sustentarse en información del dominio público.",
+          "etiquetaError": "confunde-fuente-informacion"
+        },
+        {
+          "texto": "no es autorizado ni supervisado por la CNBV."
+        },
+        {
+          "texto": "está afiliado a una casa de bolsa que respalda su opinión.",
+          "porQueNo": "El analista independiente es distinto de una casa de bolsa.",
+          "etiquetaError": "confunde-figura"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Funciones del analista independiente: mantener su independencia, presentar a la Bolsa la cobertura de análisis con información del dominio público, vigilar a su personal y revelar en el reporte que no son autorizados ni supervisados por la CNBV.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 173,
+        "textual": "Revelar en el reporte que no son autorizados ni supervisados"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l5.q05",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.formador-de-mercado",
+      "objetivoId": "capitales.mercado-de-capitales-i.formador-de-mercado.o03",
+      "enunciado": "Es una prohibición del formador de mercado:",
+      "opciones": [
+        {
+          "texto": "ingresar y mantener posturas de compra y venta.",
+          "porQueNo": "Es una obligación del formador.",
+          "etiquetaError": "confunde-prohibicion-obligacion"
+        },
+        {
+          "texto": "celebrar operaciones de cruce."
+        },
+        {
+          "texto": "brindar el servicio a varios tipos de valor y emisoras.",
+          "porQueNo": "Es un derecho del formador.",
+          "etiquetaError": "confunde-prohibicion-derecho"
+        },
+        {
+          "texto": "dar a conocer las actividades y servicios que presta.",
+          "porQueNo": "Es un derecho del formador.",
+          "etiquetaError": "confunde-prohibicion-derecho"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Prohibiciones: variar artificialmente el precio o volumen de los valores; compartir pérdidas o ganancias con la emisora; celebrar operaciones de cruce; cualquier otra conducta prohibida a los miembros.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 171,
+        "textual": "Celebrar operaciones de cruce"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l5.q06",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.formador-de-mercado",
+      "objetivoId": "capitales.mercado-de-capitales-i.formador-de-mercado.o04",
+      "enunciado": "La Bolsa podrá revocar la aprobación otorgada al formador de mercado cuando la CNBV lo clasifique, con base en su índice de consumo de capital, en la categoría:",
+      "opciones": [
+        {
+          "texto": "I o II.",
+          "porQueNo": "La categoría I es precisamente el requisito para ser aprobado.",
+          "etiquetaError": "confunde-requisito-revocacion"
+        },
+        {
+          "texto": "III o IV."
+        },
+        {
+          "texto": "II o III.",
+          "porQueNo": "El manual menciona las categorías III o IV.",
+          "etiquetaError": "altera-categoria"
+        },
+        {
+          "texto": "IV, únicamente.",
+          "porQueNo": "También la categoría III es causa de revocación.",
+          "etiquetaError": "altera-cuantificador"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Revocación: a solicitud del formador o de la emisora; por incumplimiento reiterado de obligaciones; o cuando la CNBV lo clasifique en la categoría III o IV con base en su índice de consumo de capital.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 171,
+        "textual": "clasificado por la CNBY en la categoría lli o IV"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l5.q07",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.formador-de-mercado",
+      "objetivoId": "capitales.mercado-de-capitales-i.formador-de-mercado.o02",
+      "enunciado": "La solicitud que presenta a la Bolsa el miembro integral que pretende actuar como formador de mercado debe estar suscrita por:",
+      "opciones": [
+        {
+          "texto": "el director general del miembro."
+        },
+        {
+          "texto": "el contralor normativo del miembro.",
+          "porQueNo": "El manual señala al director general.",
+          "etiquetaError": "confunde-firmante"
+        },
+        {
+          "texto": "el representante legal de la emisora.",
+          "porQueNo": "La emisora participa mediante el contrato de prestación de servicios, no firmando la solicitud.",
+          "etiquetaError": "confunde-firmante"
+        },
+        {
+          "texto": "el presidente del consejo de administración de la Bolsa.",
+          "porQueNo": "La Bolsa recibe y aprueba la solicitud; no la suscribe.",
+          "etiquetaError": "confunde-firmante"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Primer requisito: presentar a la Bolsa la solicitud correspondiente, suscrita por el director general del miembro.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 170,
+        "textual": "suscrita por el director general del Miembro"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l5.q08",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.formador-de-mercado",
+      "objetivoId": "capitales.mercado-de-capitales-i.formador-de-mercado.o03",
+      "enunciado": "Son obligaciones del formador de mercado, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "obtener cuotas preferenciales a los aranceles de la Bolsa."
+        },
+        {
+          "texto": "satisfacer en cada sesión los parámetros de importe mínimo y diferencial máximo de precios.",
+          "porQueNo": "Sí es obligación del formador.",
+          "etiquetaError": "no-reconoce-obligacion"
+        },
+        {
+          "texto": "dar aviso a la Bolsa de la rescisión anticipada del contrato con la emisora.",
+          "porQueNo": "Sí es obligación del formador.",
+          "etiquetaError": "no-reconoce-obligacion"
+        },
+        {
+          "texto": "hacer su mejor esfuerzo para promover la liquidez de los valores del contrato.",
+          "porQueNo": "Sí es obligación del formador.",
+          "etiquetaError": "no-reconoce-obligacion"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Obtener exenciones o cuotas preferenciales a los aranceles es un derecho, no una obligación. Las obligaciones son ingresar y mantener posturas, cumplir importe mínimo y diferencial máximo, promover la liquidez y estabilidad, avisar la rescisión anticipada, informar la prórroga o renovación y cumplir las demás obligaciones de los miembros.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 171,
+        "textual": "parámetros operativos de importe mínimo y diferencial máximo de precios"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l5.q09",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.formador-de-mercado",
+      "objetivoId": "capitales.mercado-de-capitales-i.formador-de-mercado.o04",
+      "enunciado": "Una casa de bolsa actúa como formador de mercado de una emisora y es designada líder colocador en una oferta pública de esa emisora, con un periodo posterior de operaciones de estabilización. Según el manual, debe:",
+      "opciones": [
+        {
+          "texto": "continuar formando mercado, porque la estabilización es compatible con su función.",
+          "porQueNo": "El manual ordena abstenerse precisamente en ese supuesto.",
+          "etiquetaError": "invierte-regla"
+        },
+        {
+          "texto": "abstenerse de formar mercado mientras sea líder colocador y durante la estabilización."
+        },
+        {
+          "texto": "pedir a la CNBV autorización para formar mercado durante la colocación.",
+          "porQueNo": "El manual no prevé esa autorización; la regla es la abstención.",
+          "etiquetaError": "inventa-requisito"
+        },
+        {
+          "texto": "renunciar en forma definitiva a ser formador de mercado de esa emisora.",
+          "porQueNo": "La regla es abstenerse durante la colocación y la estabilización, no renunciar.",
+          "etiquetaError": "exagera-consecuencia"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Los formadores de mercado deberán abstenerse de desarrollar sus actividades de formación de mercado cuando participen como líderes colocadores en una oferta pública de valores y durante el plazo en que celebren operaciones de estabilización.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": false,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 172,
+        "textual": "cuando participen como líderes colocadores"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l5.q10",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.analista-independiente",
+      "objetivoId": "capitales.mercado-de-capitales-i.analista-independiente.o02",
+      "enunciado": "El analista independiente debe sustentar su análisis con base en información financiera, económica, contable, jurídica y administrativa:",
+      "opciones": [
+        {
+          "texto": "que le proporcione la emisora en forma confidencial.",
+          "porQueNo": "Usar información no pública contradice la independencia y la función que señala el manual.",
+          "etiquetaError": "confunde-fuente-informacion"
+        },
+        {
+          "texto": "que sea del dominio público."
+        },
+        {
+          "texto": "que le entregue la CNBV como autoridad supervisora.",
+          "porQueNo": "La CNBV no lo supervisa ni le proporciona información para su análisis.",
+          "etiquetaError": "confunde-entidad"
+        },
+        {
+          "texto": "que verifique previamente la casa de bolsa colocadora.",
+          "porQueNo": "El manual no exige esa verificación.",
+          "etiquetaError": "inventa-requisito"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Funciones del analista independiente: sustentar su análisis con base en información financiera, económica, contable, jurídica y administrativa que sea del dominio público.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 173,
+        "textual": "administrativa que sea del dominio público"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l5.q11",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.formador-de-mercado",
+      "objetivoId": "capitales.mercado-de-capitales-i.formador-de-mercado.o04",
+      "enunciado": "Un formador de mercado quiere prestar sus servicios a dos emisoras que desarrollan giros comerciales del mismo tipo. De acuerdo con el manual:",
+      "opciones": [
+        {
+          "texto": "solo puede hacerlo si demuestra ante la Bolsa que no existirán conflictos de interés."
+        },
+        {
+          "texto": "solo puede hacerlo si demuestra ante la CNBV que no existirán conflictos de interés.",
+          "porQueNo": "Cambia la entidad: la demostración se hace ante la Bolsa.",
+          "etiquetaError": "confunde-entidad"
+        },
+        {
+          "texto": "solo puede hacerlo con el consentimiento por escrito de ambas emisoras.",
+          "porQueNo": "El manual no lo condiciona al consentimiento de las emisoras.",
+          "etiquetaError": "inventa-requisito"
+        },
+        {
+          "texto": "no puede hacerlo en ningún caso, porque la prohibición es absoluta.",
+          "porQueNo": "La prohibición admite una excepción: demostrar que no habrá conflicto de interés.",
+          "etiquetaError": "omite-excepcion"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Los formadores de mercado no podrán prestar sus servicios a emisoras que desarrollen giros comerciales del mismo tipo, a menos de que demuestren ante la Bolsa que no existirán conflictos de interés.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 172,
+        "textual": "a menos de que demuestren ante la Bolsa que no existirán conflictos de interés"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l5.q12",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.formador-de-mercado",
+      "objetivoId": "capitales.mercado-de-capitales-i.formador-de-mercado.o04",
+      "enunciado": "Respecto del número de formadores de mercado que pueden atender un mismo tipo de valor, el manual establece que:",
+      "opciones": [
+        {
+          "texto": "la Bolsa podrá aprobar que dos o más formadores presten sus servicios."
+        },
+        {
+          "texto": "solo puede haber un formador por emisora, sin excepción.",
+          "porQueNo": "El manual permite que la Bolsa apruebe dos o más formadores.",
+          "etiquetaError": "altera-cuantificador"
+        },
+        {
+          "texto": "pueden ser hasta dos, siempre que lo autorice la CNBV.",
+          "porQueNo": "Ni limita a dos ni exige autorización de la CNBV; aprueba la Bolsa.",
+          "etiquetaError": "confunde-entidad"
+        },
+        {
+          "texto": "puede haber uno por cada serie accionaria de la emisora.",
+          "porQueNo": "El manual no establece esa regla por serie.",
+          "etiquetaError": "inventa-regla"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "La Bolsa podrá aprobar que dos o más formadores de mercado presten sus servicios para un mismo tipo de valor.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 171,
+        "textual": "La Bolsa podrá aprobar que dos o más Formadores de Mercado presten sus servicios"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l5.q13",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.analista-independiente",
+      "objetivoId": "capitales.mercado-de-capitales-i.analista-independiente.o02",
+      "enunciado": "Son funciones del analista independiente según el manual, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "informar de inmediato a la Bolsa la causa que originó un conflicto de intereses.",
+          "porQueNo": "Sí es función: forma parte de mantener su independencia.",
+          "etiquetaError": "no-reconoce-funcion"
+        },
+        {
+          "texto": "presentar a la CNBV la cobertura de análisis de las emisoras que atiende."
+        },
+        {
+          "texto": "vigilar que su personal no participe en operaciones con conflicto de interés.",
+          "porQueNo": "Sí es función del analista.",
+          "etiquetaError": "no-reconoce-funcion"
+        },
+        {
+          "texto": "revelar en su reporte que no lo autoriza ni lo supervisa la CNBV.",
+          "porQueNo": "Sí es función del analista.",
+          "etiquetaError": "no-reconoce-funcion"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "El analista elabora y presenta su cobertura de análisis a la Bolsa, no a la CNBV, que no lo autoriza ni lo supervisa.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 173,
+        "textual": "Elaborar y presentar reporte a la Bolsa la Cobertura de Análisis"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l5.q14",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.formador-de-mercado",
+      "objetivoId": "capitales.mercado-de-capitales-i.formador-de-mercado.o05",
+      "enunciado": "Cuando un miembro integral solicita la ubicación contigua de su servidor transaccional al sistema electrónico de negociación, debe:",
+      "opciones": [
+        {
+          "texto": "obtener la autorización previa del Banco de México.",
+          "porQueNo": "El manual no exige autorización de Banxico para la ubicación contigua.",
+          "etiquetaError": "confunde-entidad"
+        },
+        {
+          "texto": "contar al menos con dos enlaces lógicos dedicados.",
+          "porQueNo": "El requisito del acceso directo es al menos un enlace lógico dedicado, y no corresponde a la ubicación contigua.",
+          "etiquetaError": "altera-cifra"
+        },
+        {
+          "texto": "acreditar la categoría I de la CNBV por su índice de consumo de capital.",
+          "porQueNo": "Es un requisito para ser formador de mercado, no para la ubicación contigua.",
+          "etiquetaError": "confunde-requisito"
+        },
+        {
+          "texto": "firmar un contrato de prestación de servicio con la Bolsa."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Cuando un miembro integral solicite la ubicación contigua de su servidor transaccional al sistema electrónico de negociación, deberá firmar un contrato de prestación de servicio con la Bolsa. Para el acceso directo al mercado se exige al menos un enlace lógico dedicado.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 172,
+        "textual": "deberá firmar un contrato de prestación de servicio con la Bolsa"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l5.q15",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-i.analista-independiente",
+      "objetivoId": "capitales.mercado-de-capitales-i.analista-independiente.o01",
+      "enunciado": "Una institución de crédito desea prestar habitual y profesionalmente servicios de cobertura de análisis a varias emisoras como analista independiente. Según el manual:",
+      "opciones": [
+        {
+          "texto": "puede, siempre que la Bolsa la apruebe como analista independiente.",
+          "porQueNo": "La aprobación de la Bolsa no subsana la exclusión expresa de las instituciones de crédito.",
+          "etiquetaError": "omite-exclusion"
+        },
+        {
+          "texto": "puede, siempre que la CNBV la autorice y la supervise en esa función.",
+          "porQueNo": "El analista independiente no es autorizado ni supervisado por la CNBV, y el banco está excluido.",
+          "etiquetaError": "confunde-entidad"
+        },
+        {
+          "texto": "no puede, porque las instituciones de crédito están excluidas de esa figura."
+        },
+        {
+          "texto": "puede, pero solo si es una institución de crédito extranjera.",
+          "porQueNo": "Puede ser nacional o extranjera, pero en ningún caso casa de bolsa o institución de crédito.",
+          "etiquetaError": "altera-condicion"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Analista independiente: persona moral, nacional o extranjera, distinta a una casa de bolsa o institución de crédito, aprobada por la Bolsa, que presta habitual y profesionalmente servicios de cobertura de análisis a una o más emisoras.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 173,
+        "textual": "distinta a una casa de bolsa o institución de crédito"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l6.q01",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.american-depositary-receipt-adr",
+      "objetivoId": "capitales.mercado-de-capitales-ii.american-depositary-receipt-adr.o02",
+      "enunciado": "El ADR de una emisora mexicana cotiza en US$31.47 con un ratio de 1:3 y el tipo de cambio es de $19.6835. ¿Cuál es el precio teórico de la acción en el mercado local?",
+      "opciones": [
+        {
+          "texto": "$1,858.3192",
+          "porQueNo": "Multiplica por el ratio en lugar de dividir: 31.47 × 3 × 19.6835.",
+          "etiquetaError": "multiplica-ratio"
+        },
+        {
+          "texto": "$206.4799"
+        },
+        {
+          "texto": "$0.5329",
+          "porQueNo": "Divide entre el tipo de cambio en lugar de multiplicar.",
+          "etiquetaError": "divide-tipo-cambio"
+        },
+        {
+          "texto": "$619.4397",
+          "porQueNo": "Olvida el ratio y convierte el ADR completo a pesos.",
+          "etiquetaError": "omite-ratio"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "$ACCION = $ADR ÷ RATIO × TC = 31.47 ÷ 3 × 19.6835 = 10.49 × 19.6835 = $206.4799.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 174,
+        "textual": "Proporción de acciones por cada ADR"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l6.q02",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.american-depositary-receipt-adr",
+      "objetivoId": "capitales.mercado-de-capitales-ii.american-depositary-receipt-adr.o01",
+      "enunciado": "Según el manual, los ADR son recibos emitidos por:",
+      "opciones": [
+        {
+          "texto": "un banco americano, que ampara el depósito de acciones de emisoras mexicanas."
+        },
+        {
+          "texto": "la CNBV, que ampara el depósito de acciones de emisoras mexicanas.",
+          "porQueNo": "La CNBV faculta a las emisoras para cotizar en el extranjero, pero no emite los recibos.",
+          "etiquetaError": "confunde-entidad"
+        },
+        {
+          "texto": "la propia emisora mexicana, que los coloca directamente en el NYSE.",
+          "porQueNo": "El recibo lo emite un banco americano sobre acciones depositadas.",
+          "etiquetaError": "confunde-emisor"
+        },
+        {
+          "texto": "el Indeval, que ampara el depósito de acciones de emisoras extranjeras.",
+          "porQueNo": "Indeval es el depósito mexicano; el ADR lo emite un banco americano sobre acciones mexicanas.",
+          "etiquetaError": "confunde-entidad"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Los ADR son recibos emitidos por un banco americano que amparan el depósito de acciones de emisoras mexicanas facultadas por la CNBV para cotizar en mercados foráneos.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 174,
+        "textual": "que amparan el depósito de"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l6.q03",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.american-depositary-receipt-adr",
+      "objetivoId": "capitales.mercado-de-capitales-ii.american-depositary-receipt-adr.o03",
+      "enunciado": "Una acción cotiza en la BMV en $87.45, el ratio es de 1:6 y el tipo de cambio es de $18.9420. ¿Cuál es el precio teórico del ADR?",
+      "opciones": [
+        {
+          "texto": "US$0.7695",
+          "porQueNo": "Divide también entre el ratio: 87.45 ÷ 18.9420 ÷ 6.",
+          "etiquetaError": "divide-ratio"
+        },
+        {
+          "texto": "US$4.6167",
+          "porQueNo": "Olvida el ratio: solo convierte una acción a dólares.",
+          "etiquetaError": "omite-ratio"
+        },
+        {
+          "texto": "US$524.7000",
+          "porQueNo": "Multiplica el precio en pesos por el ratio sin convertirlo a dólares: 87.45 × 6.",
+          "etiquetaError": "omite-tipo-cambio"
+        },
+        {
+          "texto": "US$27.7003"
+        }
+      ],
+      "clave": 3,
+      "explicacion": "$ADR = $ACCION ÷ TC × RATIO = 87.45 ÷ 18.9420 × 6 = 4.616725 × 6 = US$27.7003.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 175,
+        "textual": "Utilizamos la misma fórmula e identificamos variables"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l6.q04",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.american-depositary-receipt-adr",
+      "objetivoId": "capitales.mercado-de-capitales-ii.american-depositary-receipt-adr.o01",
+      "enunciado": "Una acción extranjera cotiza en el NYSE con un ratio de 1:20. Esto significa que:",
+      "opciones": [
+        {
+          "texto": "cada acción del mercado de origen respalda 20 ADR.",
+          "porQueNo": "Invierte la proporción: son 20 acciones por cada ADR.",
+          "etiquetaError": "invierte-ratio"
+        },
+        {
+          "texto": "cada ADR representa 20 acciones del mercado de origen."
+        },
+        {
+          "texto": "el ADR cotiza con un descuento de 20% respecto de la acción.",
+          "porQueNo": "El ratio es una proporción de acciones por recibo, no un descuento.",
+          "etiquetaError": "confunde-ratio"
+        },
+        {
+          "texto": "se requieren 20 dólares para adquirir una acción en origen.",
+          "porQueNo": "El ratio no expresa un precio ni un tipo de cambio.",
+          "etiquetaError": "confunde-ratio"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "En el ejemplo del manual, Viña Concha y Toro cotiza en el NYSE con relación acciones/ADR de 20 a 1, es decir, un ratio de 1:20: 20 acciones emitidas en el mercado chileno por cada ADR emitido en el NYSE.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 174,
+        "textual": "20 acciones emitidas en el mercado chileno, por cada ADR emitido en el NYSE"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l6.q05",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.arbitraje",
+      "objetivoId": "capitales.mercado-de-capitales-ii.arbitraje.o01",
+      "enunciado": "Por medio del arbitraje, el inversionista busca obtener:",
+      "opciones": [
+        {
+          "texto": "una utilidad de largo plazo asumiendo el riesgo de mercado de la acción.",
+          "porQueNo": "El arbitraje es simultáneo e instantáneo; no asume una posición direccional de largo plazo.",
+          "etiquetaError": "confunde-arbitraje-especulacion"
+        },
+        {
+          "texto": "una cobertura contra la baja del precio de una acción que ya posee.",
+          "porQueNo": "Eso describe una cobertura, no un arbitraje.",
+          "etiquetaError": "confunde-arbitraje-cobertura"
+        },
+        {
+          "texto": "el cobro del dividendo en los dos mercados donde cotiza la emisora.",
+          "porQueNo": "El arbitraje aprovecha diferencias de precio, no duplica dividendos.",
+          "etiquetaError": "confunde-objetivo"
+        },
+        {
+          "texto": "una utilidad instantánea libre de riesgo por la diferencia de precios entre mercados."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Arbitraje: operación de compraventa simultánea que aprovecha el diferencial de precios entre dos o más mercados; por medio del arbitraje los inversionistas pueden obtener una utilidad instantánea libre de riesgo.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 176,
+        "textual": "pueden obtener una utilidad instantánea libre de riesgo"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l6.q06",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.arbitraje",
+      "objetivoId": "capitales.mercado-de-capitales-ii.arbitraje.o02",
+      "enunciado": "Una acción cotiza en la BMV en $112.40. Su ADR cotiza en el NYSE en US$17.85 con ratio de 1:3 y el tipo de cambio es de $19.2163. Sin comisiones, ¿qué posición conviene?",
+      "opciones": [
+        {
+          "texto": "Largo en el NYSE y corto en la BMV.",
+          "porQueNo": "Invierte la operación: el equivalente del ADR ($114.3370) es más caro que la acción en la BMV.",
+          "etiquetaError": "invierte-posicion"
+        },
+        {
+          "texto": "Largo en ambos mercados, porque el ADR está sobrevaluado.",
+          "porQueNo": "El arbitraje combina una compra y una venta simultáneas, no dos compras.",
+          "etiquetaError": "confunde-arbitraje"
+        },
+        {
+          "texto": "Largo en la BMV y corto en el NYSE."
+        },
+        {
+          "texto": "No hay arbitraje, porque los precios están en monedas distintas.",
+          "porQueNo": "Al convertir con el tipo de cambio y el ratio sí hay diferencia de precios.",
+          "etiquetaError": "omite-conversion"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Paso 1: precio equivalente en NYSE = 17.85 ÷ 3 × 19.2163 = $114.3370 por acción. Paso 2: en la BMV la acción vale $112.40, más barata. Conviene comprar en la BMV (posición larga) y vender en el NYSE (posición corta).",
+      "tipo": "calculo",
+      "formato": "caso",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 176,
+        "textual": "Acciones que cotizan en la BMV valen $49.78"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l6.q07",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.arbitraje",
+      "objetivoId": "capitales.mercado-de-capitales-ii.arbitraje.o02",
+      "enunciado": "Una acción vale $112.40 en la BMV y su ADR cotiza en US$17.85 con ratio de 1:3; el tipo de cambio es de $19.2163. Sin comisiones, ¿cuál es la utilidad teórica de arbitraje por acción?",
+      "opciones": [
+        {
+          "texto": "$1.9370"
+        },
+        {
+          "texto": "$5.8110",
+          "porQueNo": "Calcula la utilidad por ADR (tres acciones), no por acción.",
+          "etiquetaError": "confunde-por-adr-por-accion"
+        },
+        {
+          "texto": "$0.6457",
+          "porQueNo": "Divide la utilidad por acción entre el ratio.",
+          "etiquetaError": "divide-ratio"
+        },
+        {
+          "texto": "$0.1008",
+          "porQueNo": "Expresa la utilidad en dólares al dividir entre el tipo de cambio.",
+          "etiquetaError": "confunde-moneda"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Utilidad por acción = precio equivalente en NYSE − precio en BMV = 17.85 ÷ 3 × 19.2163 − 112.40 = 114.336985 − 112.40 = $1.9370.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 176,
+        "textual": "Precio en NYSE = (5.13"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l6.q08",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.arbitraje",
+      "objetivoId": "capitales.mercado-de-capitales-ii.arbitraje.o02",
+      "enunciado": "Una acción vale $74.20 en la BMV, con comisión de compra de 0.85%. Su ADR cotiza en US$12.40 con ratio 1:3 y tipo de cambio de $18.4520. Si se compra en la BMV y se vende el equivalente en el NYSE sin comisión, ¿cuál es la utilidad por acción?",
+      "opciones": [
+        {
+          "texto": "$1.4376"
+        },
+        {
+          "texto": "$2.0683",
+          "porQueNo": "Omite la comisión de compra en la BMV.",
+          "etiquetaError": "omite-comision"
+        },
+        {
+          "texto": "$2.6990",
+          "porQueNo": "Resta la comisión al precio de compra en lugar de sumarla.",
+          "etiquetaError": "resta-comision-compra"
+        },
+        {
+          "texto": "$0.7893",
+          "porQueNo": "Aplica también una comisión de 0.85% a la venta en el NYSE, que el enunciado no contempla.",
+          "etiquetaError": "aplica-comision-inexistente"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Paso 1: equivalente en NYSE = 12.40 ÷ 3 × 18.4520 = $76.268267. Paso 2: costo en BMV con comisión = 74.20 × (1 + 0.85 ÷ 100) = $74.830700. Utilidad = 76.268267 − 74.830700 = $1.4376 por acción.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 176,
+        "textual": "$58.50 x (1+(1.2 + 100)) = $59.20"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l6.q09",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.american-depositary-receipt-adr",
+      "objetivoId": "capitales.mercado-de-capitales-ii.american-depositary-receipt-adr.o01",
+      "enunciado": "Sobre los ADR, el manual señala lo siguiente, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "amparan el depósito de acciones de emisoras facultadas por la CNBV.",
+          "porQueNo": "Es correcto según la definición del manual.",
+          "etiquetaError": "no-reconoce-caracteristica"
+        },
+        {
+          "texto": "los patrocinados son los que respalda la empresa emisora.",
+          "porQueNo": "Es correcto: ADR patrocinados, los respalda la empresa emisora.",
+          "etiquetaError": "no-reconoce-caracteristica"
+        },
+        {
+          "texto": "pueden diferir momentáneamente del precio en el país de origen.",
+          "porQueNo": "Es correcto: esas diferencias dan lugar al arbitraje internacional.",
+          "etiquetaError": "no-reconoce-caracteristica"
+        },
+        {
+          "texto": "se emiten en México y cotizan en pesos en el SIC."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Los ADR se emiten por un banco americano y cotizan en bolsas de Estados Unidos, en dólares. El SIC es el mecanismo mexicano para valores extranjeros, que cotiza y liquida en moneda nacional.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 174,
+        "textual": "Los respalda la empresa emisora de las acciones"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l6.q10",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.american-depositary-receipt-adr",
+      "objetivoId": "capitales.mercado-de-capitales-ii.american-depositary-receipt-adr.o03",
+      "enunciado": "La acción de una emisora mexicana no cambia de precio en la BMV, pero el tipo de cambio sube de $18.50 a $19.20 pesos por dólar. Con el mismo ratio, el precio teórico de su ADR:",
+      "opciones": [
+        {
+          "texto": "baja, porque la acción equivale a menos dólares."
+        },
+        {
+          "texto": "sube, porque el dólar se aprecia frente al peso.",
+          "porQueNo": "El tipo de cambio divide al precio de la acción: a mayor tipo de cambio, menos dólares.",
+          "etiquetaError": "invierte-efecto"
+        },
+        {
+          "texto": "no cambia, porque el precio de la acción en pesos es el mismo.",
+          "porQueNo": "El ADR está en dólares y depende del tipo de cambio.",
+          "etiquetaError": "omite-tipo-cambio"
+        },
+        {
+          "texto": "baja, porque el ratio se ajusta a la depreciación del peso.",
+          "porQueNo": "Acierta la dirección, pero el ratio no cambia; la causa es la conversión cambiaria.",
+          "etiquetaError": "confunde-causa"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "$ADR = $ACCION ÷ TC × RATIO. Si $ACCION y RATIO no cambian y TC sube, el cociente disminuye: el ADR teórico baja (por ejemplo, de $ACCION ÷ 18.50 a $ACCION ÷ 19.20, una baja de 3.65%).",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 175,
+        "textual": "ADR = (Precio de la acción + Tipo de Cambio) x ratio"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l6.q11",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.arbitraje",
+      "objetivoId": "capitales.mercado-de-capitales-ii.arbitraje.o02",
+      "enunciado": "Un arbitrajista compra 2,000 ADR en el NYSE a US$15.42, con ratio de 1:4 y tipo de cambio de $19.8750, y vende en la BMV, a $77.60, las acciones que recibe. Sin comisiones, ¿cuál es su utilidad total?",
+      "opciones": [
+        {
+          "texto": "$1,963.7500",
+          "porQueNo": "Multiplica la utilidad por acción por 2,000 en lugar de por las 8,000 acciones que amparan los ADR.",
+          "etiquetaError": "omite-ratio-en-cantidad"
+        },
+        {
+          "texto": "$7,855.0000"
+        },
+        {
+          "texto": "$31,420.0000",
+          "porQueNo": "Aplica el ratio dos veces al número de acciones (32,000).",
+          "etiquetaError": "duplica-ratio"
+        },
+        {
+          "texto": "$395.2201",
+          "porQueNo": "Expresa la utilidad en dólares, dividiéndola entre el tipo de cambio.",
+          "etiquetaError": "confunde-moneda"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Paso 1: acciones recibidas = 2,000 × 4 = 8,000. Ingreso en BMV = 8,000 × 77.60 = $620,800. Paso 2: costo = 2,000 × 15.42 × 19.8750 = $612,945. Utilidad = 620,800 − 612,945 = $7,855.0000.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 176,
+        "textual": "Operación de compra-venta simultánea que tiene por objeto aprovechar el diferencial de precios"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l6.q12",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.arbitraje",
+      "objetivoId": "capitales.mercado-de-capitales-ii.arbitraje.o02",
+      "enunciado": "Una acción vale $145.10 en la BMV (comisión 0.80%) y su ADR US$48.95 en el NYSE (comisión 0.30%), con ratio 1:7 y tipo de cambio de $20.4130. Agregando cada comisión al precio de su mercado, ¿qué posición conviene?",
+      "opciones": [
+        {
+          "texto": "Largo en el NYSE y corto en la BMV."
+        },
+        {
+          "texto": "Largo en la BMV y corto en el NYSE.",
+          "porQueNo": "Invierte la operación: con comisiones la BMV cuesta $146.2608 y el equivalente del ADR $143.1734; el mercado barato es el NYSE.",
+          "etiquetaError": "invierte-posicion"
+        },
+        {
+          "texto": "Corto en ambos mercados, porque ambos precios suben con la comisión.",
+          "porQueNo": "El arbitraje requiere una compra y una venta simultáneas.",
+          "etiquetaError": "confunde-arbitraje"
+        },
+        {
+          "texto": "Ninguna, porque las comisiones eliminan cualquier diferencia de precios.",
+          "porQueNo": "Aun descontando la comisión de venta en la BMV queda una utilidad de $0.7658 por acción.",
+          "etiquetaError": "sobreestima-comision"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Paso 1: equivalente en NYSE = 48.95 ÷ 7 × 20.4130 = $142.7452; con comisión, × 1.003 = $143.1734. Paso 2: BMV con comisión = 145.10 × 1.008 = $146.2608. Conviene comprar en el NYSE (larga) y vender en la BMV (corta). Comprobación: venta neta en BMV 145.10 × 0.992 = $143.9392, mayor que el costo de $143.1734.",
+      "tipo": "calculo",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 176,
+        "textual": "Comprar en NYSE (posición larga) y vender en BMV"
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "La comisión en ambos mercados sigue el planteamiento del manual 2023 (sección 2.14.3); AMIB 1 solo ejemplifica comisión en la BMV. Los datos se eligieron para que el criterio del manual y el de utilidad neta coincidan."
+      ]
+    },
+    {
+      "id": "g.capitales.l6.q13",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.arbitraje",
+      "objetivoId": "capitales.mercado-de-capitales-ii.arbitraje.o02",
+      "enunciado": "Una acción vale $98.60 en la BMV; el equivalente en pesos de su ADR es $99.3105. Si la compra en la BMV paga una comisión de 1.5%, ¿qué afirmación es correcta?",
+      "opciones": [
+        {
+          "texto": "Conviene ampliar la posición larga en la BMV, porque la comisión se resta al precio de $98.60.",
+          "porQueNo": "La comisión encarece la compra; no se resta del precio.",
+          "etiquetaError": "resta-comision-compra"
+        },
+        {
+          "texto": "La comisión no altera la decisión, porque se paga en ambos mercados por igual.",
+          "porQueNo": "El enunciado solo contempla comisión en la BMV, y esta cambia la comparación.",
+          "etiquetaError": "omite-comision"
+        },
+        {
+          "texto": "Deja de convenir la posición larga en la BMV, porque su costo de $100.0790 supera $99.3105."
+        },
+        {
+          "texto": "Sigue conviniendo comprar en la BMV, porque $98.60 es menor que $99.3105.",
+          "porQueNo": "Compara precios sin la comisión, como si no existiera.",
+          "etiquetaError": "omite-comision"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Sin comisión, la BMV ($98.60) es más barata que el equivalente del ADR ($99.3105). Con la comisión, comprar en la BMV cuesta 98.60 × (1 + 1.5 ÷ 100) = $100.0790, más que $99.3105: deja de convenir la posición larga en la BMV.",
+      "tipo": "calculo",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 176,
+        "textual": "Comprar en NYSE (posición larga) y vender en BMV"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l6.q14",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.american-depositary-receipt-adr",
+      "objetivoId": "capitales.mercado-de-capitales-ii.american-depositary-receipt-adr.o02",
+      "enunciado": "El ADR de una emisora cotiza en US$41.80 con una relación acciones/ADR de 12 a 1, y el tipo de cambio es de $19.1032. ¿Cuál es el precio teórico de cada acción en pesos?",
+      "opciones": [
+        {
+          "texto": "$9,582.1651",
+          "porQueNo": "Lee la relación al revés y multiplica por 12.",
+          "etiquetaError": "invierte-ratio"
+        },
+        {
+          "texto": "$798.5138",
+          "porQueNo": "Olvida el ratio y convierte el ADR completo a pesos.",
+          "etiquetaError": "omite-ratio"
+        },
+        {
+          "texto": "$0.1823",
+          "porQueNo": "Divide entre el tipo de cambio en lugar de multiplicar.",
+          "etiquetaError": "divide-tipo-cambio"
+        },
+        {
+          "texto": "$66.5428"
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Relación de 12 a 1 equivale a un ratio de 1:12 (12 acciones por ADR). $ACCION = 41.80 ÷ 12 × 19.1032 = 3.483333 × 19.1032 = $66.5428.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 174,
+        "textual": "relación de acciones/ADRs de 20 a 1"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l6.q15",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.arbitraje",
+      "objetivoId": "capitales.mercado-de-capitales-ii.arbitraje.o02",
+      "enunciado": "Una acción vale $96.30 en la BMV y su ADR US$25.10, con ratio de 1:5. ¿Con qué tipo de cambio no habría oportunidad de arbitraje?",
+      "opciones": [
+        {
+          "texto": "$19.1833"
+        },
+        {
+          "texto": "$0.7673",
+          "porQueNo": "Divide el precio de la acción entre el producto del ADR por el ratio.",
+          "etiquetaError": "invierte-ratio"
+        },
+        {
+          "texto": "$1.3032",
+          "porQueNo": "Invierte la fórmula: multiplica el ADR por el ratio y divide entre el precio de la acción.",
+          "etiquetaError": "invierte-formula"
+        },
+        {
+          "texto": "$3.8367",
+          "porQueNo": "Omite el ratio: divide el precio de la acción entre el del ADR.",
+          "etiquetaError": "omite-ratio"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "No hay arbitraje cuando $ACCION = $ADR ÷ RATIO × TC. Despejando: TC = $ACCION × RATIO ÷ $ADR = 96.30 × 5 ÷ 25.10 = $19.1833.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 174,
+        "textual": "Cuando esto no ocurre, existe la posibilidad de arbitraje"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l7.q01",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.eventos-corporativos",
+      "objetivoId": "capitales.mercado-de-capitales-ii.eventos-corporativos.o02",
+      "enunciado": "Una emisora cuya acción cotiza en $48.75 paga un dividendo en efectivo de $1.35 por acción. ¿Cuál es el precio ajustado?",
+      "opciones": [
+        {
+          "texto": "$50.1000",
+          "porQueNo": "Suma el dividendo al precio en lugar de restarlo.",
+          "etiquetaError": "suma-dividendo"
+        },
+        {
+          "texto": "$48.0919",
+          "porQueNo": "Trata el dividendo de $1.35 como si fuera un porcentaje del precio.",
+          "etiquetaError": "confunde-pesos-porcentaje"
+        },
+        {
+          "texto": "$47.4000"
+        },
+        {
+          "texto": "$48.7500",
+          "porQueNo": "No ajusta el precio por el dividendo.",
+          "etiquetaError": "sin-ajuste"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "$PDIV = PM − DIV = 48.75 − 1.35 = $47.4000.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 177,
+        "textual": "Al recibir un dividendo en efectivo por parte de una empresa emisora"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l7.q02",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.eventos-corporativos",
+      "objetivoId": "capitales.mercado-de-capitales-ii.eventos-corporativos.o02",
+      "enunciado": "Una acción cotiza en $126.80 y la emisora realiza un split canjeando 1 acción anterior por 4 nuevas. ¿Cuál es el precio ajustado?",
+      "opciones": [
+        {
+          "texto": "$507.2000",
+          "porQueNo": "Invierte el cociente: multiplica por AN ÷ AA, como si fuera un split inverso.",
+          "etiquetaError": "invierte-aa-an"
+        },
+        {
+          "texto": "$25.3600",
+          "porQueNo": "Divide entre AA + AN (5), como en un dividendo en acciones.",
+          "etiquetaError": "usa-formula-dividendo-acciones"
+        },
+        {
+          "texto": "$31.7000"
+        },
+        {
+          "texto": "$101.4400",
+          "porQueNo": "Multiplica por AN ÷ (AA + AN) = 4 ÷ 5.",
+          "etiquetaError": "confunde-formula"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "$PAS = PM × AA ÷ AN = 126.80 × 1 ÷ 4 = $31.7000.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 179,
+        "textual": "La fórmula para ambos casos es la misma"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l7.q03",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.eventos-corporativos",
+      "objetivoId": "capitales.mercado-de-capitales-ii.eventos-corporativos.o01",
+      "enunciado": "Según el manual, en un split el inversionista:",
+      "opciones": [
+        {
+          "texto": "obtiene menos acciones con un precio proporcionalmente mayor.",
+          "porQueNo": "Eso describe el split inverso.",
+          "etiquetaError": "confunde-split-inverso"
+        },
+        {
+          "texto": "obtiene más acciones pagando un precio de suscripción menor al de mercado.",
+          "porQueNo": "El pago por acciones nuevas corresponde a la suscripción.",
+          "etiquetaError": "confunde-suscripcion"
+        },
+        {
+          "texto": "conserva sus acciones y recibe efectivo, por lo que el precio baja.",
+          "porQueNo": "Eso describe el dividendo en efectivo.",
+          "etiquetaError": "confunde-dividendo-efectivo"
+        },
+        {
+          "texto": "obtiene más acciones con un precio proporcionalmente menor."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Split: de pocas acciones se obtienen más, pero con un precio proporcionalmente menor; se aplica cuando la emisora quiere hacer el precio de su acción más bursátil. Split inverso: lo contrario.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 179,
+        "textual": "De pocas acciones se obtendrán más, pero con un precio proporcionalmente menor"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l7.q04",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.eventos-corporativos",
+      "objetivoId": "capitales.mercado-de-capitales-ii.eventos-corporativos.o02",
+      "enunciado": "Una emisora decreta un dividendo en acciones de 3 acciones nuevas por cada 25 anteriores. Si el precio de mercado es de $58.40, ¿cuál es el precio ajustado?",
+      "opciones": [
+        {
+          "texto": "$52.1429"
+        },
+        {
+          "texto": "$51.3920",
+          "porQueNo": "Resta al precio la proporción de acciones nuevas: 58.40 × (25 − 3) ÷ 25.",
+          "etiquetaError": "resta-proporcion"
+        },
+        {
+          "texto": "$65.4080",
+          "porQueNo": "Invierte la fracción: 58.40 × 28 ÷ 25.",
+          "etiquetaError": "invierte-fraccion"
+        },
+        {
+          "texto": "$66.3636",
+          "porQueNo": "Divide entre AA − AN en lugar de entre AN + AA.",
+          "etiquetaError": "resta-en-denominador"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "$PACC = PM × AA ÷ (AN + AA) = 58.40 × 25 ÷ (3 + 25) = 1,460 ÷ 28 = $52.1429.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 177,
+        "textual": "el precio ajustado de las acciones se calcula con la siguiente fórmula"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l7.q05",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.eventos-corporativos",
+      "objetivoId": "capitales.mercado-de-capitales-ii.eventos-corporativos.o01",
+      "enunciado": "En una suscripción de acciones, la empresa ofrece a sus actuales accionistas acciones nuevas:",
+      "opciones": [
+        {
+          "texto": "sin costo, como capitalización de utilidades.",
+          "porQueNo": "Eso es el dividendo en acciones; en la suscripción el accionista paga.",
+          "etiquetaError": "confunde-dividendo-acciones"
+        },
+        {
+          "texto": "mediante el derecho al tanto, a un precio mayor que el de mercado.",
+          "porQueNo": "Cambia una palabra: el precio de suscripción es menor que el de mercado.",
+          "etiquetaError": "invierte-precio"
+        },
+        {
+          "texto": "mediante el derecho al tanto, a un precio menor que el de mercado."
+        },
+        {
+          "texto": "a cambio de sus acciones anteriores, para modificar el precio de mercado.",
+          "porQueNo": "El canje de acciones por otras es el split o split inverso.",
+          "etiquetaError": "confunde-canje"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Suscripción: no es precisamente un beneficio para el tenedor; la empresa otorga el derecho al tanto a sus actuales accionistas, ofreciéndoles en venta nuevas acciones a un precio menor del que se encuentra en el mercado.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 178,
+        "textual": "la empresa otorga el derecho al tanto a sus actuales"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l7.q06",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.eventos-corporativos",
+      "objetivoId": "capitales.mercado-de-capitales-ii.eventos-corporativos.o02",
+      "enunciado": "Una acción cotiza en $62.30. La emisora decreta una suscripción de 2 acciones nuevas por cada 15 anteriores a un precio de suscripción de $55.00. ¿Cuál es el precio ajustado?",
+      "opciones": [
+        {
+          "texto": "$61.4412"
+        },
+        {
+          "texto": "$54.9706",
+          "porQueNo": "Omite el precio de suscripción y aplica la fórmula del dividendo en acciones.",
+          "etiquetaError": "omite-precio-suscripcion"
+        },
+        {
+          "texto": "$55.8588",
+          "porQueNo": "Intercambia los ponderadores: precio de mercado por AN y de suscripción por AA.",
+          "etiquetaError": "intercambia-ponderadores"
+        },
+        {
+          "texto": "$58.6500",
+          "porQueNo": "Promedia los dos precios sin ponderar por número de acciones.",
+          "etiquetaError": "promedio-simple"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "$PASUS = (PM × AA + PS × AN) ÷ (AN + AA) = (62.30 × 15 + 55.00 × 2) ÷ (2 + 15) = (934.50 + 110.00) ÷ 17 = $61.4412.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 178,
+        "textual": "El precio se ajusta con la fórmula"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l7.q07",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.eventos-corporativos",
+      "objetivoId": "capitales.mercado-de-capitales-ii.eventos-corporativos.o02",
+      "enunciado": "Una acción cotiza en $3.87 y la emisora hará un split inverso canjeando 25 acciones anteriores por 2 nuevas. ¿Cuál es el precio ajustado?",
+      "opciones": [
+        {
+          "texto": "$0.3096",
+          "porQueNo": "Invierte el cociente: multiplica por AN ÷ AA.",
+          "etiquetaError": "invierte-aa-an"
+        },
+        {
+          "texto": "$3.5833",
+          "porQueNo": "Aplica la fórmula del dividendo en acciones: 3.87 × 25 ÷ 27.",
+          "etiquetaError": "usa-formula-dividendo-acciones"
+        },
+        {
+          "texto": "$48.3750"
+        },
+        {
+          "texto": "$4.1796",
+          "porQueNo": "Multiplica por (AA + AN) ÷ AA.",
+          "etiquetaError": "confunde-formula"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "$PAS = PM × AA ÷ AN = 3.87 × 25 ÷ 2 = $48.3750.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 179,
+        "textual": "hará un SPLIT INVERSO al canjear 30"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l7.q08",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.eventos-corporativos",
+      "objetivoId": "capitales.mercado-de-capitales-ii.eventos-corporativos.o01",
+      "enunciado": "Después del pago de un dividendo en efectivo, según el manual:",
+      "opciones": [
+        {
+          "texto": "el número de acciones aumenta y el monto de inversión es igual.",
+          "porQueNo": "Ese es el impacto del dividendo en acciones.",
+          "etiquetaError": "confunde-dividendo-acciones"
+        },
+        {
+          "texto": "el número de acciones es igual y el monto de inversión aumenta.",
+          "porQueNo": "El precio se ajusta a la baja, por lo que el monto disminuye.",
+          "etiquetaError": "invierte-efecto"
+        },
+        {
+          "texto": "el número de acciones disminuye y el monto de inversión es igual.",
+          "porQueNo": "Eso describe un split inverso.",
+          "etiquetaError": "confunde-split-inverso"
+        },
+        {
+          "texto": "el número de acciones es igual y el monto de inversión disminuye."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Dividendo en efectivo: número de acciones, permanece igual; monto de inversión del inversionista, disminuye, pues el precio de la acción se ajustó a la baja.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 177,
+        "textual": "Disminuye el monto, pues el precio de la acción se ajustó a la"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l7.q09",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.eventos-corporativos",
+      "objetivoId": "capitales.mercado-de-capitales-ii.eventos-corporativos.o02",
+      "enunciado": "Una acción cotiza en $36.50. En la misma fecha la emisora paga un dividendo en efectivo de $1.10 y un dividendo en acciones de 1 nueva por cada 10 anteriores. Con el criterio de la pregunta oficial de AMIB, ¿cuál es el precio ajustado?",
+      "opciones": [
+        {
+          "texto": "$32.0818",
+          "porQueNo": "Invierte el orden: reparte primero entre las acciones y resta después el dividendo en efectivo.",
+          "etiquetaError": "invierte-orden-ajustes"
+        },
+        {
+          "texto": "$33.1818",
+          "porQueNo": "Solo aplica el dividendo en acciones y omite el efectivo.",
+          "etiquetaError": "omite-dividendo-efectivo"
+        },
+        {
+          "texto": "$32.1818"
+        },
+        {
+          "texto": "$35.4000",
+          "porQueNo": "Solo resta el dividendo en efectivo y omite el dividendo en acciones.",
+          "etiquetaError": "omite-dividendo-acciones"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Paso 1: 36.50 − 1.10 = 35.40. Paso 2: 35.40 × 10 ÷ (1 + 10) = $32.1818.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 177,
+        "textual": "Pago de Dividendos en Acciones"
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "El orden de los ajustes sigue la pregunta oficial tipo.16 (Preguntas Tipo.docx); AMIB 1 no trata eventos simultáneos."
+      ]
+    },
+    {
+      "id": "g.capitales.l7.q10",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.eventos-corporativos",
+      "objetivoId": "capitales.mercado-de-capitales-ii.eventos-corporativos.o02",
+      "enunciado": "Un inversionista tiene 3,000 acciones que cotizan en $2.40. La emisora realiza un split inverso de 30 acciones anteriores por 1 nueva. ¿Con qué tenencia queda?",
+      "opciones": [
+        {
+          "texto": "90,000 acciones con precio teórico de $0.0800.",
+          "porQueNo": "Aplica el canje como split: multiplica las acciones y divide el precio.",
+          "etiquetaError": "confunde-split-split-inverso"
+        },
+        {
+          "texto": "100 acciones con precio teórico de $2.4000.",
+          "porQueNo": "Reduce el número de acciones pero no ajusta el precio.",
+          "etiquetaError": "ajuste-incompleto"
+        },
+        {
+          "texto": "3,000 acciones con precio teórico de $72.0000.",
+          "porQueNo": "Ajusta el precio pero no reduce el número de acciones.",
+          "etiquetaError": "ajuste-incompleto"
+        },
+        {
+          "texto": "100 acciones con precio teórico de $72.0000."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Acciones nuevas = 3,000 × 1 ÷ 30 = 100. $PAS = PM × AA ÷ AN = 2.40 × 30 ÷ 1 = $72.0000. Comprobación: 3,000 × 2.40 = 100 × 72.00 = $7,200.",
+      "tipo": "calculo",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 179,
+        "textual": "de muchas acciones se hará un canje por menor"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l7.q11",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.eventos-corporativos",
+      "objetivoId": "capitales.mercado-de-capitales-ii.eventos-corporativos.o02",
+      "enunciado": "Una acción cotiza en $47.80 y la emisora decreta una suscripción de 3 acciones nuevas por cada 20 anteriores a $41.50. ¿Cuál es el precio ajustado?",
+      "opciones": [
+        {
+          "texto": "$41.5652",
+          "porQueNo": "Omite el precio de suscripción: 47.80 × 20 ÷ 23.",
+          "etiquetaError": "omite-precio-suscripcion"
+        },
+        {
+          "texto": "$54.0250",
+          "porQueNo": "Divide solo entre las acciones anteriores (20) en lugar de entre AN + AA.",
+          "etiquetaError": "denominador-incompleto"
+        },
+        {
+          "texto": "$42.3217",
+          "porQueNo": "Intercambia los ponderadores de los dos precios.",
+          "etiquetaError": "intercambia-ponderadores"
+        },
+        {
+          "texto": "$46.9783"
+        }
+      ],
+      "clave": 3,
+      "explicacion": "$PASUS = (47.80 × 20 + 41.50 × 3) ÷ (3 + 20) = (956.00 + 124.50) ÷ 23 = 1,080.50 ÷ 23 = $46.9783.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 178,
+        "textual": "precio menor del que se encuentra en el mercado"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l7.q12",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.eventos-corporativos",
+      "objetivoId": "capitales.mercado-de-capitales-ii.eventos-corporativos.o02",
+      "enunciado": "Un inversionista compró acciones en $87.60. Antes de vender, la emisora hizo un split de 1 acción anterior por 3 nuevas, y después vendió todas sus acciones en $30.15. ¿Cuál fue su rendimiento efectivo?",
+      "opciones": [
+        {
+          "texto": "−65.5822%",
+          "porQueNo": "Compara el precio de venta con el de compra sin ajustar por el split.",
+          "etiquetaError": "omite-ajuste-split"
+        },
+        {
+          "texto": "3.2534%"
+        },
+        {
+          "texto": "5.8562%",
+          "porQueNo": "Anualiza a 200 días un rendimiento que se pide efectivo.",
+          "etiquetaError": "anualiza-sin-pedirlo"
+        },
+        {
+          "texto": "−88.5274%",
+          "porQueNo": "Aplica el split al revés: divide el precio de venta entre 3.",
+          "etiquetaError": "invierte-aa-an"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Paso 1: precio de compra ajustado por el split = 87.60 × 1 ÷ 3 = $29.20 (o bien, valor de venta por acción original = 30.15 × 3 = $90.45). Paso 2: %TEFEC = (30.15 ÷ 29.20 − 1) × 100 = 3.2534%.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 179,
+        "textual": "Canje de acciones por Spiit y Split Inverso"
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "Combina la fórmula del rendimiento efectivo (5.3.1) con el ajuste por split (5.9.1); el manual no presenta este caso combinado. Dato de 200 días solo para el distractor anualizado."
+      ]
+    },
+    {
+      "id": "g.capitales.l7.q13",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.eventos-corporativos",
+      "objetivoId": "capitales.mercado-de-capitales-ii.eventos-corporativos.o01",
+      "enunciado": "Sobre el impacto de los eventos corporativos, el manual señala lo siguiente, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "dividendo en acciones: el número de acciones aumenta y la inversión es igual.",
+          "porQueNo": "Es correcto: más acciones a un precio menor.",
+          "etiquetaError": "no-reconoce-impacto"
+        },
+        {
+          "texto": "suscripción: aumentan el número de acciones y el capital de la empresa.",
+          "porQueNo": "Es correcto según el manual.",
+          "etiquetaError": "no-reconoce-impacto"
+        },
+        {
+          "texto": "split inverso: menos acciones con un precio proporcionalmente mayor.",
+          "porQueNo": "Es correcto según el manual.",
+          "etiquetaError": "no-reconoce-impacto"
+        },
+        {
+          "texto": "dividendo en efectivo: el número de acciones aumenta y la inversión es igual."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "En el dividendo en efectivo el número de acciones permanece igual y el monto de inversión disminuye. La opción mezcla el impacto del dividendo en acciones con el evento de dividendo en efectivo.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 178,
+        "textual": "Monto de Inversión del inversionista = Permanece igual"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l7.q14",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.eventos-corporativos",
+      "objetivoId": "capitales.mercado-de-capitales-ii.eventos-corporativos.o02",
+      "enunciado": "Una acción cotiza en $95.40. La emisora paga un dividendo en efectivo de $2.25 y, después, realiza un split de 2 acciones anteriores por 7 nuevas. ¿Cuál es el precio ajustado final?",
+      "opciones": [
+        {
+          "texto": "$26.6143"
+        },
+        {
+          "texto": "$25.0071",
+          "porQueNo": "Invierte el orden: aplica el split y después resta el dividendo completo.",
+          "etiquetaError": "invierte-orden-ajustes"
+        },
+        {
+          "texto": "$27.2571",
+          "porQueNo": "Aplica el split y omite el dividendo en efectivo.",
+          "etiquetaError": "omite-dividendo-efectivo"
+        },
+        {
+          "texto": "$20.7000",
+          "porQueNo": "Usa la fórmula del dividendo en acciones (divide entre 2 + 7).",
+          "etiquetaError": "usa-formula-dividendo-acciones"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Paso 1: 95.40 − 2.25 = 93.15. Paso 2: $PAS = 93.15 × 2 ÷ 7 = $26.6143.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 179,
+        "textual": "La fórmula para ambos casos es la misma"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.capitales.l7.q15",
+      "version": 1,
+      "area": "capitales",
+      "subtemaId": "capitales.mercado-de-capitales-ii.eventos-corporativos",
+      "objetivoId": "capitales.mercado-de-capitales-ii.eventos-corporativos.o02",
+      "enunciado": "Tras un dividendo en acciones de 1 acción nueva por cierto número de anteriores, el precio de una acción pasó de $64.80 a $60.48. ¿Cuál fue la proporción?",
+      "opciones": [
+        {
+          "texto": "1 acción nueva por cada 15 anteriores.",
+          "porQueNo": "Con 15 anteriores el precio ajustado sería 64.80 × 15 ÷ 16 = $60.75; confunde el total de acciones (15) con las anteriores.",
+          "etiquetaError": "confunde-total-anteriores"
+        },
+        {
+          "texto": "1 acción nueva por cada 14 anteriores."
+        },
+        {
+          "texto": "1 acción nueva por cada 13 anteriores.",
+          "porQueNo": "Con 13 anteriores el precio ajustado sería 64.80 × 13 ÷ 14 = $60.1714.",
+          "etiquetaError": "despeje-incorrecto"
+        },
+        {
+          "texto": "1 acción nueva por cada 16 anteriores.",
+          "porQueNo": "Con 16 anteriores el precio ajustado sería 64.80 × 16 ÷ 17 = $60.9882.",
+          "etiquetaError": "despeje-incorrecto"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "De $PACC = PM × AA ÷ (AN + AA) con AN = 1: AA = $PACC ÷ (PM − $PACC) = 60.48 ÷ (64.80 − 60.48) = 60.48 ÷ 4.32 = 14. Comprobación: 64.80 × 14 ÷ 15 = $60.48.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 177,
+        "textual": "GFBANORTE otorgará una capitalización de utilidades"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    }
+  ]
+}

@@ -1,0 +1,658 @@
+{
+  "id": "capitales.indices-accionarios",
+  "area": "capitales",
+  "materia": "Mercado de Capitales I",
+  "subtemaId": "capitales.mercado-de-capitales-i.indices-accionarios",
+  "objetivoIds": [
+    "capitales.mercado-de-capitales-i.indices-accionarios.o01",
+    "capitales.mercado-de-capitales-i.indices-accionarios.o08",
+    "capitales.mercado-de-capitales-i.indices-accionarios.o09",
+    "capitales.mercado-de-capitales-ii.indices.o01",
+    "capitales.mercado-de-capitales-i.indices-accionarios.o02",
+    "capitales.mercado-de-capitales-i.indices-accionarios.o05",
+    "capitales.mercado-de-capitales-i.indices-accionarios.o06",
+    "capitales.mercado-de-capitales-i.indices-accionarios.o03",
+    "capitales.mercado-de-capitales-i.indices-accionarios.o04",
+    "capitales.mercado-de-capitales-i.indices-accionarios.o07",
+    "capitales.mercado-de-capitales-i.conceptos-basicos.o04"
+  ],
+  "orden": 4,
+  "titulo": "Índices accionarios: construcción, cálculo, índices nacionales e internacionales y MILA",
+  "resumen": "Concepto de índice y por qué se mide en puntos, metodología de construcción, cálculo de la variación de un índice con rendimientos y ponderaciones (ejemplo del manual), S&P/BMV IPC, INMEX, IMC30, IRT y FTSE BIVA con sus criterios, clasificación sectorial, índices internacionales y el Mercado Integrado Latinoamericano.",
+  "duracionMin": 45,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        164,
+        165,
+        166,
+        167,
+        168,
+        169
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "concepto-y-puntos",
+      "titulo": "Qué es un índice y por qué se mide en puntos",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los [[índices accionarios]] pretenden, mediante el análisis de una **muestra**, reflejar el **comportamiento promedio** del mercado accionario."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Un índice es una **media** de los valores que lo componen, calculada teniendo en cuenta la capitalización bursátil de cada valor o sin tenerla en cuenta. Sirve para **resumir en un único dato** el comportamiento de muchos valores. Por eso se expresa en **puntos**: la variación de los puntos refleja el comportamiento promedio de la muestra."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen puntos:",
+          "texto": "el índice no es un precio en pesos; es un número índice cuya **variación** resume el promedio de la muestra."
+        }
+      ],
+      "ampliada": "Lo que importa de un índice es su variación porcentual entre dos fechas; el nivel en puntos solo tiene sentido comparado contra su base o contra otro día.",
+      "paginas": [
+        164
+      ]
+    },
+    {
+      "id": "metodologia",
+      "titulo": "Metodología general de construcción",
+      "bloques": [
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Primer paso: selección",
+              "texto": "Se define la canasta con una de tres metodologías.",
+              "cuando": "Qué acciones entran"
+            },
+            {
+              "titulo": "Segundo paso: ponderación",
+              "texto": "Se calcula un coeficiente que establece la importancia de cada acción.",
+              "cuando": "Qué peso tiene cada una"
+            }
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Metodología de selección",
+            "Variable"
+          ],
+          "filas": [
+            [
+              "Por liquidez (bursatilidad)",
+              "Facilidad de comprar o vender una acción en determinado momento a un precio justo"
+            ],
+            [
+              "Por capitalización bursátil",
+              "Valor de las empresas a precios de mercado"
+            ],
+            [
+              "Mixta",
+              "Liquidez y capitalización de manera conjunta; **la más utilizada** internacionalmente"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Un índice ponderado asigna a las empresas más activas y representativas de la bolsa una **mayor importancia relativa**."
+        }
+      ],
+      "ampliada": "En el examen, \"selección\" y \"ponderación\" son los dos pasos, en ese orden. La metodología mixta es la respuesta cuando preguntan cuál es la más usada.",
+      "paginas": [
+        164
+      ]
+    },
+    {
+      "id": "calculo-variacion",
+      "titulo": "Calcular la variación de un índice",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Para obtener el cierre del índice se calcula primero el **rendimiento promedio ponderado** de la muestra y después se aplica al cierre anterior."
+        },
+        {
+          "tipo": "formula",
+          "logica": "R = \\sum_{i=1}^{n} w_i \\, r_i \\qquad I_1 = I_0 \\left(1 + \\frac{R}{100}\\right)",
+          "leyenda": [
+            [
+              "R",
+              "rendimiento del índice en la jornada, en por ciento"
+            ],
+            [
+              "w_i",
+              "peso de la serie i en la muestra, en decimal"
+            ],
+            [
+              "r_i",
+              "rendimiento de la serie i en la jornada, en por ciento"
+            ],
+            [
+              "I_0",
+              "cierre anterior del índice, en puntos"
+            ],
+            [
+              "I_1",
+              "cierre de la jornada actual, en puntos"
+            ]
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Serie",
+            "Rendimiento",
+            "Peso",
+            "Contribución"
+          ],
+          "filas": [
+            [
+              "Acc. 1",
+              "3.00%",
+              "25%",
+              "0.7500"
+            ],
+            [
+              "Acc. 2",
+              "−4.00%",
+              "24%",
+              "−0.9600"
+            ],
+            [
+              "Acc. 3",
+              "2.40%",
+              "20%",
+              "0.4800"
+            ],
+            [
+              "Acc. 4",
+              "4.50%",
+              "17%",
+              "0.7650"
+            ],
+            [
+              "Acc. 5",
+              "−0.20%",
+              "14%",
+              "−0.0280"
+            ]
+          ],
+          "trampas": []
+        },
+        {
+          "tipo": "formula",
+          "logica": "I_1 = I_0 \\left(1 + \\frac{R}{100}\\right)",
+          "leyenda": [],
+          "valores": "R = 0.75 - 0.96 + 0.48 + 0.765 - 0.028 = 1.007\\% \\qquad I_1 = 100 \\left(1 + \\frac{1.007}{100}\\right)",
+          "resultado": "I_1 = 101.007 puntos, es decir, 101.0070"
+        }
+      ],
+      "ampliada": "Ejemplo del manual (página 165): índice de rendimiento simple que cerró en 100 puntos, con cinco series. La tabla del manual quedó ilegible en el OCR y se transcribió de la imagen de la página.",
+      "paginas": [
+        165
+      ]
+    },
+    {
+      "id": "errores-y-capitalizacion",
+      "titulo": "Errores típicos y pesos por capitalización",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Error",
+            "Qué hace",
+            "Resultado con el ejemplo"
+          ],
+          "filas": [
+            [
+              "Promedio simple",
+              "Ignora los pesos y promedia los rendimientos",
+              "101.1400 puntos"
+            ],
+            [
+              "Suma sin pesos",
+              "Suma los rendimientos",
+              "105.7000 puntos"
+            ],
+            [
+              "Sumar el porcentaje como puntos",
+              "Calcula 100 + 1.007",
+              "Coincide solo porque la base es 100"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Si el enunciado da precios y número de acciones en lugar de pesos, el peso de cada serie es su **capitalización** entre la capitalización total. Ejemplo: A vale $50 con 100 acciones y B $20 con 300 acciones; los pesos son 45.4545% y 54.5455%. Si A sube 2% y B baja 2.5%, el índice que estaba en 1,000 puntos cierra en:"
+        },
+        {
+          "tipo": "formula",
+          "logica": "I_1 = I_0 \\left(1 + \\frac{\\sum w_i r_i}{100}\\right)",
+          "leyenda": [],
+          "valores": "I_1 = 1000 \\left(1 + \\frac{0.454545 \\times 2 + 0.545455 \\times (-2.5)}{100}\\right)",
+          "resultado": "I_1 = 995.4545 puntos"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Con base distinta de 100, sumar el rendimiento como si fueran puntos es un error grave: en un índice de 50,000 puntos, 1.007% equivale a 503.5 puntos, no a 1.007."
+        }
+      ],
+      "ampliada": "El cálculo con capitalización equivale a dividir la capitalización final entre la inicial: 1000 × (51 × 100 + 19.5 × 300) ÷ (50 × 100 + 20 × 300) = 995.4545. Esta variante no aparece en el manual; se incluye porque el objetivo pide considerar la ponderación de las acciones.",
+      "paginas": [
+        164,
+        165
+      ]
+    },
+    {
+      "id": "ipc",
+      "titulo": "S&P/BMV IPC",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[S&P/BMV IPC]] es el **principal indicador** del mercado mexicano: expresa el rendimiento del mercado accionario en función de las variaciones de precios de una muestra balanceada, ponderada y representativa."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Muestra",
+              "**35 emisoras**, con la serie más bursátil de cada una; **una sola serie por emisora**"
+            ],
+            [
+              "Reconstitución",
+              "Dos veces al año, efectiva tras el cierre del **tercer viernes de marzo y septiembre**; fecha de referencia: último día hábil de **enero y julio**"
+            ],
+            [
+              "Peso máximo",
+              "**25%** por serie al inicio de la vigencia de la muestra"
+            ],
+            [
+              "Cinco mayores",
+              "En conjunto, **no más de 60%**"
+            ],
+            [
+              "Ponderación",
+              "Capitalización de mercado **ajustada por flotación**"
+            ],
+            [
+              "Reponderación",
+              "Bianual, efectiva tras el cierre del **tercer viernes de junio y diciembre**"
+            ]
+          ],
+          "titulo": "Ficha: S&P/BMV IPC"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Reconstitución: marzo y septiembre. Reponderación: junio y diciembre. Referencia: enero y julio. Son tres calendarios distintos."
+        }
+      ],
+      "ampliada": "El manual 2023 dice que la muestra se revisa de forma semestral en junio y diciembre; AMIB 1 separa reconstitución (marzo y septiembre) y reponderación (junio y diciembre). Se sigue AMIB 1.",
+      "paginas": [
+        165
+      ]
+    },
+    {
+      "id": "inmex-imc30-irt",
+      "titulo": "INMEX, IMC30 e IRT",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Índice",
+            "Muestra",
+            "Peso máximo",
+            "Rasgo clave"
+          ],
+          "filas": [
+            [
+              "S&P/BMV INMEX",
+              "**20 series**; una emisora con sus diferentes series",
+              "**10%**",
+              "Compuesto por series que integran el IPC; ponderado por valor de capitalización"
+            ],
+            [
+              "S&P/BMV IMC30",
+              "**30 series**",
+              "**15%**",
+              "Empresas de **mediana** capitalización; reconstitución **una vez al año** (tercer viernes de septiembre); primero capitalización, luego bursatilidad"
+            ],
+            [
+              "S&P/BMV IRT",
+              "La del IPC",
+              "La del IPC",
+              "Rendimiento **total**: incorpora todos los eventos corporativos, **incluidos los dividendos en efectivo**"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "IPC",
+            "IRT"
+          ],
+          "filas": [
+            [
+              "Índice de **rendimiento simple**: solo fluctuaciones de precios por movimientos del mercado",
+              "Variación de **rendimiento total** del IPC: incluye eventos corporativos y dividendos en efectivo"
+            ]
+          ],
+          "trampas": []
+        }
+      ],
+      "ampliada": "El INMEX se reconstituye, como el IPC, tras el tercer viernes de marzo y septiembre. El manual 2023 agrega que el INMEX se relaciona con el mercado de derivados y exige capitalización superior a 100 millones de dólares.",
+      "paginas": [
+        166
+      ]
+    },
+    {
+      "id": "ftse-biva-y-criterios",
+      "titulo": "FTSE BIVA y criterios de selección",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Origen",
+              "Creado con **FTSE Russell**; representa al mercado mexicano y sus segmentos"
+            ],
+            [
+              "Elegibles",
+              "Miembros del FTSE México All Cap listados en **cualquier bolsa** del país"
+            ],
+            [
+              "Tamaños",
+              "Grandes, medianas y pequeñas empresas; incluye **FIBRAS**"
+            ],
+            [
+              "Ponderación",
+              "Por valor de capitalización; máximo **15%** por emisora en la revisión semestral"
+            ],
+            [
+              "Integrantes",
+              "**Sin número fijo**; muestra de 52 empresas (21 grandes, 19 medianas, 12 pequeñas)"
+            ],
+            [
+              "Cambios",
+              "Rebalanceos semestrales, después del cierre del **tercer viernes de marzo y septiembre**; pueden incluirse IPO relevantes"
+            ]
+          ],
+          "titulo": "Ficha: FTSE BIVA"
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Criterio",
+            "S&P/BMV IPC",
+            "FTSE BIVA"
+          ],
+          "filas": [
+            [
+              "Universo",
+              "Series de la BMV, **excluyendo FIBRAS** y fideicomisos hipotecarios",
+              "Miembros del FTSE México All Cap"
+            ],
+            [
+              "Historial",
+              "3 meses de operación y 95% de días operados en los últimos 6 meses",
+              "Liquidez revisada semestralmente con la mediana mensual del volumen diario"
+            ],
+            [
+              "Tamaño",
+              "**10 mil millones** de pesos de capitalización flotante (con VWAP)",
+              "Ponderación por capitalización"
+            ],
+            [
+              "Series múltiples",
+              "MDTV de al menos **50 millones** de pesos",
+              "Se elige por capitalización de mercado"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ]
+          ]
+        }
+      ],
+      "ampliada": "El IPC también usa el factor de acciones flotantes (IWF) y una calificación conjunta con el valor de capitalización flotante y el MDTV de los últimos seis meses. La muestra de 52 empresas del FTSE BIVA es un dato de fecha y puede cambiar.",
+      "paginas": [
+        166,
+        167
+      ]
+    },
+    {
+      "id": "clasificacion-sectorial",
+      "titulo": "Clasificación sectorial de la BMV",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El esquema fue desarrollado por la BMV con su **Comité Técnico de Metodologías**, incorporando la opinión del **Comité de Análisis de la AMIB**. Tiene **cuatro niveles**: **10 sectores, 24 subsectores, 78 ramos y 192 subramos**."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Energía.",
+            "Materiales.",
+            "Industrial.",
+            "Servicios y bienes de consumo no básico.",
+            "Productos de consumo frecuente.",
+            "Salud.",
+            "Servicios financieros.",
+            "Tecnología de la información.",
+            "Servicios de telecomunicaciones.",
+            "Servicios públicos."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "No confundas \"servicios y bienes de consumo **no básico**\" con \"productos de consumo **frecuente**\": son sectores distintos."
+        }
+      ],
+      "ampliada": "El manual 2023 menciona además una clasificación por actividad económica (primario, secundario y terciario), que no forma parte del objetivo de índices.",
+      "paginas": [
+        167
+      ]
+    },
+    {
+      "id": "internacionales",
+      "titulo": "Índices internacionales",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Índice",
+            "Mercado",
+            "Dato que se pregunta"
+          ],
+          "filas": [
+            [
+              "DAX",
+              "Frankfurt, Alemania",
+              "30 principales empresas, por capitalización y contratación"
+            ],
+            [
+              "CAC 40",
+              "París, Francia",
+              "40 valores más significativos de entre las 100 mayores"
+            ],
+            [
+              "FTSE 100",
+              "Londres",
+              "100 blue chips; 70% del valor del mercado; pondera por capitalización"
+            ],
+            [
+              "Nikkei 225",
+              "Tokio",
+              "225 valores más líquidos; pondera **por precios**, no por capitalización"
+            ],
+            [
+              "Hang Seng",
+              "Hong Kong",
+              "33 compañías que representan el 65% de la bolsa"
+            ],
+            [
+              "Nasdaq",
+              "Estados Unidos",
+              "Bolsa electrónica automatizada más grande; más de 7,000 compañías"
+            ],
+            [
+              "S&P 500",
+              "Estados Unidos",
+              "500 empresas; el más representativo de la situación real"
+            ],
+            [
+              "Dow Jones",
+              "NYSE",
+              "30 valores industriales; **media aritmética simple de precios**"
+            ],
+            [
+              "FTSE Russell 3000",
+              "Estados Unidos",
+              "3,000 empresas; aproximadamente 98% de la renta variable"
+            ],
+            [
+              "BM&F Bovespa",
+              "Sao Paulo, Brasil",
+              "Indicador principal de 70 emisores; unas 550 compañías"
+            ],
+            [
+              "Latibex",
+              "Madrid, España",
+              "Valores latinoamericanos en euros desde 1999; 39 valores y 34 emisoras"
+            ]
+          ],
+          "trampas": [
+            [
+              3,
+              2
+            ],
+            [
+              7,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Nikkei 225 y Dow Jones son los que el manual describe **por precios**; los demás que precisan método ponderan por capitalización."
+        }
+      ],
+      "ampliada": "El manual 2023 da cifras distintas para algunos índices (por ejemplo, 24 emisoras en Latibex y 50 emisores en Bovespa). Se siguen las cifras de AMIB 1 y la diferencia se anota en el archivo de dudas.",
+      "paginas": [
+        168
+      ]
+    },
+    {
+      "id": "mila",
+      "titulo": "Mercado Integrado Latinoamericano (MILA)",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[MILA]] nació del acuerdo entre la Bolsa de Comercio de Santiago, la Bolsa de Valores de Colombia y la Bolsa de Valores de Lima, con los depósitos Deceval, DCV y Cavali, que desde **2009** iniciaron la creación de un mercado regional de **renta variable**."
+        },
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Inicio del proceso",
+              "texto": "Chile, Colombia y Perú comienzan a crear el mercado regional.",
+              "cuando": "2009"
+            },
+            {
+              "titulo": "Entrada en operación",
+              "texto": "Inversionistas de los tres países compran y venden acciones de las tres plazas a través de un intermediario local.",
+              "cuando": "30 de mayo de 2011"
+            },
+            {
+              "titulo": "Entrada de México",
+              "texto": "Se oficializa con la incorporación de la BMV e Indeval.",
+              "cuando": "Diciembre de 2014"
+            }
+          ]
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Ningún mercado pierde su **independencia ni su autonomía regulatoria**.",
+            "Todas las negociaciones se hacen en **moneda local**, sin salir de cada país, con anotaciones en cuenta a través del intermediario local.",
+            "Es el primer mercado de Latinoamérica por número de compañías listadas, el segundo por capitalización y el tercero por volumen."
+          ]
+        }
+      ],
+      "ampliada": "El manual 2023 dice que la BMV e Indeval se incorporaron en junio de 2014 y que la primera operación fue el 2 de diciembre de 2014; AMIB 1 dice que la entrada se oficializó en diciembre de 2014. En ambos casos el año es 2014.",
+      "paginas": [
+        169
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Índice: media de una muestra que resume el comportamiento promedio del mercado; se mide en puntos porque lo relevante es su variación.",
+    "Construcción: primero selección (liquidez, capitalización o mixta, la más usada) y después ponderación.",
+    "Variación: R = suma de peso por rendimiento; cierre = cierre anterior × (1 + R ÷ 100). Ejemplo del manual: 1.007% y 101.0070 puntos.",
+    "IPC: 35 emisoras, una serie por emisora, máximo 25% por serie, cinco mayores hasta 60%, capitalización ajustada por flotación; reconstitución en marzo y septiembre, reponderación en junio y diciembre.",
+    "INMEX 20 series y máximo 10%; IMC30 30 series, mediana capitalización y máximo 15%; IRT es el rendimiento total del IPC con dividendos.",
+    "FTSE BIVA: FTSE México All Cap, empresas grandes, medianas y pequeñas, FIBRAS incluidas, máximo 15%, sin número fijo de integrantes.",
+    "Clasificación sectorial BMV: 10 sectores, 24 subsectores, 78 ramos y 192 subramos.",
+    "MILA: Chile, Colombia y Perú desde 2011; México en 2014; moneda local y sin pérdida de autonomía regulatoria."
+  ],
+  "practica": [
+    "g.capitales.l4.q01",
+    "g.capitales.l4.q02",
+    "g.capitales.l4.q03",
+    "g.capitales.l4.q04",
+    "g.capitales.l4.q05"
+  ],
+  "miniExamen": [
+    "g.capitales.l4.q06",
+    "g.capitales.l4.q07",
+    "g.capitales.l4.q08",
+    "g.capitales.l4.q09",
+    "g.capitales.l4.q10"
+  ],
+  "reto": [
+    "g.capitales.l4.q11",
+    "g.capitales.l4.q12",
+    "g.capitales.l4.q13",
+    "g.capitales.l4.q14",
+    "g.capitales.l4.q15"
+  ]
+}

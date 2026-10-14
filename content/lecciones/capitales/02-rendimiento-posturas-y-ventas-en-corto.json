@@ -1,0 +1,567 @@
+{
+  "id": "capitales.rendimiento-posturas-y-ventas-en-corto",
+  "area": "capitales",
+  "materia": "Mercado de Capitales I",
+  "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+  "objetivoIds": [
+    "capitales.mercado-de-capitales-i.conceptos-basicos.o09",
+    "capitales.mercado-de-capitales-i.conceptos-basicos.o10",
+    "capitales.mercado-de-capitales-i.conceptos-basicos.o07",
+    "capitales.mercado-de-capitales-ii.ventas-en-corto-y-prestamo-de-valores.o01",
+    "capitales.mercado-de-capitales-ii.ventas-en-corto-y-prestamo-de-valores.o02"
+  ],
+  "orden": 2,
+  "titulo": "Rendimiento de una acción, cruces, posturas y ventas en corto",
+  "resumen": "Cálculo del rendimiento efectivo y anualizado de una acción con el ejemplo del manual, el cruce, los tipos de posturas y modalidades de la BMV y de BIVA, la venta en corto (utilidad, riesgo y reglamentación) y los sujetos y reglas del préstamo de valores.",
+  "duracionMin": 40,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        155,
+        158,
+        159,
+        160
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "rendimiento-efectivo",
+      "titulo": "Rendimiento efectivo de una acción",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[rendimiento efectivo]] mide cuánto ganó (o perdió) el inversionista entre el precio de compra y el de venta, **sin anualizar**. Es la tasa del periodo."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\%TEFEC = \\left(\\frac{VFIN}{VINI} - 1\\right) \\times 100",
+          "leyenda": [
+            [
+              "\\%TEFEC",
+              "tasa efectiva del periodo, en por ciento"
+            ],
+            [
+              "VFIN",
+              "valor final: precio al que se vende la acción"
+            ],
+            [
+              "VINI",
+              "valor inicial: precio al que se compró la acción"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** Un inversionista compró acciones a $26.74 y, 210 días después, las vendió a $28.62."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\%TEFEC = \\left(\\frac{VFIN}{VINI} - 1\\right) \\times 100",
+          "leyenda": [],
+          "valores": "\\%TEFEC = \\left(\\frac{28.62}{26.74} - 1\\right) \\times 100 = (1.070307 - 1) \\times 100",
+          "resultado": "%TEFEC = 7.030665%, es decir, 7.0307%"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El valor final va **arriba** y el inicial **abajo**. Dividir la ganancia entre el precio de venta, o invertir el cociente, da 6.5688% y −6.5688%, cifras que aparecen como distractores."
+        }
+      ],
+      "ampliada": "El OCR del manual dice VINI = 25.74 en la lista de variables, pero la imagen de la página y el cálculo confirman $26.74. El rendimiento del inversionista también puede incluir dividendos: el manual señala que la acción rinde por dividendos y por ganancias de capital (página 155).",
+      "paginas": [
+        155,
+        158
+      ]
+    },
+    {
+      "id": "rendimiento-anualizado",
+      "titulo": "Anualizar el rendimiento",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El enunciado del manual pide el rendimiento \"efectivo y anualizado\", pero solo resuelve el efectivo. Con la convención del examen (interés simple y año de **360 días**), el anualizado lleva la tasa del periodo a un año."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\%TA = \\%TEFEC \\times \\frac{360}{d}",
+          "leyenda": [
+            [
+              "\\%TA",
+              "tasa anualizada, en por ciento"
+            ],
+            [
+              "\\%TEFEC",
+              "tasa efectiva del periodo"
+            ],
+            [
+              "d",
+              "días que se mantuvo la inversión"
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\%TA = \\%TEFEC \\times \\frac{360}{d}",
+          "leyenda": [],
+          "valores": "\\%TA = 7.030665 \\times \\frac{360}{210}",
+          "resultado": "%TA = 12.052570%, es decir, 12.0526%"
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Error",
+            "Resultado con el ejemplo",
+            "Cómo detectarlo"
+          ],
+          "filas": [
+            [
+              "No anualizar",
+              "7.0307%",
+              "Te piden anualizado y el plazo no es un año"
+            ],
+            [
+              "Año de 365 días",
+              "12.2200%",
+              "El examen usa 360 días"
+            ],
+            [
+              "Multiplicar por d ÷ 360",
+              "4.1012%",
+              "Si d es menor que 360, el anualizado debe ser mayor que el efectivo"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              1
+            ]
+          ]
+        }
+      ],
+      "ampliada": "La fórmula de anualización no aparece impresa en la sección 5.3.1; se aplica la convención de interés simple con año de 360 días que siguen las preguntas oficiales. Está registrada en el archivo de dudas.",
+      "paginas": [
+        158
+      ]
+    },
+    {
+      "id": "cruce",
+      "titulo": "El cruce",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "En un [[cruce]] coinciden en una **misma casa de bolsa** el comprador y el vendedor, que están de acuerdo en **monto y precio**; la operación se formaliza **a través de la Bolsa**."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Quién",
+              "Una misma casa de bolsa con ambas puntas"
+            ],
+            [
+              "Acuerdo",
+              "Monto y precio"
+            ],
+            [
+              "Dónde se formaliza",
+              "En la Bolsa (no fuera de ella)"
+            ],
+            [
+              "En BIVA",
+              "Existe la postura de cruce, similar a la de la BMV"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El **formador de mercado tiene prohibido** celebrar operaciones de cruce. Es una conexión que el examen aprovecha entre temas."
+        }
+      ],
+      "ampliada": "El manual 2023 describe el cruce como la operación en que una casa de bolsa tiene al vendedor y al comprador de un mismo título en cuanto a emisora, serie, volumen, precio y vigencia.",
+      "paginas": [
+        158,
+        159
+      ]
+    },
+    {
+      "id": "posturas-bmv",
+      "titulo": "Tipos de posturas en la BMV",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Postura",
+            "Cómo se ejecuta"
+          ],
+          "filas": [
+            [
+              "Limitada",
+              "A un **precio determinado**"
+            ],
+            [
+              "A mercado",
+              "Al **mejor precio** que se pueda obtener en el mercado"
+            ],
+            [
+              "A mercado con protección",
+              "Al mejor precio que se encuentre **sin rebasar el precio límite** de la postura"
+            ],
+            [
+              "A precio medio",
+              "Al **precio medio que registre el mercado**"
+            ],
+            [
+              "Al cierre",
+              "Al final del remate, al **precio de cierre** determinado por la Bolsa"
+            ],
+            [
+              "Al precio promedio del día",
+              "Al final de la sesión, al **precio promedio del día** determinado por la Bolsa"
+            ],
+            [
+              "Mejor postura limitada",
+              "Con precio límite que **sigue los precios de referencia o posturas** del libro electrónico sobre el mismo tipo de valor"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              5,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "\"A precio medio\" (precio medio del mercado) y \"al precio promedio del día\" (al final de la sesión) se distinguen por una palabra. Y la mejor postura limitada de la BMV se parece a la postura pegada de BIVA."
+        }
+      ],
+      "ampliada": "Para las posturas al precio de cierre y al precio promedio del día, los horarios de ingreso y ejecución se estudian en la lección de la sesión de remates.",
+      "paginas": [
+        158,
+        159
+      ]
+    },
+    {
+      "id": "modalidades-bmv",
+      "titulo": "Modalidades de ejecución en la BMV",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Modalidad",
+            "Qué hace"
+          ],
+          "filas": [
+            [
+              "Tiempo específico",
+              "Vigencia por un **tiempo determinado** dentro de una sesión de remate"
+            ],
+            [
+              "Volumen oculto",
+              "Muestra solo **una parte** de su volumen total; al ejecutarse la parte expuesta, la porción adicional ocupa el **último lugar en la prelación** al mismo precio"
+            ],
+            [
+              "Venta en corto",
+              "Venta cuya liquidación se efectúa con valores obtenidos en **préstamo**"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen modalidades:",
+          "texto": "tiempo, volumen oculto y venta en corto son **modalidades** con que se ingresa una postura, no tipos de postura distintos."
+        }
+      ],
+      "ampliada": "El volumen oculto pierde prioridad: la porción que se revela entra al final de la fila de posturas a ese precio. Es el detalle que el examen suele preguntar.",
+      "paginas": [
+        159
+      ]
+    },
+    {
+      "id": "posturas-biva",
+      "titulo": "Posturas y atributos en BIVA",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Postura BIVA",
+            "Descripción"
+          ],
+          "filas": [
+            [
+              "Pegada (PP)",
+              "Su precio resulta de aplicar un **diferencial** al mejor precio visible de una postura limitada de **su mismo lado**"
+            ],
+            [
+              "Activada al nivel (PAN)",
+              "Se activa e ingresa al sistema cuando el precio **alcanza cierto nivel**; también llamada stop-loss"
+            ],
+            [
+              "Postura cancela postura (PCP)",
+              "Combina una limitada y una activada al nivel: al ejecutarse una, **la otra se cancela** (stop-loss y take-profit)"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Similares a la BMV",
+              "Limitadas por precio (LIMT), a mercado (MKT), de cruce y al precio de cierre (MOC)"
+            ],
+            [
+              "Atributos",
+              "Volumen oculto (VO), ventas en corto (VC), diferencial (DI), precio límite (PL) y precio de activación (PA)"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Stop-loss solo es la **activada al nivel**; stop-loss y take-profit juntos es la **postura cancela postura**."
+        }
+      ],
+      "ampliada": "El OCR escribe \"MET\" para la postura a mercado; por su sigla en inglés (market) se transcribe MKT. Se anota como lectura probable en el archivo de dudas.",
+      "paginas": [
+        159
+      ]
+    },
+    {
+      "id": "ventas-en-corto",
+      "titulo": "Ventas en corto: utilidad, riesgo y reglamentación",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La [[venta en corto]] es una compraventa de valores a través de Bolsa cuya liquidación realiza el vendedor con **valores obtenidos en préstamo**. Busca **ganar en un mercado a la baja** y **dar más volumen** al mercado."
+        },
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Préstamo",
+              "texto": "El prestatario solicita valores en préstamo.",
+              "cuando": "Día 1"
+            },
+            {
+              "titulo": "Venta",
+              "texto": "Los vende porque espera una baja.",
+              "cuando": "Ese mismo día"
+            },
+            {
+              "titulo": "Recompra",
+              "texto": "Recompra los valores en el mercado.",
+              "cuando": "Después"
+            },
+            {
+              "titulo": "Devolución",
+              "texto": "Los devuelve al prestamista y gana el diferencial entre el precio de venta y el de compra (menos el premio).",
+              "cuando": "Al vencimiento"
+            }
+          ]
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Utilidad",
+              "Ganar en un mercado a la baja y dar volumen"
+            ],
+            [
+              "Riesgo",
+              "Que el mercado **evolucione al alza**"
+            ],
+            [
+              "Reglamentación",
+              "El préstamo de valores lo regula el **Banco de México** en sus Reglas para instituciones de crédito, casas de bolsa, sociedades de inversión, SIEFORES y la Financiera Rural"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El regulador del préstamo de valores es **Banxico**; la **CNBV** aparece solo para autorizar préstamos sobre acciones de mínima bursatilidad."
+        }
+      ],
+      "ampliada": "El manual 2023 añade como riesgo no obtener el préstamo de los valores y describe la venta en corto como una manera de apostar a que el precio va a bajar.",
+      "paginas": [
+        160
+      ]
+    },
+    {
+      "id": "prestamo-de-valores",
+      "titulo": "Préstamo de valores: sujetos y reglas",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[préstamo de valores]] transfiere la propiedad de acciones o valores de su titular (**prestamista**) al **prestatario**, quien se obliga a restituirlos al vencimiento."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Sujeto",
+            "Papel"
+          ],
+          "filas": [
+            [
+              "Prestamista",
+              "Propietario original; presta a cambio de un **premio**, con la condición de que los valores sean **operados en corto**"
+            ],
+            [
+              "Prestatario",
+              "Solicita y recibe los valores para **venderlos en un lapso no mayor de 5 días**; queda en posición corta y debe devolver los valores, los **derechos patrimoniales** y el **premio**"
+            ]
+          ],
+          "trampas": []
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Instituciones de crédito, casas de bolsa y la Financiera Rural pueden prestar **acciones y valores**.",
+            "Sociedades de inversión y SIEFORES pueden hacerlo con acciones o valores **siempre que esté previsto en su régimen de inversión**.",
+            "Acciones de **mínima bursatilidad** o sin clasificación de la BMV: requieren **previa autorización de la CNBV**.",
+            "Los valores prestados y la garantía deben estar **en todo momento** depositados en un depositario de valores.",
+            "Garantías: valores gubernamentales o efectivo; carta de crédito o título bancario; acciones de alta y media bursatilidad; acciones de fondos de inversión de deuda y de renta variable."
+          ]
+        }
+      ],
+      "ampliada": "Este mismo tema se repasa en Títulos de Deuda (préstamo de valores), con preguntas sobre el plazo de 5 días, el premio y las garantías. Aquí se enfatiza quién puede prestar y la autorización de la CNBV.",
+      "paginas": [
+        160
+      ]
+    },
+    {
+      "id": "mapa-de-trampas",
+      "titulo": "Mapa de trampas de la lección",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Tema",
+            "Dato exacto",
+            "Distractor frecuente"
+          ],
+          "filas": [
+            [
+              "Rendimiento efectivo",
+              "(VFIN ÷ VINI − 1) × 100",
+              "Dividir entre VFIN"
+            ],
+            [
+              "Anualizado",
+              "× 360 ÷ días",
+              "Usar 365 o no anualizar"
+            ],
+            [
+              "Cruce",
+              "Misma casa de bolsa, monto y precio",
+              "Casas de bolsa distintas"
+            ],
+            [
+              "Volumen oculto",
+              "Porción adicional al último lugar",
+              "Conserva su prioridad"
+            ],
+            [
+              "PCP",
+              "Limitada más activada al nivel",
+              "Solo stop-loss"
+            ],
+            [
+              "Regulador del préstamo",
+              "Banco de México",
+              "CNBV"
+            ],
+            [
+              "Mínima bursatilidad",
+              "Previa autorización de la CNBV",
+              "Autorización de la BMV"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              2
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              6,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen de la lección:",
+          "texto": "rendimiento del periodo con VFIN ÷ VINI; anualizado con 360; cada postura se distingue por una palabra; corto significa vender lo prestado esperando una baja."
+        }
+      ],
+      "ampliada": "Antes de calcular, revisa si te piden la tasa del periodo o la anualizada, y si hubo dividendos o eventos corporativos entre la compra y la venta.",
+      "paginas": [
+        158,
+        159,
+        160
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Rendimiento efectivo: %TEFEC = (VFIN ÷ VINI − 1) × 100; ejemplo del manual: (28.62 ÷ 26.74 − 1) × 100 = 7.0307%.",
+    "Anualizado con la convención del examen: %TEFEC × 360 ÷ días; el ejemplo de 210 días da 12.0526%.",
+    "Cruce: misma casa de bolsa con comprador y vendedor, de acuerdo en monto y precio, formalizado a través de la Bolsa.",
+    "Posturas BMV: limitada, a mercado, a mercado con protección, a precio medio, al cierre, al precio promedio del día y mejor postura limitada.",
+    "Modalidades BMV: tiempo específico, volumen oculto (la porción adicional pasa al último lugar) y venta en corto.",
+    "BIVA: pegada (diferencial sobre el mejor precio de su mismo lado), activada al nivel (stop-loss) y cancela postura (stop-loss y take-profit).",
+    "Venta en corto: busca ganar a la baja y dar volumen; su riesgo es el alza; el préstamo de valores lo regula Banxico.",
+    "Préstamo: el prestamista exige que se operen en corto; mínima bursatilidad requiere previa autorización de la CNBV; todo depositado en un depositario."
+  ],
+  "practica": [
+    "g.capitales.l2.q01",
+    "g.capitales.l2.q02",
+    "g.capitales.l2.q03",
+    "g.capitales.l2.q04",
+    "g.capitales.l2.q05"
+  ],
+  "miniExamen": [
+    "g.capitales.l2.q06",
+    "g.capitales.l2.q07",
+    "g.capitales.l2.q08",
+    "g.capitales.l2.q09",
+    "g.capitales.l2.q10"
+  ],
+  "reto": [
+    "g.capitales.l2.q11",
+    "g.capitales.l2.q12",
+    "g.capitales.l2.q13",
+    "g.capitales.l2.q14",
+    "g.capitales.l2.q15"
+  ]
+}

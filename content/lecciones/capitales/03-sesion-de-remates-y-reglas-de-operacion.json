@@ -1,0 +1,611 @@
+{
+  "id": "capitales.sesion-de-remates-y-reglas-de-operacion",
+  "area": "capitales",
+  "materia": "Mercado de Capitales I",
+  "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+  "objetivoIds": [
+    "capitales.mercado-de-capitales-i.conceptos-basicos.o12",
+    "capitales.mercado-de-capitales-i.conceptos-basicos.o11",
+    "capitales.mercado-de-capitales-i.conceptos-basicos.o13",
+    "capitales.mercado-de-capitales-i.conceptos-basicos.o16",
+    "capitales.mercado-de-capitales-i.conceptos-basicos.o14",
+    "capitales.mercado-de-capitales-i.conceptos-basicos.o15"
+  ],
+  "orden": 3,
+  "titulo": "Sesión de remates, SIC y reglas de operación en BMV y BIVA",
+  "resumen": "Etapas y horarios de la sesión de remates en la BMV y en BIVA, el Sistema Internacional de Cotizaciones (SIC-BMV y SIC-BIVA), receso administrativo, lotes, pujas y precio de cierre, porcentajes de suspensión por movimientos extraordinarios y filtros pretransaccionales por precio e importe.",
+  "duracionMin": 35,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        161,
+        162,
+        163
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "etapas-bmv",
+      "titulo": "Sesión de remates en la BMV",
+      "bloques": [
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Cancelación de posturas",
+              "texto": "Antes de abrir se cancelan posturas.",
+              "cuando": "07:50 a 07:59:59"
+            },
+            {
+              "titulo": "Preapertura de warrants y renta fija",
+              "texto": "Solo para títulos opcionales y valores de renta fija.",
+              "cuando": "08:00 a 08:25"
+            },
+            {
+              "titulo": "Subastas de apertura",
+              "texto": "Formación del precio de apertura.",
+              "cuando": "08:00 a 08:29:59"
+            },
+            {
+              "titulo": "Mercado continuo",
+              "texto": "Negociación continua; las subastas continuas corren de 08:00 a 15:00.",
+              "cuando": "08:30 a 15:00"
+            },
+            {
+              "titulo": "Precio de cierre, etapa 1",
+              "texto": "Ingreso de posturas al precio de cierre, con ejecución a las 15:00.",
+              "cuando": "08:30 a 14:40"
+            },
+            {
+              "titulo": "Precio de cierre, etapa 2",
+              "texto": "Registro de posturas al precio de cierre, si concluyó la asignación de la etapa 1; ejecución a más tardar a las 15:06.",
+              "cuando": "15:01:00 a 15:05:59"
+            }
+          ]
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Precio promedio del día",
+              "Ingreso, modificación, cancelación y preasignación de 08:00 a 14:40, con ejecución a las 15:00"
+            ],
+            [
+              "Precios de valuación",
+              "Registro de fondos de inversión de capitales y SIEFORES de 08:30 a 13:00"
+            ],
+            [
+              "CKDs y CERPIS",
+              "Subasta de 08:30 a 14:00"
+            ]
+          ],
+          "titulo": "Otros horarios BMV"
+        }
+      ],
+      "ampliada": "El manual 2023 reporta la etapa 2 de 15:01 a 15:09:59 con ejecución a las 15:10. Se siguen los horarios de AMIB 1 y la discrepancia queda en el archivo de dudas. Los horarios son disposiciones de cada bolsa y pueden cambiar.",
+      "paginas": [
+        161
+      ]
+    },
+    {
+      "id": "etapas-biva",
+      "titulo": "Sesión de remates en BIVA",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "En BIVA el horario se ajusta según el libro de operación y el tipo de valor."
+        },
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Periodo de cancelación",
+              "texto": "Cancelación de posturas.",
+              "cuando": "07:50 a 08:00"
+            },
+            {
+              "titulo": "Subasta de apertura de warrants",
+              "texto": "Para títulos opcionales.",
+              "cuando": "08:00:00 a 08:30:00"
+            },
+            {
+              "titulo": "Subasta de apertura",
+              "texto": "Acciones, FIBRAS, FIBRA E, CERPIS y valores SIC-BIVA.",
+              "cuando": "08:00:01 a 08:30:00"
+            },
+            {
+              "titulo": "Mercado continuo",
+              "texto": "Negociación continua.",
+              "cuando": "08:30:01 a 14:50:00"
+            },
+            {
+              "titulo": "Subastas de cierre",
+              "texto": "Determinan el precio teórico de cierre.",
+              "cuando": "14:50:01 a 15:00:00"
+            },
+            {
+              "titulo": "Ejecución al precio de cierre",
+              "texto": "Se ejecutan las posturas al precio de cierre.",
+              "cuando": "15:00"
+            }
+          ]
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Subastas de mantenimiento y por inactividad",
+              "Duración de **1 hora**, de 08:00 a 14:50"
+            ],
+            [
+              "Posturas al precio de cierre",
+              "Ingreso de 08:00 a 14:50"
+            ],
+            [
+              "Subastas de CKDs",
+              "08:30 a 14:00"
+            ]
+          ],
+          "titulo": "Otros horarios BIVA"
+        }
+      ],
+      "ampliada": "El OCR imprime \"08:00:00 a 06:30:00\" para la subasta de apertura de warrants; la imagen de la página dice 08:30:00.",
+      "paginas": [
+        161
+      ]
+    },
+    {
+      "id": "comparativo-horarios",
+      "titulo": "BMV contra BIVA: las horas que más se confunden",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Etapa",
+            "BMV",
+            "BIVA"
+          ],
+          "filas": [
+            [
+              "Cancelación de posturas",
+              "07:50 a 07:59:59",
+              "07:50 a 08:00"
+            ],
+            [
+              "Mercado continuo",
+              "08:30 a 15:00",
+              "08:30:01 a 14:50:00"
+            ],
+            [
+              "Ingreso al precio de cierre",
+              "Etapa 1: 08:30 a 14:40",
+              "08:00 a 14:50"
+            ],
+            [
+              "Cierre",
+              "Etapa 2: 15:01:00 a 15:05:59",
+              "Subastas de cierre 14:50:01 a 15:00:00"
+            ],
+            [
+              "Ejecución al cierre",
+              "15:00 (etapa 1) y 15:06 (etapa 2)",
+              "15:00"
+            ],
+            [
+              "CKDs",
+              "08:30 a 14:00",
+              "08:30 a 14:00"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El mercado continuo de BIVA **termina a las 14:50** porque de 14:50:01 a 15:00 corren sus subastas de cierre; el de la BMV termina a las **15:00**. Las 14:40 son de la BMV (etapa 1 y precio promedio del día)."
+        }
+      ],
+      "ampliada": "Una estrategia útil: memoriza 14:40 como hora BMV y 14:50 como hora BIVA. Los CKDs coinciden en ambas bolsas: 08:30 a 14:00.",
+      "paginas": [
+        161
+      ]
+    },
+    {
+      "id": "sic",
+      "titulo": "Sistema Internacional de Cotizaciones (SIC)",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "En el [[SIC]] cotizan valores **no inscritos en el RNV** (acciones ordinarias) que cumplen con las disposiciones y pueden obtener: a) **reconocimiento directo de la CNBV**, o b) **reconocimiento promovido** por las bolsas de valores o los intermediarios que los patrocinen. Deben satisfacer los requisitos del reglamento interior de la bolsa respectiva."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Rasgo",
+            "SIC-BMV",
+            "SIC-BIVA"
+          ],
+          "filas": [
+            [
+              "Sistema",
+              "Sistema Electrónico de Negociación",
+              "**OPEL-E**"
+            ],
+            [
+              "Mercado continuo",
+              "08:30 a 15:00",
+              "08:30:01 a 14:50:00"
+            ],
+            [
+              "Moneda",
+              "Cotiza y liquida en **moneda nacional**",
+              "Cotiza y liquida en **moneda nacional**"
+            ],
+            [
+              "Lote",
+              "1 acción; para fijar precio, 5 acciones",
+              "1 acción"
+            ],
+            [
+              "Puja",
+              "$0.01",
+              "$0.01"
+            ],
+            [
+              "Concertación",
+              "Directamente en la BMV o en el mercado de origen (operaciones internacionales)",
+              "No se detalla"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El SIC **cotiza y liquida en pesos**, aunque los valores sean extranjeros. Y en el SIC-BMV el lote es de 1 acción, pero se necesitan **5 acciones para fijar precio**."
+        }
+      ],
+      "ampliada": "El manual 2023 agrega que el SIC se creó en 2003 en la BMV, que desde enero de 2014 participa todo tipo de inversionista y que los valores deben estar listados en mercados reconocidos por la CNBV.",
+      "paginas": [
+        161,
+        162
+      ]
+    },
+    {
+      "id": "receso-lotes-pujas",
+      "titulo": "Receso administrativo, lotes y pujas",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Un [[receso administrativo]] es una **acción preventiva** en la que la Bolsa **suspende la cotización de todos los valores** para evitar distorsiones en el mercado y mantener el **principio de equidad** entre sus participantes."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Lote",
+              "Cantidad **mínima** de valores, y sus múltiplos, de una misma emisora y serie que la Bolsa determina como unidad estandarizada para operar en el sistema electrónico"
+            ],
+            [
+              "Puja",
+              "**Importe mínimo** en que puede variar el precio unitario de cada título; se expresa como fracción del precio de mercado o del valor nominal"
+            ]
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Precio de la acción",
+            "Puja"
+          ],
+          "filas": [
+            [
+              "Mayor o igual a $1.01",
+              "$0.01"
+            ],
+            [
+              "Menor o igual a $1.00",
+              "$0.001"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El receso afecta a **todos** los valores; la suspensión por fluctuación extraordinaria afecta a un valor. Y con precio de $1.00 exactos, la puja es de $0.001, no de $0.01."
+        }
+      ],
+      "ampliada": "Con una acción a $1.00, el siguiente precio posible es $1.001; con una acción a $1.01, el siguiente es $1.02.",
+      "paginas": [
+        162
+      ]
+    },
+    {
+      "id": "precio-de-cierre",
+      "titulo": "Precio de cierre en la BMV y en BIVA",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Prioridad",
+            "BMV",
+            "BIVA"
+          ],
+          "filas": [
+            [
+              "1",
+              "Último **precio promedio ponderado por volumen** de los últimos **20 minutos**",
+              "**Precio teórico de cierre (PTC)** de la subasta de cierre"
+            ],
+            [
+              "2",
+              "En su defecto, el último hecho de compraventa de la sesión",
+              "Si no hay PTC por falta de actividad, el último hecho del valor ese día"
+            ],
+            [
+              "3",
+              "A falta de ambos, el último precio de cierre conocido",
+              "Si no hubo operaciones ese día, el precio de cierre del día anterior"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "El procedimiento de BIVA solo aplica a valores con **listado principal en BIVA**."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen precio de cierre:",
+          "texto": "BMV usa el **PPP de 20 minutos**; BIVA usa el **PTC** de su subasta de cierre. Ambos caen al último hecho y, después, al cierre anterior."
+        }
+      ],
+      "ampliada": "El manual 2023 describe la postura a precio de cierre de la BMV con el mismo criterio de los últimos 20 minutos de operación.",
+      "paginas": [
+        162
+      ]
+    },
+    {
+      "id": "suspension",
+      "titulo": "Suspensión por movimientos extraordinarios",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Bolsa",
+            "Variación",
+            "Consecuencia"
+          ],
+          "filas": [
+            [
+              "BMV",
+              "**15%** sobre el límite de rango estático (al alza o a la baja)",
+              "Fluctuación extraordinaria: causa de suspensión"
+            ],
+            [
+              "BIVA",
+              "**−7%** en nivel 1 o **−13%** en nivel 2",
+              "Suspensión de la sesión por **15 minutos**"
+            ],
+            [
+              "BIVA",
+              "**−20%**",
+              "Suspensión por el **resto de la sesión**"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "En la BMV el 15% aplica a acciones, CPO, TRACs, cupones, FIBRAS, FIBRA E y valores de la sección SIC Capitales."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El 5% es el **filtro de precio** de las posturas, no un umbral de suspensión. Y en BIVA los porcentajes son de **baja** (negativos)."
+        }
+      ],
+      "ampliada": "Estos porcentajes son reglas de las bolsas que pueden actualizarse; las preguntas que los usan están marcadas por verificar.",
+      "paginas": [
+        163
+      ]
+    },
+    {
+      "id": "filtros",
+      "titulo": "Filtros pretransaccionales",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El sistema electrónico de negociación aplica dos tipos de [[filtros]] a las posturas de compra y de venta: por **precio** y por **importe**."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Filtro por precio",
+              "**5%** de variación, con base en el **último hecho del momento**; si no hubo operación en la sesión, el **precio de cierre anterior**. Aplica a acciones, cupones, CPO sobre acciones, TRACs, CCD, FIBRAS, certificados bursátiles fiduciarios hipotecarios, valores del SIC y warrants"
+            ]
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Importe máximo",
+            "Valores"
+          ],
+          "filas": [
+            [
+              "$200,000,000",
+              "Acciones, cupones, CPO, TRACs, CCD, FIBRAS y warrants"
+            ],
+            [
+              "$500,000,000",
+              "AMX L, CEMEX CPO, GMEXICO B, FEMSA UBD, WALMEX V y SANMEX B"
+            ],
+            [
+              "$800,000,000",
+              "Valores autorizados para cotizar en el **SIC**"
+            ],
+            [
+              "$1,400,000,000",
+              "NAFTRAC 02 y los ETF DIA, DLN, DVY, EWJ, EWZ, IVV, QQQ y SPY"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              0
+            ]
+          ]
+        }
+      ],
+      "ampliada": "En el manual los ETF de la última fila aparecen con la serie marcada con un asterisco; aquí se omite ese símbolo por la regla de estilo.",
+      "paginas": [
+        163
+      ]
+    },
+    {
+      "id": "mapa-de-cifras",
+      "titulo": "Mapa de cifras para memorizar",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "Cifra"
+          ],
+          "filas": [
+            [
+              "Precio de cierre BMV",
+              "PPP de los últimos 20 minutos"
+            ],
+            [
+              "Suspensión BMV",
+              "15%"
+            ],
+            [
+              "Suspensión BIVA",
+              "−7% o −13% por 15 minutos; −20% resto de la sesión"
+            ],
+            [
+              "Filtro de precio",
+              "5%"
+            ],
+            [
+              "Filtro de importe",
+              "$200, $500, $800 y $1,400 millones"
+            ],
+            [
+              "Puja",
+              "$0.01 desde $1.01; $0.001 hasta $1.00"
+            ],
+            [
+              "Lote SIC-BMV",
+              "1 acción; 5 para fijar precio"
+            ]
+          ],
+          "trampas": [
+            [
+              3,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen de la lección:",
+          "texto": "BMV abre continuo a las 08:30 y cierra a las 15:00; BIVA cierra su continuo a las 14:50; SIC en pesos; 5% filtro, 15% suspensión BMV, 7, 13 y 20% en BIVA."
+        }
+      ],
+      "ampliada": "Las preguntas de esta lección son de memoria fina: cambian una hora, un porcentaje o la bolsa a la que pertenece un dato.",
+      "paginas": [
+        161,
+        162,
+        163
+      ]
+    }
+  ],
+  "puntosClave": [
+    "BMV: cancelación 07:50 a 07:59:59; subastas de apertura 08:00 a 08:29:59; mercado continuo 08:30 a 15:00; precio de cierre etapa 1 de 08:30 a 14:40 y etapa 2 de 15:01:00 a 15:05:59.",
+    "BIVA: cancelación 07:50 a 08:00; mercado continuo 08:30:01 a 14:50:00; subastas de cierre 14:50:01 a 15:00:00; subastas de mantenimiento de 1 hora.",
+    "SIC: valores no inscritos en el RNV con reconocimiento directo de la CNBV o promovido; cotiza y liquida en moneda nacional; SIC-BIVA opera vía OPEL-E.",
+    "Receso administrativo: la Bolsa suspende la cotización de todos los valores para evitar distorsiones y mantener la equidad.",
+    "Puja: $0.01 si el precio es mayor o igual a $1.01; $0.001 si es menor o igual a $1.00.",
+    "Precio de cierre: BMV, PPP por volumen de los últimos 20 minutos; BIVA, precio teórico de cierre de la subasta.",
+    "Suspensión: BMV 15%; BIVA −7% (nivel 1) o −13% (nivel 2) por 15 minutos y −20% por el resto de la sesión.",
+    "Filtros: precio 5% sobre el último hecho; importe $200 millones general, $500 millones emisoras grandes, $800 millones SIC y $1,400 millones NAFTRAC y ETF."
+  ],
+  "practica": [
+    "g.capitales.l3.q01",
+    "g.capitales.l3.q02",
+    "g.capitales.l3.q03",
+    "g.capitales.l3.q04",
+    "g.capitales.l3.q05"
+  ],
+  "miniExamen": [
+    "g.capitales.l3.q06",
+    "g.capitales.l3.q07",
+    "g.capitales.l3.q08",
+    "g.capitales.l3.q09",
+    "g.capitales.l3.q10"
+  ],
+  "reto": [
+    "g.capitales.l3.q11",
+    "g.capitales.l3.q12",
+    "g.capitales.l3.q13",
+    "g.capitales.l3.q14",
+    "g.capitales.l3.q15"
+  ]
+}

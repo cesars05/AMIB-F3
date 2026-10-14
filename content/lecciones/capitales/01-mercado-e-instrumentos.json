@@ -1,0 +1,632 @@
+{
+  "id": "capitales.mercado-e-instrumentos",
+  "area": "capitales",
+  "materia": "Mercado de Capitales I",
+  "subtemaId": "capitales.mercado-de-capitales-i.conceptos-basicos",
+  "objetivoIds": [
+    "capitales.mercado-de-capitales-i.conceptos-basicos.o01",
+    "capitales.mercado-de-capitales-i.conceptos-basicos.o02",
+    "capitales.mercado-de-capitales-i.conceptos-basicos.o03",
+    "capitales.mercado-de-capitales-i.conceptos-basicos.o08",
+    "capitales.mercado-de-capitales-i.conceptos-basicos.o05",
+    "capitales.mercado-de-capitales-i.conceptos-basicos.o06"
+  ],
+  "orden": 1,
+  "titulo": "Mercado de capitales e instrumentos que se negocian",
+  "resumen": "Concepto y características del mercado de capitales, mercado primario y secundario, diferencias con el mercado de deuda, y las fichas de los instrumentos: certificados de participación, acciones con sus derechos, obligaciones convertibles, títulos de emisores extranjeros, warrants, FIBRAS, CKDs, CERPIS y ETFs.",
+  "duracionMin": 40,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        153,
+        154,
+        155,
+        156,
+        157
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "concepto-y-caracteristicas",
+      "titulo": "Qué es el mercado de capitales",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[mercado de capitales]] es un mercado diseñado para la **formación de capital social**, la **adquisición de activos** o el desarrollo de **proyectos de largo plazo** por parte del emisor. En él se compran y venden acciones, obligaciones y títulos de deuda de largo plazo."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "El principal instrumento son las **acciones**. En conjunto, los instrumentos de este bloque se conocen como títulos de [[renta variable]], porque **no otorgan rendimientos conocidos**. El manual enumera como renta variable: acciones, CKDs, CERPIS, FIBRAS, ETFs, warrants y obligaciones convertibles en acciones."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "En México se opera a través de las **bolsas de valores**, lo que implica costos operativos (comisiones de compraventa).",
+            "Al comprar acciones, el inversionista se convierte en **socio** de la empresa en proporción al capital que posee.",
+            "Hay riesgo, porque los rendimientos son variables, y **no existe garantía** de obtener beneficios.",
+            "No hay un plazo concreto; la recomendación general es invertir de **mediano a largo plazo**.",
+            "Puede dar alta rentabilidad en el largo plazo y permite **diversificar** el riesgo del portafolio.",
+            "Ofrece una amplia gama de productos con distinto riesgo, según las necesidades de inversión o de financiamiento."
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen concepto:",
+          "texto": "capital social, adquisición de activos y proyectos de **largo plazo**; renta variable porque el rendimiento **no se conoce** de antemano."
+        }
+      ],
+      "ampliada": "El manual 2023 agrega que el mercado de capitales tiene mucha liquidez y que no hay garantía de beneficios ni de devolución del capital invertido. En el examen, cualquier opción que ofrezca un rendimiento conocido o garantizado describe un instrumento de deuda, no de renta variable.",
+      "paginas": [
+        153,
+        154
+      ]
+    },
+    {
+      "id": "primario-y-secundario",
+      "titulo": "Mercado primario y mercado secundario",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "Mercado primario",
+            "Mercado secundario"
+          ],
+          "filas": [
+            [
+              "Qué ocurre",
+              "El emisor **coloca por primera vez** los títulos",
+              "Transacciones **sucesivas y cotidianas** entre inversionistas"
+            ],
+            [
+              "Cómo",
+              "Oferta pública, oferta privada o subasta",
+              "Compraventa de valores colocados previamente"
+            ],
+            [
+              "Quién recibe el dinero",
+              "El **emisor**, que recibe los recursos aportados por el público",
+              "El **inversionista** que vende"
+            ],
+            [
+              "Función",
+              "Financiar al emisor",
+              "Dar **liquidez** a los inversionistas"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Si la pregunta habla de que el emisor **recibe** los recursos, es mercado primario. Si habla de liquidez o de valores **colocados previamente**, es secundario. La oferta pública no es exclusiva: el manual también admite oferta privada y subasta en el primario."
+        }
+      ],
+      "ampliada": "La fila \"Quién recibe el dinero\" y la función de liquidez del secundario provienen del manual 2023 (secciones 2.7.3 y 2.7.4), que también aclara que en la colocación primaria la casa de bolsa actúa como agente colocador.",
+      "paginas": [
+        154
+      ]
+    },
+    {
+      "id": "capitales-contra-deuda",
+      "titulo": "Mercado de capitales contra mercado de deuda",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Rasgo",
+            "Mercado de capitales",
+            "Mercado de deuda"
+          ],
+          "filas": [
+            [
+              "Plazo",
+              "Mediano o largo plazo",
+              "Corto, mediano y largo plazo"
+            ],
+            [
+              "Relación con el emisor",
+              "**Propiedad**",
+              "**Acreedora**"
+            ],
+            [
+              "Rendimiento",
+              "Diferentes grados de riesgo y rendimiento",
+              "Rendimientos **predeterminados** a un plazo dado"
+            ],
+            [
+              "Riesgo",
+              "Varía dependiendo del emisor",
+              "Ligado a la calidad crediticia del emisor"
+            ],
+            [
+              "Qué representa el título",
+              "Una parte del capital social",
+              "La participación individual en un **crédito colectivo** a cargo del emisor"
+            ],
+            [
+              "Ejemplos",
+              "Acciones, FIBRAS, CKDs, ETFs",
+              "Bonos, obligaciones, títulos bancarios, gubernamentales"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen comparación:",
+          "texto": "capitales es **propiedad** con rendimiento incierto; deuda es **crédito** con rendimiento predeterminado."
+        }
+      ],
+      "ampliada": "La fila de riesgo en deuda es una interpretación didáctica; el manual solo dice que en capitales el riesgo varía dependiendo del emisor. Lo que el examen pregunta con más frecuencia es la relación con el emisor: propiedad en capitales y acreedora en deuda.",
+      "paginas": [
+        154,
+        155
+      ]
+    },
+    {
+      "id": "certificados-de-participacion",
+      "titulo": "Certificados de participación (CPO y CPI)",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los [[certificados de participación]] son **títulos de crédito nominativos**, de largo plazo, emitidos por una **institución fiduciaria**. Representan tres derechos sobre lo que contiene el fideicomiso:"
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "El derecho a una **parte alícuota de los frutos o rendimientos** de los valores, derechos o bienes del fideicomiso.",
+            "El derecho a una **parte alícuota del derecho de propiedad** o de la titularidad de esos bienes, derechos o valores.",
+            "El derecho a una **parte alícuota del producto neto** que resulte de la venta de dichos bienes, derechos o valores."
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Tipo",
+            "Qué hay en el fideicomiso"
+          ],
+          "filas": [
+            [
+              "Ordinarios (CPO)",
+              "Bienes **muebles**: valores, bienes o derechos"
+            ],
+            [
+              "Inmobiliarios (CPI)",
+              "Bienes **inmuebles**"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Son [[no amortizables]] cuando, al extinguirse el fideicomiso base de la emisión, la sociedad emisora **no paga el valor nominal**, sino que **adjudica o vende** los bienes fideicomitidos y distribuye entre los tenedores el producto neto de la venta."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Los CP amortizables (que sí pagan valor nominal) se estudian como instrumentos de deuda; los **no amortizables** se clasifican en el temario como renta variable. No confundas CPI (inmobiliario) con CPO (ordinario)."
+        }
+      ],
+      "ampliada": "El manual ubica los certificados de participación en el objetivo de instrumentos de deuda negociados en el mercado de capitales, pero solo define los no amortizables. La caracterización de los amortizables por contraste (pagan el valor nominal) es una inferencia didáctica, anotada en el archivo de dudas.",
+      "paginas": [
+        155
+      ]
+    },
+    {
+      "id": "acciones",
+      "titulo": "Acciones: ficha, rendimiento y derechos",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las [[acciones]] son títulos de crédito que representan una **parte alícuota del capital social** de una empresa; se colocan entre el gran público inversionista a través de la bolsa para obtener financiamiento."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Emisor",
+              "Sociedades Anónimas Bursátiles (**SAB**) y Sociedades Anónimas Promotoras de Inversión Bursátil (**SAPIB**)"
+            ],
+            [
+              "Colocación",
+              "**Oferta pública**"
+            ],
+            [
+              "Valor nominal",
+              "Fijado por la **oferta y la demanda**"
+            ],
+            [
+              "Plazo",
+              "**Indefinido**: su vigencia depende de la vida de la empresa"
+            ],
+            [
+              "Garantía",
+              "El **prestigio del emisor**, según sus antecedentes financieros"
+            ],
+            [
+              "Rendimiento",
+              "**Dividendos** (participación en utilidades) y **ganancias de capital** (diferencia entre el precio de venta y el de compra)"
+            ]
+          ],
+          "titulo": "Ficha: acciones"
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Derechos del accionista",
+            "Contenido"
+          ],
+          "filas": [
+            [
+              "Corporativos",
+              "Voz y voto en las asambleas; suscripción de nuevas acciones"
+            ],
+            [
+              "Patrimoniales",
+              "Participación en el reparto de utilidades mediante dividendos"
+            ]
+          ],
+          "trampas": []
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La garantía de una acción **no** es un activo ni un aval: es el prestigio del emisor. Y su valor nominal no lo fija la CNBV, lo fija el mercado."
+        }
+      ],
+      "ampliada": "El manual AMIB 1 menciona que la tenencia otorga derechos corporativos y patrimoniales; el contenido de cada uno proviene del manual 2023 (sección 2.6.1). La SAPIB, según el manual 2023, coloca solo mediante oferta pública restringida u oferta privada, entre inversionistas institucionales y calificados.",
+      "paginas": [
+        155
+      ]
+    },
+    {
+      "id": "convertibles-y-extranjeros",
+      "titulo": "Obligaciones convertibles y títulos de emisores extranjeros",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las [[obligaciones convertibles]] son **títulos de deuda** que en su fecha de vencimiento se **canjean por acciones** representativas del capital social del emisor; por eso operan en el mercado de capitales."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Los **títulos representativos del capital social de emisores extranjeros** cuyo mercado de origen no haya sido reconocido por la CNBV pueden listarse en el **SIC** sin aplicar las disposiciones de reconocimiento de emisores extranjeros, siempre que los valores o sus emisores estén listados o registrados en una **bolsa reconocida por la CNBV**."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Las sociedades extranjeras que soliciten inscribir su capital en el **RNV** deben acreditar a la CNBV que cuentan con **derechos de minorías equivalentes o superiores** a los exigidos a las SAB, y que sus órganos sociales tienen organización, funciones y controles internos al menos equivalentes."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La obligación convertible es deuda que **termina** en acciones; no es un warrant (derecho a comprar o vender) ni un dividendo en acciones."
+        }
+      ],
+      "ampliada": "El manual 2023 añade que las obligaciones convertibles representan la participación individual en un crédito colectivo y que pagan intereses semestralmente. Estos datos complementan, pero el examen se apoya en el canje por acciones al vencimiento.",
+      "paginas": [
+        155,
+        156
+      ]
+    },
+    {
+      "id": "warrants-y-fibras",
+      "titulo": "Warrants y FIBRAS",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los [[títulos opcionales]] (warrants) otorgan a sus tenedores, **a cambio del pago de una prima de emisión**, el derecho de **comprar o vender al emisor** un número determinado de acciones, un grupo o canasta de acciones, o de **recibir del emisor una suma de dinero** resultante de la variación de un índice, a un **precio de ejercicio** y durante un periodo o en una fecha determinada."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Las [[FIBRAS]] son vehículos para el financiamiento de **bienes raíces**. Son fideicomisos que adquieren o construyen inmuebles destinados al **arrendamiento**, o adquieren el derecho a percibir ingresos de ese arrendamiento, y pueden otorgar financiamiento con esos fines."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Warrant",
+              "Derecho (no obligación) a cambio de una **prima**; contraparte: el **emisor**"
+            ],
+            [
+              "FIBRA",
+              "Pagos periódicos (**rentas**) y posible ganancia de capital (**plusvalía**)"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "En el warrant la contraparte es el **emisor**, no la bolsa ni otro inversionista; y lo que se paga es una **prima de emisión**."
+        }
+      ],
+      "ampliada": "El manual 2023 precisa que en una FIBRA al menos el 70% de los activos del fideicomiso debe invertirse en bienes raíces destinados al arrendamiento y que no hay obligación de pagar principal ni intereses. Ese porcentaje no aparece en AMIB 1.",
+      "paginas": [
+        156
+      ]
+    },
+    {
+      "id": "ckds-y-cerpis",
+      "titulo": "CKDs y CERPIS",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los [[Certificados de Capital de Desarrollo]] (CKDs) invierten en proyectos de sectores en crecimiento: infraestructura, minería, comunicaciones, carreteras, puertos, fondos de capital privado y capital privado para empresas."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Los [[CERPIS]] (Certificados de Proyectos de Inversión) son **certificados bursátiles fiduciarios** emitidos por fideicomisos cuyos recursos financian proyectos o la inversión en acciones, partes sociales o financiamiento de sociedades, directa o indirectamente."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Rasgo",
+            "CKDs",
+            "CERPIS"
+          ],
+          "filas": [
+            [
+              "Plazo",
+              "**Específico**, a diferencia del capital puro",
+              "Igual que los CKDs"
+            ],
+            [
+              "Rendimiento",
+              "Incierto y de largo plazo",
+              "Incierto y de largo plazo"
+            ],
+            [
+              "Inversionistas",
+              "AFORES y compañías de seguros",
+              "Los mismos"
+            ],
+            [
+              "Aprobación de inversiones",
+              "Comité técnico o asamblea de tenedores",
+              "**No se requiere**: total discrecionalidad"
+            ],
+            [
+              "Se parecen a",
+              "Inversión de capital con plazo",
+              "**Fondos de capital privado** de otras partes del mundo"
+            ]
+          ],
+          "trampas": [
+            [
+              3,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen CKDs y CERPIS:",
+          "texto": "en esencia iguales, con los mismos participantes; la diferencia es que el CERPI **no necesita** aprobación del comité técnico ni de la asamblea para invertir."
+        }
+      ],
+      "ampliada": "El manual 2023 agrega que los CKDs pueden tener plazo de hasta 50 años y se colocan en ofertas públicas restringidas, y que los CERPIS pueden invertir hasta 90% en el extranjero. Son datos complementarios que AMIB 1 no menciona.",
+      "paginas": [
+        156
+      ]
+    },
+    {
+      "id": "etfs",
+      "titulo": "ETFs y trackers",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los [[ETF]] (Exchange Traded Funds) son fondos de inversión que **cotizan en bolsa como si fueran una acción**. Su primera generación son los **TRACS o trackers**, que replican un índice accionario; el ejemplo más conocido en México es el **NAFTRAC**, que busca imitar al IPC."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Emisores",
+              "Fideicomisos cuyo patrimonio es una canasta de valores muy similar a la del índice"
+            ],
+            [
+              "Mercado primario",
+              "Emisión y **reembolso** de las participaciones"
+            ],
+            [
+              "Mercado secundario",
+              "Su principal atractivo: compraventa en **tiempo real** al precio de mercado"
+            ],
+            [
+              "Adquirentes",
+              "Inversionistas particulares que quieren aprovechar movimientos alcistas o bajistas en el corto plazo"
+            ],
+            [
+              "Mecánica",
+              "Se comporta como **una acción**: precio calculado de forma automática según la ponderación de sus valores"
+            ],
+            [
+              "Régimen fiscal",
+              "El propio de las **acciones**"
+            ]
+          ],
+          "titulo": "Ficha: ETF"
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Generación",
+            "Referencia"
+          ],
+          "filas": [
+            [
+              "Primera",
+              "Índices de renta variable (IPC, S&P 500, Nasdaq) y renta fija (Udibonos, bonos gubernamentales o corporativos)"
+            ],
+            [
+              "Segunda",
+              "Materias primas (oro, petróleo) y tipo de cambio"
+            ],
+            [
+              "Tercera",
+              "El doble, el triple, el inverso o el doble del inverso diario del subyacente"
+            ],
+            [
+              "Cuarta",
+              "Basados en logaritmos matemáticos"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ]
+          ]
+        }
+      ],
+      "ampliada": "La diferencia con un fondo tradicional es que el ETF se negocia durante toda la sesión a precio de mercado, como una acción. El manual 2023 agrega que reduce el riesgo por su diversificación y tiene costos menores que un fondo de inversión.",
+      "paginas": [
+        157
+      ]
+    },
+    {
+      "id": "mapa-de-instrumentos",
+      "titulo": "Mapa de instrumentos y trampas",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Instrumento",
+            "Rasgo que lo identifica",
+            "Trampa típica"
+          ],
+          "filas": [
+            [
+              "Acción",
+              "Parte alícuota del capital social; plazo indefinido",
+              "Garantía = prestigio del emisor"
+            ],
+            [
+              "CPO o CPI",
+              "Derechos alícuotas sobre un fideicomiso",
+              "No amortizable: no paga valor nominal"
+            ],
+            [
+              "Obligación convertible",
+              "Deuda que al vencer se canjea por acciones",
+              "Opera en el mercado de capitales"
+            ],
+            [
+              "Warrant",
+              "Derecho a comprar o vender al emisor por una prima",
+              "Puede liquidarse en dinero por la variación de un índice"
+            ],
+            [
+              "FIBRA",
+              "Bienes raíces para arrendamiento",
+              "Rentas más plusvalía"
+            ],
+            [
+              "CKD",
+              "Proyectos de infraestructura y capital privado",
+              "Plazo específico"
+            ],
+            [
+              "CERPI",
+              "Igual que el CKD",
+              "Sin aprobación del comité técnico"
+            ],
+            [
+              "ETF",
+              "Fondo que cotiza como acción",
+              "Tercera generación: apalancados e inversos"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              2
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              7,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen de la lección:",
+          "texto": "renta variable significa rendimiento no conocido; capitales es propiedad y deuda es crédito; cada instrumento tiene un rasgo distintivo que el examen convierte en distractor del instrumento vecino."
+        }
+      ],
+      "ampliada": "Antes de responder, identifica la palabra clave del enunciado: prima (warrant), arrendamiento (FIBRA), comité técnico (CKD o CERPI), canje al vencimiento (obligación convertible), réplica de un índice (ETF).",
+      "paginas": [
+        153,
+        155,
+        156,
+        157
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Mercado de capitales: formación de capital social, adquisición de activos y proyectos de largo plazo; sus títulos son de renta variable porque no otorgan rendimientos conocidos.",
+    "Primario: el emisor coloca por primera vez (oferta pública, privada o subasta) y recibe los recursos. Secundario: operaciones sucesivas entre inversionistas con valores ya colocados.",
+    "Relación con el emisor: de propiedad en capitales y acreedora en deuda; en deuda los rendimientos están predeterminados.",
+    "Certificados de participación: títulos nominativos de una fiduciaria; CPO con bienes muebles, CPI con inmuebles; los no amortizables no pagan valor nominal, adjudican o venden los bienes.",
+    "Acciones: emisores SAB y SAPIB, oferta pública, valor nominal fijado por oferta y demanda, plazo indefinido y garantía el prestigio del emisor.",
+    "Warrant: derecho a comprar o vender al emisor por una prima de emisión; FIBRA: bienes raíces en arrendamiento con rentas y plusvalía.",
+    "CERPI frente a CKD: mismos inversionistas (AFORES y aseguradoras), pero el CERPI no requiere aprobación del comité técnico o la asamblea.",
+    "ETF: cotiza como acción, régimen fiscal de acciones; generaciones: índices, materias primas y tipo de cambio, apalancados o inversos, logaritmos."
+  ],
+  "practica": [
+    "g.capitales.l1.q01",
+    "g.capitales.l1.q02",
+    "g.capitales.l1.q03",
+    "g.capitales.l1.q04",
+    "g.capitales.l1.q05"
+  ],
+  "miniExamen": [
+    "g.capitales.l1.q06",
+    "g.capitales.l1.q07",
+    "g.capitales.l1.q08",
+    "g.capitales.l1.q09",
+    "g.capitales.l1.q10"
+  ],
+  "reto": [
+    "g.capitales.l1.q11",
+    "g.capitales.l1.q12",
+    "g.capitales.l1.q13",
+    "g.capitales.l1.q14",
+    "g.capitales.l1.q15"
+  ]
+}

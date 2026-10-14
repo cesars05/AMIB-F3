@@ -1,0 +1,413 @@
+{
+  "id": "capitales.formador-de-mercado-y-analista-independiente",
+  "area": "capitales",
+  "materia": "Mercado de Capitales I",
+  "subtemaId": "capitales.mercado-de-capitales-i.formador-de-mercado",
+  "objetivoIds": [
+    "capitales.mercado-de-capitales-i.formador-de-mercado.o01",
+    "capitales.mercado-de-capitales-i.formador-de-mercado.o02",
+    "capitales.mercado-de-capitales-i.formador-de-mercado.o03",
+    "capitales.mercado-de-capitales-i.formador-de-mercado.o04",
+    "capitales.mercado-de-capitales-i.formador-de-mercado.o05",
+    "capitales.mercado-de-capitales-i.analista-independiente.o01",
+    "capitales.mercado-de-capitales-i.analista-independiente.o02"
+  ],
+  "orden": 5,
+  "titulo": "Formador de mercado y analista independiente",
+  "resumen": "Concepto, requisitos, derechos, obligaciones, prohibiciones, supuestos de abstención y revocación del formador de mercado; controles del esquema de canalización de posturas y acceso directo al mercado; concepto y funciones del analista independiente, con una comparación de ambas figuras.",
+  "duracionMin": 30,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        170,
+        171,
+        172,
+        173
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "concepto-formador",
+      "titulo": "Qué es un formador de mercado",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[formador de mercado]] es el **miembro integral (casa de bolsa) aprobado por la Bolsa** que, **con recursos propios**, interviene en el mercado de capitales mediante el mantenimiento **permanente** de posturas de **compra y de venta, en firme**, sobre un valor o un conjunto de valores, conforme a los criterios de la Bolsa."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Quién",
+              "Miembro integral (casa de bolsa) aprobado por la Bolsa"
+            ],
+            [
+              "Con qué",
+              "Recursos **propios**, no de clientes ni de la emisora"
+            ],
+            [
+              "Para qué",
+              "Promover la **liquidez**, establecer **precios de referencia** y contribuir a la **estabilidad y continuidad** de precios"
+            ],
+            [
+              "Cómo",
+              "Posturas de compra y de venta, en firme, de forma permanente"
+            ]
+          ],
+          "titulo": "Ficha: formador de mercado"
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen concepto:",
+          "texto": "casa de bolsa, aprobada por la Bolsa, con recursos propios, con posturas en firme de **ambos lados**."
+        }
+      ],
+      "ampliada": "El manual 2023 resume la figura: debe ser miembro integral de la BMV, mantiene posturas permanentes de compra y venta para promover la liquidez y la estabilidad, y debe estar aprobado por la Bolsa.",
+      "paginas": [
+        170
+      ]
+    },
+    {
+      "id": "requisitos",
+      "titulo": "Requisitos para actuar como formador de mercado",
+      "bloques": [
+        {
+          "tipo": "lista",
+          "items": [
+            "Presentar a la Bolsa la solicitud, **suscrita por el director general** del miembro.",
+            "Entregar copia del **contrato de prestación de servicios con la emisora**, debidamente suscrito.",
+            "Designar a los **operadores** responsables de formular las posturas y celebrar las operaciones.",
+            "Informar a la Bolsa los **mecanismos de control interno y administrativos** que aplicará.",
+            "Acreditar que está clasificado por la CNBV en la **categoría I** por su índice de consumo de capital.",
+            "Presentar la demás información que la Bolsa determine como necesaria."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La categoría que se exige para **entrar** es la **I**; la que provoca la **revocación** es la **III o IV**. El examen intercambia ambas."
+        }
+      ],
+      "ampliada": "La solicitud la firma el director general del miembro, no el contralor normativo ni la emisora. La emisora participa a través del contrato de prestación de servicios.",
+      "paginas": [
+        170
+      ]
+    },
+    {
+      "id": "derechos-y-obligaciones",
+      "titulo": "Derechos y obligaciones",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Derechos",
+            "Obligaciones"
+          ],
+          "filas": [
+            [
+              "Dar a conocer las actividades y servicios que presta como formador",
+              "Ingresar y mantener posturas de compra y venta"
+            ],
+            [
+              "Brindar el servicio respecto de **varios tipos de valor y diferentes emisoras**",
+              "Satisfacer en cada sesión los parámetros de **importe mínimo** y **diferencial máximo** de precios"
+            ],
+            [
+              "Obtener **exenciones o cuotas preferenciales** a los aranceles de la Bolsa en sus operaciones como formador",
+              "Hacer su mejor esfuerzo para promover la liquidez y procurar la estabilidad y continuidad de precios"
+            ],
+            [
+              "",
+              "Dar aviso a la Bolsa de la **rescisión anticipada** del contrato con la emisora"
+            ],
+            [
+              "",
+              "Informar de inmediato a la Bolsa la **prórroga o renovación** del contrato"
+            ],
+            [
+              "",
+              "Cumplir las demás obligaciones de los miembros"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              0
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Las cuotas preferenciales son un **derecho**; mantener posturas y respetar el diferencial máximo son **obligaciones**."
+        }
+      ],
+      "ampliada": "Las preguntas tipo EXCEPTO suelen mezclar un derecho dentro de una lista de obligaciones, o una prohibición dentro de una lista de derechos.",
+      "paginas": [
+        170,
+        171
+      ]
+    },
+    {
+      "id": "prohibiciones",
+      "titulo": "Prohibiciones",
+      "bloques": [
+        {
+          "tipo": "lista",
+          "items": [
+            "Variar artificialmente el **precio o volumen** de los valores en que sea formador.",
+            "**Compartir las pérdidas o ganancias** con la emisora a la que presta servicios.",
+            "Celebrar **operaciones de cruce**.",
+            "Realizar cualquier otra conducta prohibida a los miembros."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El cruce es una operación legítima para cualquier casa de bolsa, pero está **prohibido al formador** en los valores en que actúa como tal."
+        }
+      ],
+      "ampliada": "El manual 2023 incluye en la lista de prohibiciones la abstención durante colocaciones y estabilizaciones; AMIB 1 la presenta como un supuesto adicional, que se estudia en la lámina siguiente.",
+      "paginas": [
+        171
+      ]
+    },
+    {
+      "id": "abstencion-y-revocacion",
+      "titulo": "Cuándo no puede actuar y cuándo se revoca",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Supuesto",
+            "Consecuencia"
+          ],
+          "filas": [
+            [
+              "Participa como **líder colocador** en una oferta pública y durante el plazo de **operaciones de estabilización**",
+              "Debe **abstenerse** de la formación de mercado"
+            ],
+            [
+              "Emisoras con **giros comerciales del mismo tipo**",
+              "No puede prestarles servicio, **salvo que demuestre ante la Bolsa** que no habrá conflicto de interés"
+            ],
+            [
+              "Dos o más formadores para un mismo tipo de valor",
+              "La Bolsa **puede aprobarlo**"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "La Bolsa puede **revocar** la aprobación en tres casos:"
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "A solicitud del formador de mercado o de la emisora.",
+            "Cuando incumpla **reiteradamente** sus obligaciones.",
+            "Cuando la CNBV lo clasifique en la **categoría III o IV** por su índice de consumo de capital."
+          ]
+        }
+      ],
+      "ampliada": "La demostración de que no hay conflicto de interés se hace ante la Bolsa, no ante la CNBV. Es un distractor típico de entidad intercambiada.",
+      "paginas": [
+        171,
+        172
+      ]
+    },
+    {
+      "id": "controles",
+      "titulo": "Controles del esquema de canalización de posturas",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El miembro integral que use **esquemas para la canalización de posturas al libro electrónico**, mediante el **acceso directo al mercado**, debe cumplir con:"
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Presentar a la Bolsa la solicitud de aprobación, suscrita por el **director general o por un apoderado o representante legal**.",
+            "Tratándose de acceso directo al mercado, contar **al menos con un enlace lógico dedicado**.",
+            "Sujetarse a las capacidades de transmisión de información transaccional.",
+            "Sujetarse al **periodo de pruebas** que determine la Bolsa, sobre funcionalidad y volúmenes de las posturas.",
+            "Informar a la Bolsa que cuenta con mecanismos de **control para la administración de riesgos** de las órdenes de sus clientes.",
+            "Presentar la demás información que la Bolsa justifique como necesaria."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Si solicita la **ubicación contigua** de su servidor transaccional al sistema electrónico de negociación, debe **firmar un contrato de prestación de servicio con la Bolsa**."
+        }
+      ],
+      "ampliada": "Aquí la solicitud admite la firma de un apoderado o representante legal; en la solicitud para ser formador de mercado, el manual solo menciona al director general.",
+      "paginas": [
+        172
+      ]
+    },
+    {
+      "id": "analista-concepto",
+      "titulo": "Analista independiente: concepto",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[analista independiente]] es la **persona moral, nacional o extranjera**, **distinta a una casa de bolsa o institución de crédito**, **aprobada por la Bolsa**, que presta habitual y profesionalmente servicios de **cobertura de análisis** a una o más emisoras, en los términos del Reglamento Interior de la BMV."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Naturaleza",
+              "Persona **moral** (no física), nacional o extranjera"
+            ],
+            [
+              "Exclusiones",
+              "No puede ser casa de bolsa ni institución de crédito"
+            ],
+            [
+              "Aprobación",
+              "De la **Bolsa**"
+            ],
+            [
+              "Supervisión",
+              "**No** es autorizado ni supervisado por la CNBV"
+            ]
+          ],
+          "titulo": "Ficha: analista independiente"
+        }
+      ],
+      "ampliada": "El manual 2023 agrega que las emisoras contratan al analista a través de la BMV.",
+      "paginas": [
+        173
+      ]
+    },
+    {
+      "id": "analista-funciones",
+      "titulo": "Funciones del analista independiente",
+      "bloques": [
+        {
+          "tipo": "lista",
+          "items": [
+            "Mantener en todo momento su **independencia**; si no, informar de inmediato a la Bolsa la causa del conflicto de intereses.",
+            "Elaborar y presentar **a la Bolsa** la cobertura de análisis sobre información financiera del **dominio público** de las emisoras a las que presta el servicio.",
+            "Sustentar su análisis en información financiera, económica, contable, jurídica y administrativa del **dominio público**.",
+            "Vigilar y controlar que su **personal** no participe en actividades que impliquen conflictos de interés.",
+            "**Revelar** en el reporte que **no son autorizados ni supervisados por la CNBV**."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El reporte se presenta **a la Bolsa**, no a la CNBV, y se basa en información **pública**, nunca en información privilegiada de la emisora."
+        }
+      ],
+      "ampliada": "Las cinco funciones giran alrededor de dos ideas: independencia e información pública.",
+      "paginas": [
+        173
+      ]
+    },
+    {
+      "id": "comparativo",
+      "titulo": "Formador de mercado contra analista independiente",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Rasgo",
+            "Formador de mercado",
+            "Analista independiente"
+          ],
+          "filas": [
+            [
+              "Quién puede serlo",
+              "Miembro integral (casa de bolsa)",
+              "Persona moral **distinta** de casa de bolsa o banco"
+            ],
+            [
+              "Quién lo aprueba",
+              "La Bolsa",
+              "La Bolsa"
+            ],
+            [
+              "Qué hace",
+              "Posturas en firme de compra y venta con recursos propios",
+              "Cobertura de análisis de emisoras"
+            ],
+            [
+              "Relación con la emisora",
+              "Contrato de prestación de servicios",
+              "Presta el servicio de cobertura"
+            ],
+            [
+              "Prohibición clave",
+              "Cruces y compartir ganancias con la emisora",
+              "Participar en conflictos de interés"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen de la lección:",
+          "texto": "el formador es una **casa de bolsa** que da liquidez; el analista es una persona moral que **no puede ser** casa de bolsa ni banco y que analiza con información pública."
+        }
+      ],
+      "ampliada": "Ambas figuras dependen de la aprobación de la Bolsa, lo que el examen aprovecha para cambiar la entidad por la CNBV.",
+      "paginas": [
+        170,
+        173
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Formador de mercado: miembro integral aprobado por la Bolsa que, con recursos propios, mantiene posturas permanentes de compra y venta en firme para dar liquidez, precios de referencia y estabilidad.",
+    "Requisitos: solicitud firmada por el director general, contrato con la emisora, operadores designados, controles internos y categoría I de la CNBV.",
+    "Derechos: difundir sus servicios, atender varios tipos de valor y emisoras, y cuotas preferenciales en aranceles.",
+    "Obligaciones: mantener posturas, cumplir importe mínimo y diferencial máximo, procurar liquidez y avisar rescisión, prórroga o renovación del contrato.",
+    "Prohibiciones: variar artificialmente precio o volumen, compartir pérdidas o ganancias con la emisora y celebrar cruces.",
+    "Debe abstenerse como líder colocador y durante la estabilización; no atiende emisoras del mismo giro salvo que demuestre a la Bolsa que no hay conflicto; revocación por solicitud, incumplimiento reiterado o categoría III o IV.",
+    "Analista independiente: persona moral distinta de casa de bolsa o institución de crédito, aprobada por la Bolsa; presenta su cobertura a la Bolsa con información pública y revela que no lo supervisa la CNBV."
+  ],
+  "practica": [
+    "g.capitales.l5.q01",
+    "g.capitales.l5.q02",
+    "g.capitales.l5.q03",
+    "g.capitales.l5.q04",
+    "g.capitales.l5.q05"
+  ],
+  "miniExamen": [
+    "g.capitales.l5.q06",
+    "g.capitales.l5.q07",
+    "g.capitales.l5.q08",
+    "g.capitales.l5.q09",
+    "g.capitales.l5.q10"
+  ],
+  "reto": [
+    "g.capitales.l5.q11",
+    "g.capitales.l5.q12",
+    "g.capitales.l5.q13",
+    "g.capitales.l5.q14",
+    "g.capitales.l5.q15"
+  ]
+}

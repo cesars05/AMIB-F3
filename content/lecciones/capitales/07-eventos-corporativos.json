@@ -1,0 +1,512 @@
+{
+  "id": "capitales.eventos-corporativos",
+  "area": "capitales",
+  "materia": "Mercado de Capitales II",
+  "subtemaId": "capitales.mercado-de-capitales-ii.eventos-corporativos",
+  "objetivoIds": [
+    "capitales.mercado-de-capitales-ii.eventos-corporativos.o01",
+    "capitales.mercado-de-capitales-ii.eventos-corporativos.o02"
+  ],
+  "orden": 7,
+  "titulo": "Eventos corporativos y precio ajustado",
+  "resumen": "Dividendo en efectivo, dividendo en acciones, suscripción, split, split inverso y canje de acciones: fórmula del precio ajustado, ejemplos resueltos del manual, impacto en el número de acciones y en el monto de inversión, y eventos combinados con el criterio de la pregunta oficial.",
+  "duracionMin": 40,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        177,
+        178,
+        179
+      ]
+    },
+    {
+      "documento": "AMIB Data/Preguntas Tipo.docx",
+      "paginas": []
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": [
+        40,
+        41
+      ]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "panorama",
+      "titulo": "Panorama de los eventos corporativos",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Cuando una emisora decreta un [[evento corporativo]], la Bolsa **ajusta el precio** de la acción para que el valor de la tenencia sea comparable antes y después del evento."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Evento",
+            "Precio ajustado",
+            "Número de acciones",
+            "Monto de inversión"
+          ],
+          "filas": [
+            [
+              "Dividendo en efectivo",
+              "PM − DIV",
+              "Igual",
+              "Disminuye"
+            ],
+            [
+              "Dividendo en acciones",
+              "PM × AA ÷ (AN + AA)",
+              "Aumenta",
+              "Igual"
+            ],
+            [
+              "Suscripción",
+              "(PM × AA + PS × AN) ÷ (AN + AA)",
+              "Aumenta",
+              "Aumenta el capital de la empresa"
+            ],
+            [
+              "Split",
+              "PM × AA ÷ AN",
+              "Aumenta",
+              "Igual"
+            ],
+            [
+              "Split inverso",
+              "PM × AA ÷ AN",
+              "Disminuye",
+              "Igual"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen panorama:",
+          "texto": "solo el dividendo en efectivo **resta**; el dividendo en acciones divide entre el **total** de acciones; split y split inverso usan la **misma fórmula** con anteriores entre nuevas."
+        }
+      ],
+      "ampliada": "En la tabla, PM es el precio de mercado, DIV el dividendo por acción, PS el precio de suscripción, AA las acciones anteriores y AN las nuevas. El manual no señala el impacto del split en el monto de inversión; que permanezca igual se deduce de su descripción (más acciones a precio proporcionalmente menor).",
+      "paginas": [
+        177,
+        178,
+        179
+      ]
+    },
+    {
+      "id": "dividendo-efectivo",
+      "titulo": "Dividendo en efectivo",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Al pagarse un [[dividendo en efectivo]], la BMV ajusta el precio restándole el dividendo."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$PDIV = PM - DIV",
+          "leyenda": [
+            [
+              "\\$PDIV",
+              "precio ajustado"
+            ],
+            [
+              "PM",
+              "precio de mercado antes del evento"
+            ],
+            [
+              "DIV",
+              "dividendo en efectivo por acción"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** ALFA, con precio de $16.20, paga un dividendo en efectivo de $0.98 contra el cupón 6 a cada una de sus 2 millones de acciones."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$PDIV = PM - DIV",
+          "leyenda": [],
+          "valores": "\\$PDIV = 16.20 - 0.98",
+          "resultado": "$PDIV = $15.22, es decir, $15.2200"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El número de acciones en circulación (2 millones) es un dato **distractor**: el ajuste es por acción. Impacto: el número de acciones **permanece igual** y el monto de inversión **disminuye** porque el precio se ajusta a la baja."
+        }
+      ],
+      "ampliada": "El inversionista no pierde valor: recibe el dividendo en efectivo, que compensa la baja del precio.",
+      "paginas": [
+        177
+      ]
+    },
+    {
+      "id": "dividendo-acciones",
+      "titulo": "Dividendo en acciones",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La empresa puede pagar el dividendo **en acciones** y no desembolsar efectivo (capitalización de utilidades). El precio se reparte entre las acciones anteriores más las nuevas."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$PACC = \\frac{PM \\times AA}{AN + AA}",
+          "leyenda": [
+            [
+              "\\$PACC",
+              "precio ajustado"
+            ],
+            [
+              "PM",
+              "precio de mercado"
+            ],
+            [
+              "AA",
+              "acciones anteriores"
+            ],
+            [
+              "AN",
+              "acciones nuevas"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** GFBANORTE capitaliza utilidades a razón de 2 acciones nuevas contra 10 anteriores, con precio de $25.20."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$PACC = \\frac{PM \\times AA}{AN + AA}",
+          "leyenda": [],
+          "valores": "\\$PACC = \\frac{25.20 \\times 10}{2 + 10} = \\frac{252}{12}",
+          "resultado": "$PACC = $21.00, es decir, $21.0000"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El denominador es el **total** (AN + AA), no solo AN. Usar PM × AA ÷ AN sería tratarlo como split. Impacto: el número de acciones **aumenta** y el monto de inversión **permanece igual** (más acciones a menor precio)."
+        }
+      ],
+      "ampliada": "Comprobación: 10 acciones × $25.20 = $252.00 antes; 12 acciones × $21.00 = $252.00 después. El OCR del ejemplo dice AN = 1; la imagen de la página confirma AN = 2.",
+      "paginas": [
+        177,
+        178
+      ]
+    },
+    {
+      "id": "suscripcion",
+      "titulo": "Suscripción de acciones",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "En la [[suscripción]] la empresa otorga el **derecho al tanto** a sus accionistas actuales: les ofrece en venta acciones nuevas a un **precio menor** que el de mercado. El manual advierte que \"no es precisamente un beneficio\" para el tenedor, porque debe **pagar** las acciones nuevas."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$PASUS = \\frac{PM \\times AA + PS \\times AN}{AN + AA}",
+          "leyenda": [
+            [
+              "\\$PASUS",
+              "precio ajustado"
+            ],
+            [
+              "PM",
+              "precio de mercado"
+            ],
+            [
+              "PS",
+              "precio de suscripción"
+            ],
+            [
+              "AA",
+              "acciones anteriores"
+            ],
+            [
+              "AN",
+              "acciones nuevas"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** FEMSA UBD, con precio de $34.20, suscribe 1.2 acciones nuevas por cada 22 anteriores a $33.00."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$PASUS = \\frac{PM \\times AA + PS \\times AN}{AN + AA}",
+          "leyenda": [],
+          "valores": "\\$PASUS = \\frac{34.20 \\times 22 + 33.00 \\times 1.2}{1.2 + 22} = \\frac{752.40 + 39.60}{23.2}",
+          "resultado": "$PASUS = $34.137931, es decir, $34.1379"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Es un **promedio ponderado** de dos precios: el de mercado pesa con las acciones anteriores y el de suscripción con las nuevas. Impacto: el número de acciones **aumenta** y el **capital de la empresa aumenta**, porque entra dinero nuevo."
+        }
+      ],
+      "ampliada": "Si se olvida el precio de suscripción y se usa la fórmula del dividendo en acciones, el resultado sería 34.20 × 22 ÷ 23.2 = $32.4310, muy por debajo del correcto.",
+      "paginas": [
+        178
+      ]
+    },
+    {
+      "id": "split-y-split-inverso",
+      "titulo": "Split, split inverso y canje",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "En un **canje de acciones** la emisora cambia el número de títulos para modificar su precio de mercado. En el [[split]] se entregan más acciones nuevas que las anteriores; en el [[split inverso]], menos. **La fórmula es la misma** para ambos casos."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$PAS = PM \\times \\frac{AA}{AN}",
+          "leyenda": [
+            [
+              "\\$PAS",
+              "precio ajustado"
+            ],
+            [
+              "PM",
+              "precio de mercado"
+            ],
+            [
+              "AA",
+              "acciones anteriores"
+            ],
+            [
+              "AN",
+              "acciones nuevas"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual (split inverso).** CEMEX, a $14.30, canjea 30 acciones anteriores por 10 nuevas."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$PAS = PM \\times \\frac{AA}{AN}",
+          "leyenda": [],
+          "valores": "\\$PAS = 14.30 \\times \\frac{30}{10}",
+          "resultado": "$PAS = $42.90, es decir, $42.9000"
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual (split).** GMODELO, a $74.50, canjea 2 títulos anteriores por 32.1 nuevos."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$PAS = PM \\times \\frac{AA}{AN}",
+          "leyenda": [],
+          "valores": "\\$PAS = 74.50 \\times \\frac{2}{32.1}",
+          "resultado": "$PAS = $4.641744, es decir, $4.6417"
+        }
+      ],
+      "ampliada": "El OCR imprime el resultado del split como 54.541744; la imagen de la página y el cálculo confirman $4.641744.",
+      "paginas": [
+        179
+      ]
+    },
+    {
+      "id": "impacto-split",
+      "titulo": "Impacto del split y del split inverso",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Evento",
+            "Acciones",
+            "Precio",
+            "Para qué"
+          ],
+          "filas": [
+            [
+              "Split",
+              "De pocas se obtienen **más**",
+              "Proporcionalmente **menor**",
+              "Hacer el precio de la acción **más bursátil**"
+            ],
+            [
+              "Split inverso",
+              "De muchas se obtienen **menos**",
+              "Proporcionalmente **mayor**",
+              "Lo contrario del split"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "El manual 2023 agrega que el split y el split inverso cambian el **valor nominal** de las acciones **sin afectar el monto del capital social**: el split reduce el valor nominal y el split inverso lo incrementa."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "En un split inverso el capital **no cambia** y el precio **aumenta**. Responder que el capital disminuye o que el precio baja es el error típico."
+        }
+      ],
+      "ampliada": "Ejemplo: con 3,000 acciones a $2.40 y un split inverso de 30 por 1, el inversionista termina con 100 acciones a $72.00; su inversión sigue siendo $7,200.",
+      "paginas": [
+        179
+      ]
+    },
+    {
+      "id": "eventos-combinados",
+      "titulo": "Eventos combinados",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Si en la misma fecha hay **dividendo en efectivo** y **dividendo en acciones**, el criterio de la pregunta oficial de AMIB es restar primero el efectivo y después repartir entre el total de acciones."
+        },
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Paso 1: dividendo en efectivo",
+              "texto": "Precio ajustado parcial = PM − DIV.",
+              "cuando": "Restar"
+            },
+            {
+              "titulo": "Paso 2: dividendo en acciones",
+              "texto": "Precio final = precio parcial × AA ÷ (AN + AA).",
+              "cuando": "Repartir"
+            }
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Pregunta oficial.** Precio de $20, dividendo en efectivo de $1 y dividendo en acciones de 1 nueva por cada 20 anteriores."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$PA = (PM - DIV) \\times \\frac{AA}{AN + AA}",
+          "leyenda": [],
+          "valores": "\\$PA = (20 - 1) \\times \\frac{20}{1 + 20}",
+          "resultado": "$PA = $18.095238; la pregunta oficial muestra $18.10"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Si se invierte el orden (primero repartir y luego restar) el resultado es $18.0476, que redondea a $18.05: con 4 decimales el orden sí cambia la respuesta."
+        }
+      ],
+      "ampliada": "El orden se toma de la pregunta oficial tipo.16 de Preguntas Tipo.docx, cuya clave es $18.10. El manual AMIB 1 no trata eventos simultáneos; se registra en el archivo de dudas.",
+      "paginas": [
+        177
+      ]
+    },
+    {
+      "id": "verificacion-y-errores",
+      "titulo": "Verificación del valor y mapa de errores",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Una forma rápida de comprobar: **acciones × precio** debe conservarse en el dividendo en acciones, el split y el split inverso; en la suscripción, el valor nuevo es el anterior **más** lo pagado por las acciones nuevas."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Error",
+            "Dónde aparece",
+            "Efecto"
+          ],
+          "filas": [
+            [
+              "Dividir entre AN en lugar de AN + AA",
+              "Dividendo en acciones",
+              "Precio demasiado alto"
+            ],
+            [
+              "Invertir AA ÷ AN",
+              "Split y split inverso",
+              "Precio en sentido contrario"
+            ],
+            [
+              "Omitir el precio de suscripción",
+              "Suscripción",
+              "Precio ajustado demasiado bajo"
+            ],
+            [
+              "Sumar el dividendo en efectivo",
+              "Dividendo en efectivo",
+              "Precio mayor que el de mercado"
+            ],
+            [
+              "Invertir el orden de los ajustes",
+              "Eventos combinados",
+              "Diferencia en el segundo decimal"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              2
+            ],
+            [
+              4,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen de la lección:",
+          "texto": "efectivo: PM − DIV; acciones: PM × AA ÷ (AN + AA); suscripción: (PM × AA + PS × AN) ÷ (AN + AA); split y split inverso: PM × AA ÷ AN."
+        }
+      ],
+      "ampliada": "En el rendimiento de una acción con eventos corporativos entre la compra y la venta, el precio final debe compararse con el inicial en la misma base de acciones; por ejemplo, tras un split de 1 por 3, el precio de venta se multiplica por 3.",
+      "paginas": [
+        177,
+        178,
+        179
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Dividendo en efectivo: PM − DIV (ALFA: 16.20 − 0.98 = $15.2200); acciones iguales, monto de inversión disminuye.",
+    "Dividendo en acciones: PM × AA ÷ (AN + AA) (GFBANORTE: 25.20 × 10 ÷ 12 = $21.0000); acciones aumentan, monto igual.",
+    "Suscripción: (PM × AA + PS × AN) ÷ (AN + AA) (FEMSA: $34.1379); derecho al tanto a precio menor; acciones y capital aumentan.",
+    "Split y split inverso: PM × AA ÷ AN (CEMEX: 14.30 × 30 ÷ 10 = $42.9000; GMODELO: 74.50 × 2 ÷ 32.1 = $4.6417).",
+    "Split: más acciones a precio proporcionalmente menor para hacerla más bursátil; split inverso: menos acciones a precio mayor; el capital social no cambia.",
+    "Eventos combinados (pregunta oficial): primero se resta el dividendo en efectivo y después se reparte entre AN + AA: (20 − 1) × 20 ÷ 21 = $18.10.",
+    "Comprobación: acciones × precio se conserva en dividendo en acciones y splits."
+  ],
+  "practica": [
+    "g.capitales.l7.q01",
+    "g.capitales.l7.q02",
+    "g.capitales.l7.q03",
+    "g.capitales.l7.q04",
+    "g.capitales.l7.q05"
+  ],
+  "miniExamen": [
+    "g.capitales.l7.q06",
+    "g.capitales.l7.q07",
+    "g.capitales.l7.q08",
+    "g.capitales.l7.q09",
+    "g.capitales.l7.q10"
+  ],
+  "reto": [
+    "g.capitales.l7.q11",
+    "g.capitales.l7.q12",
+    "g.capitales.l7.q13",
+    "g.capitales.l7.q14",
+    "g.capitales.l7.q15"
+  ]
+}

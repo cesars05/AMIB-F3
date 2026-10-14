@@ -1,0 +1,542 @@
+{
+  "id": "capitales.adr-y-arbitraje-internacional",
+  "area": "capitales",
+  "materia": "Mercado de Capitales II",
+  "subtemaId": "capitales.mercado-de-capitales-ii.american-depositary-receipt-adr",
+  "objetivoIds": [
+    "capitales.mercado-de-capitales-ii.american-depositary-receipt-adr.o01",
+    "capitales.mercado-de-capitales-ii.american-depositary-receipt-adr.o02",
+    "capitales.mercado-de-capitales-ii.american-depositary-receipt-adr.o03",
+    "capitales.mercado-de-capitales-ii.arbitraje.o01",
+    "capitales.mercado-de-capitales-ii.arbitraje.o02"
+  ],
+  "orden": 6,
+  "titulo": "ADR y arbitraje internacional",
+  "resumen": "Concepto y estructura de los ADR, precio teórico de la acción a partir del ADR y del ADR a partir de la acción con tipo de cambio y ratio, concepto de arbitraje y cálculo de la posición conveniente con y sin comisiones, con los ejemplos resueltos del manual.",
+  "duracionMin": 40,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        174,
+        175,
+        176
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": [
+        39,
+        40
+      ]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "concepto-adr",
+      "titulo": "Qué es un ADR",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los [[ADR]] (American Depositary Receipts) son **recibos emitidos por un banco americano** que amparan el **depósito de acciones** de emisoras mexicanas facultadas por la **CNBV** para cotizar en mercados foráneos."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Para estructurar un ADR se deposita un número determinado de acciones del país de origen por cada ADR emitido en las bolsas estadounidenses. Esa proporción es el [[ratio]]."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Emisor del recibo",
+              "Un **banco americano** (depositario)"
+            ],
+            [
+              "Respaldo",
+              "Acciones depositadas del país de origen"
+            ],
+            [
+              "Ratio 1:20",
+              "**20 acciones** del mercado de origen por cada ADR (ejemplo del manual: Viña Concha y Toro en el NYSE)"
+            ],
+            [
+              "ADR patrocinado",
+              "Lo **respalda la empresa emisora** de las acciones"
+            ],
+            [
+              "ADR no patrocinado",
+              "Se genera sin el respaldo de la emisora (manual 2023)"
+            ]
+          ],
+          "titulo": "Ficha: ADR"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El ratio 1:n significa **n acciones por un ADR**, no n ADR por acción. Por eso el precio de un ADR suele ser varias veces el de la acción, convertido a dólares."
+        }
+      ],
+      "ampliada": "El arbitraje internacional se aplica a acciones que cotizan en México o en otro país y que también están colocadas mediante ADR en Estados Unidos: puede haber diferencias momentáneas de precio por un alza en la bolsa de origen que aún no se refleja en la de Estados Unidos, y viceversa.",
+      "paginas": [
+        174
+      ]
+    },
+    {
+      "id": "precio-accion",
+      "titulo": "Precio teórico de la acción a partir del ADR",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Generalmente el precio de un ADR es el **equivalente en dólares** del precio de la acción local. Para llevarlo a pesos por acción, se **divide entre el ratio** y se **multiplica por el tipo de cambio**."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$ACCION = \\frac{\\$ADR}{RATIO} \\times TC",
+          "leyenda": [
+            [
+              "\\$ACCION",
+              "precio teórico de la acción, en pesos"
+            ],
+            [
+              "\\$ADR",
+              "precio del ADR, en dólares"
+            ],
+            [
+              "RATIO",
+              "acciones por cada ADR (en 1:5, RATIO = 5)"
+            ],
+            [
+              "TC",
+              "tipo de cambio, pesos por dólar"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** El ADR está en US$16.82 con ratio de 1:5 y tipo de cambio de $19.26."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$ACCION = \\frac{\\$ADR}{RATIO} \\times TC",
+          "leyenda": [],
+          "valores": "\\$ACCION = \\frac{16.82}{5} \\times 19.26 = 3.364 \\times 19.26",
+          "resultado": "$ACCION = $64.79064, es decir, $64.7906 (el manual muestra $64.79)"
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "ADR.EUA.ARBITRAJE",
+          "entradas": [
+            [
+              "$ADR",
+              "16.82"
+            ],
+            [
+              "RATIO",
+              "5"
+            ],
+            [
+              "TCAM",
+              "19.26"
+            ],
+            [
+              "COM",
+              "0"
+            ]
+          ],
+          "salida": [
+            "$ACC",
+            "64.79064"
+          ]
+        }
+      ],
+      "ampliada": "La fórmula de la HP 17bII+ ADR.EUA.ARBITRAJE con las variables $ACC, $ADR, RATIO, TCAM y COM aparece en el manual 2023 (sección 2.14). Sin comisión se captura COM = 0. El enunciado del ejemplo en el OCR dice US$16.87, pero la imagen de la página y el cálculo confirman US$16.82.",
+      "paginas": [
+        174
+      ]
+    },
+    {
+      "id": "precio-adr",
+      "titulo": "Precio teórico del ADR a partir de la acción",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Es la misma relación despejada: se **divide entre el tipo de cambio** para pasar a dólares y se **multiplica por el ratio** porque un ADR contiene varias acciones."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$ADR = \\frac{\\$ACCION}{TC} \\times RATIO",
+          "leyenda": [
+            [
+              "\\$ADR",
+              "precio teórico del ADR, en dólares"
+            ],
+            [
+              "\\$ACCION",
+              "precio de la acción en el mercado local, en pesos"
+            ],
+            [
+              "TC",
+              "tipo de cambio, pesos por dólar"
+            ],
+            [
+              "RATIO",
+              "acciones por cada ADR"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** La acción está en MXN$122.56, con ratio de 1:4 y tipo de cambio de $18.64."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$ADR = \\frac{\\$ACCION}{TC} \\times RATIO",
+          "leyenda": [],
+          "valores": "\\$ADR = \\frac{122.56}{18.64} \\times 4 = 6.575107 \\times 4",
+          "resultado": "$ADR = US$26.300429, es decir, US$26.3004 (el manual muestra $26.30 USD)"
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "ADR.EUA.ARBITRAJE",
+          "entradas": [
+            [
+              "$ACC",
+              "122.56"
+            ],
+            [
+              "RATIO",
+              "4"
+            ],
+            [
+              "TCAM",
+              "18.64"
+            ],
+            [
+              "COM",
+              "0"
+            ]
+          ],
+          "salida": [
+            "$ADR",
+            "26.300429"
+          ]
+        }
+      ],
+      "ampliada": "Verificación: si el ADR vale US$26.300429, cada acción equivale a 26.300429 ÷ 4 × 18.64 = $122.56. Las dos fórmulas son la misma igualdad despejada.",
+      "paginas": [
+        175
+      ]
+    },
+    {
+      "id": "errores-de-conversion",
+      "titulo": "Errores de conversión que generan distractores",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Error",
+            "Qué hace",
+            "Resultado con el ejemplo del ADR de US$16.82"
+          ],
+          "filas": [
+            [
+              "Multiplicar por el ratio",
+              "16.82 × 5 × 19.26",
+              "$1,619.7660"
+            ],
+            [
+              "Olvidar el ratio",
+              "16.82 × 19.26",
+              "$323.9532"
+            ],
+            [
+              "Dividir entre el tipo de cambio",
+              "16.82 ÷ 5 ÷ 19.26",
+              "$0.1747"
+            ],
+            [
+              "Correcto",
+              "16.82 ÷ 5 × 19.26",
+              "$64.7906"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Regla rápida:",
+          "texto": "de ADR a acción: **÷ ratio × TC**. De acción a ADR: **÷ TC × ratio**. Si el resultado no tiene un orden de magnitud razonable, revisaste mal el ratio."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Si el tipo de cambio **sube** (el peso se deprecia) y la acción local no cambia, el ADR teórico **baja**, porque la acción vale menos dólares."
+        }
+      ],
+      "ampliada": "La sensibilidad al tipo de cambio explica por qué un movimiento del peso abre oportunidades de arbitraje aunque las acciones no se muevan.",
+      "paginas": [
+        174,
+        175
+      ]
+    },
+    {
+      "id": "arbitraje-concepto",
+      "titulo": "Concepto de arbitraje",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[arbitraje]] es una **operación de compraventa simultánea** que aprovecha el **diferencial de precios** entre dos o más mercados: se **compra** donde el precio es **más bajo** y se **vende** donde es **más alto**."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Utilidad para el inversionista",
+              "Una **utilidad instantánea libre de riesgo**, debida a la diferencia de precios entre mercados"
+            ],
+            [
+              "Posición larga",
+              "Compra en el mercado barato"
+            ],
+            [
+              "Posición corta",
+              "Venta en el mercado caro"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Arbitraje no es especulación: la compra y la venta son **simultáneas** y no se apuesta a una tendencia."
+        }
+      ],
+      "ampliada": "Los mismos principios valen para títulos o divisas. En capitales, el caso típico es una acción mexicana con ADR en Nueva York.",
+      "paginas": [
+        176
+      ]
+    },
+    {
+      "id": "arbitraje-sin-comisiones",
+      "titulo": "Arbitraje sin comisiones",
+      "bloques": [
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Convertir",
+              "texto": "Lleva el ADR a pesos por acción: $ADR ÷ RATIO × TC.",
+              "cuando": "Paso 1"
+            },
+            {
+              "titulo": "Comparar",
+              "texto": "Compara ese precio con el de la acción en la BMV.",
+              "cuando": "Paso 2"
+            },
+            {
+              "titulo": "Decidir",
+              "texto": "Compra (larga) en el mercado más barato y vende (corta) en el más caro.",
+              "cuando": "Paso 3"
+            }
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** La acción vale $49.78 en la BMV; el ADR, US$5.13 con ratio 1:2; el manual calcula con tipo de cambio de $20.15."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$ACCION_{NYSE} = \\frac{\\$ADR}{RATIO} \\times TC",
+          "leyenda": [],
+          "valores": "\\$ACCION_{NYSE} = \\frac{5.13}{2} \\times 20.15",
+          "resultado": "$51.684750 en NYSE contra $49.78 en la BMV: comprar en BMV (larga) y vender en NYSE (corta)"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El enunciado del manual dice $20.27, pero la sustitución usa $20.15, y el manual redondea a $51.69. Con cualquiera de los dos tipos de cambio la decisión es la misma."
+        }
+      ],
+      "ampliada": "Con $20.27 el precio equivalente sería $51.9926. La utilidad teórica por acción es la diferencia entre el precio de venta y el de compra.",
+      "paginas": [
+        176
+      ]
+    },
+    {
+      "id": "arbitraje-con-comisiones",
+      "titulo": "Arbitraje con comisiones",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La comisión **encarece** la compra. El manual la suma al precio de la BMV con el factor (1 + comisión ÷ 100) antes de comparar."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$ACCION_{BMV} = P_{BMV} \\left(1 + \\frac{COM}{100}\\right)",
+          "leyenda": [
+            [
+              "P_{BMV}",
+              "precio de la acción en la BMV"
+            ],
+            [
+              "COM",
+              "comisión en la BMV, en por ciento"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** Acción en $58.50 en la BMV, ADR en US$16.28 con ratio 1:5, tipo de cambio $18.06 y comisión de 1.2% en la BMV."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$ACCION_{NYSE} = \\frac{16.28}{5} \\times 18.06 \\qquad \\$ACCION_{BMV} = 58.50 \\left(1 + \\frac{1.2}{100}\\right)",
+          "leyenda": [],
+          "valores": "\\$ACCION_{NYSE} = 58.803360 \\qquad \\$ACCION_{BMV} = 59.202000",
+          "resultado": "Respuesta del manual: comprar en NYSE (larga) y vender en BMV (corta)"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Sin comisión, la BMV ($58.50) era el mercado barato. Con la comisión, comprar en la BMV cuesta $59.20, más que el equivalente del ADR: **deja de convenir la posición larga en la BMV**. Ese es el efecto que el examen quiere que veas."
+        }
+      ],
+      "ampliada": "Nota de método: si la comisión también se descuenta al vender en la BMV, el ingreso neto sería 58.50 × (1 − 0.012) = $57.80, menor que el costo de $58.80 en NYSE, de modo que con estos datos no quedaría utilidad en ningún sentido. Las preguntas de este banco usan datos en los que ambos criterios llevan a la misma decisión; la observación está en el archivo de dudas.",
+      "paginas": [
+        176
+      ]
+    },
+    {
+      "id": "utilidad-del-arbitraje",
+      "titulo": "Cuánto gana el arbitrajista",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La utilidad se mide en pesos: lo que se recibe por la venta menos lo que cuesta la compra, con el **mismo número de acciones** en ambas puntas."
+        },
+        {
+          "tipo": "formula",
+          "logica": "U = N_{ADR} \\times RATIO \\times P_{BMV} - N_{ADR} \\times \\$ADR \\times TC",
+          "leyenda": [
+            [
+              "U",
+              "utilidad en pesos al comprar ADR y vender acciones en la BMV"
+            ],
+            [
+              "N_{ADR}",
+              "número de ADR comprados"
+            ],
+            [
+              "RATIO",
+              "acciones que contiene cada ADR"
+            ],
+            [
+              "P_{BMV}",
+              "precio de venta de la acción en la BMV"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo.** Se compran 1,000 ADR a US$12.10 con ratio 1:3 y tipo de cambio de $19.50, y se venden las 3,000 acciones en la BMV a $79.40."
+        },
+        {
+          "tipo": "formula",
+          "logica": "U = N_{ADR} \\times RATIO \\times P_{BMV} - N_{ADR} \\times \\$ADR \\times TC",
+          "leyenda": [],
+          "valores": "U = 1000 \\times 3 \\times 79.40 - 1000 \\times 12.10 \\times 19.50 = 238200 - 235950",
+          "resultado": "U = $2,250.0000"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Al vender en la BMV debes entregar **N × RATIO** acciones. Usar N acciones en lugar de N × RATIO subestima la utilidad."
+        }
+      ],
+      "ampliada": "Equivale a la utilidad por acción (79.40 − 12.10 ÷ 3 × 19.50 = 0.75) multiplicada por las 3,000 acciones.",
+      "paginas": [
+        176
+      ]
+    },
+    {
+      "id": "resumen-adr-arbitraje",
+      "titulo": "Resumen y mapa de decisiones",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Situación",
+            "Decisión"
+          ],
+          "filas": [
+            [
+              "Equivalente del ADR mayor que el precio en BMV",
+              "Largo en BMV, corto en NYSE"
+            ],
+            [
+              "Equivalente del ADR menor que el precio en BMV",
+              "Largo en NYSE, corto en BMV"
+            ],
+            [
+              "La comisión de compra hace que el mercado barato deje de serlo",
+              "Deja de convenir comprar en ese mercado"
+            ],
+            [
+              "Precios equivalentes",
+              "No hay arbitraje"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen de la lección:",
+          "texto": "ADR = recibo de un banco americano sobre acciones depositadas; acción = ADR ÷ ratio × TC; ADR = acción ÷ TC × ratio; arbitraje = comprar barato y vender caro de forma simultánea."
+        }
+      ],
+      "ampliada": "El tipo de cambio que elimina el arbitraje es TC = $ACCION × RATIO ÷ $ADR: con ese tipo de cambio ambos precios coinciden.",
+      "paginas": [
+        174,
+        175,
+        176
+      ]
+    }
+  ],
+  "puntosClave": [
+    "ADR: recibo emitido por un banco americano que ampara el depósito de acciones de emisoras facultadas por la CNBV para cotizar en el extranjero.",
+    "Ratio 1:n: n acciones del mercado de origen por cada ADR; ADR patrocinado es el que respalda la empresa emisora.",
+    "Acción teórica en pesos: $ADR ÷ RATIO × TC; ejemplo del manual: 16.82 ÷ 5 × 19.26 = $64.7906.",
+    "ADR teórico en dólares: $ACCION ÷ TC × RATIO; ejemplo del manual: 122.56 ÷ 18.64 × 4 = US$26.3004.",
+    "Arbitraje: compraventa simultánea que aprovecha diferencias de precio entre mercados para una utilidad instantánea libre de riesgo.",
+    "Sin comisiones: se compra (largo) en el mercado barato y se vende (corto) en el caro; ejemplo del manual: largo BMV y corto NYSE.",
+    "Con comisión en la BMV: precio × (1 + comisión ÷ 100); en el ejemplo del manual la comisión vuelve más cara la compra en la BMV y la respuesta es largo NYSE, corto BMV."
+  ],
+  "practica": [
+    "g.capitales.l6.q01",
+    "g.capitales.l6.q02",
+    "g.capitales.l6.q03",
+    "g.capitales.l6.q04",
+    "g.capitales.l6.q05"
+  ],
+  "miniExamen": [
+    "g.capitales.l6.q06",
+    "g.capitales.l6.q07",
+    "g.capitales.l6.q08",
+    "g.capitales.l6.q09",
+    "g.capitales.l6.q10"
+  ],
+  "reto": [
+    "g.capitales.l6.q11",
+    "g.capitales.l6.q12",
+    "g.capitales.l6.q13",
+    "g.capitales.l6.q14",
+    "g.capitales.l6.q15"
+  ]
+}
