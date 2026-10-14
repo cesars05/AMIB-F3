@@ -182,6 +182,23 @@ El **Plan de hoy** mezcla estos modos según la intensidad y el diagnóstico. Po
 - **Limpieza** (modelos, por sección): corrige errores de OCR sin cambiar ninguna cifra. Un script compara números, porcentajes y plazos antes y después. El manual 2023, que sí tiene texto, sirve de respaldo para pasajes ilegibles.
 - **Redacción de lecciones** (Opus, por subtema): láminas con el formato de las notas de Cesar. Cada lámina cita su página del manual. Se empieza con Títulos de Deuda (capítulo 6) y se combina con sus notas.
 
+
+### Niveles de dominio exigentes (decisión de Cesar; inspirado en Khan Academy y Duolingo)
+Acertar una vez **no** es dominar. Cada subtema y objetivo pasa por cinco niveles: **Sin ver → Visto → Familiar → Competente → Dominado**.
+- **Visto**: abriste la lección o respondiste al menos una pregunta.
+- **Familiar**: aciertas el mini examen de la lección (dificultad 1–3).
+- **Competente**: vuelves a acertar en **otra sesión** (≥2 días después), con dificultad 3–4 e incluyendo cálculo si el subtema lo tiene.
+- **Dominado**: superas un **reto de preguntas rebuscadas** (dificultad 4–5, trampas y casos), en una tercera sesión separada por ≥7 días, sin pistas y dentro del ritmo de examen (≤74 s por pregunta).
+- **Se baja de nivel** al fallar en repasos o por olvido: si pasa tiempo sin repasar, el nivel decae con la curva de repetición espaciada. Un acierto "adivinando" no cuenta para subir.
+- La dificultad de las preguntas se adapta al nivel: mientras más alto el nivel, más rebuscadas son, para que sea crítico y no se quede en lo sencillo.
+- La probabilidad de aprobar usa el dominio ponderado por nivel, no solo el % bruto de aciertos.
+
+### Presentación de contenido (decisiones de Cesar)
+- **Fórmulas como matemáticas** (MathJax o KaTeX empaquetado localmente en la app, sin internet), en **dos pasos**: 1) la fórmula con símbolos y una leyenda de qué es cada uno; 2) la fórmula con los valores sustituidos; luego el resultado (a 4 decimales en preguntas).
+- **Nivel de detalle de examen**: cada sección cubre procesos completos, no solo definiciones. Ejemplo: en CETES, el proceso de emisión y subasta paso a paso, con horarios, actores (Banxico, SIAC-BANXICO, INDEVAL) y tipo de asignación.
+- **Orden aleatorio de opciones** en cada presentación (`core/barajar.ts`): la correcta se reparte de forma equilibrada entre a–d, sin rachas de más de 2 iguales, y la clave se rastrea siempre. Las opciones que dependen de su posición ("todas las anteriores", "a y b") no se mueven.
+- El diseño final será menos plano. Se trabaja en la fase de diseño con las skills de diseño.
+
 ### Arranque personalizado (onboarding)
 Primera vez que se abre la app:
 1. Fecha del examen.

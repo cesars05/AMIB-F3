@@ -45,6 +45,8 @@ Las tareas medianas o grandes llevan ficha en `docs/fichas/`. Al cerrar una tare
 - `ECC/` y `graphify/` son fuentes de herramientas: no se compilan, no se modifican y no se indexan.
 - Temas intercambiables (Terminal, Editorial, Enfoque, Claro) y tipografía elegible (Arial, Calibri, Segoe UI): los componentes usan solo tokens, nunca colores literales.
 - La app abre en **Inicio** (hub de secciones), nunca directo en un examen.
+- Dominio exigente: 5 niveles (Sin ver, Visto, Familiar, Competente, Dominado); acertar una vez nunca da "Dominado".
+- Opciones siempre barajadas con `core/barajar.ts` (posición de la clave equilibrada). Fórmulas en dos pasos: símbolos con leyenda → valores → resultado.
 - Los puntajes en escala 200–1100 son **estimados**, porque la conversión oficial no es pública. Muéstralo siempre así.
 
 ## Lecciones

@@ -70,6 +70,24 @@ h1 { margin: 0; font-size: 28px; letter-spacing: -0.01em; text-wrap: balance; }
 .keys { font-family: var(--mono); font-size: 13px; color: var(--dim); }
 .keys kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 1px 6px; background: var(--bg); color: var(--fg); }
 
+/* Fórmula en dos pasos: lógica (símbolos) → sustitución (valores) */
+.fx { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.fx-row { display: grid; grid-template-columns: 120px minmax(0, 1fr); border-bottom: 1px solid var(--line); }
+.fx-row:last-child { border-bottom: 0; }
+@media (max-width: 560px) { .fx-row { grid-template-columns: minmax(0, 1fr); } }
+.fx-tag { background: var(--soft); padding: 12px 14px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--dim); font-weight: 700; }
+.fx-math { padding: 10px 16px; overflow-x: auto; font-size: 17px; }
+.fx-math mjx-container[display="true"] { margin: 6px 0 !important; }
+.fx-legend { padding: 10px 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 4px 16px; font-size: 14px; }
+.fx-legend span b { color: var(--termino); }
+.fx-res { padding: 10px 16px; font-size: 17px; font-weight: 700; color: var(--up); }
+.steps { display: grid; gap: 0; border-left: 2px solid var(--line); margin-left: 12px; }
+.step { position: relative; padding: 0 0 14px 26px; display: grid; gap: 3px; }
+.step::before { content: attr(data-n); position: absolute; left: -14px; top: -2px; width: 26px; height: 26px; border-radius: 50%; background: var(--morado); color: #fff; font-size: 13px; font-weight: 700; display: grid; place-items: center; }
+.step b { font-size: 15px; }
+.step time { font-size: 12px; font-weight: 700; color: var(--termino); text-transform: uppercase; letter-spacing: 0.04em; }
+.step span { font-size: 14px; line-height: 1.5; color: var(--fg); }
+
 /* Paneles bajo la lámina */
 .under { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border-top: 1px solid var(--line); background: var(--soft); }
 @media (max-width: 720px) { .under { grid-template-columns: minmax(0, 1fr); } }
@@ -119,6 +137,10 @@ h1 { margin: 0; font-size: 28px; letter-spacing: -0.01em; text-wrap: balance; }
 .score table { border-collapse: collapse; font-size: 14px; width: 100%; }
 .score td { border-bottom: 1px solid var(--line); padding: 8px 4px; }
 .score td:last-child { text-align: right; font-weight: 700; }
+.niveles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+.niveles span { font-size: 12px; text-align: center; padding: 8px 4px; border-radius: 4px; background: var(--soft); color: var(--dim); }
+.niveles span.past { background: #dfe7f1; color: var(--blue); }
+.niveles span.on { background: var(--fg); color: var(--bg); font-weight: 700; }
 .demo { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
 @media (prefers-reduced-motion: reduce) { .slide-body, .why { animation: none; } .stage i b { transition: none; } }
 </style>
@@ -133,14 +155,25 @@ h1 { margin: 0; font-size: 28px; letter-spacing: -0.01em; text-wrap: balance; }
     </header>
     <div>
       <h1>CETES: el bono cupón cero del Gobierno Federal</h1>
-      <p class="lead">Lección guiada · ~18 min · Objetivos 6.2.1 y 6.4.1 del temario · Fuente: Manual AMIB, cap. 6, pp. 190 y 203</p>
+      <p class="lead">Lección guiada · ~25 min · Objetivos 6.2.1 y 6.4.1 del temario · Fuente: Manual AMIB, cap. 6, pp. 190 y 203</p>
     </div>
     <nav class="rail" id="rail" aria-label="Etapas de la lección"></nav>
     <main id="main"></main>
   </div>
 </div>
 
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, svg: { fontCache: 'global' }, startup: { typeset: false } };</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
 <script>
+/* Fórmula en dos pasos: 1) la lógica con símbolos y qué significa cada uno; 2) los valores sustituidos; 3) resultado. */
+function fx({ logica, leyenda, valores, resultado }) {
+  return `<div class="fx">
+    <div class="fx-row"><div class="fx-tag">1 · Fórmula</div><div><div class="fx-math">\\[${logica}\\]</div>
+      ${leyenda ? `<div class="fx-legend">${leyenda.map(([k, v]) => `<span><b>\\(${k}\\)</b> = ${v}</span>`).join('')}</div>` : ''}</div></div>
+    ${valores ? `<div class="fx-row"><div class="fx-tag">2 · Con valores</div><div class="fx-math">\\[${valores}\\]</div></div>` : ''}
+    ${resultado ? `<div class="fx-row"><div class="fx-tag">Resultado</div><div class="fx-res">${resultado}</div></div>` : ''}
+  </div>`;
+}
 const STAGES = ['1 · Explicación por partes', '2 · Puntos clave', '3 · Práctica guiada', '4 · Mini examen'];
 
 /* ───── Láminas (contenido del manual, cap. 6) ───── */
@@ -166,17 +199,27 @@ const SLIDES = [
       </div>
       <div class="resumen"><b>Ojo en el examen:</b> en CETES la postura es por <b>tasa de descuento</b>; en BONDES D y Bonos M es por <b>precio</b>.</div>`,
     more: 'Las cuatro características (valor nominal, plazo, pago de intereses y colocación primaria) se repiten en todas las fichas de títulos gubernamentales. Aprenderlas en este orden facilita compararlos.' },
+  { title: 'Cómo se emite un CETE: la subasta semanal', page: 190,
+    html: `<p>Banxico, como <span class="t">agente financiero del Gobierno Federal</span>, coloca CETES cada semana mediante <span class="t">subasta a tasa múltiple</span>. El examen pregunta por los horarios, por quién hace cada paso y por cómo se asigna.</p>
+      <div class="steps">
+        <div class="step" data-n="1"><time>Semana anterior · desde 11:30 h</time><b>Convocatoria</b><span>Banxico la publica en su página el <b>último día hábil bancario de la semana anterior</b>: plazos a subastar (28, 91, 182, 364 días…) y monto que el Gobierno planea colocar.</span></div>
+        <div class="step" data-n="2"><time>Martes · límite 11:00 h</time><b>Recepción de posturas</b><span>Bancos y casas de bolsa autorizados envían posturas electrónicas con <b>monto</b> y <b>tasa de descuento</b>, a más tardar a las 11:00 h del <b>segundo día hábil anterior</b> a la colocación.</span></div>
+        <div class="step" data-n="3"><time>Martes · 11:30 h (+30 min)</time><b>Resultados generales</b><span>Banxico publica montos demandados y colocados y las tasas de descuento y rendimiento.</span></div>
+        <div class="step" data-n="4"><time>Martes · 12:00 h (+1 h)</time><b>Asignación individual (tasa múltiple)</b><span>Se asigna desde la postura con <b>menor tasa de descuento</b> hacia arriba hasta agotar el monto. <b>Cada ganador paga la tasa que pidió</b>. Se comunica por <span class="t">SIAC-BANXICO</span>.</span></div>
+        <div class="step" data-n="5"><time>Jueves · día de colocación</time><b>Liquidación</b><span>Pago conforme al reglamento de <span class="t">INDEVAL</span> y depósito de los CETES en la cuenta de cada postor, 2 días hábiles después de las posturas.</span></div>
+      </div>
+      <div class="resumen"><b>Resumen subasta:</b> convocatoria (semana anterior) → posturas 11:00 → resultados 11:30 → asignación 12:00 → liquidación jueves. <b>Tasa múltiple</b>: cada quien su tasa. La "tasa de la semana" es el <b>promedio ponderado</b> de las posturas ganadoras.</div>`,
+    more: 'Trampa frecuente: en la subasta a tasa única todos pagan la tasa de la última postura asignada; en la interactiva los participantes ven la postura que deben superar. Los CETES usan tasa múltiple. Fuente: tus notas (AMIB Fig 3) y objetivos 6.5.1–6.5.3.' },
   { title: 'Dos tasas que no son lo mismo', page: 203,
     html: `<p>El mismo CETE tiene dos tasas. La <span class="t">tasa de descuento</span> mide el descuento contra el <b>valor nominal</b>. La <span class="t">tasa de rendimiento</span> mide la ganancia contra el <b>precio</b> que pagaste. Como el precio es menor que $10, la tasa de rendimiento siempre es <b>mayor</b>.</p>
-      <div class="formula">Precio         P  = VN × (1 − TD × t / 360)
-Tasa descuento TD = (1 − P / VN) × 360 / t
-Tasa rendim.   TR = (VN / P − 1) × 360 / t   =   TD / (1 − TD × t / 360)</div>
+      ${fx({ logica: 'P = VN\\left(1 - TD\\cdot\\frac{t}{360}\\right)', leyenda: [['P', 'precio hoy'], ['VN', 'valor nominal ($10)'], ['TD', 'tasa de descuento anual'], ['t', 'días por vencer']] })}
+      ${fx({ logica: 'TD = \\left(1 - \\frac{P}{VN}\\right)\\cdot\\frac{360}{t} \\qquad TR = \\left(\\frac{VN}{P} - 1\\right)\\cdot\\frac{360}{t} = \\frac{TD}{1 - TD\\cdot\\frac{t}{360}}', leyenda: [['TR', 'tasa de rendimiento anual']] })}
       <div class="resumen"><b>Regla rápida:</b> descuento → divides entre VN. Rendimiento → divides entre P. Año de <b>360 días</b>.</div>`,
     more: 'El objetivo 6.4.1 pide calcular precio, tasa de rendimiento, tasa de descuento y plazo de los instrumentos que cotizan a descuento. El examen usa año comercial de 360 días.' },
   { title: 'Ejemplo resuelto del manual', page: 203,
     html: `<p>¿Cuál es el precio de unos CETES con <b>94 días</b> por vencer y una tasa de descuento de <b>4.52 %</b>? ¿Y su tasa de rendimiento?</p>
-      <div class="formula">P  = 10 × (1 − 0.0452 × 94 / 360) = 10 × (1 − 0.011802) = $9.881978
-TR = 4.52 % / (1 − 0.011802)              = 4.573983 %</div>
+      ${fx({ logica: 'P = VN\\left(1 - TD\\cdot\\frac{t}{360}\\right)', valores: 'P = 10\\left(1 - 0.0452\\cdot\\frac{94}{360}\\right) = 10\\,(1 - 0.011802)', resultado: 'P = $9.881978' })}
+      ${fx({ logica: 'TR = \\frac{TD}{1 - TD\\cdot\\frac{t}{360}}', valores: 'TR = \\frac{0.0452}{1 - 0.011802}', resultado: 'TR = 4.573983 %  →  4.5740 % a 4 decimales' })}
       <p class="keys">HP-17bII (PRECIO.DESCTO): <kbd>VN</kbd> 10 · <kbd>%TD</kbd> 4.52 · <kbd>DIAS</kbd> 94 → <kbd>$PR</kbd> = 9.881978. Luego DESC.REND → <kbd>%TR</kbd> = 4.573983</p>
       <div class="resumen"><b>Comprueba:</b> TR (4.5740 %) &gt; TD (4.5200 %). Si te sale al revés, usaste la base equivocada.</div>`,
     more: 'El manual muestra el resultado con 6 decimales. En el examen en línea las respuestas numéricas aparecen con 4 decimales: 4.5740 %.' },
@@ -196,7 +239,8 @@ TR = 4.52 % / (1 − 0.011802)              = 4.573983 %</div>
 const POINTS = [
   'CETES = bono <b>cupón cero</b> del Gobierno Federal: se compra a descuento y paga <b>$10</b> al vencimiento.',
   'Plazos: <b>28 y 91 días</b>, y cercanos a <b>6 meses y 1 año</b>.',
-  'En la subasta primaria la postura es por <b>monto y tasa de descuento</b> (no por precio).',
+  'En la subasta primaria la postura es por <b>monto y tasa de descuento</b> (no por precio). Es a <b>tasa múltiple</b>: cada ganador paga su tasa.',
+  'Calendario: convocatoria la semana anterior → posturas martes <b>11:00</b> → resultados <b>11:30</b> → asignación <b>12:00</b> (SIAC-BANXICO) → liquidación <b>jueves</b> vía INDEVAL.',
   '<b>TD</b> se mide contra VN; <b>TR</b> contra el precio. Para el mismo CETE, <b>TR &gt; TD</b>.',
   'Año comercial de <b>360 días</b>. Respuestas numéricas a <b>4 decimales</b>.'
 ];
@@ -212,20 +256,39 @@ const PRACTICE = [
   { meta: 'Cálculo · 4 decimales', stem: '¿Cuál es el precio de un CETE con 91 días por vencer y tasa de descuento de 7.35 %?',
     opts: ['$9.8142', '$9.8168', '$9.8176', '$9.2650'], key: 0,
     why: ['', 'Usaste año de 365 días; el examen usa 360.', 'Trataste 7.35 % como tasa de rendimiento: P = 10 / (1 + 0.0735 × 91/360).', 'No proporcionaste la tasa al plazo (falta × 91/360).'], pat: ['', 'base-365', 'confunde-descuento-rendimiento', 'sin-proporcion-al-plazo'],
-    calc: 'P = 10 × (1 − 0.0735 × 91 / 360) = 10 × (1 − 0.018579) = $9.8142' }
+    calc: { logica: 'P = VN\\left(1 - TD\\cdot\\frac{t}{360}\\right)', valores: 'P = 10\\left(1 - 0.0735\\cdot\\frac{91}{360}\\right) = 10\\,(1 - 0.018579)', resultado: 'P = $9.8142' } },
+  { meta: 'Teoría · subasta', stem: 'En la subasta semanal regular de CETES, las instituciones que reciben asignación pagan:',
+    opts: ['La misma tasa de corte para todas', 'La tasa de descuento que cada una solicitó', 'El promedio ponderado de las posturas ganadoras', 'La TIIE de fondeo vigente'], key: 1,
+    why: ['Eso es la subasta a tasa única; los CETES usan tasa múltiple.', '', 'El promedio ponderado es la tasa que se publica, no la que paga cada postor.', 'La TIIE no interviene en la asignación de CETES.'], pat: ['confunde-tasa-unica-multiple', '', 'confunde-tasa-publicada', 'confunde-referencias'] }
 ];
 const EXAM = [
   { meta: 'Teoría', stem: 'Para un mismo CETE, la tasa de rendimiento es:', opts: ['Igual a la tasa de descuento', 'Menor que la tasa de descuento', 'Mayor que la tasa de descuento', 'Independiente del plazo'], key: 2,
     why: ['Solo coincidirían si el precio fuera $10.', 'Al revés: el precio (base del rendimiento) es menor que VN.', '', 'Ambas dependen del plazo.'], pat: ['', 'confunde-descuento-rendimiento', '', ''] },
   { meta: 'Cálculo · 4 decimales', stem: 'Un CETE con 63 días por vencer cotiza a $9.8543. ¿Cuál es su tasa de descuento?', opts: ['8.4488 %', '8.3257 %', '8.4413 %', '1.4570 %'], key: 1,
     why: ['Es la tasa de rendimiento (divide entre el precio).', '', 'Usaste año de 365 días.', 'No anualizaste: falta × 360/63.'], pat: ['confunde-descuento-rendimiento', '', 'base-365', 'sin-anualizar'],
-    calc: 'TD = (1 − 9.8543 / 10) × 360 / 63 = 0.01457 × 5.714286 = 8.3257 %' },
+    calc: { logica: 'TD = \\left(1 - \\frac{P}{VN}\\right)\\cdot\\frac{360}{t}', valores: 'TD = \\left(1 - \\frac{9.8543}{10}\\right)\\cdot\\frac{360}{63} = 0.01457\\cdot 5.714286', resultado: 'TD = 8.3257 %' } },
   { meta: 'Teoría · trampa de instrumentos', stem: 'Los Bonos M pueden emitirse a cualquier plazo siempre que sea múltiplo de:', opts: ['28 días', '91 días', '182 días', '364 días'], key: 2,
     why: ['Múltiplo de 28 días es la regla de BONDES D.', 'Múltiplo de 91 días es la regla de los BPAG91.', '', 'No existe esa regla para Bonos M.'], pat: ['confunde-bondes-bonos-m', 'confunde-bpag', '', ''] }
 ];
 
+/* ───── Barajado: la correcta se reparte entre a–d y nunca se pierde la clave ───── */
+function crearAzar(semilla) { let a = semilla >>> 0; return () => { a = (a + 0x6d2b79f5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+function mezclar(arr, az) { const r = [...arr]; for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(az() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; }
+function posiciones(n, az) { const b = Array.from({ length: n }, (_, i) => i % 4); for (let k = 0; k < 200; k++) { const r = mezclar(b, az); if (!r.some((x, i) => i > 1 && x === r[i - 1] && x === r[i - 2])) return r; } return mezclar(b, az); }
+function barajar(q, destino, az) {
+  const resto = mezclar([0, 1, 2, 3].filter((i) => i !== q.key), az);
+  const perm = [...resto.slice(0, destino), q.key, ...resto.slice(destino)];
+  return { ...q, opts: perm.map((i) => q.opts[i]), why: perm.map((i) => q.why[i]), pat: perm.map((i) => q.pat[i]), key: destino };
+}
+const AZ = crearAzar(Date.now() % 100000);
+const POS = posiciones(PRACTICE.length + EXAM.length, AZ);
+PRACTICE.forEach((q, i) => { PRACTICE[i] = barajar(q, POS[i], AZ); });
+EXAM.forEach((q, i) => { EXAM[i] = barajar(q, POS[PRACTICE.length + i], AZ); });
+
 /* ───── Estado ───── */
 const S = { stage: 0, slide: 0, prac: 0, pAns: {}, exam: {}, examDone: false, seen: new Set([0]) };
+const NIVELES = ['Sin ver', 'Visto', 'Familiar', 'Competente', 'Dominado'];
+const nivelNuevo = (right) => (right === EXAM.length ? 2 : 1);
 const NOTES_KEY = 'amib-leccion-cetes-notas';
 let notes = {};
 try { notes = JSON.parse(localStorage.getItem(NOTES_KEY) || '{}') || {}; } catch (e) { notes = {}; }
@@ -277,7 +340,7 @@ function qView(q, chosen, reveal, name) {
   let why = '';
   if (reveal) {
     const ok = chosen === q.key;
-    why = `<div class="why"><b>${ok ? 'Correcto.' : 'Incorrecto. La respuesta es ' + L[q.key] + ').'}</b>${q.calc ? `<div class="formula" style="background:#fff">${q.calc}</div>` : ''}${!ok && q.why[chosen] ? `<span>${q.why[chosen]}</span>` : ''}${!ok && q.pat[chosen] ? `<span class="pat">Patrón registrado en tu perfil: ${q.pat[chosen].replace(/-/g, ' ')}</span>` : ''}</div>`;
+    why = `<div class="why"><b>${ok ? 'Correcto.' : 'Incorrecto. La respuesta es ' + L[q.key] + ').'}</b>${q.calc ? fx(q.calc) : ''}${!ok && q.why[chosen] ? `<span>${q.why[chosen]}</span>` : ''}${!ok && q.pat[chosen] ? `<span class="pat">Patrón registrado en tu perfil: ${q.pat[chosen].replace(/-/g, ' ')}</span>` : ''}</div>`;
   }
   return `<div class="q"><span class="meta">${q.meta}</span><p class="stem">${q.stem}</p><div class="opts">${opts}</div>${why}</div>`;
 }
@@ -294,7 +357,10 @@ function examView() {
     return `<article class="slide"><div class="slide-body score"><h2>Resultado del mini examen</h2>
         <div class="big">${right} / ${EXAM.length}</div>
         <table>${EXAM.map((q, i) => `<tr><td>${i + 1}. ${q.stem}</td><td style="color:${S.exam[i] === q.key ? 'var(--up)' : 'var(--down)'}">${S.exam[i] === q.key ? 'Bien' : 'Revisar'}</td></tr>`).join('')}</table>
-        <p class="count">${right === EXAM.length ? 'Dominio de "CETES" sube a <b>en progreso → dominado</b> si lo repites en 3 días.' : `Se guardó en tu perfil: ${pats.length ? pats.map((p) => p.replace(/-/g, ' ')).join(', ') : 'repasar el tema'}. Volverá en tu repaso.`}</p>
+        <div class="niveles">${NIVELES.map((n, i) => `<span class="${i === nivelNuevo(right) ? 'on' : i < nivelNuevo(right) ? 'past' : ''}">${n}</span>`).join('')}</div>
+        <p class="count">${right === EXAM.length
+          ? 'Subes de <b>Visto</b> a <b>Familiar</b>, no a Dominado. Para <b>Competente</b> necesitas acertar de nuevo en otra sesión (en 2–3 días) con preguntas más difíciles. Para <b>Dominado</b>, superar un reto de preguntas rebuscadas en una tercera sesión, separada por al menos una semana.'
+          : `Te quedas en <b>Visto</b>. Se guardó en tu perfil: ${pats.length ? pats.map((p) => p.replace(/-/g, ' ')).join(', ') : 'repasar el tema'}. Estas preguntas vuelven mañana en tu repaso.`}</p>
         ${EXAM.map((q, i) => (S.exam[i] !== q.key ? qView(q, S.exam[i], true, 'x') : '')).join('')}
       </div></article>
       <div class="nav"><button class="btn" data-restart>Repetir lección</button><button class="btn primary" data-stage="0">Volver a las láminas</button></div>`;
@@ -308,8 +374,12 @@ function examView() {
 function render() {
   renderRail();
   const views = [slideView, pointsView, practiceView, examView];
-  document.getElementById('main').innerHTML = `<div style="display:grid;gap:14px">${views[S.stage]()}</div>`;
+  const main = document.getElementById('main');
+  main.innerHTML = `<div style="display:grid;gap:14px">${views[S.stage]()}</div>`;
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([main]).catch(() => {});
 }
+// Si MathJax carga después del primer render, tipografía al estar listo.
+(function esperarMathJax(n) { if (window.MathJax && MathJax.typesetPromise) { MathJax.typesetPromise([document.getElementById('main')]).catch(() => {}); } else if (n < 50) setTimeout(() => esperarMathJax(n + 1), 100); })(0);
 
 /* ───── Eventos ───── */
 document.addEventListener('click', (e) => {
