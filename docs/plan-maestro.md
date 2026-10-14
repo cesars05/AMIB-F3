@@ -189,6 +189,34 @@ La app funciona en dos modos, seleccionables en Configuración:
 - En cada lámina o subtema débil aparece "ver video". El video se abre en el navegador, y en modo sin internet solo se muestra el enlace.
 - Nota: en la búsqueda inicial no apareció un canal especializado claro. Se priorizan videos de conceptos generales (bonos, CETES, derivados, CAPM…) en español y de fuentes reconocibles.
 
+
+### Memoria del estudiante (perfil que el sistema recuerda)
+Todo lo que hace Cesar queda registrado y se convierte en un **perfil persistente** que alimenta el diagnóstico, el selector y las gráficas del Inicio:
+- **Registro de eventos** (tabla `intento` y tabla `evento`): cada respuesta (con tiempo, confianza y opción elegida), cada lámina vista, cada tarjeta repasada, cada simulacro.
+- **Perfil por subtema y objetivo** (calculado y guardado en caché):
+  - aciertos e intentos;
+  - dominio con su banda de confianza;
+  - tiempo promedio contra el ritmo del examen (74 s);
+  - última vez que se vio;
+  - estado: *no visto*, *débil*, *en progreso* o *dominado*;
+  - errores frecuentes, por etiqueta de distractor;
+  - aciertos "adivinando".
+- **Lo que el sistema recuerda**, visible en el Inicio y en el Diagnóstico:
+  - dónde falla más;
+  - patrones de error;
+  - objetivos sin ver;
+  - temas dominados;
+  - temas importantes pendientes (obligatorios o de alto peso);
+  - tiempo por pregunta por área.
+- **Gráficas desde el día 1**:
+  - dominio por área contra la meta;
+  - tiempo por pregunta contra 74 s;
+  - cobertura del temario (vistos / 465);
+  - evolución semanal;
+  - mapa de calor por subtema;
+  - historial de simulacros.
+- Todo es local, con respaldo en JSON, y se puede reiniciar. No sale de la PC salvo el texto de estudio que use el modo con IA.
+
 ### Motor de diagnóstico (proporcionado a un solo usuario)
 1. **Examen diagnóstico inicial** de 60–90 preguntas, estratificado por área. Da evidencia desde el día 1.
 2. **Dominio por subtema**: estimación Beta, ponderada por recencia, con banda de confianza. Se muestra **% de aciertos con su banda** y aparte el puntaje estimado en la escala 200–1100.
@@ -236,6 +264,17 @@ La app funciona en dos modos, seleccionables en Configuración:
 3. Cesar elige.
 4. Implementar con `animate`, revisar con `review-animations`, `animation-performance` y `break-ui`.
 5. Capturas y lista de prueba para Windows.
+
+
+### Temas y tipografía seleccionables (decisión de Cesar)
+- La app tiene un **sistema de temas intercambiables** basado en tokens de diseño (colores, tipografía, densidad). En **Ajustes → Apariencia**, Cesar elige:
+  - **Terminal**: oscuro, estilo Bloomberg.
+  - **Editorial**: salmón, estilo FT.
+  - **Enfoque**: grafito, estilo Apple.
+  - **Claro**: blanco, sobrio y profesional, estilo semanario económico. Es el tema por omisión si Cesar no elige otro.
+- **Tipografía** seleccionable entre fuentes conocidas de Windows: Arial, Calibri y Segoe UI. Las cifras siempre usan dígitos tabulares.
+- Las pantallas se construyen solo con tokens, nunca con colores literales, para que cualquier tema funcione en todas. Una prueba E2E recorre los 4 temas con capturas.
+- Al iniciar, la app abre en **Inicio**, el hub para elegir sección (Sesión de hoy, Practicar, Diagnóstico, Simulacro, Guías, Tarjetas, Videos, Ajustes). Nunca abre directo en un examen.
 
 ## 5. Banco de preguntas: cómo se hace extenso, difícil y confiable
 1. **Piloto primero**: 30 preguntas de Títulos de Deuda. Cesar las califica por dificultad, claridad y trampas. Con el piloto se **mide el costo** (tokens y tiempo) para estimar el banco completo antes de escalar.

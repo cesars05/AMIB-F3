@@ -45,3 +45,15 @@ Formato: fecha · etapa · qué se hizo · qué funcionó · qué no · atajos y
 - **Decisión de regla:** `tipo = 'calculo'` solo si el verbo es `calcular` o `resolver`, o el texto menciona cálculo/fórmula. `interpretar` y `determinar` no bastan: en el temario son conceptuales (p. ej. "Determinar en situaciones concretas el cumplimiento del principio ético…").
 - **Pendiente:** `exclusivoFig3` queda en `false` para todos los objetivos (TODO en `parse-temario.ts`).
 - **Atajo:** `fast-xml-parser` no hizo falta; con expresiones regulares sobre `word/document.xml` basta (las tablas no están anidadas) y se controla mejor la negrita por *run*.
+
+## 2026-10-14 · E1 Prototipos de diseño
+- **Hecho:**
+  - Prototipos de **Pregunta** (Terminal, Editorial, Enfoque) y de **Inicio** (Terminal, Editorial, Enfoque, Claro), publicados como artifacts con selector. Copia en `docs/prototipos/`.
+- **Decisiones de Cesar:**
+  - Las pantallas de pregunta están bien.
+  - El Inicio es un hub para elegir sección, no un examen directo.
+  - Quiere poder **elegir el diseño** y agregar uno blanco y sobrio con Arial o Calibri.
+  - El backend debe **recordar todo del estudiante** y mostrarlo en gráficas.
+  - Los problemas numéricos del examen en línea usan **4 decimales**.
+- **Bug encontrado al revisar:** un velo con `opacity: 0` seguía interceptando clics. Siempre hay que agregar `pointer-events: none` cuando está oculto.
+- **Atajo:** las capturas con Playwright de cada variante (`scratchpad/shot*.mjs`, con Chromium de `/opt/pw-browsers`) detectan solapes y textos invisibles antes de publicar. Si un archivo local no tiene doctype, el navegador entra en modo quirks y las tablas no heredan el color.

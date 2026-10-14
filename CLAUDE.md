@@ -43,6 +43,8 @@ Las tareas medianas o grandes llevan ficha en `docs/fichas/`. Al cerrar una tare
 - El contenido (taxonomía, preguntas, guías) vive en `content/` como datos versionados. Las preguntas tienen ID estable y nunca se borran: se **retiran**.
 - Base de datos: `node:sqlite` (ver ADR-001). Las migraciones solo se agregan; nunca se editan las publicadas.
 - `ECC/` y `graphify/` son fuentes de herramientas: no se compilan, no se modifican y no se indexan.
+- Temas intercambiables (Terminal, Editorial, Enfoque, Claro) y tipografía elegible (Arial, Calibri, Segoe UI): los componentes usan solo tokens, nunca colores literales.
+- La app abre en **Inicio** (hub de secciones), nunca directo en un examen.
 - Los puntajes en escala 200–1100 son **estimados**, porque la conversión oficial no es pública. Muéstralo siempre así.
 
 ## Lecciones

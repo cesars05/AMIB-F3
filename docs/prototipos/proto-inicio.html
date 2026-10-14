@@ -1,0 +1,543 @@
+<title>Inicio AMIB F3</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Carlito:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Source+Sans+3:wght@400;600&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+/* Concepto: arnés de prototipos de la pantalla de Inicio (hub de secciones). Tres mundos visuales completos:
+   Terminal (launchpad de funciones), Editorial (portada de periódico), Enfoque (tarjetas y hoja inferior).
+   El selector flotante es cromo del arnés. Los datos de progreso son de ejemplo. */
+:root {
+  color-scheme: dark;
+  --page: #0b0d10;
+  --t-bg: #0b0d10; --t-panel: #13171c; --t-line: #252b33; --t-fg: #e6e1d6; --t-dim: #8a8f98;
+  --t-amber: #ffb000; --t-orange: #ff7a1a; --t-up: #2fbf71; --t-down: #ff4d4f;
+  --e-bg: #fff1e5; --e-paper: #fff7ef; --e-line: #e3cfbd; --e-fg: #33302e; --e-dim: #6e6259;
+  --e-claret: #990f3d; --e-teal: #0d7680; --e-up: #00994d; --e-down: #cc0000;
+  --f-bg: #121315; --f-card: #1b1c1f; --f-line: #2c2e33; --f-fg: #f2f2f0; --f-dim: #9a9ca3;
+  --f-accent: #f5a524; --f-up: #34c759; --f-down: #ff453a; --f-sheet: #222327;
+  /* Claro (blanco, sobrio, estilo semanario económico) */
+  --c-bg: #ffffff; --c-soft: #f4f5f7; --c-line: #dcdfe4; --c-fg: #121212; --c-dim: #5b6168;
+  --c-red: #e3120b; --c-blue: #1f5fa8; --c-up: #1a7f37; --c-down: #c4161c;
+  --c-font: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  --mono: 'JetBrains Mono', 'Cascadia Mono', Consolas, ui-monospace, monospace;
+  --sans: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --ed-sans: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+  --focus: 'Instrument Sans', 'Segoe UI', system-ui, sans-serif;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+html, body { height: 100%; }
+body { background: var(--page); color: var(--t-fg); font-variant-numeric: tabular-nums; }
+.screen { min-height: 100vh; min-height: 100dvh; box-sizing: border-box; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 80px 48px; }
+button, input { font: inherit; color: inherit; }
+.reveal { animation: reveal 200ms var(--ease-out) both; }
+@keyframes reveal { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.demo { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+@media (prefers-reduced-motion: reduce) { .reveal, .f-sheet, .f-scrim { animation: none !important; transition: none !important; } }
+
+/* ═════════ 1 · TERMINAL ═════════ */
+.v-term { background: var(--t-bg); color: var(--t-fg); font-family: var(--sans); }
+.t-wrap { max-width: 1280px; margin: 0 auto; display: grid; gap: 16px; }
+.t-head { display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: center; justify-content: space-between; font-family: var(--mono); font-size: 12px; border-bottom: 1px solid var(--t-line); padding-bottom: 10px; }
+.t-brand { color: var(--t-amber); font-weight: 700; letter-spacing: 0.12em; }
+.t-kpis { display: flex; gap: 22px; flex-wrap: wrap; }
+.t-kpi { display: grid; gap: 2px; }
+.t-kpi span { color: var(--t-dim); font-size: 10px; letter-spacing: 0.1em; }
+.t-kpi strong { font-size: 16px; }
+.t-kpi .warn { color: var(--t-orange); }
+.t-cmd { display: flex; align-items: center; gap: 10px; background: var(--t-panel); border: 1px solid var(--t-line); padding: 10px 12px; font-family: var(--mono); }
+.t-cmd label { color: var(--t-amber); font-weight: 700; font-size: 13px; }
+.t-cmd input { flex: 1; min-width: 0; background: transparent; border: 0; outline: none; font-size: 14px; color: var(--t-fg); }
+.t-cmd input::placeholder { color: var(--t-dim); }
+.t-cmd:focus-within { border-color: var(--t-amber); }
+.t-cols { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 900px) { .t-cols { grid-template-columns: minmax(0, 1fr); } }
+.t-box { border: 1px solid var(--t-line); background: var(--t-panel); min-width: 0; }
+.t-box h2 { margin: 0; padding: 9px 12px; border-bottom: 1px solid var(--t-line); font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--t-amber); font-weight: 700; display: flex; justify-content: space-between; gap: 8px; }
+.t-box h2 span { color: var(--t-dim); font-weight: 400; }
+.t-table { width: 100%; border-collapse: collapse; color: var(--t-fg); font-family: var(--mono); font-size: 12px; }
+.t-table th { text-align: left; color: var(--t-dim); font-weight: 400; font-size: 10px; letter-spacing: 0.08em; padding: 8px 12px; border-bottom: 1px solid var(--t-line); }
+.t-table td { padding: 7px 12px; border-bottom: 1px solid rgba(37,43,51,0.6); white-space: nowrap; }
+.t-table td.name { font-family: var(--sans); font-size: 13px; white-space: normal; }
+.t-table .r { text-align: right; }
+.t-ob { color: var(--t-orange); font-size: 10px; margin-left: 6px; }
+.t-bar { position: relative; height: 8px; width: 120px; background: var(--t-bg); }
+.t-bar i { position: absolute; inset: 0 auto 0 0; background: var(--t-dim); }
+.t-bar i.ok { background: var(--t-up); }
+.t-bar i.low { background: var(--t-down); }
+.t-bar b { position: absolute; top: -3px; bottom: -3px; left: 75%; width: 1px; background: var(--t-amber); }
+.t-up { color: var(--t-up); } .t-down { color: var(--t-down); }
+.t-fns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--t-line); }
+@media (max-width: 520px) { .t-fns { grid-template-columns: minmax(0, 1fr); } }
+.t-fn { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 4px 10px; padding: 12px; background: var(--t-panel); border: 0; text-align: left; cursor: pointer; transition: background-color 120ms ease-out; }
+.t-fn:hover, .t-fn.sel { background: #1a2027; }
+.t-fn.sel { box-shadow: inset 2px 0 0 var(--t-amber); }
+.t-fn:active { transform: scale(0.99); }
+.t-fn:focus-visible { outline: 2px solid var(--t-amber); outline-offset: -2px; }
+.t-code { font-family: var(--mono); font-weight: 700; color: var(--t-bg); background: var(--t-amber); padding: 2px 6px; font-size: 12px; align-self: start; }
+.t-fn strong { font-size: 14px; font-weight: 600; }
+.t-fn small { grid-column: 2; color: var(--t-dim); font-size: 12px; line-height: 1.4; }
+.t-detail { padding: 12px; display: grid; gap: 10px; }
+.t-detail p { margin: 0; color: var(--t-dim); font-size: 13px; }
+.t-sub { display: grid; gap: 1px; background: var(--t-line); border: 1px solid var(--t-line); }
+.t-sub button { display: flex; justify-content: space-between; gap: 10px; padding: 10px 12px; background: var(--t-bg); border: 0; cursor: pointer; text-align: left; font-size: 13px; }
+.t-sub button span { color: var(--t-dim); font-family: var(--mono); font-size: 11px; white-space: nowrap; }
+.t-sub button:hover { background: #151a20; }
+.t-agenda { display: grid; }
+.t-agenda div { display: grid; grid-template-columns: 54px minmax(0,1fr) auto; gap: 10px; padding: 8px 12px; border-bottom: 1px solid rgba(37,43,51,0.6); font-size: 13px; align-items: baseline; }
+.t-agenda time { font-family: var(--mono); color: var(--t-amber); font-size: 12px; }
+.t-agenda em { font-style: normal; color: var(--t-dim); font-family: var(--mono); font-size: 11px; }
+.t-toast { font-family: var(--mono); font-size: 12px; color: var(--t-amber); }
+
+/* ═════════ 2 · EDITORIAL ═════════ */
+.v-edit { background: var(--e-bg); color: var(--e-fg); font-family: var(--ed-sans); }
+.e-wrap { max-width: 1160px; margin: 0 auto; }
+.e-mast { text-align: center; border-bottom: 3px double var(--e-fg); padding-bottom: 10px; }
+.e-mast h1 { font-family: var(--serif); font-size: clamp(30px, 5vw, 46px); font-weight: 600; margin: 0; letter-spacing: -0.02em; }
+.e-mast p { margin: 4px 0 0; font-size: 13px; color: var(--e-dim); display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.e-nav { display: flex; gap: 2px; flex-wrap: wrap; justify-content: center; border-bottom: 1px solid var(--e-line); padding-block: 8px; }
+.e-nav button { border: 0; background: transparent; padding: 6px 12px; cursor: pointer; font-weight: 600; font-size: 14px; }
+.e-nav button:hover, .e-nav button.sel { color: var(--e-claret); }
+.e-nav button.sel { box-shadow: inset 0 -2px 0 var(--e-claret); }
+.e-nav button:focus-visible { outline: 2px solid var(--e-teal); outline-offset: 2px; }
+.e-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 330px); gap: 36px; padding-top: 24px; }
+@media (max-width: 900px) { .e-grid { grid-template-columns: minmax(0, 1fr); } }
+.e-kicker { font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--e-claret); font-weight: 600; }
+.e-lead h2 { font-family: var(--serif); font-size: clamp(28px, 4vw, 40px); line-height: 1.1; margin: 8px 0 10px; font-weight: 500; text-wrap: balance; }
+.e-lead p { font-family: var(--serif); font-size: 18px; line-height: 1.5; margin: 0 0 16px; color: var(--e-dim); max-width: 60ch; }
+.e-btn { border: 1px solid var(--e-fg); background: transparent; padding: 10px 18px; cursor: pointer; font-weight: 600; font-size: 14px; }
+.e-btn.primary { background: var(--e-fg); color: var(--e-bg); }
+.e-btn:active { transform: scale(0.97); }
+.e-btn:focus-visible { outline: 2px solid var(--e-teal); outline-offset: 2px; }
+.e-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.e-sections { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--e-fg); margin-top: 28px; }
+@media (max-width: 700px) { .e-sections { grid-template-columns: minmax(0, 1fr); } }
+.e-sec { padding: 14px 16px 16px 0; border-bottom: 1px solid var(--e-line); }
+.e-sec + .e-sec { padding-left: 0; }
+@media (min-width: 701px) { .e-sec:not(:nth-child(3n+1)) { padding-left: 16px; border-left: 1px solid var(--e-line); } }
+.e-sec h3 { margin: 0 0 6px; font-family: var(--serif); font-size: 21px; font-weight: 600; }
+.e-sec h3 button { all: unset; cursor: pointer; }
+.e-sec h3 button:hover { color: var(--e-claret); }
+.e-sec h3 button:focus-visible { outline: 2px solid var(--e-teal); outline-offset: 2px; }
+.e-sec p { margin: 0; font-size: 14px; line-height: 1.45; color: var(--e-dim); }
+.e-aside h3 { font-family: var(--serif); font-size: 19px; margin: 0 0 8px; border-top: 4px solid var(--e-teal); padding-top: 10px; }
+.e-mkt { width: 100%; border-collapse: collapse; font-size: 14px; color: var(--e-fg); }
+.e-mkt td { padding: 7px 0; border-bottom: 1px solid var(--e-line); }
+.e-mkt .r { text-align: right; font-weight: 600; }
+.e-mkt .chg { text-align: right; width: 56px; font-size: 13px; }
+.e-up { color: var(--e-up); } .e-down { color: var(--e-down); }
+.e-ob { font-size: 11px; color: var(--e-claret); font-weight: 600; margin-left: 4px; }
+.e-note { font-size: 12px; color: var(--e-dim); margin-top: 8px; }
+.e-detail { border: 1px solid var(--e-line); background: var(--e-paper); padding: 18px; margin-top: 4px; }
+.e-detail h2 { font-family: var(--serif); font-size: 28px; margin: 6px 0 6px; font-weight: 500; }
+.e-detail ul { list-style: none; padding: 0; margin: 12px 0 16px; display: grid; }
+.e-detail li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--e-line); font-size: 15px; }
+.e-detail li span { color: var(--e-dim); font-size: 13px; white-space: nowrap; }
+
+/* ═════════ 3 · ENFOQUE ═════════ */
+.v-foco { background: var(--f-bg); color: var(--f-fg); font-family: var(--focus); }
+.f-wrap { max-width: 980px; margin: 0 auto; display: grid; gap: 22px; }
+.f-hero { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 22px; align-items: center; }
+@media (max-width: 560px) { .f-hero { grid-template-columns: minmax(0,1fr); justify-items: start; } }
+.f-ring { position: relative; width: 116px; height: 116px; }
+.f-ring svg { display: block; }
+.f-ring div { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.f-ring strong { font-size: 28px; font-weight: 600; font-family: var(--mono); }
+.f-ring span { font-size: 11px; color: var(--f-dim); }
+.f-hero h1 { margin: 0 0 6px; font-size: 26px; font-weight: 600; letter-spacing: -0.01em; }
+.f-hero p { margin: 0; color: var(--f-dim); font-size: 15px; line-height: 1.5; }
+.f-today { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; background: var(--f-card); border: 1px solid var(--f-line); border-radius: 18px; padding: 20px 22px; }
+.f-today h2 { margin: 0 0 4px; font-size: 18px; }
+.f-today p { margin: 0; color: var(--f-dim); font-size: 14px; }
+.f-go { border: 0; background: var(--f-fg); color: var(--f-bg); border-radius: 12px; padding: 12px 20px; font-weight: 600; cursor: pointer; transition: transform 100ms ease-out; }
+.f-go:active { transform: scale(0.97); }
+.f-go:focus-visible { outline: 2px solid var(--f-accent); outline-offset: 2px; }
+.f-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 860px) { .f-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.f-card { display: grid; gap: 10px; align-content: start; text-align: left; background: var(--f-card); border: 1px solid var(--f-line); border-radius: 16px; padding: 16px; cursor: pointer; min-height: 132px; transition: border-color 150ms ease-out, transform 120ms ease-out; }
+.f-card:hover { border-color: #44474e; }
+.f-card:active { transform: scale(0.98); }
+.f-card:focus-visible { outline: 2px solid var(--f-accent); outline-offset: 2px; }
+.f-glyph { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--f-line); }
+.f-card strong { font-size: 16px; font-weight: 600; }
+.f-card small { color: var(--f-dim); font-size: 13px; line-height: 1.4; }
+.f-mini { display: grid; gap: 4px; }
+.f-mini i { display: block; height: 4px; border-radius: 2px; background: var(--f-line); position: relative; overflow: hidden; }
+.f-mini i b { position: absolute; inset: 0 auto 0 0; border-radius: 2px; }
+.f-scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.5); opacity: 0; transition: opacity 200ms ease-out; z-index: 10; pointer-events: none; }
+.f-scrim.on { opacity: 1; pointer-events: auto; }
+.f-sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 11; background: var(--f-sheet); border-radius: 20px 20px 0 0; padding: 10px max(20px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px)); transform: translateY(100%); transition: transform 320ms var(--ease-out); max-height: 75vh; overflow: auto; }
+.f-sheet.on { transform: none; }
+.f-sheet .grab { width: 40px; height: 5px; border-radius: 3px; background: #4a4d55; margin: 0 auto 14px; }
+.f-sheet-in { max-width: 680px; margin: 0 auto; display: grid; gap: 12px; }
+.f-sheet h2 { margin: 0; font-size: 22px; }
+.f-sheet p { margin: 0; color: var(--f-dim); font-size: 14px; }
+.f-opts { display: grid; gap: 8px; }
+.f-opts button { display: flex; justify-content: space-between; gap: 12px; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--f-line); background: transparent; cursor: pointer; text-align: left; transition: border-color 150ms ease-out; }
+.f-opts button:hover { border-color: #4a4d55; }
+.f-opts button:active { transform: scale(0.99); }
+.f-opts button span { color: var(--f-dim); font-size: 13px; white-space: nowrap; }
+.f-close { justify-self: end; border: 0; background: var(--f-line); border-radius: 999px; padding: 6px 14px; cursor: pointer; font-size: 13px; }
+
+
+/* ═════════ 4 · CLARO ═════════ */
+.v-claro { background: var(--c-bg); color: var(--c-fg); font-family: var(--c-font); }
+.v-claro[data-font="calibri"] { --c-font: Calibri, Carlito, 'Segoe UI', Arial, sans-serif; }
+.v-claro[data-font="segoe"] { --c-font: 'Segoe UI', 'Segoe UI Variable', system-ui, Arial, sans-serif; }
+.c-wrap { max-width: 1180px; margin: 0 auto; display: grid; gap: 22px; }
+.c-top { display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: center; justify-content: space-between; border-top: 6px solid var(--c-red); padding-top: 14px; }
+.c-brand { font-weight: 700; font-size: 20px; letter-spacing: -0.01em; }
+.c-brand i { font-style: normal; color: var(--c-red); }
+.c-font { display: flex; gap: 4px; align-items: center; font-size: 12px; color: var(--c-dim); }
+.c-font button { border: 1px solid var(--c-line); background: var(--c-bg); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+.c-font button.on { border-color: var(--c-fg); background: var(--c-fg); color: var(--c-bg); }
+.c-font button:focus-visible, .c-sec:focus-visible, .c-go:focus-visible { outline: 2px solid var(--c-blue); outline-offset: 2px; }
+.c-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--c-line); }
+@media (max-width: 760px) { .c-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.c-kpi { padding: 14px 16px; border-right: 1px solid var(--c-line); display: grid; gap: 4px; }
+.c-kpi:last-child { border-right: 0; }
+.c-kpi span { font-size: 12px; color: var(--c-dim); }
+.c-kpi strong { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
+.c-kpi small { font-size: 12px; color: var(--c-dim); }
+.c-kpi .red { color: var(--c-red); }
+.c-secs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 860px) { .c-secs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.c-sec { text-align: left; background: var(--c-bg); border: 1px solid var(--c-line); border-radius: 6px; padding: 14px; cursor: pointer; display: grid; gap: 6px; align-content: start; transition: border-color 120ms ease-out, box-shadow 120ms ease-out; }
+.c-sec:hover { border-color: var(--c-fg); }
+.c-sec:active { transform: scale(0.99); }
+.c-sec.today { background: var(--c-fg); color: var(--c-bg); border-color: var(--c-fg); }
+.c-sec.today small { color: #c9ccd1; }
+.c-sec strong { font-size: 16px; }
+.c-sec small { color: var(--c-dim); font-size: 13px; line-height: 1.35; }
+.c-charts { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 900px) { .c-charts { grid-template-columns: minmax(0, 1fr); } }
+.c-panel { border: 1px solid var(--c-line); border-radius: 6px; padding: 16px; min-width: 0; }
+.c-panel h2 { margin: 0 0 4px; font-size: 15px; }
+.c-panel p.sub { margin: 0 0 12px; font-size: 12px; color: var(--c-dim); }
+.c-svg { width: 100%; height: auto; display: block; }
+.c-svg text { font-family: var(--c-font); fill: var(--c-dim); font-size: 11px; }
+.c-svg text.lbl { fill: var(--c-fg); font-size: 12px; }
+.c-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--c-dim); margin-top: 8px; }
+.c-legend i { display: inline-block; width: 10px; height: 10px; margin-right: 5px; vertical-align: -1px; }
+.c-list { display: grid; gap: 0; }
+.c-list div { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--c-line); font-size: 13px; }
+.c-list b { font-weight: 700; }
+.c-list span { color: var(--c-dim); white-space: nowrap; }
+.c-detail { border: 1px solid var(--c-fg); border-radius: 6px; padding: 18px; display: grid; gap: 10px; }
+.c-detail h2 { margin: 0; font-size: 22px; }
+.c-detail p { margin: 0; color: var(--c-dim); }
+.c-detail ul { list-style: none; margin: 0; padding: 0; }
+.c-detail li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--c-line); }
+.c-detail li span { color: var(--c-dim); font-size: 13px; white-space: nowrap; }
+.c-go { justify-self: start; border: 0; background: var(--c-red); color: #fff; border-radius: 4px; padding: 10px 16px; font-weight: 700; cursor: pointer; }
+.c-go:active { transform: scale(0.97); }
+
+/* ═════════ Picker (spec verbatim) ═════════ */
+.proto-picker { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 2147483647; display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 999px; background: rgba(10, 10, 10, 0.82); -webkit-backdrop-filter: blur(12px) saturate(1.4); backdrop-filter: blur(12px) saturate(1.4); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset, 0 8px 24px rgba(0, 0, 0, 0.24), 0 2px 6px rgba(0, 0, 0, 0.12); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 13px; line-height: 1; -webkit-font-smoothing: antialiased; user-select: none; -webkit-user-select: none; }
+.proto-picker-highlight { position: absolute; top: 4px; left: 0; height: 28px; border-radius: 999px; background: rgba(255, 255, 255, 0.12); will-change: transform; }
+.proto-picker[data-ready] .proto-picker-highlight { transition: transform 250ms cubic-bezier(0.23, 1, 0.32, 1), width 250ms cubic-bezier(0.23, 1, 0.32, 1); }
+@media (prefers-reduced-motion: reduce) { .proto-picker[data-ready] .proto-picker-highlight { transition: none; } }
+.proto-picker-item { position: relative; display: flex; align-items: center; height: 28px; padding: 0 12px; border: 0; border-radius: 999px; background: transparent; color: rgba(255, 255, 255, 0.55); font: inherit; cursor: pointer; transition: color 150ms ease-out; }
+.proto-picker-item:hover { color: rgba(255, 255, 255, 0.85); }
+.proto-picker-item:active { transform: scale(0.97); }
+.proto-picker-item:focus-visible { outline: 2px solid rgba(255, 255, 255, 0.4); outline-offset: 2px; }
+.proto-picker-item[data-active] { color: #fff; }
+.proto-picker-divider { width: 1px; height: 16px; margin: 0 4px; background: rgba(255, 255, 255, 0.12); }
+.proto-picker-replay { padding: 0 10px; font-size: 14px; }
+.proto-picker[data-position="top"] { bottom: auto; top: calc(24px + env(safe-area-inset-top, 0px)); }
+</style>
+
+<div id="stage"></div>
+
+<nav class="proto-picker" aria-label="Prototype variants" data-position="top">
+  <span class="proto-picker-highlight" aria-hidden="true"></span>
+  <button class="proto-picker-item" data-active aria-current="true">Terminal</button>
+  <button class="proto-picker-item">Editorial</button>
+  <button class="proto-picker-item">Enfoque</button>
+  <button class="proto-picker-item">Claro</button>
+  <span class="proto-picker-divider" aria-hidden="true"></span>
+  <button class="proto-picker-item proto-picker-replay" aria-label="Replay animation (R)">↻</button>
+</nav>
+
+<script>
+/* Datos de ejemplo (no son tu progreso real). Meta por área obligatoria: 75 %. */
+const AREAS = [
+  { id: 'etica', n: 'Ética', q: 20, ob: true, p: 82, d: +4 },
+  { id: 'servicios', n: 'Servicios de Inversión', q: 20, ob: false, p: 64, d: +2 },
+  { id: 'normativo', n: 'Marco Normativo', q: 25, ob: false, p: 55, d: -1 },
+  { id: 'matematicas', n: 'Matemáticas y Portafolios', q: 25, ob: false, p: 61, d: +6 },
+  { id: 'capitales', n: 'Mercado de Capitales', q: 25, ob: true, p: 71, d: +3 },
+  { id: 'deuda', n: 'Títulos de Deuda', q: 25, ob: true, p: 58, d: +9 },
+  { id: 'fondos', n: 'Fondos de Inversión', q: 20, ob: false, p: 66, d: 0 },
+  { id: 'derivados', n: 'Derivados y Riesgos', q: 25, ob: true, p: 49, d: -2 },
+  { id: 'analisis', n: 'Análisis Econ., Fin. y Técnico', q: 25, ob: false, p: 60, d: +1 }
+];
+const META = 75, DIAS = 46, PROB = 31;
+
+/* Secciones de la app y lo que hay dentro de cada una. */
+const SECS = [
+  { code: 'PLAN', n: 'Sesión de hoy', d: 'Lo que toca hoy según tu modo intensivo: 55 min.', subs: [['40 preguntas de Derivados (opciones, cálculo)', '30 min'], ['Lámina: Reporto y precio de salida', '10 min'], ['15 tarjetas: plazos y reguladores', '8 min'], ['12 repasos vencidos', '7 min']] },
+  { code: 'PRAC', n: 'Practicar', d: 'Por área, tema o subtema. Teoría o cálculo. Con explicación al instante.', subs: [['Elegir área y subtema', '465 objetivos'], ['Solo cálculo (4 decimales)', 'plantillas'], ['Mis errores frecuentes', '23 preguntas'], ['Preguntas oficiales de ejemplo', '75']] },
+  { code: 'DIAG', n: 'Diagnóstico', d: 'Qué te falla y por qué: área → subtema → tipo de error.', subs: [['Mapa de calor por subtema', '76 subtemas'], ['Teoría vs. cálculo', 'por área'], ['Patrones de error', '5 detectados'], ['Examen diagnóstico inicial', '60 preguntas']] },
+  { code: 'SIM', n: 'Simulacro', d: 'Como el examen real, con boleta por área.', subs: [['Integral', '210 preg · 4 h 18 min'], ['Por módulo (un área)', '20–25 preg'], ['Modular extraordinario', '4 obligatorias'], ['Rápido', '40 preg · 49 min']] },
+  { code: 'GUIA', n: 'Guías', d: 'Láminas con tus notas debajo y mapas conceptuales. Exporta a Word y PowerPoint.', subs: [['Títulos de Deuda', '38 láminas'], ['Ética', 'pronto'], ['Mercado de Capitales', 'pronto'], ['Derivados y Riesgos', 'pronto']] },
+  { code: 'TARJ', n: 'Tarjetas', d: 'Datos duros con repetición espaciada: plazos, montos, horarios, reguladores.', subs: [['Repaso de hoy', '15 tarjetas'], ['Por área', '9 mazos'], ['Las que más fallas', '11']] },
+  { code: 'VID', n: 'Videos', d: 'Videos por tema, verificados, y los que tú agregues.', subs: [['Recomendados para tus debilidades', '4'], ['Por área', '9'], ['Agregar enlace', '']] },
+  { code: 'CONF', n: 'Ajustes', d: 'Fecha del examen, intensidad, modo con IA, respaldo.', subs: [['Fecha del examen', '29 nov 2026'], ['Modo de estudio', 'Intensivo'], ['Modo con IA (OmniRoute)', 'Desactivado'], ['Respaldar progreso', 'JSON']] }
+];
+const weakest = AREAS.filter((a) => a.ob).sort((a, b) => a.p - b.p)[0];
+const S = { sel: null, cmd: '' };
+const state = (p, ob) => (p >= META ? 'ok' : ob && p < 60 ? 'low' : '');
+const sign = (d) => (d > 0 ? `▲ ${d}` : d < 0 ? `▼ ${-d}` : '— 0');
+
+/* ───── 1 · Terminal: launchpad ───── */
+function term() {
+  const rows = AREAS.map((a) => `<tr>
+      <td class="name">${a.n}${a.ob ? '<span class="t-ob">● OBL</span>' : ''}</td>
+      <td class="r">${a.q}</td>
+      <td><div class="t-bar" title="Meta ${META} %"><i class="${state(a.p, a.ob)}" style="width:${a.p}%"></i><b></b></div></td>
+      <td class="r">${a.p.toFixed(1)}%</td>
+      <td class="r ${a.d > 0 ? 't-up' : a.d < 0 ? 't-down' : ''}">${sign(a.d)}</td></tr>`).join('');
+  const q = S.cmd.trim().toUpperCase();
+  const fns = SECS.filter((s) => !q || s.code.startsWith(q) || s.n.toUpperCase().includes(q));
+  const sel = SECS.find((s) => s.code === S.sel);
+  const right = sel
+    ? `<div class="t-detail reveal"><p>${sel.d}</p><div class="t-sub">${sel.subs.map(([a, b]) => `<button data-open="${sel.code}">${a}<span>${b}</span></button>`).join('')}</div>
+        <button class="t-fn" data-back style="grid-template-columns:auto 1fr"><span class="t-code">ESC</span><strong>Volver a funciones</strong></button></div>`
+    : `<div class="t-fns">${fns.map((s, i) => `<button class="t-fn" data-sec="${s.code}"><span class="t-code">${s.code}</span><strong>${s.n}</strong><small>${s.d}</small></button>`).join('') || '<p class="t-detail" style="color:var(--t-dim)">Sin coincidencias. Prueba SIM, DEUDA o GUIA.</p>'}</div>`;
+  return `<div class="screen v-term"><div class="t-wrap">
+    <header class="t-head"><span class="t-brand">AMIB F3 · TERMINAL DE ESTUDIO</span>
+      <span class="t-kpis">
+        <span class="t-kpi"><span>EXAMEN EN</span><strong>${DIAS} DÍAS</strong></span>
+        <span class="t-kpi"><span>PROB. APROBAR (EST.)</span><strong class="warn">${PROB}%</strong></span>
+        <span class="t-kpi"><span>OBLIGATORIAS ≥ META</span><strong>1 / 4</strong></span>
+        <span class="t-kpi"><span>RACHA</span><strong>6 DÍAS</strong></span>
+      </span></header>
+    <form class="t-cmd" data-cmd><label for="cmd">&gt;</label><input id="cmd" autocomplete="off" placeholder="Escribe una función o tema (SIM, PRAC, DEUDA…) y Enter" value="${S.cmd}"><span class="demo" style="color:var(--t-dim)">datos de ejemplo</span></form>
+    <div class="t-cols">
+      <section class="t-box"><h2>MONITOR DE ÁREAS <span>meta ${META}% · │ = meta</span></h2>
+        <div style="overflow-x:auto"><table class="t-table"><thead><tr><th>ÁREA</th><th class="r">PREG</th><th>DOMINIO</th><th class="r">%</th><th class="r">7D</th></tr></thead><tbody>${rows}</tbody></table></div>
+      </section>
+      <div style="display:grid;gap:16px;align-content:start;min-width:0">
+        <section class="t-box"><h2>${sel ? sel.code + ' · ' + sel.n.toUpperCase() : 'FUNCIONES'} <span>${sel ? '' : 'clic o escribe el código'}</span></h2>${right}</section>
+        <section class="t-box"><h2>HOY <span>intensivo · 55 min</span></h2><div class="t-agenda">
+          <div><time>30 min</time><span>Derivados y Riesgos · opciones (cálculo)</span><em>DÉBIL</em></div>
+          <div><time>10 min</time><span>Lámina: reporto y precio de salida</span><em>GUIA</em></div>
+          <div><time>8 min</time><span>15 tarjetas: plazos y reguladores</span><em>TARJ</em></div>
+          <div><time>7 min</time><span>12 repasos vencidos</span><em>PRAC</em></div>
+        </div></section>
+      </div>
+    </div>
+    <div class="t-toast" data-toast></div>
+  </div></div>`;
+}
+
+/* ───── 2 · Editorial: portada ───── */
+function edit() {
+  const sel = SECS.find((s) => s.code === S.sel);
+  const nav = SECS.filter((s) => s.code !== 'PLAN').map((s) => `<button class="${S.sel === s.code ? 'sel' : ''}" data-sec="${s.code}">${s.n}</button>`).join('');
+  const lead = sel
+    ? `<article class="e-detail reveal"><div class="e-kicker">Sección</div><h2>${sel.n}</h2><p style="margin:0;font-family:var(--serif);font-size:17px;color:var(--e-dim)">${sel.d}</p>
+        <ul>${sel.subs.map(([a, b]) => `<li><button class="e-btn" style="border:0;padding:0;background:none;text-align:left" data-open="${sel.code}">${a}</button><span>${b}</span></li>`).join('')}</ul>
+        <button class="e-btn" data-back>Volver a la portada</button></article>`
+    : `<article class="e-lead reveal"><div class="e-kicker">Sesión de hoy · 55 min</div>
+        <h2>${weakest.n}, tu área obligatoria más débil, encabeza la sesión de hoy</h2>
+        <p>Vas en ${weakest.p} % y la meta es ${META} %. Hoy: 40 preguntas de opciones (cálculo a 4 decimales), una lámina de reporto y 15 tarjetas de repaso.</p>
+        <div class="e-row"><button class="e-btn primary" data-open="PLAN">Empezar la sesión de hoy</button><button class="e-btn" data-sec="SIM">Hacer un simulacro</button></div></article>`;
+  const secs = SECS.filter((s) => s.code !== 'PLAN' && s.code !== 'CONF').map((s) => `<div class="e-sec"><h3><button data-sec="${s.code}">${s.n}</button></h3><p>${s.d}</p></div>`).join('');
+  const mkt = AREAS.map((a) => `<tr><td>${a.n}${a.ob ? '<span class="e-ob">OBL</span>' : ''}</td><td class="r">${a.p}%</td><td class="chg ${a.d > 0 ? 'e-up' : a.d < 0 ? 'e-down' : ''}">${sign(a.d)}</td></tr>`).join('');
+  return `<div class="screen v-edit"><div class="e-wrap">
+    <header class="e-mast"><h1>AMIB F3</h1><p><span>Martes 14 de octubre de 2026</span><span>Examen en <strong>${DIAS} días</strong></span><span>Probabilidad estimada de aprobar <strong>${PROB} %</strong></span></p></header>
+    <nav class="e-nav">${nav}</nav>
+    <div class="e-grid">
+      <div>${lead}<div class="e-sections">${secs}</div></div>
+      <aside class="e-aside"><h3>Tus áreas</h3><table class="e-mkt"><tbody>${mkt}</tbody></table>
+        <p class="e-note">Aciertos por área y cambio en 7 días. OBL = obligatoria (meta ${META} %). Datos de ejemplo.</p></aside>
+    </div>
+  </div></div>`;
+}
+
+/* ───── 3 · Enfoque: tarjetas + hoja ───── */
+const GLYPH = {
+  PRAC: '<path d="M4 7h10M4 11h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="14" cy="11" r="1.6" fill="currentColor"/>',
+  DIAG: '<path d="M3 14l4-5 3 3 5-7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
+  SIM: '<circle cx="9" cy="10" r="6" stroke="currentColor" stroke-width="2" fill="none"/><path d="M9 7v3l2 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  GUIA: '<rect x="3" y="4" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="2" fill="none"/><path d="M5 16h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  TARJ: '<rect x="4" y="3" width="10" height="13" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>',
+  VID: '<path d="M6 4l9 5.5L6 15z" fill="currentColor"/>',
+  CONF: '<circle cx="9" cy="9.5" r="2.5" stroke="currentColor" stroke-width="2" fill="none"/><path d="M9 2.5v2M9 14.5v2M2 9.5h2M14 9.5h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  PLAN: ''
+};
+function foco() {
+  const circ = 2 * Math.PI * 50;
+  const sel = SECS.find((s) => s.code === S.sel);
+  const cards = SECS.filter((s) => s.code !== 'PLAN').map((s) => {
+    let extra = `<small>${s.d}</small>`;
+    if (s.code === 'DIAG') extra = `<div class="f-mini">${AREAS.filter((a) => a.ob).map((a) => `<i title="${a.n} ${a.p}%"><b style="width:${a.p}%;background:${a.p >= META ? 'var(--f-up)' : a.p < 60 ? 'var(--f-down)' : 'var(--f-accent)'}"></b></i>`).join('')}</div><small>4 obligatorias vs. meta ${META} %</small>`;
+    return `<button class="f-card" data-sec="${s.code}"><span class="f-glyph"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">${GLYPH[s.code]}</svg></span><strong>${s.n}</strong>${extra}</button>`;
+  }).join('');
+  return `<div class="screen v-foco"><div class="f-wrap">
+    <section class="f-hero">
+      <div class="f-ring" aria-label="Probabilidad estimada de aprobar ${PROB}%"><svg width="116" height="116" viewBox="0 0 116 116"><circle cx="58" cy="58" r="50" fill="none" stroke="#2c2e33" stroke-width="10"/><circle cx="58" cy="58" r="50" fill="none" stroke="#f5a524" stroke-width="10" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${circ * (1 - PROB / 100)}" transform="rotate(-90 58 58)"/></svg><div><strong>${PROB}%</strong><span>prob. aprobar</span></div></div>
+      <div><h1>Buenas noches, Cesar</h1><p>Faltan ${DIAS} días. ${weakest.n} es tu obligatoria más débil (${weakest.p} % de ${META} %). <span class="demo">· datos de ejemplo</span></p></div>
+    </section>
+    <section class="f-today"><div><h2>Sesión de hoy · 55 min</h2><p>40 preguntas de Derivados · 1 lámina · 15 tarjetas · 12 repasos</p></div><button class="f-go" data-sec="PLAN">Empezar</button></section>
+    <section class="f-grid">${cards}</section>
+  </div>
+  <div class="f-scrim ${sel ? 'on' : ''}" data-back></div>
+  <div class="f-sheet ${sel ? 'on' : ''}" role="dialog" aria-modal="true" aria-label="${sel ? sel.n : ''}"><div class="grab"></div>
+    ${sel ? `<div class="f-sheet-in"><h2>${sel.n}</h2><p>${sel.d}</p><div class="f-opts">${sel.subs.map(([a, b]) => `<button data-open="${sel.code}">${a}<span>${b}</span></button>`).join('')}</div><button class="f-close" data-back>Cerrar</button></div>` : ''}
+  </div></div>`;
+}
+
+
+/* ───── 4 · Claro: blanco, sobrio, con perfil del estudiante ───── */
+const PERFIL = {
+  // segundos promedio por pregunta, por área (meta: 74 s)
+  tiempo: { etica: 41, servicios: 52, normativo: 63, matematicas: 118, capitales: 66, deuda: 97, fondos: 58, derivados: 131, analisis: 70 },
+  // objetivos vistos / totales por área (del temario: 465)
+  vistos: { etica: [30, 42], servicios: [14, 32], normativo: [21, 75], matematicas: [22, 49], capitales: [25, 42], deuda: [24, 31], fondos: [18, 52], derivados: [29, 75], analisis: [19, 67] }
+};
+S.font = S.font || 'arial';
+function claro() {
+  const sel = SECS.find((s) => s.code === S.sel);
+  const mand = AREAS.filter((a) => a.ob);
+  const ok = mand.filter((a) => a.p >= META).length;
+  const seen = Object.values(PERFIL.vistos).reduce((t, [v]) => t + v, 0);
+  const secs = SECS.map((s) => `<button class="c-sec ${s.code === 'PLAN' ? 'today' : ''}" data-sec="${s.code}"><strong>${s.n}</strong><small>${s.d}</small></button>`).join('');
+  // Gráfica 1: dominio por área vs meta (barras horizontales a escala 0–100)
+  const W = 560, rowH = 26, top = 18, left = 190, barW = W - left - 60;
+  const x = (v) => left + (v / 100) * barW;
+  const bars = AREAS.map((a, i) => {
+    const y = top + i * rowH;
+    const col = a.p >= META ? 'var(--c-up)' : a.ob && a.p < 60 ? 'var(--c-down)' : 'var(--c-blue)';
+    return `<text class="lbl" x="${left - 8}" y="${y + 13}" text-anchor="end">${a.n}${a.ob ? ' ●' : ''}</text>
+      <rect x="${left}" y="${y + 3}" width="${barW}" height="14" fill="var(--c-soft)"/>
+      <rect x="${left}" y="${y + 3}" width="${(a.p / 100) * barW}" height="14" fill="${col}"/>
+      <text x="${x(a.p) + 6}" y="${y + 14}">${a.p}%</text>`;
+  }).join('');
+  const H1 = top + AREAS.length * rowH + 22;
+  const meta = `<line x1="${x(META)}" x2="${x(META)}" y1="${top - 4}" y2="${H1 - 18}" stroke="var(--c-red)" stroke-width="1.5" stroke-dasharray="3 3"/><text x="${x(META)}" y="${top - 6}" text-anchor="middle" fill="var(--c-red)">meta ${META}%</text>`;
+  const ticks = [0, 25, 50, 75, 100].map((t) => `<text x="${x(t)}" y="${H1 - 4}" text-anchor="middle">${t}</text>`).join('');
+  // Gráfica 2: tiempo promedio por pregunta vs meta 74 s
+  const W2 = 420, maxT = 140, l2 = 150, bw2 = W2 - l2 - 40, x2 = (v) => l2 + (v / maxT) * bw2;
+  const tb = AREAS.map((a, i) => {
+    const t = PERFIL.tiempo[a.id], y = 14 + i * 22;
+    return `<text class="lbl" x="${l2 - 8}" y="${y + 11}" text-anchor="end">${a.n.split(' ')[0]}${a.n.includes('Análisis') ? ' E/F/T' : ''}</text>
+      <rect x="${l2}" y="${y + 2}" width="${(t / maxT) * bw2}" height="12" fill="${t > 74 ? 'var(--c-red)' : 'var(--c-fg)'}"/>
+      <text x="${x2(t) + 5}" y="${y + 12}">${t}s</text>`;
+  }).join('');
+  const H2 = 14 + AREAS.length * 22 + 20;
+  const meta2 = `<line x1="${x2(74)}" x2="${x2(74)}" y1="8" y2="${H2 - 16}" stroke="var(--c-blue)" stroke-width="1.5" stroke-dasharray="3 3"/><text x="${x2(74)}" y="${H2 - 4}" text-anchor="middle" fill="var(--c-blue)">74 s por pregunta en el examen</text>`;
+  const body = sel
+    ? `<section class="c-detail reveal"><h2>${sel.n}</h2><p>${sel.d}</p><ul>${sel.subs.map(([a, b]) => `<li>${a}<span>${b}</span></li>`).join('')}</ul><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="c-go" data-open="${sel.code}">Abrir</button><button class="c-sec" data-back style="padding:10px 16px">Volver al inicio</button></div></section>`
+    : `<section class="c-secs">${secs}</section>
+      <section class="c-charts">
+        <div class="c-panel"><h2>Dominio por área</h2><p class="sub">% de aciertos ponderado por recencia. ● obligatoria: necesitas ${META} % en cada una.</p>
+          <svg class="c-svg" viewBox="0 0 ${W} ${H1}" role="img" aria-label="Dominio por área contra la meta">${meta}${bars}${ticks}</svg>
+          <div class="c-legend"><span><i style="background:var(--c-up)"></i>en meta</span><span><i style="background:var(--c-blue)"></i>en progreso</span><span><i style="background:var(--c-down)"></i>obligatoria en riesgo</span></div></div>
+        <div style="display:grid;gap:16px;min-width:0">
+          <div class="c-panel"><h2>Tiempo por pregunta</h2><p class="sub">Promedio por área. Rojo: más lento que el ritmo del examen.</p>
+            <svg class="c-svg" viewBox="0 0 ${W2} ${H2}" role="img" aria-label="Segundos promedio por pregunta por área">${tb}${meta2}</svg></div>
+          <div class="c-panel"><h2>Lo que el sistema recuerda de ti</h2>
+            <div class="c-list">
+              <div><span>Fallas más seguido</span><b>Opciones: prima y valor intrínseco</b></div>
+              <div><span>Patrón de error</span><b>Confundes descuento con rendimiento (7×)</b></div>
+              <div><span>Sin ver todavía</span><b>${465 - seen} de 465 objetivos</b></div>
+              <div><span>Dominas</span><b>Ética general, CETES, índices accionarios</b></div>
+              <div><span>Acertaste adivinando</span><b>9 preguntas · vuelven en repaso</b></div>
+            </div></div>
+        </div>
+      </section>`;
+  return `<div class="screen v-claro" data-font="${S.font}"><div class="c-wrap">
+    <header class="c-top"><span class="c-brand">AMIB <i>F3</i> · Estudio</span>
+      <span class="c-font" aria-label="Tipografía">Letra:
+        ${[['arial', 'Arial'], ['calibri', 'Calibri'], ['segoe', 'Segoe UI']].map(([k, n]) => `<button data-font="${k}" class="${S.font === k ? 'on' : ''}">${n}</button>`).join('')}
+        <span class="demo" style="margin-left:8px">datos de ejemplo</span></span></header>
+    <section class="c-kpis">
+      <div class="c-kpi"><span>Examen en</span><strong>${DIAS} días</strong><small>29 nov 2026 · intensivo</small></div>
+      <div class="c-kpi"><span>Probabilidad de aprobar</span><strong class="red">${PROB} %</strong><small>estimada</small></div>
+      <div class="c-kpi"><span>Obligatorias en meta</span><strong>${ok} / 4</strong><small>meta ${META} % cada una</small></div>
+      <div class="c-kpi"><span>Cobertura del temario</span><strong>${Math.round((seen / 465) * 100)} %</strong><small>${seen} de 465 objetivos vistos</small></div>
+    </section>
+    ${body}
+  </div></div>`;
+}
+
+const variants = [term, edit, foco, claro];
+const PAGE = ['#0b0d10', '#fff1e5', '#121315', '#ffffff'];
+const SCHEME = ['dark', 'light', 'dark', 'light'];
+
+/* ───── Arnés (comportamiento del selector según spec) ───── */
+const stage = document.getElementById('stage');
+const picker = document.querySelector('.proto-picker');
+const highlight = picker.querySelector('.proto-picker-highlight');
+const items = [...picker.querySelectorAll('.proto-picker-item:not(.proto-picker-replay)')];
+const replay = picker.querySelector('.proto-picker-replay');
+let current = 0;
+function moveHighlight() { const el = items[current]; highlight.style.width = el.offsetWidth + 'px'; highlight.style.transform = `translateX(${el.offsetLeft}px)`; }
+function paint(keepFocus) {
+  const hadFocus = keepFocus && document.activeElement && document.activeElement.id === 'cmd';
+  const pos = hadFocus ? document.activeElement.selectionStart : 0;
+  stage.innerHTML = variants[current]();
+  if (hadFocus) { const i = document.getElementById('cmd'); i.focus(); i.setSelectionRange(pos, pos); }
+}
+function mount(i) {
+  S.sel = null; S.cmd = ''; S.font = S.font || 'arial';
+  document.documentElement.style.setProperty('--page', PAGE[i]);
+  document.documentElement.style.colorScheme = SCHEME[i];
+  stage.innerHTML = '';
+  requestAnimationFrame(() => paint(false));
+}
+function setActive(i) {
+  if (i < 0 || i >= variants.length) return;
+  current = i;
+  items.forEach((el, j) => { el.toggleAttribute('data-active', j === i); if (j === i) el.setAttribute('aria-current', 'true'); else el.removeAttribute('aria-current'); });
+  moveHighlight();
+  try { const url = new URL(location); url.searchParams.set('v', i + 1); history.replaceState(null, '', url); } catch (e) {}
+  mount(i);
+}
+items.forEach((el, i) => el.addEventListener('click', () => setActive(i)));
+replay?.addEventListener('click', () => mount(current));
+window.addEventListener('resize', moveHighlight);
+
+/* ───── Navegación del prototipo ───── */
+function openSec(code) { S.sel = code; paint(false); }
+function back() { S.sel = null; paint(false); }
+stage.addEventListener('click', (e) => {
+  const f = e.target.closest('button[data-font]'); if (f) { S.font = f.dataset.font; return paint(false); }
+  const s = e.target.closest('[data-sec]'); if (s) return openSec(s.dataset.sec);
+  if (e.target.closest('[data-back]')) return back();
+  const o = e.target.closest('[data-open]');
+  if (o) {
+    const t = stage.querySelector('[data-toast]');
+    if (t) t.textContent = `> ABRIENDO ${o.dataset.open}… (en el prototipo aquí termina el recorrido)`;
+    else openSec(o.dataset.open === S.sel ? S.sel : o.dataset.open);
+  }
+});
+stage.addEventListener('input', (e) => { if (e.target.id === 'cmd') { S.cmd = e.target.value; paint(true); } });
+stage.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const q = S.cmd.trim().toUpperCase(); if (!q) return;
+  const hit = SECS.find((s) => s.code.startsWith(q) || s.n.toUpperCase().includes(q));
+  if (hit) { S.cmd = ''; openSec(hit.code); }
+  else { S.cmd = ''; openSec('PRAC'); const t = stage.querySelector('[data-toast]'); if (t) t.textContent = `> "${q}": se buscará como tema dentro de PRACTICAR`; }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && S.sel) return back();
+  if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.target.isContentEditable) return;
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const num = parseInt(e.key, 10);
+  if (num >= 1 && num <= variants.length) return setActive(num - 1);
+  if (e.key === 'ArrowRight') return setActive((current + 1) % variants.length);
+  if (e.key === 'ArrowLeft') return setActive((current - 1 + variants.length) % variants.length);
+  if (e.key === 'r' || e.key === 'R') return mount(current);
+  if (current === 0 && e.key === '/') { e.preventDefault(); document.getElementById('cmd')?.focus(); }
+});
+
+let start = 0;
+try { start = (parseInt(new URLSearchParams(location.search).get('v'), 10) || 1) - 1; } catch (e) {}
+setActive(start);
+requestAnimationFrame(() => requestAnimationFrame(() => picker.setAttribute('data-ready', '')));
+</script>
