@@ -155,6 +155,33 @@ docs/              fichas, ADRs, herramientas, guía de uso
 - **Intento**: pregunta, versión, semilla, respuesta, acierto, `tiempo_ms`, confianza ("seguro / dudé / adiviné"), modo, sesión, fecha.
 - **Paquete de contenido versionado**: actualizar preguntas no borra el progreso. El progreso vive en la carpeta de usuario de Windows, con respaldo y restauración en JSON.
 
+
+### Modos de estudio (decisión de Cesar): primero se aprende, luego se evalúa
+Una sesión **no empieza con un examen**. Desde Inicio hay cuatro maneras de estudiar:
+
+| Modo | Para qué | Flujo |
+|---|---|---|
+| **Lección guiada** (por subtema) | Aprender un tema | 1) **Explicación por partes**: láminas con el tema dividido en sus conceptos, fichas de instrumentos y mapa conceptual. 2) **Puntos clave**: lo que hay que memorizar. 3) **Práctica guiada**: preguntas con explicación inmediata. 4) **Mini examen** al final (5–10 preguntas), que alimenta el diagnóstico |
+| **Repaso rápido** | Lo más importante que debes saber **hoy** | Tarjetas y puntos clave priorizados por peso en el examen, por tus debilidades y por lo que olvidarás pronto. 10–20 minutos, con 3–5 preguntas de control al final |
+| **Repaso completo desde cero** | Recorrer todo el temario en orden | Todas las lecciones guiadas en el orden del temario (área → materia → subtema), con avance guardado. Las 4 obligatorias van primero si así lo elige el plan |
+| **Evaluación directa** | Medirse | Práctica libre, simulacro por módulo, modular extraordinario, rápido o integral |
+
+El **Plan de hoy** mezcla estos modos según la intensidad y el diagnóstico. Por ejemplo: lección de un subtema débil, luego repaso rápido de tarjetas vencidas y al final un mini examen.
+
+### Fuente de las lecciones: `AMIB_1_completo.md`
+- Es el manual oficial completo en OCR: 10 capítulos, 351 secciones `####` (una por objetivo de aprendizaje) y marcadores `<!-- page N -->`.
+- **Ingesta (`tools/parse-manual.ts`)**:
+  - Corta el manual por capítulo y sección.
+  - Detecta encabezados que el OCR perdió (líneas que empiezan con numeración tipo `6.2.3.`).
+  - Guarda el rango de páginas de cada sección.
+  - Marca las secciones "INFORMACIÓN FIGURA 3".
+  - Vincula cada sección con su objetivo del temario por similitud de texto, con nivel de confianza.
+  - Escribe `content/manual/capNN/<seccion>.md`, el OCR crudo con metadatos.
+  - Extrae las preguntas de "Repaso del capítulo" como `borrador`, porque no traen clave.
+  - Completa `exclusivoFig3` en la taxonomía.
+- **Limpieza** (modelos, por sección): corrige errores de OCR sin cambiar ninguna cifra. Un script compara números, porcentajes y plazos antes y después. El manual 2023, que sí tiene texto, sirve de respaldo para pasajes ilegibles.
+- **Redacción de lecciones** (Opus, por subtema): láminas con el formato de las notas de Cesar. Cada lámina cita su página del manual. Se empieza con Títulos de Deuda (capítulo 6) y se combina con sus notas.
+
 ### Arranque personalizado (onboarding)
 Primera vez que se abre la app:
 1. Fecha del examen.
@@ -271,7 +298,7 @@ Todo lo que hace Cesar queda registrado y se convierte en un **perfil persistent
   - **Terminal**: oscuro, estilo Bloomberg.
   - **Editorial**: salmón, estilo FT.
   - **Enfoque**: grafito, estilo Apple.
-  - **Claro**: blanco, sobrio y profesional, estilo semanario económico. Es el tema por omisión si Cesar no elige otro.
+  - **Claro**: blanco, sobrio y profesional, estilo semanario económico. **Es el tema por omisión (confirmado por Cesar).**
 - **Tipografía** seleccionable entre fuentes conocidas de Windows: Arial, Calibri y Segoe UI. Las cifras siempre usan dígitos tabulares.
 - Las pantallas se construyen solo con tokens, nunca con colores literales, para que cualquier tema funcione en todas. Una prueba E2E recorre los 4 temas con capturas.
 - Al iniciar, la app abre en **Inicio**, el hub para elegir sección (Sesión de hoy, Practicar, Diagnóstico, Simulacro, Guías, Tarjetas, Videos, Ajustes). Nunca abre directo en un examen.

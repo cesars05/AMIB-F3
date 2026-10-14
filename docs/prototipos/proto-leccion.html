@@ -1,0 +1,338 @@
+<title>Lección guiada CETES</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Concepto: lección guiada en el tema Claro (por omisión). Una columna de lectura con un riel de etapas arriba:
+   Explicación por partes → Puntos clave → Práctica guiada → Mini examen. Cada lámina lleva tus notas debajo. */
+:root {
+  color-scheme: light;
+  --bg: #ffffff; --soft: #f4f5f7; --line: #dcdfe4; --fg: #121212; --dim: #5b6168;
+  --red: #e3120b; --blue: #1f5fa8; --up: #1a7f37; --down: #c4161c;
+  /* acentos de las notas de Cesar */
+  --morado: #7030a0; --termino: #c00000; --resumen: #3a7c22;
+  --font: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  --mono: Consolas, 'Cascadia Mono', ui-monospace, monospace;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+.app[data-font="calibri"] { --font: Calibri, Carlito, 'Segoe UI', Arial, sans-serif; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-variant-numeric: tabular-nums; }
+.app { font-family: var(--font); min-height: 100%; }
+button, textarea { font: inherit; color: inherit; }
+.wrap { max-width: 920px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 56px; display: grid; gap: 18px; }
+
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; align-items: center; border-top: 6px solid var(--red); padding-top: 12px; }
+.crumb { font-size: 13px; color: var(--dim); }
+.crumb b { color: var(--fg); }
+.fontsw { display: flex; gap: 4px; align-items: center; font-size: 12px; color: var(--dim); }
+.fontsw button { border: 1px solid var(--line); background: var(--bg); border-radius: 4px; padding: 3px 9px; cursor: pointer; font-size: 12px; }
+.fontsw button.on { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+h1 { margin: 0; font-size: 28px; letter-spacing: -0.01em; text-wrap: balance; }
+.lead { margin: 4px 0 0; color: var(--dim); font-size: 15px; }
+
+/* Riel de etapas */
+.rail { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.stage { display: grid; gap: 6px; text-align: left; border: 0; background: none; padding: 0; cursor: pointer; }
+.stage i { display: block; height: 4px; border-radius: 2px; background: var(--line); position: relative; overflow: hidden; }
+.stage i b { position: absolute; inset: 0 auto 0 0; background: var(--fg); transition: width 300ms var(--ease-out); }
+.stage span { font-size: 12px; color: var(--dim); }
+.stage.on span { color: var(--fg); font-weight: 700; }
+.stage:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; border-radius: 2px; }
+@media (max-width: 560px) { .stage span { font-size: 11px; } }
+
+/* Lámina */
+.slide { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.slide-body { padding: 26px 28px; display: grid; gap: 14px; min-height: 300px; align-content: start; animation: enter 220ms var(--ease-out) both; }
+@media (max-width: 560px) { .slide-body { padding: 20px; } }
+@keyframes enter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.slide h2 { margin: 0; font-size: 22px; color: var(--morado); }
+.slide p { margin: 0; line-height: 1.6; font-size: 16px; max-width: 66ch; }
+.t { color: var(--termino); font-weight: 700; }
+.resumen { border-left: 4px solid var(--resumen); background: #f1f7ee; padding: 10px 14px; font-size: 15px; line-height: 1.5; }
+.resumen b { color: var(--resumen); }
+.ficha { display: grid; grid-template-columns: minmax(0, 180px) minmax(0, 1fr); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.ficha div { padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 15px; line-height: 1.45; }
+.ficha div:nth-child(odd) { background: var(--soft); font-weight: 700; }
+.ficha div:nth-last-child(-n+2) { border-bottom: 0; }
+@media (max-width: 560px) { .ficha { grid-template-columns: minmax(0, 1fr); } .ficha div:nth-child(odd) { border-bottom: 0; padding-bottom: 2px; } }
+.formula { font-family: var(--mono); background: var(--soft); border-radius: 6px; padding: 12px 14px; font-size: 14px; line-height: 1.6; overflow-x: auto; white-space: pre; }
+.cmp { overflow-x: auto; }
+.cmp table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 14px; }
+.cmp th, .cmp td { border-bottom: 1px solid var(--line); padding: 9px 10px; text-align: left; vertical-align: top; }
+.cmp th { background: var(--soft); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--dim); }
+.cmp td:first-child { font-weight: 700; }
+.trap { color: var(--down); font-weight: 700; }
+.timeline { width: 100%; height: auto; display: block; }
+.timeline text { font-family: var(--font); font-size: 12px; fill: var(--dim); }
+.timeline text.k { fill: var(--fg); font-weight: 700; font-size: 13px; }
+.keys { font-family: var(--mono); font-size: 13px; color: var(--dim); }
+.keys kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 1px 6px; background: var(--bg); color: var(--fg); }
+
+/* Paneles bajo la lámina */
+.under { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border-top: 1px solid var(--line); background: var(--soft); }
+@media (max-width: 720px) { .under { grid-template-columns: minmax(0, 1fr); } }
+.under section { padding: 14px 18px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.under section + section { border-left: 1px solid var(--line); }
+@media (max-width: 720px) { .under section + section { border-left: 0; border-top: 1px solid var(--line); } }
+.under h3 { margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--dim); }
+.under textarea { width: 100%; box-sizing: border-box; min-height: 84px; resize: vertical; border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; background: var(--bg); font-size: 14px; line-height: 1.45; }
+.under textarea:focus { outline: 2px solid var(--blue); outline-offset: 0; border-color: var(--blue); }
+.under small { color: var(--dim); font-size: 12px; }
+.under p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--dim); }
+
+.nav { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.btn { border: 1px solid var(--fg); background: var(--bg); padding: 9px 16px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 14px; transition: transform 100ms ease-out; }
+.btn.primary { background: var(--fg); color: var(--bg); }
+.btn.red { background: var(--red); border-color: var(--red); color: #fff; }
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.35; cursor: default; transform: none; }
+.btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.count { font-size: 13px; color: var(--dim); }
+
+/* Puntos clave */
+.points { display: grid; gap: 10px; counter-reset: p; }
+.point { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; align-items: start; border-bottom: 1px solid var(--line); padding-bottom: 10px; font-size: 16px; line-height: 1.5; }
+.point::before { counter-increment: p; content: counter(p); width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--fg); color: var(--bg); font-size: 13px; font-weight: 700; }
+
+/* Preguntas */
+.q { display: grid; gap: 12px; }
+.q .meta { font-size: 12px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.05em; }
+.q .stem { font-size: 18px; line-height: 1.45; margin: 0; }
+.opts { display: grid; gap: 8px; }
+.opt { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 12px 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); text-align: left; cursor: pointer; transition: border-color 120ms ease-out, background-color 120ms ease-out; }
+.opt:hover:not([disabled]) { border-color: var(--fg); }
+.opt:active:not([disabled]) { transform: scale(0.995); }
+.opt:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.opt .l { font-weight: 700; color: var(--dim); }
+.opt .v { font-size: 16px; }
+.opt .m { font-size: 12px; font-weight: 700; }
+.opt.sel { border-color: var(--fg); background: var(--soft); }
+.opt.ok { border-color: var(--up); background: #eef7f0; } .opt.ok .m { color: var(--up); }
+.opt.bad { border-color: var(--down); background: #fbefef; } .opt.bad .m { color: var(--down); }
+.opt[disabled] { cursor: default; }
+.why { border-left: 4px solid var(--blue); background: #f2f6fb; padding: 10px 14px; font-size: 15px; line-height: 1.5; display: grid; gap: 6px; animation: enter 200ms var(--ease-out) both; }
+.why .pat { font-size: 12px; color: var(--termino); font-weight: 700; }
+.score { display: grid; gap: 12px; }
+.score .big { font-size: 44px; font-weight: 700; letter-spacing: -0.02em; }
+.score table { border-collapse: collapse; font-size: 14px; width: 100%; }
+.score td { border-bottom: 1px solid var(--line); padding: 8px 4px; }
+.score td:last-child { text-align: right; font-weight: 700; }
+.demo { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
+@media (prefers-reduced-motion: reduce) { .slide-body, .why { animation: none; } .stage i b { transition: none; } }
+</style>
+
+<div class="app" id="app" data-font="arial">
+  <div class="wrap">
+    <header class="top">
+      <span class="crumb">Inicio › Títulos de Deuda › Títulos de Deuda I › <b>Gubernamentales: CETES</b></span>
+      <span class="fontsw">Letra:
+        <button data-font="arial" class="on">Arial</button><button data-font="calibri">Calibri</button>
+        <span class="demo" style="margin-left:8px">prototipo</span></span>
+    </header>
+    <div>
+      <h1>CETES: el bono cupón cero del Gobierno Federal</h1>
+      <p class="lead">Lección guiada · ~18 min · Objetivos 6.2.1 y 6.4.1 del temario · Fuente: Manual AMIB, cap. 6, pp. 190 y 203</p>
+    </div>
+    <nav class="rail" id="rail" aria-label="Etapas de la lección"></nav>
+    <main id="main"></main>
+  </div>
+</div>
+
+<script>
+const STAGES = ['1 · Explicación por partes', '2 · Puntos clave', '3 · Práctica guiada', '4 · Mini examen'];
+
+/* ───── Láminas (contenido del manual, cap. 6) ───── */
+const SLIDES = [
+  { title: '¿Qué es un CETE?', page: 190,
+    html: `<p>Los <span class="t">Certificados de la Tesorería de la Federación (CETES)</span> son títulos de deuda del Gobierno Federal que pertenecen a la familia de los <span class="t">bonos cupón cero</span>: se compran <b>a descuento</b>, es decir, por debajo de su valor nominal, no pagan intereses durante su vida y al vencimiento liquidan su valor nominal completo.</p>
+      <svg class="timeline" viewBox="0 0 640 120" role="img" aria-label="Flujo de un CETE: pagas el precio hoy y recibes 10 pesos al vencimiento">
+        <line x1="60" y1="60" x2="580" y2="60" stroke="#121212" stroke-width="2"/>
+        <circle cx="60" cy="60" r="6" fill="#c4161c"/><circle cx="580" cy="60" r="6" fill="#1a7f37"/>
+        <text class="k" x="60" y="36" text-anchor="middle">Hoy pagas P</text><text x="60" y="88" text-anchor="middle">p. ej. $9.881978</text>
+        <text class="k" x="580" y="36" text-anchor="middle">Recibes VN = $10</text><text x="580" y="88" text-anchor="middle">al vencimiento</text>
+        <text x="320" y="52" text-anchor="middle">sin cupones en medio</text><text x="320" y="88" text-anchor="middle">t = días por vencer</text>
+      </svg>
+      <div class="resumen"><b>Resumen CETES:</b> tu ganancia es la diferencia entre lo que pagas hoy y los $10 que recibes al final. La tasa está "escondida" en ese descuento.</div>`,
+    more: 'El manual lo define en el objetivo 6.2.1 (características de los títulos gubernamentales). Los CETES son el ejemplo más claro de bono cupón cero en México.' },
+  { title: 'Ficha del instrumento', page: 190,
+    html: `<div class="ficha">
+        <div>Emisor</div><div>Gobierno Federal (SHCP); Banxico actúa como agente colocador</div>
+        <div>Valor nominal</div><div><span class="t">$10 pesos</span></div>
+        <div>Plazo</div><div>28 y 91 días, y plazos cercanos a <span class="t">6 meses y 1 año</span></div>
+        <div>Pago de intereses</div><div><span class="t">No devenga intereses</span> (cupón cero). La tasa está implícita en el precio de compra, el valor nominal y el plazo</div>
+        <div>Colocación primaria</div><div>Por <span class="t">subasta</span>: los participantes presentan posturas por el <b>monto</b> y la <b>tasa de descuento</b> que están dispuestos a pagar</div>
+      </div>
+      <div class="resumen"><b>Ojo en el examen:</b> en CETES la postura es por <b>tasa de descuento</b>; en BONDES D y Bonos M es por <b>precio</b>.</div>`,
+    more: 'Las cuatro características (valor nominal, plazo, pago de intereses y colocación primaria) se repiten en todas las fichas de títulos gubernamentales. Aprenderlas en este orden facilita compararlos.' },
+  { title: 'Dos tasas que no son lo mismo', page: 203,
+    html: `<p>El mismo CETE tiene dos tasas. La <span class="t">tasa de descuento</span> mide el descuento contra el <b>valor nominal</b>. La <span class="t">tasa de rendimiento</span> mide la ganancia contra el <b>precio</b> que pagaste. Como el precio es menor que $10, la tasa de rendimiento siempre es <b>mayor</b>.</p>
+      <div class="formula">Precio         P  = VN × (1 − TD × t / 360)
+Tasa descuento TD = (1 − P / VN) × 360 / t
+Tasa rendim.   TR = (VN / P − 1) × 360 / t   =   TD / (1 − TD × t / 360)</div>
+      <div class="resumen"><b>Regla rápida:</b> descuento → divides entre VN. Rendimiento → divides entre P. Año de <b>360 días</b>.</div>`,
+    more: 'El objetivo 6.4.1 pide calcular precio, tasa de rendimiento, tasa de descuento y plazo de los instrumentos que cotizan a descuento. El examen usa año comercial de 360 días.' },
+  { title: 'Ejemplo resuelto del manual', page: 203,
+    html: `<p>¿Cuál es el precio de unos CETES con <b>94 días</b> por vencer y una tasa de descuento de <b>4.52 %</b>? ¿Y su tasa de rendimiento?</p>
+      <div class="formula">P  = 10 × (1 − 0.0452 × 94 / 360) = 10 × (1 − 0.011802) = $9.881978
+TR = 4.52 % / (1 − 0.011802)              = 4.573983 %</div>
+      <p class="keys">HP-17bII (PRECIO.DESCTO): <kbd>VN</kbd> 10 · <kbd>%TD</kbd> 4.52 · <kbd>DIAS</kbd> 94 → <kbd>$PR</kbd> = 9.881978. Luego DESC.REND → <kbd>%TR</kbd> = 4.573983</p>
+      <div class="resumen"><b>Comprueba:</b> TR (4.5740 %) &gt; TD (4.5200 %). Si te sale al revés, usaste la base equivocada.</div>`,
+    more: 'El manual muestra el resultado con 6 decimales. En el examen en línea las respuestas numéricas aparecen con 4 decimales: 4.5740 %.' },
+  { title: 'CETES contra sus parientes: la trampa típica', page: 190,
+    html: `<div class="cmp"><table>
+        <thead><tr><th></th><th>CETES</th><th>BONDES D</th><th>Bonos M</th></tr></thead>
+        <tbody>
+          <tr><td>Valor nominal</td><td>$10</td><td class="trap">$100</td><td class="trap">$100</td></tr>
+          <tr><td>Intereses</td><td>No paga (a descuento)</td><td>Cada 28 días, tasa variable (fondeo)</td><td>Cada 182 días, tasa fija</td></tr>
+          <tr><td>Plazo</td><td>28, 91, ~182, ~364 días</td><td>Múltiplo de 28 días</td><td>Múltiplo de 182 días (3 a 30 años)</td></tr>
+          <tr><td>Postura en subasta</td><td><b>Tasa de descuento</b></td><td class="trap">Precio</td><td class="trap">Precio</td></tr>
+        </tbody></table></div>
+      <div class="resumen"><b>Resumen:</b> si la pregunta dice <b>$10</b>, <b>a descuento</b> o <b>tasa de descuento en la postura</b>, es CETES.</div>`,
+    more: 'Las preguntas tipo AMIB suelen mezclar características de estos tres instrumentos en las opciones. Esta tabla resume las diferencias que más se confunden.' }
+];
+
+const POINTS = [
+  'CETES = bono <b>cupón cero</b> del Gobierno Federal: se compra a descuento y paga <b>$10</b> al vencimiento.',
+  'Plazos: <b>28 y 91 días</b>, y cercanos a <b>6 meses y 1 año</b>.',
+  'En la subasta primaria la postura es por <b>monto y tasa de descuento</b> (no por precio).',
+  '<b>TD</b> se mide contra VN; <b>TR</b> contra el precio. Para el mismo CETE, <b>TR &gt; TD</b>.',
+  'Año comercial de <b>360 días</b>. Respuestas numéricas a <b>4 decimales</b>.'
+];
+
+/* ───── Preguntas (clave y porqué de cada distractor) ───── */
+const PRACTICE = [
+  { meta: 'Teoría · trampa de instrumentos', stem: 'En la colocación primaria de CETES, además del monto, ¿qué indican las posturas de los participantes?',
+    opts: ['El precio que están dispuestos a pagar', 'La tasa de descuento que están dispuestos a pagar', 'La sobretasa sobre la TIIE', 'La tasa cupón deseada'], key: 1,
+    why: ['Así es en BONDES D y Bonos M, no en CETES.', '', 'La sobretasa aparece en instrumentos corporativos y bancarios.', 'Los CETES no tienen cupón.'], pat: ['confunde-cetes-bondes', '', 'confunde-gubernamental-corporativo', 'confunde-cupon-cero'] },
+  { meta: 'Teoría', stem: 'Sobre un CETE a 28 días, es correcto que:',
+    opts: ['Paga intereses cada 28 días referenciados al fondeo', 'Se compra por debajo de $10 y al vencimiento paga $10', 'Su valor nominal es de $100', 'Su tasa se fija en la emisión y paga cupón semestral'], key: 1,
+    why: ['Eso describe a BONDES D.', '', 'El valor nominal de $100 es de BONDES D y Bonos M.', 'Eso describe a los Bonos M.'], pat: ['confunde-cetes-bondes', '', 'confunde-valor-nominal', 'confunde-cetes-bonos-m'] },
+  { meta: 'Cálculo · 4 decimales', stem: '¿Cuál es el precio de un CETE con 91 días por vencer y tasa de descuento de 7.35 %?',
+    opts: ['$9.8142', '$9.8168', '$9.8176', '$9.2650'], key: 0,
+    why: ['', 'Usaste año de 365 días; el examen usa 360.', 'Trataste 7.35 % como tasa de rendimiento: P = 10 / (1 + 0.0735 × 91/360).', 'No proporcionaste la tasa al plazo (falta × 91/360).'], pat: ['', 'base-365', 'confunde-descuento-rendimiento', 'sin-proporcion-al-plazo'],
+    calc: 'P = 10 × (1 − 0.0735 × 91 / 360) = 10 × (1 − 0.018579) = $9.8142' }
+];
+const EXAM = [
+  { meta: 'Teoría', stem: 'Para un mismo CETE, la tasa de rendimiento es:', opts: ['Igual a la tasa de descuento', 'Menor que la tasa de descuento', 'Mayor que la tasa de descuento', 'Independiente del plazo'], key: 2,
+    why: ['Solo coincidirían si el precio fuera $10.', 'Al revés: el precio (base del rendimiento) es menor que VN.', '', 'Ambas dependen del plazo.'], pat: ['', 'confunde-descuento-rendimiento', '', ''] },
+  { meta: 'Cálculo · 4 decimales', stem: 'Un CETE con 63 días por vencer cotiza a $9.8543. ¿Cuál es su tasa de descuento?', opts: ['8.4488 %', '8.3257 %', '8.4413 %', '1.4570 %'], key: 1,
+    why: ['Es la tasa de rendimiento (divide entre el precio).', '', 'Usaste año de 365 días.', 'No anualizaste: falta × 360/63.'], pat: ['confunde-descuento-rendimiento', '', 'base-365', 'sin-anualizar'],
+    calc: 'TD = (1 − 9.8543 / 10) × 360 / 63 = 0.01457 × 5.714286 = 8.3257 %' },
+  { meta: 'Teoría · trampa de instrumentos', stem: 'Los Bonos M pueden emitirse a cualquier plazo siempre que sea múltiplo de:', opts: ['28 días', '91 días', '182 días', '364 días'], key: 2,
+    why: ['Múltiplo de 28 días es la regla de BONDES D.', 'Múltiplo de 91 días es la regla de los BPAG91.', '', 'No existe esa regla para Bonos M.'], pat: ['confunde-bondes-bonos-m', 'confunde-bpag', '', ''] }
+];
+
+/* ───── Estado ───── */
+const S = { stage: 0, slide: 0, prac: 0, pAns: {}, exam: {}, examDone: false, seen: new Set([0]) };
+const NOTES_KEY = 'amib-leccion-cetes-notas';
+let notes = {};
+try { notes = JSON.parse(localStorage.getItem(NOTES_KEY) || '{}') || {}; } catch (e) { notes = {}; }
+const saveNotes = () => { try { localStorage.setItem(NOTES_KEY, JSON.stringify(notes)); } catch (e) {} };
+const L = ['a', 'b', 'c', 'd'];
+
+function progress(i) {
+  if (i === 0) return S.seen.size / SLIDES.length;
+  if (i === 1) return S.stage >= 1 ? 1 : 0;
+  if (i === 2) return Object.keys(S.pAns).length / PRACTICE.length;
+  return S.examDone ? 1 : Object.keys(S.exam).length / EXAM.length * 0.9;
+}
+function renderRail() {
+  document.getElementById('rail').innerHTML = STAGES.map((s, i) =>
+    `<button class="stage ${i === S.stage ? 'on' : ''}" data-stage="${i}" aria-current="${i === S.stage ? 'step' : 'false'}"><i><b style="width:${Math.round(progress(i) * 100)}%"></b></i><span>${s}</span></button>`).join('');
+}
+
+function slideView() {
+  const sl = SLIDES[S.slide];
+  return `<article class="slide">
+      <div class="slide-body" key="${S.slide}"><h2>${sl.title}</h2>${sl.html}</div>
+      <div class="under">
+        <section><h3>Mis notas de esta lámina</h3>
+          <textarea id="nota-${S.slide}" data-note="${S.slide}" placeholder="Escribe aquí tu nota (se guarda sola y sale en Word y PowerPoint)">${(notes[S.slide] || '').replace(/</g, '&lt;')}</textarea>
+          <small id="saved">${notes[S.slide] ? 'Guardado' : 'Sin nota todavía'}</small></section>
+        <section><h3>Explicación ampliada · Manual p. ${sl.page}</h3><p>${sl.more}</p></section>
+      </div>
+    </article>
+    <div class="nav">
+      <button class="btn" data-prev ${S.slide === 0 ? 'disabled' : ''}>← Anterior</button>
+      <span class="count">Lámina ${S.slide + 1} de ${SLIDES.length} · usa ← →</span>
+      ${S.slide < SLIDES.length - 1 ? '<button class="btn primary" data-next>Siguiente →</button>' : '<button class="btn primary" data-stage="1">Ver puntos clave →</button>'}
+    </div>`;
+}
+function pointsView() {
+  return `<article class="slide"><div class="slide-body"><h2>Lo que tienes que saber de CETES</h2>
+      <div class="points">${POINTS.map((p) => `<div class="point"><span>${p}</span></div>`).join('')}</div>
+      <p class="count">Estos puntos se vuelven tarjetas de repaso y aparecen en el <b>Repaso rápido</b> cuando toque recordarlos.</p></div></article>
+    <div class="nav"><button class="btn" data-stage="0">← Volver a las láminas</button><button class="btn primary" data-stage="2">Practicar →</button></div>`;
+}
+function qView(q, chosen, reveal, name) {
+  const opts = q.opts.map((o, i) => {
+    let cls = '', m = '';
+    if (reveal && i === q.key) { cls = 'ok'; m = 'Correcta'; }
+    else if (reveal && i === chosen) { cls = 'bad'; m = 'Tu respuesta'; }
+    else if (!reveal && i === chosen) cls = 'sel';
+    return `<button class="opt ${cls}" data-${name}="${i}" ${reveal ? 'disabled' : ''}><span class="l">${L[i]})</span><span class="v">${o}</span><span class="m">${m}</span></button>`;
+  }).join('');
+  let why = '';
+  if (reveal) {
+    const ok = chosen === q.key;
+    why = `<div class="why"><b>${ok ? 'Correcto.' : 'Incorrecto. La respuesta es ' + L[q.key] + ').'}</b>${q.calc ? `<div class="formula" style="background:#fff">${q.calc}</div>` : ''}${!ok && q.why[chosen] ? `<span>${q.why[chosen]}</span>` : ''}${!ok && q.pat[chosen] ? `<span class="pat">Patrón registrado en tu perfil: ${q.pat[chosen].replace(/-/g, ' ')}</span>` : ''}</div>`;
+  }
+  return `<div class="q"><span class="meta">${q.meta}</span><p class="stem">${q.stem}</p><div class="opts">${opts}</div>${why}</div>`;
+}
+function practiceView() {
+  const q = PRACTICE[S.prac], a = S.pAns[S.prac];
+  return `<article class="slide"><div class="slide-body"><h2>Práctica guiada · ${S.prac + 1} de ${PRACTICE.length}</h2>${qView(q, a, a !== undefined, 'pa')}</div></article>
+    <div class="nav"><button class="btn" data-stage="1">← Puntos clave</button>
+      ${a === undefined ? '<span class="count">Responde con clic o con las teclas A–D</span>' : S.prac < PRACTICE.length - 1 ? '<button class="btn primary" data-pnext>Siguiente pregunta →</button>' : '<button class="btn red" data-stage="3">Ir al mini examen →</button>'}</div>`;
+}
+function examView() {
+  if (S.examDone) {
+    const right = EXAM.filter((q, i) => S.exam[i] === q.key).length;
+    const pats = EXAM.map((q, i) => (S.exam[i] !== q.key ? q.pat[S.exam[i]] : '')).filter(Boolean);
+    return `<article class="slide"><div class="slide-body score"><h2>Resultado del mini examen</h2>
+        <div class="big">${right} / ${EXAM.length}</div>
+        <table>${EXAM.map((q, i) => `<tr><td>${i + 1}. ${q.stem}</td><td style="color:${S.exam[i] === q.key ? 'var(--up)' : 'var(--down)'}">${S.exam[i] === q.key ? 'Bien' : 'Revisar'}</td></tr>`).join('')}</table>
+        <p class="count">${right === EXAM.length ? 'Dominio de "CETES" sube a <b>en progreso → dominado</b> si lo repites en 3 días.' : `Se guardó en tu perfil: ${pats.length ? pats.map((p) => p.replace(/-/g, ' ')).join(', ') : 'repasar el tema'}. Volverá en tu repaso.`}</p>
+        ${EXAM.map((q, i) => (S.exam[i] !== q.key ? qView(q, S.exam[i], true, 'x') : '')).join('')}
+      </div></article>
+      <div class="nav"><button class="btn" data-restart>Repetir lección</button><button class="btn primary" data-stage="0">Volver a las láminas</button></div>`;
+  }
+  const answered = Object.keys(S.exam).length;
+  return `<article class="slide"><div class="slide-body"><h2>Mini examen · sin ayuda hasta el final</h2>
+      ${EXAM.map((q, i) => qView(q, S.exam[i], false, 'ex' + i)).join('<hr style="border:0;border-top:1px solid var(--line);margin:4px 0">')}</div></article>
+    <div class="nav"><span class="count">${answered} de ${EXAM.length} respondidas</span><button class="btn red" data-finish ${answered < EXAM.length ? 'disabled' : ''}>Terminar y calificar</button></div>`;
+}
+
+function render() {
+  renderRail();
+  const views = [slideView, pointsView, practiceView, examView];
+  document.getElementById('main').innerHTML = `<div style="display:grid;gap:14px">${views[S.stage]()}</div>`;
+}
+
+/* ───── Eventos ───── */
+document.addEventListener('click', (e) => {
+  const f = e.target.closest('button[data-font]');
+  if (f) { document.getElementById('app').dataset.font = f.dataset.font; document.querySelectorAll('.fontsw button').forEach((b) => b.classList.toggle('on', b === f)); return; }
+  const st = e.target.closest('[data-stage]'); if (st) { S.stage = +st.dataset.stage; if (S.stage === 1) S.seen.add(SLIDES.length - 1); return render(); }
+  if (e.target.closest('[data-next]')) { S.slide = Math.min(SLIDES.length - 1, S.slide + 1); S.seen.add(S.slide); return render(); }
+  if (e.target.closest('[data-prev]')) { S.slide = Math.max(0, S.slide - 1); return render(); }
+  const pa = e.target.closest('[data-pa]'); if (pa && !pa.disabled) { S.pAns[S.prac] = +pa.dataset.pa; return render(); }
+  if (e.target.closest('[data-pnext]')) { S.prac++; return render(); }
+  for (let i = 0; i < EXAM.length; i++) { const b = e.target.closest(`[data-ex${i}]`); if (b) { S.exam[i] = +b.dataset['ex' + i]; return render(); } }
+  if (e.target.closest('[data-finish]')) { S.examDone = true; return render(); }
+  if (e.target.closest('[data-restart]')) { Object.assign(S, { stage: 0, slide: 0, prac: 0, pAns: {}, exam: {}, examDone: false, seen: new Set([0]) }); return render(); }
+});
+document.addEventListener('input', (e) => {
+  if (e.target.dataset.note !== undefined) { notes[e.target.dataset.note] = e.target.value; saveNotes(); const s = document.getElementById('saved'); if (s) s.textContent = 'Guardado'; }
+});
+document.addEventListener('keydown', (e) => {
+  if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (S.stage === 0 && e.key === 'ArrowRight' && S.slide < SLIDES.length - 1) { S.slide++; S.seen.add(S.slide); return render(); }
+  if (S.stage === 0 && e.key === 'ArrowLeft' && S.slide > 0) { S.slide--; return render(); }
+  const k = 'abcd'.indexOf(e.key.toLowerCase());
+  if (S.stage === 2 && k >= 0 && S.pAns[S.prac] === undefined) { S.pAns[S.prac] = k; return render(); }
+});
+render();
+</script>
