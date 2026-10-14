@@ -13,3 +13,9 @@ export const DOC_MANUAL_ETICA = 'AMIB Data/Manual_EBSPMV_completo.md'
 export const SALIDA_TAXONOMIA = 'content/taxonomia.json'
 export const SALIDA_PREGUNTAS_TIPO = 'content/preguntas/oficial/preguntas-tipo.json'
 export const SALIDA_ENSAYO_ETICA = 'content/preguntas/oficial/etica-ensayo.json'
+
+export const DOC_MANUAL_AMIB = 'AMIB Data/AMIB_1_completo.md'
+export const SALIDA_REPASOS_MANUAL = 'content/preguntas/repasos/manual-amib1.json'
+export const SALIDA_INDICE_MANUAL = 'content/manual/indice.json'
+/** Carpeta de las secciones del manual: `content/manual/capNN/NN-<slug>.md`. */
+export const CARPETA_MANUAL = 'content/manual'

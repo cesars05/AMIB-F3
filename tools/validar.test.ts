@@ -63,3 +63,60 @@ describe('validarContenido', () => {
     expect(r.errores[0]).toMatch(/ids de taxonomía repetidos/)
   })
 })
+
+describe('validarContenido: índice del manual', () => {
+  const seccion = (numero: string, extra: Record<string, unknown> = {}) => ({
+    capitulo: 6,
+    numero,
+    numeroOriginal: numero,
+    correccionNumero: 'ninguna',
+    titulo: 'Identificar el concepto de mercado de deuda.',
+    origen: 'encabezado',
+    paginas: { inicio: 183, fin: 183 },
+    objetivoId: null,
+    objetivoCandidato: null,
+    confianza: 0.2,
+    exclusivoFig3: false,
+    fig3Parcial: false,
+    archivo: `content/manual/cap06/${numero.split('.').pop()!.padStart(2, '0')}-x.md`,
+    caracteres: 100,
+    ...extra
+  })
+  const indice = (secciones: unknown[]): ArchivoContenido => ({ ruta: 'content/manual/indice.json', datos: { fuente: 'x', generado: '2026-01-01', secciones } })
+
+  it('acepta un índice válido y lo resume', () => {
+    const r = validarContenido([indice([seccion('6.1.1'), seccion('6.1.2', { exclusivoFig3: true })])])
+    expect(r.errores).toEqual([])
+    expect(r.resumen.manual).toMatchObject({ secciones: 2, porCapitulo: { 6: 2 }, vinculadas: 0, exclusivasFig3: 1 })
+    expect(r.resumen.manual?.archivos).toHaveLength(2)
+  })
+
+  it('reporta errores de esquema con la ruta', () => {
+    const r = validarContenido([indice([seccion('6.1.1', { capitulo: 12 })])])
+    expect(r.errores[0]).toContain('content/manual/indice.json')
+  })
+
+  it('detecta archivos repetidos, números repetidos sin marcar como dudosos y carpetas de otro capítulo', () => {
+    expect(validarContenido([indice([seccion('6.1.1'), seccion('6.1.2', { archivo: seccion('6.1.1').archivo })])]).errores.some((e) => /archivo de sección repetido/.test(e))).toBe(true)
+    expect(validarContenido([indice([seccion('6.1.1'), seccion('6.1.1', { archivo: 'content/manual/cap06/09-y.md' })])]).errores.some((e) => /número de sección repetido/.test(e))).toBe(true)
+    expect(validarContenido([indice([seccion('6.1.1'), seccion('6.1.1', { archivo: 'content/manual/cap06/09-y.md', correccionNumero: 'dudosa' })])]).errores).toEqual([])
+    expect(validarContenido([indice([seccion('6.1.1', { archivo: 'content/manual/cap07/01-x.md' })])]).errores.some((e) => /otro capítulo/.test(e))).toBe(true)
+  })
+
+  it('las páginas no pueden retroceder entre secciones', () => {
+    const r = validarContenido([indice([seccion('6.1.1', { paginas: { inicio: 190, fin: 190 } }), seccion('6.1.2', { paginas: { inicio: 183, fin: 183 } })])])
+    expect(r.errores.some((e) => /retroceden/.test(e))).toBe(true)
+  })
+
+  it('el objetivoId debe existir en la taxonomía', () => {
+    const areas = ['etica', 'servicios', 'normativo', 'matematicas', 'capitales', 'deuda', 'fondos', 'derivados', 'analisis'].map((a) => ({
+      area: a,
+      temas: [{ id: `${a}.t`, nombre: 'Tema', subtemas: [{ id: `${a}.t.s`, nombre: 'Subtema', objetivos: [{ id: `${a}.t.s.o01`, texto: 'Identificar algo', verbo: 'identificar', tipo: 'teoria' }] }] }]
+    }))
+    const tax: ArchivoContenido = { ruta: 'content/taxonomia.json', datos: { fuente: 'x', generado: 'y', areas } }
+    const bien = seccion('6.1.1', { objetivoId: 'deuda.t.s.o01', objetivoCandidato: 'deuda.t.s.o01', confianza: 0.9 })
+    expect(validarContenido([tax, indice([bien])]).errores).toEqual([])
+    const mal = seccion('6.1.1', { objetivoId: 'deuda.t.s.o99', objetivoCandidato: 'deuda.t.s.o99', confianza: 0.9 })
+    expect(validarContenido([tax, indice([mal])]).errores.some((e) => /objetivoId inexistente/.test(e))).toBe(true)
+  })
+})

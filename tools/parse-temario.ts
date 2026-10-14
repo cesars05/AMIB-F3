@@ -106,7 +106,7 @@ export function parsearTemario(bloques: readonly BloqueDocx[], fuente: string, g
         texto,
         verbo: verboDe(texto),
         tipo: clasificarTipo(texto),
-        // TODO: marcar exclusivoFig3 cuando se compare el temario Fig. 3 contra el de otras figuras.
+        // `exclusivoFig3` se completa después, en `construir.ts`, con las secciones del manual marcadas "INFORMACIÓN FIGURA 3".
         exclusivoFig3: false
       })
     } else {

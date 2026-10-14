@@ -1241,28 +1241,28 @@
                   "texto": "Identificar las funciones del asesor en inversiones, establecidas en la Ley del Mercado de Valores.",
                   "verbo": "identificar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "normativo.marco-normativo-iii.asesoria-en-inversiones.o02",
                   "texto": "Reconocer los requisitos que deben cumplir los asesores en inversiones para desempeñarse como tal.",
                   "verbo": "reconocer",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "normativo.marco-normativo-iii.asesoria-en-inversiones.o03",
                   "texto": "Identificar las obligaciones, prohibiciones y responsabilidades de los asesores en inversiones, establecidas en la Ley del Mercado de Valores.",
                   "verbo": "identificar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "normativo.marco-normativo-iii.asesoria-en-inversiones.o04",
                   "texto": "Identificar los casos en los que la Comisión Nacional Bancaria y de Valores puede cancelar el registro de los asesores en inversiones, de acuerdo con la Ley del Mercado de Valores.",
                   "verbo": "identificar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 }
               ]
             }
@@ -2936,7 +2936,7 @@
                   "texto": "Identificar el funcionamiento de la red de seguridad de Asigna.",
                   "verbo": "identificar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "derivados.derivados-financieros-ii.liquidacion-en-mercados-organizados.o02",
@@ -3141,14 +3141,14 @@
                   "texto": "Identificar el concepto de nota estructurada.",
                   "verbo": "identificar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "derivados.derivados-financieros-ii.notas-estructuradas.o02",
                   "texto": "Distinguir los elementos que integran una nota estructurada (deuda y estrategia con derivados).",
                   "verbo": "distinguir",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 }
               ]
             }
@@ -3304,21 +3304,21 @@
                   "texto": "Identificar las diferencias entre el riesgo de liquidez de un activo, respecto del riesgo de liquidez generado por situaciones extremas de mercado (reflejado en diferenciales entre compra y venta).",
                   "verbo": "identificar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "derivados.riesgos-ii.teoria-fundamental.o02",
                   "texto": "Identificar el concepto de estructura intertemporal de tasas de interés y la utilidad para la administración de riesgos.",
                   "verbo": "identificar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "derivados.riesgos-ii.teoria-fundamental.o03",
                   "texto": "Identificar la utilidad del análisis de sensibilidades (Betas, DV01, Correlación, Delta).",
                   "verbo": "identificar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 }
               ]
             }
@@ -3499,21 +3499,21 @@
                   "texto": "Identificar el concepto de ciclos económicos.",
                   "verbo": "identificar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "analisis.analisis-economico-ii.macroeconomia.o02",
                   "texto": "Interpretar las fases de un ciclo económico.",
                   "verbo": "interpretar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "analisis.analisis-economico-ii.macroeconomia.o03",
                   "texto": "Identificar el concepto de los siguientes indicadores económicos: PIB, Tasa de Desempleo, Inflación, Índice de Confianza del Consumidor y Producción Industrial.",
                   "verbo": "identificar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "analisis.analisis-economico-ii.macroeconomia.o04",
@@ -3534,28 +3534,28 @@
                   "texto": "Identificar los propósitos de la política monetaria.",
                   "verbo": "identificar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "analisis.analisis-economico-ii.macroeconomia.o07",
                   "texto": "Identificar los componentes de la política monetaria.",
                   "verbo": "identificar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "analisis.analisis-economico-ii.macroeconomia.o08",
                   "texto": "Identificar los mecanismos de tributación.",
                   "verbo": "identificar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "analisis.analisis-economico-ii.macroeconomia.o09",
                   "texto": "Identificar los propósitos de las finanzas públicas.",
                   "verbo": "identificar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 }
               ]
             }
@@ -3574,35 +3574,35 @@
                   "texto": "Determinar el impacto en la economía por una mayor o menor demanda de dinero.",
                   "verbo": "determinar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "analisis.analisis-economico-iii.teoria-avanzada.o02",
                   "texto": "Determinar la relación que existe entre la inflación y los siguientes conceptos: oferta de dinero, gasto del gobierno y demanda.",
                   "verbo": "determinar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "analisis.analisis-economico-iii.teoria-avanzada.o03",
                   "texto": "Determinar el impacto de la política fiscal en la demanda agregada.",
                   "verbo": "determinar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "analisis.analisis-economico-iii.teoria-avanzada.o04",
                   "texto": "Interpretar la mecánica de actuación del Banco Central para controlar los “choques de oferta y demanda”, bajo un enfoque de crecimiento del Producto Interno Bruto.",
                   "verbo": "interpretar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "analisis.analisis-economico-iii.teoria-avanzada.o05",
                   "texto": "Interpretar la mecánica de actuación del Banco Central para controlar los “choques de oferta y demanda”, bajo un enfoque de estabilidad en precios.",
                   "verbo": "interpretar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 }
               ]
             }
@@ -3710,7 +3710,7 @@
                   "texto": "Interpretar el costo promedio ponderado de capital.",
                   "verbo": "interpretar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "analisis.analisis-financiero-ii.analisis-fundamental.o04",
@@ -3724,7 +3724,7 @@
                   "texto": "Identificar la utilidad de la metodología denominada descuento de flujos de efectivo.",
                   "verbo": "identificar",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "analisis.analisis-financiero-ii.analisis-fundamental.o06",
@@ -3738,7 +3738,7 @@
                   "texto": "Distinguir los siguientes múltiplos de valuación: precio-utilidad, precio-valor en libros, precio- flujo de efectivo, precio-ventas, valor empresa-ebitda.",
                   "verbo": "distinguir",
                   "tipo": "teoria",
-                  "exclusivoFig3": false
+                  "exclusivoFig3": true
                 },
                 {
                   "id": "analisis.analisis-financiero-ii.analisis-fundamental.o08",

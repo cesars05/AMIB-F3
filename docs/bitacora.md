@@ -57,3 +57,19 @@ Formato: fecha · etapa · qué se hizo · qué funcionó · qué no · atajos y
   - Los problemas numéricos del examen en línea usan **4 decimales**.
 - **Bug encontrado al revisar:** un velo con `opacity: 0` seguía interceptando clics. Siempre hay que agregar `pointer-events: none` cuando está oculto.
 - **Atajo:** las capturas con Playwright de cada variante (`scratchpad/shot*.mjs`, con Chromium de `/opt/pw-browsers`) detectan solapes y textos invisibles antes de publicar. Si un archivo local no tiene doctype, el navegador entra en modo quirks y las tablas no heredan el color.
+
+## 2026-10-14 · E1 Ingesta del manual oficial (AMIB_1)
+- **Hecho:**
+  - `tools/parse-manual.ts`: `AMIB_1_completo.md` → 10 capítulos y **413 secciones** (351 `####` + 61 encabezados recuperados + el formulario como sección única). Por capítulo: 20, 28, 74, 41, 39, 32, 41, 77, 60, 1.
+  - Cada sección lleva número normalizado y el impreso, páginas del PDF, cuerpo OCR crudo, `exclusivoFig3`/`fig3Parcial` y su objetivo del temario con confianza. Se escribe en `content/manual/capNN/NN-<slug>.md` + `content/manual/indice.json` (`SeccionManualSchema` en `core/contenido.ts`).
+  - `tools/vincular-manual.ts` + `tools/similitud.ts`: vínculo por similitud de tokens. Umbral 0.55; alta ≥ 0.8. **323 alta, 57 media, 33 sin vínculo** (el formulario incluido). Con la taxonomía, 25 objetivos quedan con `exclusivoFig3 = true`.
+  - `tools/parse-repaso.ts`: **130 preguntas** de repaso como `borrador` sin clave (`content/preguntas/repasos/manual-amib1.json`); 48 omitidas por no poder reconocer las 4 opciones. Por capítulo (extraídas/omitidas): 25/0, 15/6, 9/6, 12/3, 18/7, 20/5, 4/8, 19/6, 8/7.
+  - `validate-content` valida el índice (esquema, objetivos existentes, páginas monótonas, archivos presentes). Pruebas nuevas para cada módulo (189 en total, con los archivos reales).
+- **Hallazgos:**
+  - La numeración del OCR no se arregla con reglas locales: `1.14.4` puede ser 1.1.3 o 1.1.4. Se resolvió con una búsqueda sobre todo el capítulo (ediciones mínimas + secuencia creciente) y se marcan como `dudosa` las 26 lecturas ambiguas; el orden del documento manda.
+  - El temario no contiene todos los objetivos del manual y viceversa: 357 de 465 objetivos tienen sección y 19 tienen dos.
+  - Las preguntas de repaso llegan con columnas mezcladas; omitir fue mejor que adivinar. El capítulo 7 (fondos) es el peor: 4 de 12.
+  - Un `Pág. M` impreso va 2 por debajo del marcador `<!-- page N -->`; la última página (360) está vacía.
+- **Decisión de regla:** la sección es exclusiva de la Figura 3 solo si el marcador está en el tema o en su propio encabezado; un subtema suelto marcado dentro del cuerpo la deja como `fig3Parcial`.
+- **Pendiente:** limpieza de OCR por sección (con diff de cifras), resolver y validar las 130 preguntas de repaso (sin clave), y revisar a mano las secciones con numeración `dudosa` y las 33 sin vínculo.
+

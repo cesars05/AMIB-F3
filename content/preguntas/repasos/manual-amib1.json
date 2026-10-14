@@ -1,0 +1,4621 @@
+{
+  "fuente": "AMIB Data/AMIB_1_completo.md",
+  "generado": "2026-10-14",
+  "preguntas": [
+    {
+      "id": "manual-repaso.c01.q01",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "El director de promeción de una casa de bolsa le pide al gerente de operaciones que madifique la asignación de las operaciones de compraventa de acciones para beneficiar a un cliente muy importante, hecho que perjudica a otro cliente. ¿Cómo debe actuar el gerente de operaciones?",
+      "opciones": [
+        {
+          "texto": "No modificar la asignación de operaciones y evadir el hecho"
+        },
+        {
+          "texto": "No modiftcar la asignación de operaciones y comunicar este incidente al Contralor Normativo"
+        },
+        {
+          "texto": "Seguir las instrucciones del director de promoción, pues es superior jerárquico y conoce a la perfección el mercado"
+        },
+        {
+          "texto": "Seguir las instrueciones del director de promoción, pero comentarle que es una excepción por tratarse de un cliente muy importante"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 25
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q02",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Es un conjunto de valores que forman parte de una doctrina:",
+      "opciones": [
+        {
+          "texto": "Ética"
+        },
+        {
+          "texto": "Moral"
+        },
+        {
+          "texto": "Metafísica"
+        },
+        {
+          "texto": "Psicología"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 25
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q03",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "El Cádigo de Ética es:",
+      "opciones": [
+        {
+          "texto": "El conjunto de normas de mayor jerarquia dentro de la regulación expedida por cada entidad autorregulatoria"
+        },
+        {
+          "texto": "Esun conjunto de normas que completa la regulación bursátil actual"
+        },
+        {
+          "texto": "Esun conjunto de reglas expedida por la BMV"
+        },
+        {
+          "texto": "Esun conjunto de normas que expide el mercado de valores"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 25
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 2 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q04",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Se refiere éticamente a la constancia en ohservar los deberes:",
+      "opciones": [
+        {
+          "texto": "Honestidad"
+        },
+        {
+          "texto": "Integridad"
+        },
+        {
+          "texto": "Prabidad"
+        },
+        {
+          "texto": "Iimparcialidad"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 25
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q05",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "¿Qué establecen los Principios Fundamentales de Actuación del Código de Ética?",
+      "opciones": [
+        {
+          "texto": "Establecen el contenido del debe ser en el mercado bursátil"
+        },
+        {
+          "texto": "Establecern la forma de actuación de los profesionales en el mercado bursátil"
+        },
+        {
+          "texto": "Lavirtud de sus funciones en el mercado bursátil"
+        },
+        {
+          "texto": "Ningún inciso es correcto"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 25
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q06",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "El promator de una operadora de fondos de inversión les ofrece a sus clientes un rendimiento garantizado de al menos el 15% anual al invertir en fondos de renta varlable. ¿A qué principio fundamental está faltando el promotor?",
+      "opciones": [
+        {
+          "texto": "Haz prevalecer el interés de tu cliente"
+        },
+        {
+          "texto": "— Actúa con base en una conducta profesional íntegra que permita el desarrollo transparente y ordenado del mercado"
+        },
+        {
+          "texto": "Compite en forma leal"
+        },
+        {
+          "texto": "— Evita conflictos entre tu interés personal y el de terceros"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 25
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q07",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Principio que supone conacer y seguir las normas, leyes y reglamentos del medio bursátil:",
+      "opciones": [
+        {
+          "texto": "Actúa de acuerdo con las disposiciones aplicables y sanas prácticas del mercado"
+        },
+        {
+          "texto": "Actúa con base en una conducta integra que permita el desarrollo transparente y ordenado del mercado"
+        },
+        {
+          "texto": "Haz prevalecer el interés de los clientes"
+        },
+        {
+          "texto": "Nouses ni divulgues información privilegiada"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 25
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q08",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "¿Cuál es la principal característica de un líder moral?",
+      "opciones": [
+        {
+          "texto": "Coherencia"
+        },
+        {
+          "texto": "Inteligencia"
+        },
+        {
+          "texto": "Confianza"
+        },
+        {
+          "texto": "Prudencia"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 25
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q09",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "El promotor de una distribuidora de acciones de Fondos de inversión únicamente les recomienda a sus clientes los fondos que conace, independientemente de los objetivas de inversión de las clientes y de que hay otros fondos disponibles que se adaptan mejor a sus necesidades de inversión, ¿Cuál seria la forma correcta de actuar del promotor?",
+      "opciones": [
+        {
+          "texto": "Recomendarasus clientes los productos que él conozca mejor con la finalidad de darles una buena asesoría"
+        },
+        {
+          "texto": "Recomendar asus clientes únicamente los productos que él conozca para evitar mal informarios"
+        },
+        {
+          "texto": "Mencionar asus clientes todos los fondos disponibles y dejar que ellos libremente seleccionen los productos adecuados a sus objetivos y necesidades de inversión"
+        },
+        {
+          "texto": "Conocer todos los productos y recomendarle a sus clientes aquellos que . nejor se adapten a sus objetivos y necesidades de inversión"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 26
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q10",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Un operador de una Casa de Bolsa escucha rumores de cierta acción en Bolsa va a tener problemas y la tiene en posición dentro de su cartera, ¿qué principio debe seguir?",
+      "opciones": [
+        {
+          "texto": "Actúa de acuerdo con las disposiciones aplicables y la sama práctica de mercado"
+        },
+        {
+          "texto": "Actúa con base en una conducta profesional integra que permita el desarrollo transparente y ordenado del mercado"
+        },
+        {
+          "texto": "Haz prevalecer el interés de tu cliente"
+        },
+        {
+          "texto": "Evita conflictos entre tu interes personal y el de terceros"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 26
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q11",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "El hombre prudente es aquel que acierta a decidir:",
+      "opciones": [
+        {
+          "texto": "lLoconducente con sus principios"
+        },
+        {
+          "texto": "Locorrecto y conveniente en carda caso concreto"
+        },
+        {
+          "texto": "Lobueno paratodos"
+        },
+        {
+          "texto": "lLomás común en benefício de la sociedad financiera del país"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 26
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q12",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Tu jefe te pide que canalices los recursos de la clientela a cierto producto que está promoviendo intensamente durante este mes la institución, sin avisarles nt importar si sea adecuado a su perfil. ¿Qué Principio Fundamental de Actuación te está queriendo forzar a incumplir?",
+      "opciones": [
+        {
+          "texto": "Salvaguarda la confidencialidad de los clientes"
+        },
+        {
+          "texto": "Actúa con base en una conducta integra que permita el desarrolto transparente y ordenado del mescado"
+        },
+        {
+          "texto": "Hazprevalecer el interés de los clientes"
+        },
+        {
+          "texto": "mNouses ní divulgues información privilegiada"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 26
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q13",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Observas que un compañero tuyo está sustrayendo recursos de la cuenta del cliente y no dices nada; ¿Qué incumples tú como promotor?",
+      "opciones": [
+        {
+          "texto": "Salvaguarda la confidencialidad de la informarción de los clientes"
+        },
+        {
+          "texto": "Evita ronflictos entre tu interés personal y el de terceros"
+        },
+        {
+          "texto": "Actúa de acuerdo a las disposiciones aplicables y sanas prácticas del mercado"
+        },
+        {
+          "texto": "Proporciona al mercado información veraz, clara, completa y oportuna"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 26
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q14",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Selecciona los beneficios para el Mercado de Valores de contar con la certificación de AMIB 1. Generar confianza en el público inversionista. 2. Convencimiento de la obtención de conocimie..tos técnicos para una superación personal que incida en la excelencia profesional bursátil. 3. Atender la necesidad del cumplimiento de las disposiciones legales en materia bursátil por convicción. 4. Formemtar la cultura bursátil.",
+      "opciones": [
+        {
+          "texto": "lya"
+        },
+        {
+          "texto": "1yz"
+        },
+        {
+          "texto": "2y3"
+        },
+        {
+          "texto": "1y3"
+        }
+      ],
+      "clave": null,
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 26
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q15",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "¿Cuáles sonins tres elementos del Acto Humano?",
+      "opciones": [
+        {
+          "texto": "Objeto, Fin y Circunstancias"
+        },
+        {
+          "texto": "Ética, Maral y Ley"
+        },
+        {
+          "texto": "Transparencia, Secrecía y Equidad"
+        },
+        {
+          "texto": "Pensamianto, Obra y Omisión"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 26
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q16",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Actos que carecen de inteligencia, voluntad y libertad:",
+      "opciones": [
+        {
+          "texto": "Actos del Hombre"
+        },
+        {
+          "texto": "Actos Humanos"
+        },
+        {
+          "texto": "Actos del Ser"
+        },
+        {
+          "texto": "Actos Naturales"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 26
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q17",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Son las razones básicas de las que parte el conocimiento para llevar a cabo los actos humanos:",
+      "opciones": [
+        {
+          "texto": "vVerdades"
+        },
+        {
+          "texto": "Valores"
+        },
+        {
+          "texto": "Hábitos"
+        },
+        {
+          "texto": "Principios"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 27
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q18",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "La finalidad de la autorregulación en el mercado de valores es lograr un mercado:",
+      "opciones": [
+        {
+          "texto": "Eficiente, equitativo, transparente, seguro y de calidad"
+        },
+        {
+          "texto": "Eficiente, equítativo, rentable, seguro y de calidad"
+        },
+        {
+          "texto": "— Eficiente, equitibrado, transparente, sin riesgo y de calidad"
+        },
+        {
+          "texto": "Eficiente, equitativo, transparente, seguro y de confianza"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 27
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q19",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Lograr un mercado financiero eficiente, equitativo, transparente, seguro y de calidad con los estándares éticos, además de estar dispuesto a rendir cuentas y ser evaluado por el cumplimiento.",
+      "opciones": [
+        {
+          "texto": "Eselobjero del Código de Ética"
+        },
+        {
+          "texto": "Eselobjeto de la Moral"
+        },
+        {
+          "texto": "Esel objeto de CNBV"
+        },
+        {
+          "texto": "Eselabjeto de la Autorregulación"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 27
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q20",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "¿A qué tipo de líder define el Código de Ética, como aquel que es capaz de hacerse seguir por otras y lograr de ellos identificación y adhesión a las causas que él pretende conseguir?",
+      "opciones": [
+        {
+          "texto": "Lider Político"
+        },
+        {
+          "texto": "Lider Empresarial"
+        },
+        {
+          "texto": "LUder Sindical"
+        },
+        {
+          "texto": "Líder Moral"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 27
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q21",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "¿Cuál es el objeto general de estudio de la ética?",
+      "opciones": [
+        {
+          "texto": "Losactos humanos"
+        },
+        {
+          "texto": "Lavoluntad"
+        },
+        {
+          "texto": "Lascircunstancias"
+        },
+        {
+          "texto": "— Losactos del hombre"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 27
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q22",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Durante la flesta de fin de año de la Casa de Bolsa el promotor Juan Pérez comenta con su jefe inmediatao, el Director de Promoción, sobre el monto, tipo y características de las operaciones que realizó un cliente ese día. ¿Qué principio fundamental está incumpliendo dicho promotor?",
+      "opciones": [
+        {
+          "texto": "Actúa de acuerdo con las disposiciones aplicables y las sanas prácticas de mercado."
+        },
+        {
+          "texto": "Haz prevalecer el interés de tu cliente"
+        },
+        {
+          "texto": "— Salvaguarda la confidencialidad de la información de los clientes"
+        },
+        {
+          "texto": "Nousesni divulgues información privilegiada."
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 27
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q23",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "El objeto especifica de análisis de la ética (objeto formal) es la:",
+      "opciones": [
+        {
+          "texto": "Bondad o maldad de los actos"
+        },
+        {
+          "texto": "Racionalidad del que actúa"
+        },
+        {
+          "texto": "— Intencionalidar con que se actúa"
+        },
+        {
+          "texto": "— Libertad con que se actúa"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 27
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q24",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Sirve para la adquisición y formación de valores.",
+      "opciones": [
+        {
+          "texto": "Moral"
+        },
+        {
+          "texto": "Legalidad"
+        },
+        {
+          "texto": "Religión"
+        },
+        {
+          "texto": "Ética"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 27
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c01.q25",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Son las acciones libres y conscientes, que se desprenden de la racionalidad y la libertad de la persona que las realiza.",
+      "opciones": [
+        {
+          "texto": "Moral"
+        },
+        {
+          "texto": "Creatividad"
+        },
+        {
+          "texto": "Actos Humanos"
+        },
+        {
+          "texto": "Innovación Continua"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 27
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c02.q01",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "Eslaprestación habitual y profesional en favor de clientes, de Asesoría de Inversiones o Gestión de Inversiones:",
+      "opciones": [
+        {
+          "texto": "Servicios de Inversión Recomendados"
+        },
+        {
+          "texto": "Servicios de Inversión no Asesorados"
+        },
+        {
+          "texto": "Servicios de inversión Asesorados"
+        },
+        {
+          "texto": "- Servicios de Inversión Personalizados"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 66
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c02.q02",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "La advertencia al cliente referente a que las eperaciones solicitadas no provendrán de una recomendación personalizada y la relteración del cliente de la solicitud de contratar este tipo de servicio, son algunos de los requisitos para la prestación de servicios de:",
+      "opciones": [
+        {
+          "texto": "Ejecución de operaciones."
+        },
+        {
+          "texto": "Comercialización o promación"
+        },
+        {
+          "texto": "Gestión de inversianes"
+        },
+        {
+          "texto": "Inversión asesorados"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 66
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c02.q03",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "La prestación de Servicios de Inversión deberá realizarse por las Entidades Financieras a través de:",
+      "opciones": [
+        {
+          "texto": "Personasfísicas certificadas para celebrar operaciones con el púbEico de asesoría, promúción, compra y venta de valores"
+        },
+        {
+          "texto": "Personas morales certificadas para celebrar operaciones con el público de asesoría, promeción, compra y venta de valores"
+        },
+        {
+          "texto": "- Instituciones de Crédite certificadas para celebrar operaciones con el público de asespría, promoción, compra y venta de valores"
+        },
+        {
+          "texto": "Casas de Bolsa certificadas para celebrar Ooperaciones con el pública de asesoría, promación, compra y venta de valores"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 66
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c02.q04",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "¿Qué tipo de clientes se considerará que cuentan con la capacidad financiera para hacer frente a los riesgos inherentes de las operaciones con valores o instrumentos financieros derivados, así como con los conocimientos y experiencia necesarios para entenderlas?",
+      "opciones": [
+        {
+          "texto": "Inversionistas Institucionales e Clientes Sofisticados"
+        },
+        {
+          "texto": "Inversionistas personas físicas"
+        },
+        {
+          "texto": "Inversionistas personas morales"
+        },
+        {
+          "texto": "Clientes que no sean Inversionistas Institucionales 9 Clientes Safisticados"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 66
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c02.q06",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "d Los mentos a invertir ¿Cuál es el resultado del añálisis de cada Producto Financiero que realizan las Entidades Financieras y los Asespres en Inversiones?",
+      "opciones": [
+        {
+          "texto": "El perfil del Producto Financiero"
+        },
+        {
+          "texto": "Larentabilidad que genera dicho producto"
+        },
+        {
+          "texto": "Lasituación financiera de la Entidad Financiera"
+        },
+        {
+          "texto": "El perfil del cliente"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 66
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c02.q09",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "Determinar lineamientos y límites para la composición de las carteras de Inversión considerando las características de los valores y los perfiles de inversión de los clientes, es una función que debe realizar:",
+      "opciones": [
+        {
+          "texto": "El Consejo de Administración de ta Entidad Financiera"
+        },
+        {
+          "texto": "El Director General de la Entidad Financiera"
+        },
+        {
+          "texto": "El Comité Responsable del Análisis de Productos Financieros"
+        },
+        {
+          "texto": "LaCNev zaz"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 66
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c02.q10",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "Ea ¡y p == Conductas prohibidas de la Entidad Financiera en las emisiones de valores en las que actúen ya sea con el carácter de Lider Colocador 0 como Miembros del Sindicato Colocador. Excepto:",
+      "opciones": [
+        {
+          "texto": "Naopodrán realizar operaciones por cuenta propia, cuando existan instrucciones de clentes"
+        },
+        {
+          "texto": "Nopodrán asignarles los valores a UN precio distinto al de la oferta pública"
+        },
+        {
+          "texto": "Nopodrán cobrar comisión alguna al chente, aún y cuando se haya establecido previamente"
+        },
+        {
+          "texto": "Nopodrán obtener un diferencial entre la tasa acordada por el cliente y la pactada por la emisora"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 66
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c02.q11",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "Dentro de la Entidad Financiera, ¿quién deberá aprobar políticas y lineamientos sobre la prestación de Servicios de Inversión para evitar en general la existencia de conflictos de interés?",
+      "opciones": [
+        {
+          "texto": "El responsable de supervisar el cumplimiento de los Servicios de Inversión"
+        },
+        {
+          "texto": "El Conseja de Administración"
+        },
+        {
+          "texto": "El Sirector General"
+        },
+        {
+          "texto": "El Contralor Normativo"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 67
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c02.q12",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "¿En dónde deberá realizarse la divulgación de las comisiones por la prestación de Servicios de inversión?",
+      "opciones": [
+        {
+          "texto": "Através de la Guía de Servicios de Inversión"
+        },
+        {
+          "texto": "Através del Prospecto de Colocación"
+        },
+        {
+          "texto": "Através del Prospecto de Información"
+        },
+        {
+          "texto": "Através de la justificación de cada recomendación"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 67
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c02.q13",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "El amálisis contenido en los Reportes de Análisis debe reflejar exclusivamente el punto de vista de:",
+      "opciones": [
+        {
+          "texto": "las Analistas responsables de su elaboración"
+        },
+        {
+          "texto": "El Conseja de Administración de la Entidad Financiera"
+        },
+        {
+          "texto": "El Comité responsable del Análisis de los Productos Financieros"
+        },
+        {
+          "texto": "El Responsable de supervisar el cumplimiento de los Servicios de Inversión"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 67
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c02.q16",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "Conductas prohibidas de la Entidad Financiera en las emislones de valores en las que actúen ya sea con el carácter de Líder Colocador 0 como Miembros del Sindicato Colocador. Excepto:",
+      "opciones": [
+        {
+          "texto": "No podrán realizar operaciones por cuenta propia, cuando existan instrucciones de clientes"
+        },
+        {
+          "texto": "No podrán asignarles los valores a un precio distiínto al de la oferta pública"
+        },
+        {
+          "texto": "Nopodrán cobrar comisión alguna al cliente, aún y cuando se haya establecido previamente"
+        },
+        {
+          "texto": "No podrán obtener un diferencial entre la tasa acordada por el cliente y la pactada por la emisora"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 69
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c02.q17",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "Dentra de la Entidad Financiera, ¿quién deberá aprobar políticas y lineamientos sobre la prestación de Servicios de Inversión para evitar en general la existencia de conflictos de interés?",
+      "opciones": [
+        {
+          "texto": "Elresponsable de supervisar el cumplimiento de los Servicios de inversión"
+        },
+        {
+          "texto": "El Consejo de Administración"
+        },
+        {
+          "texto": "El Director General"
+        },
+        {
+          "texto": "El Contralor Normativo"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 69
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c02.q18",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "¿En dónde deberá realizarse la divulgación de las comisiones por la prestación de Servicios de Inversión?",
+      "opciones": [
+        {
+          "texto": "Através de la Guía de Servicios de Inversión"
+        },
+        {
+          "texto": "Através del Prospecto de Colocación"
+        },
+        {
+          "texto": "Atraves del Prospecto de Informzción"
+        },
+        {
+          "texto": "Atraves de la justificación de cada recomendación"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 69
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c02.q19",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "El análisis contenido en los Reportes de Anállsis debe reflejar exclusivamente el punto de vista de:",
+      "opciones": [
+        {
+          "texto": "Los Analistas responsables de su elaboración"
+        },
+        {
+          "texto": "El Consejo de Administración de la Entidad Financiera"
+        },
+        {
+          "texto": "El Comité responsable del Análisis de los Productos Financieros"
+        },
+        {
+          "texto": "El Responsable de supervisar el cumplimiento de los Servicios de Inversión"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 69
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c02.q20",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "Seleccione Del siguiente listado algunas obligaciones de las Entidades Financieras o Los Asesores en Inversiones en la prestación de servicios de inversión: 1. Proporcionar la Guía de servicios de inversión 2.- Implementar mecanismos y procedimientos para la difusión de información 3.- Celebrar contratos de intermediación bursátil en los que sean cotitulares de las cuentas de sus clientes 4.- Proporcionar recomendaciones a los clientes y ejecutar operaciones al amparo del servicio de ejecución de operaciones",
+      "opciones": [
+        {
+          "texto": "1,4."
+        },
+        {
+          "texto": "3.4"
+        },
+        {
+          "texto": "32"
+        },
+        {
+          "texto": "1,2"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 69
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c03.q01",
+      "version": 1,
+      "area": "normativo",
+      "enunciado": "¿Qué se entiende por intermediación en el Mereado de Valores?",
+      "opciones": [
+        {
+          "texto": "Operaciones por cuenta propia"
+        },
+        {
+          "texto": "Operaciones de correduría o comisión tendientes a contactar la oferta y demanda de valores"
+        },
+        {
+          "texto": "Administración y manejo de cartera de valores propiedad de terceros"
+        },
+        {
+          "texto": "Tedos las incisos son correctos"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 117
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c03.q02",
+      "version": 1,
+      "area": "normativo",
+      "enunciado": "Las Instituciones para el Depósito de Valores son responsables de la guarda y debida conservación de los valores, así como de su:",
+      "opciones": [
+        {
+          "texto": "Administración, compensación y liquidación"
+        },
+        {
+          "texto": "Compensación, liquidación y transferencia"
+        },
+        {
+          "texto": "Administración y transferencia centralizada"
+        },
+        {
+          "texto": "Acministración, compensación, liquidación y transferencia"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 117
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c03.q03",
+      "version": 1,
+      "area": "normativo",
+      "enunciado": "¿Cuál e5 el órgano del Poder Ejecutivo Federal y máxima autoridad del Sistema Financiero Mexicano?",
+      "opciones": [
+        {
+          "texto": "CONDUSEF"
+        },
+        {
+          "texto": "Banco de México"
+        },
+        {
+          "texto": "CONSAR"
+        },
+        {
+          "texto": "SsHCP"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 117
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c03.q04",
+      "version": 1,
+      "area": "normativo",
+      "enunciado": "Son las sociedades anénimas que tienen por objeto asumir el carácter de acreedor y deudor reciproco de los derechos y obligaciones que deriven de operaciones con valores prevismente concertados en el mercado de valores:",
+      "opciones": [
+        {
+          "texto": "Calificadoras de valores"
+        },
+        {
+          "texto": "Instituciones para el depósito de valores"
+        },
+        {
+          "texto": "Contrapartes centrales de valores"
+        },
+        {
+          "texto": "Proveedores de precios"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 117
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c03.q05",
+      "version": 1,
+      "area": "normativo",
+      "enunciado": "Se considera parte del gran público inversionista, excepto:",
+      "opciones": [
+        {
+          "texto": "Seanconsejeros, director general o su equivalente o funciónarios que ocupen cargos dentro de las 2 jerarquías innediatas inferiores a la del director general de una Emisora y subsidiarias."
+        },
+        {
+          "texto": "Mantengan el 30% o más de las acciones de una Emisora."
+        },
+        {
+          "texto": "NO mantengan vínculos patrimoniales con las personas relacionadas a la Emisora."
+        },
+        {
+          "texto": "avyo."
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 117
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c03.q06",
+      "version": 1,
+      "area": "normativo",
+      "enunciado": "B. ¿Qué son las Casas de Bolsa?",
+      "opciones": [
+        {
+          "texto": "Sociedades que cuenten con la concesión respectiva para prestar el servicio de guarda, administración, compensación, Niquidación y transferencia de valores"
+        },
+        {
+          "texto": "Es elagente de valores, persona moral, autorizado para actuar como intermediario del Mercado de Valores"
+        },
+        {
+          "texto": "Sociedades que tienen por objeto la adquisición y venta de Activos Objeto de Inversión"
+        },
+        {
+          "texto": "Sociedades que cuentan con la concesión para prestar el servicio de la venta de Activos Objeto de Inversión"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 117
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c03.q07",
+      "version": 1,
+      "area": "normativo",
+      "enunciado": "Aquella aperación que asuma o realice un empleado, funcionario o miembro del Conseja de Administración, que pueda considerarse anormal, se conoce como:",
+      "opciones": [
+        {
+          "texto": "Operación prencupante"
+        },
+        {
+          "texto": "Operación inusual"
+        },
+        {
+          "texto": "Operación relevante"
+        },
+        {
+          "texto": "Operación sospechosa"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 117
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c03.q08",
+      "version": 1,
+      "area": "normativo",
+      "enunciado": "Sociedades que cuentan con la concesión respectiva para prestar el servicio de guarda, administración, compensación, liquidación y transferencia:",
+      "opciones": [
+        {
+          "texto": "Instituciones para el Depósito de Valores"
+        },
+        {
+          "texto": "Casas de Bolsa"
+        },
+        {
+          "texto": "RNV"
+        },
+        {
+          "texto": "“ociedades de Inversión tos documentas y grabaciones de voz en que eonsten las de los clientes serán conservados por un plazo de cuando menos cinco años y formarán parte de la :"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 117
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c03.q15",
+      "version": 1,
+      "area": "normativo",
+      "enunciado": "Son los valores cuyos títulos deben ser endosados en administración a la institución para el depósito de valores.",
+      "opciones": [
+        {
+          "texto": "Al Portador"
+        },
+        {
+          "texto": "Emitidos por Casa de Bolsa"
+        },
+        {
+          "texto": "Nominativos"
+        },
+        {
+          "texto": "Emitidos por Institución de Crédito"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 118
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c04.q01",
+      "version": 1,
+      "area": "matematicas",
+      "enunciado": "Sehizo una inversión de $100,000 a una tasa de 22% anual, capitalizando intereses cada bimestre. ¿Cuál es el monta al final de 18 meses?",
+      "opciones": [
+        {
+          "texto": "5142,824.62"
+        },
+        {
+          "texto": "$277,307.87"
+        },
+        {
+          "texto": "$119,509,25"
+        },
+        {
+          "texto": "$768,996.57"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 150
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c04.q03",
+      "version": 1,
+      "area": "matematicas",
+      "enunciado": "Uninversionista obtuvo un rendimiento anual del 6,92%, mientras que la inflación de ese año fue 3.28% ¿Cuál fue la tasa real de esta operación?",
+      "opciones": [
+        {
+          "texto": "3.604%"
+        },
+        {
+          "texto": "3.52%"
+        },
+        {
+          "texto": "3.24%"
+        },
+        {
+          "texto": "2.56%"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 150
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c04.q04",
+      "version": 1,
+      "area": "matematicas",
+      "enunciado": "¿Cuál es el monto al final de una inversión de $50,000 a 2 años a una tasa de interés simple del 4.62% nominal?",
+      "opciones": [
+        {
+          "texto": "554,726.72"
+        },
+        {
+          "texto": "552,310.10"
+        },
+        {
+          "texto": "554,620.00"
+        },
+        {
+          "texto": "561,328.45"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 150
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c04.q05",
+      "version": 1,
+      "area": "matematicas",
+      "enunciado": "Entontrar la interpolación lineal en un plazo de 75 días si se tiene una tasa de 28 días al 4.2% y una tasa de 91 días al 5.6%.",
+      "opciones": [
+        {
+          "texto": "5.224423"
+        },
+        {
+          "texto": "5204444"
+        },
+        {
+          "texto": "5163333"
+        },
+        {
+          "texto": "5.101222"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 150
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c04.q07",
+      "version": 1,
+      "area": "matematicas",
+      "enunciado": "Calcule el valor futuro de una anualidad ordinaria dados los siguientes datos: monto a ahorrar bimestral de $5,200.00 a una tasa anual de 8.2% durante 3 años,",
+      "opciones": [
+        {
+          "texto": "582,479.01"
+        },
+        {
+          "texto": "583,607.13"
+        },
+        {
+          "texto": "$106,747.16"
+        },
+        {
+          "texto": "$105,307.95"
+        }
+      ],
+      "clave": null,
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 150
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c04.q08",
+      "version": 1,
+      "area": "matematicas",
+      "enunciado": "¿Cuál es la tasa de descuento de un instrumento con valor nominal de $10, a un precio de 9.642284 y le faltan 72 dias por vencer?",
+      "opciones": [
+        {
+          "texto": "12.46%"
+        },
+        {
+          "texto": "17.88%"
+        },
+        {
+          "texto": "18.54%"
+        },
+        {
+          "texto": "16.972%"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 150
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c04.q09",
+      "version": 1,
+      "area": "matematicas",
+      "enunciado": "¿Cuál será el rendimiento esperado de una inversión, si la tasa libre de riesgo es del 4.2%, la beta es del 1.18 y el rendimiento de mercado es de 7.5%?",
+      "opciones": [
+        {
+          "texto": "8.09%"
+        },
+        {
+          "texto": "3.30%"
+        },
+        {
+          "texto": "3.89%"
+        },
+        {
+          "texto": "7.40%"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 150
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c04.q10",
+      "version": 1,
+      "area": "matematicas",
+      "enunciado": "Calcular la TIR de una inversión de 5500,000 con los siguientes flujas a reribir los próximos 4 años: $95,000; $140,000; $200,000, $220,000:",
+      "opciones": [
+        {
+          "texto": "14.29%"
+        },
+        {
+          "texto": "13.96%"
+        },
+        {
+          "texto": "12.45%"
+        },
+        {
+          "texto": "15.23%"
+        }
+      ],
+      "clave": null,
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 150
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c04.q11",
+      "version": 1,
+      "area": "matematicas",
+      "enunciado": "¿Cuál será el rendimiento esperado de un portafolio? 5i está compuesto por los siguientes activos: 30% en el activo A; 40% en el activo B y 30% en el artivo C. Con un rendimiento esperado del 12% en el A; 4.2% en el B y -3% en el C.",
+      "opciones": [
+        {
+          "texto": "0.036"
+        },
+        {
+          "texto": "0.0417"
+        },
+        {
+          "texto": "0.0618"
+        },
+        {
+          "texto": "0.0438"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 150
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c04.q13",
+      "version": 1,
+      "area": "matematicas",
+      "enunciado": "Sila tasa de referencia pasó de 4.60% a 4.75%, se dice que:",
+      "opciones": [
+        {
+          "texto": "Incrementó 15 puntos base"
+        },
+        {
+          "texto": "Decrementa 15 puntos base"
+        },
+        {
+          "texto": "Incrementó 15 puntos porcentuales"
+        },
+        {
+          "texto": "Decremento 15 puntos porcentuales"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 151
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c04.q14",
+      "version": 1,
+      "area": "matematicas",
+      "enunciado": "En portafolios, cuando nos referimos a la cantidad máxima de rendimiento esperado que el inversionista está dispuesto a sacrificar con tal de reducir en una unidad el riesgo, hablamos de:",
+      "opciones": [
+        {
+          "texto": "Estructura Intertemporal de las Tasas"
+        },
+        {
+          "texto": "Tasa Equivalente"
+        },
+        {
+          "texto": "Boot-Strapping"
+        },
+        {
+          "texto": "Tasa marginal de sustitución."
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 151
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c04.q15",
+      "version": 1,
+      "area": "matematicas",
+      "enunciado": "Representa el conjunto de portafolios considerados como óptimos, es decir, aquellos portafollos que para un riesgo dado, se obtiene un máximo rendimiento:",
+      "opciones": [
+        {
+          "texto": "Frontera Eficiente."
+        },
+        {
+          "texto": "Linea del Mercado de Capitales"
+        },
+        {
+          "texto": "Linea de Mínima Varianza"
+        },
+        {
+          "texto": "Curva de Indiferencia"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 151
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c05.q01",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "tasempresas mexicanas cotizan en NYSE y NASDAQ a través de:",
+      "opciones": [
+        {
+          "texto": "Títulos Múltiples"
+        },
+        {
+          "texto": "Constancias de Valores Extranjeros"
+        },
+        {
+          "texto": "uUMS"
+        },
+        {
+          "texto": "ADR's"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 180
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c05.q02",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "Sedenominaal Intermediario Bursátil que representa a la empresa para realizar una Oferta Pública:",
+      "opciones": [
+        {
+          "texto": "Representante Común"
+        },
+        {
+          "texto": "(Casade Bolsa"
+        },
+        {
+          "texto": "Agente Colocador"
+        },
+        {
+          "texto": "Financiamiento Corporativo"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 180
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c05.q03",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "¿Cuántos sectores considera la clasificación sectarial de la BMY para índices?",
+      "opciones": [
+        {
+          "texto": "5"
+        },
+        {
+          "texto": "10"
+        },
+        {
+          "texto": "20"
+        },
+        {
+          "texto": "35"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 180
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c05.q04",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "¿Cuálesta función principal del Mercado Secundario?",
+      "opciones": [
+        {
+          "texto": "la Emisora secapitaliza"
+        },
+        {
+          "texto": "Ofrece prestigio a la Emisora"
+        },
+        {
+          "texto": "Realizar nuevas culc.aciones"
+        },
+        {
+          "texto": "Ofrecer liquidez a los inversionistas"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 180
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c05.q05",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "Seconsidera el principal indicador de las empresas de mediano valor de mercado:",
+      "opciones": [
+        {
+          "texto": "SéP/ BMYIPC"
+        },
+        {
+          "texto": "SEP / BMVIMCIO"
+        },
+        {
+          "texto": "SeEP/BMYINMEX"
+        },
+        {
+          "texto": "SP / BMY PRINCIPAL"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 180
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c05.q07",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "¿Qué tipo de derecho requiere de pago para la adquisición de las nuevas acciones emitidas por la empresa?",
+      "opciones": [
+        {
+          "texto": "EBividendo en acciones"
+        },
+        {
+          "texto": "- Split"
+        },
+        {
+          "texto": "Suscripción de acciones"
+        },
+        {
+          "texto": "Reverse-Split"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 180
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c05.q08",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "Es un mercado que ofrece liquidez a los inversionistas a través de operaciones de compra- venta de títulos:",
+      "opciones": [
+        {
+          "texto": "Mercado primario"
+        },
+        {
+          "texto": "Mercado de valores"
+        },
+        {
+          "texto": "Mercado de derivados"
+        },
+        {
+          "texto": "¡Mercado secundario"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 180
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c05.q09",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "¿Cómo se denomina a la operación en que una misma Casa de Bolsa representa al comprador y vendedor?",
+      "opciones": [
+        {
+          "texto": "Cierre de corro"
+        },
+        {
+          "texto": "Cruce"
+        },
+        {
+          "texto": "Orden a precio de cierre (OPC)"
+        },
+        {
+          "texto": "Asignación de posturas"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 180
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c05.q10",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "Es la persona física o moral, propietaria de los valores quien se obliga a transferir la propiedad de los valores abiato del préstamo al prestatario:",
+      "opciones": [
+        {
+          "texto": "Reportado"
+        },
+        {
+          "texto": "Repertador"
+        },
+        {
+          "texto": "Prestamista"
+        },
+        {
+          "texto": "Prestatario"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 180
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c05.q11",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "Este tipo de obiigaciones en su fecha de amortización o vencimiento se canjean por acciones:",
+      "opciones": [
+        {
+          "texto": "Quirografarias"
+        },
+        {
+          "texto": "Hipotecarias"
+        },
+        {
+          "texto": "Prendarias"
+        },
+        {
+          "texto": "Convertibles"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 180
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c05.q12",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "Es el Mercado Integrado Latinoamericano:",
+      "opciones": [
+        {
+          "texto": "1Y"
+        },
+        {
+          "texto": "SEPfBMYVIPC"
+        },
+        {
+          "texto": "Latibex"
+        },
+        {
+          "texto": "MA"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 180
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c05.q15",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "Principal indicador de la Bolsa Institucional de Valores:",
+      "opciones": [
+        {
+          "texto": "SEP/FTSE BIVA"
+        },
+        {
+          "texto": "FTFSEIAT"
+        },
+        {
+          "texto": "SaP /BMVIPC"
+        },
+        {
+          "texto": "FTISE BIVA"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 181
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c05.q16",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "Es un mercado bursátil para valores latinoamericanos radicado en Madrid (España). Está regulado por la Ley del Mercado de Valores española. Los valores que lo integran cotizan en euros.",
+      "opciones": [
+        {
+          "texto": "1IDIv"
+        },
+        {
+          "texto": "S£P / BMVIPC"
+        },
+        {
+          "texto": "Latibex"
+        },
+        {
+          "texto": "MILA"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 181
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c05.q17",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "¿Qué horario define la BMY para el Ingreso de Posturas al Precio de Cierre Etapa 1?",
+      "opciones": [
+        {
+          "texto": "De38:00a8:25 horas"
+        },
+        {
+          "texto": "De38:30a 15:00 horas"
+        },
+        {
+          "texto": "De8:30a13:00 horas"
+        },
+        {
+          "texto": "De8:30a14:40 horas."
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 181
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c05.q18",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "La persona moral, nacional o extranjera, distinta a una casa de bolsa o institución de crédito, aprobada por la Bolsa que preste habitual y profesionalmente los servicios de Cobertura de Análisis a una o más Emisoras:",
+      "opciones": [
+        {
+          "texto": "Formador de mercado"
+        },
+        {
+          "texto": "Proveedor de precios"
+        },
+        {
+          "texto": "Analista independiente"
+        },
+        {
+          "texto": "Auditor independiente"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 181
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c05.q19",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "La acción cotiza en $62, el tipo de cambio opera en $15.60 pesos por dólar y el Ratio es de 1:4.",
+      "opciones": [
+        {
+          "texto": "El precio teórico del ADR es de $241.80"
+        },
+        {
+          "texto": "El precio teórico del ADR es de $15.89"
+        },
+        {
+          "texto": "El precio teórico del ADR es de $128.19"
+        },
+        {
+          "texto": "El precio teórico del AUR es de $74.58"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 181
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c05.q20",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "Acciones que cotizan en la BMV valen $49.86 mientras en el NYSE el ADR está en US$16.28 con un ratio de 1:5. El tipo de cambio está en $15.86 pesos por dólar. La comisión en la BMYV es del 1%6. ¿Cuáf es la posición que conviene contratar?",
+      "opciones": [
+        {
+          "texto": "Largo BMVY"
+        },
+        {
+          "texto": "Largo NYSE"
+        },
+        {
+          "texto": "“Corto BMV"
+        },
+        {
+          "texto": "Corto México"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 181
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c05.q21",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "En un Split inverso:",
+      "opciones": [
+        {
+          "texto": "El capital no cambia, disminuye el precio y aumenta el número de titutos"
+        },
+        {
+          "texto": "El capital aumenta, disminuye el precio y aumenta el numero de titulos"
+        },
+        {
+          "texto": "El capital no carabia, aumenta el precio y disminuye el número de títulos"
+        },
+        {
+          "texto": "El capital disminuye, disminuye el precio y aumenta el número de títulos"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 181
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q02",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "Bono que realiza pagos periódicos por concepto de intereses con el objeto de retribuir al inversionista por el préstamo del rapital y la tasa de referencia para el pago de la renta puede ser una tasa fija o variable",
+      "opciones": [
+        {
+          "texto": "Bonocupán cero"
+        },
+        {
+          "texto": "Bono cuponacdo 9."
+        },
+        {
+          "texto": "Bono amortizable"
+        },
+        {
+          "texto": "Bono bullet"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 209
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q03",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "Los títulos del Gobierno Federal son colocados a través de:",
+      "opciones": [
+        {
+          "texto": "Oferta Privada"
+        },
+        {
+          "texto": "Subasta"
+        },
+        {
+          "texto": "Oferta Pública"
+        },
+        {
+          "texto": "Oferta Mixta"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 209
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q04",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "Es ei mercado donde se negocian títulos de crédito a corto, mediano ' largo plazo Jue representan para el tenedor su participación individual en un crédito colectivo a cargo del emisor:",
+      "opciones": [
+        {
+          "texto": "Mercado de Capitales"
+        },
+        {
+          "texto": "Mercado de Derivados"
+        },
+        {
+          "texto": "Sic"
+        },
+        {
+          "texto": "Mercado de Títulos de Deuda"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 209
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q05",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "Cuando el inverslonista puede mantener el título de deuda hasta su vencimiento se considera una:",
+      "opciones": [
+        {
+          "texto": "Operación de arbitraje"
+        },
+        {
+          "texto": "Operación de Préstamo"
+        },
+        {
+          "texto": "Operación de Reporto"
+        },
+        {
+          "texto": "¡Operación en Directo"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 209
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q06",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "¿Qué es una operación en Reporto?",
+      "opciones": [
+        {
+          "texto": "Esuncontrato en el cual no se regresan titulos"
+        },
+        {
+          "texto": "Esuncantrato en el cual no interviene el premio, sirve para tener liquidez"
+        },
+        {
+          "texto": "Esuncontrato de Intermediación, en el cual se pacta un premio a un plazo determinado"
+        },
+        {
+          "texto": "Esuncantrato que se realiza a valor nominal"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 209
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q08",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "de Cupón Es el pago periódico de interés que efectúan los emisores durante la vida del hono:",
+      "opciones": [
+        {
+          "texto": "Tasacupón"
+        },
+        {
+          "texto": "Tasa de rendimiento"
+        },
+        {
+          "texto": "Plazo del cupón"
+        },
+        {
+          "texto": "Cupón"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 209
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q09",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "¿Cuáles son los títulos que pueden ser objeto de reporto?",
+      "opciones": [
+        {
+          "texto": "Todoslos instrumentos de deuda inscritos en RNV"
+        },
+        {
+          "texto": "Selo aquello con calificaciones AAA y AA+ global"
+        },
+        {
+          "texto": "Solcios titulos llamados Gubernamentales"
+        },
+        {
+          "texto": "Aquellos con 2 o más calificaciones de AA- o superiores; mx A-3 o superiores en corto plazo e valores extranjeros con calificación A4- global o superiores."
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 209
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q10",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "¿Qué obtiene el inversionista en un reporta?",
+      "opciones": [
+        {
+          "texto": "El Descuento"
+        },
+        {
+          "texto": "Los dividendos"
+        },
+        {
+          "texto": "El premio"
+        },
+        {
+          "texto": "La minusvalía"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 209
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q11",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "Titulo que ofrece un rendimiento basado en la tendencia de la inflación y una tasa real:",
+      "opciones": [
+        {
+          "texto": "BONOS DETASA FIJA"
+        },
+        {
+          "texto": "UDIBONOS"
+        },
+        {
+          "texto": "BONDES"
+        },
+        {
+          "texto": "BONOS UMS"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 209
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q12",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "Son instrumentos de deuda de los Estados Unidos Mexicanos colocados en el extranjero.",
+      "opciones": [
+        {
+          "texto": ".Bonos Tasa Fija"
+        },
+        {
+          "texto": "Banos UMS"
+        },
+        {
+          "texto": "CETES, Papel Comercial, Certificados de Depósito"
+        },
+        {
+          "texto": "BPA's"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 209
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q13",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "El valor Nominal de los UDIBONOS es:",
+      "opciones": [
+        {
+          "texto": "100 Udis"
+        },
+        {
+          "texto": "100 Pesos"
+        },
+        {
+          "texto": "10 Udis"
+        },
+        {
+          "texto": "1,000 pesos"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 210
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q14",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "Los Bondes D ofrecen un rendimiento referenciado",
+      "opciones": [
+        {
+          "texto": "Tasaequivalente"
+        },
+        {
+          "texto": "Tasa Real"
+        },
+        {
+          "texto": "Tasa de Fondeo Bancaria"
+        },
+        {
+          "texto": "Tasa Libor"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 210
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q15",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "¿Qué valores se consideran instrumentos bancarios?",
+      "opciones": [
+        {
+          "texto": "Acciones, PREV, CEDES"
+        },
+        {
+          "texto": "PRLY, Bonos Bancariós, CEDES"
+        },
+        {
+          "texto": "Acciones, Obligaciones, Warrants"
+        },
+        {
+          "texto": "Pagares Comerciales, Obligaciones"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 210
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q16",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "Un inversionista adquirió CETES a un precio de $9.842179, con un plazo de 78 días por vencer. Determine la tasa de descuento correspondiente a este precio de compra:",
+      "opciones": [
+        {
+          "texto": "7.284046%"
+        },
+        {
+          "texto": "7.400347%"
+        },
+        {
+          "texto": "6.673212%"
+        },
+        {
+          "texto": "8.327698%"
+        }
+      ],
+      "clave": null,
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 210
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q17",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "Una suvasta en la cual los valores sc asignan a partir de la mejor postura para el emisor y posteriormente son asignados a la tasa o precio solicitado, es conocida como subasta:",
+      "opciones": [
+        {
+          "texto": "Atasao precio único"
+        },
+        {
+          "texto": "Espectal"
+        },
+        {
+          "texto": "Atasaoprecio multiple"
+        },
+        {
+          "texto": "De vasos comunicantes"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 210
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q18",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "Son las subastas que el Banco de México realice para dotar de liquidez a las Instituciones, en las que las asignaciones respectivas podrán formalizarse mediante crédito garantizado o reporto:",
+      "opciones": [
+        {
+          "texto": "Subastas de liquidez"
+        },
+        {
+          "texto": "Subastas para permuta de valores"
+        },
+        {
+          "texto": "Subastas de depósito"
+        },
+        {
+          "texto": "Subastas atasa o precio múltiple"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 210
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q20",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "Mencione las contrapartes en el contrato de reporta:",
+      "opciones": [
+        {
+          "texto": "Reportado y Reportador."
+        },
+        {
+          "texto": "Girado y Girador"
+        },
+        {
+          "texto": "Prestamista y prestatario"
+        },
+        {
+          "texto": "Repoartado"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 210
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q21",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "Eslatasarepresentativa de las operaciones de mayoreo realizadas por la banca y casas de bolsa en el mercado interbancario sobre titulos de deuda pública a plazo de 1 día:",
+      "opciones": [
+        {
+          "texto": "Tasade fondeo bancaria"
+        },
+        {
+          "texto": "Tasadeinterés interbancaria de equilibrio"
+        },
+        {
+          "texto": "Tasade fondeo gubernamental"
+        },
+        {
+          "texto": "Tasareal"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 210
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q22",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "¿Cuálesta periodiridad del corte de cupónr de un UDIBONO?",
+      "opciones": [
+        {
+          "texto": "180dias"
+        },
+        {
+          "texto": "91 días"
+        },
+        {
+          "texto": "182.Has,"
+        },
+        {
+          "texto": "2edas"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 210
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c06.q23",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "Calcular el precio limpio de un bono tasa fija emitido por el poblerno federal, con 764 días por vencer, con tasa de rendimiento del 5.72% y con tasa cupña del 7.45%. Se pactó liquidar en 48 horas.",
+      "opciones": [
+        {
+          "texto": "$1064573"
+        },
+        {
+          "texto": "$103.8053"
+        },
+        {
+          "texto": "$106.5878"
+        },
+        {
+          "texto": "$1033945"
+        }
+      ],
+      "clave": null,
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 210
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c07.q04",
+      "version": 1,
+      "area": "fondos",
+      "enunciado": "que se mencionan en la Ley?",
+      "opciones": [
+        {
+          "texto": "Úñnicamente de capitales"
+        },
+        {
+          "texto": "RentaVariable, instrumentos de Deuda, Capitales y de Objeto Limitado"
+        },
+        {
+          "texto": "Renta Variable, Fja, Capitales y Objeto Limitado"
+        },
+        {
+          "texto": "Cobertura e Indizadas"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 238
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c07.q06",
+      "version": 1,
+      "area": "fondos",
+      "enunciado": "Sociedad autorizada para administrar, distribuir y recomprar acciones de Fondos de Inversión:",
+      "opciones": [
+        {
+          "texto": "tCasas de Boka"
+        },
+        {
+          "texto": "Operadoras de Fondos de Inversión"
+        },
+        {
+          "texto": "Casas de Cambio"
+        },
+        {
+          "texto": "Valuadoras de Fondos de Inversión"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 239
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c07.q07",
+      "version": 1,
+      "area": "fondos",
+      "enunciado": "¿Qué es una empresa Calificadora de Fondos de Inversión?",
+      "opciones": [
+        {
+          "texto": "Sociedad Anónima de Capital Variable autorizada para otorgar valuaciones"
+        },
+        {
+          "texto": "Esuna Sociedad para depositar las acciones de los Fondos de Inversión"
+        },
+        {
+          "texto": "Sorciedad Anónima autorizada por la CNBY para otorgar proveeduría de precioas"
+        },
+        {
+          "texto": "Esuna SA de CV autorizada por la CNBY para otorgar calificaciones a los Fondos de Inversión"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 239
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c07.q08",
+      "version": 1,
+      "area": "fondos",
+      "enunciado": "¿Qué significan las letras y números de calificación de Fondos de Inversión de Deuda?",
+      "opciones": [
+        {
+          "texto": "Lasletras, la recomendación para vender y Jos números la recomendación de comprar"
+        },
+        {
+          "texto": "Lastetras, la recomendación para comprar y los números la recomendación de vender"
+        },
+        {
+          "texto": "Lasletras, la probabilidad de pago de los títulos y los números la sensibilidad de los precios a las tasas de interés"
+        },
+        {
+          "texto": "MNingún inciso es correcta"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 239
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q01",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "Otorgan el derecho a ejercer, pero no la obligación a comprar o vender un subyacente:",
+      "opciones": [
+        {
+          "texto": "Bonos Bancarios"
+        },
+        {
+          "texto": "Opciones"
+        },
+        {
+          "texto": "Obligaciones"
+        },
+        {
+          "texto": "Futuros"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 302
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q02",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "Posición que mantiene un inversionista que se compromete a vender un subyacente, mediante un contrato de Futuro:",
+      "opciones": [
+        {
+          "texto": "Opuesta"
+        },
+        {
+          "texto": "Mixta"
+        },
+        {
+          "texto": "Corta"
+        },
+        {
+          "texto": "Larga"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 302
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q03",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "Supongamos que se está largo en un Cali con precio de ejercicio de $42 cotizando a $3.72, el subyacente opera en $39. Obtener la Delta de ta opción si el precio sube a $43 y ta nueva prima se cotiza en $4.34:",
+      "opciones": [
+        {
+          "texto": "155"
+        },
+        {
+          "texto": "096"
+        },
+        {
+          "texto": "1.00"
+        },
+        {
+          "texto": "0.155"
+        }
+      ],
+      "clave": null,
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 302
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q04",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "Pieno indice de referencia que se negocia én un contrato de futuro u opción, concertado en una Bolsa de Derivados:",
+      "opciones": [
+        {
+          "texto": "Tamaño de contrato"
+        },
+        {
+          "texto": "— Fideicomiso"
+        },
+        {
+          "texto": "Activo Subyacente"
+        },
+        {
+          "texto": "Margen"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 302
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q06",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "Contrato estandarizado, en el cuat el comprador, mediante el pago de una prima adquiere el derecho, pero no la obligación de comprar (call) o vender (put) un activo subyacente a un precio pactado (precio de ejercicio) en una fechva futura, y el vendedor se obliga a vender o comprar, según corresponda:",
+      "opciones": [
+        {
+          "texto": "Ce Opriones"
+        },
+        {
+          "texto": "De Plazo"
+        },
+        {
+          "texto": "De eporto"
+        },
+        {
+          "texto": "De Futuros"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 302
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q09",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "Acuerdo privado entre dos contrapartes para intercambiar flujos de efectivo en el futuro:",
+      "opciones": [
+        {
+          "texto": "Warrant"
+        },
+        {
+          "texto": "Swap"
+        },
+        {
+          "texto": "Forward -"
+        },
+        {
+          "texto": "Futuro"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 302
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q10",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "Liquidación que no requiere la entrega física del valor de referencia en los contratos de futuros y opciones:",
+      "opciones": [
+        {
+          "texto": "Enefectivo"
+        },
+        {
+          "texto": "Ordinaria"
+        },
+        {
+          "texto": "Enespecie"
+        },
+        {
+          "texto": "Extraordinaria"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 302
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q12",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "Para realizar la valuación de una opción utilizando el modelo \"Black-Scholes” se requiere de:",
+      "opciones": [
+        {
+          "texto": "Precios esperados de las acciones, volatilidad y la tasa de interés."
+        },
+        {
+          "texto": "Plazo al vencimiento, precio de ejercicio, volatilidad y precio actual del subyacente."
+        },
+        {
+          "texto": "Precio del subyacente, volatilidad, plazo al vencimiento, tasa de interés y precio de ejercicio."
+        },
+        {
+          "texto": "Ninguno de los anteriores."
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 303
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q13",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "Una empresa tiene una deuda de USD 10'000,000 para dentro de 30 días. Uno de sus principales riesgos es que la paridad peso-dólar suba. La empresa desea mitigar ese riesgo de mercado, ¿qué operación debe realizar en el MEXDER?",
+      "opciones": [
+        {
+          "texto": "Comprar 10'000,000 de contratos DA"
+        },
+        {
+          "texto": "Vender 10'000,000 de contratos DA"
+        },
+        {
+          "texto": "vVender 1,000 contratos DA"
+        },
+        {
+          "texto": "FComprar 1,000 contratos DA."
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 303
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q14",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "¿Qué es la Aportación Inicial Mínima?",
+      "opciones": [
+        {
+          "texto": "Esel efectivo que aporta el operador a la Cámara de Compensación."
+        },
+        {
+          "texto": "Esel efectivo o valores que aporta la Bolsa a la Cámara de Compensación."
+        },
+        {
+          "texto": "Esel efectivo que aporta el Banco a la Cámara de Compensación."
+        },
+        {
+          "texto": "Esel efectivo o valores que aporta el socio Liquidador a la Cámara de Compensación"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 303
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q15",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "La red de seguridad de Asigna consiste en:",
+      "opciones": [
+        {
+          "texto": "Unprocedimiento de tipo legal que se sigue con el objeta de dirimir conflictos entre Socios."
+        },
+        {
+          "texto": "Normas y procedimientos para disponer de recursos líquidos y enfrentar incumplimientos de Clientes o Socias Liquidadores."
+        },
+        {
+          "texto": "Losrecursos del Fondo de Compensación y su restitución obligatoria."
+        },
+        {
+          "texto": "Un conjunto de recursos líquidos para enfrentar incumplimientos del Socio Operador."
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 303
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q16",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "¿Cómo se estructura un Pub Sintético Corto?",
+      "opciones": [
+        {
+          "texto": "Putcorto, delta y gamma neutral y un forward corto."
+        },
+        {
+          "texto": "Putlargo, delta neutral y un forward corto."
+        },
+        {
+          "texto": "Callicorto y futuro targo."
+        },
+        {
+          "texto": "Putcorto y futuro largo."
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 303
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q18",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "d Expectativas variables Cuando se asume un Call Largo:",
+      "opciones": [
+        {
+          "texto": "Setiene'a obligación de vender y == recibe la prima"
+        },
+        {
+          "texto": "Setiene el derecho de vender y se paga la prima"
+        },
+        {
+          "texto": "Setienela obligación de comprar y se recibe la prima"
+        },
+        {
+          "texto": "Setiene el derecho de comprar y se paga la prima."
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 303
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q19",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "5i Mmi posición es “Corto Put”:",
+      "opciones": [
+        {
+          "texto": "Ganoalaalza, pierdo ata baja y mi contraparte es el comprador de opciones de venta"
+        },
+        {
+          "texto": "Ganoalaalza, pierdo a la baja y mi contraparte es el comprador de opciones de compra"
+        },
+        {
+          "texto": "Ganoalabaja, pierdo ala alza y mi contraparte está “Largo-Put”"
+        },
+        {
+          "texto": "Ganoalaalza, pierdo a la baja y mi contraparte está “Largo-Call”"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 303
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q20",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "En las negociaciones con futuros, la palabra Riesgo Base se refiere a:",
+      "opciones": [
+        {
+          "texto": "El grado de apalancamiento de los futuros."
+        },
+        {
+          "texto": "Ladiferencia entre precios de futuros en diferentes meses de entrega."
+        },
+        {
+          "texto": "Ladiferencia entre el precio spot y el precio de futuros del mismo subyacente."
+        },
+        {
+          "texto": "Teodas las anteriores"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 304
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q21",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "¿Qué es riesgo de crédito?",
+      "opciones": [
+        {
+          "texto": "Escuando el inversinnista incumple con sus obligaciones de pago"
+        },
+        {
+          "texto": "Escuando un deudor incumple con sus obligaciones de pago"
+        },
+        {
+          "texto": "Escuando un inversionista incumple con el pago de sus acciones en la fecha de amortización"
+        },
+        {
+          "texto": "Ningún inciso es correcto"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 304
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q22",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "Qué efectos tiene una Baja en la Calificación Crediticia:",
+      "opciones": [
+        {
+          "texto": "Aumento en el costo financiero"
+        },
+        {
+          "texto": "Abaratamiento del fondeo"
+        },
+        {
+          "texto": "Caída en el precio de los bonos colocados"
+        },
+        {
+          "texto": "ayc"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 304
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 2 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q23",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "Sise desea estructurar una estrategia Bull Spread",
+      "opciones": [
+        {
+          "texto": "Compra / Venta de un ¿all al mismo strike"
+        },
+        {
+          "texto": "Compra (strike mayor) / Venta (strike menor) de un call"
+        },
+        {
+          "texto": "Compra (strike menor) / Venta (strike mayor) de un call."
+        },
+        {
+          "texto": "Compra / Venta de un put al mismo strike"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 304
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c08.q24",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "Determinar la nueva prima de una epción cuando el subyacente opera a $62, si la THETA anuat es -12,24 y la cotización de mercado hace dos Días era $29.75. Considerar un año de 360 dias.",
+      "opciones": [
+        {
+          "texto": "$17.51"
+        },
+        {
+          "texto": "$49.76"
+        },
+        {
+          "texto": "$29.72"
+        },
+        {
+          "texto": "$29.68."
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 304
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c09.q01",
+      "version": 1,
+      "area": "analisis",
+      "enunciado": "Estado donde se evalúa la solvencia de la empresa:",
+      "opciones": [
+        {
+          "texto": "Estado de Pérdidas y Ganancias"
+        },
+        {
+          "texto": "Estado de Resultados"
+        },
+        {
+          "texto": "Estado de Variaciones en el Capital Contable"
+        },
+        {
+          "texto": "Estado de Situación Financiera"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 346
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c09.q06",
+      "version": 1,
+      "area": "analisis",
+      "enunciado": "di 2, En una formación Hombro = Cabeza = Hombro:",
+      "opciones": [
+        {
+          "texto": "Marcaelinicio de una tendencia alcista y su cambio hacia una bajista"
+        },
+        {
+          "texto": "mMarcaelinicio de una tendencia bajista y su cambio hacia una alcistá"
+        },
+        {
+          "texto": "Tiene 3 puntos de Resistencia y 2 de Soporte"
+        },
+        {
+          "texto": "Tiene 2 puntos de Resistencia y 3 de Soporte"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 346
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c09.q08",
+      "version": 1,
+      "area": "analisis",
+      "enunciado": "di _ Aumentos y Disminuciones La estructura del Monopolio se caracteriza por ser el único productor dentro su área de producción, existiendo ciertas barreras de entrada a otras empresas, como lo son:",
+      "opciones": [
+        {
+          "texto": "Narturales y Económicas"
+        },
+        {
+          "texto": "Naturales y Desarrolladoras"
+        },
+        {
+          "texto": "Naturales y Monopólicas"
+        },
+        {
+          "texto": "Natu ales y Artificiales"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 346
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c09.q09",
+      "version": 1,
+      "area": "analisis",
+      "enunciado": "En qué caso estamos ante una puliítica monetarta expansiva.",
+      "opciones": [
+        {
+          "texto": "Compra de bonos del estado y otros activos financieros objetivo, inyectar dinero más líquido en el sistema. Esto se denomina Operaciones de mercado abierto"
+        },
+        {
+          "texto": "Redurcción en el Encaje a los bancos"
+        },
+        {
+          "texto": "Reducción de las tasas de interés"
+        },
+        {
+          "texto": "Tedas son correctas"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 346
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 2 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c09.q10",
+      "version": 1,
+      "area": "analisis",
+      "enunciado": "Es el régimen en donde el Banco Central impide desviaciones de un tipo de cambio.",
+      "opciones": [
+        {
+          "texto": "Fiotación sucia"
+        },
+        {
+          "texto": "flotación manejada"
+        },
+        {
+          "texto": "Fijo"
+        },
+        {
+          "texto": "Flotante"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 346
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: 1 marcador(es) de opción irregulares"
+      ]
+    },
+    {
+      "id": "manual-repaso.c09.q13",
+      "version": 1,
+      "area": "analisis",
+      "enunciado": "De la siguiente lista identifique las razones financieras de rentabilidad. 1.-Margen de Utilidad; 2.-Prueba del Ácido; 3.-Rotación de Inventarios; 4.- Rendimiento sobre Activos. 5.- Cobertura de Intereses; 6.- Rendimiento sobre Capital; 7.- Apalancamiento",
+      "opciones": [
+        {
+          "texto": "12y5"
+        },
+        {
+          "texto": "35y7"
+        },
+        {
+          "texto": "13y7"
+        },
+        {
+          "texto": "1,uvy6"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 347
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación",
+        "OCR: contiene cifras; verifícalas contra la página del manual"
+      ]
+    },
+    {
+      "id": "manual-repaso.c09.q14",
+      "version": 1,
+      "area": "analisis",
+      "enunciado": "Cuál es la razón financiera que nos muestra la capacidad de la empresa para enfrentar su deuda con costo financiero:",
+      "opciones": [
+        {
+          "texto": "Margen de Utilidad"
+        },
+        {
+          "texto": "— Prueba del Acido"
+        },
+        {
+          "texto": "Margen de utilidad"
+        },
+        {
+          "texto": "Cobertura de Intereses"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 347
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    },
+    {
+      "id": "manual-repaso.c09.q15",
+      "version": 1,
+      "area": "analisis",
+      "enunciado": "Nivel de precios en el que se puede esperar un considerable aumento de la demanda o compra de los valores:",
+      "opciones": [
+        {
+          "texto": "Promedios Moviles"
+        },
+        {
+          "texto": "sSoporte"
+        },
+        {
+          "texto": "Resistencia"
+        },
+        {
+          "texto": "Tendencia"
+        }
+      ],
+      "clave": null,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-repaso",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 347
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "sin clave: requiere resolución y validación"
+      ]
+    }
+  ]
+}
