@@ -29,7 +29,9 @@ Las tareas medianas o grandes llevan ficha en `docs/fichas/`. Al cerrar una tare
 |---|---|
 | `npm run dev` | App en modo desarrollo |
 | `npm test` | Pruebas unitarias (Vitest) |
-| `npm run typecheck` | Tipos (proceso principal y renderer) |
+| `npm run typecheck` | Tipos (proceso principal, renderer y `tools/`) |
+| `npm run content:build` | Regenera `content/` desde `AMIB Data/` con los parsers de `tools/` |
+| `npm run validate:content` | Valida `content/` con los esquemas Zod y resume por área/estado/fuente |
 | `npm run e2e:linux` | E2E con Electron real bajo xvfb (nube/CI). Captura en `test-results/` |
 | `npm run e2e` | E2E en Windows o Mac |
 | `npm run dist:win` | Instalador de Windows (se compila en GitHub Actions, no en la nube Linux) |
@@ -44,8 +46,9 @@ Las tareas medianas o grandes llevan ficha en `docs/fichas/`. Al cerrar una tare
 - Los puntajes en escala 200–1100 son **estimados**, porque la conversión oficial no es pública. Muéstralo siempre así.
 
 ## Lecciones
-- `Preguntas Tipo.docx`: la clave es el **texto** de la opción en negritas. En 7 preguntas (1, 4, 10, 17, 22, 32, 34) la **letra** en negritas no coincide con ese texto. Manda el texto.
+- `Preguntas Tipo.docx`: la clave es el **texto** de la opción en negritas. En 6 preguntas (1, 4, 10, 17, 22, 32) la **letra** en negritas no coincide con ese texto. Manda el texto.
 - Convenciones de cálculo del examen (de las preguntas oficiales): año de 360 días, interés simple, tasas del periodo, rendimientos de fondos sin anualizar.
+- **Los problemas numéricos del examen en línea muestran 4 decimales** (indicación de Cesar). Las plantillas de cálculo calculan con precisión completa y formatean la clave y los distractores a 4 decimales (p. ej. `7.7040%`). Los distractores deben salir de errores de método reales (360/365, descuento/rendimiento, periodo/anual), nunca de un redondeo distinto, y no puede haber dos opciones iguales a 4 decimales. Las preguntas oficiales de ejemplo traen 2 decimales: se conservan tal cual.
 - Los repasos de los manuales **no traen clave**. Hay que resolverlos y validarlos.
 - `AMIB_1_completo.md` es OCR: numeración y cifras pueden estar mal. Toda limpieza debe conservar las cifras (verifícalo con un diff).
 - El preload con `sandbox: true` debe compilarse a **CommonJS** (`index.cjs`). El proceso principal es ESM y define `__dirname` con `import.meta.url`.

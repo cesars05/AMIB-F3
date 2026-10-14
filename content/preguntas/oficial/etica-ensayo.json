@@ -1,0 +1,1037 @@
+{
+  "fuente": "AMIB Data/Manual_EBSPMV_completo.md",
+  "generado": "2026-10-14",
+  "preguntas": [
+    {
+      "id": "etica-ensayo.01",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Se define como la capacidad de elegir:",
+      "opciones": [
+        {
+          "texto": "verdad"
+        },
+        {
+          "texto": "hábito"
+        },
+        {
+          "texto": "libertad"
+        },
+        {
+          "texto": "voluntad"
+        }
+      ],
+      "clave": 2,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 74
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "duplicado de tipo.25"
+      ]
+    },
+    {
+      "id": "etica-ensayo.02",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Este concepto realiza una reflexión sobre la conducta humana derivada de las costumbres:",
+      "opciones": [
+        {
+          "texto": "ética"
+        },
+        {
+          "texto": "derecho"
+        },
+        {
+          "texto": "moral"
+        },
+        {
+          "texto": "religión"
+        }
+      ],
+      "clave": 2,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 74
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.03",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Es la propiedad del acto libre que consiste en asumir las consecuencias de nuestros actos:",
+      "opciones": [
+        {
+          "texto": "valor"
+        },
+        {
+          "texto": "bien"
+        },
+        {
+          "texto": "libertad"
+        },
+        {
+          "texto": "responsabilidad"
+        }
+      ],
+      "clave": 3,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 74
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.04",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "¿Cuál es la disciplina que estudia la vivencia cotidiana de las virtudes y los valores que deben prevalecer al actuar?",
+      "opciones": [
+        {
+          "texto": "Religión"
+        },
+        {
+          "texto": "Ética"
+        },
+        {
+          "texto": "Derecho"
+        },
+        {
+          "texto": "Moral"
+        }
+      ],
+      "clave": 1,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 74
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.05",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "¿Cuál es el objeto general de estudio de la ética?",
+      "opciones": [
+        {
+          "texto": "Los actos humanos."
+        },
+        {
+          "texto": "La voluntad."
+        },
+        {
+          "texto": "Las circunstancias."
+        },
+        {
+          "texto": "Los actos del hombre."
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 74
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.06",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "El objeto específico de análisis de la ética (objeto formal) es la:",
+      "opciones": [
+        {
+          "texto": "bondad o maldad de los actos"
+        },
+        {
+          "texto": "racionalidad del que actúa"
+        },
+        {
+          "texto": "intencionalidad con que se actúa"
+        },
+        {
+          "texto": "libertad con que se actúa"
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 74
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.07",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Los elementos del acto humano son:",
+      "opciones": [
+        {
+          "texto": "Objeto, circunstancia y valor."
+        },
+        {
+          "texto": "Objeto, fin e intención."
+        },
+        {
+          "texto": "Objeto, fin y circunstancia."
+        },
+        {
+          "texto": "Objeto, fin y valor."
+        }
+      ],
+      "clave": 2,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 75
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.08",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Son las razones básicas de las que parte el conocimiento para llevar a cabo los actos humanos:",
+      "opciones": [
+        {
+          "texto": "verdades"
+        },
+        {
+          "texto": "valores"
+        },
+        {
+          "texto": "hábitos"
+        },
+        {
+          "texto": "principios"
+        }
+      ],
+      "clave": 3,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 75
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.09",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Establece un orden social obligatorio, no sujeto a la voluntad personal y se caracteriza por aplicarse de manera externa.",
+      "opciones": [
+        {
+          "texto": "religión"
+        },
+        {
+          "texto": "moral"
+        },
+        {
+          "texto": "derecho"
+        },
+        {
+          "texto": "ética"
+        }
+      ],
+      "clave": 1,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 75
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.10",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "La utilidad de la ética radica en que:",
+      "opciones": [
+        {
+          "texto": "proporciona un amplio criterio en la toma de decisiones y es de aplicación externa."
+        },
+        {
+          "texto": "proporciona un amplio criterio en la toma de decisiones y supera cualquier coercibilidad."
+        },
+        {
+          "texto": "limita el criterio en la toma de decisiones por mantenernos dentro de la coercibilidad."
+        },
+        {
+          "texto": "limita el criterio en la toma de decisiones, es externa e incoercible."
+        }
+      ],
+      "clave": 1,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 75
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.11",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "¿Cómo es la obligatoriedad en la norma ética?",
+      "opciones": [
+        {
+          "texto": "Unilateral"
+        },
+        {
+          "texto": "Bilateral"
+        },
+        {
+          "texto": "Heterónoma"
+        },
+        {
+          "texto": "Externa"
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 75
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.12",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "La legitimación de la existencia de las empresas radica en que tienen como finalidad:",
+      "opciones": [
+        {
+          "texto": "proporcionar a la sociedad bienes y servicios."
+        },
+        {
+          "texto": "realizar actividades encaminadas a satisfacer necesidades laborales."
+        },
+        {
+          "texto": "crear fuentes de trabajo para un sector específico de la población."
+        },
+        {
+          "texto": "competir con otros países para tener un lugar en la economía mundial."
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 75
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "duplicado de tipo.26"
+      ]
+    },
+    {
+      "id": "etica-ensayo.13",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Una característica propia del líder moral consiste en la coherencia entre:",
+      "opciones": [
+        {
+          "texto": "El hacer y el querer."
+        },
+        {
+          "texto": "La acción y la promoción."
+        },
+        {
+          "texto": "La palabra y la acción."
+        },
+        {
+          "texto": "La palabra y la intención."
+        }
+      ],
+      "clave": 2,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 76
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.14",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Las organizaciones tienen un fin ____ debido a que son creadas para proporcionar bienes y servicios a la sociedad.",
+      "opciones": [
+        {
+          "texto": "económico"
+        },
+        {
+          "texto": "social"
+        },
+        {
+          "texto": "cultural"
+        },
+        {
+          "texto": "político"
+        }
+      ],
+      "clave": 1,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 76
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.15",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "La ética bursátil se define como:",
+      "opciones": [
+        {
+          "texto": "ciencia práctica que muestra la necesidad de que los profesionales bursátiles se comporten de acuerdo con sus mejores intenciones."
+        },
+        {
+          "texto": "modo de vida apegado a valores aceptados por tradición del mercado de valores."
+        },
+        {
+          "texto": "conocimiento práctico que muestra la necesidad de un comportamiento apegado a principios y valores del mercado."
+        },
+        {
+          "texto": "modo de vida apegado a principios y conductas legalmente aceptados por la CNBV."
+        }
+      ],
+      "clave": 2,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 76
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "duplicado de tipo.27"
+      ]
+    },
+    {
+      "id": "etica-ensayo.16",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "De los siguientes enunciados, selecciona los beneficios para el Mercado de Valores de contar con la certificación de AMIB:\n1. Generar confianza en el público inversionista.\n2. Generar una competencia leal en el Mercado de Valores que promueva las sanas prácticas.\n3. Adoptar y aplicar principios éticos que se traduzcan en la honorabilidad del profesional bursátil a fin de preservar la integridad del Mercado Bursátil.\n4. Convencimiento de la obtención de conocimientos técnicos para una superación personal que incida en la excelencia profesional bursátil.\n5. Atender la necesidad del cumplimiento de las disposiciones legales en materia bursátil por convicción.\n6. Fomentar la cultura bursátil.",
+      "opciones": [
+        {
+          "texto": "1, 2, 6"
+        },
+        {
+          "texto": "1, 4, 5"
+        },
+        {
+          "texto": "3, 4, 5"
+        },
+        {
+          "texto": "2, 3, 6"
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 76
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.17",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Es el fin último de la Autorregulación:",
+      "opciones": [
+        {
+          "texto": "equidad"
+        },
+        {
+          "texto": "confianza"
+        },
+        {
+          "texto": "confidencialidad"
+        },
+        {
+          "texto": "justicia"
+        }
+      ],
+      "clave": 1,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 77
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.18",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Seleccione los Organismos Autorregulatorios en México establecidos en la Ley del Mercado de Valores:\n1. Secretaría de Hacienda y Crédito Público\n2. Bolsa Mexicana de Valores\n3. Contraparte Central de Valores\n4. Asociación Mexicana de Intermediarios Bursátiles\n5. Comisión Nacional Bancaria y de Valores\n6. Banco de México",
+      "opciones": [
+        {
+          "texto": "2, 3, 4"
+        },
+        {
+          "texto": "1, 4, 5"
+        },
+        {
+          "texto": "1, 5, 6"
+        },
+        {
+          "texto": "2, 3, 6"
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 77
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.19",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Identifique tres principios éticos generales.",
+      "opciones": [
+        {
+          "texto": "diligencia, imparcialidad y dinamismo"
+        },
+        {
+          "texto": "probidad, honestidad y libertad"
+        },
+        {
+          "texto": "honestidad, diligencia y buena fe"
+        },
+        {
+          "texto": "honestidad, justicia y virtud"
+        }
+      ],
+      "clave": 2,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 77
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "duplicado de tipo.28"
+      ]
+    },
+    {
+      "id": "etica-ensayo.20",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Principio que supone conocer y seguir las normas, leyes y reglamentos del medio bursátil:",
+      "opciones": [
+        {
+          "texto": "Actúa de acuerdo con las disposiciones aplicables y sanas prácticas del mercado."
+        },
+        {
+          "texto": "Actúa con base en una conducta íntegra que permita el desarrollo transparente y ordenado del mercado."
+        },
+        {
+          "texto": "Haz prevalecer el interés de los clientes."
+        },
+        {
+          "texto": "No uses ni divulgues información privilegiada."
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 77
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.21",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Un promotor tiene facultades para operar depósitos por montos superiores a un millón de pesos. Con bastante frecuencia sale de la oficina tardándose un promedio de dos horas, prestando su clave personal al subgerente de servicio para que pueda operar en caso de que se ofrezca. ¿Qué principio está violando el subgerente? y ¿porqué?",
+      "opciones": [
+        {
+          "texto": "“Actúa de acuerdo con las disposiciones aplicables y las sanas prácticas del mercado”, ya que incluye el presupuesto que se refiere a no ser complacientes o consecuentes con las conductas incorrectas de otros y promover con el ejemplo la rectitud de actuación con los demás profesionales."
+        },
+        {
+          "texto": "“Actúa con base en una conducta profesional íntegra que permita el desarrollo transparente u ordenado del mercado”, porque este principio señala que no hay que alterar o interrumpir sin justificación la normalidad de las operaciones en el mercado bursátil."
+        },
+        {
+          "texto": "“Evita los conflictos entre tu interés personal y el de terceros”, en virtud de que no puede participar en actividades que sean incompatibles con sus funciones."
+        },
+        {
+          "texto": "“Salvaguarda la confidencialidad de la información de los clientes”, ya que incluye el presupuesto que señala que las operaciones realizadas deberán permanecer confidenciales."
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 78
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.22",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Un cliente muy importante y conocedor del mercado le pide a su promotor una venta de una gran cantidad de acciones de una emisora. El promotor decide compartir el hecho con otros clientes para “orientarlos”, ¿Qué Principio Fundamental de Actuación está incumpliendo el promotor?",
+      "opciones": [
+        {
+          "texto": "Salvaguarda la confidencialidad de los clientes."
+        },
+        {
+          "texto": "Actúa con base en una conducta íntegra que permita el desarrollo transparente y ordenado del mercado."
+        },
+        {
+          "texto": "Haz prevalecer el interés de los clientes."
+        },
+        {
+          "texto": "No uses ni divulgues información privilegiada."
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 78
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.23",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Tu jefe te pide que canalices los recursos de la clientela a cierto producto que está promoviendo intensamente durante este mes la institución, sin avisarles ni importar si sea adecuado a su perfil. ¿Qué Principio Fundamental de Actuación te está queriendo forzar a incumplir?",
+      "opciones": [
+        {
+          "texto": "Salvaguarda la confidencialidad de los clientes."
+        },
+        {
+          "texto": "Actúa con base en una conducta íntegra que permita el desarrollo transparente y ordenado del mercado."
+        },
+        {
+          "texto": "Haz prevalecer el interés de los clientes."
+        },
+        {
+          "texto": "No uses ni divulgues información privilegiada."
+        }
+      ],
+      "clave": 2,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 78
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.24",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Un cliente sin experiencia desea invertir en acciones porque a un amigo suyo le ha ido muy bien. ¿Qué debe hacer el promotor?",
+      "opciones": [
+        {
+          "texto": "Seguir las instrucciones del cliente e invertir todo su capital en acciones."
+        },
+        {
+          "texto": "Procurar que el cliente comprenda la naturaleza y riesgo de la operación."
+        },
+        {
+          "texto": "Aprovechar la ignorancia del cliente en beneficio propio."
+        },
+        {
+          "texto": "Recomendar al cliente otros productos que le generen más comisión a la institución."
+        }
+      ],
+      "clave": 1,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 78
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.25",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "El gerente de promoción de una intermediaria le solicita al responsable del área de contratos que le permita dar de alta varios contratos sin contar con toda la documentación, por la urgencia de asegurar las inversiones de sus clientes. ¿Cómo debe actuar el responsable del área de contratos?",
+      "opciones": [
+        {
+          "texto": "Dar de alta por única ocasión los contratos, bajo la promesa del gerente de obtener la documentación correspondiente lo antes posible."
+        },
+        {
+          "texto": "Dar de alta los contratos pues la captación de recursos es primordial para la casa de bolsa."
+        },
+        {
+          "texto": "Dar de alta los contratos con la condición de que se le entregue la documentación más importante, dejando para después la que no es primordial."
+        },
+        {
+          "texto": "Dar de alta sólo los contratos que cuenten con la documentación correspondiente."
+        }
+      ],
+      "clave": 3,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 79
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.26",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "El promotor de una distribuidora de acciones de sociedades de inversión únicamente le recomienda a sus clientes los fondos que conoce, independientemente de los objetivos de inversión de los clientes y de que hay otros fondos disponibles que se adaptan mejor a sus necesidades de inversión. ¿Cuál sería la forma correcta de actuar del promotor?",
+      "opciones": [
+        {
+          "texto": "Recomendar a sus clientes los productos que él conozca mejor con la finalidad de darles una buena asesoría."
+        },
+        {
+          "texto": "Recomendar a sus clientes únicamente los productos que él conozca para evitar mal informarlos."
+        },
+        {
+          "texto": "Mencionar a sus clientes todos los fondos disponibles y dejar que ellos libremente seleccionen los productos adecuados a sus objetivos y necesidades de inversión."
+        },
+        {
+          "texto": "Conocer todos los productos y recomendarle a sus clientes aquellos que mejor se adapten a sus objetivos y necesidades de inversión."
+        }
+      ],
+      "clave": 3,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 79
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.27",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "El promotor de una operadora de sociedades de inversión le ofrece a sus clientes un rendimiento garantizado de al menos el 15% anual al invertir en fondos de renta variable. ¿A qué principio fundamental está faltando el promotor?",
+      "opciones": [
+        {
+          "texto": "Proporciona al mercado información veraz, clara, completa y oportuna."
+        },
+        {
+          "texto": "Compite en forma leal."
+        },
+        {
+          "texto": "Actúa de Acuerdo con las Disposiciones Aplicables y las Sanas Prácticas de Mercado."
+        },
+        {
+          "texto": "Salvaguarda la Confidencialidad de la Información de los Clientes."
+        }
+      ],
+      "clave": 1,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 79
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.28",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Un promotor de una casa de bolsa se da cuenta de que un compañero está falseando la información que le entrega a un cliente. Si usted fuera el promotor, ¿qué haría?",
+      "opciones": [
+        {
+          "texto": "Hablar con su compañero y pedirle que no lo haga más, de lo contrario lo reportará con las autoridades competentes."
+        },
+        {
+          "texto": "Reportar inmediatamente esta conducta al cliente afectado."
+        },
+        {
+          "texto": "Reportar inmediatamente esta conducta a su superior jerárquico y al Contralor Normativo de la casa de bolsa."
+        },
+        {
+          "texto": "No intervenir ya que no es su responsabilidad vigilar la buena conducta de otros compañeros."
+        }
+      ],
+      "clave": 2,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 79
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.29",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "El director de promoción de una casa de bolsa le pide al gerente de operaciones que modifique la asignación de las operaciones de compraventa de acciones para beneficiar a un cliente muy importante, hecho que perjudica a otro cliente. ¿Cómo debe actuar el gerente de operaciones?",
+      "opciones": [
+        {
+          "texto": "No modificar la asignación de operaciones y evadir el hecho."
+        },
+        {
+          "texto": "No modificar la asignación de operaciones y comunicar este incidente al Contralor Normativo."
+        },
+        {
+          "texto": "Seguir las instrucciones del director de promoción, pues es superior jerárquico y conoce a la perfección el mercado."
+        },
+        {
+          "texto": "Seguir las instrucciones del director de promoción, pero comentarle que es una excepción por tratarse de un cliente muy importante."
+        }
+      ],
+      "clave": 1,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 80
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.30",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Cada vez que contacta a un nuevo cliente, el asesor de una casa de bolsa omite aplicar un cuestionario detallado para conocer el perfil del mismo y poder identificar adecuadamente sus objetivos de inversión. El director de promoción se ha dado cuenta de esta situación, ¿qué debe hacer?",
+      "opciones": [
+        {
+          "texto": "No intervenir y dejar que el asesor realice su trabajo como lo considere adecuado, aunque esto implique la omisión de algunos procedimientos."
+        },
+        {
+          "texto": "No intervenir pues probablemente el asesor identifique adecuadamente los objetivos de inversión del cliente sin tener que aplicar el cuestionario."
+        },
+        {
+          "texto": "Apoyar al asesor debido a que omitir procedimientos equivale a incrementar la productividad para la venta de fondos."
+        },
+        {
+          "texto": "Exigir al asesor que aplique el cuestionario detallado para conocer el perfil de los clientes y poder identificar adecuadamente sus objetivos de inversión."
+        }
+      ],
+      "clave": 3,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 80
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "etica-ensayo.31",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "El promotor de una casa de bolsa que maneja cuentas de clientes con un gran patrimonio, suele comentar en reuniones con amigos detalles de sus clientes, como: quiénes son, a qué se dedican, dónde viven y cuánto dinero tienen. ¿A qué principio fundamental está faltando el promotor?",
+      "opciones": [
+        {
+          "texto": "Proporciona al mercado información veraz, clara, completa y oportuna."
+        },
+        {
+          "texto": "Actúa de acuerdo con las disposiciones aplicables y las sanas prácticas de mercado."
+        },
+        {
+          "texto": "Haz prevalecer el interés de tu cliente."
+        },
+        {
+          "texto": "Salvaguarda la confidencialidad de la información de los clientes."
+        }
+      ],
+      "clave": 3,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "manual-ensayo",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 80
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    }
+  ]
+}

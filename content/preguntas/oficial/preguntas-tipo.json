@@ -1,0 +1,1434 @@
+{
+  "fuente": "AMIB Data/Preguntas Tipo.docx",
+  "generado": "2026-10-14",
+  "preguntas": [
+    {
+      "id": "tipo.01",
+      "version": 1,
+      "area": "analisis",
+      "enunciado": "Son principios de la Teoría Dow, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "la diversificación mitiga el riesgo."
+        },
+        {
+          "texto": "el volumen confirma la tendencia."
+        },
+        {
+          "texto": "las tendencias principales tienen tres fases."
+        },
+        {
+          "texto": "el precio descuenta las noticias."
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "conflicto de clave: letra d en negritas, texto a en negritas"
+      ]
+    },
+    {
+      "id": "tipo.02",
+      "version": 1,
+      "area": "analisis",
+      "enunciado": "¿Cuál de las siguientes funciones compete al Banco de México?",
+      "opciones": [
+        {
+          "texto": "Supervisar a los emisores de valores inscritos en el Registro Nacional de Valores."
+        },
+        {
+          "texto": "Prestar servicio como tesorería al Gobierno Federal y prestamista de última instancia."
+        },
+        {
+          "texto": "Instrumentar el funcionamiento de las instituciones que integran el sistema financiero nacional."
+        },
+        {
+          "texto": "Otorgar y revocar autorizaciones para la constitución y operación de casas de bolsa y bolsa de valores."
+        }
+      ],
+      "clave": 1,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.03",
+      "version": 1,
+      "area": "analisis",
+      "enunciado": "El mercado se encuentra en equilibrio cuando:",
+      "opciones": [
+        {
+          "texto": "el costo de los bienes igualan las fuerzas de la oferta y la demanda."
+        },
+        {
+          "texto": "la escasez de bienes igualan la fuerza de la oferta y la demanda."
+        },
+        {
+          "texto": "aumenta el precio súbitamente al igualar la oferta y la demanda."
+        },
+        {
+          "texto": "el precio y la cantidad igualan las fuerzas de la oferta y la demanda."
+        }
+      ],
+      "clave": 3,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.04",
+      "version": 1,
+      "area": "analisis",
+      "enunciado": "Es una formación de continuación de tendencia usada en el Análisis Técnico:",
+      "opciones": [
+        {
+          "texto": "canal descendente."
+        },
+        {
+          "texto": "cabeza hombros."
+        },
+        {
+          "texto": "canal ascendente."
+        },
+        {
+          "texto": "triángulo descendente."
+        }
+      ],
+      "clave": 3,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "conflicto de clave: letra a en negritas, texto d en negritas"
+      ]
+    },
+    {
+      "id": "tipo.05",
+      "version": 1,
+      "area": "normativo",
+      "enunciado": "Las personas físicas o morales, con nacionalidad mexicana son inversionistas:",
+      "opciones": [
+        {
+          "texto": "nacionales."
+        },
+        {
+          "texto": "calificados."
+        },
+        {
+          "texto": "Institucionales."
+        },
+        {
+          "texto": "Sofisticados."
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.06",
+      "version": 1,
+      "area": "normativo",
+      "enunciado": "Es la forma de girar instrucciones, prevista en el contrato de intermediación bursátil, cuando solo se requiere la firma del titular de la cuenta o, en su caso, del representante.",
+      "opciones": [
+        {
+          "texto": "Colegiada."
+        },
+        {
+          "texto": "Individual"
+        },
+        {
+          "texto": "Mancomunada"
+        },
+        {
+          "texto": "Solidaria"
+        }
+      ],
+      "clave": 1,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.07",
+      "version": 1,
+      "area": "normativo",
+      "enunciado": "¿Qué derechos tiene el beneficiario en caso de muerte del titular de las acciones de un fondo de inversión, en términos de la Ley de Fondos de Inversión?",
+      "opciones": [
+        {
+          "texto": "Elegir la entrega del 50% de las acciones del fondo de inversión o el importe de su recompra."
+        },
+        {
+          "texto": "Elegir la entrega de determinados valores registrados por la casa de bolsa en la cuenta o el importe de su venta."
+        },
+        {
+          "texto": "Elegir la entrega del 75% de las acciones del fondo de inversión o el importe de su recompra."
+        },
+        {
+          "texto": "Elegir entre la entrega de las acciones del fondo de inversión correspondiente o el importe de su recompra."
+        }
+      ],
+      "clave": 3,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.08",
+      "version": 1,
+      "area": "normativo",
+      "enunciado": "Es la persona designada por el titular de un contrato celebrado con la Casa de Bolsa, para que, en caso de fallecimiento de dicho titular, tal persona ejerza ante esta los derechos derivados del contrato respectivo, de acuerdo con lo dispuesto al efecto por la Ley del Mercado de Valores.",
+      "opciones": [
+        {
+          "texto": "Beneficiario"
+        },
+        {
+          "texto": "Cliente"
+        },
+        {
+          "texto": "Destinatario"
+        },
+        {
+          "texto": "Usuario"
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.09",
+      "version": 1,
+      "area": "matematicas",
+      "enunciado": "A la diferencia entre el valor de la inversión y la suma de los flujos descontados se denomina:",
+      "opciones": [
+        {
+          "texto": "valor presente."
+        },
+        {
+          "texto": "costo de reposición."
+        },
+        {
+          "texto": "valor presente neto."
+        },
+        {
+          "texto": "valor residual."
+        }
+      ],
+      "clave": 2,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.10",
+      "version": 1,
+      "area": "matematicas",
+      "enunciado": "Se realiza una inversión en un bono cupón cero a tasa nominal del 5.05%, se espera que en un plazo de 182 días se tenga una inflación anualizada en un rango del 3.00% a 3.10%. Identifique cual sería la tasa real obtenida si se da una inflación del 3.08%.",
+      "opciones": [
+        {
+          "texto": "1.94%"
+        },
+        {
+          "texto": "1.92%"
+        },
+        {
+          "texto": "2.02%"
+        },
+        {
+          "texto": "1.97%"
+        }
+      ],
+      "clave": 0,
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "conflicto de clave: letra c en negritas, texto a en negritas"
+      ]
+    },
+    {
+      "id": "tipo.11",
+      "version": 1,
+      "area": "matematicas",
+      "enunciado": "Se tiene un proyecto con una inversión inicial de $20,000, a una tasa del 17% y genera los siguientes flujos: $4,000, $6,000, $8,000 y $8,000. ¿Cuál es la tasa interna de retorno?",
+      "opciones": [
+        {
+          "texto": "4.60%"
+        },
+        {
+          "texto": "10.14%"
+        },
+        {
+          "texto": "5.00%"
+        },
+        {
+          "texto": "9.80%"
+        }
+      ],
+      "clave": 1,
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.12",
+      "version": 1,
+      "area": "matematicas",
+      "enunciado": "Si se desea calcular los intereses de una inversión a un plazo muy corto, lo mejor es utilizar el rendimiento:",
+      "opciones": [
+        {
+          "texto": "continuo"
+        },
+        {
+          "texto": "bruto."
+        },
+        {
+          "texto": "simple."
+        },
+        {
+          "texto": "compuesto."
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.13",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "Instrumento que otorga al tenedor la propiedad alícuota del capital social del emisor.",
+      "opciones": [
+        {
+          "texto": "Obligación"
+        },
+        {
+          "texto": "Acción"
+        },
+        {
+          "texto": "Tracker"
+        },
+        {
+          "texto": "CPI"
+        }
+      ],
+      "clave": 1,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.14",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "En el Mercado de _____ se negocian obligaciones.",
+      "opciones": [
+        {
+          "texto": "Dinero"
+        },
+        {
+          "texto": "Derivados"
+        },
+        {
+          "texto": "Capitales"
+        },
+        {
+          "texto": "Fondos de Inversión"
+        }
+      ],
+      "clave": 2,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.15",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "El Índice de Precios y Cotizaciones mide…",
+      "opciones": [
+        {
+          "texto": "la inflación en la economía."
+        },
+        {
+          "texto": "el comportamiento del mercado accionario."
+        },
+        {
+          "texto": "la tasa real que pagan las inversiones en la bolsa."
+        },
+        {
+          "texto": "el cambio en los precios al consumidor."
+        }
+      ],
+      "clave": 1,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.16",
+      "version": 1,
+      "area": "capitales",
+      "enunciado": "Calcule el precio ajustado de una acción cuyo precio en fecha excupón es de $20 después de pagar un dividendo en efectivo de $1 y un dividendo en acciones a razón de 1 nueva acción por cada 20 de las anteriores.",
+      "opciones": [
+        {
+          "texto": "$18.10"
+        },
+        {
+          "texto": "$19.00"
+        },
+        {
+          "texto": "$19.05"
+        },
+        {
+          "texto": "$20.00"
+        }
+      ],
+      "clave": 0,
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.17",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "El riesgo que corre un fondo de inversión por un aumento en la volatilidad de los precios de los instrumentos que tiene en su portafolio se conoce como:",
+      "opciones": [
+        {
+          "texto": "legal."
+        },
+        {
+          "texto": "de crédito."
+        },
+        {
+          "texto": "Operacional."
+        },
+        {
+          "texto": "de mercado."
+        }
+      ],
+      "clave": 3,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "conflicto de clave: letra a en negritas, texto d en negritas"
+      ]
+    },
+    {
+      "id": "tipo.18",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "El valor en riesgo (VaR) es:",
+      "opciones": [
+        {
+          "texto": "la máxima pérdida esperada en un período de tiempo y a un determinado nivel de confianza."
+        },
+        {
+          "texto": "la mínima pérdida esperada en un período de tiempo y a un determinado nivel de confianza."
+        },
+        {
+          "texto": "la máxima pérdida esperada en un año dado cierto nivel de confianza."
+        },
+        {
+          "texto": "la mínima pérdida esperada en un año dado cierto nivel de confianza."
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.19",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "Si durante el día se realizan las siguientes operaciones: El operador A compra 10 contratos, el operador B vende 5 contratos, el operador C vende 5 contratos, el operador D compra 5 contratos y el operador B compra 5 contratos, ¿Cuál es el interés abierto?",
+      "opciones": [
+        {
+          "texto": "5 contratos"
+        },
+        {
+          "texto": "20 contratos"
+        },
+        {
+          "texto": "40 contratos"
+        },
+        {
+          "texto": "10 contratos"
+        }
+      ],
+      "clave": 0,
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.20",
+      "version": 1,
+      "area": "derivados",
+      "enunciado": "El cambio en el precio de una Opción conforme transcurre el tiempo está determinado por la:",
+      "opciones": [
+        {
+          "texto": "theta."
+        },
+        {
+          "texto": "delta."
+        },
+        {
+          "texto": "rho."
+        },
+        {
+          "texto": "Vega."
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.21",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "Un IM emitido por el IPAB es un Bono...",
+      "opciones": [
+        {
+          "texto": "revisable."
+        },
+        {
+          "texto": "fijo."
+        },
+        {
+          "texto": "cupón cero."
+        },
+        {
+          "texto": "amortizable."
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.22",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "Aquella operación en la cual se obtienen los derechos de un instrumento de deuda y se pueden mantener hasta el vencimiento se denomina:",
+      "opciones": [
+        {
+          "texto": "venta en directo."
+        },
+        {
+          "texto": "compra en reporte."
+        },
+        {
+          "texto": "compra en directo."
+        },
+        {
+          "texto": "venta en reporto."
+        }
+      ],
+      "clave": 2,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "conflicto de clave: letra a en negritas, texto c en negritas"
+      ]
+    },
+    {
+      "id": "tipo.23",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "¿Cuál es la tasa de descuento de un CETE de 100 días y que tiene un precio de mercado de $9.786?",
+      "opciones": [
+        {
+          "texto": "7.86%"
+        },
+        {
+          "texto": "7.70%"
+        },
+        {
+          "texto": "8.76%"
+        },
+        {
+          "texto": "8.00%"
+        }
+      ],
+      "clave": 1,
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.24",
+      "version": 1,
+      "area": "deuda",
+      "enunciado": "Un BONO con valor nominal de $100 paga intereses cada 182 días a una tasa cupón del 6%. ¿Cuál es el Precio Limpio, si han transcurrido 45 días y el Precio Sucio es de $98.56?",
+      "opciones": [
+        {
+          "texto": "$98.56"
+        },
+        {
+          "texto": "$97.81"
+        },
+        {
+          "texto": "$98.71"
+        },
+        {
+          "texto": "$100.00"
+        }
+      ],
+      "clave": 1,
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.25",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Se define como la capacidad de elegir:",
+      "opciones": [
+        {
+          "texto": "verdad."
+        },
+        {
+          "texto": "hábito."
+        },
+        {
+          "texto": "libertad."
+        },
+        {
+          "texto": "voluntad."
+        }
+      ],
+      "clave": 2,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.26",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "La legitimación de la existencia de las empresas radica en que tienen como finalidad:",
+      "opciones": [
+        {
+          "texto": "proporcionar a la sociedad bienes y servicios."
+        },
+        {
+          "texto": "realizar actividades encaminadas a satisfacer necesidades laborales."
+        },
+        {
+          "texto": "crear fuentes de trabajo para un sector específico de la población."
+        },
+        {
+          "texto": "competir con otros países para tener un lugar en la economía mundial."
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.27",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "La ética bursátil se define como:",
+      "opciones": [
+        {
+          "texto": "ciencia práctica que muestra la necesidad de que los profesionales bursátiles se comporten de acuerdo con sus mejores intenciones."
+        },
+        {
+          "texto": "modo de vida apegado a valores aceptados por tradición del mercado de valores."
+        },
+        {
+          "texto": "conocimiento práctico que muestra la necesidad de un comportamiento apegado a principios y valores del mercado."
+        },
+        {
+          "texto": "modo de vida apegado a principios y conductas legalmente aceptados por la CNBV."
+        }
+      ],
+      "clave": 2,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.28",
+      "version": 1,
+      "area": "etica",
+      "enunciado": "Identifique tres principios éticos generales.",
+      "opciones": [
+        {
+          "texto": "Diligencia, imparcialidad y dinamismo."
+        },
+        {
+          "texto": "Probidad, honestidad y libertad."
+        },
+        {
+          "texto": "Honestidad, diligencia y buena fe."
+        },
+        {
+          "texto": "Honestidad, justicia y virtud."
+        }
+      ],
+      "clave": 2,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.29",
+      "version": 1,
+      "area": "fondos",
+      "enunciado": "El 8 de enero del 2016 un cliente de una distribuidora de fondos de Inversión adquirió 1,000 acciones de un fondo de renta variable a un precio de $7.897633 pesos por acción. El 26 de diciembre del mismo año vende sus acciones a un precio de $8.895390 por acción. ¿Cuál fue el rendimiento del inversionista?",
+      "opciones": [
+        {
+          "texto": "12.6336%"
+        },
+        {
+          "texto": "12.8841%"
+        },
+        {
+          "texto": "13.0693%"
+        },
+        {
+          "texto": "12.6688%"
+        }
+      ],
+      "clave": 0,
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.30",
+      "version": 1,
+      "area": "fondos",
+      "enunciado": "Un inversionista compra acciones de un fondo de inversión de renta variable indizado el 15 de febrero del 2016 pagando por cada acción $5.667788 y el 28 de diciembre del mismo año decide vender su posición obteniendo un precio por acción de $8.519338. ¿Qué rendimiento obtuvo el inversionista?",
+      "opciones": [
+        {
+          "texto": "50.3115%"
+        },
+        {
+          "texto": "57.1361%"
+        },
+        {
+          "texto": "55.2200%"
+        },
+        {
+          "texto": "58.2384%"
+        }
+      ],
+      "clave": 0,
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.31",
+      "version": 1,
+      "area": "fondos",
+      "enunciado": "En un fondo de inversión de renta variable que está invertido al 95% en acciones que cotizan en la Bolsa Mexicana de Valores, ¿qué efectos tendrá una baja pronunciada del IPC?",
+      "opciones": [
+        {
+          "texto": "El precio de la acción del fondo de inversión bajará."
+        },
+        {
+          "texto": "El precio de la acción se subvaluará."
+        },
+        {
+          "texto": "El precio de la acción se sobrevaluará."
+        },
+        {
+          "texto": "El precio de la acción del fondo de inversión subirá."
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.32",
+      "version": 1,
+      "area": "fondos",
+      "enunciado": "La aplicación del mecanismo de sobrevaluación y subvaluación de los fondos de inversión, debe ser aprobada por...",
+      "opciones": [
+        {
+          "texto": "el contralor normativo así como por el responsable de la administración integral de riesgos."
+        },
+        {
+          "texto": "más del 50% de los accionistas del fondo de inversión."
+        },
+        {
+          "texto": "la Bolsa Mexicana de Valores."
+        },
+        {
+          "texto": "la Comisión Nacional Bancaria y de Valores."
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "conflicto de clave: letra d en negritas, texto a en negritas"
+      ]
+    },
+    {
+      "id": "tipo.33",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "Los clientes no sofisticados con Servicios de Ejecución y que desean recibir recomendaciones sobre productos financieros, ¿qué deben hacer para que las Entidades financieras puedan emitir recomendaciones sobre valores?",
+      "opciones": [
+        {
+          "texto": "Contratar el Servicio de Gestión de inversiones."
+        },
+        {
+          "texto": "Contratar el servicio de Asesoría en inversiones."
+        },
+        {
+          "texto": "Contratar el Servicio de inversión no asesorado."
+        },
+        {
+          "texto": "Contratar el Servicio de Comercialización o Promoción."
+        }
+      ],
+      "clave": 1,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.34",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "Son requisitos que debe cumplir la persona física en la prestación de Servicios de inversión, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "autorización de un organismo autorregulatorio."
+        },
+        {
+          "texto": "autorización de la CNBV."
+        },
+        {
+          "texto": "calidad técnica."
+        },
+        {
+          "texto": "honorabilidad e historial crediticio satisfactorio."
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.35",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "Es información mínima que debe contener la guía de servicios de inversión, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "los servicios de inversión que la Entidad financiera o el Asesor en inversiones proporcionen."
+        },
+        {
+          "texto": "las políticas y lineamientos para evitar la existencia de conflictos de interés."
+        },
+        {
+          "texto": "los mecanismos para la recepción y atención de reclamaciones que se encuentran disponibles para los clientes."
+        },
+        {
+          "texto": "el resultado del cálculo del rendimiento de la cartera de Inversión así como el rendimiento de la cartera de inversión neto."
+        }
+      ],
+      "clave": 3,
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.36",
+      "version": 1,
+      "area": "servicios",
+      "enunciado": "Son acciones que deben realizar las Entidades financieras al amparo de las políticas y lineamientos en materia de Servicios de inversión, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "obtener para sí , para un cliente o cualquier tercero, un beneficio financiero."
+        },
+        {
+          "texto": "realizar la evaluación necesaria para determinar los perfiles de sus clientes."
+        },
+        {
+          "texto": "definir los parámetros de actuación a ser observados por las personas que proporcionen Servicios de inversión."
+        },
+        {
+          "texto": "difundir a sus clientes la información relativa a los productos financieros que ofrezcan, las actividades y servicios que presten, así como las comisiones cobradas."
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": false,
+      "extra": false,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.37",
+      "version": 1,
+      "area": "derivados",
+      "seccionOriginal": "Concertación de Operación en MexDer",
+      "enunciado": "La facultad o responsabilidad de aprobar el programa de contingencia operativa, así como supervisar que se lleve a cabo la programación y realización de simulaciones periódicas para probar su eficacia, corresponde al:",
+      "opciones": [
+        {
+          "texto": "Director General."
+        },
+        {
+          "texto": "Director de Servicios Transaccionales."
+        },
+        {
+          "texto": "Contralor Normativo."
+        },
+        {
+          "texto": "Socio Liquidador."
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": true,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.38",
+      "version": 1,
+      "area": "derivados",
+      "seccionOriginal": "Concertación de Operación en MexDer",
+      "enunciado": "El primer criterio de prioridad para celebrar operaciones es:",
+      "opciones": [
+        {
+          "texto": "mejor precio o diferencial."
+        },
+        {
+          "texto": "primero en tiempo."
+        },
+        {
+          "texto": "mayor Volumen."
+        },
+        {
+          "texto": "mayor Diferencial."
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": true,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.39",
+      "version": 1,
+      "area": "derivados",
+      "seccionOriginal": "Concertación de Operación en MexDer",
+      "enunciado": "Aquella operación en la cual el Socio Liquidador u Operador registran una postura de un cliente y la perfeccionan contra su cuenta propia se denomina de:",
+      "opciones": [
+        {
+          "texto": "cruce."
+        },
+        {
+          "texto": "cama."
+        },
+        {
+          "texto": "ronda."
+        },
+        {
+          "texto": "autoentrada."
+        }
+      ],
+      "clave": 3,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": true,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.40",
+      "version": 1,
+      "area": "derivados",
+      "seccionOriginal": "Concertación de Operación en MexDer",
+      "enunciado": "Una vez celebrada una operación dentro del Sistema Electrónico de Negociación, los Socios Liquidadores y Operadores están obligados a:",
+      "opciones": [
+        {
+          "texto": "retener las operaciones hasta que sea aceptada por la contraparte y enviarlas a la Cámara de Compensación posteriormente."
+        },
+        {
+          "texto": "asignar las operaciones registradas, a través del sistema que al efecto establezca la Cámara de Compensación."
+        },
+        {
+          "texto": "detener las operaciones y sustituir la cuenta MexDer según las indicaciones de la Cámara de Compensación."
+        },
+        {
+          "texto": "asignar las operaciones registradas, mediante cualquier sistema para envío a la Cámara de Compensación."
+        }
+      ],
+      "clave": 1,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": true,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.41",
+      "version": 1,
+      "area": "capitales",
+      "seccionOriginal": "Concertación de Operaciones en el Mercado de Capitales",
+      "enunciado": "En el Sistema SENTRA Capitales, ¿qué estado presentan los valores que se encuentran en subastas de apertura?",
+      "opciones": [
+        {
+          "texto": "SA"
+        },
+        {
+          "texto": "CP"
+        },
+        {
+          "texto": "AP"
+        },
+        {
+          "texto": "SP"
+        }
+      ],
+      "clave": 3,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": true,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.42",
+      "version": 1,
+      "area": "capitales",
+      "seccionOriginal": "Concertación de Operaciones en el Mercado de Capitales",
+      "enunciado": "En el Sistema SENTRA Capitales, ¿cuál es la sección para difundir cada postura registrada en un valor?",
+      "opciones": [
+        {
+          "texto": "Libro electrónico"
+        },
+        {
+          "texto": "Cartera de mercado"
+        },
+        {
+          "texto": "Mensajes"
+        },
+        {
+          "texto": "Estadístico"
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": true,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.43",
+      "version": 1,
+      "area": "capitales",
+      "seccionOriginal": "Concertación de Operaciones en el Mercado de Capitales",
+      "enunciado": "En el Sistema SENTRA Capitales, ¿cuál es la sección en donde se presentan los límites de fluctuación estáticos de un valor?",
+      "opciones": [
+        {
+          "texto": "Estadístico"
+        },
+        {
+          "texto": "Libro Principal"
+        },
+        {
+          "texto": "Entrada Múltiple de Operaciones"
+        },
+        {
+          "texto": "Libro de operaciones al cierre"
+        }
+      ],
+      "clave": 0,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": true,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "tipo.44",
+      "version": 1,
+      "area": "capitales",
+      "seccionOriginal": "Concertación de Operaciones en el Mercado de Capitales",
+      "enunciado": "En el Sistema SENTRA Capitales, ¿en qué sección la contraparte de una operación confirma el cambio del plazo de liquidación?",
+      "opciones": [
+        {
+          "texto": "Consulta de cambios de liquidación"
+        },
+        {
+          "texto": "Alarmas de mercado"
+        },
+        {
+          "texto": "Libro principal"
+        },
+        {
+          "texto": "Cartera de mercado"
+        }
+      ],
+      "clave": 1,
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "extra": true,
+      "fuente": "oficial-ejemplo",
+      "cita": {
+        "documento": "AMIB Data/Preguntas Tipo.docx"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    }
+  ]
+}

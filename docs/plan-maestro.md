@@ -55,8 +55,8 @@ Se mantienen vivas a lo largo de todo el proyecto y se actualizan al cerrar cada
 ## 2. Inventario del material (verificado)
 | Archivo (`AMIB Data/`) | Qué es | Uso |
 |---|---|---|
-| `Examen Integral…docx` | Temario oficial Serie 210: 9 áreas, subtemas, **~540 objetivos** (~460 con verbo de acción; ~96 de cálculo: "Calcular" 44, "Interpretar" 31, "Determinar" 21). Sin pesos debajo del nivel área | Columna vertebral de la taxonomía |
-| `Preguntas Tipo.docx` | 44 preguntas en 11 secciones. La clave se marca en negritas, **pero en 7 preguntas (1, 4, 10, 17, 22, 32, 34) la letra en negritas no coincide con el texto en negritas**. Manda el texto en negritas, comprobado recalculando las preguntas de cálculo | Referencia de estilo y dificultad. Las 7 de cálculo (10, 11, 16, 23, 24, 29, 30) fijan las **convenciones del examen**: año de 360 días, interés simple, tasas del periodo, rendimientos de fondos sin anualizar |
+| `Examen Integral…docx` | Temario oficial Serie 210: 9 áreas, subtemas, **465 objetivos** bajo 76 encabezados de subtema y 22 materias (49 de cálculo; "interpretar" y "determinar" son conceptuales en el temario). Sin pesos debajo del nivel área | Columna vertebral de la taxonomía |
+| `Preguntas Tipo.docx` | 44 preguntas en 11 secciones. La clave se marca en negritas, **pero en 6 preguntas (1, 4, 10, 17, 22, 32) la letra en negritas no coincide con el texto en negritas**. Manda el texto en negritas, comprobado recalculando las preguntas de cálculo | Referencia de estilo y dificultad. Las 8 de cálculo (10, 11, 16, 19, 23, 24, 29, 30) fijan las **convenciones del examen**: año de 360 días, interés simple, tasas del periodo, rendimientos de fondos sin anualizar |
 | `Manual_EBSPMV_completo.md` + PDF | Ética oficial (AMIB 2012), con "Ensayo de examen" de 31 preguntas y tabla de respuestas | Guía de Ética y 31 preguntas con clave |
 | `AMIB_1_completo.md` (OCR, 360 pp) | Manual oficial completo, 10 capítulos, temas exclusivos de Figura 3 marcados, ~10 "Repaso" **sin clave**, guías de teclas de la HP-17bII. OCR ruidoso. Usa todavía el nombre anterior a 2014, "sociedades de inversión" (19 veces) | Fuente principal para guías y para generar preguntas |
 | `702510249-Manual…2023.pdf` | Manual de terceros con texto, 9 capítulos, ~141 preguntas de repaso **sin clave** | Fuente secundaria y respaldo del OCR |
@@ -243,10 +243,11 @@ La app funciona en dos modos, seleccionables en Configuración:
    - Estilo AMIB: casos, "EXCEPTO", "es correcto que…".
    - Distractores plausibles, cada uno etiquetado. Confusiones típicas: CETES/BONDES/Bonos M, limpio/sucio, reporto/directo, TIIE/Fondeo, cifras y plazos exactos, quién regula qué.
    - Prohibido: opciones obvias o ambiguas.
-3. **Cálculo paramétrico**: ~96 objetivos de cálculo, que dan unas 50–60 plantillas. Ejemplos: tasa real, descuento de CETE, precio limpio y sucio, premio de reporto, precio de salida, duración, VaR, CAPM, Sharpe, futuros, opciones y rendimientos de fondos.
-   - Las 7 preguntas oficiales de cálculo son **pruebas fijas** de las fórmulas.
+3. **Cálculo paramétrico**: 49 objetivos de cálculo, que dan unas 40–50 plantillas. Ejemplos: tasa real, descuento de CETE, precio limpio y sucio, premio de reporto, precio de salida, duración, VaR, CAPM, Sharpe, futuros, opciones y rendimientos de fondos.
+   - Las 8 preguntas oficiales de cálculo son **pruebas fijas** de las fórmulas.
+   - **Formato de 4 decimales**, como en el examen en línea: clave y distractores se calculan con precisión completa y se muestran a 4 decimales. Un validador rechaza instancias con opciones repetidas o casi iguales a 4 decimales.
    - Las explicaciones incluyen **las teclas de la HP-17bII**, tomadas de las guías del manual.
-4. **Meta de volumen**: ~3 preguntas de teoría por objetivo (~1,400–1,600), más plantillas ilimitadas y tarjetas. El orden es por áreas obligatorias.
+4. **Meta de volumen**: ~3 preguntas de teoría por objetivo (~1,250 para 416 objetivos de teoría), más plantillas ilimitadas y tarjetas. El orden es por áreas obligatorias.
 5. **Validación** (no depende de que Cesar sepa la respuesta):
    - **Cita textual obligatoria**: un script verifica que el fragmento citado existe en el texto del manual. Sin cita que coincida, la pregunta sigue en `borrador`.
    - Un segundo modelo resuelve sin ver la clave. Si no coinciden, la pregunta va a revisión.
@@ -379,7 +380,7 @@ Las fechas son metas y dependen del tiempo de sesión disponible y de las revisi
   - Conversión de escala y Beta/Leitner.
   - Selector sin repetición y semillas reproducibles.
   - Plantillas contra las 7 preguntas oficiales de cálculo.
-- **Parsers**: 44 claves con 7 conflictos resueltos, 31 de Ética y conteos del temario.
+- **Parsers**: 44 claves con 6 conflictos resueltos, 31 de Ética y conteos del temario.
 - **Contenido**: `validate:content`, que revisa esquemas, IDs estables, cita textual existente, duplicados y balance de claves.
 - **E2E (Playwright)**: diagnóstico → práctica → progreso → módulo → boleta → exportar a `.docx` (se abre y se valida).
 - **Revisión**: `code-reviewer` y `security-reviewer` de ECC, más una crítica con Opus en cada etapa.

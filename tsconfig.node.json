@@ -1,5 +1,5 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": { "types": ["node"], "lib": ["ES2023"], "outDir": "out/tsc-node" },
-  "include": ["electron.vite.config.ts", "vitest.config.ts", "playwright.config.ts", "app/src/main/**/*", "app/src/preload/**/*", "app/src/core/**/*", "e2e/**/*"]
+  "include": ["electron.vite.config.ts", "vitest.config.ts", "playwright.config.ts", "app/src/main/**/*", "app/src/preload/**/*", "app/src/core/**/*", "e2e/**/*", "tools/**/*"]
 }
