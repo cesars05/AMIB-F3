@@ -1,0 +1,578 @@
+{
+  "id": "deuda.operaciones-liquidacion-y-tipos-de-bonos",
+  "area": "deuda",
+  "materia": "Títulos de Deuda I",
+  "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+  "objetivoIds": [
+    "deuda.titulos-de-deuda-i.elementos-basicos.o04",
+    "deuda.titulos-de-deuda-i.elementos-basicos.o05",
+    "deuda.titulos-de-deuda-i.elementos-basicos.o06",
+    "deuda.titulos-de-deuda-i.elementos-basicos.o07"
+  ],
+  "orden": 2,
+  "titulo": "Operaciones en directo, liquidación y tipos de bonos",
+  "resumen": "Operación en directo, fechas valor, funciones del proveedor de precios, tipos de bonos (cupón cero, cuponado fijo o revisable, amortizable y bullet), tasa de rendimiento, tasa cupón, sobretasa y la diferencia entre precio limpio y precio sucio.",
+  "duracionMin": 35,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        187,
+        188,
+        202,
+        203
+      ]
+    },
+    {
+      "documento": "AMIB Data/AMIB Fig 3_vf.docx",
+      "paginas": []
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": [
+        49,
+        55
+      ]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "operacion-en-directo",
+      "titulo": "La operación en directo",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "En una [[operación en directo]] el vendedor y el comprador convienen expresamente **ceder la propiedad** (derechos e incumplimientos) y los beneficios de los títulos. Dicho de otra manera: **se adquieren todos los derechos y todos los riesgos del título**."
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: operación en directo",
+          "filas": [
+            [
+              "Qué se transmite",
+              "La propiedad del título, con derechos, incumplimientos y beneficios"
+            ],
+            [
+              "Riesgos",
+              "El comprador asume **todos** los riesgos del título"
+            ],
+            [
+              "Quién puede comprar",
+              "Un inversionista de **cualquier tipo**"
+            ],
+            [
+              "Horizonte",
+              "Tiende a mantenerse **hasta el vencimiento**"
+            ],
+            [
+              "Liquidación",
+              "Sujeta al criterio de **entrega contra pago** en INDEVAL"
+            ]
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "En directo",
+            "Reporto"
+          ],
+          "filas": [
+            [
+              "Propiedad",
+              "Definitiva",
+              "Temporal"
+            ],
+            [
+              "Compromiso posterior",
+              "Ninguno",
+              "Recompra a un plazo pactado"
+            ],
+            [
+              "Ingreso del inversionista",
+              "Rendimiento del título (descuento o cupones)",
+              "Premio pactado"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Si el enunciado dice \"se obtienen los derechos de un instrumento y se pueden mantener hasta el vencimiento\", la respuesta es **compra en directo**, no venta en directo ni reporto."
+        }
+      ],
+      "ampliada": "El manual 2023 la define como la compraventa de títulos de deuda en la que se trasladan los derechos y obligaciones del título hasta su vencimiento. En el reporto, en cambio, la propiedad se transfiere solo por un plazo y regresa con un premio.",
+      "paginas": [
+        187
+      ]
+    },
+    {
+      "id": "fechas-valor",
+      "titulo": "Plazos de liquidación (fechas valor)",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La [[fecha valor]] es el día en que se intercambian títulos y dinero. En el mercado de títulos de deuda las operaciones pueden liquidarse:"
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Fecha valor",
+            "Cuándo se liquida",
+            "Días que se restan a los días por vencer"
+          ],
+          "filas": [
+            [
+              "Mismo día",
+              "El día de la operación",
+              "0"
+            ],
+            [
+              "24 horas",
+              "El día hábil siguiente",
+              "1"
+            ],
+            [
+              "48 horas",
+              "El segundo día hábil",
+              "2"
+            ],
+            [
+              "72 horas",
+              "El tercer día hábil",
+              "3"
+            ],
+            [
+              "96 horas",
+              "El cuarto día hábil; es el **máximo**",
+              "4"
+            ]
+          ],
+          "trampas": [
+            [
+              4,
+              0
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "DxV_{liq} = DxV_{hoy} - d_{fv}",
+          "leyenda": [
+            [
+              "DxV_{liq}",
+              "días por vencer a la fecha de liquidación"
+            ],
+            [
+              "DxV_{hoy}",
+              "días por vencer el día en que se pacta"
+            ],
+            [
+              "d_{fv}",
+              "días de la fecha valor (24 h equivale a 1, 48 h a 2, 72 h a 3)"
+            ]
+          ],
+          "valores": "DxV_{liq} = 723 - 3",
+          "resultado": "DxV = 720 días (ejemplo del manual: Bono M con liquidación a 72 horas)."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen fechas valor:",
+          "texto": "Mismo día, 24, 48, 72 y hasta 96 horas. El bono se valúa con los días por vencer de la fecha de liquidación."
+        }
+      ],
+      "ampliada": "El manual resta directamente los días de la fecha valor, como en su ejemplo de 723 menos 3. En la práctica, las 72 horas se cuentan en días hábiles; si entre la operación y la liquidación hay un fin de semana, los días naturales que se restan pueden ser más. Para el examen se usa la convención del manual.",
+      "paginas": [
+        187,
+        202
+      ]
+    },
+    {
+      "id": "proveedor-de-precios",
+      "titulo": "El proveedor de precios",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[proveedor de precios]] es el \"tasador independiente\" del mercado: calcula precios, difunde calificaciones, mide riesgos y elabora índices. **No opera ni toma posiciones.** Sus funciones principales son:"
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Prestar servicios de cálculo, determinación y suministro de **precios actualizados** para la valuación de valores, instrumentos financieros derivados o índices, y enviar la información relacionada.",
+            "**Publicar y difundir** calificaciones **emitidas por instituciones calificadoras** de valores.",
+            "**Medir riesgos financieros** de las inversiones de entidades financieras, y publicarlos y difundirlos cuando cuenten con autorización de éstas.",
+            "Determinar y difundir **índices** de tasas de interés y de instrumentos representativos de deuda a cargo de emisoras.",
+            "Las demás contempladas en sus estatutos sociales."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El proveedor de precios **publica** calificaciones, no las **emite**: las emiten las calificadoras. Tampoco autoriza emisiones (eso corresponde a la CNBV) ni opera títulos."
+        }
+      ],
+      "ampliada": "Las notas de Cesar añaden que en México hay dos proveedores de precios autorizados y supervisados por la CNBV: PIP (Proveedor Integral de Precios) y Valmer (Valuación Operativa y Referencias de Mercado). Ese dato no aparece en el manual AMIB 1 y puede cambiar, por lo que se registra como dato por verificar.",
+      "paginas": [
+        187
+      ]
+    },
+    {
+      "id": "bono-cupon-cero",
+      "titulo": "Bono cupón cero",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Un [[bono cupón cero]] se comercializa **a descuento** (por debajo de su valor nominal), **no devenga intereses** durante su vida y liquida su **valor nominal** al vencimiento. La tasa queda implícita en la diferencia entre el precio y el valor nominal."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Sector",
+            "Ejemplo de cupón cero"
+          ],
+          "filas": [
+            [
+              "Gubernamental",
+              "CETES (el ejemplo más claro; valor nominal de $10)"
+            ],
+            [
+              "Bancario",
+              "PRLV"
+            ],
+            [
+              "Empresarial",
+              "Papel comercial"
+            ],
+            [
+              "Internacional",
+              "T-Bills de Estados Unidos"
+            ]
+          ],
+          "trampas": []
+        },
+        {
+          "tipo": "formula",
+          "logica": "G = VN - P",
+          "leyenda": [
+            [
+              "G",
+              "ganancia de capital por título"
+            ],
+            [
+              "VN",
+              "valor nominal que se recibe al vencimiento"
+            ],
+            [
+              "P",
+              "precio de compra a descuento"
+            ]
+          ],
+          "valores": "G = 10 - 9.881978",
+          "resultado": "G = 0.118022 pesos por CETE (precio del ejemplo del manual, CETE a 94 días y tasa de descuento de 4.52 %)."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "\"Se coloca a descuento\" no basta para ser cupón cero. Los **BONDES D** se colocan a descuento y aun así pagan rendimiento cada 28 días."
+        }
+      ],
+      "ampliada": "El cálculo de precio, tasa de descuento y tasa de rendimiento de los instrumentos a descuento se estudia en la lección de valuación (sección 6.4.1 del manual). Aquí basta con reconocer la estructura de flujos: un solo pago, al vencimiento.",
+      "paginas": [
+        187
+      ]
+    },
+    {
+      "id": "bono-cuponado",
+      "titulo": "Bono cuponado: tasa fija o revisable",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[bono cuponado]] es un título de crédito que ampara una deuda de largo plazo y **liquida periódicamente intereses** (cada 28, 91 o 182 días) mediante el corte de cupones. La amortización del capital puede ser al vencimiento o por parcialidades, según la emisión. Ejemplos: M10, UMS, BONDES y obligaciones."
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Reglas de los cupones",
+          "filas": [
+            [
+              "Días",
+              "Se cuentan los días **efectivamente transcurridos** entre las fechas de pago"
+            ],
+            [
+              "Año base",
+              "**360 días**"
+            ],
+            [
+              "Momento de pago",
+              "Al **finalizar** cada periodo de interés (pagos vencidos)"
+            ],
+            [
+              "Tasa",
+              "**Fija** (por ejemplo, Bonos M) o **revisable** (por ejemplo, BONDES D con la TPFB)"
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "C = VN\\cdot tc\\cdot\\frac{d}{360}",
+          "leyenda": [
+            [
+              "C",
+              "monto del cupón por título"
+            ],
+            [
+              "VN",
+              "valor nominal"
+            ],
+            [
+              "tc",
+              "tasa cupón anual"
+            ],
+            [
+              "d",
+              "días del periodo de cupón"
+            ]
+          ],
+          "valores": "C = 100\\cdot 0.085\\cdot\\frac{182}{360}",
+          "resultado": "C = 4.297222, es decir, $4.2972 por título."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Un instrumento cuya tasa se ajusta cada periodo a una referencia (TPFB, CETES, TIIE) es **revisable**, aunque se coloque a descuento. La pregunta tipo oficial sobre el IM del IPAB tiene como respuesta \"revisable\"."
+        }
+      ],
+      "ampliada": "El manual 2023 agrega el bono a tasa flotante, cuyo pago de intereses se pacta a una o más tasas de referencia; es la versión revisable del cuponado.",
+      "paginas": [
+        188
+      ]
+    },
+    {
+      "id": "amortizable-y-bullet",
+      "titulo": "Bono amortizable y bono bullet",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "Bono amortizable",
+            "Bono bullet (pago de capital a vencimiento)"
+          ],
+          "filas": [
+            [
+              "Pago del capital",
+              "Prepaga **parcialidades del principal** en cada corte de cupón",
+              "Amortiza **totalmente en un solo pago** al vencimiento"
+            ],
+            [
+              "Cupones",
+              "Sí",
+              "Sí, solo intereses durante la vida"
+            ],
+            [
+              "Ejemplo de flujos de capital (VN 100, 4 periodos)",
+              "25, 25, 25 y 25",
+              "0, 0, 0 y 100"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen tipos de bonos:",
+          "texto": "Cupón cero: un solo pago al final, sin cupones. Cuponado: cupones periódicos. Amortizable: cupones y principal en partes. Bullet: cupones y todo el principal al final."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "No confundas bullet con cupón cero: ambos devuelven el principal en un solo pago, pero el bullet **sí paga cupones** durante su vida."
+        }
+      ],
+      "ampliada": "El ejemplo de flujos es ilustrativo. En un bono amortizable los intereses de cada cupón se calculan sobre el saldo que queda por amortizar, por lo que van disminuyendo.",
+      "paginas": [
+        188
+      ]
+    },
+    {
+      "id": "tasas-del-bono",
+      "titulo": "Tasa de rendimiento, tasa cupón y sobretasa",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "titulo": "Tres tasas que el examen mezcla",
+          "filas": [
+            [
+              "Tasa de rendimiento",
+              "Tasa de mercado, pactada o a vencimiento (**YTM**). Es la tasa de retorno del bono y tiene **relación inversa con el precio**"
+            ],
+            [
+              "Tasa cupón",
+              "Tasa de interés periódica que se ofrece al inversionista, en términos nominales. **Tasa cupón por valor nominal da el flujo del cupón**"
+            ],
+            [
+              "Cupón",
+              "El **pago periódico** de interés que efectúa el emisor"
+            ],
+            [
+              "Sobretasa",
+              "En bonos de **tasa flotante gubernamentales**, el beneficio que se obtiene por el diferencial entre el precio de adquisición con descuento y el valor nominal. Por eso, en precio limpio, se adquieren **por debajo** del valor nominal"
+            ]
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Si la tasa de rendimiento es...",
+            "El precio limpio queda..."
+          ],
+          "filas": [
+            [
+              "Mayor que la tasa cupón",
+              "Por debajo del valor nominal (bajo par)"
+            ],
+            [
+              "Igual a la tasa cupón",
+              "En el valor nominal (a la par)"
+            ],
+            [
+              "Menor que la tasa cupón",
+              "Por arriba del valor nominal (sobre par)"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Ejemplo del manual: cupón de 8.5 % y rendimiento de 5.47 % dan un precio limpio mayor a $100. Si te sale menor, invertiste la relación."
+        }
+      ],
+      "ampliada": "El manual 2023 define también la sobretasa, en sentido general, como la diferencia entre la tasa requerida por el comprador y la ofrecida por el emisor. Las preguntas de repaso del manual ya cubren las definiciones literales de tasa de rendimiento y de cupón; aquí se insiste en distinguirlas.",
+      "paginas": [
+        188,
+        202
+      ]
+    },
+    {
+      "id": "precio-limpio-y-sucio",
+      "titulo": "Precio limpio y precio sucio",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[precio limpio]] es el precio del bono **sin** los intereses que ya se devengaron desde el último cupón; es el que normalmente se cotiza. El [[precio sucio]] es el que **realmente se paga**: precio limpio más intereses devengados (intereses corridos)."
+        },
+        {
+          "tipo": "formula",
+          "logica": "PS = PL + I \\qquad I = VN\\cdot tc\\cdot\\frac{d_t}{360}",
+          "leyenda": [
+            [
+              "PS",
+              "precio sucio"
+            ],
+            [
+              "PL",
+              "precio limpio"
+            ],
+            [
+              "I",
+              "intereses devengados del cupón vigente"
+            ],
+            [
+              "VN",
+              "valor nominal"
+            ],
+            [
+              "tc",
+              "tasa cupón anual"
+            ],
+            [
+              "d_t",
+              "días transcurridos del cupón vigente"
+            ]
+          ],
+          "valores": "I = 100\\cdot 0.052\\cdot\\frac{64}{360} = 0.924444 \\qquad PS = 96.121811 + 0.924444",
+          "resultado": "PS = 97.046255 UDIS. En pesos, con UDI de 4.857918: 471.442749 (UDIBONO del manual con 1,210 días por vencer: 1,210 = 6 cupones de 182 más 118 días, así que han transcurrido 64 días del cupón vigente)."
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "TASA.FIJA.182 (HP 17bII+)",
+          "entradas": [
+            [
+              "%LIDER",
+              "6.50"
+            ],
+            [
+              "DXV",
+              "1210"
+            ],
+            [
+              "%CPN",
+              "5.20"
+            ]
+          ],
+          "salida": [
+            "PLIMP",
+            "96.121811 UDIS; luego INT = 0.9244"
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Si una opción coincide con el precio limpio, es el distractor de quien olvidó sumar los intereses. Y si una opción en pesos coincide con el precio limpio por la UDI, también falta sumar los intereses."
+        }
+      ],
+      "ampliada": "El cálculo completo de precios de bonos se estudia en la lección de valuación (secciones 6.4.2 y 6.4.3 del manual). En el otro ejemplo del manual (Bono M de 723 días, cupón 8.5 % y rendimiento 5.47 %, liquidación a 72 horas) el OCR imprime precio limpio 105.564023; el recálculo da 105.664023, que es el valor coherente con el precio sucio impreso (105.8529) y los intereses de 0.1889.",
+      "paginas": [
+        188,
+        202
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Operación en directo: se transmite la propiedad con **todos los derechos y todos los riesgos**; comprador de cualquier tipo; **entrega contra pago** en INDEVAL; tiende a mantenerse al vencimiento.",
+    "Fechas valor: **mismo día, 24, 48, 72 y hasta 96 horas**. Se valúa con los días por vencer a la fecha de liquidación (723 días a 72 h se capturan como 720).",
+    "Proveedor de precios: calcula precios, **publica** calificaciones (no las emite), mide riesgos, difunde índices; **no opera**.",
+    "Cupón cero: a descuento, sin intereses, paga el valor nominal al vencimiento (CETES, PRLV, papel comercial, T-Bills).",
+    "Cuponado: intereses cada 28, 91 o 182 días, días efectivamente transcurridos, **base 360**, pagos **vencidos**, tasa fija o revisable.",
+    "Amortizable: prepaga principal en cada cupón. **Bullet**: todo el principal en un solo pago al vencimiento, con cupones.",
+    "Tasa de rendimiento (YTM) con **relación inversa** al precio; tasa cupón por VN da el cupón; la sobretasa en flotantes gubernamentales hace que se compren **bajo par** en precio limpio.",
+    "**Precio sucio = precio limpio + intereses devengados**; los intereses se calculan con los días transcurridos y base 360."
+  ],
+  "practica": [
+    "g.deuda.l2.q01",
+    "g.deuda.l2.q02",
+    "g.deuda.l2.q03",
+    "g.deuda.l2.q04",
+    "g.deuda.l2.q05"
+  ],
+  "miniExamen": [
+    "g.deuda.l2.q06",
+    "g.deuda.l2.q07",
+    "g.deuda.l2.q08",
+    "g.deuda.l2.q09",
+    "g.deuda.l2.q10"
+  ],
+  "reto": [
+    "g.deuda.l2.q11",
+    "g.deuda.l2.q12",
+    "g.deuda.l2.q13",
+    "g.deuda.l2.q14",
+    "g.deuda.l2.q15"
+  ]
+}

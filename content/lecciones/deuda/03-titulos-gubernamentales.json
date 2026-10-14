@@ -1,0 +1,872 @@
+{
+  "id": "deuda.titulos-gubernamentales",
+  "area": "deuda",
+  "materia": "Títulos de Deuda I",
+  "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+  "objetivoIds": [
+    "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o01",
+    "deuda.titulos-de-deuda-ii.subastas.o01",
+    "deuda.titulos-de-deuda-ii.subastas.o02",
+    "deuda.titulos-de-deuda-ii.subastas.o03"
+  ],
+  "orden": 3,
+  "titulo": "Títulos de deuda gubernamentales",
+  "resumen": "CETES (con su subasta semanal completa), BONDES D, Bonos M, UDIBONOS, Bonos UMS, bonos del IPAB (BPAG28, BPAG91 y BPA182) y los instrumentos de Banobras (CBICs y PIC-FARAC), con fichas comparativas y las trampas típicas del examen.",
+  "duracionMin": 40,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        189,
+        190,
+        191,
+        192,
+        205,
+        206
+      ]
+    },
+    {
+      "documento": "AMIB Data/AMIB Fig 3_vf.docx",
+      "paginas": []
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": [
+        48,
+        51,
+        52,
+        53,
+        56,
+        57,
+        61
+      ]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "panorama-gubernamentales",
+      "titulo": "Panorama: quién emite, cuánto vale y cómo se coloca",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El Gobierno Federal emite por conducto de la **SHCP**; el **IPAB** y **Banobras** también emiten valores con respaldo gubernamental. **Banxico** es el **agente financiero** del Gobierno Federal y del IPAB, por lo que coloca sus valores mediante subasta. La excepción son los UMS."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Instrumento",
+            "Emisor",
+            "Valor nominal",
+            "Intereses",
+            "Colocación primaria"
+          ],
+          "filas": [
+            [
+              "CETES",
+              "SHCP",
+              "$10",
+              "Cupón cero",
+              "Subasta: monto y **tasa de descuento**"
+            ],
+            [
+              "BONDES D",
+              "SHCP",
+              "$100",
+              "Cada 28 días, TPFB",
+              "Subasta: monto y precio"
+            ],
+            [
+              "Bonos M",
+              "SHCP",
+              "$100",
+              "Cada 182 días, tasa fija",
+              "Subasta: monto y precio"
+            ],
+            [
+              "UDIBONOS",
+              "SHCP",
+              "100 UDIS",
+              "Cada 182 días, tasa real fija",
+              "Subasta: monto y precio en UDIS"
+            ],
+            [
+              "Bonos UMS",
+              "Gobierno Federal en el extranjero (SHCP)",
+              "1,000 dólares",
+              "Cada 182 días",
+              "**Bancos comerciales** como agentes financieros"
+            ],
+            [
+              "BPAG28",
+              "IPAB",
+              "$100",
+              "Cada 28 días",
+              "Subasta: monto y precio"
+            ],
+            [
+              "BPAG91",
+              "IPAB",
+              "$100",
+              "Cada 91 días",
+              "Subasta: monto y precio"
+            ],
+            [
+              "BPA182",
+              "IPAB",
+              "$100",
+              "Cada 182 días",
+              "Subasta: monto y precio"
+            ],
+            [
+              "CBICs",
+              "Banobras",
+              "100 UDIS",
+              "Mensual, trimestral o semestral",
+              "Subasta: monto y precio"
+            ],
+            [
+              "PIC-FARAC",
+              "Banobras (fiduciario)",
+              "100 UDIS",
+              "Cada 182 días",
+              "Subasta"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              4,
+              4
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen panorama:",
+          "texto": "Si dice **$10**, es CETES. Si dice **100 UDIS**, es UDIBONOS, CBICs o PIC-FARAC. Si dice **1,000 dólares** o bancos comerciales, es UMS. Todo lo demás vale **$100**."
+        }
+      ],
+      "ampliada": "La tabla integra el manual AMIB 1 (pp. 189 a 192) con la tabla resumen del manual 2023 (p. 61). Banxico como agente financiero del Gobierno Federal y del IPAB está en la p. 205.",
+      "paginas": [
+        189,
+        190,
+        191,
+        192,
+        205
+      ]
+    },
+    {
+      "id": "cetes-ficha",
+      "titulo": "CETES: ficha del instrumento",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los [[CETES]] (Certificados de la Tesorería de la Federación) pertenecen a la familia de los **bonos cupón cero**: se comercializan a descuento, no devengan intereses y liquidan su valor nominal al vencimiento."
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: CETES",
+          "filas": [
+            [
+              "Emisor",
+              "Gobierno Federal por conducto de la **SHCP**; **Banxico** los coloca como agente financiero"
+            ],
+            [
+              "Valor nominal",
+              "**$10 pesos**"
+            ],
+            [
+              "Plazo",
+              "**28 y 91 días**, y plazos cercanos a **seis meses y un año**"
+            ],
+            [
+              "Pago de intereses",
+              "**No devengan intereses** (cupón cero). La tasa está implícita en la relación entre precio, valor nominal y plazo"
+            ],
+            [
+              "Colocación primaria",
+              "**Subasta**: posturas por el **monto** y la **tasa de descuento** que están dispuestos a pagar"
+            ],
+            [
+              "Rendimiento",
+              "Ganancia de capital: diferencia entre el valor nominal y el precio de compra"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "En CETES la postura es por **tasa de descuento**; en BONDES D, Bonos M y bonos del IPAB es por **precio**; en UDIBONOS, por **precio en UDIS**."
+        }
+      ],
+      "ampliada": "El manual 2023 agrega que los CETES se emitieron por primera vez en enero de 1978, que son el instrumento de deuda más antiguo del Gobierno Federal y que su vigencia máxima es de un año. La valuación (precio, tasa de descuento y tasa de rendimiento) se estudia en la lección de la sección 6.4.1 del manual.",
+      "paginas": [
+        189
+      ]
+    },
+    {
+      "id": "cetes-subasta",
+      "titulo": "Cómo se emite un CETE: la subasta semanal",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Banxico, como **agente financiero del Gobierno Federal**, coloca valores gubernamentales cada semana. La colocación y liquidación suele ser en **jueves**. El examen pregunta horarios, quién hace cada paso y cómo se asigna."
+        },
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Convocatoria",
+              "cuando": "Último día hábil bancario de la semana anterior, a partir de las 11:30:00 h",
+              "texto": "Banxico la pone a disposición de casas de bolsa, instituciones de crédito, sociedades de inversión y otras personas autorizadas: plazos a subastar y monto que el Gobierno planea colocar."
+            },
+            {
+              "titulo": "Recepción de posturas",
+              "cuando": "Segundo día hábil bancario anterior a la colocación, a más tardar 11:00:00 h (martes)",
+              "texto": "Las instituciones envían posturas electrónicas con **monto** y **tasa de descuento**."
+            },
+            {
+              "titulo": "Resultados generales",
+              "cuando": "A más tardar 30 minutos después del límite (11:30 h)",
+              "texto": "Banxico publica en su página los montos demandados y colocados y las tasas de descuento y rendimiento."
+            },
+            {
+              "titulo": "Asignación individual",
+              "cuando": "A más tardar 1 hora después del límite (12:00 h)",
+              "texto": "Banxico informa a cada postor por **SIAC-BANXICO** la cantidad asignada y el precio total que debe cubrir."
+            },
+            {
+              "titulo": "Liquidación y entrega",
+              "cuando": "Día de colocación (jueves)",
+              "texto": "Casas de bolsa e instituciones de crédito pagan conforme al reglamento interior de **INDEVAL**; los valores se depositan en la cuenta de cada postor el día de la colocación."
+            }
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen subasta:",
+          "texto": "Convocatoria la semana anterior desde las 11:30; posturas el martes a las 11:00; resultados generales a las 11:30; asignación individual a las 12:00 por SIAC-BANXICO; liquidación el jueves por INDEVAL. Para los valores del **IPAB** las posturas son el **día hábil anterior** a la colocación, a más tardar a las **10:00 h**."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "No confundas los tiempos: **30 minutos** para los resultados generales y **1 hora** para la asignación individual. Y las 11:30 h aparecen dos veces: la hora de la convocatoria (semana anterior) y la de los resultados generales (día de la subasta)."
+        }
+      ],
+      "ampliada": "Los horarios generales vienen del manual (p. 206). Que la recepción de posturas sea en martes y la liquidación en jueves proviene de las notas de Cesar y del manual 2023, que precisa que la colocación siempre es en jueves salvo día inhábil. Las notas de Cesar indican que las subastas regulares de CETES son a tasa múltiple; el manual AMIB 1 no lo dice expresamente, por lo que se registró como dato por verificar.",
+      "paginas": [
+        206
+      ]
+    },
+    {
+      "id": "tipos-de-subasta",
+      "titulo": "Asignación: tasa múltiple, tasa única e interactiva",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Tipo",
+            "Cómo se asigna",
+            "A qué tasa o precio se atiende"
+          ],
+          "filas": [
+            [
+              "Tasa (o precio) múltiple",
+              "Desde la mejor postura para el emisor",
+              "A la **tasa o precio que cada quien solicitó**"
+            ],
+            [
+              "Tasa (o precio) única",
+              "Desde la mejor postura para el emisor",
+              "Todas a la tasa o precio de la **última postura que recibe asignación**"
+            ],
+            [
+              "Interactiva",
+              "Si las ofertas rebasan el monto, los participantes ven la postura que deben superar (sin saber quién la ofreció)",
+              "Según la mejora de posturas"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Ejemplo del manual 2023: subasta de CETES por **20 millones**. Posturas: Santander 6 millones al 2 %, HSBC 5 millones al 2.5 %, Banamex 8 millones al 3 % y Banorte 9 millones al 3.5 %. La mejor postura para el emisor es la de **menor tasa de descuento**."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Postor",
+            "Tasa solicitada",
+            "Asignado",
+            "Tasa múltiple",
+            "Tasa única"
+          ],
+          "filas": [
+            [
+              "Santander",
+              "2.0 %",
+              "6 millones",
+              "2.0 %",
+              "3.5 %"
+            ],
+            [
+              "HSBC",
+              "2.5 %",
+              "5 millones",
+              "2.5 %",
+              "3.5 %"
+            ],
+            [
+              "Banamex",
+              "3.0 %",
+              "8 millones",
+              "3.0 %",
+              "3.5 %"
+            ],
+            [
+              "Banorte",
+              "3.5 %",
+              "1 millón de 9",
+              "3.5 %",
+              "3.5 %"
+            ]
+          ],
+          "trampas": [
+            [
+              3,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\bar{t} = \\frac{\\sum_i m_i\\,t_i}{\\sum_i m_i}",
+          "leyenda": [
+            [
+              "\\bar{t}",
+              "tasa promedio ponderada de lo asignado"
+            ],
+            [
+              "m_i",
+              "monto asignado al postor i"
+            ],
+            [
+              "t_i",
+              "tasa de descuento del postor i"
+            ]
+          ],
+          "valores": "\\bar{t} = \\frac{6(2.0) + 5(2.5) + 8(3.0) + 1(3.5)}{20} = \\frac{52}{20}",
+          "resultado": "Tasa promedio ponderada = 2.6000 %."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "En tasa única la tasa común es la de la **última postura asignada** (3.5 %), no la mejor (2 %) ni el promedio ponderado (2.6 %). Si hay posturas empatadas y no alcanza el monto, se reparte a prorrata."
+        }
+      ],
+      "ampliada": "Las definiciones de los tipos de subasta están en el manual AMIB 1 (p. 205); el ejercicio y la regla de prorrata, en el manual 2023 (pp. 52 y 53). Los precios del ejercicio original ($9.70 al 3 %, $9.75 al 2.5 %) corresponden a un CETE de 360 días.",
+      "paginas": [
+        205
+      ]
+    },
+    {
+      "id": "bondes-y-bonos-m",
+      "titulo": "BONDES D y Bonos M",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: BONDES D",
+          "filas": [
+            [
+              "Emisor",
+              "Gobierno Federal por conducto de la **SHCP**, para fortalecer la estructura de su deuda"
+            ],
+            [
+              "Valor nominal",
+              "**$100 pesos**"
+            ],
+            [
+              "Plazo",
+              "Cualquier plazo **múltiplo de 28 días**; inicialmente de **1 a 5 años**"
+            ],
+            [
+              "Pago de intereses",
+              "Se colocan **a descuento**, con rendimiento pagadero **cada 28 días** referenciado a la **Tasa Ponderada de Fondeo Bancario**. Variante: **BONDE91**, con pago cada 91 días"
+            ],
+            [
+              "Colocación primaria",
+              "Subasta: posturas por **monto y precio**"
+            ]
+          ]
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: Bonos M (tasa fija)",
+          "filas": [
+            [
+              "Emisor",
+              "Gobierno Federal (SHCP); según el manual, la familia gubernamental de más reciente creación"
+            ],
+            [
+              "Valor nominal",
+              "**$100 pesos**"
+            ],
+            [
+              "Plazo",
+              "Mayores a un año, **múltiplo de 182 días**; emitidos a 3, 5, 10, 20 y 30 años"
+            ],
+            [
+              "Pago de intereses",
+              "Cada **seis meses (182 días)**; la tasa se determina en la emisión y queda **fija** toda la vida"
+            ],
+            [
+              "Colocación primaria",
+              "Subasta: posturas por **monto y precio**"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "BONDES D: tasa **revisable** con fondeo **bancario**, múltiplo de **28**. Bonos M: tasa **fija**, múltiplo de **182**. Ambos valen $100 y se subastan por precio."
+        }
+      ],
+      "ampliada": "El manual AMIB 1 no menciona los BONDES F (referenciados a la TIIE de fondeo), que el Gobierno Federal emite desde 2021 según información pública; si el examen vigente los incluye, habrá que agregarlos. Se registró como duda. El manual 2023 agrega las claves de emisión (LD para BONDES D y M para Bonos M) y que los BONDES D se emiten desde agosto de 2006.",
+      "paginas": [
+        189
+      ]
+    },
+    {
+      "id": "udibonos-y-ums",
+      "titulo": "UDIBONOS y Bonos UMS",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: UDIBONOS",
+          "filas": [
+            [
+              "Emisor",
+              "Gobierno Federal (SHCP)"
+            ],
+            [
+              "Propósito",
+              "Proteger al tenedor ante cambios inesperados en la **inflación**"
+            ],
+            [
+              "Valor nominal",
+              "**100 UDIS**"
+            ],
+            [
+              "Plazo",
+              "**Múltiplo de 182 días**; emitidos a 3, 5 y 10 años según el manual"
+            ],
+            [
+              "Pago de intereses",
+              "Cada **182 días**, en pesos, con una **tasa de interés real fija** que se determina en la emisión"
+            ],
+            [
+              "Colocación primaria",
+              "Subasta: posturas por **monto y precio denominado en UDIS**"
+            ]
+          ]
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: Bonos UMS",
+          "filas": [
+            [
+              "Emisor",
+              "Gobierno Federal, **en el extranjero**, en divisas distintas al peso"
+            ],
+            [
+              "Administración",
+              "La **SHCP**, **sin participación de Banxico**; su información no está en el portal de Banxico"
+            ],
+            [
+              "Valor nominal",
+              "**1,000 dólares**"
+            ],
+            [
+              "Plazo",
+              "Múltiplo de 182 días"
+            ],
+            [
+              "Pago de intereses",
+              "Cada seis meses"
+            ],
+            [
+              "Colocación primaria",
+              "Por **distintos bancos comerciales** que actúan como agentes financieros del Gobierno Federal; no es subasta de Banxico"
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "Precio_{\\$} = Precio_{UDIS}\\cdot UDI",
+          "leyenda": [
+            [
+              "Precio_{UDIS}",
+              "precio del UDIBONO en UDIS"
+            ],
+            [
+              "UDI",
+              "valor de la UDI en pesos"
+            ]
+          ],
+          "valores": "Precio_{\\$} = 96.121811 \\cdot 4.857918",
+          "resultado": "Precio limpio en pesos = 466.951874 (ejemplo del manual)."
+        }
+      ],
+      "ampliada": "El manual imprime para los UMS \"devengan intereses en pesos cada seis meses\"; como están denominados en divisas, es probable que sea un arrastre del texto de los Bonos M, y se registró como duda. El manual 2023 da plazos de UDIBONOS de 3, 10 y 30 años y clave de emisión S; difiere del manual AMIB 1 (3, 5 y 10 años).",
+      "paginas": [
+        190,
+        202
+      ]
+    },
+    {
+      "id": "bonos-ipab",
+      "titulo": "Bonos del IPAB: BPAG28, BPAG91 y BPA182",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "BPAG28",
+            "BPAG91",
+            "BPA182"
+          ],
+          "filas": [
+            [
+              "Pago de interés",
+              "**Mensual** (28 días)",
+              "**Trimestral** (91 días)",
+              "**Semestral** (182 días)"
+            ],
+            [
+              "Plazo",
+              "Hasta 3 años; múltiplo de 28 días",
+              "Hasta 5 años; múltiplo de 91 días",
+              "Hasta 7 años (2,548 días); múltiplo de 182 días"
+            ],
+            [
+              "Tasa",
+              "La **máxima** entre CETES a 28 días y la **TPFG**",
+              "La **máxima** entre CETES a 91 días y la **TPFG**",
+              "Tasa de referencia (CETES a 182 días en colocación primaria) más **protección contra la inflación**"
+            ],
+            [
+              "Valor nominal",
+              "$100",
+              "$100",
+              "$100"
+            ],
+            [
+              "Base de cálculo",
+              "360 días, días efectivamente transcurridos",
+              "360 días",
+              "360 días"
+            ],
+            [
+              "Colocación",
+              "Subasta: monto y precio",
+              "Subasta: monto y precio",
+              "Subasta: monto y precio"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "i = VN\\cdot\\max\\left(r_{CETES}, TPFG\\right)\\cdot\\frac{d}{360}",
+          "leyenda": [
+            [
+              "i",
+              "intereses del periodo por título"
+            ],
+            [
+              "VN",
+              "valor nominal ($100)"
+            ],
+            [
+              "r_{CETES}",
+              "tasa de CETES del plazo del cupón (28 o 91 días)"
+            ],
+            [
+              "TPFG",
+              "Tasa Ponderada de Fondeo Gubernamental"
+            ],
+            [
+              "d",
+              "días del periodo"
+            ]
+          ],
+          "valores": "i = 100\\cdot\\max(7.15\\%,\\ 7.22\\%)\\cdot\\frac{28}{360} = 100\\cdot 0.0722\\cdot 0.077778",
+          "resultado": "i = 0.561556, es decir, $0.5616 por título (BPAG28, cifras ilustrativas)."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La segunda referencia de los BPAG es el fondeo **gubernamental**, no el bancario, y se toma la **máxima**, nunca la mínima ni el promedio. Las tasas se fijan al **inicio** del periodo y a dos decimales."
+        }
+      ],
+      "ampliada": "El manual describe la tasa del BPA182 como \"Tasa de Referencia más Protección contra la Inflación (opción)\"; las notas de Cesar la describen como el máximo entre la inflación del periodo y la tasa de CETES a 182 días. Hay una discrepancia que se registró como duda, por eso no se pregunta la mecánica exacta del BPA182. El manual 2023 agrega las claves IM (BPAG28), IQ (BPAG91) e IS (BPA182).",
+      "paginas": [
+        190,
+        191
+      ]
+    },
+    {
+      "id": "banobras",
+      "titulo": "Banobras: CBICs y PIC-FARAC",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "CBICs",
+            "PIC-FARAC"
+          ],
+          "filas": [
+            [
+              "Nombre",
+              "Certificados Bursátiles de Indemnización Carretera",
+              "Pagaré de Indemnización Carretera del FARAC (Fideicomiso de Apoyo al Rescate de Autopistas Concesionadas)"
+            ],
+            [
+              "Emisor",
+              "Banobras",
+              "Banobras, como **fiduciario**"
+            ],
+            [
+              "Valor nominal",
+              "100 UDIS",
+              "100 UDIS"
+            ],
+            [
+              "Objetivo",
+              "Financiar infraestructura carretera",
+              "Financiar infraestructura carretera"
+            ],
+            [
+              "Plazo",
+              "**Se establece en la colocación**",
+              "**De 5 a 30 años**"
+            ],
+            [
+              "Intereses",
+              "Mensual, trimestral o semestral",
+              "**Cada 182 días**"
+            ],
+            [
+              "Garantía",
+              "Aval del Gobierno Federal",
+              "Aval del Gobierno Federal"
+            ],
+            [
+              "Rendimiento",
+              "Tasa real",
+              "Tasa real"
+            ],
+            [
+              "Colocación",
+              "Subasta: monto y precio",
+              "Subasta"
+            ]
+          ],
+          "trampas": [
+            [
+              4,
+              1
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              5,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Los CBICs tienen la **categoría de valor gubernamental**: pueden negociarlos las instituciones de crédito y ser objeto de **reporto**, porque están inscritos en el **Registro Nacional de Valores**."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Lo que distingue a los dos instrumentos de Banobras es el **plazo** y la **periodicidad**: CBICs con plazo libre y cupón mensual, trimestral o semestral; PIC-FARAC de 5 a 30 años y cupón semestral."
+        }
+      ],
+      "ampliada": "El manual 2023 resume ambos como instrumentos de 100 UDIS con cupón cada 182 días y vigencia de 5 a 30 años; el manual AMIB 1, que es la base, distingue el plazo y la periodicidad de los CBICs. Para el examen se sigue el manual AMIB 1.",
+      "paginas": [
+        191,
+        192
+      ]
+    },
+    {
+      "id": "claves-y-trampas",
+      "titulo": "Claves de emisión y comparativo final",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Clave",
+            "Instrumento",
+            "Tipo de tasa"
+          ],
+          "filas": [
+            [
+              "BI",
+              "CETES",
+              "Cupón cero (a descuento)"
+            ],
+            [
+              "LD",
+              "BONDES D",
+              "Revisable (TPFB)"
+            ],
+            [
+              "M",
+              "Bonos M",
+              "Fija"
+            ],
+            [
+              "S",
+              "UDIBONOS",
+              "Real fija"
+            ],
+            [
+              "IM",
+              "BPAG28",
+              "Revisable (máximo de CETES 28 y TPFG)"
+            ],
+            [
+              "IQ",
+              "BPAG91",
+              "Revisable (máximo de CETES 91 y TPFG)"
+            ],
+            [
+              "IS",
+              "BPA182",
+              "Revisable con protección inflacionaria"
+            ]
+          ],
+          "trampas": [
+            [
+              4,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Regla de plazo",
+            "Instrumentos"
+          ],
+          "filas": [
+            [
+              "Múltiplo de 28 días",
+              "BONDES D y BPAG28"
+            ],
+            [
+              "Múltiplo de 91 días",
+              "BPAG91"
+            ],
+            [
+              "Múltiplo de 182 días",
+              "Bonos M, UDIBONOS, UMS y BPA182"
+            ],
+            [
+              "28 y 91 días, cercanos a 6 meses y 1 año",
+              "CETES"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen gubernamentales:",
+          "texto": "Postura por **tasa de descuento** solo en CETES. **100 UDIS** en UDIBONOS, CBICs y PIC-FARAC. **Sin Banxico** solo los UMS. **Fondeo bancario** en BONDES D; **fondeo gubernamental** en BPAG28 y BPAG91."
+        }
+      ],
+      "ampliada": "Las claves de emisión no están en el manual AMIB 1; vienen del manual 2023 (pp. 56 y 57) y la pregunta tipo oficial 21 (\"Un IM emitido por el IPAB es un bono...\", respuesta: revisable) muestra que el examen sí las usa.",
+      "paginas": [
+        189,
+        190,
+        191
+      ]
+    }
+  ],
+  "puntosClave": [
+    "CETES: SHCP emite y **Banxico** coloca; **$10**; 28 y 91 días y cercanos a 6 meses y 1 año; cupón cero; posturas por **monto y tasa de descuento**.",
+    "Subasta semanal: convocatoria el último día hábil de la semana anterior desde las **11:30**; posturas el segundo día hábil anterior a las **11:00**; resultados generales **+30 min**; asignación individual **+1 h** por **SIAC-BANXICO**; liquidación en INDEVAL el día de colocación (jueves). IPAB: posturas el día hábil anterior a las **10:00**.",
+    "Tasa múltiple: cada quien a su tasa. Tasa única: todos a la tasa de la **última postura asignada**. Interactiva: se ve la postura a superar.",
+    "BONDES D: $100, múltiplo de **28** días, a descuento con pago cada 28 días a la **TPFB**, posturas por precio. Bonos M: $100, múltiplo de **182**, tasa **fija** semestral.",
+    "UDIBONOS: **100 UDIS**, tasa real fija, cada 182 días, posturas por precio en UDIS. UMS: **1,000 dólares**, en el extranjero, SHCP **sin Banxico**, colocados por bancos comerciales.",
+    "IPAB: BPAG28 (mensual, hasta 3 años) y BPAG91 (trimestral, hasta 5 años) pagan la **máxima** entre CETES del plazo y la **TPFG**; BPA182 (semestral, 7 años) con CETES 182 y protección contra la inflación.",
+    "Banobras: CBICs (plazo libre, cupón mensual, trimestral o semestral, valor gubernamental reportable) y PIC-FARAC (5 a 30 años, cupón cada 182 días); ambos **100 UDIS**, tasa real, aval del Gobierno Federal."
+  ],
+  "practica": [
+    "g.deuda.l3.q01",
+    "g.deuda.l3.q02",
+    "g.deuda.l3.q03",
+    "g.deuda.l3.q04",
+    "g.deuda.l3.q05"
+  ],
+  "miniExamen": [
+    "g.deuda.l3.q06",
+    "g.deuda.l3.q07",
+    "g.deuda.l3.q08",
+    "g.deuda.l3.q09",
+    "g.deuda.l3.q10"
+  ],
+  "reto": [
+    "g.deuda.l3.q11",
+    "g.deuda.l3.q12",
+    "g.deuda.l3.q13",
+    "g.deuda.l3.q14",
+    "g.deuda.l3.q15"
+  ]
+}

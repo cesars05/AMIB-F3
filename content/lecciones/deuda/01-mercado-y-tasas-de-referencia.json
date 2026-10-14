@@ -1,0 +1,664 @@
+{
+  "id": "deuda.mercado-y-tasas-de-referencia",
+  "area": "deuda",
+  "materia": "Títulos de Deuda I",
+  "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+  "objetivoIds": [
+    "deuda.titulos-de-deuda-i.elementos-basicos.o01",
+    "deuda.titulos-de-deuda-i.elementos-basicos.o02",
+    "deuda.titulos-de-deuda-i.elementos-basicos.o03",
+    "deuda.titulos-de-deuda-i.elementos-basicos.o08",
+    "deuda.titulos-de-deuda-i.elementos-basicos.o09",
+    "deuda.titulos-de-deuda-ii.subastas.o06"
+  ],
+  "orden": 1,
+  "titulo": "Mercado de deuda y tasas de referencia",
+  "resumen": "Concepto y características del mercado de deuda y las referencias que determina o publica Banxico: TIIE, tasa de CETES, tasas ponderadas de fondeo bancario y gubernamental, tipo de cambio FIX y spot, y UDI, con sus procedimientos, horarios y usos.",
+  "duracionMin": 35,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        183,
+        184,
+        185,
+        186
+      ]
+    },
+    {
+      "documento": "AMIB Data/AMIB Fig 3_vf.docx",
+      "paginas": []
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": [
+        49,
+        50,
+        51
+      ]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "mercado-de-deuda",
+      "titulo": "Qué es el mercado de deuda",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[mercado de títulos de deuda]] es aquel donde se negocian **títulos de crédito a corto, mediano y largo plazo** que representan para el tenedor su **participación individual en un crédito colectivo** a cargo del emisor. Para quien emite, el título es un **pasivo**; para quien lo compra, un derecho de cobro."
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: mercado de deuda",
+          "filas": [
+            [
+              "Qué se negocia",
+              "Títulos de crédito a corto, mediano y largo plazo"
+            ],
+            [
+              "Qué representa para el tenedor",
+              "Su participación individual en un crédito colectivo a cargo del emisor"
+            ],
+            [
+              "Qué representa para el emisor",
+              "Un **pasivo**"
+            ],
+            [
+              "Características principales",
+              "Dos: **tienen un vencimiento** y **prometen un rendimiento**"
+            ],
+            [
+              "Forma de operar",
+              "Las operaciones se realizan **a descuento** o **a precio**"
+            ],
+            [
+              "Comisiones",
+              "**No se cobran.** La casa de bolsa gana por el **diferencial de la compraventa**"
+            ],
+            [
+              "Sistema de negociación",
+              "[[BMV SENTRA Títulos de Deuda]]: sistema integral de remate electrónico para la negociación y asignación de instrumentos de deuda"
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen mercado de deuda:",
+          "texto": "Títulos con vencimiento y rendimiento prometido; pasivo para el emisor; sin comisiones (la ganancia del intermediario es el diferencial); se negocian en BMV SENTRA Títulos de Deuda."
+        }
+      ],
+      "ampliada": "El manual 2023 complementa la clasificación por plazo (corto, hasta un año; mediano, de uno a tres años; largo, de tres años en adelante) y los emisores: Gobierno Federal (por medio de la SHCP, el IPAB y Banobras), instituciones de crédito, empresas privadas, gobiernos estatales y municipales y empresas paraestatales. El examen suele preguntar la definición casi literal: \"participación individual en un crédito colectivo a cargo del emisor\".",
+      "paginas": [
+        183
+      ]
+    },
+    {
+      "id": "directo-y-reporto",
+      "titulo": "Dos tipos de operación: reporto y directo",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El manual distingue **dos tipos de operaciones** con títulos de deuda. Conviene fijar desde ahora quién es quién en el reporto, porque el examen invierte los papeles con frecuencia."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "Reporto",
+            "En directo"
+          ],
+          "filas": [
+            [
+              "Qué es",
+              "Operación entre una institución financiera (banco o casa de bolsa) y un inversionista, mediante el contrato de reporto",
+              "Compra de instrumentos de deuda que tiende a mantenerse hasta el vencimiento"
+            ],
+            [
+              "Papel de la institución",
+              "**Reportada**: entrega los títulos y recibe dinero",
+              "Vendedor o comprador"
+            ],
+            [
+              "Papel del inversionista",
+              "**Reportador**: entrega dinero, recibe los títulos y cobra un premio",
+              "Adquiere todos los derechos y riesgos del título"
+            ],
+            [
+              "Propiedad",
+              "Temporal, con compromiso de recompra",
+              "Definitiva"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "En el reporto la institución financiera es la **reportada** y el inversionista es el **reportador**. Si una opción dice que el banco es el reportador frente a su cliente, está invertida."
+        }
+      ],
+      "ampliada": "Esta lámina solo presenta la distinción. La operación en directo se estudia a detalle en la lección de operaciones y liquidación, y el reporto en su propia lección (secciones 6.3.1 a 6.3.8 del manual).",
+      "paginas": [
+        183
+      ]
+    },
+    {
+      "id": "tasas-de-referencia",
+      "titulo": "Tasas de referencia: concepto y catálogo",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las [[tasas de referencia]] son tasas de interés que **reflejan las condiciones del mercado de dinero en moneda nacional y en UDIS al mayoreo**, y funcionan como referencia de un gran número de operaciones financieras."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Referencia",
+            "Qué mide",
+            "Quién la determina o publica",
+            "Dato clave"
+          ],
+          "filas": [
+            [
+              "TIIE",
+              "Tasa de interés interbancaria de equilibrio; promedio de tasas pasivas de ciertos intermediarios",
+              "Banxico",
+              "Cotizaciones de al menos 6 instituciones; 4 decimales"
+            ],
+            [
+              "Tasa de CETES",
+              "Ponderación de las tasas de rendimiento adjudicadas en las subastas de Banxico",
+              "Banxico (subasta primaria)",
+              "Es un promedio ponderado de lo asignado"
+            ],
+            [
+              "Fondeo bancario (TPFB)",
+              "Operaciones de mayoreo a 1 día con **deuda bancaria**",
+              "Banxico",
+              "Directo y reporto; 17:30 h"
+            ],
+            [
+              "Fondeo gubernamental (TPFG)",
+              "Operaciones de mayoreo a 1 día con **deuda pública**",
+              "Banxico",
+              "Solo reporto; 17:30 h"
+            ],
+            [
+              "Tipo de cambio FIX",
+              "Tipo de cambio para liquidar en México obligaciones en dólares",
+              "Banxico; se publica en el DOF",
+              "A partir de las 12:00 h"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen referencias:",
+          "texto": "Todas las determina o publica **Banxico**. Las de fondeo se distinguen por el tipo de título (bancario o gubernamental), no por el plazo, que en ambas es de 1 día."
+        }
+      ],
+      "ampliada": "La tabla resumen del manual (p. 184) agrupa TIIE, tasa de CETES, fondeo bancario, fondeo gubernamental y tipo de cambio FIX. La UDI se trata aparte como unidad de valor. En las preguntas, las opciones suelen intercambiar la autoridad (Banxico, SHCP, CNBV, INEGI): en todas estas referencias la respuesta es Banxico.",
+      "paginas": [
+        183,
+        184
+      ]
+    },
+    {
+      "id": "tiie-procedimiento",
+      "titulo": "TIIE: el procedimiento de determinación hora por hora",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La [[TIIE]] (Tasa de Interés Interbancaria de Equilibrio) la publica Banxico como tasa de referencia sobre créditos. Se calcula para cada plazo y monto que Banxico haya informado a las instituciones participantes, con este procedimiento:"
+        },
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Recepción de cotizaciones",
+              "cuando": "A más tardar 12:00:00 h",
+              "texto": "Si Banxico obtiene cotizaciones de **cuando menos seis instituciones participantes**, calcula la TIIE. Las cotizaciones se presentan por **SIAC-BANXICO**."
+            },
+            {
+              "titulo": "Primer reintento",
+              "cuando": "A más tardar 12:15:00 h",
+              "texto": "Si no reunió seis cotizaciones, solicita nuevamente a las instituciones que presenten sus cotizaciones."
+            },
+            {
+              "titulo": "Segundo reintento",
+              "cuando": "A más tardar 12:30:00 h",
+              "texto": "Si aún no tiene seis, formula las solicitudes por cada plazo **en forma secuencial y en orden alfabético** de las instituciones. La presentación es **obligatoria** cuando sea necesaria para determinar la tasa."
+            },
+            {
+              "titulo": "Último recurso",
+              "cuando": "Mismo día",
+              "texto": "Si no pudo determinarla, Banxico fija la TIIE **considerando las condiciones prevalecientes en el mercado de dinero**. Las tasas se expresan en por ciento anual, **cerradas a cuatro decimales**."
+            },
+            {
+              "titulo": "Resultados",
+              "cuando": "A más tardar 14:00:00 h",
+              "texto": "Quedan a disposición de las instituciones participantes por **SIAC-BANXICO** el mismo día."
+            },
+            {
+              "titulo": "Publicación oficial",
+              "cuando": "Día hábil bancario siguiente",
+              "texto": "Banxico publica en el **Diario Oficial de la Federación** las tasas y el **nombre de las instituciones** que participaron."
+            }
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen TIIE:",
+          "texto": "Todo pasa el mismo día: cotizaciones a las 12:00 (reintentos a las 12:15 y 12:30 si no se juntan seis instituciones), cálculo ese mismo día y resultados a las 14:00 por SIAC-BANXICO. Lo único que se recorre un día hábil es la publicación en el DOF."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "No confundas las 12:00 h de la TIIE (límite de cotizaciones) con las 12:00 h del FIX (hora a partir de la cual se da a conocer). Tampoco las 14:00 h de la TIIE con las 17:30 h del fondeo."
+        }
+      ],
+      "ampliada": "El OCR del manual imprime \"12:15:50\" para el primer reintento; las notas de Cesar y el manual 2023 dicen 12:15, y la secuencia de 15 minutos (12:00, 12:15, 12:30) lo confirma. El manual 2023 añade que la TIIE se determina a plazos de 28 y 91 días. Este procedimiento es normativo y puede cambiar: verifica la vigencia en la circular de Banxico antes del examen.",
+      "paginas": [
+        184
+      ]
+    },
+    {
+      "id": "tasas-de-fondeo",
+      "titulo": "Tasas ponderadas de fondeo: bancario y gubernamental",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Ambas tasas se calculan con **operaciones reales ya ejecutadas** a plazo de 1 día, ponderadas por volumen. Lo que las separa es el **tipo de título** y el **tipo de operación** que admiten."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "Fondeo bancario (TPFB)",
+            "Fondeo gubernamental (TPFG)"
+          ],
+          "filas": [
+            [
+              "Títulos",
+              "Deuda **bancaria**: certificados de depósito, pagarés y aceptaciones bancarias registrados en el INDEVAL",
+              "Deuda **pública** (gubernamental) registrada en el INDEVAL"
+            ],
+            [
+              "Operaciones incluidas",
+              "**Directo y reporto**",
+              "**Solo reporto**"
+            ],
+            [
+              "Plazo",
+              "1 día",
+              "1 día"
+            ],
+            [
+              "Cálculo",
+              "Promedio ponderado por volumen",
+              "Promedio ponderado por volumen"
+            ],
+            [
+              "Exclusiones",
+              "Operaciones entre instituciones de un mismo grupo financiero y con la clientela",
+              "Las mismas"
+            ],
+            [
+              "Publicación",
+              "17:30 h del mismo día, en la página de Banxico",
+              "17:30 h del mismo día, en la página de Banxico"
+            ],
+            [
+              "Instrumentos que la usan",
+              "BONDES D",
+              "BPAG28 y BPAG91, en máximo con la tasa de CETES"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              6,
+              1
+            ],
+            [
+              6,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "TPF = \\frac{\\sum_{i} r_i\\,V_i}{\\sum_{i} V_i}",
+          "leyenda": [
+            [
+              "TPF",
+              "tasa ponderada de fondeo"
+            ],
+            [
+              "r_i",
+              "tasa de la operación i"
+            ],
+            [
+              "V_i",
+              "volumen (monto) de la operación i"
+            ],
+            [
+              "\\sum",
+              "suma solo de las operaciones que no se excluyen"
+            ]
+          ],
+          "valores": "TPF = \\frac{200(7.05) + 500(7.12) + 300(7.20)}{200 + 500 + 300} = \\frac{7{,}130}{1{,}000}",
+          "resultado": "TPF = 7.1300 %. Una cuarta operación de 400 a 6.70 % entre instituciones del mismo grupo financiero se excluye; si se incluyera, el resultado sería 7.0071 %, un error típico."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen fondeo:",
+          "texto": "Bancario: deuda bancaria, directo y reporto, referencia de BONDES D. Gubernamental: deuda pública, solo reporto, referencia de BPAG28 y BPAG91. Ambas a 1 día, ponderadas por volumen, sin operaciones intragrupo ni con clientela, publicadas a las 17:30 h."
+        }
+      ],
+      "ampliada": "El ejemplo numérico es ilustrativo (no viene en el manual) y sirve para practicar las exclusiones, que es lo que el examen convierte en distractor. El manual 2023 menciona que estas tasas se aplican a las operaciones de mayoreo de bancos y casas de bolsa en el mercado interbancario.",
+      "paginas": [
+        186
+      ]
+    },
+    {
+      "id": "fix-y-spot",
+      "titulo": "Tipo de cambio FIX y tipo de cambio spot",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "FIX",
+            "Spot"
+          ],
+          "filas": [
+            [
+              "Qué es",
+              "Tipo de cambio que determina Banxico con un **promedio de cotizaciones** del mercado de cambios al mayoreo",
+              "Tipo de cambio **al contado**: compra o venta de divisa al tipo actual de cotización"
+            ],
+            [
+              "Liquidación",
+              "Cotizaciones para operaciones liquidables el **segundo día hábil bancario siguiente**",
+              "Entrega en un plazo de **dos días hábiles**"
+            ],
+            [
+              "Difusión",
+              "A partir de las **12:00 h** de todos los días hábiles bancarios",
+              "Banxico también lo publica como muestra de transacciones al mayoreo entre bancos, casas de bolsa, casas de cambio y particulares"
+            ],
+            [
+              "Publicación oficial",
+              "**DOF**, un día hábil bancario después de su determinación",
+              "El manual no le asigna publicación en el DOF"
+            ],
+            [
+              "Uso",
+              "Solventar obligaciones en dólares liquidables en la República Mexicana **al día siguiente de la publicación**",
+              "Referencia del precio de mercado en el momento"
+            ]
+          ],
+          "trampas": [
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen FIX:",
+          "texto": "Lo determina Banxico, sale a las 12:00 h, se publica en el DOF al día hábil siguiente y sirve para pagar en México obligaciones en dólares al día siguiente de esa publicación. El spot es \"el del momento\"."
+        }
+      ],
+      "ampliada": "El manual solo describe al spot como una muestra de transacciones que Banxico publica; la publicación en el DOF la menciona únicamente para el FIX. El manual 2023 resume el FIX como el promedio para operaciones a 48 horas, con cotizaciones entre las 9 y las 12 del día.",
+      "paginas": [
+        185
+      ]
+    },
+    {
+      "id": "fix-metodologia",
+      "titulo": "Metodología de cálculo del FIX paso a paso",
+      "bloques": [
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Fuente de cotizaciones",
+              "cuando": "Cada día hábil bancario",
+              "texto": "Banxico obtiene cotizaciones de compra y venta del dólar para operaciones liquidables el segundo día hábil siguiente, de plataformas de transacción cambiaria u otro medio electrónico que refleje el mercado al mayoreo."
+            },
+            {
+              "titulo": "Tres periodos",
+              "cuando": "De 9:00:00 a 9:59:00 h, de 10:00:00 a 10:59:00 h y de 11:00:00 a 12:00:00 h",
+              "texto": "En cada periodo elige **de manera aleatoria** el momento en que toma la cotización **más alta de compra** y la **más baja de venta** vigentes."
+            },
+            {
+              "titulo": "Equilibrio por periodo",
+              "cuando": "Al cierre de cada periodo",
+              "texto": "El tipo de cambio de equilibrio del periodo es el **promedio aritmético** de esas dos cotizaciones."
+            },
+            {
+              "titulo": "FIX",
+              "cuando": "A partir de las 12:00 h",
+              "texto": "Promedio aritmético de los tres tipos de cambio de equilibrio, **cerrado a cuatro decimales**. Si falta algún periodo, Banxico usa la información que sí obtuvo."
+            }
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "FIX = \\frac{1}{3}\\sum_{k=1}^{3}\\frac{C_k + V_k}{2}",
+          "leyenda": [
+            [
+              "C_k",
+              "cotización más alta de compra del periodo k"
+            ],
+            [
+              "V_k",
+              "cotización más baja de venta del periodo k"
+            ],
+            [
+              "k",
+              "periodo: 1 (9 h), 2 (10 h), 3 (11 a 12 h)"
+            ]
+          ],
+          "valores": "FIX = \\frac{1}{3}\\left(\\frac{18.4520 + 18.4580}{2} + \\frac{18.4610 + 18.4650}{2} + \\frac{18.4490 + 18.4530}{2}\\right) = \\frac{18.4550 + 18.4630 + 18.4510}{3}",
+          "resultado": "FIX = 18.456333, es decir, 18.4563 pesos por dólar a cuatro decimales."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La regla es **compra más alta y venta más baja**. Una opción que diga \"compra más baja y venta más alta\" invierte la metodología. Tampoco se toma un solo periodo: se promedian los tres."
+        }
+      ],
+      "ampliada": "Las cifras del ejemplo son ilustrativas. Fíjate en que el último periodo termina a las 12:00:00 h, que coincide con la hora a partir de la cual se da a conocer el FIX.",
+      "paginas": [
+        185
+      ]
+    },
+    {
+      "id": "udi",
+      "titulo": "UDI: unidad de valor ligada a la inflación",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: Unidad de Inversión (UDI)",
+          "filas": [
+            [
+              "Qué es",
+              "Unidad de valor que se basa en el **incremento de los precios**; se usa para solventar obligaciones de créditos hipotecarios o cualquier acto mercantil"
+            ],
+            [
+              "Origen",
+              "Se creó en **1995** con el fin de **proteger a los bancos**, enfocada principalmente en créditos hipotecarios"
+            ],
+            [
+              "Uso en deuda",
+              "Valor nominal de amortización de instrumentos de cobertura inflacionaria: **UDIBONOS y CBICs**; también referencia en derivados"
+            ],
+            [
+              "Cálculo",
+              "Se aplica al precio de la UDI la variación del **INPC**; el manual indica que lo calcula el INEGI los días 10 y 25"
+            ],
+            [
+              "Publicación",
+              "**Banxico** da a conocer su valor los días **10 y 25 de cada mes**"
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "Precio_{\\$} = Precio_{UDIS}\\cdot UDI",
+          "leyenda": [
+            [
+              "Precio_{\\$}",
+              "precio en pesos"
+            ],
+            [
+              "Precio_{UDIS}",
+              "precio expresado en UDIS"
+            ],
+            [
+              "UDI",
+              "valor de la UDI en pesos en la fecha de liquidación"
+            ]
+          ],
+          "valores": "Precio_{\\$} = 96.121811 \\cdot 4.857918",
+          "resultado": "Precio en pesos = 466.951874 (ejemplo de UDIBONO del manual, p. 202)."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Si la pregunta dice \"quién da a conocer el valor de la UDI\", la respuesta del manual es **Banxico**, los días 10 y 25. La UDI no se mueve con el tipo de cambio sino con el INPC."
+        }
+      ],
+      "ampliada": "El manual atribuye el cálculo al INEGI y la difusión a Banxico; en la práctica el INEGI publica el INPC y Banxico calcula y publica la UDI. Se registró como duda. La multiplicación del ejemplo, con los datos redondeados que imprime el manual, da 466.951876; el manual reporta 466.951874.",
+      "paginas": [
+        186,
+        202
+      ]
+    },
+    {
+      "id": "indicadores-banxico",
+      "titulo": "Para qué sirve cada indicador que publica Banxico",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Indicador",
+            "Utilidad",
+            "Cuándo y por qué medio"
+          ],
+          "filas": [
+            [
+              "TIIE",
+              "Referencia de un gran número de operaciones y créditos; tasa de equilibrio interbancaria",
+              "Resultados a más tardar 14:00 h por SIAC-BANXICO; DOF el día hábil siguiente"
+            ],
+            [
+              "Tipo de cambio FIX",
+              "Liquidar en México obligaciones denominadas en dólares",
+              "A partir de las 12:00 h; DOF un día hábil bancario después"
+            ],
+            [
+              "Tasa Ponderada de Fondeo Bancario",
+              "Costo de fondeo a 1 día con deuda bancaria; referencia de BONDES D",
+              "17:30 h del mismo día, página de internet de Banxico"
+            ],
+            [
+              "Tasa Ponderada de Fondeo Gubernamental",
+              "Costo de fondeo a 1 día con deuda pública; referencia de BPAG28 y BPAG91",
+              "17:30 h del mismo día, página de internet de Banxico"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen horarios:",
+          "texto": "Del más temprano al más tardío: FIX desde las 12:00 h, TIIE a las 14:00 h, fondeos a las 17:30 h. En el DOF salen al día hábil siguiente la TIIE y el FIX."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "FIX: 12:00 h, liquidación de obligaciones en dólares.",
+            "TIIE: 14:00 h por SIAC-BANXICO, referencia de créditos.",
+            "Fondeo bancario y gubernamental: 17:30 h, referencia de BONDES D y de los BPAG."
+          ]
+        }
+      ],
+      "ampliada": "Este objetivo (sección 6.1.9 del manual, \"Señalar la utilidad de los indicadores\") se pregunta casi siempre como horario o como uso. Memoriza la tríada de horas 12:00, 14:00 y 17:30.",
+      "paginas": [
+        184,
+        185,
+        186
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Mercado de deuda: títulos de crédito a corto, mediano y largo plazo; **participación individual en un crédito colectivo** a cargo del emisor; para el emisor es un **pasivo**. Dos características: **vencimiento** y **rendimiento prometido**.",
+    "En deuda **no se cobran comisiones**: la casa de bolsa gana por el **diferencial de compraventa**. Se negocia en **BMV SENTRA Títulos de Deuda**.",
+    "TIIE: mínimo **6 cotizaciones** a las **12:00:00**, reintentos a las **12:15** y **12:30** (orden alfabético), vía **SIAC-BANXICO**, **4 decimales**, resultados a las **14:00** y DOF el día hábil siguiente con nombres de participantes.",
+    "TPFB: deuda **bancaria** a 1 día, **directo y reporto**; TPFG: deuda **gubernamental** a 1 día, **solo reporto**. Ambas ponderadas por volumen, excluyen mismo grupo financiero y clientela, publicadas a las **17:30 h**.",
+    "FIX: tres periodos (9:00, 10:00 y 11:00 a 12:00 h), promedio de la **compra más alta y la venta más baja**, cierre a 4 decimales, difusión desde las **12:00 h**, DOF un día hábil después; sirve para liquidar en México obligaciones en dólares.",
+    "Spot: tipo de cambio **al contado**, entrega en **dos días hábiles**.",
+    "UDI: creada en **1995**, sigue al **INPC**, Banxico publica su valor los días **10 y 25**; base del valor nominal de **UDIBONOS y CBICs**."
+  ],
+  "practica": [
+    "g.deuda.l1.q01",
+    "g.deuda.l1.q02",
+    "g.deuda.l1.q03",
+    "g.deuda.l1.q04",
+    "g.deuda.l1.q05"
+  ],
+  "miniExamen": [
+    "g.deuda.l1.q06",
+    "g.deuda.l1.q07",
+    "g.deuda.l1.q08",
+    "g.deuda.l1.q09",
+    "g.deuda.l1.q10"
+  ],
+  "reto": [
+    "g.deuda.l1.q11",
+    "g.deuda.l1.q12",
+    "g.deuda.l1.q13",
+    "g.deuda.l1.q14",
+    "g.deuda.l1.q15"
+  ]
+}

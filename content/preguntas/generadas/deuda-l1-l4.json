@@ -1,0 +1,2653 @@
+{
+  "fuente": "Generadas por Claude (Opus) a partir de AMIB_1_completo.md, capítulo 6 (secciones 6.1.1 a 6.2.4), con apoyo de las notas de Cesar y del manual 2023",
+  "generado": "2026-10-14",
+  "preguntas": [
+    {
+      "id": "g.deuda.l1.q01",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o01",
+      "enunciado": "En el mercado de títulos de deuda, la ganancia de la casa de bolsa al operar mercado de dinero proviene de:",
+      "opciones": [
+        {
+          "texto": "una comisión porcentual sobre el monto operado.",
+          "porQueNo": "En el mercado de deuda no se cobran comisiones.",
+          "etiquetaError": "cree-comision-mercado-dinero"
+        },
+        {
+          "texto": "el diferencial entre el precio de compra y el de venta."
+        },
+        {
+          "texto": "el premio que paga el reportado al vencimiento.",
+          "porQueNo": "El premio corresponde al reportador en un reporto, no es la ganancia de intermediación de la casa de bolsa.",
+          "etiquetaError": "confunde-premio-reporto"
+        },
+        {
+          "texto": "una cuota fija por cada título liquidado en el INDEVAL.",
+          "porQueNo": "El manual no prevé cuotas por título; la ganancia es el diferencial de compraventa.",
+          "etiquetaError": "inventa-cuota-liquidacion"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "El manual señala que en el mercado de deuda no se cobran comisiones: la ganancia de la casa de bolsa al operar mercado de dinero se obtiene por el diferencial de la compraventa.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 183,
+        "textual": "La ganancia de la Casa de Bolsa al operar Mercado de Dinero"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l1.q02",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o02",
+      "enunciado": "Para calcular la TIIE, ¿cuántas cotizaciones de instituciones participantes debe obtener como mínimo el Banco de México a más tardar a las 12:00:00 horas?",
+      "opciones": [
+        {
+          "texto": "Seis cotizaciones."
+        },
+        {
+          "texto": "Tres cotizaciones.",
+          "porQueNo": "Con tres cotizaciones Banxico tendría que volver a solicitarlas; el mínimo es seis.",
+          "etiquetaError": "confunde-minimo-cotizaciones"
+        },
+        {
+          "texto": "Ocho cotizaciones.",
+          "porQueNo": "El procedimiento pide al menos seis; ocho no es el umbral.",
+          "etiquetaError": "confunde-minimo-cotizaciones"
+        },
+        {
+          "texto": "Cinco cotizaciones.",
+          "porQueNo": "El mínimo que exige el procedimiento es de seis instituciones, no cinco.",
+          "etiquetaError": "confunde-minimo-cotizaciones"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Si a más tardar a las 12:00:00 horas Banxico obtiene cotizaciones de cuando menos seis instituciones participantes, procede a calcular la TIIE. Si no, repite la solicitud a las 12:15:00 y a las 12:30:00 horas.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 184,
+        "textual": "obtenga cotizaciones de cuando menos seis instituciones participantes"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l1.q03",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o08",
+      "enunciado": "La Tasa Ponderada de Fondeo Gubernamental se calcula con:",
+      "opciones": [
+        {
+          "texto": "cotizaciones de al menos seis instituciones presentadas mediante SIAC-BANXICO.",
+          "porQueNo": "Ese es el procedimiento de la TIIE, que se basa en cotizaciones y no en operaciones realizadas.",
+          "etiquetaError": "confunde-tiie-fondeo"
+        },
+        {
+          "texto": "las tasas de rendimiento adjudicadas en la subasta primaria semanal de CETES.",
+          "porQueNo": "Esa es la tasa de CETES como referencia.",
+          "etiquetaError": "confunde-tasa-cetes-fondeo"
+        },
+        {
+          "texto": "operaciones en reporto a 1 día con títulos gubernamentales registrados en el INDEVAL."
+        },
+        {
+          "texto": "operaciones en directo y en reporto a 1 día con certificados de depósito y pagarés bancarios.",
+          "porQueNo": "Esa es la base de la Tasa Ponderada de Fondeo Bancario.",
+          "etiquetaError": "confunde-fondeo-bancario-gubernamental"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "La TPFG es representativa de las operaciones de mayoreo de la banca y las casas de bolsa sobre títulos de deuda pública a plazo de 1 día, e incluye las operaciones en reporto con títulos gubernamentales registrados en el INDEVAL. Se pondera por volumen.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 186,
+        "textual": "Se incluyen las operaciones en reporto con titulos de deuda gubernamental registrados en el INDEVAL"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l1.q04",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o03",
+      "enunciado": "El tipo de cambio FIX se publica en el Diario Oficial de la Federación:",
+      "opciones": [
+        {
+          "texto": "el mismo día de su determinación, a partir de las 12:00 horas.",
+          "porQueNo": "A partir de las 12:00 horas Banxico lo da a conocer, pero la publicación en el DOF es al día hábil siguiente.",
+          "etiquetaError": "confunde-difusion-con-dof"
+        },
+        {
+          "texto": "los días 10 y 25 de cada mes, junto con el valor de la UDI.",
+          "porQueNo": "Esos días corresponden a la publicación del valor de la UDI.",
+          "etiquetaError": "confunde-udi-fix"
+        },
+        {
+          "texto": "un día hábil bancario después de la fecha de su determinación."
+        },
+        {
+          "texto": "dos días hábiles bancarios después de su determinación.",
+          "porQueNo": "Los dos días hábiles corresponden a la liquidación de las cotizaciones, no a la publicación en el DOF.",
+          "etiquetaError": "confunde-liquidacion-48h"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Banxico da a conocer el FIX a partir de las 12:00 horas de todos los días hábiles bancarios; se publica en el DOF un día hábil bancario después de la fecha de determinación y sirve para solventar obligaciones en dólares liquidables en México al día siguiente de la publicación.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 185,
+        "textual": "se publica en el Diario Oficial de la Federación (DOF) un día hábil bancario después de la fecha de determinación"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l1.q05",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o08",
+      "enunciado": "Respecto a las Unidades de Inversión (UDIS), es correcto afirmar que:",
+      "opciones": [
+        {
+          "texto": "Banxico da a conocer su valor los días 10 y 25 de cada mes."
+        },
+        {
+          "texto": "sirven de base para el valor nominal de los BONDES D.",
+          "porQueNo": "Los BONDES D tienen valor nominal de $100 pesos; la UDI se usa en UDIBONOS y CBICs.",
+          "etiquetaError": "confunde-instrumentos-udi"
+        },
+        {
+          "texto": "se crearon en 1995 para proteger principalmente a las casas de bolsa.",
+          "porQueNo": "Se crearon en 1995 con el fin de proteger a los bancos, enfocadas en créditos hipotecarios.",
+          "etiquetaError": "confunde-proposito-udi"
+        },
+        {
+          "texto": "su valor se ajusta con la variación diaria del tipo de cambio FIX.",
+          "porQueNo": "La UDI se ajusta con las variaciones del INPC, no con el tipo de cambio.",
+          "etiquetaError": "confunde-udi-fix"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "La UDI es una unidad de valor que sigue el incremento de los precios (INPC). Se creó en 1995 para proteger a los bancos, sobre todo en créditos hipotecarios, y su valor lo da a conocer Banxico los días 10 y 25 de cada mes.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 186,
+        "textual": "El valor de la UDI se da a conocer por BANXICO los días 10 y 25 de cada mes"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l1.q06",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o08",
+      "enunciado": "Son características de la Tasa Ponderada de Fondeo Bancario, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "excluye las operaciones entre instituciones de un mismo grupo financiero.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "se calcula con operaciones de deuda bancaria a plazo de 1 día.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "Banxico da a conocer su resultado a las 17:30 horas del mismo día.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "solo considera operaciones en reporto con títulos gubernamentales."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "La TPFB incluye operaciones en directo y en reporto con deuda bancaria (certificados de depósito, pagarés y aceptaciones bancarias) a 1 día registradas en el INDEVAL. Operar solo reportos con títulos gubernamentales describe a la Tasa Ponderada de Fondeo Gubernamental.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 186,
+        "textual": "a plazo de 1 día. incluyen las operaciones en directo y en reporto con certificados de depósito"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l1.q07",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o03",
+      "enunciado": "Banxico obtuvo para el FIX estas cotizaciones (compra más alta y venta más baja) en los tres periodos: 9:00 a 9:59 h, 18.3215 y 18.3275; 10:00 a 10:59 h, 18.3390 y 18.3440; 11:00 a 12:00 h, 18.3105 y 18.3175. ¿Cuál es el tipo de cambio FIX?",
+      "opciones": [
+        {
+          "texto": "18.3297",
+          "porQueNo": "Promediaste solo las cotizaciones de venta; falta promediar con la compra.",
+          "etiquetaError": "omite-cotizacion-compra"
+        },
+        {
+          "texto": "18.3140",
+          "porQueNo": "Es solo el tipo de cambio de equilibrio del último periodo; el FIX promedia los tres.",
+          "etiquetaError": "toma-solo-ultimo-periodo"
+        },
+        {
+          "texto": "18.3237",
+          "porQueNo": "Promediaste solo las cotizaciones de compra; cada periodo se equilibra con el promedio de compra y venta.",
+          "etiquetaError": "omite-cotizacion-venta"
+        },
+        {
+          "texto": "18.3267"
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Cada periodo: equilibrio = (compra + venta) / 2, que da 18.3245, 18.3415 y 18.3140. FIX = (18.3245 + 18.3415 + 18.3140) / 3 = 18.326667, que cerrado a cuatro decimales es 18.3267.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 185,
+        "textual": "tomará la cotización más alta de compra y la más baja de venta vigentes"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l1.q08",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o02",
+      "enunciado": "Si a las 12:00:00 horas Banxico no ha reunido el mínimo de cotizaciones para la TIIE, ¿qué hace en primer lugar?",
+      "opciones": [
+        {
+          "texto": "Determina la tasa considerando las condiciones prevalecientes del mercado.",
+          "porQueNo": "Ese es el último recurso, después de los dos reintentos.",
+          "etiquetaError": "salta-al-ultimo-recurso"
+        },
+        {
+          "texto": "Solicita cotizaciones en orden alfabético a más tardar a las 12:30:00 horas.",
+          "porQueNo": "La solicitud secuencial en orden alfabético es el segundo reintento, no el primero.",
+          "etiquetaError": "confunde-orden-reintentos"
+        },
+        {
+          "texto": "Solicita nuevamente cotizaciones a más tardar a las 12:15:00 horas."
+        },
+        {
+          "texto": "Publica en el DOF la TIIE del día hábil anterior.",
+          "porQueNo": "El procedimiento no prevé repetir la tasa anterior.",
+          "etiquetaError": "inventa-arrastre-tasa"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Secuencia de la TIIE: a las 12:00:00 se requieren seis cotizaciones; si no se reúnen, Banxico las solicita de nuevo a más tardar a las 12:15:00; si aún faltan, a las 12:30:00 en forma secuencial y en orden alfabético; si no logra determinarla, la fija según las condiciones del mercado de dinero.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 184,
+        "textual": "solicitará nuevamente a las instituciones"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": [
+        "El OCR del manual imprime 12:15:50; las notas de Cesar y el manual 2023 dicen 12:15. Ver docs/dudas/deuda-l1-l4.md."
+      ]
+    },
+    {
+      "id": "g.deuda.l1.q09",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o03",
+      "enunciado": "El tipo de cambio al contado, cuya operación implica la entrega de la divisa en un plazo de dos días hábiles y que Banxico publica como muestra de transacciones al mayoreo, es el:",
+      "opciones": [
+        {
+          "texto": "tipo de cambio a plazo (forward).",
+          "porQueNo": "Un tipo a plazo se pacta para entrega futura, no al contado.",
+          "etiquetaError": "confunde-spot-forward"
+        },
+        {
+          "texto": "tipo de cambio FIX.",
+          "porQueNo": "El FIX es un promedio de cotizaciones obtenidas en tres periodos y sirve para solventar obligaciones en dólares; no es una muestra de transacciones al contado.",
+          "etiquetaError": "confunde-fix-spot"
+        },
+        {
+          "texto": "tipo de cambio de equilibrio del periodo de 11:00 a 12:00 horas.",
+          "porQueNo": "Es solo un insumo intermedio del cálculo del FIX.",
+          "etiquetaError": "confunde-fix-periodo"
+        },
+        {
+          "texto": "tipo de cambio spot."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El spot es el tipo de cambio al contado (compra o venta de divisa al tipo actual de cotización para entrega en dos días hábiles). Banxico también lo publica como muestra de las transacciones al mayoreo entre bancos, casas de bolsa, casas de cambio y particulares.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 185,
+        "textual": "para entrega en el plazo de dos dias hábiles"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l1.q10",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o06",
+      "enunciado": "Un tesorero necesita el mismo día tres datos de Banxico: TIIE, FIX y Tasa Ponderada de Fondeo Gubernamental. ¿En qué orden quedan disponibles, del más temprano al más tardío?",
+      "opciones": [
+        {
+          "texto": "FIX (12:00 h), TIIE (14:00 h) y fondeo gubernamental (17:30 h)."
+        },
+        {
+          "texto": "TIIE (12:00 h), FIX (14:00 h) y fondeo gubernamental (17:30 h).",
+          "porQueNo": "A las 12:00 h vence el plazo de cotizaciones de la TIIE, pero sus resultados salen a las 14:00 h; el FIX se da a conocer desde las 12:00 h.",
+          "etiquetaError": "confunde-horario-tiie-fix"
+        },
+        {
+          "texto": "Fondeo gubernamental (9:00 h), FIX (12:00 h) y TIIE (14:00 h).",
+          "porQueNo": "A las 9:00 h inicia el primer periodo de cotizaciones del FIX; el fondeo se publica a las 17:30 h.",
+          "etiquetaError": "confunde-periodo-fix-con-fondeo"
+        },
+        {
+          "texto": "FIX (12:00 h), fondeo gubernamental (14:00 h) y TIIE (17:30 h).",
+          "porQueNo": "Se intercambiaron las horas de la TIIE y del fondeo.",
+          "etiquetaError": "confunde-horario-tiie-fondeo"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "FIX: Banxico lo da a conocer a partir de las 12:00 h. TIIE: resultados vía SIAC-BANXICO a más tardar a las 14:00:00 h. Fondeo bancario y gubernamental: 17:30 h del mismo día en la página de internet de Banxico.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 186,
+        "textual": "dará a conocer el resultado de la tasa de fondeo gubernamental a las 17:30 hrs"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l1.q11",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o08",
+      "enunciado": "Operaciones a 1 día con deuda bancaria registradas en el INDEVAL: A) directo entre bancos de distinto grupo, 450 mdp a 7.15%; B) reporto entre casa de bolsa y banco del mismo grupo financiero, 300 mdp a 7.02%; C) reporto entre bancos de distinto grupo, 250 mdp a 7.21%; D) reporto de un banco con su clientela, 200 mdp a 6.80%; E) reporto entre casa de bolsa y banco de otro grupo, 300 mdp a 7.18%. ¿Cuál es la Tasa Ponderada de Fondeo Bancario?",
+      "opciones": [
+        {
+          "texto": "7.1800%",
+          "porQueNo": "Es un promedio simple de A, C y E; la tasa se pondera por volumen.",
+          "etiquetaError": "promedio-simple"
+        },
+        {
+          "texto": "7.1936%",
+          "porQueNo": "Excluiste la operación en directo; la TPFB sí incluye directo y reporto (solo reporto es la regla del fondeo gubernamental).",
+          "etiquetaError": "confunde-fondeo-bancario-gubernamental"
+        },
+        {
+          "texto": "7.1740%"
+        },
+        {
+          "texto": "7.0933%",
+          "porQueNo": "Incluiste las operaciones B y D; se excluyen las de un mismo grupo financiero y las realizadas con la clientela.",
+          "etiquetaError": "no-excluye-operaciones"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Se excluyen B (mismo grupo financiero) y D (clientela). TPFB = (450 × 7.15 + 250 × 7.21 + 300 × 7.18) / (450 + 250 + 300) = 7,174 / 1,000 = 7.1740%.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 186,
+        "textual": "realizadas entre instituciones que pertenecen a un mismo Grupo Financiero y con la clientela"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l1.q12",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o02",
+      "enunciado": "Sobre la difusión de la TIIE, señale la afirmación correcta:",
+      "opciones": [
+        {
+          "texto": "los resultados se dan a conocer vía SIAC-BANXICO el día hábil bancario inmediato siguiente.",
+          "porQueNo": "El día hábil siguiente es la publicación en el DOF, con las tasas y los nombres de las instituciones participantes.",
+          "etiquetaError": "confunde-dof-siguiente-dia"
+        },
+        {
+          "texto": "los resultados se dan a conocer vía SIAC-BANXICO a más tardar a las 14:00:00 horas del mismo día."
+        },
+        {
+          "texto": "los resultados se dan a conocer en el DOF a más tardar a las 14:00:00 horas del mismo día.",
+          "porQueNo": "A las 14:00 h los resultados están en SIAC-BANXICO; el DOF los publica el día hábil bancario siguiente.",
+          "etiquetaError": "confunde-siac-dof"
+        },
+        {
+          "texto": "los resultados se dan a conocer vía SIAC-BANXICO a más tardar a las 17:30:00 horas del mismo día.",
+          "porQueNo": "Las 17:30 h corresponden a la publicación de las tasas ponderadas de fondeo.",
+          "etiquetaError": "confunde-horario-fondeo"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "La TIIE se determina y se pone a disposición de las instituciones participantes por SIAC-BANXICO a más tardar a las 14:00:00 horas del mismo día. Solo la publicación oficial en el DOF ocurre el día hábil bancario inmediato siguiente.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 184,
+        "textual": "a más tardar a las 14:00:00 horas del mismo día en que se determinen las tasas a través del SIAC-BANXICO"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l1.q13",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o03",
+      "enunciado": "Sobre la metodología de cálculo del tipo de cambio FIX, son correctas las siguientes afirmaciones, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "en cada periodo, el momento de la cotización se selecciona de manera aleatoria.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "el promedio de los tres tipos de cambio de equilibrio se cierra a cuatro decimales.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "en cada periodo se toma la cotización más baja de compra y la más alta de venta."
+        },
+        {
+          "texto": "Banxico obtiene cotizaciones para operaciones liquidables el segundo día hábil bancario siguiente.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "La opción falsa invierte la regla: Banxico toma la cotización más ALTA de compra y la más BAJA de venta vigentes en un momento aleatorio de cada periodo, promedia ambas y luego promedia los tres periodos, cerrando a cuatro decimales.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 185,
+        "textual": "cerrando el resultado a cuatro decimales"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l1.q14",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o08",
+      "enunciado": "Según el manual, la UDI se utiliza para establecer el valor nominal de amortización de los siguientes instrumentos de cobertura inflacionaria:",
+      "opciones": [
+        {
+          "texto": "UDIBONOS y CBICs."
+        },
+        {
+          "texto": "UDIBONOS y BONDES D.",
+          "porQueNo": "Los BONDES D son de tasa revisable con valor nominal en pesos.",
+          "etiquetaError": "confunde-bondes-udibonos"
+        },
+        {
+          "texto": "CBICs y Bonos UMS.",
+          "porQueNo": "Los UMS están denominados en divisas distintas al peso.",
+          "etiquetaError": "confunde-ums-udi"
+        },
+        {
+          "texto": "BPA182 y BPAG91.",
+          "porQueNo": "Los bonos del IPAB tienen valor nominal de $100 pesos; el BPA182 tiene protección inflacionaria en su tasa, no un valor nominal en UDIS.",
+          "etiquetaError": "confunde-bpa-proteccion-inflacion"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El manual indica que la UDI se utiliza para establecer el valor nominal de amortización de instrumentos de deuda de cobertura inflacionaria (UDIBONOS y CBICs) y como valor de referencia en productos derivados.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 186,
+        "textual": "de cobertura inflacionaria (Udibonos y Cbic's)"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l1.q15",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o08",
+      "enunciado": "Un banco realiza una operación en reporto a 1 día con CETES, registrada en el INDEVAL, con una casa de bolsa de otro grupo financiero. ¿En qué tasa de referencia se refleja esta operación?",
+      "opciones": [
+        {
+          "texto": "En ninguna, porque las operaciones en reporto se excluyen.",
+          "porQueNo": "Se excluyen las operaciones del mismo grupo financiero y con la clientela, no los reportos.",
+          "etiquetaError": "cree-reporto-excluido"
+        },
+        {
+          "texto": "En ambas tasas ponderadas de fondeo, por ser a 1 día.",
+          "porQueNo": "Cada tasa toma un tipo de título distinto; el plazo de 1 día es común pero no las mezcla.",
+          "etiquetaError": "cree-ambas-fondeo"
+        },
+        {
+          "texto": "En la Tasa Ponderada de Fondeo Bancario.",
+          "porQueNo": "La TPFB se forma con deuda bancaria; los CETES son deuda gubernamental.",
+          "etiquetaError": "confunde-fondeo-bancario-gubernamental"
+        },
+        {
+          "texto": "En la Tasa Ponderada de Fondeo Gubernamental."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "La operación es un reporto a 1 día con título gubernamental registrado en el INDEVAL entre instituciones de grupos distintos: entra en el cálculo de la Tasa Ponderada de Fondeo Gubernamental.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 186,
+        "textual": "Se incluyen las operaciones en reporto con titulos de deuda gubernamental registrados en el INDEVAL"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l2.q01",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o04",
+      "enunciado": "En una operación en directo del mercado de deuda, el comprador:",
+      "opciones": [
+        {
+          "texto": "adquiere el título con el compromiso de revenderlo en una fecha pactada.",
+          "porQueNo": "El compromiso de recompra describe al reporto.",
+          "etiquetaError": "confunde-directo-reporto"
+        },
+        {
+          "texto": "adquiere todos los derechos y todos los riesgos del título."
+        },
+        {
+          "texto": "debe ser un inversionista institucional o calificado.",
+          "porQueNo": "En directo, el comprador puede ser un inversionista de cualquier tipo.",
+          "etiquetaError": "restringe-inversionista"
+        },
+        {
+          "texto": "recibe un premio pactado al inicio por el uso de su dinero.",
+          "porQueNo": "El premio es propio del reporto.",
+          "etiquetaError": "confunde-premio-reporto"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "En una operación en directo, vendedor y comprador convienen ceder la propiedad (derechos e incumplimientos) y los beneficios del título: se adquieren todos los derechos y todos los riesgos, con entrega contra pago en INDEVAL.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 187,
+        "textual": "SE ADQUIEREN TODOS LOS DERECHOS Y TODOS LOS RIESGOS del título"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l2.q02",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o05",
+      "enunciado": "Según el manual, los plazos de liquidación (fechas valor) de las operaciones del mercado de títulos de deuda son:",
+      "opciones": [
+        {
+          "texto": "mismo día, 24, 48, 72 y hasta 96 horas."
+        },
+        {
+          "texto": "mismo día y 48 horas, igual que el tipo de cambio.",
+          "porQueNo": "Las 48 horas del FIX y del spot no limitan las fechas valor del mercado de deuda.",
+          "etiquetaError": "confunde-fecha-valor-cambios"
+        },
+        {
+          "texto": "24, 48, 72, 96 y hasta 120 horas.",
+          "porQueNo": "No existe la fecha valor de 120 horas y se omite la liquidación el mismo día.",
+          "etiquetaError": "agrega-120h"
+        },
+        {
+          "texto": "mismo día, 24, 48 y hasta 72 horas.",
+          "porQueNo": "Falta la fecha valor de 96 horas, que es el máximo.",
+          "etiquetaError": "omite-96h"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Las fechas valor del mercado de títulos de deuda son: mismo día, 24, 48, 72 y hasta 96 horas.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 187,
+        "textual": "Mismo día, 24, 48, 72 y hasta 96 horas"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l2.q03",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "enunciado": "Es una función del proveedor de precios:",
+      "opciones": [
+        {
+          "texto": "autorizar la inscripción de emisiones en el Registro Nacional de Valores.",
+          "porQueNo": "La inscripción en el RNV es atribución de la CNBV.",
+          "etiquetaError": "confunde-proveedor-cnbv"
+        },
+        {
+          "texto": "actuar como contraparte para dar liquidez a los títulos que valúa.",
+          "porQueNo": "El proveedor de precios no opera ni toma posiciones.",
+          "etiquetaError": "cree-que-proveedor-opera"
+        },
+        {
+          "texto": "publicar y difundir calificaciones emitidas por instituciones calificadoras de valores."
+        },
+        {
+          "texto": "emitir calificaciones crediticias sobre las emisoras de deuda.",
+          "porQueNo": "Las calificaciones las emiten las instituciones calificadoras; el proveedor solo las publica y difunde.",
+          "etiquetaError": "confunde-proveedor-calificadora"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Funciones del proveedor de precios: calcular y suministrar precios actualizados para valuación; publicar y difundir calificaciones emitidas por calificadoras; medir riesgos financieros de entidades financieras (con su autorización para difundirlos); determinar y difundir índices de tasas de interés e instrumentos de deuda; y las demás de sus estatutos.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 187,
+        "textual": "Publicar y difundir calificaciones emitidas por instituciones calificadoras de valores"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l2.q04",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o07",
+      "enunciado": "Un Bono M con valor nominal de $100 tiene tasa cupón de 7.75% y periodo de cupón de 182 días. ¿Cuál es el monto del cupón por título?",
+      "opciones": [
+        {
+          "texto": "$3.8750",
+          "porQueNo": "Dividiste la tasa entre dos como si el semestre fuera de 180 días; el cupón se calcula con los 182 días efectivos.",
+          "etiquetaError": "cupon-como-mitad-de-tasa"
+        },
+        {
+          "texto": "$3.8644",
+          "porQueNo": "Usaste año de 365 días; los cupones se calculan con base de 360 días.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "$7.7500",
+          "porQueNo": "Es el interés de un año completo; falta proporcionar la tasa al plazo del cupón.",
+          "etiquetaError": "sin-proporcion-al-plazo"
+        },
+        {
+          "texto": "$3.9181"
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Cupón = VN × tasa cupón × días / 360 = 100 × 0.0775 × 182 / 360 = 3.918056, es decir, $3.9181 a cuatro decimales.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 188,
+        "textual": "multiplicado la tasa cupón por el valor nominal del bono nos da el Flujo monetario del pago del cupón"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l2.q05",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o06",
+      "enunciado": "El bono que paga cupones periódicos y liquida la totalidad del capital en un solo pago al vencimiento se conoce como:",
+      "opciones": [
+        {
+          "texto": "bono cupón cero.",
+          "porQueNo": "El cupón cero no paga cupones: se compra a descuento.",
+          "etiquetaError": "confunde-cupon-cero"
+        },
+        {
+          "texto": "bono amortizable.",
+          "porQueNo": "El amortizable prepaga parcialidades del principal en cada corte de cupón.",
+          "etiquetaError": "confunde-amortizable-bullet"
+        },
+        {
+          "texto": "bono subordinado.",
+          "porQueNo": "La subordinación se refiere a la prelación de pago en una liquidación, no a la forma de amortizar.",
+          "etiquetaError": "confunde-prelacion-amortizacion"
+        },
+        {
+          "texto": "bono bullet."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El bono con pago de capital a vencimiento, también llamado bono bullet, amortiza totalmente en un solo pago al vencimiento; durante su vida solo paga intereses.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 188,
+        "textual": "También llamado Bono Bullet"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l2.q06",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o07",
+      "enunciado": "Un bono a tasa fija tiene tasa cupón de 8.50% y el mercado exige una tasa de rendimiento de 5.47%. Su precio limpio será:",
+      "opciones": [
+        {
+          "texto": "menor que su valor nominal, porque el rendimiento exigido es menor.",
+          "porQueNo": "Se invirtió la relación: si la tasa de rendimiento es menor que la tasa cupón, el precio sube por arriba del nominal.",
+          "etiquetaError": "invierte-relacion-precio-tasa"
+        },
+        {
+          "texto": "igual a su valor nominal, porque la tasa cupón es fija.",
+          "porQueNo": "El precio depende de la tasa de mercado; solo sería igual al nominal si ambas tasas coincidieran.",
+          "etiquetaError": "ignora-tasa-mercado"
+        },
+        {
+          "texto": "mayor que su valor nominal, por la relación inversa entre tasa y precio."
+        },
+        {
+          "texto": "igual a su precio sucio, porque el cupón no cambia.",
+          "porQueNo": "El precio sucio suma los intereses devengados; solo coincide con el limpio el día de corte de cupón.",
+          "etiquetaError": "confunde-limpio-sucio"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "La tasa de rendimiento tiene relación inversa con el precio. El ejemplo del manual (723 días, cupón 8.5%, rendimiento 5.47%) da un precio limpio superior a $100: cuando la tasa exigida es menor que la tasa cupón, el bono cotiza sobre la par.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 188,
+        "textual": "tiene una relación inversa con el precio"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "El OCR del ejemplo de la p. 202 imprime precio limpio 105.564023; el recálculo da 105.664023, coherente con el precio sucio impreso 105.8529."
+      ]
+    },
+    {
+      "id": "g.deuda.l2.q07",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o02",
+      "enunciado": "Un Bono M cotiza a un precio limpio de $98.437215. Su tasa cupón es de 7.00% y han transcurrido 40 días del cupón vigente de 182 días. ¿Cuál es su precio sucio?",
+      "opciones": [
+        {
+          "texto": "$99.2150"
+        },
+        {
+          "texto": "$97.6594",
+          "porQueNo": "Restaste los intereses devengados; el precio sucio los suma.",
+          "etiquetaError": "resta-intereses-devengados"
+        },
+        {
+          "texto": "$99.2043",
+          "porQueNo": "Calculaste los intereses devengados con base de 365 días.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "$101.1983",
+          "porQueNo": "Usaste los 142 días que faltan del cupón; los intereses devengados corresponden a los días transcurridos.",
+          "etiquetaError": "usa-dias-por-vencer-cupon"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Intereses devengados = 100 × 0.07 × 40 / 360 = 0.777778. Precio sucio = precio limpio + intereses = 98.437215 + 0.777778 = 99.214993, es decir, $99.2150.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 202,
+        "textual": "Para el precio sucio en UDIS: [PLIMP] + [INT]"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l2.q08",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o06",
+      "enunciado": "Son características de los bonos cuponados descritas en el manual, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "los intereses se liquidan al inicio de cada periodo (pagos anticipados)."
+        },
+        {
+          "texto": "los intereses se calculan con un año base de 360 días, no de 365.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "la tasa de interés del cupón puede ser fija o revisable, según la emisión.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "los intereses se calculan sobre los días efectivamente transcurridos.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "En los bonos cuponados los intereses se calculan con los días efectivamente transcurridos, con año de 360 días, y se liquidan al FINALIZAR cada periodo (pagos vencidos). La tasa puede ser fija o revisable.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 188,
+        "textual": "al finalizar cada uno de los periodos de interés"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l2.q09",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o06",
+      "enunciado": "¿Cuál de los siguientes grupos está integrado solo por instrumentos que operan como bonos cupón cero?",
+      "opciones": [
+        {
+          "texto": "CETES, Bonos UMS y T-Bills.",
+          "porQueNo": "Los UMS pagan intereses cada seis meses.",
+          "etiquetaError": "confunde-ums-cupon-cero"
+        },
+        {
+          "texto": "CETES, PRLV y papel comercial."
+        },
+        {
+          "texto": "CETES, BONDES D y PRLV.",
+          "porQueNo": "Los BONDES D se colocan a descuento pero pagan rendimiento cada 28 días: son cuponados.",
+          "etiquetaError": "confunde-cetes-bondes"
+        },
+        {
+          "texto": "PRLV, CEDES y papel comercial.",
+          "porQueNo": "Los CEDES pagan intereses cada 28 días.",
+          "etiquetaError": "confunde-prlv-cedes"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "El manual cita a los CETES como el ejemplo más claro de bono cupón cero, junto con el PRLV (bancario) y el papel comercial (empresarial); a nivel internacional, los T-Bills.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 187,
+        "textual": "Papel Comercial (Empresarial)"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l2.q10",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o05",
+      "enunciado": "Un Bono M tiene hoy 900 días por vencer y la operación se pacta con liquidación a 48 horas. Con la convención del ejemplo del manual, ¿con cuántos días por vencer se valúa?",
+      "opciones": [
+        {
+          "texto": "852 días.",
+          "porQueNo": "Restaste 48 días; la fecha valor de 48 horas equivale a 2 días.",
+          "etiquetaError": "confunde-horas-con-dias"
+        },
+        {
+          "texto": "900 días.",
+          "porQueNo": "No restaste la fecha valor; el bono se valúa a la fecha de liquidación.",
+          "etiquetaError": "ignora-fecha-valor"
+        },
+        {
+          "texto": "898 días."
+        },
+        {
+          "texto": "902 días.",
+          "porQueNo": "Sumaste la fecha valor; al liquidar después, quedan menos días por vencer.",
+          "etiquetaError": "suma-fecha-valor"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El manual valúa a la fecha de liquidación: en su ejemplo, 723 días por vencer con liquidación a 72 horas se capturan como 723 menos 3 = 720. Aquí: 900 menos 2 = 898 días.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 202,
+        "textual": "Calcular el precio limpio del bono con liquidación dentro de 72 hrs"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l2.q11",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o02",
+      "enunciado": "Un UDIBONO tiene precio limpio de 97.512346 UDIS, tasa cupón de 4.00% y 75 días transcurridos del cupón vigente. Si la UDI vale 8.123456 pesos, ¿cuál es su precio sucio en pesos?",
+      "opciones": [
+        {
+          "texto": "$798.8141",
+          "porQueNo": "Calculaste los intereses devengados con base de 365 días.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "$798.9068"
+        },
+        {
+          "texto": "$98.3457",
+          "porQueNo": "Es el precio sucio en UDIS; falta multiplicarlo por el valor de la UDI.",
+          "etiquetaError": "no-convierte-udis"
+        },
+        {
+          "texto": "$792.1373",
+          "porQueNo": "Convertiste a pesos el precio limpio; faltan los intereses devengados.",
+          "etiquetaError": "confunde-limpio-sucio"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Intereses = 100 × 0.04 × 75 / 360 = 0.833333 UDIS. Precio sucio en UDIS = 97.512346 + 0.833333 = 98.345679. En pesos: 98.345679 × 8.123456 = 798.906799, es decir, $798.9068.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 202,
+        "textual": "Para determinar los precios en pesos multiplicamos el valor de la UDI"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l2.q12",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o07",
+      "enunciado": "En los bonos gubernamentales de tasa flotante, según el manual, la sobretasa:",
+      "opciones": [
+        {
+          "texto": "es la tasa periódica que, multiplicada por el valor nominal, da el flujo de efectivo de cada cupón.",
+          "porQueNo": "Esa es la definición de tasa cupón.",
+          "etiquetaError": "confunde-sobretasa-cupon"
+        },
+        {
+          "texto": "es la tasa a vencimiento (YTM) del bono, que mantiene una relación inversa con su precio de mercado.",
+          "porQueNo": "Esa es la definición de tasa de rendimiento.",
+          "etiquetaError": "confunde-sobretasa-rendimiento"
+        },
+        {
+          "texto": "hace que el título se adquiera siempre por arriba de su valor nominal en precio limpio.",
+          "porQueNo": "Es al revés: los títulos de tasa flotante se adquieren por debajo de su valor nominal en precio limpio.",
+          "etiquetaError": "invierte-descuento-sobretasa"
+        },
+        {
+          "texto": "refleja el beneficio del diferencial entre el precio de adquisición con descuento y el nominal."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "La sobretasa representa el beneficio que se obtiene al aplicar un diferencial entre el precio de adquisición con descuento y el valor nominal; por eso los títulos de tasa flotante, en precio limpio, siempre se adquieren por debajo de su valor nominal.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 188,
+        "textual": "De ahi que los titulos de tasa flotante, siempre se adquieran por debajo de su valor nominal"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l2.q13",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o04",
+      "enunciado": "Sobre la operación en directo, son correctas las siguientes afirmaciones, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "el comprador se obliga a revender los títulos al vendedor en una fecha pactada."
+        },
+        {
+          "texto": "la operación está sujeta al criterio de entrega contra pago en INDEVAL.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "el comprador puede ser un inversionista de cualquier tipo.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "el vendedor cede la propiedad, con derechos e incumplimientos, y los beneficios del título.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "La obligación de revender (recomprar, desde el punto de vista del reportado) es la esencia del reporto. En directo la propiedad se transmite en forma definitiva, con todos los derechos y riesgos.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 187,
+        "textual": "adquiere todos los derechos y obligaciones del título a vencimiento"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l2.q14",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.elementos-basicos",
+      "objetivoId": "deuda.titulos-de-deuda-i.elementos-basicos.o06",
+      "enunciado": "Un instrumento se coloca a descuento y paga intereses cada 28 días con una tasa que se revisa en cada periodo según la Tasa Ponderada de Fondeo Bancario. Por su tipo de tasa, es un bono:",
+      "opciones": [
+        {
+          "texto": "cupón cero, porque se coloca a descuento.",
+          "porQueNo": "Colocarse a descuento no lo hace cupón cero: paga intereses cada 28 días.",
+          "etiquetaError": "confunde-colocacion-descuento-cupon-cero"
+        },
+        {
+          "texto": "cuponado de tasa revisable."
+        },
+        {
+          "texto": "amortizable, porque prepaga principal cada 28 días.",
+          "porQueNo": "Pagar intereses periódicos no es prepagar principal.",
+          "etiquetaError": "confunde-amortizable"
+        },
+        {
+          "texto": "cuponado de tasa fija.",
+          "porQueNo": "La tasa cambia cada periodo con la TPFB; no se fija en la emisión.",
+          "etiquetaError": "confunde-fijo-revisable"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Es el caso de los BONDES D: se colocan a descuento, con rendimiento pagadero cada 28 días referenciado a la TPFB. Pagan cupones (cuponado) y su tasa se revisa (revisable).",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 189,
+        "textual": "Se colocan en el mercado a descuento, con un rendimiento pagable cada 28 días"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l2.q15",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o02",
+      "enunciado": "Un Bono M con tasa cupón de 9.00% se liquida con 120 días transcurridos del cupón vigente de 182 días y su precio sucio es de $103.250000. ¿Cuál es su precio limpio?",
+      "opciones": [
+        {
+          "texto": "$101.7000",
+          "porQueNo": "Usaste los 62 días que faltan del cupón; los intereses devengados corresponden a los días transcurridos.",
+          "etiquetaError": "usa-dias-por-vencer-cupon"
+        },
+        {
+          "texto": "$100.2500"
+        },
+        {
+          "texto": "$100.2911",
+          "porQueNo": "Calculaste los intereses devengados con base de 365 días.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "$106.2500",
+          "porQueNo": "Sumaste los intereses devengados; para obtener el limpio se restan del sucio.",
+          "etiquetaError": "suma-intereses-devengados"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Intereses devengados = 100 × 0.09 × 120 / 360 = 3.000000. Precio limpio = precio sucio menos intereses = 103.250000 menos 3.000000 = $100.2500.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 203,
+        "textual": "Para obtener el PRECIO SUCIO = [INTS] + [PRS]"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l3.q01",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o01",
+      "enunciado": "En la colocación primaria de CETES, los participantes presentan posturas por el monto que desean adquirir y por:",
+      "opciones": [
+        {
+          "texto": "el precio en UDIS que están dispuestos a pagar.",
+          "porQueNo": "El precio denominado en UDIS es la postura de los UDIBONOS.",
+          "etiquetaError": "confunde-cetes-udibonos"
+        },
+        {
+          "texto": "la sobretasa sobre la TIIE que desean recibir.",
+          "porQueNo": "La sobretasa aparece en instrumentos corporativos y de tasa flotante.",
+          "etiquetaError": "confunde-gubernamental-corporativo"
+        },
+        {
+          "texto": "el precio que están dispuestos a pagar.",
+          "porQueNo": "Las posturas por precio son de BONDES D, Bonos M y bonos del IPAB.",
+          "etiquetaError": "confunde-cetes-bondes"
+        },
+        {
+          "texto": "la tasa de descuento que están dispuestos a pagar."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Los CETES son cupón cero: la colocación primaria se realiza mediante subasta y los participantes presentan posturas por monto y tasa de descuento.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 189,
+        "textual": "posturas por el monto que desean adquirir y la tasa de descuento que están dispuestos a pagar"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l3.q02",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o01",
+      "enunciado": "El valor nominal de los Bonos UMS es de:",
+      "opciones": [
+        {
+          "texto": "100 UDIS.",
+          "porQueNo": "100 UDIS es el valor nominal de UDIBONOS, CBICs y PIC-FARAC.",
+          "etiquetaError": "confunde-ums-udibonos"
+        },
+        {
+          "texto": "1,000 dólares."
+        },
+        {
+          "texto": "100 dólares.",
+          "porQueNo": "El valor nominal de los UMS es de 1,000 dólares.",
+          "etiquetaError": "confunde-valor-nominal"
+        },
+        {
+          "texto": "$1,000 pesos.",
+          "porQueNo": "Los UMS están denominados en divisas distintas al peso.",
+          "etiquetaError": "confunde-moneda-ums"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Los Bonos UMS son emitidos en el extranjero por el Gobierno Federal en divisas distintas al peso, con valor nominal de 1,000 dólares.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 190,
+        "textual": "Valor Nominal: 1,000 dólares"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l3.q03",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o01",
+      "enunciado": "¿Cuál es la regla de plazo de los BONDES D según el manual?",
+      "opciones": [
+        {
+          "texto": "Cualquier plazo múltiplo de 182 días; emitidos a 3, 5, 10, 20 y 30 años.",
+          "porQueNo": "Esa es la regla de los Bonos M.",
+          "etiquetaError": "confunde-bondes-bonos-m"
+        },
+        {
+          "texto": "Cualquier plazo múltiplo de 91 días; hasta 5 años.",
+          "porQueNo": "Esa es la regla de los BPAG91.",
+          "etiquetaError": "confunde-bondes-bpag91"
+        },
+        {
+          "texto": "Plazos fijos de 28, 91, 182 y 364 días.",
+          "porQueNo": "Esos son plazos típicos de CETES.",
+          "etiquetaError": "confunde-bondes-cetes"
+        },
+        {
+          "texto": "Cualquier plazo múltiplo de 28 días; inicialmente de 1 a 5 años."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Los BONDES D se pueden emitir a cualquier plazo siempre que sea múltiplo de 28 días; inicialmente se emitieron a plazos de 1 a 5 años.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 189,
+        "textual": "Se pueden emitir a cualquier plazo siempre y cuando este sea múltiplo de 28 dias. Inicialmente se emitirán a plazos de 1 a 5 años"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l3.q04",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o01",
+      "enunciado": "La colocación de los Bonos UMS se realiza:",
+      "opciones": [
+        {
+          "texto": "por el IPAB, mediante subasta con posturas por monto y precio.",
+          "porQueNo": "El IPAB emite los BPAG y BPA, no los UMS.",
+          "etiquetaError": "confunde-emisor-ipab"
+        },
+        {
+          "texto": "por Banxico, mediante la subasta semanal con posturas por monto y precio.",
+          "porQueNo": "La SHCP administra los UMS sin la participación de Banxico.",
+          "etiquetaError": "confunde-ums-subasta-banxico"
+        },
+        {
+          "texto": "por casas de bolsa mexicanas, mediante oferta pública en la Bolsa Mexicana de Valores.",
+          "porQueNo": "Los UMS se emiten en el extranjero.",
+          "etiquetaError": "confunde-oferta-publica-local"
+        },
+        {
+          "texto": "por bancos comerciales que actúan como agentes financieros del Gobierno Federal."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Los UMS se emiten en el extranjero; la SHCP los administra sin participación de Banxico, y su colocación la hacen distintos bancos comerciales como agentes financieros del Gobierno Federal.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 190,
+        "textual": "se lleva a cabo por distintos bancos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l3.q05",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o01",
+      "enunciado": "Los BPAG28, BPAG91 y BPA182 son emitidos por:",
+      "opciones": [
+        {
+          "texto": "Banxico por cuenta propia, para regular la liquidez.",
+          "porQueNo": "Banxico es agente financiero del IPAB; no es el emisor.",
+          "etiquetaError": "confunde-emisor-banxico"
+        },
+        {
+          "texto": "el IPAB, con Banxico como su agente financiero."
+        },
+        {
+          "texto": "la SHCP, con Banxico como su agente financiero.",
+          "porQueNo": "La SHCP emite CETES, BONDES D, Bonos M, UDIBONOS y UMS; los bonos de protección al ahorro son del IPAB.",
+          "etiquetaError": "confunde-shcp-ipab"
+        },
+        {
+          "texto": "Banobras, con aval del Gobierno Federal.",
+          "porQueNo": "Banobras emite CBICs y PIC-FARAC.",
+          "etiquetaError": "confunde-banobras-ipab"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Los Bonos de Protección al Ahorro son emitidos por el IPAB. Banxico es agente financiero del Gobierno Federal y del IPAB, por lo que realiza las subastas de sus valores.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 205,
+        "textual": "es el agente financiero del Gobierno Federal de los Estados Unidos Mexicanos y del Instituto para la Protección al Ahorro Bancario (IPAB)"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l3.q06",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o01",
+      "enunciado": "Para cada periodo de interés, la tasa de un BPAG91 es:",
+      "opciones": [
+        {
+          "texto": "la tasa de CETES a 182 días más una protección contra la inflación.",
+          "porQueNo": "Ese esquema corresponde al BPA182.",
+          "etiquetaError": "confunde-bpag91-bpa182"
+        },
+        {
+          "texto": "la máxima entre la tasa de CETES a 91 días y la Tasa Ponderada de Fondeo Gubernamental."
+        },
+        {
+          "texto": "la mínima entre la tasa de CETES a 91 días y la Tasa Ponderada de Fondeo Gubernamental.",
+          "porQueNo": "Es la máxima, no la mínima.",
+          "etiquetaError": "invierte-maximo-minimo"
+        },
+        {
+          "texto": "la máxima entre la tasa de CETES a 91 días y la Tasa Ponderada de Fondeo Bancario.",
+          "porQueNo": "La segunda referencia es el fondeo gubernamental, no el bancario.",
+          "etiquetaError": "confunde-fondeo-bancario-gubernamental"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "BPAG91: pago trimestral, periodos iguales a los CETES de 91 días, tasa anual a dos decimales igual a la máxima entre CETES a 91 días y la TPFG, base de 360 días.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 191,
+        "textual": "la tasa de CETES a 91 días y la Tasa Ponderada de Fondeo"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l3.q07",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o03",
+      "enunciado": "Banxico subasta 30 millones de pesos en CETES y recibe estas posturas: A, 12 millones a 7.10%; B, 8 millones a 7.05%; C, 10 millones a 7.20%; D, 9 millones a 7.15%. Si la subasta fuera a tasa única, ¿a qué tasa de descuento se atenderían todas las posturas asignadas?",
+      "opciones": [
+        {
+          "texto": "7.0500%",
+          "porQueNo": "Es la mejor postura para el emisor; la tasa única es la de la última postura que recibe asignación.",
+          "etiquetaError": "toma-mejor-postura"
+        },
+        {
+          "texto": "7.1050%",
+          "porQueNo": "Es el promedio ponderado de las tasas asignadas, que se publica como resultado pero no es la tasa de una subasta a tasa única.",
+          "etiquetaError": "confunde-promedio-ponderado"
+        },
+        {
+          "texto": "7.2000%"
+        },
+        {
+          "texto": "7.1500%",
+          "porQueNo": "Excluiste la postura C, que recibe asignación parcial de 1 millón; la última asignada es la de 7.20%.",
+          "etiquetaError": "excluye-asignacion-parcial"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Se asigna desde la menor tasa de descuento: B 8 (7.05%), A 12 (7.10%), D 9 (7.15%) suman 29 millones; C recibe 1 millón a 7.20%. En tasa única todas se atienden a la tasa de la última postura asignada: 7.2000%.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 205,
+        "textual": "de la última postura que reciba asignación"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l3.q08",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o01",
+      "enunciado": "Son características de los UDIBONOS según el manual, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "pagan intereses en pesos cada seis meses, es decir, cada 182 días.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "pagan una tasa de interés real fija que se determina en la emisión.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "su valor nominal es de 100 UDIS y su plazo es múltiplo de 182 días.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "en la subasta, las posturas se presentan por monto y tasa de descuento."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "En los UDIBONOS las posturas son por monto y precio denominado en UDIS. Las posturas por tasa de descuento son las de CETES.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 190,
+        "textual": "el precio denominado en UDIS que estan dispuestas a pagar"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l3.q09",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o01",
+      "enunciado": "Los CBICs pueden ser negociados por las instituciones de crédito y ser objeto de operaciones de reporto porque:",
+      "opciones": [
+        {
+          "texto": "están denominados en dólares y cuentan con el aval directo del Banco de México.",
+          "porQueNo": "Están denominados en UDIS y su aval es del Gobierno Federal.",
+          "etiquetaError": "confunde-moneda-garantia"
+        },
+        {
+          "texto": "su plazo es menor a un año, como el de los CETES.",
+          "porQueNo": "Su plazo se establece en la colocación y se destinan a infraestructura carretera de largo plazo.",
+          "etiquetaError": "confunde-plazo-cbic"
+        },
+        {
+          "texto": "son emitidos directamente por la SHCP y colocados por Banxico.",
+          "porQueNo": "Su emisor es Banobras.",
+          "etiquetaError": "confunde-emisor-banobras"
+        },
+        {
+          "texto": "tienen la categoría de valor gubernamental y están inscritos en el RNV."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Banobras ofrece los CBICs, denominados en UDIS, para financiar infraestructura carretera. Tienen la categoría de valor gubernamental, por lo que pueden negociarlos las instituciones de crédito y ser objeto de reporto, ya que están inscritos en el Registro Nacional de Valores.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 191,
+        "textual": "pueden ser negociables por las instituciones de crédito y ser objeto de operaciones de reporto"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l3.q10",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o02",
+      "enunciado": "En la subasta semanal de valores gubernamentales, la hora límite de posturas es a las 11:00:00 horas. ¿A más tardar a qué hora informa Banxico a cada postor, por SIAC-BANXICO, la cantidad que le fue asignada?",
+      "opciones": [
+        {
+          "texto": "A las 12:00:00 horas."
+        },
+        {
+          "texto": "A las 11:30:00 horas.",
+          "porQueNo": "A los 30 minutos se publican los resultados generales, no la asignación individual.",
+          "etiquetaError": "confunde-asignacion-resultados"
+        },
+        {
+          "texto": "A las 14:00:00 horas.",
+          "porQueNo": "Es la hora límite de difusión de la TIIE.",
+          "etiquetaError": "confunde-horario-tiie"
+        },
+        {
+          "texto": "A las 17:30:00 horas.",
+          "porQueNo": "Es la hora de publicación de las tasas ponderadas de fondeo.",
+          "etiquetaError": "confunde-horario-fondeo"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Banxico informa a cada postor su asignación por SIAC-BANXICO a más tardar una hora después del límite de posturas (12:00 h) y publica los resultados generales a más tardar 30 minutos después (11:30 h).",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 206,
+        "textual": "a más tardar una hora después de la hora límite para la presentación de las posturas"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l3.q11",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o02",
+      "enunciado": "Se colocarán BPAG28 el jueves de esta semana. Según el manual, ¿cuándo deben presentarse las posturas?",
+      "opciones": [
+        {
+          "texto": "El último día hábil de la semana anterior, a partir de las 11:30:00 horas.",
+          "porQueNo": "A esa hora se publica la convocatoria; no es el plazo de posturas.",
+          "etiquetaError": "confunde-convocatoria-posturas"
+        },
+        {
+          "texto": "El día hábil bancario inmediato anterior a la colocación, a más tardar a las 10:00:00 horas."
+        },
+        {
+          "texto": "El segundo día hábil bancario anterior a la colocación, a más tardar a las 11:00:00 horas.",
+          "porQueNo": "Esa es la regla de los valores gubernamentales (CETES, BONDES D, Bonos M, UDIBONOS), no la de los valores del IPAB.",
+          "etiquetaError": "confunde-ipab-gubernamentales"
+        },
+        {
+          "texto": "El mismo día de la colocación, a más tardar a las 10:00:00 horas.",
+          "porQueNo": "El día de colocación se entregan y liquidan los valores; las posturas se presentan antes.",
+          "etiquetaError": "confunde-dia-colocacion"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Para los valores del IPAB las posturas se presentan el día hábil bancario inmediato anterior a la colocación, a más tardar a las 10:00:00 horas; para los valores gubernamentales, el segundo día hábil anterior, a más tardar a las 11:00:00 horas. La colocación suele ser en jueves.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 206,
+        "textual": "En el caso de los Valores del IPAB, las posturas deberán presentarse el Día Hábil Bancario inmediato"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": [
+        "La hora 10:00 está deteriorada en el OCR (10:00:0D) y la confirma el manual 2023."
+      ]
+    },
+    {
+      "id": "g.deuda.l3.q12",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o01",
+      "enunciado": "Al inicio de un periodo de interés, la tasa de CETES a 28 días es de 7.08% y la Tasa Ponderada de Fondeo Gubernamental de 7.13%. ¿Cuánto paga de intereses un BPAG28 por título en ese periodo de 28 días?",
+      "opciones": [
+        {
+          "texto": "$0.5470",
+          "porQueNo": "Calculaste con base de 365 días; el manual indica base de 360.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "$0.5546"
+        },
+        {
+          "texto": "$0.5507",
+          "porQueNo": "Usaste la tasa de CETES; el BPAG28 paga la máxima entre ambas tasas.",
+          "etiquetaError": "toma-minimo"
+        },
+        {
+          "texto": "$0.5526",
+          "porQueNo": "Promediaste las dos tasas; se toma la máxima.",
+          "etiquetaError": "promedia-tasas"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Tasa del periodo = máximo(7.08%, 7.13%) = 7.13%. Intereses = 100 × 0.0713 × 28 / 360 = 0.554556, es decir, $0.5546 por título.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 191,
+        "textual": "la tasa de interés anual a dos decimales, será la máxima entre: la tasa de CETES a 28 días"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l3.q13",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o01",
+      "enunciado": "Sobre los BONDES D, es correcto afirmar que:",
+      "opciones": [
+        {
+          "texto": "se colocan a descuento y pagan rendimiento cada 28 días referenciado a la TPFB."
+        },
+        {
+          "texto": "son bonos cupón cero, porque se colocan a descuento respecto de su valor nominal.",
+          "porQueNo": "Aunque se colocan a descuento, pagan rendimiento cada 28 días.",
+          "etiquetaError": "confunde-colocacion-descuento-cupon-cero"
+        },
+        {
+          "texto": "pagan cada 28 días la máxima entre CETES a 28 días y la TPFG.",
+          "porQueNo": "Esa es la tasa del BPAG28.",
+          "etiquetaError": "confunde-bondes-bpag28"
+        },
+        {
+          "texto": "su valor nominal es de $10 y sus posturas son por tasa de descuento.",
+          "porQueNo": "Eso describe a los CETES; los BONDES D valen $100 y se subastan por precio.",
+          "etiquetaError": "confunde-cetes-bondes"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "BONDES D: emisor Gobierno Federal por conducto de la SHCP, valor nominal $100, plazo múltiplo de 28 días, se colocan a descuento con rendimiento pagadero cada 28 días referenciado a la Tasa Ponderada de Fondeo Bancario, posturas por monto y precio.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 189,
+        "textual": "con un rendimiento pagable cada 28 días referenciados a la TASA PONDERADA DE FONDEO BANCARIO"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l3.q14",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o01",
+      "enunciado": "Respecto a los PIC-FARAC, son correctas las siguientes afirmaciones, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "pagan intereses cada 182 días durante toda su vigencia.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "su valor nominal es de 100 UDIS, igual que el de los CBICs.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "cuentan con el aval del Gobierno Federal a través de Banobras.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "su plazo se fija libremente en cada colocación."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Los PIC-FARAC tienen plazo de 5 a 30 años. El plazo que se establece en la colocación, sin rango, es el de los CBICs, el otro instrumento de Banobras.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 192,
+        "textual": "Plazo: De 5 a 30 años."
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l3.q15",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o01",
+      "enunciado": "Un instrumento del IPAB identificado con la clave de emisión IQ paga intereses:",
+      "opciones": [
+        {
+          "texto": "cada 28 días, referenciado a la tasa de fondeo bancario.",
+          "porQueNo": "Ese es el esquema de los BONDES D (clave LD).",
+          "etiquetaError": "confunde-bondes-bpag"
+        },
+        {
+          "texto": "cada 182 días, con CETES a 182 días y protección inflacionaria.",
+          "porQueNo": "Eso corresponde a la clave IS (BPA182).",
+          "etiquetaError": "confunde-clave-iq-is"
+        },
+        {
+          "texto": "cada 91 días, a la máxima entre CETES a 91 días y la TPFG."
+        },
+        {
+          "texto": "cada 28 días, a la máxima entre CETES a 28 días y la TPFG.",
+          "porQueNo": "Eso corresponde a la clave IM (BPAG28).",
+          "etiquetaError": "confunde-clave-im-iq"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Claves del IPAB: IM es el BPAG28 (mensual), IQ el BPAG91 (trimestral) e IS el BPA182 (semestral). El BPAG91 paga cada 91 días la máxima entre CETES a 91 días y la TPFG.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 191,
+        "textual": "Bonos de Protección al Ahorro con pago trimestral de interés"
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "Las claves de emisión (IM, IQ, IS) provienen del manual 2023 y de la pregunta tipo oficial 21; el manual AMIB 1 no las trae."
+      ]
+    },
+    {
+      "id": "g.deuda.l4.q01",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o02",
+      "enunciado": "El valor nominal de un PRLV, según el manual, es de:",
+      "opciones": [
+        {
+          "texto": "$10 pesos, igual que los CETES.",
+          "porQueNo": "Los $10 son el valor nominal de los CETES.",
+          "etiquetaError": "confunde-prlv-cetes"
+        },
+        {
+          "texto": "$100 pesos o $1.00 peso."
+        },
+        {
+          "texto": "$1,000 pesos o múltiplos.",
+          "porQueNo": "Ningún instrumento bancario del manual tiene ese valor nominal.",
+          "etiquetaError": "confunde-valor-nominal"
+        },
+        {
+          "texto": "100 UDIS o múltiplos.",
+          "porQueNo": "Las UDIS aparecen en pagarés corporativos, obligaciones y certificados de participación.",
+          "etiquetaError": "confunde-prlv-corporativos"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "El PRLV es un título suscrito por instituciones de crédito con valor nominal de $100 pesos o $1.00 peso, colocado a descuento por oferta pública y con plazo menor a un año.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 192,
+        "textual": "Valor nominal: $100 pesos o $1.00 peso"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l4.q02",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o02",
+      "enunciado": "Según el manual, los CEDES pagan intereses:",
+      "opciones": [
+        {
+          "texto": "al vencimiento, porque se colocan a descuento.",
+          "porQueNo": "Así opera el PRLV, no el CEDE.",
+          "etiquetaError": "confunde-cedes-prlv"
+        },
+        {
+          "texto": "cada 182 días, a tasa fija.",
+          "porQueNo": "Esa es la periodicidad de los Bonos M.",
+          "etiquetaError": "confunde-cedes-bonos-m"
+        },
+        {
+          "texto": "cada 28 días."
+        },
+        {
+          "texto": "cada trimestre, a la mayor entre CETES a 91 días y pagarés a 3 meses.",
+          "porQueNo": "Ese es el esquema de los Bonos Bancarios de Desarrollo.",
+          "etiquetaError": "confunde-cedes-bonos-desarrollo"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Los CEDES obligan al banco a pagar capital más un interés periódico: pagan intereses cada 28 días y su rendimiento es ganancia de capital más intereses, regularmente referenciado a CETES.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 192,
+        "textual": "interés cada 28 días"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l4.q03",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o03",
+      "enunciado": "Los certificados de participación cuyo fideicomiso se integra por bienes muebles se denominan:",
+      "opciones": [
+        {
+          "texto": "Certificados de Participación Inmobiliaria (CPI).",
+          "porQueNo": "Los CPI tienen un fideicomiso de bienes inmuebles.",
+          "etiquetaError": "confunde-cpi-cpo"
+        },
+        {
+          "texto": "Certificados Bursátiles Fiduciarios.",
+          "porQueNo": "Su propósito es bursatilizar un activo del emisor, como cuentas por cobrar.",
+          "etiquetaError": "confunde-cpo-cebur-fiduciario"
+        },
+        {
+          "texto": "Certificados de Participación Ordinaria (CPO)."
+        },
+        {
+          "texto": "Certificados Bursátiles respaldados por Hipotecas.",
+          "porQueNo": "Los BORHIS están respaldados por créditos hipotecarios.",
+          "etiquetaError": "confunde-cpo-borhis"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Los certificados de participación los colocan instituciones crediticias con cargo a un fideicomiso: si el patrimonio son bienes inmuebles se llaman CPI; si son bienes muebles, CPO.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 194,
+        "textual": "Participación Ordinaria)"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l4.q04",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o03",
+      "enunciado": "Las obligaciones garantizadas por la solvencia económica y moral de la empresa, respaldadas por todos sus bienes y activos sin hipotecar, son las:",
+      "opciones": [
+        {
+          "texto": "quirografarias."
+        },
+        {
+          "texto": "subordinadas.",
+          "porQueNo": "La subordinación se refiere a la prelación en una liquidación, no al tipo de garantía.",
+          "etiquetaError": "confunde-subordinada-quirografaria"
+        },
+        {
+          "texto": "convertibles.",
+          "porQueNo": "Las convertibles se distinguen por la opción de convertirse en acciones.",
+          "etiquetaError": "confunde-convertible"
+        },
+        {
+          "texto": "hipotecarias.",
+          "porQueNo": "Las hipotecarias están garantizadas con una hipoteca sobre bienes de la emisora.",
+          "etiquetaError": "confunde-hipotecaria-quirografaria"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El manual distingue tres tipos de obligaciones: hipotecarias (hipoteca sobre bienes de la emisora), quirografarias (solvencia económica y moral, respaldadas por bienes sin hipotecar) y convertibles (pueden convertirse en acciones).",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 193,
+        "textual": "Están garantizadas por la solvencia económica y moral de la empresa"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l4.q05",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o04",
+      "enunciado": "El flujo de pago de los BORHIS depende de:",
+      "opciones": [
+        {
+          "texto": "los flujos del conjunto de créditos hipotecarios que respalda la emisión."
+        },
+        {
+          "texto": "la solvencia de la Sofol que originó y cedió los créditos.",
+          "porQueNo": "El emisor es el fideicomiso; la Sofol es fideicomitente y su solvencia es un riesgo, no la fuente del flujo.",
+          "etiquetaError": "confunde-riesgo-emisor-borhis"
+        },
+        {
+          "texto": "el valor de la UDI publicado los días 10 y 25 de cada mes.",
+          "porQueNo": "La mayoría de los BORHIS se colocan a tasa fija; su flujo no depende de la UDI.",
+          "etiquetaError": "confunde-borhis-udi"
+        },
+        {
+          "texto": "la renta de inmuebles aportados a un fideicomiso de participación.",
+          "porQueNo": "Eso describe a los Certificados de Participación Inmobiliaria.",
+          "etiquetaError": "confunde-borhis-cpi"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Los BORHIS son certificados bursátiles fiduciarios respaldados por un conjunto (pool) de créditos hipotecarios; el flujo de pago depende de los flujos de esas hipotecas.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 195,
+        "textual": "El flujo de pago de dichos bonos depende de los"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l4.q06",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o02",
+      "enunciado": "Son características del PRLV según el manual, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "se colocan mediante oferta pública.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "su plazo es menor a un año.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "pagan intereses cada 28 días referenciados a CETES."
+        },
+        {
+          "texto": "son emitidos por instituciones de crédito y son un pasivo a su cargo.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El PRLV no paga intereses: se coloca a descuento y su rendimiento es la ganancia de capital entre valor nominal y precio. El pago cada 28 días referenciado a CETES describe a los CEDES.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 192,
+        "textual": "Intereses: No pagan intereses, se colocan a descuento"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l4.q07",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o03",
+      "enunciado": "Una obligación con valor nominal de $100 paga TIIE más una sobretasa de 1.35%. Si la TIIE vigente al inicio del periodo es de 7.95%, ¿cuánto paga de intereses por título en un periodo de 28 días?",
+      "opciones": [
+        {
+          "texto": "$0.5133",
+          "porQueNo": "Restaste la sobretasa; se suma a la tasa de referencia.",
+          "etiquetaError": "resta-sobretasa"
+        },
+        {
+          "texto": "$0.6183",
+          "porQueNo": "Omitiste la sobretasa: la tasa del periodo es TIIE más sobretasa.",
+          "etiquetaError": "omite-sobretasa"
+        },
+        {
+          "texto": "$0.7134",
+          "porQueNo": "Calculaste con base de 365 días.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "$0.7233"
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Tasa = 7.95% + 1.35% = 9.30%. Intereses = 100 × 0.093 × 28 / 360 = 0.723333, es decir, $0.7233.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 194,
+        "textual": "Rendimiento: Dan una sobretasa"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l4.q08",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o02",
+      "enunciado": "Según el manual, los Bonos Bancarios de Desarrollo ofrecen intereses pagaderos trimestralmente en función de:",
+      "opciones": [
+        {
+          "texto": "la tasa mayor entre CETES a 91 días y la Tasa Ponderada de Fondeo Gubernamental.",
+          "porQueNo": "Esa combinación es la del BPAG91 del IPAB.",
+          "etiquetaError": "confunde-bonos-desarrollo-bpag91"
+        },
+        {
+          "texto": "la tasa menor entre el promedio de rendimiento de CETES a 91 días y de pagarés bancarios a 3 meses.",
+          "porQueNo": "Es la tasa mayor, no la menor.",
+          "etiquetaError": "invierte-maximo-minimo"
+        },
+        {
+          "texto": "la tasa mayor entre el promedio de rendimiento de CETES a 91 días y de pagarés bancarios a 3 meses."
+        },
+        {
+          "texto": "una tasa de interés real fija que se determina en la fecha de emisión del título.",
+          "porQueNo": "Eso describe a los UDIBONOS.",
+          "etiquetaError": "confunde-udibonos"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Bonos Bancarios de Desarrollo: emitidos por la banca de desarrollo, plazo de 3 años con uno de gracia, garantía del banco emisor e intereses trimestrales a la tasa mayor entre el promedio de CETES a 91 días y de pagarés bancarios a 3 meses del mes anterior a la colocación.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 193,
+        "textual": "en función de la tasa mayor del promedio de rendimiento de CETES a 91 días y de pagarés bancarios a 3 meses"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l4.q09",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o03",
+      "enunciado": "Según el manual, pueden emitir Certificados Bursátiles:",
+      "opciones": [
+        {
+          "texto": "únicamente empresas privadas inscritas en el RNV que otorguen garantía hipotecaria.",
+          "porQueNo": "Los emisores son más amplios y la garantía depende del emisor.",
+          "etiquetaError": "restringe-emisores-cebur"
+        },
+        {
+          "texto": "sociedades anónimas, paraestatales, estados, municipios y entidades financieras como fiduciarios."
+        },
+        {
+          "texto": "solo el Gobierno Federal, por conducto de la SHCP, con el Banco de México como agente colocador.",
+          "porQueNo": "Ese es el esquema de los valores gubernamentales.",
+          "etiquetaError": "confunde-cebur-gubernamental"
+        },
+        {
+          "texto": "exclusivamente instituciones de crédito que actúan con cargo a un fideicomiso de bienes muebles.",
+          "porQueNo": "Eso describe a los Certificados de Participación Ordinaria.",
+          "etiquetaError": "confunde-cebur-certificados-participacion"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Los Certificados Bursátiles representan la participación individual en un crédito colectivo a cargo de personas morales o de un patrimonio en fideicomiso. Los emiten sociedades anónimas, entidades paraestatales, entidades federativas, municipios y entidades financieras como fiduciarios.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 194,
+        "textual": "Emisores: Sociedades Anónimas, Entidades de la Administración Pública Paraestatal"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l4.q10",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o02",
+      "enunciado": "Un inversionista compró títulos de un banco que carecen de garantía específica y que, si el banco se liquida, se pagan después que el resto de los tenedores de deuda. Se trata de:",
+      "opciones": [
+        {
+          "texto": "certificados de depósito (CEDES).",
+          "porQueNo": "Los CEDES tienen la garantía del banco emisor y no son deuda subordinada.",
+          "etiquetaError": "confunde-cedes-subordinadas"
+        },
+        {
+          "texto": "obligaciones convertibles.",
+          "porQueNo": "Su rasgo es la opción de convertirse en acciones, no la prelación.",
+          "etiquetaError": "confunde-convertible"
+        },
+        {
+          "texto": "obligaciones hipotecarias.",
+          "porQueNo": "Tienen garantía específica: una hipoteca sobre bienes de la emisora.",
+          "etiquetaError": "confunde-subordinada-hipotecaria"
+        },
+        {
+          "texto": "obligaciones subordinadas."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "En las obligaciones subordinadas los derechos del tenedor sobre los activos del emisor se sitúan por detrás de los de otros tenedores de deuda en caso de liquidación, y carecen de garantía específica.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 193,
+        "textual": "se sitúan por detrás de los derechos de otros tenedores de deuda"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l4.q11",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o04",
+      "enunciado": "Además de los riesgos de prepago y de default, el manual señala como riesgos de los BORHIS los siguientes, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "el riesgo cambiario, por estar denominados en dólares."
+        },
+        {
+          "texto": "el riesgo de mercado y de liquidez.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "el riesgo del administrador de los créditos hipotecarios.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "el riesgo de ejecución de garantías y seguros.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que NO corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Los seis riesgos del manual son: prepago, default, emisor, administrador, ejecución de garantías y seguros, y mercado y liquidez. El riesgo cambiario no aparece: los BORHIS se respaldan en hipotecas locales.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 195,
+        "textual": "RIESGO DE MERCADO Y DE LIQUIDEZ"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l4.q12",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o04",
+      "enunciado": "¿Cuál de las siguientes situaciones corresponde al riesgo de prepago de un BORHI?",
+      "opciones": [
+        {
+          "texto": "Una caída de las tasas lleva a los acreditados a liquidar anticipadamente sus créditos."
+        },
+        {
+          "texto": "Un alza de las tasas reduce el precio de los BORHIS colocados a tasa fija.",
+          "porQueNo": "Ese es el riesgo de mercado.",
+          "etiquetaError": "confunde-prepago-mercado"
+        },
+        {
+          "texto": "Los acreditados dejan de pagar y el fideicomiso no tiene recursos suficientes.",
+          "porQueNo": "Ese es el riesgo de default.",
+          "etiquetaError": "confunde-prepago-default"
+        },
+        {
+          "texto": "La ejecución de la garantía hipotecaria resulta laboriosa y costosa.",
+          "porQueNo": "Ese es el riesgo de ejecución de garantías y seguros.",
+          "etiquetaError": "confunde-prepago-ejecucion"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Riesgo de prepago: que el crédito hipotecario se prepague (venta de la casa, aceleración o caída de tasas), por lo que el BORHI se prepaga en la misma proporción.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 195,
+        "textual": "por aceleración o por una caída en las tasas"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l4.q13",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o03",
+      "enunciado": "Una empresa registrada en el RNV emite por oferta pública títulos a 5 años, con valor nominal de 100 UDIS, que pagan una sobretasa sobre la TIIE y tienen garantía prendaria. Por sus características, corresponde a:",
+      "opciones": [
+        {
+          "texto": "pagarés de mediano plazo.",
+          "porQueNo": "Su garantía puede ser quirografaria, avalada o fiduciaria; la prendaria no está entre ellas.",
+          "etiquetaError": "confunde-pagare-obligacion"
+        },
+        {
+          "texto": "obligaciones."
+        },
+        {
+          "texto": "certificados de participación ordinaria.",
+          "porQueNo": "Los emiten instituciones crediticias con cargo a un fideicomiso, no una empresa directamente.",
+          "etiquetaError": "confunde-obligaciones-cpo"
+        },
+        {
+          "texto": "certificados bursátiles fiduciarios.",
+          "porQueNo": "Los emite un fideicomiso y su valor nominal es de $100 pesos.",
+          "etiquetaError": "confunde-obligacion-cebur-fiduciario"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Obligaciones: emitidas por empresas registradas en el RNV, oferta pública, valor nominal de $100, 100 UDIS o múltiplos, plazo de tres años en adelante, sobretasa sobre CETES o TIIE y garantía quirografaria, fiduciaria, avalada, hipotecaria o prendaria. La garantía prendaria es la pista decisiva.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 194,
+        "textual": "Puede ser quirografaria, fiduciaria, avalada, hipotecaria o prendaria"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l4.q14",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o04",
+      "enunciado": "En la estructura de un BORHI, ¿quién emite los títulos que se colocan en el mercado?",
+      "opciones": [
+        {
+          "texto": "El fideicomiso al que el fideicomitente cede los créditos hipotecarios."
+        },
+        {
+          "texto": "El INDEVAL, como depositario de los créditos cedidos.",
+          "porQueNo": "El INDEVAL es depositario de valores; no emite títulos.",
+          "etiquetaError": "confunde-indeval-emisor"
+        },
+        {
+          "texto": "La institución que originó los créditos hipotecarios, en forma directa y sin intermediarios.",
+          "porQueNo": "El manual subraya que el originador no es quien vende los créditos al mercado.",
+          "etiquetaError": "confunde-originador-emisor"
+        },
+        {
+          "texto": "El administrador que cobra los pagos mensuales de los créditos.",
+          "porQueNo": "El administrador cobra y entrega los pagos al fideicomiso; no emite.",
+          "etiquetaError": "confunde-administrador-emisor"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El fideicomitente (por ejemplo, una Sofol hipotecaria) cede los créditos al fideicomiso, y es el fideicomiso el que emite los BORHIS a cambio de los recursos captados en el mercado.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 195,
+        "textual": "al fideicomiso el cual emite los BORHIS"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l4.q15",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+      "objetivoId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o02",
+      "enunciado": "Al comparar PRLV y CEDES según el manual, ¿cuál afirmación es correcta?",
+      "opciones": [
+        {
+          "texto": "Ambos pagan intereses cada 28 días, pero solo el PRLV se coloca a descuento.",
+          "porQueNo": "El PRLV no paga intereses periódicos.",
+          "etiquetaError": "confunde-prlv-cedes"
+        },
+        {
+          "texto": "Ambos valen $100 o $1.00, pero solo los CEDES tienen plazo menor a un año.",
+          "porQueNo": "El valor de $1.00 es solo del PRLV y el plazo menor a un año también es del PRLV.",
+          "etiquetaError": "confunde-vn-plazo-prlv"
+        },
+        {
+          "texto": "Ambos tienen garantía del banco emisor, pero solo los CEDES admiten oferta privada."
+        },
+        {
+          "texto": "Ambos se colocan por oferta pública, pero solo el PRLV tiene garantía del banco.",
+          "porQueNo": "Ambos tienen garantía del banco emisor y el CEDE admite oferta privada.",
+          "etiquetaError": "confunde-colocacion-garantia"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "PRLV: $100 o $1.00, oferta pública, plazo menor a un año, a descuento, garantía del banco emisor. CEDES: $100, oferta pública o privada, plazo fijado por el emisor (regularmente un año), intereses cada 28 días, garantía del banco emisor.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 192,
+        "textual": "Colocados mediante oferta pública o privada"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    }
+  ]
+}

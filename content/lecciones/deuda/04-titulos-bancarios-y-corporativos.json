@@ -1,0 +1,720 @@
+{
+  "id": "deuda.titulos-bancarios-y-corporativos",
+  "area": "deuda",
+  "materia": "Títulos de Deuda I",
+  "subtemaId": "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda",
+  "objetivoIds": [
+    "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o02",
+    "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o03",
+    "deuda.titulos-de-deuda-i.caracteristicas-de-los-titulos-de-deuda.o04"
+  ],
+  "orden": 4,
+  "titulo": "Títulos de deuda bancarios y corporativos",
+  "resumen": "PRLV, CEDES, bonos bancarios, obligaciones y obligaciones subordinadas, pagarés, certificados de participación, certificados bursátiles y bursátiles fiduciarios, y los BORHIS con sus seis riesgos.",
+  "duracionMin": 35,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        192,
+        193,
+        194,
+        195
+      ]
+    },
+    {
+      "documento": "AMIB Data/AMIB Fig 3_vf.docx",
+      "paginas": []
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": [
+        58,
+        59,
+        60,
+        61
+      ]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "panorama-privados",
+      "titulo": "Panorama: deuda bancaria y corporativa",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Fuera del Gobierno, emiten deuda los **bancos** (instituciones de crédito y banca de desarrollo), las **empresas** y, mediante certificados bursátiles, también estados, municipios y paraestatales. A diferencia de los gubernamentales, se colocan por **oferta pública** (o privada en algunos casos), no por subasta de Banxico."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Instrumento",
+            "Emisor",
+            "Valor nominal",
+            "Plazo",
+            "Rendimiento"
+          ],
+          "filas": [
+            [
+              "PRLV",
+              "Instituciones de crédito",
+              "$100 o $1.00",
+              "Menor a un año",
+              "Ganancia de capital (a descuento)"
+            ],
+            [
+              "CEDES",
+              "Instituciones de crédito",
+              "$100",
+              "Fijado por el emisor, regularmente un año",
+              "Intereses cada 28 días, referidos a CETES"
+            ],
+            [
+              "Bonos bancarios",
+              "Banca de desarrollo y banca comercial",
+              "No lo indica el manual",
+              "Mediano plazo, 3 a 5 años",
+              "Rentabilidad preestablecida"
+            ],
+            [
+              "Pagarés",
+              "Sociedad mercantil mexicana",
+              "$100, 100 UDIS o múltiplos",
+              "De 1 a 7 años",
+              "Tasa fija o revisable"
+            ],
+            [
+              "Obligaciones",
+              "Empresas registradas en el RNV",
+              "$100, 100 UDIS o múltiplos",
+              "De 3 años en adelante",
+              "Sobretasa sobre CETES o TIIE"
+            ],
+            [
+              "Certificados de participación",
+              "Instituciones crediticias con cargo a un fideicomiso",
+              "$100 o 100 UDIS",
+              "De 3 años en adelante",
+              "Sobretasa sobre CETES o TIIE"
+            ],
+            [
+              "Certificados bursátiles",
+              "S.A., paraestatales, estados, municipios, entidades financieras como fiduciarios",
+              "$100",
+              "Se establece en la colocación",
+              "Ganancia de capital más intereses"
+            ],
+            [
+              "CEBUR fiduciarios",
+              "Fideicomiso",
+              "$100",
+              "Se establece en la colocación",
+              "Ganancia de capital más intereses"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              3,
+              3
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen panorama:",
+          "texto": "Bancarios de corto plazo: PRLV (a descuento) y CEDES (cupón cada 28 días). Corporativos de largo plazo con sobretasa: obligaciones y certificados de participación. Plazo libre: certificados bursátiles."
+        }
+      ],
+      "ampliada": "El plazo de los pagarés está ilegible en el OCR (\"Va de la? años\"); el manual 2023 lo da como de 1 a 7 años y las notas de Cesar como de 1 año en adelante. Se adoptó el dato del manual 2023 y se registró como duda.",
+      "paginas": [
+        192,
+        193,
+        194,
+        195
+      ]
+    },
+    {
+      "id": "prlv",
+      "titulo": "PRLV: Pagaré con Rendimiento Liquidable al Vencimiento",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los [[PRLV]] son títulos de crédito suscritos por instituciones de crédito que representan un **pasivo** a cargo de ellas; su rendimiento se liquida **al vencimiento**. Es el **cupón cero bancario**."
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: PRLV",
+          "filas": [
+            [
+              "Valor nominal",
+              "**$100 pesos o $1.00 peso**"
+            ],
+            [
+              "Emisor",
+              "Instituciones de crédito"
+            ],
+            [
+              "Objetivo",
+              "Financiamiento de corto plazo a la institución de crédito"
+            ],
+            [
+              "Forma de colocación",
+              "Oferta pública"
+            ],
+            [
+              "Plazo",
+              "**Menor a un año**"
+            ],
+            [
+              "Pago de intereses",
+              "**No pagan intereses**: se colocan a descuento"
+            ],
+            [
+              "Garantía",
+              "Banco emisor"
+            ],
+            [
+              "Rendimiento",
+              "**Ganancia de capital**: diferencia entre valor nominal y precio de compra"
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "G = VN - P",
+          "leyenda": [
+            [
+              "G",
+              "ganancia de capital"
+            ],
+            [
+              "VN",
+              "valor nominal"
+            ],
+            [
+              "P",
+              "precio de compra a descuento"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El PRLV y el CETE son ambos cupón cero, pero el PRLV es **bancario**, vale **$100 o $1.00** (no $10) y se coloca por **oferta pública**, no por subasta."
+        }
+      ],
+      "ampliada": "El manual 2023 indica plazos de 7 a 360 días y que en INDEVAL su valor nominal es de $1 peso. El manual AMIB 1, que es la base, solo dice \"menor a un año\".",
+      "paginas": [
+        192
+      ]
+    },
+    {
+      "id": "cedes",
+      "titulo": "CEDES y su comparación con el PRLV",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: CEDES (Certificados de Depósito)",
+          "filas": [
+            [
+              "Qué son",
+              "Títulos de crédito emitidos por una institución de crédito con obligación de pagar **capital más un interés periódico**"
+            ],
+            [
+              "Valor nominal",
+              "**$100 pesos**"
+            ],
+            [
+              "Emisor",
+              "Instituciones de crédito"
+            ],
+            [
+              "Objetivo",
+              "Financiamiento de corto plazo a la institución de crédito"
+            ],
+            [
+              "Forma de colocación",
+              "Oferta **pública o privada**"
+            ],
+            [
+              "Plazo",
+              "Fijado por el emisor, **regularmente a un año**"
+            ],
+            [
+              "Intereses",
+              "**Cada 28 días**"
+            ],
+            [
+              "Garantía",
+              "Banco emisor"
+            ],
+            [
+              "Rendimiento",
+              "Ganancia de capital más intereses, regularmente referenciado a **CETES**"
+            ]
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "PRLV",
+            "CEDES"
+          ],
+          "filas": [
+            [
+              "Intereses",
+              "No paga; a descuento",
+              "Cada 28 días"
+            ],
+            [
+              "Colocación",
+              "Oferta pública",
+              "Oferta pública **o privada**"
+            ],
+            [
+              "Valor nominal",
+              "$100 o $1.00",
+              "$100"
+            ],
+            [
+              "Plazo",
+              "Menor a un año",
+              "Regularmente un año"
+            ],
+            [
+              "Garantía",
+              "Banco emisor",
+              "Banco emisor"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "I = VN\\cdot r\\cdot\\frac{28}{360}",
+          "leyenda": [
+            [
+              "I",
+              "intereses de un periodo por título"
+            ],
+            [
+              "VN",
+              "valor nominal ($100)"
+            ],
+            [
+              "r",
+              "tasa anual del periodo"
+            ]
+          ],
+          "valores": "I = 100\\cdot 0.074\\cdot\\frac{28}{360}",
+          "resultado": "I = 0.575556, es decir, $0.5756 por título (cifras ilustrativas)."
+        }
+      ],
+      "ampliada": "El manual 2023 trae una definición de CEDE que corresponde al certificado de depósito de almacenes generales, no al instrumento bancario; para el examen se sigue el manual AMIB 1.",
+      "paginas": [
+        192
+      ]
+    },
+    {
+      "id": "bonos-bancarios",
+      "titulo": "Bonos bancarios",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los [[bonos bancarios]] son obligaciones de **mediano plazo (entre 3 y 5 años)** con una **rentabilidad preestablecida**, emitidas por la **banca de desarrollo** y por la **banca comercial**."
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: Bonos Bancarios de Desarrollo",
+          "filas": [
+            [
+              "Qué son",
+              "Títulos de crédito **nominativos** emitidos por la **banca de desarrollo** para captar recursos de largo plazo destinados a proyectos de inversión"
+            ],
+            [
+              "Plazo",
+              "**3 años con uno de gracia**"
+            ],
+            [
+              "Garantía",
+              "Banco emisor"
+            ],
+            [
+              "Pago de intereses",
+              "**Trimestral**, en función de la **tasa mayor** entre el promedio de rendimiento de **CETES a 91 días** y de **pagarés bancarios a 3 meses**, vigentes el mes anterior a la colocación"
+            ],
+            [
+              "Quién los adquiere",
+              "Por **subasta pública**, personas físicas o morales, mexicanas o extranjeras"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Los Bonos Bancarios de Desarrollo toman la mayor entre CETES 91 y **pagarés bancarios a 3 meses**; los BPAG91 del IPAB toman la máxima entre CETES 91 y la **TPFG**. Mismo plazo de cupón, referencias distintas."
+        }
+      ],
+      "ampliada": "El manual menciona en segundo lugar los Bonos Bancarios para la Vivienda, pero el texto que el OCR coloca debajo corresponde a la definición general de obligaciones (crédito colectivo a cargo de una sociedad anónima y sus tres tipos). Parece un problema de maquetación en dos columnas; se registró como duda y esos tipos se estudian en la lámina siguiente.",
+      "paginas": [
+        193
+      ]
+    },
+    {
+      "id": "obligaciones-y-subordinadas",
+      "titulo": "Obligaciones y obligaciones subordinadas",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las [[obligaciones]] son títulos de crédito que representan la participación individual de sus tenedores en un crédito colectivo a cargo de una **sociedad anónima**. El manual distingue **tres tipos**:"
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Tipo",
+            "Garantía o rasgo distintivo"
+          ],
+          "filas": [
+            [
+              "Hipotecarias",
+              "Garantizadas por una **hipoteca** sobre bienes de la empresa emisora"
+            ],
+            [
+              "Quirografarias",
+              "Garantizadas por la **solvencia económica y moral** de la empresa, respaldada por todos sus bienes y activos **sin hipotecar**"
+            ],
+            [
+              "Convertibles",
+              "Pagan intereses periódicos y el tenedor puede optar entre la amortización o **convertir sus títulos en acciones** de la emisora"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Las [[obligaciones subordinadas]] son valores en los que los derechos del tenedor sobre los activos del emisor **se sitúan por detrás** de los de otros tenedores de deuda en caso de liquidación. **Carecen de garantía específica.**"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "\"Quirografaria\" habla de la **garantía** (sin bien específico); \"subordinada\" habla de la **prelación** de pago. Una obligación puede ser quirografaria sin ser subordinada."
+        }
+      ],
+      "ampliada": "En el manual, las obligaciones subordinadas aparecen junto a los títulos bancarios (p. 193). Las obligaciones corporativas, con su ficha de valor nominal, plazo y sobretasa, se ven en la lámina siguiente.",
+      "paginas": [
+        193
+      ]
+    },
+    {
+      "id": "pagares-y-obligaciones",
+      "titulo": "Deuda corporativa: pagarés y obligaciones",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: Pagarés (mediano plazo)",
+          "filas": [
+            [
+              "Emisor",
+              "**Sociedad mercantil mexicana** con facultad de contraer pasivos y suscribir títulos de crédito"
+            ],
+            [
+              "Valor nominal",
+              "$100 pesos, 100 UDIS o múltiplos"
+            ],
+            [
+              "Plazo",
+              "De 1 a 7 años"
+            ],
+            [
+              "Rendimiento",
+              "Tasa **fija o revisable**; intereses mensuales, trimestrales, semestrales o anuales"
+            ],
+            [
+              "Garantía",
+              "**Quirografaria, avalada o fiduciaria**"
+            ]
+          ]
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: Obligaciones",
+          "filas": [
+            [
+              "Emisor",
+              "Empresas privadas **registradas en el RNV**"
+            ],
+            [
+              "Valor nominal",
+              "$100 pesos, 100 UDIS o múltiplos"
+            ],
+            [
+              "Forma de colocación",
+              "Oferta pública"
+            ],
+            [
+              "Plazo",
+              "**De tres años en adelante**; amortización al término o en parcialidades anticipadas"
+            ],
+            [
+              "Rendimiento",
+              "**Sobretasa** con referencia a **CETES o TIIE**"
+            ],
+            [
+              "Garantía",
+              "Quirografaria, fiduciaria, avalada, **hipotecaria o prendaria**"
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "C = VN\\cdot\\left(r_{ref} + s\\right)\\cdot\\frac{d}{360}",
+          "leyenda": [
+            [
+              "C",
+              "cupón por título"
+            ],
+            [
+              "VN",
+              "valor nominal"
+            ],
+            [
+              "r_{ref}",
+              "tasa de referencia (CETES o TIIE) al inicio del periodo"
+            ],
+            [
+              "s",
+              "sobretasa"
+            ],
+            [
+              "d",
+              "días del periodo"
+            ]
+          ],
+          "valores": "C = 100\\cdot(0.0785 + 0.0120)\\cdot\\frac{182}{360} = 100\\cdot 0.0905\\cdot 0.505556",
+          "resultado": "C = 4.575278, es decir, $4.5753 por título (cifras ilustrativas, cupón de 182 días)."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La garantía **prendaria** e **hipotecaria** aparece en las obligaciones, no en los pagarés. La sobretasa se **suma** a la referencia."
+        }
+      ],
+      "ampliada": "El plazo de los pagarés está ilegible en el OCR del manual; se tomó del manual 2023 (de 1 a 7 años). El ejemplo de cupón es ilustrativo: el manual no fija la periodicidad de las obligaciones.",
+      "paginas": [
+        194
+      ]
+    },
+    {
+      "id": "certificados-de-participacion",
+      "titulo": "Certificados de participación: CPI y CPO",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: Certificados de Participación",
+          "filas": [
+            [
+              "Qué son",
+              "Títulos colocados en el mercado bursátil por **instituciones crediticias** con cargo a un **fideicomiso**"
+            ],
+            [
+              "CPI",
+              "Patrimonio del fideicomiso integrado por **bienes inmuebles** (Inmobiliaria)"
+            ],
+            [
+              "CPO",
+              "Patrimonio integrado por **bienes muebles** (Ordinaria)"
+            ],
+            [
+              "Valor nominal",
+              "$100 pesos o 100 UDIS"
+            ],
+            [
+              "Forma de colocación",
+              "Oferta pública"
+            ],
+            [
+              "Plazo",
+              "De 3 años en adelante; amortización al vencimiento o con pagos periódicos"
+            ],
+            [
+              "Rendimiento",
+              "Sobretasa con referencia a CETES o TIIE"
+            ],
+            [
+              "Garantía",
+              "La determina cada emisión"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "**I**nmobiliaria es **i**nmuebles; **O**rdinaria es muebles. Y el emisor es una institución crediticia con cargo a un fideicomiso, no la empresa directamente."
+        }
+      ],
+      "ampliada": "El manual 2023 agrega que los CPO pueden pagar también tasa real y que los CPI tienen valor nominal de $100 pesos.",
+      "paginas": [
+        194
+      ]
+    },
+    {
+      "id": "certificados-bursatiles",
+      "titulo": "Certificados bursátiles y certificados bursátiles fiduciarios",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "Certificados bursátiles",
+            "Certificados bursátiles fiduciarios"
+          ],
+          "filas": [
+            [
+              "Qué son",
+              "Participación individual en un crédito colectivo a cargo de personas morales o de un patrimonio en fideicomiso",
+              "Instrumento para la **bursatilización** de un activo del emisor (por ejemplo, derechos de cobro de cuentas por cobrar)"
+            ],
+            [
+              "Emisores",
+              "Sociedades anónimas, paraestatales, entidades federativas, municipios y entidades financieras como fiduciarios",
+              "Un **fideicomiso** emisor"
+            ],
+            [
+              "Valor nominal",
+              "$100",
+              "$100"
+            ],
+            [
+              "Colocación",
+              "Oferta pública",
+              "Oferta pública"
+            ],
+            [
+              "Plazo",
+              "Se establece en la colocación; **sin mínimo ni máximo**",
+              "Se establece en la colocación; sin mínimo ni máximo"
+            ],
+            [
+              "Intereses",
+              "Mensuales, trimestrales o semestrales",
+              "Mensuales, trimestrales o semestrales"
+            ],
+            [
+              "Garantía",
+              "Depende del emisor: participaciones federales (estados y municipios), quirografaria o hipotecaria (empresas privadas)",
+              "Depende del emisor"
+            ],
+            [
+              "Rendimiento",
+              "Ganancia de capital más intereses",
+              "Ganancia de capital más intereses"
+            ]
+          ],
+          "trampas": [
+            [
+              4,
+              1
+            ],
+            [
+              6,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen CEBURES:",
+          "texto": "Plazo libre, valor nominal de $100, oferta pública e intereses mensuales, trimestrales o semestrales. El fiduciario bursatiliza activos por medio de un fideicomiso, conforme a la Ley del Mercado de Valores."
+        }
+      ],
+      "ampliada": "El temario menciona certificados bursátiles de corto plazo, largo plazo y fiduciarios; el manual AMIB 1 no separa el corto del largo plazo, ya que el plazo se establece en cada colocación. El manual 2023 añade que se colocan a descuento o a rendimiento al amparo de un programa.",
+      "paginas": [
+        194,
+        195
+      ]
+    },
+    {
+      "id": "borhis",
+      "titulo": "BORHIS y sus seis riesgos",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los [[BORHIS]] son certificados bursátiles fiduciarios **respaldados por hipotecas**: tienen como respaldo un conjunto (pool) de créditos hipotecarios, y su flujo de pago **depende de los flujos de esas hipotecas**."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "**Riesgo de prepago**: el crédito se prepaga (venta de la casa, aceleración o caída de las tasas) y el BORHI se prepaga en la misma proporción.",
+            "**Riesgo de default**: los acreditados no pagan y el fideicomiso no tiene recursos suficientes.",
+            "**Riesgo del emisor**: quien originó los créditos no es quien los vende al mercado; el **fideicomitente** (por ejemplo, una Sofol hipotecaria) los cede al **fideicomiso**, que emite los BORHIS.",
+            "**Riesgo del administrador**: quien cobra los pagos mensuales y los entrega al fideicomiso; está ligado al riesgo del emisor.",
+            "**Riesgo de ejecución de garantías y seguros**: amortiguan el default, pero su ejecución puede ser laboriosa y costosa.",
+            "**Riesgo de mercado y de liquidez**: la mayoría se coloca a **tasa fija**, con fuerte volatilidad ante cambios de tasas por su duración; la falta de estandarización dificulta fijar un precio representativo en el mercado secundario."
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen BORHIS:",
+          "texto": "Dos riesgos \"obvios\" (prepago y default) y cuatro adicionales (emisor, administrador, ejecución de garantías y seguros, mercado y liquidez). El emisor es el **fideicomiso**."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Una **caída** de tasas genera **prepago**; una **subida** de tasas genera pérdida de precio (riesgo de **mercado**). No existe riesgo cambiario en la lista del manual."
+        }
+      ],
+      "ampliada": "El manual 2023 agrega que la Sociedad Hipotecaria Federal (SHF) estableció características para los BORHIS y que, como banca de gobierno, impulsa la bursatilización de créditos hipotecarios.",
+      "paginas": [
+        195
+      ]
+    }
+  ],
+  "puntosClave": [
+    "PRLV: instituciones de crédito, **$100 o $1.00**, plazo **menor a un año**, **a descuento** (no paga intereses), oferta pública, garantía del banco emisor.",
+    "CEDES: **$100**, intereses **cada 28 días** referidos a CETES, plazo regularmente de un año, oferta **pública o privada**, garantía del banco emisor.",
+    "Bonos bancarios: 3 a 5 años. Bonos Bancarios de Desarrollo: 3 años con uno de gracia, intereses **trimestrales** a la **mayor** entre CETES 91 y pagarés bancarios a 3 meses; subasta pública.",
+    "Obligaciones: hipotecarias, **quirografarias** (solvencia moral y económica) y convertibles; **subordinadas**: se pagan después de otros acreedores y sin garantía específica.",
+    "Obligaciones corporativas: empresas del RNV, $100 o 100 UDIS, **3 años en adelante**, **sobretasa** sobre CETES o TIIE, garantía incluso **hipotecaria o prendaria**. Pagarés: sociedad mercantil, tasa fija o revisable, garantía quirografaria, avalada o fiduciaria.",
+    "Certificados de participación: institución crediticia con fideicomiso; **CPI inmuebles**, **CPO muebles**; 3 años en adelante; sobretasa.",
+    "Certificados bursátiles: $100, plazo **sin mínimo ni máximo**, intereses mensuales, trimestrales o semestrales; los fiduciarios bursatilizan activos mediante un fideicomiso.",
+    "BORHIS: pool hipotecario; riesgos de **prepago, default, emisor, administrador, ejecución de garantías y seguros, mercado y liquidez**; emite el **fideicomiso**."
+  ],
+  "practica": [
+    "g.deuda.l4.q01",
+    "g.deuda.l4.q02",
+    "g.deuda.l4.q03",
+    "g.deuda.l4.q04",
+    "g.deuda.l4.q05"
+  ],
+  "miniExamen": [
+    "g.deuda.l4.q06",
+    "g.deuda.l4.q07",
+    "g.deuda.l4.q08",
+    "g.deuda.l4.q09",
+    "g.deuda.l4.q10"
+  ],
+  "reto": [
+    "g.deuda.l4.q11",
+    "g.deuda.l4.q12",
+    "g.deuda.l4.q13",
+    "g.deuda.l4.q14",
+    "g.deuda.l4.q15"
+  ]
+}
