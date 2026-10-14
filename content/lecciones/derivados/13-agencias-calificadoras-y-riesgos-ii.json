@@ -1,0 +1,509 @@
+{
+  "id": "derivados.agencias-calificadoras-y-riesgos-ii",
+  "area": "derivados",
+  "materia": "Riesgos I y II",
+  "subtemaId": "derivados.riesgos-i.agencias-calificadoras",
+  "objetivoIds": [
+    "derivados.riesgos-i.agencias-calificadoras.o01",
+    "derivados.riesgos-i.agencias-calificadoras.o02",
+    "derivados.riesgos-i.agencias-calificadoras.o03",
+    "derivados.riesgos-ii.teoria-fundamental.o01",
+    "derivados.riesgos-ii.teoria-fundamental.o02",
+    "derivados.riesgos-ii.teoria-fundamental.o03"
+  ],
+  "orden": 13,
+  "titulo": "Agencias calificadoras y teoría fundamental de riesgos",
+  "resumen": "Funciones de las agencias calificadoras y de los emisores, escalas de calificación de S&P, Moody's, Fitch y HR, límite del grado de inversión y efecto de una baja de calificación; riesgo de liquidez de un activo frente al de fondeo, estructura intertemporal de tasas y análisis de sensibilidades (exclusivo Figura 3).",
+  "duracionMin": 40,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        298,
+        299,
+        300,
+        301
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "agencias-y-emisores",
+      "titulo": "Agencias calificadoras y emisores",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Agencias calificadoras de valores",
+              "Empresas que, **por cuenta de un cliente**, **califican** determinados productos financieros o activos, ya sean de empresas, estados o gobiernos regionales. También se llaman agencias de calificación de riesgos, de clasificación de créditos o de rating."
+            ],
+            [
+              "Principales agencias",
+              "**Standard & Poor's**, **Moody's**, **Fitch** y **HR Ratings**."
+            ],
+            [
+              "Emisor",
+              "Empresas registradas en el **Registro Nacional de Valores**, **instituciones de crédito** y **Gobierno Federal, estatal o municipal** que, por requerir recursos para proyectos de inversión o capital de trabajo, **emiten títulos, valores o documentos** para colocarlos en el mercado de valores."
+            ]
+          ],
+          "titulo": "Funciones según el manual"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La agencia **califica**; el emisor **emite y obtiene recursos**. Ni la agencia garantiza el pago ni autoriza la inscripción en el Registro Nacional de Valores."
+        }
+      ],
+      "ampliada": "El objetivo 8.10.1 pide distinguir las funciones: el emisor necesita financiamiento y la agencia da al mercado una opinión independiente sobre su capacidad de pago.",
+      "paginas": [
+        298
+      ]
+    },
+    {
+      "id": "calificacion-crediticia",
+      "titulo": "Calificación crediticia y escala nacional",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[rating]] o **calificación crediticia** es una clasificación que proporciona la información necesaria para saber si los **prestatarios** (emisores que piden financiamiento) van a contar con los recursos necesarios, es decir, si tendrán **capacidad para hacer frente al pago regular de la deuda** en el tiempo establecido."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Las calificaciones en la **escala nacional para México** son una **opinión** sobre la calidad crediticia de las entidades (emisor, empresa, institución financiera o contraparte) o sobre su capacidad para cumplir obligaciones financieras específicas (calificación de emisión), **en relación con otros emisores y emisiones del mercado mexicano**."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La escala nacional es **relativa** al mercado mexicano: una calificación nacional alta no equivale a la misma letra en escala global."
+        }
+      ],
+      "ampliada": "Por eso el límite de grado de inversión se define en escala global (BBB-) \"o su equivalente en escala nacional\".",
+      "paginas": [
+        298
+      ]
+    },
+    {
+      "id": "tabla-de-escalas",
+      "titulo": "Escalas de largo plazo de S&P, Moody's, Fitch y HR",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Grado (CNBV)",
+            "S&P",
+            "Moody's",
+            "Fitch",
+            "HR"
+          ],
+          "filas": [
+            [
+              "Grado 1",
+              "mxAAA",
+              "Aaa.mx",
+              "AAA(mex)",
+              "HR AAA"
+            ],
+            [
+              "Grado 2",
+              "mxAA+, mxAA, mxAA-",
+              "Aa1.mx, Aa2.mx, Aa3.mx",
+              "AA+(mex), AA(mex), AA-(mex)",
+              "HR AA+, HR AA, HR AA-"
+            ],
+            [
+              "Grado 3",
+              "mxA+, mxA, mxA-",
+              "A1.mx, A2.mx, A3.mx",
+              "A+(mex), A(mex), A-(mex)",
+              "HR A+, HR A, HR A-"
+            ],
+            [
+              "Grado 4 (parte alta)",
+              "mxBBB+, mxBBB, mxBBB-",
+              "Baa1.mx, Baa2.mx, Baa3.mx",
+              "BBB+(mex), BBB(mex), BBB-(mex)",
+              "HR BBB+, HR BBB, HR BBB-"
+            ],
+            [
+              "Grado 4 (parte baja)",
+              "mxBB+, mxBB, mxBB-",
+              "Ba1.mx, Ba2.mx, Ba3.mx",
+              "BB+(mex), BB(mex), BB-(mex)",
+              "HR BB+, HR BB, HR BB-"
+            ],
+            [
+              "Grado 5",
+              "mxB+, mxB, mxB-, mxCCC, mxCC",
+              "B1.mx, B2.mx, B3.mx, Caa1.mx, Caa2.mx, Caa3.mx",
+              "B+(mex), B(mex), B-(mex), CCC(mex), CC(mex), C(mex)",
+              "HR B+, HR B, HR B-, HR C+, HR C, HR C-"
+            ]
+          ],
+          "trampas": [
+            [
+              3,
+              0
+            ],
+            [
+              4,
+              0
+            ]
+          ]
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "S&P",
+              "Prefijo **mx** (mxAAA)."
+            ],
+            [
+              "Moody's",
+              "Letras con números y sufijo **.mx** (Aaa.mx, A3.mx, Baa3.mx)."
+            ],
+            [
+              "Fitch",
+              "Sufijo **(mex)** (AAA(mex))."
+            ],
+            [
+              "HR Ratings",
+              "Prefijo **HR** (HR AAA)."
+            ]
+          ],
+          "titulo": "Cómo reconocer a cada agencia"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El **Grado 4** de la tabla abarca desde mxBBB+ hasta mxBB-: mezcla calificaciones con grado de inversión (BBB) y sin él (BB). No identifiques Grado 4 con grado de inversión."
+        }
+      ],
+      "ampliada": "La tabla es de la CNBV (página 299). Contiene dos erratas evidentes que aquí se corrigen: en la fila de mxBB- la columna de Moody's dice Aa3.mx (debe ser Ba3.mx) y en la fila de B- la columna de S&P dice mxA- (debe ser mxB-). Además, HR usa C+, C y C- donde las otras agencias usan CCC, CC y C.",
+      "paginas": [
+        299
+      ]
+    },
+    {
+      "id": "grado-de-inversion",
+      "titulo": "Límite del grado de inversión",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Un instrumento se considera con [[grado de inversión]] cuando cuenta con una calificación de **BBB- (triple B menos) o superior en escala global**, o su **equivalente en escala nacional**."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "S&P, Fitch y HR (global)",
+            "Moody's (global)",
+            "Situación"
+          ],
+          "filas": [
+            [
+              "BBB+",
+              "Baa1",
+              "Grado de inversión"
+            ],
+            [
+              "BBB",
+              "Baa2",
+              "Grado de inversión"
+            ],
+            [
+              "BBB-",
+              "Baa3",
+              "**Último escalón** con grado de inversión"
+            ],
+            [
+              "BB+",
+              "Ba1",
+              "**Primer escalón** sin grado de inversión (especulativo)"
+            ],
+            [
+              "BB",
+              "Ba2",
+              "Sin grado de inversión"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Con Moody's el límite es **Baa3**, no Ba1 ni Baa1. Una sola \"a\" de diferencia separa el grado de inversión (Baa) del especulativo (Ba)."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen grado de inversión:",
+          "texto": "BBB- o mejor en escala global (Baa3 en Moody's), o su equivalente nacional."
+        }
+      ],
+      "ampliada": "La equivalencia global entre agencias se toma del manual 2023 (tabla de calidad crediticia de largo plazo), que coincide renglón por renglón con la tabla de escalas locales del manual AMIB 1.",
+      "paginas": [
+        299
+      ]
+    },
+    {
+      "id": "baja-de-calificacion",
+      "titulo": "Efecto de una baja en la calificación",
+      "bloques": [
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Deterioro",
+              "texto": "El desempeño y las métricas crediticias del emisor se deterioran gradualmente.",
+              "cuando": "Causa"
+            },
+            {
+              "titulo": "Baja de calificación",
+              "texto": "La agencia reconocida reduce la calificación crediticia.",
+              "cuando": "Evento"
+            },
+            {
+              "titulo": "Menor bursatilidad",
+              "texto": "Baja la bursatilidad del bono o acción del emisor.",
+              "cuando": "Efecto"
+            },
+            {
+              "titulo": "Baja de precio",
+              "texto": "El precio cae si el tenedor quiere **venderlo en el mercado antes de su vencimiento**.",
+              "cuando": "Consecuencia"
+            }
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El manual liga la caída de precio a la **venta antes del vencimiento**. La baja de calificación no reduce el valor nominal que el emisor debe pagar."
+        }
+      ],
+      "ampliada": "El repaso del capítulo 8 añade que la baja de calificación aumenta el costo financiero del emisor y hace caer el precio de los bonos colocados.",
+      "paginas": [
+        299
+      ]
+    },
+    {
+      "id": "liquidez-activo-y-fondeo",
+      "titulo": "Riesgo de liquidez de un activo y por fondeo de operaciones",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "Riesgo de liquidez de un activo",
+            "Riesgo de liquidez por fondeo de operaciones"
+          ],
+          "filas": [
+            [
+              "Idea central",
+              "**Dificultad de vender** un activo en un momento determinado",
+              "Que la **liquidación** de un monto esperado **no se lleve a cabo en el tiempo pactado**"
+            ],
+            [
+              "Causa",
+              "No hay nadie en el mercado interesado o dispuesto a comprar",
+              "Una parte cumple su obligación y la otra podría no cumplir"
+            ],
+            [
+              "Consecuencia",
+              "Hay que mantener la inversión sin conseguir la liquidez requerida",
+              "Exposición al **valor total** de la obligación de la contraparte"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Operación cambiaria",
+              "texto": "La liquidación exige pagar una divisa y recibir otra.",
+              "cuando": "Pacto"
+            },
+            {
+              "titulo": "Falta de mecanismo",
+              "texto": "Sin un mecanismo que asegure que una transferencia ocurre si y solo si ocurre la otra, una parte puede pagar la divisa que vendió y no recibir la que compró.",
+              "cuando": "Riesgo"
+            },
+            {
+              "titulo": "Necesidad de fondeo",
+              "texto": "Quien no recibe podría tener que cubrir y financiar el faltante hasta que la contraparte entregue: el riesgo de liquidación implica también riesgo de liquidez.",
+              "cuando": "Efecto"
+            }
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El ejemplo típico del riesgo de liquidación es el **mercado de divisas (FOREX)**. En situaciones extremas de mercado la falta de compradores se refleja en **diferenciales amplios entre compra y venta**, que es la forma en que el objetivo del temario plantea este riesgo."
+        }
+      ],
+      "ampliada": "El objetivo 8.11.1 menciona los diferenciales entre compra y venta, pero el texto del manual no los desarrolla; la relación con la definición de riesgo de liquidez de la página 292 (venta a descuentos inusuales) es una interpretación de esta lección.",
+      "paginas": [
+        300
+      ]
+    },
+    {
+      "id": "estructura-intertemporal",
+      "titulo": "Estructura intertemporal de tasas de interés",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La [[estructura intertemporal de tasas]] mide la relación entre el **vencimiento** de un instrumento de deuda y el **rendimiento esperado** a esa fecha. Su representación es válida solo si los instrumentos tienen **igual calidad crediticia, liquidez y estructura de pagos**: así, cualquier diferencia de rendimientos se atribuye **únicamente al plazo**."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Si esas premisas no se cumplen, los distintos rendimientos son consecuencia de las **primas por riesgo** que asigna el mercado por variables **distintas al vencimiento**."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Utilidad: es el **punto de partida** para valorar bonos y fijar rendimientos en otros sectores del mercado de deuda, préstamos bancarios, créditos corporativos, hipotecas y emisiones internacionales.",
+            "La **forma de la curva** refleja el grado de **preferencia por liquidez**, las **expectativas** de los agentes sobre la evolución futura de las tasas y las **ineficiencias** en el desplazamiento de fondos entre el corto y el largo plazo."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El plazo **no** es una de las condiciones de igualdad: es justamente la variable que la curva relaciona con el rendimiento."
+        }
+      ],
+      "ampliada": "Las lecciones de Títulos de Deuda usan la curva para interpolar y obtener tasas a plazos intermedios; aquí el énfasis es su uso en la administración de riesgos.",
+      "paginas": [
+        300,
+        301
+      ]
+    },
+    {
+      "id": "sensibilidades",
+      "titulo": "Análisis de sensibilidades",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[análisis de sensibilidad]] crea **simulaciones de escenarios** para observar los cambios en los resultados de un modelo ante variaciones en sus principales variables. **Mide el cambio en el valor de la cartera por un cambio en sus factores de riesgo**."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Medida",
+            "Factor de riesgo",
+            "Qué indica"
+          ],
+          "filas": [
+            [
+              "Beta",
+              "Mercado accionario",
+              "Sensibilidad de un título ante los movimientos del mercado"
+            ],
+            [
+              "DV01",
+              "Tasa de interés",
+              "Cambio en **pesos** del precio de un bono ante un punto base"
+            ],
+            [
+              "Correlación",
+              "Relación entre activos",
+              "Cómo se combinan los riesgos dentro del portafolio"
+            ],
+            [
+              "Delta",
+              "Precio del subyacente",
+              "Cambio en la prima de una opción ante un cambio en el subyacente"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "DV01 = P(y) - P(y + 0.01\\%) \\qquad \\Delta V \\approx DV01 \\times pb \\times n",
+          "leyenda": [
+            [
+              "P(y)",
+              "precio del bono con la tasa actual (por cada $100 de valor nominal)"
+            ],
+            [
+              "P(y + 0.01\\%)",
+              "precio con la tasa un punto base más alta"
+            ],
+            [
+              "pb",
+              "número de puntos base que se mueve la tasa"
+            ],
+            [
+              "n",
+              "número de bonos de $100 en la posición"
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "DV01 = P(y) - P(y + 0.01\\%)",
+          "leyenda": [],
+          "valores": "DV01 = 70.3570 - 70.2824",
+          "resultado": "DV01 = $0.0746 por bono a 25 años con cupón de 6% y tasa de 9%"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El DV01 mide la volatilidad del precio en **términos monetarios**; la duración la mide en **términos porcentuales**. El manual asocia la volatilidad con la beta y la tasa de interés con el DV01."
+        }
+      ],
+      "ampliada": "Los precios del ejemplo son de la tabla de DV01 del manual 2023 (bono a 25 años, cupón 6%, precio $70.3570 con tasa de 9% y $70.2824 con 9.01%), que se reprodujo con cupones semestrales.",
+      "paginas": [
+        301
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Agencias (S&P, Moody's, Fitch, HR) **califican por cuenta de un cliente**; el emisor (empresas en el RNV, instituciones de crédito, gobiernos) **emite para obtener recursos**.",
+    "Escala nacional: opinión de calidad crediticia **relativa** a otros emisores del mercado mexicano.",
+    "Nomenclatura local: S&P **mxAAA**, Moody's **Aaa.mx**, Fitch **AAA(mex)**, HR **HR AAA**.",
+    "Grado de inversión: **BBB- o superior en escala global** (Baa3 en Moody's) o su equivalente nacional; el Grado 4 de la CNBV mezcla BBB y BB.",
+    "Baja de calificación: menor **bursatilidad** y caída de **precio** si se vende antes del vencimiento.",
+    "Liquidez de un activo: **dificultad de vender**; liquidez por fondeo: la **liquidación** no ocurre en el tiempo pactado (ejemplo: **FOREX**).",
+    "Estructura intertemporal: rendimiento contra plazo con **igual calidad crediticia, liquidez y estructura de pagos**; su forma refleja preferencia por liquidez, expectativas e ineficiencias.",
+    "Análisis de sensibilidad: cambio en el valor de la cartera por un cambio en sus **factores de riesgo** (beta, DV01, correlación, delta)."
+  ],
+  "practica": [
+    "g.derivados.l13.q01",
+    "g.derivados.l13.q02",
+    "g.derivados.l13.q03",
+    "g.derivados.l13.q04",
+    "g.derivados.l13.q05"
+  ],
+  "miniExamen": [
+    "g.derivados.l13.q06",
+    "g.derivados.l13.q07",
+    "g.derivados.l13.q08",
+    "g.derivados.l13.q09",
+    "g.derivados.l13.q10"
+  ],
+  "reto": [
+    "g.derivados.l13.q11",
+    "g.derivados.l13.q12",
+    "g.derivados.l13.q13",
+    "g.derivados.l13.q14",
+    "g.derivados.l13.q15"
+  ]
+}

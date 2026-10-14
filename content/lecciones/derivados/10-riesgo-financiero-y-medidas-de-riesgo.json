@@ -1,0 +1,554 @@
+{
+  "id": "derivados.riesgo-financiero-y-medidas-de-riesgo",
+  "area": "derivados",
+  "materia": "Riesgos I",
+  "subtemaId": "derivados.riesgos-i.teoria-basica",
+  "objetivoIds": [
+    "derivados.riesgos-i.teoria-basica.o01",
+    "derivados.riesgos-i.teoria-basica.o02",
+    "derivados.riesgos-i.teoria-basica.o03",
+    "derivados.riesgos-i.teoria-basica.o04"
+  ],
+  "orden": 10,
+  "titulo": "Riesgo financiero, volatilidad, correlación y duración",
+  "resumen": "Concepto de riesgo financiero, rendimiento, desviación estándar, varianza y coeficiente de correlación, el efecto de la correlación en el riesgo total de un portafolio y la duración de Macaulay y modificada, con ejemplos resueltos.",
+  "duracionMin": 40,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        148,
+        149,
+        290,
+        291
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "riesgo-financiero",
+      "titulo": "Qué es el riesgo financiero",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El capítulo 8.9 (Teoría Básica) abre con una definición amplia: el [[riesgo financiero]] es la **posibilidad de que el rendimiento esperado de una inversión no se materialice**. No es una pérdida segura ni una pérdida máxima: es la incertidumbre sobre el resultado esperado."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "El manual enumera cuatro causas por las que el rendimiento esperado puede no materializarse:"
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "**Fluctuaciones adversas de los precios** (el origen del riesgo de mercado).",
+            "**Cesación de pagos del deudor** (el origen del riesgo de crédito).",
+            "**Operaciones mal consumadas** (el origen del riesgo operacional).",
+            "**Factores imprevistos** que alteran el desenvolvimiento económico de los mercados."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El examen suele dar como definición de riesgo financiero la de un tipo de riesgo en particular (por ejemplo, el incumplimiento del emisor). Esa es solo una de sus causas: la definición general habla del **rendimiento esperado que no se materializa**."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen riesgo financiero:",
+          "texto": "posibilidad de que el rendimiento esperado no se materialice, por precios adversos, cesación de pagos, operaciones mal consumadas o factores imprevistos."
+        }
+      ],
+      "ampliada": "Las cuatro causas anticipan la clasificación que se estudia en la lección siguiente: precios adversos corresponden al riesgo de mercado, cesación de pagos al de crédito, operaciones mal consumadas al operacional y los factores imprevistos a los riesgos no cuantificables.",
+      "paginas": [
+        290
+      ]
+    },
+    {
+      "id": "rendimiento-y-dispersion",
+      "titulo": "Rendimiento, desviación estándar y varianza",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Rendimiento",
+              "Es la **ganancia en el valor del dinero en el tiempo**; es el **beneficio financiero** asociado a una inversión e **incluye valorización** sobre el capital invertido."
+            ],
+            [
+              "Desviación estándar (volatilidad)",
+              "Medida de **dispersión** de los datos: muestra qué tan dispersos están los valores respecto del **valor promedio**. Con ella se mide el riesgo de **un solo instrumento**."
+            ],
+            [
+              "Varianza",
+              "Media aritmética de las desviaciones respecto de la media **elevadas al cuadrado**: la sumatoria de las distancias al cuadrado entre cada dato y su media, dividida entre el **número total de datos**."
+            ],
+            [
+              "Lectura de riesgo",
+              "Mientras más alejado esté un valor de la media (mayor desviación estándar), **mayor riesgo**."
+            ]
+          ],
+          "titulo": "Conceptos del objetivo 8.9.2"
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\sigma^{2} = \\frac{\\sum_{i=1}^{n} (x_i - \\bar{x})^{2}}{n} \\qquad \\sigma = \\sqrt{\\sigma^{2}}",
+          "leyenda": [
+            [
+              "\\sigma^{2}",
+              "varianza"
+            ],
+            [
+              "\\sigma",
+              "desviación estándar o volatilidad"
+            ],
+            [
+              "x_i",
+              "cada dato observado (por ejemplo, cada rendimiento)"
+            ],
+            [
+              "\\bar{x}",
+              "media aritmética de los datos"
+            ],
+            [
+              "n",
+              "número total de datos"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo.** Con los datos 5, 8 y 14 (los del capítulo 4 del manual), la media es 9 y la suma de desviaciones al cuadrado es 16 + 1 + 25 = 42."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\sigma^{2} = \\frac{\\sum (x_i - \\bar{x})^{2}}{n}",
+          "leyenda": [],
+          "valores": "\\sigma^{2} = \\frac{(5-9)^{2} + (8-9)^{2} + (14-9)^{2}}{3} = \\frac{42}{3} = 14",
+          "resultado": "Varianza 14.0000; desviación estándar \\(\\sqrt{14}\\) = 3.7417"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El capítulo 4 del manual resuelve el mismo ejemplo dividiendo entre n menos 1 (42 entre 2 = 21, desviación 4.58), mientras que la definición del capítulo 8 divide entre el **número total de datos**. Lee qué divisor indica el enunciado; si no lo indica, la definición de riesgos usa n."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen dispersión:",
+          "texto": "la varianza está en unidades al cuadrado; la desviación estándar es su raíz cuadrada y es la medida de riesgo de un instrumento individual."
+        }
+      ],
+      "ampliada": "La desviación estándar se llama también volatilidad, y es el insumo del VaR paramétrico de la lección 12. El ejemplo numérico con divisor n se calculó a partir de la definición del capítulo 8; el del capítulo 4 (p. 148) usa n menos 1, como se explica en la trampa.",
+      "paginas": [
+        290,
+        148
+      ]
+    },
+    {
+      "id": "correlacion",
+      "titulo": "Coeficiente de correlación",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[coeficiente de correlación]] indica **la fuerza y la dirección de una relación lineal entre dos variables aleatorias**. Hay correlación positiva si al aumentar los valores de A también aumentan los de B, y viceversa."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Valor del coeficiente",
+            "Tipo de relación",
+            "Lectura en la figura del manual"
+          ],
+          "filas": [
+            [
+              "r = 1",
+              "Correlación directa o positiva perfecta",
+              "Dependencia funcional"
+            ],
+            [
+              "0 < r < 1",
+              "Correlación directa o positiva",
+              "Dependencia aleatoria"
+            ],
+            [
+              "r = 0",
+              "No existe correlación",
+              "Independencia aleatoria"
+            ],
+            [
+              "−1 < r < 0",
+              "Correlación inversa o negativa",
+              "Dependencia aleatoria"
+            ],
+            [
+              "r = −1",
+              "Correlación inversa o negativa perfecta",
+              "Dependencia funcional"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              1
+            ],
+            [
+              4,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Fuerte",
+              "Valor absoluto de 0.75 a 1."
+            ],
+            [
+              "Media",
+              "Valor absoluto alrededor de 0.25 a 0.75."
+            ],
+            [
+              "Débil",
+              "Valor absoluto menor que 0.25."
+            ],
+            [
+              "Nula",
+              "Coeficiente igual a 0."
+            ]
+          ],
+          "titulo": "Escala de intensidad de la figura (página 291)"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El signo indica la **dirección** y el valor absoluto la **fuerza**. Una correlación de −0.90 es fuerte (inversa), no débil; una de 0.15 es positiva pero débil."
+        }
+      ],
+      "ampliada": "La escala se tomó de la figura de la página 291 (leída sobre la imagen del PDF, porque el OCR no la recupera). La figura muestra los valores negativos sin signo en el lado izquierdo; por simetría corresponden a −1, −0.75, −0.5 y −0.25.",
+      "paginas": [
+        290,
+        291
+      ]
+    },
+    {
+      "id": "correlacion-y-riesgo-total",
+      "titulo": "Por qué la correlación determina el riesgo total",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Al conocer la correlación entre los rendimientos de diferentes activos, los inversionistas pueden desarrollar estrategias para **disminuir o nulificar el riesgo** ante ciertos eventos. La razón es que el riesgo de un portafolio **no es la simple combinación** de los riesgos de sus activos."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\sigma_p^{2} = w_A^{2}\\sigma_A^{2} + w_B^{2}\\sigma_B^{2} + 2\\,w_A w_B\\,\\rho_{AB}\\,\\sigma_A \\sigma_B",
+          "leyenda": [
+            [
+              "\\sigma_p",
+              "desviación estándar (riesgo total) del portafolio"
+            ],
+            [
+              "w_A, w_B",
+              "proporción invertida en cada activo"
+            ],
+            [
+              "\\sigma_A, \\sigma_B",
+              "desviación estándar de cada activo"
+            ],
+            [
+              "\\rho_{AB}",
+              "coeficiente de correlación entre los rendimientos"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual (capítulo 4).** 20% en A con desviación de 40% y 80% en B con desviación de 20%, correlación de 0.5:"
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\sigma_p^{2} = w_A^{2}\\sigma_A^{2} + w_B^{2}\\sigma_B^{2} + 2\\,w_A w_B\\,\\rho_{AB}\\,\\sigma_A \\sigma_B",
+          "leyenda": [],
+          "valores": "\\sigma_p^{2} = (0.20^{2} \\times 40^{2}) + (0.80^{2} \\times 20^{2}) + (2 \\times 0.20 \\times 0.80 \\times 0.5 \\times 40 \\times 20) = 64 + 256 + 128",
+          "resultado": "Varianza 448; riesgo total \\(\\sqrt{448}\\) = 21.1660%"
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Correlación",
+            "Riesgo total del mismo portafolio",
+            "Lectura"
+          ],
+          "filas": [
+            [
+              "1",
+              "24.0000% (promedio ponderado: 0.2 × 40 + 0.8 × 20)",
+              "Sin beneficio de diversificación"
+            ],
+            [
+              "0.5",
+              "21.1660%",
+              "Ejemplo del manual"
+            ],
+            [
+              "0",
+              "17.8885%",
+              "Desaparece el término de covarianza"
+            ],
+            [
+              "−1",
+              "8.0000% (valor absoluto de 8 menos 16)",
+              "Máxima reducción del riesgo"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen correlación:",
+          "texto": "mientras menor sea la correlación, menor es el riesgo total para los mismos pesos y volatilidades. Solo con correlación 1 el riesgo es el promedio ponderado."
+        }
+      ],
+      "ampliada": "El manual afirma que, cuando la correlación no es perfecta, la diversificación siempre reduce el riesgo por debajo del 24%, que es justamente el promedio ponderado de las desviaciones (0.2 × 40 + 0.8 × 20). Los valores con correlación 1, 0 y −1 se calcularon con la misma fórmula.",
+      "paginas": [
+        291,
+        149
+      ]
+    },
+    {
+      "id": "duracion",
+      "titulo": "Duración de Macaulay y duración modificada",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Cuando suben las tasas de interés, baja el valor de los instrumentos de deuda y los tenedores sufren pérdidas. La [[duración]] y la [[duración modificada]] estiman esas variaciones, por lo que son una herramienta de administración del **riesgo de tasa de interés**."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "Qué indica",
+            "Cómo se obtiene"
+          ],
+          "filas": [
+            [
+              "Duración de Macaulay",
+              "El **tiempo promedio** en el que el inversionista recibe el pago del principal",
+              "Promedio ponderado de los flujos del bono a valor presente"
+            ],
+            [
+              "Duración modificada",
+              "El grado de **sensibilidad** del valor de un portafolio de deuda ante cambios en la tasa de interés",
+              "La duración de Macaulay **descontada un periodo**"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "D_{mod} = \\frac{D_{Mac}}{1 + \\frac{y}{m}} \\qquad \\frac{\\Delta P}{P} \\approx -D_{mod} \\times \\Delta y",
+          "leyenda": [
+            [
+              "D_{Mac}",
+              "duración de Macaulay, en años"
+            ],
+            [
+              "D_{mod}",
+              "duración modificada"
+            ],
+            [
+              "y",
+              "tasa de rendimiento anual del bono"
+            ],
+            [
+              "m",
+              "número de periodos de cupón por año"
+            ],
+            [
+              "\\Delta y",
+              "cambio en la tasa, en decimales"
+            ],
+            [
+              "\\Delta P / P",
+              "cambio porcentual aproximado del precio"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Macaulay mide **tiempo** (años); la modificada mide **sensibilidad**. Si el enunciado pregunta cuánto cambia el precio, la respuesta usa la modificada, no la de Macaulay."
+        }
+      ],
+      "ampliada": "La fórmula de la duración modificada traduce la frase del manual \"descontada un periodo\": se divide entre uno más la tasa del periodo de cupón. La aproximación del cambio de precio es la aplicación directa de esa sensibilidad.",
+      "paginas": [
+        291
+      ]
+    },
+    {
+      "id": "propiedades-duracion",
+      "titulo": "Las cuatro propiedades de la duración",
+      "bloques": [
+        {
+          "tipo": "lista",
+          "items": [
+            "La duración es **menor o igual** que el plazo al vencimiento. La igualdad se presenta en un **strip** (título en el que se separan los cupones del principal y ambas partes cotizan por separado) cuando se trata de la duración de Macaulay.",
+            "A **mayor** tiempo al vencimiento, **mayor** duración.",
+            "A **menor** cupón, **mayor** duración.",
+            "A **mayor** tasa de mercado, **menor** duración."
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Si aumenta...",
+            "La duración...",
+            "Por qué"
+          ],
+          "filas": [
+            [
+              "El plazo al vencimiento",
+              "Aumenta",
+              "El principal se recibe más tarde"
+            ],
+            [
+              "El cupón",
+              "Disminuye",
+              "Se recibe antes una parte mayor del valor"
+            ],
+            [
+              "La tasa de mercado",
+              "Disminuye",
+              "Los flujos lejanos pesan menos a valor presente"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Las propiedades 3 y 4 van en sentido inverso: menor cupón da mayor duración y mayor tasa da menor duración. El examen cambia una sola palabra (mayor por menor) para construir el distractor."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen propiedades:",
+          "texto": "plazo sube, duración sube; cupón sube, duración baja; tasa sube, duración baja; en un strip la duración de Macaulay iguala al plazo."
+        }
+      ],
+      "ampliada": "El strip es el caso del bono cupón cero: al no haber cupones intermedios, todo el valor se recibe al vencimiento y el promedio ponderado del tiempo coincide con el plazo.",
+      "paginas": [
+        291
+      ]
+    },
+    {
+      "id": "duracion-ejemplo",
+      "titulo": "Ejemplo resuelto de duración",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo (manual 2023).** Bono con valor nominal de $100, cupón de 8% anual pagadero semestralmente ($4 por cupón), tasa de 10% anual (5% por semestre) y 2 años de vigencia (4 cupones)."
+        },
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Valor presente de cada flujo",
+              "texto": "4 ÷ 1.05 = 3.8095; 4 ÷ 1.05² = 3.6281; 4 ÷ 1.05³ = 3.4554; 104 ÷ 1.05⁴ = 85.5611. Precio total: $96.4540.",
+              "cuando": "Paso 1"
+            },
+            {
+              "titulo": "Peso de cada flujo",
+              "texto": "Cada valor presente entre el precio total: 0.0395, 0.0376, 0.0358 y 0.8871.",
+              "cuando": "Paso 2"
+            },
+            {
+              "titulo": "Ponderar el tiempo",
+              "texto": "Peso por el tiempo en años (0.5, 1, 1.5 y 2) y sumar: duración de Macaulay de 1.8852 años.",
+              "cuando": "Paso 3"
+            },
+            {
+              "titulo": "Duración modificada",
+              "texto": "Se descuenta un periodo con la tasa semestral.",
+              "cuando": "Paso 4"
+            }
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "D_{mod} = \\frac{D_{Mac}}{1 + \\frac{y}{m}}",
+          "leyenda": [],
+          "valores": "D_{mod} = \\frac{1.885229}{1 + \\frac{0.10}{2}} = \\frac{1.885229}{1.05}",
+          "resultado": "D_mod = 1.7955"
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\frac{\\Delta P}{P} \\approx -D_{mod} \\times \\Delta y",
+          "leyenda": [],
+          "valores": "\\frac{\\Delta P}{P} \\approx -1.7955 \\times 0.01",
+          "resultado": "Si la tasa sube 1%, el precio baja aproximadamente 1.7955%"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Descontar con la tasa anual completa (1.885229 ÷ 1.10 = 1.7138) es el error típico: con cupones semestrales se usa la tasa del periodo, 5%."
+        }
+      ],
+      "ampliada": "El manual 2023 obtiene 1.79 por diferencias de precios: con la tasa en 9% el precio es $98.2062 y en 11% es $94.7423, de modo que (98.2062 − 94.7423) ÷ (2 × 96.4541 × 0.01) = 1.7957, prácticamente igual al resultado con la fórmula.",
+      "paginas": [
+        291
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Riesgo financiero: posibilidad de que el **rendimiento esperado no se materialice** (precios adversos, cesación de pagos, operaciones mal consumadas, factores imprevistos).",
+    "La **desviación estándar** mide el riesgo de un solo instrumento; la varianza es la media de las desviaciones al cuadrado (capítulo 8: entre el **número total de datos**).",
+    "La correlación indica **fuerza y dirección** de la relación lineal; va de −1 a 1 y en 0 no existe correlación.",
+    "A menor correlación, menor riesgo total; con correlación 1 el riesgo es el promedio ponderado, con −1 se logra la máxima reducción.",
+    "Macaulay: **tiempo promedio** en que se recibe el principal; modificada: Macaulay **descontada un periodo**, mide la **sensibilidad** del precio a la tasa.",
+    "Propiedades: duración menor o igual al plazo (igual en un strip); más plazo, más duración; **menor cupón, mayor duración**; **mayor tasa, menor duración**."
+  ],
+  "practica": [
+    "g.derivados.l10.q01",
+    "g.derivados.l10.q02",
+    "g.derivados.l10.q03",
+    "g.derivados.l10.q04",
+    "g.derivados.l10.q05"
+  ],
+  "miniExamen": [
+    "g.derivados.l10.q06",
+    "g.derivados.l10.q07",
+    "g.derivados.l10.q08",
+    "g.derivados.l10.q09",
+    "g.derivados.l10.q10"
+  ],
+  "reto": [
+    "g.derivados.l10.q11",
+    "g.derivados.l10.q12",
+    "g.derivados.l10.q13",
+    "g.derivados.l10.q14",
+    "g.derivados.l10.q15"
+  ]
+}

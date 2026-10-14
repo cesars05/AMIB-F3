@@ -1,0 +1,462 @@
+{
+  "id": "derivados.tipos-de-riesgo",
+  "area": "derivados",
+  "materia": "Riesgos I",
+  "subtemaId": "derivados.riesgos-i.teoria-basica",
+  "objetivoIds": [
+    "derivados.riesgos-i.teoria-basica.o05",
+    "derivados.riesgos-i.teoria-basica.o06",
+    "derivados.riesgos-i.teoria-basica.o07",
+    "derivados.riesgos-i.teoria-basica.o08",
+    "derivados.riesgos-i.teoria-basica.o09"
+  ],
+  "orden": 11,
+  "titulo": "Tipos de riesgo",
+  "resumen": "Riesgo de crédito, contraparte, mercado, liquidez, operacional, tecnológico y legal; riesgo sistémico, sistemático y no sistemático; riesgos cuantificables y no cuantificables; riesgo corporativo y soberano.",
+  "duracionMin": 35,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        292,
+        293,
+        294
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "credito-y-contraparte",
+      "titulo": "Riesgo de crédito y riesgo de contraparte",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Riesgo de crédito",
+              "Pérdida potencial por la **falta de pago de un emisor o contraparte** en las inversiones, **incluyendo las garantías reales o personales** que les otorguen, así como cualquier otro mecanismo de mitigación."
+            ],
+            [
+              "Riesgo de contraparte",
+              "Existe cuando una de las partes de un **contrato financiero** es **incapaz de cumplir** con las obligaciones contraídas, haciendo que la otra parte incurra en una pérdida."
+            ]
+          ],
+          "titulo": "Definiciones del manual"
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Pista en el enunciado",
+            "Riesgo"
+          ],
+          "filas": [
+            [
+              "Falta de pago de un emisor; garantías reales o personales; mecanismos de mitigación",
+              "De crédito"
+            ],
+            [
+              "Una parte de un contrato (por ejemplo, un derivado) no puede cumplir y la otra pierde",
+              "De contraparte"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La definición de riesgo de crédito **menciona a la contraparte** (\"falta de pago de un emisor o contraparte\"). Si el enunciado habla de falta de pago e incluye garantías, la respuesta es crédito, aunque aparezca la palabra contraparte."
+        }
+      ],
+      "ampliada": "En los mercados listados de derivados, el riesgo de contraparte frente al cliente lo asume la cámara de compensación (Asigna), que se interpone como contraparte central; por eso exige aportaciones iniciales mínimas.",
+      "paginas": [
+        292
+      ]
+    },
+    {
+      "id": "mercado-y-liquidez",
+      "titulo": "Riesgo de mercado y riesgo de liquidez",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Riesgo de mercado",
+              "Pérdida potencial ante **cambios en los factores de riesgo** que inciden sobre la valuación o los resultados esperados de las inversiones o pasivos: **precios, tasas de interés, tipos de cambio, índices de precios**, entre otros."
+            ],
+            [
+              "Riesgo de liquidez",
+              "Pérdida potencial por la **venta anticipada o forzosa** de activos a **descuentos inusuales** para hacer frente a obligaciones, o porque una posición **no puede ser oportunamente enajenada, adquirida o cubierta** con una posición contraria equivalente."
+            ]
+          ],
+          "titulo": "Definiciones del manual"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Si el precio baja porque cambió una tasa o un tipo de cambio, es riesgo de mercado. Si la pérdida surge porque hubo que **vender de prisa** con un descuento inusual, o no se pudo cerrar la posición, es riesgo de liquidez."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen:",
+          "texto": "mercado es el movimiento del factor; liquidez es la imposibilidad de entrar o salir a tiempo y a un precio normal."
+        }
+      ],
+      "ampliada": "La pregunta oficial tipo 17 ilustra el riesgo de mercado con un fondo de inversión afectado por la mayor volatilidad de los precios de su portafolio.",
+      "paginas": [
+        292
+      ]
+    },
+    {
+      "id": "operacional-tecnologico-legal",
+      "titulo": "Riesgo operacional, tecnológico y legal",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[riesgo operacional]] es la pérdida potencial por **fallas o deficiencias en los controles internos**, por **errores en el procesamiento y almacenamiento** de las operaciones o en la **transmisión de información**, así como por **resoluciones administrativas y judiciales adversas, fraudes o robos**. **Comprende**, entre otros, al riesgo tecnológico y al riesgo legal."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Fallas internas en el negocio: **recursos humanos** (incompetencia, fraude, concentración del expertise), **procesos de operación** (ejecución de órdenes, registro, liquidación, documentación) y **tecnología** (fallas en sistemas, errores en telecomunicaciones).",
+            "Riesgos externos: eventos políticos, aplicación de regulación como multas, aplicación de leyes y reglamentos fiscales."
+          ]
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Riesgo tecnológico",
+              "Pérdida potencial por **daños, interrupción, alteración o fallas** derivadas del uso o dependencia en el **hardware, software, sistemas, aplicaciones, redes** y cualquier otro canal de distribución de información."
+            ],
+            [
+              "Riesgo legal",
+              "Pérdida potencial por el **incumplimiento de disposiciones legales y administrativas**, la emisión de **resoluciones administrativas y judiciales desfavorables** y la **aplicación de sanciones**."
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El objetivo del temario dice \"operacional (humano, tecnológico)\": el factor humano (fraude, incompetencia) y el tecnológico son componentes del operacional. El riesgo legal también queda **comprendido** en el operacional según el manual."
+        }
+      ],
+      "ampliada": "Las resoluciones administrativas y judiciales adversas aparecen tanto en la definición del riesgo operacional como en la del legal; es coherente, porque el manual dice que el operacional comprende al legal.",
+      "paginas": [
+        292
+      ]
+    },
+    {
+      "id": "sistemico",
+      "titulo": "Riesgo sistémico",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "También conocido como **riesgo de sistema**, el [[riesgo sistémico]] se materializa cuando, sea cual fuere el origen del fallo, el **incumplimiento de una entidad participante** en un sistema provoca que **otras, a su vez, no puedan cumplir** con las suyas, generando una **cadena de fallos** que puede terminar colapsando todo el funcionamiento del mecanismo."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Término",
+            "Idea central",
+            "Palabra clave"
+          ],
+          "filas": [
+            [
+              "Sistémico",
+              "Contagio entre participantes de un sistema",
+              "Cadena de fallos"
+            ],
+            [
+              "Sistemático",
+              "Riesgo inherente a todo un mercado",
+              "No diversificable dentro del mercado"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Sistémico y sistemático difieren en dos letras y el examen los intercambia. Sistémico es **contagio** (efecto dominó); sistemático es **riesgo de mercado** que afecta a todas las emisoras."
+        }
+      ],
+      "ampliada": "Los mecanismos de las cámaras de compensación (contraparte central, aportaciones, fondos de compensación y red de seguridad) existen precisamente para cortar esa cadena de fallos.",
+      "paginas": [
+        293
+      ]
+    },
+    {
+      "id": "sistematico-no-sistematico",
+      "titulo": "Riesgo sistemático y no sistemático",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "Riesgo sistemático",
+            "Riesgo no sistemático"
+          ],
+          "filas": [
+            [
+              "Qué es",
+              "Riesgo **inherente a un mercado**; no afecta a una acción o sector particular sino al mercado en su totalidad",
+              "Riesgo **particular de cada emisora**; resulta de factores propios y específicos de cada instrumento"
+            ],
+            [
+              "Ejemplo",
+              "En una gran crisis financiera todas las acciones bajan de manera simultánea",
+              "Acciones: un nuevo producto o técnica, una fusión. Mercado de dinero: **incremento o degradación de la calificación** del emisor"
+            ],
+            [
+              "¿Diversificable?",
+              "**No** dentro del propio mercado; **sí se mitiga** con asignación de activos en mercados distintos (bonos y acciones)",
+              "**Sí**: se reduce o controla con una diversificación adecuada"
+            ],
+            [
+              "Cómo se diversifica",
+              "Invirtiendo en otros mercados",
+              "Combinando acciones con correlación menor o negativa"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El manual matiza que el riesgo sistemático es no diversificable **solo dentro del propio mercado**: invertir en mercados distintos también es diversificación y lo mitiga. Una opción que diga \"no puede mitigarse con ninguna estrategia\" es falsa."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen:",
+          "texto": "sistemático, de todo el mercado e impredecible; no sistemático, de cada emisora y diversificable."
+        }
+      ],
+      "ampliada": "La degradación de la calificación de un emisor del mercado de dinero es el ejemplo del manual de riesgo no sistemático, porque afecta a ese emisor y no al resto.",
+      "paginas": [
+        293
+      ]
+    },
+    {
+      "id": "cuantificables",
+      "titulo": "Riesgos cuantificables y no cuantificables",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los [[riesgos cuantificables]] son aquellos para los que **es posible conformar bases estadísticas** que permitan medir sus pérdidas potenciales. Se dividen en dos grupos:"
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Discrecionales",
+            "No discrecionales"
+          ],
+          "filas": [
+            [
+              "Resultan de la **toma de posición de riesgo**",
+              "Resultan de la **operación del negocio**; inciden en el patrimonio pero **no** son producto de tomar una posición de riesgo"
+            ],
+            [
+              "Riesgo de mercado",
+              "Riesgo tecnológico"
+            ],
+            [
+              "Riesgo de crédito",
+              "Riesgo legal"
+            ],
+            [
+              "Riesgo de liquidez",
+              ""
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              0
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Los [[riesgos no cuantificables]] derivan de **eventos imprevistos** para los cuales **no se puede conformar una base estadística** que permita medir las pérdidas potenciales."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Tecnológico y legal **sí son cuantificables** (no discrecionales). El error típico es clasificarlos como no cuantificables porque no provienen de una inversión."
+        }
+      ],
+      "ampliada": "La palabra discrecional alude a la decisión de tomar riesgo: la institución decide cuánto riesgo de mercado, crédito o liquidez asume; los riesgos tecnológico y legal surgen de operar, no de esa decisión.",
+      "paginas": [
+        294
+      ]
+    },
+    {
+      "id": "corporativo-soberano",
+      "titulo": "Riesgo corporativo y riesgo soberano",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Riesgo corporativo",
+              "Riesgo **interno de la empresa**: refleja el impacto que tiene un proyecto sobre el riesgo de la compañía **sin considerar** los efectos de la diversificación de los accionistas. Se mide por el impacto del proyecto sobre la **variabilidad de los rendimientos de la empresa**."
+            ],
+            [
+              "Riesgo soberano",
+              "Riesgo de una inversión debido **solo a factores específicos y comunes a un cierto país**; puede entenderse como un **riesgo promedio** de las inversiones realizadas en ese país."
+            ],
+            [
+              "Riesgo país",
+              "Eventualidad de que un **estado soberano** se vea imposibilitado o incapacitado de cumplir con sus obligaciones con algún **agente extranjero**, por razones fuera de los riesgos usuales de cualquier relación crediticia."
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El riesgo corporativo **no** considera la diversificación de los accionistas. Una opción que diga que se mide por el efecto del proyecto sobre la diversificación de los accionistas invierte la definición."
+        }
+      ],
+      "ampliada": "El objetivo 8.9.9 aparece en el OCR dentro del archivo del objetivo 8.9.8 (página 294); el contenido está completo en el PDF.",
+      "paginas": [
+        294
+      ]
+    },
+    {
+      "id": "mapa-de-riesgos",
+      "titulo": "Mapa para reconocer el riesgo en un enunciado",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Si el enunciado dice...",
+            "El riesgo es...",
+            "No confundir con..."
+          ],
+          "filas": [
+            [
+              "Cambios en precios, tasas, tipos de cambio o índices",
+              "De mercado",
+              "Liquidez"
+            ],
+            [
+              "Venta forzosa con descuento inusual; no se puede cerrar la posición",
+              "De liquidez",
+              "Mercado"
+            ],
+            [
+              "Falta de pago de un emisor, con garantías y mitigantes",
+              "De crédito",
+              "Contraparte"
+            ],
+            [
+              "Una parte de un contrato no puede cumplir",
+              "De contraparte",
+              "Sistémico"
+            ],
+            [
+              "Controles internos, procesamiento, fraude, robo",
+              "Operacional",
+              "Tecnológico"
+            ],
+            [
+              "Hardware, software, redes, aplicaciones",
+              "Tecnológico",
+              "Operacional en general"
+            ],
+            [
+              "Sanciones, resoluciones desfavorables, incumplir disposiciones",
+              "Legal",
+              "Operacional en general"
+            ],
+            [
+              "Cadena de fallos entre participantes",
+              "Sistémico",
+              "Sistemático"
+            ],
+            [
+              "Riesgo promedio de invertir en un país",
+              "Soberano",
+              "Sistemático"
+            ]
+          ],
+          "trampas": [
+            [
+              3,
+              1
+            ],
+            [
+              7,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen tipos de riesgo:",
+          "texto": "identifica primero la causa de la pérdida; cada definición del manual tiene una palabra ancla (factores de riesgo, descuentos inusuales, falta de pago, controles internos, hardware, sanciones, cadena de fallos)."
+        }
+      ],
+      "ampliada": "Cuando la pregunta describe una falla tecnológica y ofrece a la vez \"operacional\" y \"tecnológico\", la respuesta más precisa es la que el manual define con esas palabras (tecnológico), salvo que el enunciado pregunte por la categoría general.",
+      "paginas": [
+        292,
+        293,
+        294
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Crédito: falta de pago de un **emisor o contraparte**, incluyendo **garantías** y mitigantes. Contraparte: una parte de un **contrato** no puede cumplir.",
+    "Mercado: cambios en **factores de riesgo** (precios, tasas, tipos de cambio, índices). Liquidez: venta **anticipada o forzosa** a **descuentos inusuales** o posición que no puede cerrarse.",
+    "Operacional: controles internos, procesamiento, transmisión, fraudes o robos; **comprende** al tecnológico y al legal.",
+    "Sistémico: **cadena de fallos** entre participantes. Sistemático: riesgo de **todo el mercado**, mitigable solo invirtiendo en **otros mercados**.",
+    "No sistemático: propio de cada emisora (fusión, nuevo producto, **cambio de calificación**); diversificable.",
+    "Cuantificables discrecionales: **mercado, crédito y liquidez**; no discrecionales: **tecnológico y legal**. No cuantificables: eventos imprevistos sin base estadística.",
+    "Corporativo: impacto del proyecto en la **variabilidad de los rendimientos** de la empresa, sin considerar la diversificación de los accionistas. Soberano: **riesgo promedio** de invertir en un país."
+  ],
+  "practica": [
+    "g.derivados.l11.q01",
+    "g.derivados.l11.q02",
+    "g.derivados.l11.q03",
+    "g.derivados.l11.q04",
+    "g.derivados.l11.q05"
+  ],
+  "miniExamen": [
+    "g.derivados.l11.q06",
+    "g.derivados.l11.q07",
+    "g.derivados.l11.q08",
+    "g.derivados.l11.q09",
+    "g.derivados.l11.q10"
+  ],
+  "reto": [
+    "g.derivados.l11.q11",
+    "g.derivados.l11.q12",
+    "g.derivados.l11.q13",
+    "g.derivados.l11.q14",
+    "g.derivados.l11.q15"
+  ]
+}

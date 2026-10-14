@@ -1,0 +1,2666 @@
+{
+  "fuente": "Generadas por Claude (Opus) a partir de AMIB Data/AMIB_1_completo.md, cap. 8 (8.9 a 8.11, Riesgos I y II), con apoyo del manual 2023; cálculos verificados en Python a precisión completa",
+  "generado": "2026-10-14",
+  "preguntas": [
+    {
+      "id": "g.derivados.l10.q01",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o01",
+      "enunciado": "Conforme al manual, el riesgo financiero puede entenderse como la posibilidad de que:",
+      "opciones": [
+        {
+          "texto": "el emisor de un instrumento deje de pagar el principal y los intereses.",
+          "porQueNo": "Describe solo una de las causas (cesación de pagos del deudor), que corresponde al riesgo de crédito, no la definición general.",
+          "etiquetaError": "parte-por-el-todo"
+        },
+        {
+          "texto": "el rendimiento esperado de una inversión no se materialice."
+        },
+        {
+          "texto": "la pérdida de un portafolio exceda la estimada por el valor en riesgo.",
+          "porQueNo": "Confunde el riesgo financiero con la interpretación del VaR.",
+          "etiquetaError": "confunde-riesgo-con-var"
+        },
+        {
+          "texto": "el precio de un bono se aleje de su valor nominal antes del vencimiento.",
+          "porQueNo": "Una variación de precio no es por sí misma la definición de riesgo financiero; además puede ser favorable.",
+          "etiquetaError": "concepto-ajeno"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "El manual define el riesgo financiero como la posibilidad de que el rendimiento esperado de una inversión no se materialice, ya sea por fluctuaciones adversas de los precios, cesación de pagos del deudor, operaciones mal consumadas o factores imprevistos.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 290,
+        "textual": "la posibilidad de que el rendimiento esperado de una inversión no se materialice"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l10.q02",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o01",
+      "enunciado": "Son causas que el manual señala para que el rendimiento esperado de una inversión no se materialice, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "Las fluctuaciones adversas de los precios de mercado.",
+          "porQueNo": "Es la primera causa que enumera el manual.",
+          "etiquetaError": "elemento-del-conjunto"
+        },
+        {
+          "texto": "La cesación de pagos del deudor.",
+          "porQueNo": "Es la segunda causa que enumera el manual.",
+          "etiquetaError": "elemento-del-conjunto"
+        },
+        {
+          "texto": "Las operaciones mal consumadas.",
+          "porQueNo": "Es la tercera causa que enumera el manual.",
+          "etiquetaError": "elemento-del-conjunto"
+        },
+        {
+          "texto": "El pago puntual de los cupones por parte del emisor."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Las cuatro causas del manual son fluctuaciones adversas de los precios, cesación de pagos del deudor, operaciones mal consumadas y factores imprevistos que alteran el desenvolvimiento económico de los mercados. El pago puntual de los cupones es justamente el cumplimiento esperado, no una causa de riesgo.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 290,
+        "textual": "Cesación de pagos del deudor"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l10.q03",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o02",
+      "enunciado": "Según el manual, la medición del riesgo de un solo instrumento de inversión puede realizarse mediante el cálculo de:",
+      "opciones": [
+        {
+          "texto": "la desviación estándar."
+        },
+        {
+          "texto": "el coeficiente de correlación.",
+          "porQueNo": "La correlación relaciona dos variables; no mide el riesgo de un instrumento aislado.",
+          "etiquetaError": "confunde-medida-de-dos-variables"
+        },
+        {
+          "texto": "la duración de Macaulay.",
+          "porQueNo": "La duración es un tiempo promedio de recuperación del principal en instrumentos de deuda, no la medida general de riesgo de un instrumento.",
+          "etiquetaError": "confunde-duracion"
+        },
+        {
+          "texto": "la covarianza.",
+          "porQueNo": "La covarianza también requiere dos variables; sirve para el riesgo de un portafolio.",
+          "etiquetaError": "confunde-medida-de-dos-variables"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El manual indica que la medición del riesgo para un solo instrumento de inversión la podemos realizar mediante el cálculo de la desviación estándar, medida de dispersión respecto del valor promedio.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 290,
+        "textual": "La medición del riesgo para un solo instrumento de inversión lo podemos realizar mediante el cálculo de la desviación estándar"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l10.q04",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o02",
+      "enunciado": "Los rendimientos mensuales de un fondo fueron 2%, 5% y 11%. Con la definición de varianza del manual (sumatoria de las desviaciones al cuadrado entre el número total de datos), ¿cuál es la desviación estándar?",
+      "opciones": [
+        {
+          "texto": "4.5826%",
+          "porQueNo": "Divide entre n menos 1 (42 entre 2); la definición del capítulo 8 divide entre el número total de datos.",
+          "etiquetaError": "divisor-n-menos-1"
+        },
+        {
+          "texto": "14.0000%",
+          "porQueNo": "Es la varianza (14); falta sacar la raíz cuadrada para obtener la desviación estándar.",
+          "etiquetaError": "omite-raiz-cuadrada"
+        },
+        {
+          "texto": "3.7417%"
+        },
+        {
+          "texto": "3.3333%",
+          "porQueNo": "Promedia las desviaciones en valor absoluto sin elevarlas al cuadrado.",
+          "etiquetaError": "desviacion-media-absoluta"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Media = (2 + 5 + 11) ÷ 3 = 6. Desviaciones al cuadrado: 16 + 1 + 25 = 42. Varianza = 42 ÷ 3 = 14. Desviación estándar = raíz de 14 = 3.7417%.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 290,
+        "textual": "elevadas al cuadrado y el número total de datos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l10.q05",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o02",
+      "enunciado": "El coeficiente de correlación indica:",
+      "opciones": [
+        {
+          "texto": "la fuerza y la dirección de una relación lineal entre dos variables aleatorias."
+        },
+        {
+          "texto": "la magnitud de la dispersión de los rendimientos de un activo respecto de su media.",
+          "porQueNo": "Esa es la desviación estándar, que se refiere a un solo activo.",
+          "etiquetaError": "confunde-desviacion-estandar"
+        },
+        {
+          "texto": "la fuerza de una relación lineal entre dos variables, sin indicar su dirección.",
+          "porQueNo": "El coeficiente sí indica la dirección mediante su signo.",
+          "etiquetaError": "omite-elemento-definicion"
+        },
+        {
+          "texto": "la sensibilidad del precio de un bono ante un cambio en la tasa de interés.",
+          "porQueNo": "Esa es la duración modificada.",
+          "etiquetaError": "confunde-duracion"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El manual define el coeficiente de correlación como el indicador de la fuerza y la dirección de una relación lineal entre dos variables aleatorias.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 290,
+        "textual": "Indica la fuerza y la dirección de una relación lineal entre dos variables aleatorias"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l10.q06",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o03",
+      "enunciado": "Un portafolio invierte 30% en el activo A (desviación estándar de 25%) y 70% en el activo B (desviación estándar de 10%). La correlación entre ambos es 0.4. ¿Cuál es el riesgo total (desviación estándar) del portafolio?",
+      "opciones": [
+        {
+          "texto": "14.5000%",
+          "porQueNo": "Es el promedio ponderado de las desviaciones; solo sería correcto con correlación igual a 1.",
+          "etiquetaError": "supone-correlacion-perfecta"
+        },
+        {
+          "texto": "12.1347%"
+        },
+        {
+          "texto": "10.2591%",
+          "porQueNo": "Omite el término de covarianza, como si la correlación fuera 0.",
+          "etiquetaError": "omite-covarianza"
+        },
+        {
+          "texto": "11.2361%",
+          "porQueNo": "Omite el factor 2 del término de covarianza.",
+          "etiquetaError": "omite-factor-2"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Varianza = 0.30² × 25² + 0.70² × 10² + 2 × 0.30 × 0.70 × 0.4 × 25 × 10 = 56.25 + 49 + 42 = 147.25. Desviación estándar = raíz de 147.25 = 12.1347%.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 291,
+        "textual": "Al conocer la correlación entre los rendimientos de diferentes activos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "Fórmula de la varianza de un portafolio de dos activos del capítulo 4 del manual (p. 149)."
+      ]
+    },
+    {
+      "id": "g.derivados.l10.q07",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o03",
+      "enunciado": "Para dos activos con los mismos pesos y desviaciones estándar dentro de un portafolio, el riesgo total es menor cuando el coeficiente de correlación entre sus rendimientos es:",
+      "opciones": [
+        {
+          "texto": "0",
+          "porQueNo": "Con correlación nula desaparece el término de covarianza, pero el riesgo sigue siendo mayor que con correlación negativa.",
+          "etiquetaError": "confunde-nula-con-minima"
+        },
+        {
+          "texto": "1",
+          "porQueNo": "Con correlación 1 no hay beneficio de diversificación: el riesgo es el promedio ponderado.",
+          "etiquetaError": "invierte-efecto-correlacion"
+        },
+        {
+          "texto": "0.5",
+          "porQueNo": "Una correlación positiva intermedia reduce algo el riesgo, pero menos que una negativa.",
+          "etiquetaError": "invierte-efecto-correlacion"
+        },
+        {
+          "texto": "−1"
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El término 2 × wA × wB × ρ × σA × σB es mínimo cuando ρ = −1; en ese caso las variaciones de un activo compensan las del otro y el riesgo puede reducirse o incluso nulificarse.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 291,
+        "textual": "pueden desarrollar estrategias de inversión para disminuir o nulificar el riesgo"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l10.q08",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o04",
+      "enunciado": "De acuerdo con el manual, la duración modificada es:",
+      "opciones": [
+        {
+          "texto": "el tiempo promedio en el que el inversionista recibe el pago del principal, obtenido con los flujos del bono a valor presente.",
+          "porQueNo": "Esa es la definición de la duración de Macaulay.",
+          "etiquetaError": "confunde-macaulay-modificada"
+        },
+        {
+          "texto": "la duración de Macaulay capitalizada un periodo, que indica la sensibilidad del valor de un portafolio de deuda ante cambios en la tasa.",
+          "porQueNo": "La duración de Macaulay se descuenta (se divide entre uno más la tasa del periodo), no se capitaliza.",
+          "etiquetaError": "invierte-operacion"
+        },
+        {
+          "texto": "la duración de Macaulay descontada un periodo, que indica la sensibilidad del valor de un portafolio de deuda ante cambios en la tasa."
+        },
+        {
+          "texto": "el cambio en pesos del precio de un bono ante una variación de un punto base en la tasa de interés.",
+          "porQueNo": "Ese es el DV01, que mide la sensibilidad en términos monetarios.",
+          "etiquetaError": "confunde-dv01"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El manual indica que la duración modificada es la duración de Macaulay descontada un periodo e indica el grado de sensibilidad del valor de un portafolio de instrumentos de deuda ante cambios en la tasa de interés.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 291,
+        "textual": "La Duración Modificada es la Duración de Macaulay descontada un periodo"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l10.q09",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o04",
+      "enunciado": "Son propiedades de la duración señaladas en el manual, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "A mayor tiempo al vencimiento se tiene mayor duración.",
+          "porQueNo": "Es la propiedad 2 del manual.",
+          "etiquetaError": "elemento-del-conjunto"
+        },
+        {
+          "texto": "A mayor tasa de mercado se tiene mayor duración."
+        },
+        {
+          "texto": "A menor cupón se tiene mayor duración.",
+          "porQueNo": "Es la propiedad 3 del manual.",
+          "etiquetaError": "elemento-del-conjunto"
+        },
+        {
+          "texto": "La duración es menor o igual que el plazo al vencimiento del bono.",
+          "porQueNo": "Es la propiedad 1 del manual.",
+          "etiquetaError": "elemento-del-conjunto"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "La propiedad 4 dice lo contrario: a mayor tasa de mercado se tiene menor duración, porque los flujos lejanos pesan menos a valor presente.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 291,
+        "textual": "A mayor tasa de mercado se tiene menor Duración"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l10.q10",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o04",
+      "enunciado": "Un bono con cupones semestrales tiene una duración de Macaulay de 3.2 años y una tasa de rendimiento de 9% anual; su tasa cupón es 8% anual. ¿Cuál es su duración modificada?",
+      "opciones": [
+        {
+          "texto": "3.0622"
+        },
+        {
+          "texto": "2.9358",
+          "porQueNo": "Descuenta con la tasa anual completa (1.09); con cupones semestrales se usa la tasa del periodo, 4.5%.",
+          "etiquetaError": "tasa-anual-vs-periodo"
+        },
+        {
+          "texto": "3.3440",
+          "porQueNo": "Multiplica en lugar de dividir: la duración modificada es la de Macaulay descontada un periodo.",
+          "etiquetaError": "invierte-operacion"
+        },
+        {
+          "texto": "3.0769",
+          "porQueNo": "Usa la tasa cupón (4% semestral) en lugar de la tasa de rendimiento del bono.",
+          "etiquetaError": "confunde-tasa-cupon-rendimiento"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "D_mod = D_Mac ÷ (1 + y ÷ m) = 3.2 ÷ (1 + 0.09 ÷ 2) = 3.2 ÷ 1.045 = 3.0622.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 291,
+        "textual": "La Duración Modificada es la Duración de Macaulay descontada un periodo"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l10.q11",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o04",
+      "enunciado": "Un bono cotiza a $96.4540, con duración de Macaulay de 1.8852 años y duración modificada de 1.7955. Si la tasa de rendimiento sube 50 puntos base, ¿cuál es el precio estimado con la duración?",
+      "opciones": [
+        {
+          "texto": "$95.5448",
+          "porQueNo": "Usa la duración de Macaulay; la sensibilidad del precio la mide la duración modificada.",
+          "etiquetaError": "confunde-macaulay-modificada"
+        },
+        {
+          "texto": "$94.7222",
+          "porQueNo": "Toma 50 puntos base como 1%; 50 puntos base son 0.50%.",
+          "etiquetaError": "confunde-puntos-base"
+        },
+        {
+          "texto": "$97.3199",
+          "porQueNo": "Suma el cambio: cuando la tasa sube, el precio del bono baja.",
+          "etiquetaError": "invierte-signo"
+        },
+        {
+          "texto": "$95.5881"
+        }
+      ],
+      "clave": 3,
+      "explicacion": "ΔP ÷ P ≈ −D_mod × Δy = −1.7955 × 0.005 = −0.897750%. Precio estimado = 96.4540 × (1 − 0.0089775) = $95.5881.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 291,
+        "textual": "cuando se incrementan los intereses, los tenedores de bonos sufren pérdidas"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l10.q12",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o03",
+      "enunciado": "Con los datos del ejemplo del manual (20% en el activo A con desviación de 40% y 80% en el activo B con desviación de 20%), ¿cuál sería el riesgo total del portafolio si la correlación fuera −1?",
+      "opciones": [
+        {
+          "texto": "24.0000%",
+          "porQueNo": "Es el resultado con correlación 1 (promedio ponderado de las desviaciones).",
+          "etiquetaError": "invierte-signo-correlacion"
+        },
+        {
+          "texto": "21.1660%",
+          "porQueNo": "Es el resultado del ejemplo del manual, con correlación de 0.5.",
+          "etiquetaError": "usa-dato-del-ejemplo"
+        },
+        {
+          "texto": "8.0000%"
+        },
+        {
+          "texto": "17.8885%",
+          "porQueNo": "Es el resultado con correlación 0, sin término de covarianza.",
+          "etiquetaError": "omite-covarianza"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Varianza = 0.2² × 40² + 0.8² × 20² + 2 × 0.2 × 0.8 × (−1) × 40 × 20 = 64 + 256 − 256 = 64. Desviación estándar = raíz de 64 = 8.0000%, igual al valor absoluto de (0.2 × 40 − 0.8 × 20).",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 291,
+        "textual": "pueden desarrollar estrategias de inversión para disminuir o nulificar el riesgo"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "Datos del ejemplo del capítulo 4 del manual (p. 149), con la correlación cambiada a −1."
+      ]
+    },
+    {
+      "id": "g.derivados.l10.q13",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o02",
+      "enunciado": "En el capítulo de riesgos, el manual define la varianza como la sumatoria de las distancias al cuadrado entre cada dato y su media aritmética, dividida entre:",
+      "opciones": [
+        {
+          "texto": "el número total de datos."
+        },
+        {
+          "texto": "el número total de datos menos uno.",
+          "porQueNo": "Ese divisor aparece en el ejemplo del capítulo 4 (varianza muestral), pero la definición del capítulo 8 usa el número total de datos.",
+          "etiquetaError": "divisor-n-menos-1"
+        },
+        {
+          "texto": "la media aritmética de los datos.",
+          "porQueNo": "Dividir entre la media se parece al coeficiente de variación, no a la varianza.",
+          "etiquetaError": "confunde-coeficiente-variacion"
+        },
+        {
+          "texto": "la desviación estándar de los datos.",
+          "porQueNo": "La desviación estándar se obtiene de la varianza, no al revés.",
+          "etiquetaError": "invierte-relacion"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El manual define la varianza como el resultado de la división de la sumatoria de las distancias existentes entre cada dato y su media aritmética elevadas al cuadrado y el número total de datos.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 290,
+        "textual": "elevadas al cuadrado y el número total de datos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "El capítulo 4 (p. 148) resuelve un ejemplo con divisor n menos 1; ver docs/dudas/derivados-riesgos.md."
+      ]
+    },
+    {
+      "id": "g.derivados.l10.q14",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o04",
+      "enunciado": "Según el manual, la duración de Macaulay es igual al plazo al vencimiento cuando:",
+      "opciones": [
+        {
+          "texto": "el bono cotiza a la par porque su cupón iguala la tasa de mercado.",
+          "porQueNo": "Un bono a la par con cupones tiene duración menor que su plazo.",
+          "etiquetaError": "condicion-ajena"
+        },
+        {
+          "texto": "el bono tiene el cupón más alto disponible en el mercado.",
+          "porQueNo": "A mayor cupón la duración es menor, por lo que se aleja del plazo.",
+          "etiquetaError": "invierte-propiedad-cupon"
+        },
+        {
+          "texto": "la tasa de mercado es la más alta de la curva de rendimientos.",
+          "porQueNo": "A mayor tasa, menor duración; no produce la igualdad.",
+          "etiquetaError": "invierte-propiedad-tasa"
+        },
+        {
+          "texto": "se trata de un strip, cuyos cupones se separan del principal."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "La propiedad 1 del manual indica que la duración es menor o igual que el plazo, y que la igualdad se presenta en un strip, cuyos cupones se separan del principal, cuando es la duración de Macaulay.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 291,
+        "textual": "cuando se trata de un strip"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l10.q15",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o02",
+      "enunciado": "Conforme a la escala de la figura de correlación del manual, un coeficiente de correlación de 0.15 entre los rendimientos de dos activos indica una correlación:",
+      "opciones": [
+        {
+          "texto": "directa o positiva media.",
+          "porQueNo": "La intensidad media corresponde a valores entre 0.25 y 0.75.",
+          "etiquetaError": "confunde-intensidad"
+        },
+        {
+          "texto": "directa o positiva débil."
+        },
+        {
+          "texto": "inversa o negativa débil.",
+          "porQueNo": "El signo positivo indica correlación directa, no inversa.",
+          "etiquetaError": "invierte-direccion"
+        },
+        {
+          "texto": "nula, porque es menor que 0.25.",
+          "porQueNo": "La correlación nula corresponde a un coeficiente igual a 0; 0.15 es débil, no nula.",
+          "etiquetaError": "confunde-debil-nula"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "La figura de la página 291 clasifica la intensidad en fuerte (0.75 a 1), media (0.25 a 0.75), débil (menor que 0.25) y nula (0). El signo positivo indica dirección directa; 0.15 es directa débil.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 291,
+        "textual": "Al conocer la correlación entre los rendimientos de diferentes activos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "Escala leída de la figura de la p. 291 sobre la imagen del PDF, porque el OCR no la recupera."
+      ]
+    },
+    {
+      "id": "g.derivados.l11.q01",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o05",
+      "enunciado": "La pérdida potencial ante cambios en los factores de riesgo que inciden sobre la valuación o los resultados esperados de las inversiones o pasivos, como movimientos de precios, tasas de interés, tipos de cambio e índices de precios, corresponde al riesgo:",
+      "opciones": [
+        {
+          "texto": "de liquidez.",
+          "porQueNo": "El riesgo de liquidez se refiere a vender de forma anticipada o forzosa a descuentos inusuales, no al cambio de los factores de riesgo.",
+          "etiquetaError": "confunde-mercado-liquidez"
+        },
+        {
+          "texto": "de crédito.",
+          "porQueNo": "El riesgo de crédito se refiere a la falta de pago de un emisor o contraparte.",
+          "etiquetaError": "confunde-mercado-credito"
+        },
+        {
+          "texto": "de mercado."
+        },
+        {
+          "texto": "operacional.",
+          "porQueNo": "El riesgo operacional proviene de fallas en controles internos, procesamiento o fraudes.",
+          "etiquetaError": "confunde-tipo-de-riesgo"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El manual define el riesgo de mercado como la pérdida potencial ante cambios en los factores de riesgo que inciden sobre la valuación o sobre los resultados esperados en las inversiones o pasivos, tales como movimientos de precios, tasas de interés, tipos de cambio e índices de precios.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 292,
+        "textual": "Se define como la pérdida potencial ante cambios en los factores de riesgo"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l11.q02",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o05",
+      "enunciado": "Una casa de bolsa necesita recursos para cubrir un compromiso inmediato y vende de manera anticipada una posición de bonos con un descuento inusual respecto de su valuación. La pérdida resultante corresponde al riesgo:",
+      "opciones": [
+        {
+          "texto": "de liquidez."
+        },
+        {
+          "texto": "de mercado.",
+          "porQueNo": "No hubo un cambio en los factores de riesgo; la pérdida surge de vender de forma forzosa con descuento.",
+          "etiquetaError": "confunde-mercado-liquidez"
+        },
+        {
+          "texto": "de contraparte.",
+          "porQueNo": "Ninguna contraparte incumplió un contrato.",
+          "etiquetaError": "confunde-contraparte"
+        },
+        {
+          "texto": "legal.",
+          "porQueNo": "No hay incumplimiento de disposiciones, resoluciones desfavorables ni sanciones.",
+          "etiquetaError": "confunde-tipo-de-riesgo"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El riesgo de liquidez es la pérdida potencial por la venta anticipada o forzosa de activos a descuentos inusuales para hacer frente a sus obligaciones, o porque una posición no puede ser oportunamente enajenada, adquirida o cubierta.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 292,
+        "textual": "por la venta anticipada o forzosa de activos a descuentos inusuales"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l11.q03",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o05",
+      "enunciado": "La pérdida potencial por daños, interrupción, alteración o fallas derivadas del uso o dependencia en el hardware, software, sistemas, aplicaciones y redes se denomina riesgo:",
+      "opciones": [
+        {
+          "texto": "legal.",
+          "porQueNo": "El riesgo legal se refiere al incumplimiento de disposiciones, resoluciones desfavorables y sanciones.",
+          "etiquetaError": "confunde-tecnologico-legal"
+        },
+        {
+          "texto": "sistémico.",
+          "porQueNo": "El riesgo sistémico es la cadena de fallos entre participantes de un sistema, no la falla de los equipos de una entidad.",
+          "etiquetaError": "confunde-sistemico"
+        },
+        {
+          "texto": "de contraparte.",
+          "porQueNo": "El riesgo de contraparte supone que la otra parte de un contrato no cumple.",
+          "etiquetaError": "confunde-contraparte"
+        },
+        {
+          "texto": "tecnológico."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El manual define el riesgo tecnológico como la pérdida potencial por daños, interrupción, alteración o fallas derivadas del uso o dependencia en el hardware, software, sistemas, aplicaciones, redes y cualquier otro canal de distribución de información.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 292,
+        "textual": "interrupción, alteración o fallas derivadas del uso o dependencia en el hardware"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l11.q04",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o06",
+      "enunciado": "El riesgo que se materializa cuando el incumplimiento de las obligaciones de una entidad participante en un sistema provoca que otras, a su vez, no puedan cumplir con las suyas, generando una cadena de fallos, es el riesgo:",
+      "opciones": [
+        {
+          "texto": "sistemático.",
+          "porQueNo": "El riesgo sistemático es el inherente a todo un mercado; la cadena de fallos entre participantes es el sistémico.",
+          "etiquetaError": "confunde-sistemico-sistematico"
+        },
+        {
+          "texto": "sistémico."
+        },
+        {
+          "texto": "no sistemático.",
+          "porQueNo": "El no sistemático es propio de cada emisora y no implica contagio.",
+          "etiquetaError": "confunde-sistemico-sistematico"
+        },
+        {
+          "texto": "de contraparte.",
+          "porQueNo": "El de contraparte describe el incumplimiento de una parte frente a otra, no la cadena de fallos del sistema.",
+          "etiquetaError": "parte-por-el-todo"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "El manual llama riesgo sistémico (o riesgo de sistema) al que se materializa cuando el incumplimiento de una entidad participante provoca que otras no puedan cumplir, generando una cadena de fallos que puede colapsar todo el mecanismo.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 293,
+        "textual": "generando una cadena de fallos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l11.q05",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o07",
+      "enunciado": "De acuerdo con el manual, el riesgo sistemático puede mitigarse:",
+      "opciones": [
+        {
+          "texto": "agregando más acciones del mismo mercado accionario con baja correlación entre sí.",
+          "porQueNo": "Eso diversifica el riesgo no sistemático; dentro del propio mercado el sistemático no es diversificable.",
+          "etiquetaError": "confunde-sistematico-no-sistematico"
+        },
+        {
+          "texto": "de ninguna forma, porque es un riesgo impredecible que es imposible de evitar.",
+          "porQueNo": "El manual matiza que, aunque no es diversificable dentro del mercado, se mitiga invirtiendo en mercados distintos.",
+          "etiquetaError": "absolutiza"
+        },
+        {
+          "texto": "con asignación de activos, invirtiendo en mercados distintos, como bonos y acciones."
+        },
+        {
+          "texto": "vigilando la calificación crediticia de cada emisora del portafolio.",
+          "porQueNo": "La calificación de cada emisora es una fuente de riesgo no sistemático.",
+          "etiquetaError": "confunde-sistematico-no-sistematico"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El manual indica que el riesgo sistemático es no diversificable solo dentro del propio mercado y que puede mitigarse mediante una estrategia de asignación de activos, invirtiendo en mercados distintos como bonos y acciones.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 293,
+        "textual": "riesgo sistemático se puede mitigar a través de una estrategia de asignación de activos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l11.q06",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o07",
+      "enunciado": "En el mercado de dinero, una calificadora degrada la calificación de la capacidad de pago de un emisor y solo los títulos de ese emisor pierden valor. Según el manual, se trata de un riesgo:",
+      "opciones": [
+        {
+          "texto": "sistemático.",
+          "porQueNo": "El sistemático afecta a todo el mercado; aquí solo se afectan los títulos de un emisor.",
+          "etiquetaError": "confunde-sistematico-no-sistematico"
+        },
+        {
+          "texto": "sistémico.",
+          "porQueNo": "No hay una cadena de fallos entre participantes del sistema.",
+          "etiquetaError": "confunde-sistemico"
+        },
+        {
+          "texto": "soberano.",
+          "porQueNo": "El soberano es el riesgo promedio de invertir en un país, no el de un emisor específico.",
+          "etiquetaError": "confunde-soberano"
+        },
+        {
+          "texto": "no sistemático."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El manual pone como ejemplo de riesgo no sistemático en el mercado de dinero el incremento o degradación de la calificación de la capacidad de pago de la empresa que emite el instrumento.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 293,
+        "textual": "degradación de la calificación"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l11.q07",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o08",
+      "enunciado": "Según el manual, los riesgos cuantificables discrecionales, que resultan de la toma de posición de riesgo, son:",
+      "opciones": [
+        {
+          "texto": "mercado, crédito y liquidez."
+        },
+        {
+          "texto": "tecnológico y legal.",
+          "porQueNo": "Son los cuantificables no discrecionales: resultan de la operación del negocio.",
+          "etiquetaError": "invierte-clasificacion"
+        },
+        {
+          "texto": "mercado, crédito y legal.",
+          "porQueNo": "El riesgo legal es no discrecional; el tercer discrecional es el de liquidez.",
+          "etiquetaError": "mezcla-conjuntos"
+        },
+        {
+          "texto": "mercado, liquidez y operacional.",
+          "porQueNo": "El operacional no figura entre los discrecionales; el que falta es el de crédito.",
+          "etiquetaError": "mezcla-conjuntos"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "La tabla del manual clasifica como discrecionales (resultan de la toma de posición de riesgo) al riesgo de mercado, de crédito y de liquidez; como no discrecionales, al tecnológico y al legal.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 294,
+        "textual": "Resultan de la toma de posición de"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l11.q08",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o08",
+      "enunciado": "Los riesgos derivados de eventos imprevistos para los cuales no se puede conformar una base estadística que permita medir las pérdidas potenciales son los riesgos:",
+      "opciones": [
+        {
+          "texto": "cuantificables no discrecionales.",
+          "porQueNo": "Los no discrecionales (tecnológico y legal) sí permiten conformar bases estadísticas.",
+          "etiquetaError": "confunde-no-discrecional"
+        },
+        {
+          "texto": "no cuantificables."
+        },
+        {
+          "texto": "cuantificables discrecionales.",
+          "porQueNo": "Los discrecionales resultan de la toma de posición de riesgo y son medibles.",
+          "etiquetaError": "invierte-clasificacion"
+        },
+        {
+          "texto": "sistemáticos.",
+          "porQueNo": "Sistemático alude al riesgo de todo el mercado, no a la ausencia de base estadística.",
+          "etiquetaError": "concepto-ajeno"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "El manual define los riesgos no cuantificables como aquellos derivados de eventos imprevistos para los cuales no se puede conformar una base estadística que permita medir las pérdidas potenciales.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 294,
+        "textual": "Son aquellos derivados de eventos imprevistos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l11.q09",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o09",
+      "enunciado": "El riesgo de una inversión debido solo a factores específicos y comunes a un cierto país, que puede entenderse como un riesgo promedio de las inversiones realizadas en él, es el riesgo:",
+      "opciones": [
+        {
+          "texto": "soberano."
+        },
+        {
+          "texto": "corporativo.",
+          "porQueNo": "El corporativo es interno de la empresa: el impacto de un proyecto en la variabilidad de sus rendimientos.",
+          "etiquetaError": "confunde-corporativo-soberano"
+        },
+        {
+          "texto": "sistemático.",
+          "porQueNo": "El sistemático afecta a un mercado; la definición del enunciado es la del riesgo soberano.",
+          "etiquetaError": "confunde-sistematico"
+        },
+        {
+          "texto": "sistémico.",
+          "porQueNo": "El sistémico es la cadena de fallos entre participantes de un sistema.",
+          "etiquetaError": "confunde-sistemico"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El manual define el riesgo soberano como el riesgo de una inversión económica debido solo a factores específicos y comunes a un cierto país, entendido como un riesgo promedio de las inversiones realizadas en ese país.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 294,
+        "textual": "debido solo a factores especificos y comunes a"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l11.q10",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o05",
+      "enunciado": "Según la definición del manual, el riesgo operacional comprende la pérdida potencial por las siguientes causas, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "las fallas o deficiencias en los controles internos.",
+          "porQueNo": "Forma parte de la definición del riesgo operacional.",
+          "etiquetaError": "elemento-del-conjunto"
+        },
+        {
+          "texto": "los errores en el procesamiento y almacenamiento de las operaciones.",
+          "porQueNo": "Forma parte de la definición del riesgo operacional.",
+          "etiquetaError": "elemento-del-conjunto"
+        },
+        {
+          "texto": "la venta forzosa de activos a descuentos inusuales."
+        },
+        {
+          "texto": "las resoluciones administrativas y judiciales adversas, fraudes o robos.",
+          "porQueNo": "Forma parte de la definición del riesgo operacional.",
+          "etiquetaError": "elemento-del-conjunto"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El riesgo operacional es la pérdida potencial por fallas o deficiencias en los controles internos, errores en el procesamiento y almacenamiento de las operaciones o en la transmisión de información, resoluciones administrativas y judiciales adversas, fraudes o robos. La venta forzosa a descuentos inusuales define al riesgo de liquidez.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 292,
+        "textual": "por fallas o deficiencias en los controles internos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l11.q11",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o05",
+      "enunciado": "La pérdida potencial por la falta de pago de un emisor o contraparte en las inversiones, incluyendo las garantías reales o personales que les otorguen y cualquier otro mecanismo de mitigación, corresponde al riesgo:",
+      "opciones": [
+        {
+          "texto": "de contraparte.",
+          "porQueNo": "Aunque el enunciado menciona a la contraparte, la definición con garantías y mecanismos de mitigación es la del riesgo de crédito.",
+          "etiquetaError": "palabra-ancla-enganosa"
+        },
+        {
+          "texto": "de liquidez.",
+          "porQueNo": "El de liquidez se refiere a vender a descuentos inusuales o no poder cerrar la posición.",
+          "etiquetaError": "confunde-credito-liquidez"
+        },
+        {
+          "texto": "legal.",
+          "porQueNo": "El legal se refiere a disposiciones legales, resoluciones desfavorables y sanciones, no a la falta de pago.",
+          "etiquetaError": "confunde-tipo-de-riesgo"
+        },
+        {
+          "texto": "de crédito."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El manual define el riesgo de crédito como la pérdida potencial por la falta de pago de un emisor o contraparte en las inversiones, incluyendo las garantías reales o personales que les otorguen, así como cualquier otro mecanismo de mitigación.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 292,
+        "textual": "Se define como la pérdida potencial por la falta de pago de un emisor"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l11.q12",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o08",
+      "enunciado": "Conforme a la clasificación del manual, el riesgo tecnológico es un riesgo:",
+      "opciones": [
+        {
+          "texto": "cuantificable discrecional, porque resulta de la toma de posición de riesgo.",
+          "porQueNo": "Los discrecionales son mercado, crédito y liquidez.",
+          "etiquetaError": "invierte-clasificacion"
+        },
+        {
+          "texto": "cuantificable no discrecional, porque resulta de la operación del negocio."
+        },
+        {
+          "texto": "no cuantificable, porque deriva de eventos imprevistos sin base estadística.",
+          "porQueNo": "El manual lo clasifica entre los cuantificables no discrecionales.",
+          "etiquetaError": "confunde-cuantificable"
+        },
+        {
+          "texto": "no cuantificable discrecional, porque lo decide el área de sistemas.",
+          "porQueNo": "La categoría no existe en el manual: la división en discrecionales y no discrecionales es de los cuantificables.",
+          "etiquetaError": "categoria-inexistente"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Los riesgos cuantificables se dividen en discrecionales (mercado, crédito y liquidez) y no discrecionales, que son los resultantes de la operación del negocio que inciden en el patrimonio sin ser producto de una posición de riesgo: tecnológico y legal.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 294,
+        "textual": "Aquellos resultantes de la operación del negocio"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l11.q13",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o09",
+      "enunciado": "Según el manual, el riesgo corporativo se mide a través de:",
+      "opciones": [
+        {
+          "texto": "el impacto del proyecto sobre la diversificación de los accionistas.",
+          "porQueNo": "El manual aclara que el riesgo corporativo no considera los efectos de la diversificación de los accionistas.",
+          "etiquetaError": "invierte-definicion"
+        },
+        {
+          "texto": "la probabilidad de que el Estado incumpla sus obligaciones con agentes extranjeros.",
+          "porQueNo": "Esa es la idea de riesgo país o soberano.",
+          "etiquetaError": "confunde-corporativo-soberano"
+        },
+        {
+          "texto": "el impacto del proyecto sobre la variabilidad de los rendimientos de la empresa."
+        },
+        {
+          "texto": "la sensibilidad de la acción de la empresa ante los movimientos del mercado.",
+          "porQueNo": "Esa sensibilidad es la beta, relacionada con el riesgo sistemático.",
+          "etiquetaError": "confunde-beta"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El riesgo corporativo, o interno de la empresa, refleja el impacto de un proyecto sobre el riesgo de la compañía sin considerar la diversificación de los accionistas, y se mide a través del impacto del proyecto sobre la variabilidad de los rendimientos de la empresa.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 294,
+        "textual": "se mide a través del impacto del proyecto sobre la variabilidad"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l11.q14",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o07",
+      "enunciado": "Un cliente invierte únicamente en acciones de la bolsa mexicana, con un portafolio muy diversificado. Durante una crisis financiera todas sus acciones caen al mismo tiempo. Según el manual, ¿qué afirmación es correcta?",
+      "opciones": [
+        {
+          "texto": "Es riesgo sistemático; no se elimina con más acciones del mismo mercado, pero se mitiga con bonos."
+        },
+        {
+          "texto": "Es riesgo no sistemático; se elimina agregando más emisoras al portafolio accionario del cliente.",
+          "porQueNo": "Una caída simultánea de todo el mercado es riesgo sistemático, que no se diversifica dentro del mismo mercado.",
+          "etiquetaError": "confunde-sistematico-no-sistematico"
+        },
+        {
+          "texto": "Es riesgo sistémico, porque todas las acciones del portafolio bajan al mismo tiempo durante la crisis.",
+          "porQueNo": "Sistémico es la cadena de incumplimientos entre participantes, no la caída simultánea de precios.",
+          "etiquetaError": "confunde-sistemico-sistematico"
+        },
+        {
+          "texto": "Es riesgo sistemático y, por ser impredecible, no puede mitigarse con ninguna estrategia de inversión.",
+          "porQueNo": "El manual aclara que se mitiga con asignación de activos en mercados distintos.",
+          "etiquetaError": "absolutiza"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El riesgo sistemático es inherente a un mercado (en una gran crisis todas las acciones tienden a bajar). Es no diversificable dentro del propio mercado, pero se mitiga invirtiendo en mercados distintos, como bonos y acciones.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 293,
+        "textual": "en una gran crísis financiera todas las acciones tienden a bajar"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l11.q15",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o05",
+      "enunciado": "El manual define el riesgo legal como la pérdida potencial por los siguientes conceptos, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "el incumplimiento de las disposiciones legales y administrativas aplicables.",
+          "porQueNo": "Forma parte de la definición del riesgo legal.",
+          "etiquetaError": "elemento-del-conjunto"
+        },
+        {
+          "texto": "la emisión de resoluciones administrativas y judiciales desfavorables.",
+          "porQueNo": "Forma parte de la definición del riesgo legal.",
+          "etiquetaError": "elemento-del-conjunto"
+        },
+        {
+          "texto": "la aplicación de sanciones.",
+          "porQueNo": "Forma parte de la definición del riesgo legal.",
+          "etiquetaError": "elemento-del-conjunto"
+        },
+        {
+          "texto": "las fallas en las telecomunicaciones que impiden registrar una operación."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El riesgo legal es la pérdida potencial por el incumplimiento de las disposiciones legales y administrativas aplicables, la emisión de resoluciones administrativas y judiciales desfavorables y la aplicación de sanciones. Las fallas en telecomunicaciones son un riesgo tecnológico (componente del operacional).",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 292,
+        "textual": "la emisión de resoluciones administrativas y judiciales desfavorables y la aplicación de sanciones"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l12.q01",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o10",
+      "enunciado": "Según el manual, el VaR es una medida estadística del riesgo de mercado que estima:",
+      "opciones": [
+        {
+          "texto": "la pérdida máxima que podría registrar un portafolio en un intervalo de tiempo y con cierto nivel de probabilidad."
+        },
+        {
+          "texto": "la pérdida mínima que podría registrar un portafolio en un intervalo de tiempo y con cierto nivel de probabilidad.",
+          "porQueNo": "El VaR estima la pérdida máxima, no la mínima.",
+          "etiquetaError": "invierte-maximo-minimo"
+        },
+        {
+          "texto": "la ganancia máxima que podría registrar un portafolio en un intervalo de tiempo y con cierto nivel de probabilidad.",
+          "porQueNo": "El VaR mide pérdidas potenciales, no ganancias.",
+          "etiquetaError": "confunde-perdida-ganancia"
+        },
+        {
+          "texto": "la pérdida promedio que registraría un portafolio en condiciones extremas de mercado.",
+          "porQueNo": "El VaR no es un promedio y solo es válido en condiciones normales de mercado.",
+          "etiquetaError": "confunde-condiciones-extremas"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El manual define el VaR como la medida estadística del riesgo de mercado que estima la pérdida máxima que podría registrar un portafolio en un intervalo de tiempo y con cierto nivel de probabilidad.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 294,
+        "textual": "estima la pérdida máxima que podría registrar un portafolio"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l12.q02",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o10",
+      "enunciado": "De acuerdo con el manual, el VaR es válido solamente:",
+      "opciones": [
+        {
+          "texto": "en condiciones de estrés o crisis de mercado.",
+          "porQueNo": "Es al revés: en escenarios extremos el VaR deja de ser válido y se requieren otros análisis.",
+          "etiquetaError": "invierte-condicion"
+        },
+        {
+          "texto": "para horizontes de un año de operación.",
+          "porQueNo": "El VaR se calcula para cualquier horizonte (un día, diez días, un mes).",
+          "etiquetaError": "restringe-horizonte"
+        },
+        {
+          "texto": "en condiciones de mercado normales."
+        },
+        {
+          "texto": "cuando el nivel de confianza es de 99%.",
+          "porQueNo": "El manual usa 95% en su ejemplo; también se usan 99% y otros niveles.",
+          "etiquetaError": "restringe-confianza"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El manual indica que el VaR es válido solamente en condiciones de mercado normales.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 294,
+        "textual": "El VaR es válido solamente en condiciones de mercado normales"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l12.q03",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o11",
+      "enunciado": "Un cliente tiene 50,000 acciones con precio de $42 y volatilidad anual de 20%. Con 252 días de operación y un factor de 1.65 para 95% de confianza, ¿cuál es el VaR diario de la posición?",
+      "opciones": [
+        {
+          "texto": "$36,524.3070",
+          "porQueNo": "Usa 360 días; el manual convierte la volatilidad con 252 días de operación.",
+          "etiquetaError": "base-360"
+        },
+        {
+          "texto": "$61,646.0055",
+          "porQueNo": "Usa el factor 2.33 de 99%; el enunciado pide 95% (factor 1.65).",
+          "etiquetaError": "factor-confianza-equivocado"
+        },
+        {
+          "texto": "$2,750.0000",
+          "porQueNo": "Divide entre 252 sin sacar raíz cuadrada; el horizonte entra como raíz de 1 entre 252.",
+          "etiquetaError": "omite-raiz-tiempo"
+        },
+        {
+          "texto": "$43,654.8966"
+        }
+      ],
+      "clave": 3,
+      "explicacion": "VA = 50,000 × 42 = $2,100,000. VaR = 1.65 × 2,100,000 × 0.20 × raíz de (1 ÷ 252) = 693,000 × 0.062994 = $43,654.8966.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 295,
+        "textual": "Se solicita el VaR a 1 día"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l12.q04",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o11",
+      "enunciado": "Una posición tiene un VaR diario de $80,000 con 95% de confianza. Conforme a la interpretación del manual, esto significa que:",
+      "opciones": [
+        {
+          "texto": "en 1 de cada 20 días la máxima pérdida esperada es de $80,000.",
+          "porQueNo": "Invierte la lectura: en 1 de cada 20 días la pérdida puede ser mayor a $80,000.",
+          "etiquetaError": "invierte-interpretacion"
+        },
+        {
+          "texto": "en 19 de cada 20 días la máxima pérdida esperada es de $80,000."
+        },
+        {
+          "texto": "en 95 de cada 100 días se perderán exactamente $80,000.",
+          "porQueNo": "El VaR es un umbral máximo con cierta confianza, no una pérdida exacta.",
+          "etiquetaError": "perdida-exacta"
+        },
+        {
+          "texto": "la posición no puede perder más de $80,000 en ningún día.",
+          "porQueNo": "Con 95% de confianza, en 1 de cada 20 días la pérdida puede superar el VaR.",
+          "etiquetaError": "absolutiza"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "El manual interpreta el VaR diario al 95% así: en 19 de cada 20 días (19 ÷ 20 = 0.95) la máxima pérdida esperada es el VaR; solo 1 día de cada 20 la pérdida puede ser mayor.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 295,
+        "textual": "En 19 de cada 20 días"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l12.q05",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o13",
+      "enunciado": "El manual señala que en el VaR generalmente se utilizan probabilidades de 1% y 5%, que corresponden, respectivamente, a niveles de confianza de:",
+      "opciones": [
+        {
+          "texto": "95% y 99%.",
+          "porQueNo": "Invierte la correspondencia: 1% corresponde a 99% y 5% a 95%.",
+          "etiquetaError": "invierte-orden"
+        },
+        {
+          "texto": "90% y 95%.",
+          "porQueNo": "Ninguna de esas probabilidades corresponde a 90% de confianza.",
+          "etiquetaError": "cuantificador-alterado"
+        },
+        {
+          "texto": "1% y 5%.",
+          "porQueNo": "Repite las probabilidades; el nivel de confianza es su complemento.",
+          "etiquetaError": "confunde-probabilidad-confianza"
+        },
+        {
+          "texto": "99% y 95%."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El manual indica que generalmente se utilizan el 1% y el 5%, es decir, un nivel de confianza del 99% y 95%, respectivamente.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 296,
+        "textual": "un nivel de confianza del 99% y 95%, respectivamente"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l12.q06",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o11",
+      "enunciado": "Una posición de $5,000,000 tiene volatilidad anual de 18%. Con un factor de 1.65 (95%) y 252 días de operación, ¿cuál es su VaR a 10 días?",
+      "opciones": [
+        {
+          "texto": "$295,819.0808"
+        },
+        {
+          "texto": "$935,462.0707",
+          "porQueNo": "Multiplica el VaR diario por 10; el horizonte se ajusta con la raíz de 10.",
+          "etiquetaError": "horizonte-lineal"
+        },
+        {
+          "texto": "$247,500.0000",
+          "porQueNo": "Usa 360 días en lugar de 252 días de operación.",
+          "etiquetaError": "base-360"
+        },
+        {
+          "texto": "$417,732.3990",
+          "porQueNo": "Usa el factor 2.33 de 99%; el enunciado pide 95%.",
+          "etiquetaError": "factor-confianza-equivocado"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "VaR = 1.65 × 5,000,000 × 0.18 × raíz de (10 ÷ 252) = 1,485,000 × 0.199205 = $295,819.0808.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 295,
+        "textual": "VAR= CONF x VA x (VOL=100) x ((1-252)\".50)"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l12.q07",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o12",
+      "enunciado": "Un derivado tiene un valor libre de riesgo de $2,400,000.00, un CVA de $31,250.50 y un DVA de $12,480.25; no hay ajuste por fondeo. Con la fórmula del manual, ¿cuál es su valor ajustado al riesgo?",
+      "opciones": [
+        {
+          "texto": "$2,418,770.2500",
+          "porQueNo": "Suma el CVA y resta el DVA: los signos van al revés.",
+          "etiquetaError": "invierte-signos-cva-dva"
+        },
+        {
+          "texto": "$2,356,269.2500",
+          "porQueNo": "Resta también el DVA; en la fórmula del manual el DVA se suma.",
+          "etiquetaError": "resta-dva"
+        },
+        {
+          "texto": "$2,381,229.7500"
+        },
+        {
+          "texto": "$2,368,749.5000",
+          "porQueNo": "Solo resta el CVA y omite el DVA que da el enunciado.",
+          "etiquetaError": "omite-dva"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Valor ajustado al riesgo = Valor libre de riesgo − CVA + DVA ± FVA = 2,400,000.00 − 31,250.50 + 12,480.25 = $2,381,229.7500.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 296,
+        "textual": "Donde: DVA, representa el ajuste de valor de la deuda"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l12.q08",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o13",
+      "enunciado": "Según el manual, el VaR relativo se distingue del VaR absoluto porque considera:",
+      "opciones": [
+        {
+          "texto": "la cantidad absoluta en riesgo menos las ganancias esperadas.",
+          "porQueNo": "El manual define el relativo sumando las ganancias esperadas, no restándolas.",
+          "etiquetaError": "invierte-operacion"
+        },
+        {
+          "texto": "la pérdida expresada como porcentaje del valor del portafolio en lugar de pesos.",
+          "porQueNo": "La diferencia del manual no es la unidad de medida sino la inclusión de las ganancias esperadas.",
+          "etiquetaError": "concepto-ajeno"
+        },
+        {
+          "texto": "la pérdida del portafolio comparada con la de un índice de referencia.",
+          "porQueNo": "Esa idea no corresponde a la definición del manual.",
+          "etiquetaError": "concepto-ajeno"
+        },
+        {
+          "texto": "la cantidad absoluta en riesgo más las ganancias esperadas."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El manual distingue el VaR absoluto (la cantidad absoluta en riesgo) del VaR relativo (la cantidad absoluta en riesgo más las ganancias esperadas).",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 296,
+        "textual": "la cantidad absoluta en riesgo más las ganancias"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l12.q09",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o14",
+      "enunciado": "En la etapa de identificación de riesgos, el manual señala que los intermediarios están obligados a:",
+      "opciones": [
+        {
+          "texto": "mantener sistemas de evaluación de riesgos e informar al cliente sus límites en posiciones."
+        },
+        {
+          "texto": "auditar a los Socios Liquidadores y valuar los escenarios extremos del mercado de derivados.",
+          "porQueNo": "Son funciones de seguimiento que corresponden a Asigna.",
+          "etiquetaError": "confunde-entidad"
+        },
+        {
+          "texto": "garantizar a sus clientes que las pérdidas en futuros no excederán su aportación.",
+          "porQueNo": "En futuros las pérdidas pueden ser ilimitadas; ningún intermediario puede garantizar lo contrario.",
+          "etiquetaError": "contradice-manual"
+        },
+        {
+          "texto": "proponer coberturas a todos sus clientes, sin importar su tolerancia al riesgo.",
+          "porQueNo": "Las negociaciones propuestas deben tener niveles de riesgo tolerables para el cliente.",
+          "etiquetaError": "omite-tolerancia"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El manual indica que los intermediarios están obligados a mantener sistemas de evaluación de riesgos y deben informar a sus clientes respecto de los límites en posiciones, de acuerdo con la tolerancia que éstos asuman ante riesgos de mercado.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 297,
+        "textual": "Los intermediarios están obligados a mantener sistemas de evaluación de riesgos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l12.q10",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o14",
+      "enunciado": "La supervisión mediante el seguimiento de los sistemas de compensación y liquidación, la auditoría a los Socios Liquidadores, los requerimientos de información y la valuación de riesgos y escenarios extremos corresponde a:",
+      "opciones": [
+        {
+          "texto": "MexDer.",
+          "porQueNo": "MexDer da seguimiento a los sistemas operativos y audita a los Miembros, no a los Socios Liquidadores.",
+          "etiquetaError": "confunde-mexder-asigna"
+        },
+        {
+          "texto": "la CNBV.",
+          "porQueNo": "El manual atribuye estas funciones de seguimiento a la cámara de compensación.",
+          "etiquetaError": "confunde-entidad"
+        },
+        {
+          "texto": "el Banco de México.",
+          "porQueNo": "El manual atribuye estas funciones de seguimiento a la cámara de compensación.",
+          "etiquetaError": "confunde-entidad"
+        },
+        {
+          "texto": "Asigna."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El manual indica que Asigna desempeña las funciones de supervisión y vigilancia mediante el seguimiento de los sistemas de compensación y liquidación, auditoría a los Socios Liquidadores, requerimientos de información, valuación de riesgos y escenarios extremos.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 297,
+        "textual": "valuación de riesgos y escenarios extremos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l12.q11",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o11",
+      "enunciado": "Una posición de $8,000,000 tiene un VaR diario de $120,000 calculado con factor 1.65 (95%) y 252 días de operación. ¿Qué volatilidad anual se utilizó?",
+      "opciones": [
+        {
+          "texto": "0.9091%",
+          "porQueNo": "Es la volatilidad diaria; falta multiplicarla por la raíz de 252 para anualizarla.",
+          "etiquetaError": "no-anualiza"
+        },
+        {
+          "texto": "14.4314%"
+        },
+        {
+          "texto": "17.2488%",
+          "porQueNo": "Anualiza con 360 días en lugar de 252 días de operación.",
+          "etiquetaError": "base-360"
+        },
+        {
+          "texto": "10.2196%",
+          "porQueNo": "Usa el factor 2.33 de 99%; el VaR se calculó al 95%.",
+          "etiquetaError": "factor-confianza-equivocado"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "σ = VaR ÷ (F × VA × raíz de 1 ÷ 252) = 120,000 ÷ (1.65 × 8,000,000) × raíz de 252 = 0.0090909 × 15.874508 = 14.4314%.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 295,
+        "textual": "Se solicita el VaR a 1 día"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l12.q12",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o11",
+      "enunciado": "Un fondo mantiene un portafolio accionario de $12,500,000 con volatilidad anual de 22%. El comité de riesgos pide el VaR a 5 días con 99% de confianza (factor 2.33) y 252 días de operación. ¿Cuál es el VaR?",
+      "opciones": [
+        {
+          "texto": "$639,147.9051",
+          "porQueNo": "Usa el factor 1.65 de 95%; el comité pide 99%.",
+          "etiquetaError": "factor-confianza-equivocado"
+        },
+        {
+          "texto": "$755,131.1167",
+          "porQueNo": "Usa 360 días en lugar de 252 días de operación.",
+          "etiquetaError": "base-360"
+        },
+        {
+          "texto": "$902,554.3145"
+        },
+        {
+          "texto": "$403,634.5601",
+          "porQueNo": "Calcula el VaR de un día; omite el horizonte de 5 días.",
+          "etiquetaError": "omite-horizonte"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "VaR = 2.33 × 12,500,000 × 0.22 × raíz de (5 ÷ 252) = 6,407,500 × 0.140859 = $902,554.3145.",
+      "tipo": "calculo",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 296,
+        "textual": "un nivel de confianza del 99% y 95%, respectivamente"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "El factor 2.33 de 99% no aparece en el manual; se da en el enunciado."
+      ]
+    },
+    {
+      "id": "g.derivados.l12.q13",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o10",
+      "enunciado": "Si para la misma posición y el mismo horizonte el VaR se calcula con 99% de confianza en lugar de 95%, el VaR:",
+      "opciones": [
+        {
+          "texto": "disminuye, porque con mayor confianza se tolera una probabilidad menor de pérdida.",
+          "porQueNo": "Menor probabilidad de exceder el VaR implica un umbral más alto, no más bajo.",
+          "etiquetaError": "invierte-efecto"
+        },
+        {
+          "texto": "aumenta, porque el factor de confianza es mayor."
+        },
+        {
+          "texto": "no cambia, porque la volatilidad y el valor de la posición son los mismos.",
+          "porQueNo": "El factor de confianza multiplica el VaR, por lo que sí cambia.",
+          "etiquetaError": "omite-factor"
+        },
+        {
+          "texto": "aumenta en la misma proporción que el nivel de confianza, de 95 a 99.",
+          "porQueNo": "El aumento depende del cociente de los factores (2.33 entre 1.65), no del cociente 99 entre 95.",
+          "etiquetaError": "proporcion-equivocada"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "VaR = F × VA × σ × raíz de t. Al pasar de 95% a 99% el factor sube (de 1.65 a 2.33 en la normal), así que el VaR aumenta en la proporción 2.33 ÷ 1.65 = 1.4121.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 296,
+        "textual": "un nivel de confianza del 99% y 95%, respectivamente"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l12.q14",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o12",
+      "enunciado": "Según el manual, el FVA es la diferencia de valuación de un derivado respecto de su valor libre de riesgo por considerar:",
+      "opciones": [
+        {
+          "texto": "el costo de financiamiento real de la entidad en el descuento de flujos, en detrimento de las tasas OIS."
+        },
+        {
+          "texto": "el valor actual de las pérdidas futuras esperadas por el incumplimiento de la contraparte.",
+          "porQueNo": "Esa es la cuantificación del CVA.",
+          "etiquetaError": "confunde-cva-fva"
+        },
+        {
+          "texto": "el ajuste de valor de la deuda propia de la entidad que valúa y registra el derivado.",
+          "porQueNo": "Ese es el DVA.",
+          "etiquetaError": "confunde-dva-fva"
+        },
+        {
+          "texto": "las tasas libres de riesgo OIS en el descuento, en detrimento del costo real de financiamiento.",
+          "porQueNo": "Invierte la definición: el FVA sustituye las tasas OIS por el costo de financiamiento real.",
+          "etiquetaError": "invierte-definicion"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El manual define el FVA como la diferencia de valuación de un derivado respecto a su valor libre de riesgo por considerar el costo de financiamiento real de la entidad en el descuento de flujos de la operación, en detrimento de las tasas libres de riesgo (OIS).",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 296,
+        "textual": "en detrimento de las tasas libres de riesgo"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l12.q15",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.teoria-basica",
+      "objetivoId": "derivados.riesgos-i.teoria-basica.o10",
+      "enunciado": "El importe de las Aportaciones Iniciales Mínimas en MexDer resulta de cálculos de VaR conforme a cuatro métodos con nivel de confianza de 99%. Son métodos que menciona el manual, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "Monte Carlo.",
+          "porQueNo": "Es uno de los cuatro métodos que menciona el manual.",
+          "etiquetaError": "elemento-del-conjunto"
+        },
+        {
+          "texto": "Paramétrico.",
+          "porQueNo": "Es uno de los cuatro métodos que menciona el manual.",
+          "etiquetaError": "elemento-del-conjunto"
+        },
+        {
+          "texto": "Histórico.",
+          "porQueNo": "Es uno de los cuatro métodos que menciona el manual.",
+          "etiquetaError": "elemento-del-conjunto"
+        },
+        {
+          "texto": "Black and Scholes."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El manual indica que las AIM resultan de cálculos de VaR conforme a cuatro métodos (Monte Carlo, ASIGNA, Paramétrico e Histórico), todos con nivel de confianza de 99%. Black and Scholes es un modelo de valuación de opciones.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 247,
+        "textual": "Monte Carlo, ASIGNA"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l13.q01",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.agencias-calificadoras",
+      "objetivoId": "derivados.riesgos-i.agencias-calificadoras.o01",
+      "enunciado": "Según el manual, las agencias calificadoras de valores son empresas que, por cuenta de un cliente:",
+      "opciones": [
+        {
+          "texto": "emiten títulos para obtener recursos destinados a proyectos de inversión o a su capital de trabajo.",
+          "porQueNo": "Esa es la función del emisor, no de la agencia calificadora.",
+          "etiquetaError": "confunde-agencia-emisor"
+        },
+        {
+          "texto": "califican determinados productos financieros o activos de empresas, estados o gobiernos regionales."
+        },
+        {
+          "texto": "garantizan el pago oportuno de los productos financieros que califican.",
+          "porQueNo": "La calificación es una opinión; la agencia no garantiza el pago.",
+          "etiquetaError": "atribuye-garantia"
+        },
+        {
+          "texto": "autorizan la inscripción de las emisiones en el Registro Nacional de Valores.",
+          "porQueNo": "La inscripción en el RNV no es una función de las agencias calificadoras.",
+          "etiquetaError": "confunde-entidad"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "El manual define a las agencias calificadoras como empresas que, por cuenta de un cliente, califican unos determinados productos financieros o activos ya sean de empresas, estados o gobiernos regionales.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 298,
+        "textual": "por cuenta de un cliente"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l13.q02",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.agencias-calificadoras",
+      "objetivoId": "derivados.riesgos-i.agencias-calificadoras.o02",
+      "enunciado": "Conforme al manual, un instrumento se considera con grado de inversión cuando cuenta, en escala global, con una calificación de:",
+      "opciones": [
+        {
+          "texto": "BB+ o superior.",
+          "porQueNo": "BB+ es el primer escalón sin grado de inversión.",
+          "etiquetaError": "cuantificador-alterado"
+        },
+        {
+          "texto": "BBB o superior.",
+          "porQueNo": "El límite incluye BBB- (triple B menos).",
+          "etiquetaError": "cuantificador-alterado"
+        },
+        {
+          "texto": "BBB- o superior."
+        },
+        {
+          "texto": "A- o superior.",
+          "porQueNo": "Exige más de lo necesario: BBB+, BBB y BBB- también son grado de inversión.",
+          "etiquetaError": "cuantificador-alterado"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El manual indica que un instrumento se considera con grado de inversión cuando cuenta con una calificación de BBB- (triple B menos) o superior en escala global, o su equivalente en escala nacional.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 299,
+        "textual": "con grado de inversión, cuando cuenta con una calificación de BBB-"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l13.q03",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.agencias-calificadoras",
+      "objetivoId": "derivados.riesgos-i.agencias-calificadoras.o02",
+      "enunciado": "En la tabla de escalas locales de largo plazo del manual, la calificación de Moody's equivalente a mxA- de S&P es:",
+      "opciones": [
+        {
+          "texto": "A3.mx"
+        },
+        {
+          "texto": "A1.mx",
+          "porQueNo": "A1.mx equivale a mxA+; el modificador menos corresponde al número 3.",
+          "etiquetaError": "invierte-modificador"
+        },
+        {
+          "texto": "Baa1.mx",
+          "porQueNo": "Baa1.mx equivale a mxBBB+, un escalón por debajo de mxA-.",
+          "etiquetaError": "escalon-contiguo"
+        },
+        {
+          "texto": "A-(mex)",
+          "porQueNo": "Es la nomenclatura de Fitch, no la de Moody's.",
+          "etiquetaError": "confunde-agencia"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "En la tabla de la página 299, mxA- (S&P) equivale a A3.mx (Moody's), A-(mex) (Fitch) y HR A- (HR). En Moody's los números 1, 2 y 3 hacen el papel de más, neutro y menos.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 299,
+        "textual": "Grados de Rigsgo Largo Plazo"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "La tabla de la p. 299 se leyó sobre la imagen del PDF porque el OCR la recupera mal; el fragmento citado es lo que el OCR conserva."
+      ]
+    },
+    {
+      "id": "g.derivados.l13.q04",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.agencias-calificadoras",
+      "objetivoId": "derivados.riesgos-i.agencias-calificadoras.o03",
+      "enunciado": "Según el manual, una baja en la calificación crediticia de un emisor efectuada por una agencia reconocida tiene como efecto:",
+      "opciones": [
+        {
+          "texto": "un alza en la bursatilidad del bono, porque su mayor rendimiento atrae a más inversionistas del mercado.",
+          "porQueNo": "El manual describe una baja de bursatilidad, no un alza.",
+          "etiquetaError": "invierte-efecto"
+        },
+        {
+          "texto": "una menor bursatilidad del bono o acción y una baja de su precio si se vende antes del vencimiento."
+        },
+        {
+          "texto": "una reducción del valor nominal que el emisor deberá pagar al vencimiento del bono.",
+          "porQueNo": "La calificación no modifica el valor nominal de la obligación.",
+          "etiquetaError": "concepto-ajeno"
+        },
+        {
+          "texto": "la obligación del emisor de recomprar la emisión a su valor nominal de inmediato.",
+          "porQueNo": "El manual no establece tal obligación.",
+          "etiquetaError": "concepto-ajeno"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "El manual explica que el deterioro de la calificación tiene un efecto en la baja de la bursatilidad del bono o acción, que traerá una baja en el precio si el tenedor quisiera venderlo en el mercado de valores antes de su vencimiento.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 299,
+        "textual": "que traerá una baja en el precio si el tenedor quisiera venderlo"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l13.q05",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-ii.teoria-fundamental",
+      "objetivoId": "derivados.riesgos-ii.teoria-fundamental.o01",
+      "enunciado": "La dificultad de vender un activo en un momento determinado, porque no hay nadie en el mercado interesado o dispuesto a comprarlo, corresponde al riesgo de:",
+      "opciones": [
+        {
+          "texto": "liquidez por fondeo de operaciones.",
+          "porQueNo": "Ese riesgo se refiere a que la liquidación no se lleve a cabo en el tiempo pactado.",
+          "etiquetaError": "confunde-liquidez-activo-fondeo"
+        },
+        {
+          "texto": "contraparte.",
+          "porQueNo": "No hay una contraparte que incumpla; simplemente no hay compradores.",
+          "etiquetaError": "confunde-contraparte"
+        },
+        {
+          "texto": "liquidez de un activo."
+        },
+        {
+          "texto": "mercado.",
+          "porQueNo": "No se describe un cambio en los factores de riesgo, sino la falta de compradores.",
+          "etiquetaError": "confunde-mercado-liquidez"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El manual concibe el riesgo de liquidez de un activo como la dificultad de vender un activo en un momento determinado, porque no hay nadie en el mercado interesado o con disposición de comprar.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 300,
+        "textual": "la dificultad de vender un activo en un momento"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l13.q06",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.agencias-calificadoras",
+      "objetivoId": "derivados.riesgos-i.agencias-calificadoras.o02",
+      "enunciado": "En la tabla de calificaciones y grados de riesgo a largo plazo en escalas locales (CNBV) del manual, el Grado 4 comprende las calificaciones de S&P:",
+      "opciones": [
+        {
+          "texto": "de mxA+ a mxA-.",
+          "porQueNo": "Esas calificaciones forman el Grado 3.",
+          "etiquetaError": "confunde-grado"
+        },
+        {
+          "texto": "de mxBBB+ a mxBBB- únicamente.",
+          "porQueNo": "El Grado 4 también incluye mxBB+, mxBB y mxBB-.",
+          "etiquetaError": "omite-elementos"
+        },
+        {
+          "texto": "de mxBB+ a mxB-.",
+          "porQueNo": "Las calificaciones B forman parte del Grado 5.",
+          "etiquetaError": "confunde-grado"
+        },
+        {
+          "texto": "de mxBBB+ a mxBB-."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "En la tabla de la página 299, el Grado 4 agrupa seis calificaciones de S&P: mxBBB+, mxBBB, mxBBB-, mxBB+, mxBB y mxBB-. Por eso mezcla calificaciones con y sin grado de inversión.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 299,
+        "textual": "Baal.mx HR BBB+ Baa2.mx HR BBB"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "Tabla leída sobre la imagen de la p. 299; el fragmento citado es lo que el OCR conserva de la fila de BBB."
+      ]
+    },
+    {
+      "id": "g.derivados.l13.q07",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-ii.teoria-fundamental",
+      "objetivoId": "derivados.riesgos-ii.teoria-fundamental.o01",
+      "enunciado": "En una operación cambiaria, una institución paga los dólares que vendió, pero no recibe los pesos que compró, porque no existe un mecanismo que asegure que una transferencia ocurra si y solo si ocurre la otra. Según el manual, es un ejemplo típico de riesgo de:",
+      "opciones": [
+        {
+          "texto": "liquidez de un activo, por falta de compradores de la divisa.",
+          "porQueNo": "No falta quien compre; el problema es que la contraparte no entregó lo pactado.",
+          "etiquetaError": "confunde-liquidez-activo-fondeo"
+        },
+        {
+          "texto": "liquidación, que implica también riesgo de liquidez por fondeo."
+        },
+        {
+          "texto": "mercado, por la variación del tipo de cambio entre ambas divisas.",
+          "porQueNo": "El riesgo descrito no proviene de un movimiento del tipo de cambio.",
+          "etiquetaError": "confunde-mercado"
+        },
+        {
+          "texto": "sistémico, porque intervienen dos divisas de países distintos.",
+          "porQueNo": "No se describe una cadena de fallos entre participantes del sistema.",
+          "etiquetaError": "confunde-sistemico"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "El manual señala que un ejemplo típico de riesgo de liquidación se encuentra en el mercado de divisas (FOREX): sin un mecanismo que asegure la transferencia simultánea, una parte puede pagar la divisa que vendió y no recibir la que compró; además, podría tener que financiar el faltante, por lo que también implica un riesgo de liquidez.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 300,
+        "textual": "Un ejemplo típico de riesgo de liquidación se encuentra en el mercado de divisas"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l13.q08",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-ii.teoria-fundamental",
+      "objetivoId": "derivados.riesgos-ii.teoria-fundamental.o02",
+      "enunciado": "Según el manual, la validez de la representación de la estructura intertemporal de tasas de interés requiere igualdad en:",
+      "opciones": [
+        {
+          "texto": "el plazo, la calidad crediticia y la liquidez de los instrumentos.",
+          "porQueNo": "El plazo es la variable que la curva relaciona con el rendimiento; no debe ser igual.",
+          "etiquetaError": "incluye-variable-explicativa"
+        },
+        {
+          "texto": "la tasa cupón, el valor nominal y el emisor de los instrumentos.",
+          "porQueNo": "No son las condiciones que establece el manual.",
+          "etiquetaError": "concepto-ajeno"
+        },
+        {
+          "texto": "la calidad crediticia, la liquidez y la estructura de pagos de los instrumentos."
+        },
+        {
+          "texto": "la calidad crediticia, el plazo y la tasa de interés de cada uno de los instrumentos.",
+          "porQueNo": "Plazo y tasa son las dos variables que la curva relaciona.",
+          "etiquetaError": "incluye-variable-explicativa"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El manual indica que la validez de la representación requiere igualdad en la calidad crediticia de los instrumentos, la liquidez y la estructura de pagos; así, cualquier divergencia en los rendimientos se atribuye únicamente a diferencias en los plazos.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 300,
+        "textual": "requiere igualdad en la calidad crediticia"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l13.q09",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-ii.teoria-fundamental",
+      "objetivoId": "derivados.riesgos-ii.teoria-fundamental.o03",
+      "enunciado": "Según el manual, el análisis de sensibilidades mide:",
+      "opciones": [
+        {
+          "texto": "el cambio en el valor de la cartera por un cambio en sus factores de riesgo."
+        },
+        {
+          "texto": "el cambio en los factores de riesgo por un cambio en el valor de la cartera.",
+          "porQueNo": "Invierte la causa y el efecto.",
+          "etiquetaError": "invierte-relacion"
+        },
+        {
+          "texto": "la pérdida máxima de la cartera en un horizonte y con un nivel de confianza.",
+          "porQueNo": "Esa es la definición del VaR.",
+          "etiquetaError": "confunde-var"
+        },
+        {
+          "texto": "la probabilidad de incumplimiento de los emisores que integran la cartera.",
+          "porQueNo": "Eso corresponde al riesgo de crédito.",
+          "etiquetaError": "confunde-credito"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El manual indica que el análisis de sensibilidades mide el cambio en el valor de la cartera por un cambio en sus factores de riesgo, a partir de simulaciones de escenarios.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 301,
+        "textual": "mide el cambio en el valor de la cartera"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l13.q10",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.agencias-calificadoras",
+      "objetivoId": "derivados.riesgos-i.agencias-calificadoras.o01",
+      "enunciado": "Conforme al manual, pueden actuar como emisores en los mercados financieros, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "las empresas registradas en el Registro Nacional de Valores.",
+          "porQueNo": "El manual las incluye entre los emisores.",
+          "etiquetaError": "elemento-del-conjunto"
+        },
+        {
+          "texto": "las agencias que califican las emisiones."
+        },
+        {
+          "texto": "las instituciones de crédito.",
+          "porQueNo": "El manual las incluye entre los emisores.",
+          "etiquetaError": "elemento-del-conjunto"
+        },
+        {
+          "texto": "el Gobierno Federal, estatal o municipal.",
+          "porQueNo": "El manual lo incluye entre los emisores.",
+          "etiquetaError": "elemento-del-conjunto"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "El manual define al emisor como las empresas registradas en el Registro Nacional de Valores, instituciones de crédito y Gobierno Federal, estatal o municipal que requieren recursos y emiten títulos. Las agencias calificadoras califican, no emiten.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 298,
+        "textual": "Empresas registradas en el Registro"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l13.q11",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-i.agencias-calificadoras",
+      "objetivoId": "derivados.riesgos-i.agencias-calificadoras.o02",
+      "enunciado": "En la tabla de equivalencias del manual, la calificación de Moody's que ocupa el mismo renglón que mxBBB- de S&P, último escalón del grado de inversión, es:",
+      "opciones": [
+        {
+          "texto": "Ba1.mx",
+          "porQueNo": "Ba1.mx equivale a mxBB+, el primer escalón sin grado de inversión.",
+          "etiquetaError": "escalon-contiguo"
+        },
+        {
+          "texto": "Baa1.mx",
+          "porQueNo": "Baa1.mx equivale a mxBBB+.",
+          "etiquetaError": "invierte-modificador"
+        },
+        {
+          "texto": "Baa3.mx"
+        },
+        {
+          "texto": "BBB-(mex)",
+          "porQueNo": "Es la nomenclatura de Fitch.",
+          "etiquetaError": "confunde-agencia"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "En la tabla de la página 299, mxBBB- (S&P) equivale a Baa3.mx (Moody's), BBB-(mex) (Fitch) y HR BBB- (HR). BBB- es el límite del grado de inversión.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 299,
+        "textual": "Baal.mx HR BBB+ Baa2.mx HR BBB"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "Tabla leída sobre la imagen de la p. 299; la fila de mxBBB- no se conserva en el OCR."
+      ]
+    },
+    {
+      "id": "g.derivados.l13.q12",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-ii.teoria-fundamental",
+      "objetivoId": "derivados.riesgos-ii.teoria-fundamental.o02",
+      "enunciado": "Según el manual, la forma que adopta la curva de la estructura de plazos de tasas de interés refleja los siguientes elementos, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "la calificación crediticia particular de cada emisor que integra la curva."
+        },
+        {
+          "texto": "el grado de preferencia por liquidez en el mercado.",
+          "porQueNo": "Es uno de los elementos que menciona el manual.",
+          "etiquetaError": "elemento-del-conjunto"
+        },
+        {
+          "texto": "las expectativas de los agentes sobre la evolución futura de las tasas.",
+          "porQueNo": "Es uno de los elementos que menciona el manual.",
+          "etiquetaError": "elemento-del-conjunto"
+        },
+        {
+          "texto": "las ineficiencias en el desplazamiento de fondos entre el corto y el largo plazo.",
+          "porQueNo": "Es uno de los elementos que menciona el manual.",
+          "etiquetaError": "elemento-del-conjunto"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El manual indica que la forma de la curva refleja la preferencia por liquidez, las expectativas sobre las tasas y las ineficiencias en el desplazamiento de fondos entre corto y largo plazo. La calidad crediticia debe ser igual entre los instrumentos para que la curva sea válida.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 301,
+        "textual": "refleja el grado de preferencia por liquidez"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l13.q13",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-ii.teoria-fundamental",
+      "objetivoId": "derivados.riesgos-ii.teoria-fundamental.o02",
+      "enunciado": "Cuando los instrumentos que forman una curva no tienen la misma calidad crediticia, liquidez y estructura de pagos, según el manual los distintos rendimientos son consecuencia de:",
+      "opciones": [
+        {
+          "texto": "únicamente las diferencias en los plazos de vencimiento de los instrumentos de la curva.",
+          "porQueNo": "Eso solo ocurre cuando sí se cumplen las premisas de igualdad.",
+          "etiquetaError": "invierte-condicion"
+        },
+        {
+          "texto": "las expectativas de inflación de los agentes, de forma exclusiva.",
+          "porQueNo": "El manual atribuye la diferencia a primas por riesgo por variables distintas al vencimiento.",
+          "etiquetaError": "concepto-ajeno"
+        },
+        {
+          "texto": "la preferencia por liquidez de los agentes, sin influencia del riesgo.",
+          "porQueNo": "La diferencia proviene precisamente de primas por riesgo.",
+          "etiquetaError": "concepto-ajeno"
+        },
+        {
+          "texto": "las primas por riesgo que asigna el mercado por variables distintas al vencimiento."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El manual indica que el incumplimiento de las premisas determina que los distintos rendimientos sean consecuencia de las primas por riesgo que asigna el mercado por variables distintas al vencimiento.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 300,
+        "textual": "primas por riesgo que asigna el mercado"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.derivados.l13.q14",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-ii.teoria-fundamental",
+      "objetivoId": "derivados.riesgos-ii.teoria-fundamental.o03",
+      "enunciado": "Un bono de $100 de valor nominal a 25 años con cupón de 6% cuesta $70.3570 con tasa de 9% y costaría $70.2824 con tasa de 9.01%. Una posición tiene 20,000 de estos bonos. Con el DV01, ¿cuál es la pérdida estimada si la tasa sube 25 puntos base?",
+      "opciones": [
+        {
+          "texto": "$1,492.0000",
+          "porQueNo": "Calcula la pérdida de un solo punto base; faltó multiplicar por 25.",
+          "etiquetaError": "omite-puntos-base"
+        },
+        {
+          "texto": "$37,300.0000"
+        },
+        {
+          "texto": "$26,243.1610",
+          "porQueNo": "Trata el DV01 como porcentaje del precio; el DV01 ya está en pesos por bono.",
+          "etiquetaError": "confunde-dv01-porcentual"
+        },
+        {
+          "texto": "$373.0000",
+          "porQueNo": "Usa 0.25 en lugar de 25 puntos base.",
+          "etiquetaError": "confunde-puntos-base"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "DV01 = 70.3570 − 70.2824 = $0.0746 por bono. Pérdida estimada = 0.0746 × 25 × 20,000 = $37,300.0000.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 301,
+        "textual": "tasa de interés (DV01)"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "Precios de la tabla de DV01 del manual 2023, reproducidos con cupones semestrales."
+      ]
+    },
+    {
+      "id": "g.derivados.l13.q15",
+      "version": 1,
+      "area": "derivados",
+      "subtemaId": "derivados.riesgos-ii.teoria-fundamental",
+      "objetivoId": "derivados.riesgos-ii.teoria-fundamental.o03",
+      "enunciado": "Según el texto del manual, los parámetros de sensibilidad del precio de una opción indican el efecto de factores que afectan al activo subyacente, tales como:",
+      "opciones": [
+        {
+          "texto": "volatilidad (DV01), tasa de interés (beta) y tiempo.",
+          "porQueNo": "Intercambia los parámetros: el manual asocia la volatilidad con la beta y la tasa con el DV01.",
+          "etiquetaError": "intercambia-parametros"
+        },
+        {
+          "texto": "volatilidad (delta), tasa de interés (theta) y precio.",
+          "porQueNo": "No es la asociación que hace el manual.",
+          "etiquetaError": "intercambia-parametros"
+        },
+        {
+          "texto": "volatilidad (beta), tasa de interés (DV01) y tiempo."
+        },
+        {
+          "texto": "calificación, liquidez y plazo del subyacente.",
+          "porQueNo": "No son los factores que enumera el manual.",
+          "etiquetaError": "concepto-ajeno"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El manual dice que los parámetros de sensibilidad del precio de una opción indican el efecto de factores que afectan al activo subyacente, tales como volatilidad (beta), tasa de interés (DV01) y tiempo.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 301,
+        "textual": "tales como volatilidad (beta), tasa de interés (DV01) y tiempo"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "Pregunta literal del manual; en la teoría de opciones la sensibilidad a la volatilidad suele llamarse vega. Ver docs/dudas/derivados-riesgos.md."
+      ]
+    }
+  ]
+}

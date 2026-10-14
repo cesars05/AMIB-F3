@@ -1,0 +1,534 @@
+{
+  "id": "derivados.valor-en-riesgo-y-administracion-de-riesgos",
+  "area": "derivados",
+  "materia": "Riesgos I",
+  "subtemaId": "derivados.riesgos-i.teoria-basica",
+  "objetivoIds": [
+    "derivados.riesgos-i.teoria-basica.o10",
+    "derivados.riesgos-i.teoria-basica.o11",
+    "derivados.riesgos-i.teoria-basica.o12",
+    "derivados.riesgos-i.teoria-basica.o13",
+    "derivados.riesgos-i.teoria-basica.o14"
+  ],
+  "orden": 12,
+  "titulo": "Valor en Riesgo, CVA y administración de riesgos",
+  "resumen": "Concepto, cálculo e interpretación del VaR con el ejemplo del manual, ajustes por horizonte y nivel de confianza, VaR absoluto y relativo, métodos de VaR de las AIM, ajustes CVA, DVA y FVA, y el propósito de la administración de riesgos.",
+  "duracionMin": 45,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        247,
+        294,
+        295,
+        296,
+        297
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "var-concepto",
+      "titulo": "Qué es el Valor en Riesgo (VaR)",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[VaR]] es una **medida estadística del riesgo de mercado** que estima la **pérdida máxima** que podría registrar un portafolio en un **intervalo de tiempo** y con **cierto nivel de probabilidad**. El VaR es válido **solamente en condiciones de mercado normales**."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Qué mide",
+              "Riesgo de **mercado** (no de crédito ni operacional)."
+            ],
+            [
+              "Qué estima",
+              "La pérdida **máxima** (no la mínima ni la promedio)."
+            ],
+            [
+              "Elementos",
+              "Un **horizonte** (1 día, 10 días...) y un **nivel de confianza** (95%, 99%)."
+            ],
+            [
+              "Unidades",
+              "Se expresa en **términos monetarios** (pesos)."
+            ],
+            [
+              "Límite",
+              "Solo es válido en **condiciones normales** de mercado; los escenarios extremos se analizan aparte."
+            ]
+          ],
+          "titulo": "Elementos de la definición"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La pregunta oficial tipo 18 ofrece \"máxima\" contra \"mínima\" y \"periodo de tiempo\" contra \"un año\". La respuesta exige las dos palabras: pérdida **máxima** en un **periodo** de tiempo dado un nivel de confianza."
+        }
+      ],
+      "ampliada": "El manual 2023 añade que el VaR suele calcularse para 1 día, 1 semana o 1 mes, con probabilidades de 1% o 5%.",
+      "paginas": [
+        294
+      ]
+    },
+    {
+      "id": "var-formula",
+      "titulo": "Cálculo del VaR paramétrico",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El manual calcula el VaR de una posición individual a partir de su valor, su volatilidad anual y el nivel de confianza, ajustando la volatilidad al horizonte con la **raíz cuadrada del tiempo**."
+        },
+        {
+          "tipo": "formula",
+          "logica": "VaR = F \\times VA \\times \\sigma \\times \\sqrt{t}",
+          "leyenda": [
+            [
+              "VaR",
+              "valor en riesgo, en pesos"
+            ],
+            [
+              "F",
+              "factor del nivel de confianza (1.65 para 95%)"
+            ],
+            [
+              "VA",
+              "valor de mercado de la posición: número de títulos por precio"
+            ],
+            [
+              "\\sigma",
+              "volatilidad anual, en decimales (VOL ÷ 100)"
+            ],
+            [
+              "t",
+              "horizonte en años: días del horizonte entre 252 días de operación"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** Un inversionista compra 100,000 acciones a $30 (VA = $3,000,000), con volatilidad anual de 15%. VaR diario al 95% con 252 días de operación:"
+        },
+        {
+          "tipo": "formula",
+          "logica": "VaR = F \\times VA \\times \\sigma \\times \\sqrt{t}",
+          "leyenda": [],
+          "valores": "VaR = 1.65 \\times 3{,}000{,}000 \\times 0.15 \\times \\sqrt{\\tfrac{1}{252}}",
+          "resultado": "VaR = $46,773.1035 (el manual lo presenta como $46,773.10)"
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "VAR (SOLVE)",
+          "entradas": [
+            [
+              "CONF",
+              "1.65"
+            ],
+            [
+              "VA",
+              "3000000"
+            ],
+            [
+              "VOL",
+              "15"
+            ]
+          ],
+          "salida": [
+            "VAR",
+            "46773.10"
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El horizonte entra con **raíz cuadrada**: 1 entre 252 elevado a 0.5, no 1 entre 252. Dividir la volatilidad entre 252 da $2,946.43, un resultado absurdamente bajo."
+        }
+      ],
+      "ampliada": "La ecuación del manual, tal como se captura en el SOLVE de la calculadora, es VAR = CONF × VA × (VOL ÷ 100) × ((1 ÷ 252)^.50). Con 252 días de operación (no 360 ni 365) se convierte la volatilidad anual en diaria.",
+      "paginas": [
+        295
+      ]
+    },
+    {
+      "id": "var-interpretacion",
+      "titulo": "Cómo se interpreta el VaR",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El VaR mide la **pérdida potencial expresada en términos monetarios**. Con el ejemplo anterior, el VaR diario al 95% de $46,773.10 significa:"
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "En **19 de cada 20 días** (19 ÷ 20 = 0.95) la **máxima pérdida esperada** es de $46,773.10.",
+            "Visto desde otra óptica, solo **1 día de cada 20** (1 ÷ 20 = 0.05) la pérdida puede ser **mayor** a $46,773.10."
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Nivel de confianza",
+            "Probabilidad de exceder el VaR",
+            "Lectura en días"
+          ],
+          "filas": [
+            [
+              "95%",
+              "5%",
+              "1 de cada 20 días la pérdida supera el VaR"
+            ],
+            [
+              "99%",
+              "1%",
+              "1 de cada 100 días la pérdida supera el VaR"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El VaR **no** es la pérdida que ocurrirá con certeza ni un tope absoluto: es el umbral que, con la confianza elegida, no se rebasa. En 1 de cada 20 días (al 95%) la pérdida puede ser mayor."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen interpretación:",
+          "texto": "confianza 95% equivale a 19 de 20 días dentro del VaR y 1 de 20 por encima."
+        }
+      ],
+      "ampliada": "El manual 2023 expresa la misma idea con un VaR mensual: existe 5% de probabilidad de perder más que el VaR en algún mes, de modo que uno de cada 20 meses la pérdida será al menos igual al VaR.",
+      "paginas": [
+        295
+      ]
+    },
+    {
+      "id": "var-horizonte-confianza",
+      "titulo": "Cambiar el horizonte o el nivel de confianza",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Con la misma posición, el VaR crece con la **raíz** del horizonte y con el **factor de confianza**. Ambos ajustes se hacen sobre la misma fórmula."
+        },
+        {
+          "tipo": "formula",
+          "logica": "VaR_{t\\,días} = VaR_{1\\,día} \\times \\sqrt{t} \\qquad VaR_{99\\%} = VaR_{95\\%} \\times \\frac{F_{99\\%}}{F_{95\\%}}",
+          "leyenda": [
+            [
+              "VaR_{1\\,día}",
+              "VaR diario"
+            ],
+            [
+              "t",
+              "número de días del horizonte"
+            ],
+            [
+              "F_{95\\%}",
+              "factor de 95% usado por el manual: 1.65"
+            ],
+            [
+              "F_{99\\%}",
+              "factor de 99% (2.33 en la distribución normal; debe darlo el enunciado)"
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "VaR_{10\\,días} = VaR_{1\\,día} \\times \\sqrt{10}",
+          "leyenda": [],
+          "valores": "VaR_{10\\,días} = 46,773.1035 \\times \\sqrt{10}",
+          "resultado": "VaR a 10 días al 95% = $147,909.5404"
+        },
+        {
+          "tipo": "formula",
+          "logica": "VaR = F \\times VA \\times \\sigma \\times \\sqrt{t}",
+          "leyenda": [],
+          "valores": "VaR = 2.33 \\times 3{,}000{,}000 \\times 0.15 \\times \\sqrt{\\tfrac{1}{252}}",
+          "resultado": "VaR diario al 99% = $66,049.2917"
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Error de método",
+            "Qué produce"
+          ],
+          "filas": [
+            [
+              "Multiplicar el VaR diario por 10 en lugar de por la raíz de 10",
+              "Un VaR a 10 días tres veces mayor de lo correcto"
+            ],
+            [
+              "Usar 360 o 365 días en lugar de 252 días de operación",
+              "Un VaR diario menor"
+            ],
+            [
+              "Usar 1.65 cuando se pide 99%",
+              "Un VaR subestimado"
+            ],
+            [
+              "Dividir entre 252 sin raíz",
+              "Un VaR casi nulo"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        }
+      ],
+      "ampliada": "El manual solo muestra el factor 1.65 para 95%. El factor 2.33 de 99% proviene de la distribución normal estándar; en las preguntas de esta lección se proporciona en el enunciado.",
+      "paginas": [
+        295,
+        296
+      ]
+    },
+    {
+      "id": "var-absoluto-relativo",
+      "titulo": "VaR absoluto y VaR relativo",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El VaR proporciona una medida resumida del riesgo de mercado. El manual distingue:"
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Medida",
+            "Qué considera"
+          ],
+          "filas": [
+            [
+              "VaR absoluto",
+              "La **cantidad absoluta en riesgo**"
+            ],
+            [
+              "VaR relativo",
+              "La cantidad absoluta en riesgo **más las ganancias esperadas**"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "VaR_{relativo} = VaR_{absoluto} + G_{esperada}",
+          "leyenda": [
+            [
+              "VaR_{absoluto}",
+              "cantidad absoluta en riesgo"
+            ],
+            [
+              "G_{esperada}",
+              "ganancia esperada de la posición en el mismo horizonte"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "El VaR mide probabilidades expresadas como porcentajes: generalmente se utilizan **1% y 5%**, es decir, niveles de confianza de **99% y 95%**, respectivamente."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El orden importa: 1% corresponde a 99% de confianza y 5% a 95%. Un distractor frecuente invierte la correspondencia."
+        }
+      ],
+      "ampliada": "La relación algebraica se deriva literalmente de la definición del manual (relativo igual a absoluto más ganancias esperadas). Las preguntas solo la usan en ese sentido.",
+      "paginas": [
+        296
+      ]
+    },
+    {
+      "id": "var-en-mexder",
+      "titulo": "Métodos de VaR en las garantías de MexDer",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El VaR también se usa en el mercado de derivados. El importe de las **Aportaciones Iniciales Mínimas (AIM)** se determina **por tipo de contrato** a partir de cálculos de VaR conforme a **cuatro métodos**, todos con un nivel de confianza del **99%**:"
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Monte Carlo.",
+            "ASIGNA.",
+            "Paramétrico.",
+            "Histórico."
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Los métodos son revisados periódicamente por el **Subcomité de Riesgos** y aprobados por el **Comité Técnico**."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Black and Scholes y el modelo binomial valúan primas de opciones; no son métodos para calcular el VaR de las AIM."
+        }
+      ],
+      "ampliada": "Esta información está en el capítulo de liquidación en mercados organizados (página 247); se incluye aquí porque es la única mención del manual a los métodos de cálculo del VaR. Como el VaR solo es válido en condiciones normales, Asigna complementa su vigilancia con la valuación de escenarios extremos.",
+      "paginas": [
+        247
+      ]
+    },
+    {
+      "id": "cva-fva",
+      "titulo": "CVA, DVA y FVA",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "CVA (ajuste de valor del crédito)",
+              "Ajuste que se hace al valor del derivado, calculado como si estuviera **libre de riesgo**, para obtener su valor ajustado al **riesgo de impago de la contraparte**: el valor actual de las **pérdidas futuras esperadas** por incumplimiento."
+            ],
+            [
+              "FVA (ajuste de valor por fondeo)",
+              "Diferencia de valuación respecto del valor libre de riesgo por considerar el **costo de financiamiento real** de la entidad en el descuento de flujos, **en detrimento de las tasas libres de riesgo (OIS)**."
+            ],
+            [
+              "DVA",
+              "Ajuste de valor de la **deuda** (del propio riesgo de la entidad)."
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "V_{aj} = V_{LR} - CVA \\qquad V_{aj} = V_{LR} - CVA + DVA \\pm FVA",
+          "leyenda": [
+            [
+              "V_{aj}",
+              "valor ajustado al riesgo"
+            ],
+            [
+              "V_{LR}",
+              "valor libre de riesgo del derivado"
+            ],
+            [
+              "CVA",
+              "ajuste por riesgo de crédito de la contraparte (se resta)"
+            ],
+            [
+              "DVA",
+              "ajuste de valor de la deuda propia (se suma)"
+            ],
+            [
+              "FVA",
+              "ajuste por costo de fondeo (con el signo que corresponda)"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo.** Un derivado vale $2,400,000.00 libre de riesgo; su CVA es $31,250.50 y su DVA es $12,480.25 (sin ajuste por fondeo)."
+        },
+        {
+          "tipo": "formula",
+          "logica": "V_{aj} = V_{LR} - CVA + DVA",
+          "leyenda": [],
+          "valores": "V_{aj} = 2{,}400{,}000.00 - 31{,}250.50 + 12{,}480.25",
+          "resultado": "Valor ajustado al riesgo = $2,381,229.7500"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El CVA siempre **resta** (la contraparte puede no pagar) y el DVA **suma**. Confundir los signos produce $2,418,770.25 o $2,356,269.25."
+        }
+      ],
+      "ampliada": "El OCR pierde el símbolo más o menos del FVA; en el PDF (página 296) la fórmula es Valor ajustado al riesgo = Valor libre de riesgo − CVA + DVA ± FVA.",
+      "paginas": [
+        296
+      ]
+    },
+    {
+      "id": "administracion-de-riesgos",
+      "titulo": "Propósito de la administración de riesgos",
+      "bloques": [
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Identificación de riesgos",
+              "texto": "Están obligados a mantener **sistemas de evaluación de riesgos** y a informar a sus clientes los **límites en posiciones**, de acuerdo con la tolerancia que asuman ante riesgos de mercado. En futuros las ganancias o pérdidas pueden ser **ilimitadas** para vendedor o comprador; lo mismo ocurre para el **vendedor de opciones**.",
+              "cuando": "Intermediarios"
+            },
+            {
+              "titulo": "Mitigación del riesgo",
+              "texto": "El riesgo de mercado se minimiza con estrategias que combinan **dos o más operaciones simultáneas de distinta naturaleza**, con asesoría especializada. El intermediario propone negociaciones claras y con niveles de riesgo **tolerables para el cliente**.",
+              "cuando": "Intermediario acreditado ante MexDer"
+            },
+            {
+              "titulo": "Seguimiento: MexDer",
+              "texto": "Seguimiento de los **sistemas operativos**, **auditoría a Miembros**, requerimiento de información y cualquier otro medio que determine el **Consejo**.",
+              "cuando": "Bolsa"
+            },
+            {
+              "titulo": "Seguimiento: Asigna",
+              "texto": "Seguimiento de los sistemas de **compensación y liquidación**, **auditoría a los Socios Liquidadores**, requerimientos de información, **valuación de riesgos y escenarios extremos**.",
+              "cuando": "Cámara de compensación"
+            }
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "MexDer audita a **Miembros**; Asigna audita a **Socios Liquidadores** y valúa **escenarios extremos**. El examen intercambia a quién corresponde cada función."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen administración de riesgos:",
+          "texto": "identificar (sistemas de evaluación y límites), mitigar (estrategias combinadas con asesoría) y dar seguimiento (MexDer y Asigna)."
+        }
+      ],
+      "ampliada": "El comprador de una opción tiene la pérdida limitada a la prima; por eso el manual señala solo al vendedor de opciones junto con ambas partes de un futuro.",
+      "paginas": [
+        297
+      ]
+    }
+  ],
+  "puntosClave": [
+    "VaR: medida estadística del **riesgo de mercado**; **pérdida máxima** de un portafolio en un **intervalo de tiempo** con **cierto nivel de probabilidad**; válido solo en **condiciones normales**.",
+    "Fórmula del manual: VaR = F × VA × σ × raíz de (días ÷ 252); con 95% el factor es **1.65**.",
+    "Ejemplo del manual: 100,000 acciones a $30, volatilidad 15%: VaR diario al 95% de **$46,773.10**; 19 de cada 20 días la pérdida no lo rebasa.",
+    "VaR absoluto: cantidad absoluta en riesgo; VaR relativo: esa cantidad **más las ganancias esperadas**. 1% y 5% equivalen a **99% y 95%**.",
+    "AIM de MexDer: VaR por cuatro métodos (**Monte Carlo, ASIGNA, Paramétrico e Histórico**) al **99%**.",
+    "CVA se **resta** al valor libre de riesgo (impago de la contraparte); FVA refleja el **costo de fondeo real** frente a las tasas OIS; DVA es el ajuste de la deuda propia.",
+    "Administración de riesgos: identificación, mitigación y seguimiento; MexDer audita **Miembros**, Asigna audita **Socios Liquidadores** y valúa **escenarios extremos**."
+  ],
+  "practica": [
+    "g.derivados.l12.q01",
+    "g.derivados.l12.q02",
+    "g.derivados.l12.q03",
+    "g.derivados.l12.q04",
+    "g.derivados.l12.q05"
+  ],
+  "miniExamen": [
+    "g.derivados.l12.q06",
+    "g.derivados.l12.q07",
+    "g.derivados.l12.q08",
+    "g.derivados.l12.q09",
+    "g.derivados.l12.q10"
+  ],
+  "reto": [
+    "g.derivados.l12.q11",
+    "g.derivados.l12.q12",
+    "g.derivados.l12.q13",
+    "g.derivados.l12.q14",
+    "g.derivados.l12.q15"
+  ]
+}
