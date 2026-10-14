@@ -197,6 +197,7 @@ Acertar una vez **no** es dominar. Cada subtema y objetivo pasa por cinco nivele
 - **Fórmulas como matemáticas** (MathJax o KaTeX empaquetado localmente en la app, sin internet), en **dos pasos**: 1) la fórmula con símbolos y una leyenda de qué es cada uno; 2) la fórmula con los valores sustituidos; luego el resultado (a 4 decimales en preguntas).
 - **Nivel de detalle de examen**: cada sección cubre procesos completos, no solo definiciones. Ejemplo: en CETES, el proceso de emisión y subasta paso a paso, con horarios, actores (Banxico, SIAC-BANXICO, INDEVAL) y tipo de asignación.
 - **Orden aleatorio de opciones** en cada presentación (`core/barajar.ts`): la correcta se reparte de forma equilibrada entre a–d, sin rachas de más de 2 iguales, y la clave se rastrea siempre. Las opciones que dependen de su posición ("todas las anteriores", "a y b") no se mueven.
+- **Estilo de redacción serio, educativo y académico**: sin guiones largos, sin guiones ni puntos como viñetas o separadores, sin ° ni *. Ver la regla en `CLAUDE.md`; el validador de contenido la verifica.
 - El diseño final será menos plano. Se trabaja en la fase de diseño con las skills de diseño.
 
 ### Arranque personalizado (onboarding)

@@ -49,6 +49,13 @@ Las tareas medianas o grandes llevan ficha en `docs/fichas/`. Al cerrar una tare
 - Opciones siempre barajadas con `core/barajar.ts` (posición de la clave equilibrada). Fórmulas en dos pasos: símbolos con leyenda → valores → resultado.
 - Los puntajes en escala 200–1100 son **estimados**, porque la conversión oficial no es pública. Muéstralo siempre así.
 
+## Estilo de redacción del contenido (regla de Cesar)
+Todo texto visible para Cesar (lecciones, láminas, preguntas, explicaciones, guías exportadas y textos de la interfaz) sigue un **estilo serio, educativo y académico**:
+- **Prohibido:** guion largo (—), guion medio (–) usado como separador o viñeta, guion (-) como viñeta, punto medio o viñeta suelta (·, •) como separador, el símbolo °, y el asterisco (*).
+- **Permitido:** oraciones completas, dos puntos, comas, punto y coma, paréntesis, listas numeradas (1., 2.) y tablas. Para separar elementos breves se usan comas o dos puntos.
+- Los rangos numéricos se escriben con palabras ("de 20 a 25 preguntas") o con "a". Las flechas de proceso (→) se permiten solo en diagramas de secuencia.
+- Un validador de contenido debe rechazar esos caracteres en `content/` (pendiente de implementar en `tools/validar.ts`).
+
 ## Lecciones
 - `Preguntas Tipo.docx`: la clave es el **texto** de la opción en negritas. En 6 preguntas (1, 4, 10, 17, 22, 32) la **letra** en negritas no coincide con ese texto. Manda el texto.
 - Convenciones de cálculo del examen (de las preguntas oficiales): año de 360 días, interés simple, tasas del periodo, rendimientos de fondos sin anualizar.
