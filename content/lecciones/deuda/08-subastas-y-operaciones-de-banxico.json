@@ -1,0 +1,519 @@
+{
+  "id": "deuda.subastas-y-operaciones-de-banxico",
+  "area": "deuda",
+  "materia": "Títulos de Deuda II",
+  "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+  "objetivoIds": [
+    "deuda.titulos-de-deuda-ii.subastas.o01",
+    "deuda.titulos-de-deuda-ii.subastas.o02",
+    "deuda.titulos-de-deuda-ii.subastas.o03",
+    "deuda.titulos-de-deuda-ii.subastas.o04",
+    "deuda.titulos-de-deuda-ii.subastas.o05"
+  ],
+  "orden": 8,
+  "titulo": "Subastas y operaciones de Banxico",
+  "resumen": "Tipos de subasta (tasa única, múltiple e interactiva), subastas por cuenta del Gobierno Federal, del IPAB y propias, calendario de convocatoria a liquidación, permuta de valores y operaciones de crédito y depósito de Banxico.",
+  "duracionMin": 35,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        205,
+        206,
+        207,
+        208
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    },
+    {
+      "documento": "AMIB Data/AMIB Fig 3_vf.docx",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "por-cuenta-de-quien",
+      "titulo": "Por cuenta de quién subasta Banxico",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El Banco de México es el [[agente financiero]] del Gobierno Federal y del Instituto para la Protección al Ahorro Bancario (IPAB); por eso coloca sus valores mediante subastas. Además, como banco central, realiza subastas **por cuenta propia** para regular la liquidez."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Por cuenta de",
+            "Subasta",
+            "Para qué"
+          ],
+          "filas": [
+            [
+              "Gobierno Federal",
+              "Valores gubernamentales (CETES, BONDES, Bonos M, Udibonos)",
+              "Colocar deuda del Gobierno"
+            ],
+            [
+              "Gobierno Federal",
+              "Permuta de valores",
+              "Intercambiar títulos por otros de mejores condiciones"
+            ],
+            [
+              "IPAB",
+              "Valores del IPAB (BPAG28, BPAG91, BPA182)",
+              "Colocar deuda del IPAB"
+            ],
+            [
+              "Banxico (propia)",
+              "Subastas de depósito",
+              "Recibir depósitos a plazo: retira liquidez"
+            ],
+            [
+              "Banxico (propia)",
+              "Subastas de liquidez",
+              "Dotar de liquidez mediante crédito garantizado o reporto"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              0
+            ],
+            [
+              4,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen:",
+          "texto": "Gobierno e IPAB, Banxico como agente; depósito y liquidez, Banxico por cuenta propia."
+        }
+      ],
+      "ampliada": "Según el manual 2023, la SHCP, el IPAB y BANOBRAS emiten y Banxico coloca. Las subastas de crédito inyectan recursos comprando valores en directo o en reporto; las de depósito retiran liquidez vendiendo valores en directo o en reporto. Las operaciones de mercado abierto son el principal instrumento de Banxico para administrar la liquidez de corto plazo.",
+      "paginas": [
+        205
+      ]
+    },
+    {
+      "id": "tipos-de-subasta",
+      "titulo": "Tres tipos de subasta",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Tipo",
+            "Cómo se asigna",
+            "A qué tasa o precio paga cada ganador"
+          ],
+          "filas": [
+            [
+              "Tasa (o precio) única",
+              "Desde la mejor postura para el emisor hacia abajo",
+              "Todos a la misma tasa o precio: la de la **última postura** que recibe asignación"
+            ],
+            [
+              "Tasa (o precio) múltiple",
+              "Desde la mejor postura para el emisor hacia abajo",
+              "Cada uno a la tasa o precio **que solicitó**"
+            ],
+            [
+              "Interactiva",
+              "Cuando las ofertas rebasan el monto subastado",
+              "Los participantes ven la postura que deben superar, **sin saber quién la ofreció**"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "\"Mejor postura para el emisor\" significa la **menor tasa** (o el mayor precio): al Gobierno le conviene pagar menos intereses. Por eso se asigna en orden ascendente de tasa."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Las subastas regulares de CETES son a **tasa múltiple**: cada ganador paga su propia tasa, y la tasa publicada es el promedio ponderado de las posturas ganadoras. En tasa única todos reciben la tasa de corte."
+        }
+      ],
+      "ampliada": "El temario pide distinguir tasa o precio múltiple y tasa o precio único \"en las modalidades interactiva y tradicional\". En la tradicional las posturas son ciegas; en la interactiva se ve la postura a superar. Si hay posturas empatadas y el monto no alcanza, se reparten a prorrata (manual 2023).",
+      "paginas": [
+        205
+      ]
+    },
+    {
+      "id": "ejemplo-asignacion",
+      "titulo": "Ejemplo de asignación",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Banxico subasta **$10 millones** de CETES. Recibe cuatro posturas y las ordena de menor a mayor tasa de descuento:"
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Postor",
+            "Monto solicitado",
+            "Tasa",
+            "Asignado",
+            "Paga en tasa múltiple",
+            "Paga en tasa única"
+          ],
+          "filas": [
+            [
+              "X",
+              "$3 millones",
+              "7.00%",
+              "$3 millones",
+              "7.00%",
+              "7.12%"
+            ],
+            [
+              "Y",
+              "$4 millones",
+              "7.08%",
+              "$4 millones",
+              "7.08%",
+              "7.12%"
+            ],
+            [
+              "Z",
+              "$5 millones",
+              "7.12%",
+              "$3 millones",
+              "7.12%",
+              "7.12%"
+            ],
+            [
+              "W",
+              "$2 millones",
+              "7.20%",
+              "Nada",
+              "No aplica",
+              "No aplica"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              3
+            ],
+            [
+              0,
+              5
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\bar{t} = \\frac{\\sum m_i\\, t_i}{\\sum m_i}",
+          "leyenda": [
+            [
+              "\\bar{t}",
+              "tasa promedio ponderada de la colocación"
+            ],
+            [
+              "m_i",
+              "monto asignado a cada postura"
+            ],
+            [
+              "t_i",
+              "tasa de cada postura asignada"
+            ]
+          ],
+          "valores": "\\bar{t} = \\frac{3(7.00) + 4(7.08) + 3(7.12)}{10}",
+          "resultado": "7.0680% en tasa múltiple; 7.1200% para todos en tasa única"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Pondera con el monto **asignado**, no con el solicitado: Z pidió 5 millones pero solo recibe 3. W queda fuera aunque su tasa sea la más alta."
+        }
+      ],
+      "ampliada": "El ejemplo sigue el esquema del ejercicio de subasta del manual 2023 (subasta de CETES con cuatro participantes) con cifras propias.",
+      "paginas": [
+        205
+      ]
+    },
+    {
+      "id": "calendario",
+      "titulo": "Calendario de una subasta de valores gubernamentales",
+      "bloques": [
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Convocatoria",
+              "cuando": "Último día hábil de la semana anterior, desde las 11:30",
+              "texto": "Banxico la pone a disposición de casas de bolsa, instituciones de crédito, sociedades de inversión y otras personas autorizadas, en su página de internet."
+            },
+            {
+              "titulo": "Recepción de posturas",
+              "cuando": "Segundo día hábil anterior a la colocación, límite 11:00",
+              "texto": "Para valores del **IPAB**: día hábil bancario inmediato anterior, límite **10:00**."
+            },
+            {
+              "titulo": "Resultados generales",
+              "cuando": "A más tardar 30 minutos después del límite",
+              "texto": "Banxico publica los resultados generales en su página de internet u otro medio electrónico."
+            },
+            {
+              "titulo": "Asignación individual",
+              "cuando": "A más tardar 1 hora después del límite",
+              "texto": "Banxico informa a cada postor, por **SIAC-BANXICO**, los valores asignados y los precios totales a cubrir."
+            },
+            {
+              "titulo": "Liquidación y entrega",
+              "cuando": "Día de colocación (jueves)",
+              "texto": "Pago conforme al reglamento interior de **INDEVAL**, a través de una institución de crédito o casa de bolsa; los valores se depositan en la cuenta de cada postor."
+            }
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen calendario:",
+          "texto": "convocatoria 11:30 (semana anterior); posturas 11:00 del martes; resultados 11:30; asignación 12:00; liquidación el jueves. IPAB: posturas el miércoles a las 10:00."
+        }
+      ],
+      "ampliada": "Que la colocación sea normalmente en jueves proviene del manual 2023 y de las notas de Cesar; AMIB 1 lo expresa como \"fecha de colocación\". Con colocación en jueves, el segundo día hábil anterior es el martes y el inmediato anterior es el miércoles, salvo días inhábiles.",
+      "paginas": [
+        206
+      ]
+    },
+    {
+      "id": "gobierno-vs-ipab",
+      "titulo": "Gobierno Federal frente a IPAB: la trampa de horarios",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Etapa",
+            "Valores gubernamentales",
+            "Valores del IPAB",
+            "Permuta"
+          ],
+          "filas": [
+            [
+              "Convocatoria",
+              "Último día hábil de la semana anterior, 11:30",
+              "Último día hábil de la semana anterior, 11:30",
+              "Dos días hábiles antes de la subasta, 12:00"
+            ],
+            [
+              "Límite de posturas",
+              "Segundo día hábil anterior a la colocación, 11:00",
+              "Día hábil inmediato anterior, 10:00",
+              "Según la convocatoria"
+            ],
+            [
+              "Resultados individuales",
+              "A más tardar 1 hora después",
+              "A más tardar 1 hora después",
+              "A más tardar 60 minutos después"
+            ],
+            [
+              "Resultados generales",
+              "A más tardar 30 minutos después",
+              "A más tardar 30 minutos después",
+              "A más tardar 30 minutos después"
+            ],
+            [
+              "Liquidación",
+              "Día de colocación",
+              "Día de colocación",
+              "La que fije la convocatoria"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              4,
+              3
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El examen intercambia 11:00 con 10:00 y \"segundo día hábil\" con \"día hábil inmediato\". Memoriza: **IPAB, un día antes y una hora antes**."
+        }
+      ],
+      "ampliada": "Los horarios del IPAB para la convocatoria provienen del manual 2023; AMIB 1 solo distingue al IPAB en la recepción de posturas. Los horarios son regulatorios y conviene verificarlos contra la circular vigente de Banxico.",
+      "paginas": [
+        206,
+        207
+      ]
+    },
+    {
+      "id": "permuta",
+      "titulo": "Permuta de valores",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La [[permuta de valores]] es una operación que realiza Banxico, por medio de una subasta, donde se intercambian bonos de tasa fija por otros valores con **mayor plazo**: normalmente Banxico entrega títulos de mayor plazo a cambio de títulos próximos a vencer."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Postores",
+              "Instituciones de crédito; casas de bolsa; fondos de inversión y Siefores; otras personas autorizadas por Banxico."
+            ],
+            [
+              "Restricción",
+              "Debe abstenerse quien tenga una **posición larga neta**, a valor nominal, **mayor al 60%** del monto en circulación de los Bonos o Udibonos objeto de la permuta."
+            ],
+            [
+              "Convocatoria",
+              "**Dos días hábiles antes** de la subasta, a partir de las **12:00**, en la página de internet de Banxico."
+            ],
+            [
+              "Tipos",
+              "A precio único o a precio múltiple."
+            ],
+            [
+              "Precios",
+              "Banxico da a conocer los **precios limpios** de los Bonos o Udibonos que ofrece el Gobierno Federal."
+            ],
+            [
+              "Posturas",
+              "La suma por postor no puede exceder el monto máximo que el Gobierno esté dispuesto a aceptar; cada postor puede presentar una o más."
+            ],
+            [
+              "Asignación",
+              "En orden ascendente o descendente de precios, sin exceder el monto máximo."
+            ],
+            [
+              "Resultados",
+              "Individuales: a más tardar **60 minutos** después del límite. Generales: a más tardar **30 minutos** después."
+            ],
+            [
+              "Liquidación",
+              "En la fecha que fije la convocatoria; el Gobierno, por conducto de Banxico, conserva la propiedad de lo que entrega hasta recibir los títulos del postor."
+            ]
+          ],
+          "titulo": "Ficha de la permuta"
+        }
+      ],
+      "ampliada": "La permuta la realiza el Gobierno Federal por conducto de Banxico como su agente financiero, no es una subasta por cuenta propia de Banxico.",
+      "paginas": [
+        207,
+        208
+      ]
+    },
+    {
+      "id": "objetivos-permuta",
+      "titulo": "Para qué sirve la permuta",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Banxico realiza subastas para la permuta (canje o intercambio) de valores gubernamentales por otros de mejores condiciones, con el objeto de promover el sano desarrollo del sistema financiero y de:"
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Contar con herramientas que permitan al Gobierno Federal optimizar el perfil de vencimientos de los valores gubernamentales.",
+            "Continuar impulsando el desarrollo del mercado de deuda interna.",
+            "Promover mayor liquidez y aumentar la eficiencia en el proceso de formación de precios de los instrumentos disponibles.",
+            "Contribuir a reducir el costo y riesgo de financiamiento del Gobierno Federal, propiciando un mejor mercado de deuda interna."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Un intruso frecuente en preguntas EXCEPTO es \"dotar de liquidez a las instituciones mediante reporto\": eso lo hacen las subastas de liquidez, no la permuta."
+        }
+      ],
+      "ampliada": "Visto desde el Gobierno: cambiar títulos que vencen pronto por otros de mayor plazo suaviza los vencimientos y reduce el riesgo de refinanciamiento.",
+      "paginas": [
+        205,
+        206
+      ]
+    },
+    {
+      "id": "credito-y-deposito",
+      "titulo": "Operaciones de crédito y depósito en el mercado secundario",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "En el mercado secundario de dinero, Banxico **sustituyó prácticamente en su totalidad** las operaciones de reporto con valores gubernamentales (entre los bancos y Banxico) por **créditos de corto plazo**, y adoptó un esquema de encaje conocido como [[cuenta única]] o **encaje promedio cero**."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Regla",
+              "Los saldos deudores de los bancos con Banxico deben compensarse para **promediar cero** dentro de un **ciclo de 28 días**."
+            ],
+            [
+              "Fecha de corte",
+              "La **misma** para todas las instituciones."
+            ],
+            [
+              "Incumplimiento",
+              "Hace al banco acreedor de una **penalización**."
+            ],
+            [
+              "Uso de política monetaria",
+              "Si Banxico quiere propiciar alzas en tasas y restar capacidad de gasto, induce un sobregiro en las cuentas corrientes; los bancos deben contraer su **crédito** o atraer nuevos **depósitos**."
+            ]
+          ],
+          "titulo": "Cuenta única o encaje promedio cero"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El ciclo es de **28 días**. El OCR de AMIB 1 dice 25, pero la imagen del manual y las notas de Cesar dicen 28."
+        }
+      ],
+      "ampliada": "Así Banxico regula la liquidez sin fijar directamente cantidades de dinero: el costo de quedar sobregirado empuja a los bancos a ajustar sus operaciones de crédito y depósito.",
+      "paginas": [
+        208
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Banxico es agente financiero del Gobierno Federal y del IPAB; las subastas de depósito y de liquidez las hace por cuenta propia.",
+    "Tasa única: todos a la tasa de la última postura asignada. Tasa múltiple: cada uno a su tasa. Interactiva: se ve la postura a superar sin saber quién la ofreció.",
+    "Convocatoria: 11:30 del último día hábil bancario de la semana anterior.",
+    "Posturas: segundo día hábil anterior a la colocación a las 11:00; IPAB, día hábil inmediato anterior a las 10:00.",
+    "Resultados generales a más tardar 30 minutos después; asignación individual por SIAC-BANXICO a más tardar 1 hora después; liquidación vía INDEVAL el día de colocación.",
+    "Permuta: convocatoria dos días hábiles antes a las 12:00, precios limpios, abstención con posición larga neta mayor al 60%, resultados individuales en 60 minutos.",
+    "Subastas de liquidez: crédito garantizado o reporto. Subastas de depósito: depósitos a plazo.",
+    "Cuenta única: saldos que promedian cero en un ciclo de 28 días, con la misma fecha de corte para todos."
+  ],
+  "practica": [
+    "g.deuda.l8.q01",
+    "g.deuda.l8.q02",
+    "g.deuda.l8.q03",
+    "g.deuda.l8.q04",
+    "g.deuda.l8.q05"
+  ],
+  "miniExamen": [
+    "g.deuda.l8.q06",
+    "g.deuda.l8.q07",
+    "g.deuda.l8.q08",
+    "g.deuda.l8.q09",
+    "g.deuda.l8.q10"
+  ],
+  "reto": [
+    "g.deuda.l8.q11",
+    "g.deuda.l8.q12",
+    "g.deuda.l8.q13",
+    "g.deuda.l8.q14",
+    "g.deuda.l8.q15"
+  ]
+}

@@ -1,0 +1,2650 @@
+{
+  "fuente": "Generadas por Claude (Opus) a partir de AMIB Data/AMIB_1_completo.md, cap. 6 (6.3 a 6.5), con apoyo del manual 2023 y de las notas de Cesar",
+  "generado": "2026-10-14",
+  "preguntas": [
+    {
+      "id": "g.deuda.l5.q01",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores",
+      "objetivoId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores.o03",
+      "enunciado": "En una operación de reporto, ¿quién transfiere los títulos a cambio de una suma de dinero y se compromete a recomprarlos?",
+      "opciones": [
+        {
+          "texto": "El reportador, que es el inversionista.",
+          "porQueNo": "El reportador es quien entrega el dinero y recibe temporalmente los títulos; no se obliga a recomprarlos, sino a revenderlos al reportado.",
+          "etiquetaError": "confunde-reportador-reportado"
+        },
+        {
+          "texto": "El prestamista, que es el titular original de los valores.",
+          "porQueNo": "Prestamista es una figura del préstamo de valores, no del reporto.",
+          "etiquetaError": "confunde-reporto-prestamo"
+        },
+        {
+          "texto": "El reportado, que es el intermediario financiero."
+        },
+        {
+          "texto": "El Banco de México, como agente financiero.",
+          "porQueNo": "Banxico no es parte necesaria del reporto entre un intermediario y su cliente.",
+          "etiquetaError": "confunde-entidad"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El manual define el reporto como una inversión en la que el intermediario financiero (REPORTADO) transfiere al inversionista (REPORTADOR) títulos a cambio de dinero, con el compromiso de recomprarlos a un plazo anterior a su vencimiento, pagándole el mismo precio más un premio.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 196,
+        "textual": "intermediario financiero (REPORTADO) transfiere al inversionista (REPORTADOR) títulos a cambio de una suma de dinero"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l5.q02",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o05",
+      "enunciado": "Un cliente invierte $3,500,000 en un reporto a 7 días con una tasa premio de 7.25%. Los títulos reportados son CETES con 28 días por vencer y tasa de descuento de 7.10%. ¿Cuál es el premio que recibirá?",
+      "opciones": [
+        {
+          "texto": "$4,866.4384",
+          "porQueNo": "Usa un año de 365 días; el manual calcula el premio con 36000 (año comercial de 360 días).",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "$4,934.0278"
+        },
+        {
+          "texto": "$19,736.1111",
+          "porQueNo": "Usa los 28 días por vencer del CETE; el premio corre solo durante el plazo del reporto (7 días).",
+          "etiquetaError": "confunde-plazo-reporto-titulo"
+        },
+        {
+          "texto": "$4,831.9444",
+          "porQueNo": "Usa la tasa de descuento del CETE; el premio se calcula con la tasa pactada en el reporto.",
+          "etiquetaError": "confunde-tasa-premio-descuento"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Fórmula PREMIO.REPORTO: premio = VA × TASA × DIAS ÷ 36000 = 3,500,000 × 7.25 × 7 ÷ 36000 = $4,934.0278. Los datos del CETE sirven para el precio de entrada, no para el premio.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 197,
+        "textual": "PREMIO,REPORTO:SPREMIO=TASA a DIAS x VA + 36000"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l5.q03",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores",
+      "objetivoId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores.o04",
+      "enunciado": "Para que un valor pueda ser objeto de reporto, la calificación mínima que exige el manual según su plazo debe provenir de:",
+      "opciones": [
+        {
+          "texto": "al menos dos calificadoras."
+        },
+        {
+          "texto": "una sola calificadora reconocida por la CNBV.",
+          "porQueNo": "El manual exige la calificación mínima de al menos dos calificadoras, no de una.",
+          "etiquetaError": "cuantificador-alterado"
+        },
+        {
+          "texto": "al menos tres calificadoras, una de ellas global.",
+          "porQueNo": "Exagera el requisito: bastan dos calificadoras con la calificación mínima de la tabla.",
+          "etiquetaError": "cuantificador-alterado"
+        },
+        {
+          "texto": "la Bolsa Mexicana de Valores, que publica la escala local.",
+          "porQueNo": "La BMV no califica valores; la calificación la otorgan las calificadoras (S&P, Moody's, Fitch, HR Ratings).",
+          "etiquetaError": "confunde-entidad"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Los valores objeto de reporto, según su plazo (corto o largo), deben tener la calificación mínima de al menos dos calificadoras, conforme a la tabla de escalas local y global del manual.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 197,
+        "textual": "Los valores objeto de Reporto, según corresponda a su plazo, deberán tener la calificación minima de"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l5.q04",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores",
+      "objetivoId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores.o05",
+      "enunciado": "En el préstamo de valores, el prestatario solicita y recibe valores en préstamo para venderlos en un lapso no mayor de:",
+      "opciones": [
+        {
+          "texto": "3 días.",
+          "porQueNo": "Cifra alterada: el manual establece un lapso no mayor de 5 días.",
+          "etiquetaError": "cuantificador-alterado"
+        },
+        {
+          "texto": "28 días.",
+          "porQueNo": "Confunde con el plazo típico de un cupón o de un CETE; no es el lapso del préstamo de valores.",
+          "etiquetaError": "cuantificador-alterado"
+        },
+        {
+          "texto": "360 días.",
+          "porQueNo": "Confunde con el año comercial; el lapso para vender los valores prestados es de 5 días como máximo.",
+          "etiquetaError": "cuantificador-alterado"
+        },
+        {
+          "texto": "5 días."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El prestatario es la persona física o moral que solicita y recibe valores en préstamo para venderlos en un lapso no mayor de 5 días; queda en posición corta y debe restituir los valores, sus derechos patrimoniales y el premio pactado.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 199,
+        "textual": "para venderlos en un lapso no mayor de 5 días"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l5.q05",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o05",
+      "enunciado": "Una casa de bolsa entrega en reporto a 3 días CETES con 45 días por vencer y tasa de descuento de 7.40%. ¿Cuál es el precio de entrada del reporto?",
+      "opciones": [
+        {
+          "texto": "$9.9083",
+          "porQueNo": "Aplica la fórmula de precio con tasa de rendimiento (divide entre 1 + tasa); el dato es una tasa de descuento.",
+          "etiquetaError": "confunde-descuento-rendimiento"
+        },
+        {
+          "texto": "$9.9088",
+          "porQueNo": "Usa un año de 365 días; el manual usa 36000.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "$9.9938",
+          "porQueNo": "Usa el plazo del reporto (3 días); el precio de entrada se calcula con los días por vencer del CETE (45).",
+          "etiquetaError": "confunde-plazo-reporto-titulo"
+        },
+        {
+          "texto": "$9.9075"
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El precio de entrada es el precio del CETE con su tasa de descuento: $PR = VN × (1 − %TD × DIAS ÷ 36000) = 10 × (1 − 7.40 × 45 ÷ 36000) = $9.9075.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 198,
+        "textual": "este dato representa el PRECIO DE ENTRADA"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l5.q06",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o05",
+      "enunciado": "Se pacta un reporto a 5 días con tasa premio de 7.80% sobre CETES con 60 días por vencer y tasa de descuento de 8.10%. ¿Cuál es el precio de salida del reporto?",
+      "opciones": [
+        {
+          "texto": "$9.8757"
+        },
+        {
+          "texto": "$9.8761",
+          "porQueNo": "Capitaliza el precio de entrada con la tasa de descuento del CETE; el precio de salida usa la tasa premio del reporto.",
+          "etiquetaError": "confunde-tasa-premio-descuento"
+        },
+        {
+          "texto": "$9.8762",
+          "porQueNo": "Calcula el precio de mercado del CETE con 55 días por vencer; el precio de salida no depende de la tasa de mercado al vencimiento del reporto, sino de la tasa pactada.",
+          "etiquetaError": "confunde-precio-salida-mercado"
+        },
+        {
+          "texto": "$9.8755",
+          "porQueNo": "Usa un año de 365 días en la capitalización del premio.",
+          "etiquetaError": "base-365"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Paso 1, precio de entrada: 10 × (1 − 8.10 × 60 ÷ 36000) = $9.865000. Paso 2, P.SALIDA: $PSAL = $ENTR × (1 + %TR ÷ 36000 × DIAS) = 9.865000 × (1 + 7.80 ÷ 36000 × 5) = $9.8757.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 198,
+        "textual": "P.SALIDA:SPSAL = SPREN x [1 + ((ATR + 36000) x DIAS))"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l5.q07",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores",
+      "objetivoId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores.o03",
+      "enunciado": "En el reporto colateralizado, las fluctuaciones de los títulos reportados que incrementan la exposición neta se cubren:",
+      "opciones": [
+        {
+          "texto": "por el reportador, mediante caución bursátil.",
+          "porQueNo": "Invierte los papeles: quien cubre las fluctuaciones es el reportado, no el inversionista.",
+          "etiquetaError": "confunde-reportador-reportado"
+        },
+        {
+          "texto": "por el reportado, mediante una carta de crédito.",
+          "porQueNo": "El manual menciona caución bursátil; la carta de crédito aparece como garantía en el préstamo de valores.",
+          "etiquetaError": "confunde-reporto-prestamo"
+        },
+        {
+          "texto": "por el reportado, mediante caución bursátil."
+        },
+        {
+          "texto": "por el Banco de México, con cargo a la cuenta única.",
+          "porQueNo": "Banxico no garantiza los reportos entre particulares; la cuenta única es un esquema de encaje.",
+          "etiquetaError": "confunde-entidad"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "A diferencia del reporto simple, en el reporto colateralizado el reportado cubre las fluctuaciones de los títulos que causen un incremento de la exposición neta, mediante caución bursátil.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 196,
+        "textual": "en el reporto colateralizado, el reportado cubre las fluctuaciones"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l5.q08",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores",
+      "objetivoId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores.o02",
+      "enunciado": "Según el manual, ¿con cuál de los siguientes sujetos pueden las instituciones de crédito y las casas de bolsa celebrar reportos?",
+      "opciones": [
+        {
+          "texto": "Únicamente con otras instituciones de crédito nacionales.",
+          "porQueNo": "Es demasiado restrictiva: el manual incluye entidades del exterior, inversionistas institucionales y calificados, y personas físicas.",
+          "etiquetaError": "restriccion-inventada"
+        },
+        {
+          "texto": "Con personas físicas."
+        },
+        {
+          "texto": "Solo con inversionistas institucionales.",
+          "porQueNo": "Omite a los inversionistas calificados, a las entidades del exterior y a las personas físicas.",
+          "etiquetaError": "restriccion-inventada"
+        },
+        {
+          "texto": "Exclusivamente con el Banco de México.",
+          "porQueNo": "El reporto con clientes es una operación ordinaria del intermediario; no se limita a Banxico.",
+          "etiquetaError": "confunde-entidad"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Las instituciones de crédito y casas de bolsa pueden celebrar reportos con entidades financieras del exterior, entidades nacionales autorizadas para operar dichos títulos en reporto, inversionistas institucionales y calificados, y personas físicas.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 196,
+        "textual": "Inversionistas institucionales e inversionistas calificados. o Personas físicas"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l5.q09",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o05",
+      "enunciado": "Un inversionista colocó $4,200,000 en un reporto a 14 días sobre CETES con 21 días por vencer y recibió un premio de $12,250. ¿Qué tasa premio anual se pactó?",
+      "opciones": [
+        {
+          "texto": "7.6042%",
+          "porQueNo": "Despeja con un año de 365 días; la fórmula del premio usa 36000.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "7.5000%"
+        },
+        {
+          "texto": "0.2917%",
+          "porQueNo": "Es el rendimiento del periodo sin anualizar; la tasa premio se expresa en términos anuales.",
+          "etiquetaError": "sin-anualizar"
+        },
+        {
+          "texto": "5.0000%",
+          "porQueNo": "Despeja con los 21 días por vencer del CETE; el plazo del premio es el del reporto (14 días).",
+          "etiquetaError": "confunde-plazo-reporto-titulo"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "De premio = VA × TASA × DIAS ÷ 36000 se despeja TASA = premio × 36000 ÷ (VA × DIAS) = 12,250 × 36000 ÷ (4,200,000 × 14) = 7.5000%.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 197,
+        "textual": "Tasa pactada en el reporto"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l5.q10",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores",
+      "objetivoId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores.o06",
+      "enunciado": "Para realizar un préstamo de valores, el prestatario debe constituir garantías a favor del prestamista. Son valores admitidos para ello según el manual, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "valores gubernamentales o efectivo.",
+          "porQueNo": "Sí figuran en la lista de garantías del manual.",
+          "etiquetaError": "excepto-elemento-valido"
+        },
+        {
+          "texto": "carta de crédito o título bancario.",
+          "porQueNo": "Sí figuran en la lista de garantías del manual.",
+          "etiquetaError": "excepto-elemento-valido"
+        },
+        {
+          "texto": "acciones de fondos de inversión de deuda y de renta variable.",
+          "porQueNo": "Sí figuran en la lista de garantías del manual.",
+          "etiquetaError": "excepto-elemento-valido"
+        },
+        {
+          "texto": "acciones de baja y mínima bursatilidad."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El manual lista como garantías: valores gubernamentales o efectivo; carta de crédito o título bancario; acciones de alta y media bursatilidad; y acciones de fondos de inversión de deuda y de renta variable. Las acciones de baja o mínima bursatilidad no están en la lista.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": false,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 160,
+        "textual": "el Prestatario debe constituir garantías a favor del prestamista"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l5.q11",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o05",
+      "enunciado": "El Sr. Ruiz invierte $8,000,000 en un reporto a 6 días con tasa premio de 7.20%. Los CETES reportados tienen 20 días por vencer y una tasa de descuento de 8.40%. ¿Cuál es el precio de salida del reporto?",
+      "opciones": [
+        {
+          "texto": "$9.9653"
+        },
+        {
+          "texto": "$9.9651",
+          "porQueNo": "Capitaliza el premio con un año de 365 días.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "$9.9655",
+          "porQueNo": "Obtiene el precio de entrada con la fórmula de tasa de rendimiento, aunque el CETE cotiza con tasa de descuento.",
+          "etiquetaError": "confunde-descuento-rendimiento"
+        },
+        {
+          "texto": "$9.9673",
+          "porQueNo": "Capitaliza el precio de entrada con la tasa de descuento del CETE en lugar de la tasa premio.",
+          "etiquetaError": "confunde-tasa-premio-descuento"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Paso 1, PRECIO.DSCTO: 10 × (1 − 8.40 × 20 ÷ 36000) = $9.953333. Paso 2, P.SALIDA: 9.953333 × (1 + 7.20 ÷ 36000 × 6) = $9.9653. El monto invertido no cambia el precio por título.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 198,
+        "textual": "Solicitamos el precio de salida"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l5.q12",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o05",
+      "enunciado": "En un reporto a 5 días el precio de entrada fue $9.884000 y el precio de salida $9.894250 por título. ¿Cuál fue la tasa premio (tasa de rendimiento del reporto) anual?",
+      "opciones": [
+        {
+          "texto": "7.4589%",
+          "porQueNo": "Divide la ganancia entre el precio de salida, como si fuera una tasa de descuento; el premio es rendimiento sobre el precio de entrada.",
+          "etiquetaError": "confunde-descuento-rendimiento"
+        },
+        {
+          "texto": "7.5703%",
+          "porQueNo": "Anualiza con 365 días.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "7.4666%"
+        },
+        {
+          "texto": "0.1037%",
+          "porQueNo": "Es el rendimiento del periodo de 5 días sin anualizar.",
+          "etiquetaError": "sin-anualizar"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "De $PSAL = $ENTR × (1 + %TR × DIAS ÷ 36000) se despeja %TR = ($PSAL ÷ $ENTR − 1) × 36000 ÷ DIAS = (9.894250 ÷ 9.884000 − 1) × 36000 ÷ 5 = 7.4666%.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 198,
+        "textual": "Precio de Salida del Reporto"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l5.q13",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores",
+      "objetivoId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores.o04",
+      "enunciado": "Además de los valores con la calificación mínima requerida, pueden reportarse los títulos que cuenten con garantía de pago o aval de la Sociedad Hipotecaria Federal de al menos:",
+      "opciones": [
+        {
+          "texto": "el 50% de su saldo insoluto por principal e intereses ordinarios.",
+          "porQueNo": "Porcentaje alterado: el manual indica al menos el 65%.",
+          "etiquetaError": "cuantificador-alterado"
+        },
+        {
+          "texto": "el 75% de su saldo insoluto por principal e intereses ordinarios.",
+          "porQueNo": "Porcentaje alterado: el manual indica al menos el 65%.",
+          "etiquetaError": "cuantificador-alterado"
+        },
+        {
+          "texto": "el 65% de su saldo insoluto por principal e intereses ordinarios."
+        },
+        {
+          "texto": "el 65% de su valor nominal, sin incluir intereses.",
+          "porQueNo": "Conserva la cifra pero cambia la base: el aval cubre saldo insoluto por principal e intereses ordinarios.",
+          "etiquetaError": "cambia-base-calculo"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El manual admite en reporto los títulos que cuenten con garantía de pago o aval de la Sociedad Hipotecaria Federal, S.N.C., de al menos el 65% de su saldo insoluto por concepto de principal e intereses ordinarios.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 197,
+        "textual": "de al menos el 65% de su saldo insoluto por concepto de principal e intereses ordinarios"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l5.q14",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores",
+      "objetivoId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores.o04",
+      "enunciado": "Un pagaré bancario de corto plazo se quiere usar en reporto. ¿Cuál de las siguientes combinaciones de calificaciones en escala local México cumple el requisito mínimo del manual?",
+      "opciones": [
+        {
+          "texto": "mxA-3 de Standard & Poor's, sin otra calificación.",
+          "porQueNo": "Cumple el nivel mínimo, pero solo con una calificadora; el manual exige al menos dos.",
+          "etiquetaError": "cuantificador-alterado"
+        },
+        {
+          "texto": "HR AA- de HR Ratings, sin otra calificación.",
+          "porQueNo": "Es el mínimo de largo plazo y además proviene de una sola calificadora.",
+          "etiquetaError": "confunde-corto-largo-plazo"
+        },
+        {
+          "texto": "MX-3 de Moody's y una calificación de Fitch inferior a F3(mex).",
+          "porQueNo": "Solo una de las dos calificaciones alcanza el mínimo; el manual exige la calificación mínima de al menos dos calificadoras.",
+          "etiquetaError": "cuantificador-alterado"
+        },
+        {
+          "texto": "mxA-3 de Standard & Poor's y F3(mex) de Fitch."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Para corto plazo en escala local México los mínimos son mxA-3 (S&P), MX-3 (Moody's), F3(mex) (Fitch) y HR3 (HR Ratings), y se requiere la calificación mínima de al menos dos calificadoras. mxA-3 más F3(mex) cumple ambas condiciones.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 197,
+        "textual": "deberán tener la calificación minima de"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": [
+        "La tabla de calificaciones está ilegible en el OCR; las escalas se verificaron en la imagen de la página 197 del PDF y en el manual 2023."
+      ]
+    },
+    {
+      "id": "g.deuda.l5.q15",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores",
+      "objetivoId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores.o05",
+      "enunciado": "Al vencimiento de un préstamo de valores, ¿quién paga el premio pactado?",
+      "opciones": [
+        {
+          "texto": "El prestatario, que además restituye los derechos patrimoniales."
+        },
+        {
+          "texto": "El prestamista, como contraprestación por ceder sus valores.",
+          "porQueNo": "Invierte los papeles: el prestamista recibe el premio a cambio de prestar sus valores.",
+          "etiquetaError": "confunde-prestamista-prestatario"
+        },
+        {
+          "texto": "El reportado, al recomprar los títulos.",
+          "porQueNo": "Reportado y recompra son conceptos del reporto, no del préstamo de valores.",
+          "etiquetaError": "confunde-reporto-prestamo"
+        },
+        {
+          "texto": "La casa de bolsa, con cargo a la garantía constituida.",
+          "porQueNo": "La garantía respalda la obligación del prestatario; el premio lo paga el prestatario, no el intermediario.",
+          "etiquetaError": "confunde-entidad"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El prestatario queda en posición corta y se obliga a devolver al prestamista, en el plazo convenido, la propiedad íntegra de los valores, además de todos los derechos patrimoniales y el premio pactado.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 160,
+        "textual": "además de todos los derechos patrimoniales y el premio pactado"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l6.q01",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o01",
+      "enunciado": "Un CETE emitido a 91 días tiene 28 días transcurridos y se negocia a una tasa de descuento de 9.15%. ¿Cuál es su precio?",
+      "opciones": [
+        {
+          "texto": "$9.8424",
+          "porQueNo": "Usa la fórmula de precio con tasa de rendimiento; el dato es una tasa de descuento.",
+          "etiquetaError": "confunde-descuento-rendimiento"
+        },
+        {
+          "texto": "$9.8399"
+        },
+        {
+          "texto": "$9.8421",
+          "porQueNo": "Usa un año de 365 días.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "$9.7687",
+          "porQueNo": "Usa el plazo original de 91 días; el precio se calcula con los días por vencer (91 − 28 = 63).",
+          "etiquetaError": "confunde-dias-transcurridos-por-vencer"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "DIAS por vencer = 91 − 28 = 63. $PR = VN × (1 − %TD × DIAS ÷ 36000) = 10 × (1 − 9.15 × 63 ÷ 36000) = $9.8399.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 200,
+        "textual": "Esta fórmula sirve para encontrar tanto el PRECIO del título como la Tasa de DESCUENTO"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l6.q02",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o01",
+      "enunciado": "¿Cuál es la tasa de descuento de un CETE con 77 días por vencer cuyo precio de mercado es $9.8312?",
+      "opciones": [
+        {
+          "texto": "8.0275%",
+          "porQueNo": "Es la tasa de rendimiento: divide el descuento entre el precio y no entre el valor nominal.",
+          "etiquetaError": "confunde-descuento-rendimiento"
+        },
+        {
+          "texto": "7.8919%"
+        },
+        {
+          "texto": "8.0016%",
+          "porQueNo": "Anualiza con 365 días.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "1.6880%",
+          "porQueNo": "Es el descuento del periodo sin anualizar.",
+          "etiquetaError": "sin-anualizar"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Despejando de $PR = VN × (1 − %TD × DIAS ÷ 36000): %TD = (1 − $PR ÷ VN) × 36000 ÷ DIAS = (1 − 9.8312 ÷ 10) × 36000 ÷ 77 = 7.8919%.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 200,
+        "textual": "Esta fórmula sirve para encontrar tanto el PRECIO del título como la Tasa de DESCUENTO"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l6.q03",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o01",
+      "enunciado": "Para un mismo CETE, con el mismo precio y los mismos días por vencer, la tasa de rendimiento comparada con la tasa de descuento es:",
+      "opciones": [
+        {
+          "texto": "menor, porque el rendimiento se calcula sobre el valor nominal.",
+          "porQueNo": "Invierte la base: es la tasa de descuento la que se calcula sobre el valor nominal.",
+          "etiquetaError": "confunde-descuento-rendimiento"
+        },
+        {
+          "texto": "igual, porque ambas se anualizan con 360 días.",
+          "porQueNo": "Compartir la base de 360 días no las iguala: la base monetaria (precio o valor nominal) es distinta.",
+          "etiquetaError": "confunde-descuento-rendimiento"
+        },
+        {
+          "texto": "mayor solo cuando el plazo excede de 182 días.",
+          "porQueNo": "La relación se cumple para cualquier plazo positivo, no solo para plazos largos.",
+          "etiquetaError": "restriccion-inventada"
+        },
+        {
+          "texto": "mayor, porque el descuento se divide entre el precio, que es menor que el valor nominal."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "%TD = %TR ÷ (1 + %TR × DIAS ÷ 36000). Como el denominador es mayor que 1, la tasa de descuento siempre es menor que la de rendimiento; dicho de otro modo, la ganancia se divide entre el precio (menor que VN) para obtener el rendimiento.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 200,
+        "textual": "sirve para encontrar tanto la tasa de DESCUENTO como la tasa de RENDIMIENTO"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l6.q04",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o01",
+      "enunciado": "Un CETE con 119 días por vencer cotiza a una tasa de descuento de 6.85%. ¿Cuál es su tasa de rendimiento equivalente?",
+      "opciones": [
+        {
+          "texto": "6.6983%",
+          "porQueNo": "Aplica la conversión de rendimiento a descuento (suma en el denominador); el resultado sale menor que la tasa de descuento, lo cual es imposible.",
+          "etiquetaError": "conversion-invertida"
+        },
+        {
+          "texto": "7.0065%",
+          "porQueNo": "Usa 365 días en la conversión.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "7.0087%"
+        },
+        {
+          "texto": "6.8500%",
+          "porQueNo": "Supone que ambas tasas son iguales.",
+          "etiquetaError": "confunde-descuento-rendimiento"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "%TR = %TD ÷ (1 − %TD × DIAS ÷ 36000) = 6.85 ÷ (1 − 6.85 × 119 ÷ 36000) = 7.0087% (fórmula DESC.REND de la calculadora).",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 201,
+        "textual": "Para calcular la tasa de rendimiento, utilizamos la fórmula DESC.REND"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l6.q05",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o01",
+      "enunciado": "Un CETE emitido a 91 días se compra en $9.8380 con una tasa de descuento de 8.10%. ¿Cuántos días han transcurrido desde su emisión?",
+      "opciones": [
+        {
+          "texto": "19 días."
+        },
+        {
+          "texto": "72 días.",
+          "porQueNo": "Son los días por vencer; los transcurridos son 91 − 72.",
+          "etiquetaError": "confunde-dias-transcurridos-por-vencer"
+        },
+        {
+          "texto": "18 días.",
+          "porQueNo": "Despeja los días por vencer con 365 días (73) y resta de 91.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "73 días.",
+          "porQueNo": "Despeja con 365 días y además reporta los días por vencer.",
+          "etiquetaError": "base-365"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "DIAS por vencer = (1 − $PR ÷ VN) × 36000 ÷ %TD = (1 − 9.8380 ÷ 10) × 36000 ÷ 8.10 = 72. Días transcurridos = 91 − 72 = 19.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 201,
+        "textual": "[DIAS] = 91-15=76"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l6.q06",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o01",
+      "enunciado": "Un pagaré con 47 días por vencer ofrece una tasa de rendimiento de 8.05%. ¿Cuál es la tasa de descuento que le corresponde?",
+      "opciones": [
+        {
+          "texto": "8.1355%",
+          "porQueNo": "Aplica la conversión de descuento a rendimiento (resta en el denominador); da una tasa mayor que la de rendimiento.",
+          "etiquetaError": "conversion-invertida"
+        },
+        {
+          "texto": "7.9674%",
+          "porQueNo": "Usa 365 días en la conversión.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "7.9663%"
+        },
+        {
+          "texto": "8.0500%",
+          "porQueNo": "Supone que la tasa de descuento es igual a la de rendimiento.",
+          "etiquetaError": "confunde-descuento-rendimiento"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "%TD = %TR ÷ (1 + %TR × DIAS ÷ 36000) = 8.05 ÷ (1 + 8.05 × 47 ÷ 36000) = 7.9663%. Debe salir menor que 8.05%.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 200,
+        "textual": "%TD = %TR + ( 1+( 9ATA X DIAS = 36000 ))"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l6.q07",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o01",
+      "enunciado": "Un CETE de 91 días con 3 días transcurridos se negocia a una tasa de rendimiento de 7.65%. ¿Cuál es su precio?",
+      "opciones": [
+        {
+          "texto": "$9.8130",
+          "porQueNo": "Aplica la fórmula de tasa de descuento; el dato es una tasa de rendimiento.",
+          "etiquetaError": "confunde-descuento-rendimiento"
+        },
+        {
+          "texto": "$9.8164"
+        },
+        {
+          "texto": "$9.8189",
+          "porQueNo": "Usa un año de 365 días.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "$9.8103",
+          "porQueNo": "Usa el plazo original de 91 días en vez de los 88 días por vencer.",
+          "etiquetaError": "confunde-dias-transcurridos-por-vencer"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "$PR = VN ÷ (1 + %TR × DIAS ÷ 36000) = 10 ÷ (1 + 7.65 × 88 ÷ 36000) = $9.8164.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 200,
+        "textual": "fórmulz sirve para encontrar tanto el PRECIO del título como la Tasa de RENDIMIENTO"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l6.q08",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o01",
+      "enunciado": "La tasa de rendimiento a 28 días es 7.80%. Con la fórmula de tasa equivalente del manual, ¿cuál es la tasa equivalente a 91 días?",
+      "opciones": [
+        {
+          "texto": "7.8534%"
+        },
+        {
+          "texto": "7.8000%",
+          "porQueNo": "Supone que la tasa no cambia con el plazo; la tasa equivalente reinvierte la tasa de 28 días hasta 91.",
+          "etiquetaError": "sin-tasa-equivalente"
+        },
+        {
+          "texto": "7.8526%",
+          "porQueNo": "Usa 365 días en la capitalización y la anualización.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "7.7473%",
+          "porQueNo": "Lleva la tasa en sentido inverso, como si 7.80% fuera la tasa a 91 días y se buscara la de 28.",
+          "etiquetaError": "equivalente-sentido-invertido"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "%TEQUI = ((1 + %TR × DIAS ÷ 36000)^(DIAEQ ÷ DIAS) − 1) × 36000 ÷ DIAEQ = ((1 + 7.80 × 28 ÷ 36000)^(91 ÷ 28) − 1) × 36000 ÷ 91 = 7.8534%.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 200,
+        "textual": "Plazo al cual que me quiero llevar la tasa"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l6.q09",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o01",
+      "enunciado": "Para obtener el precio de liquidación de un CETE que liquida a 48 horas, el procedimiento del manual es:",
+      "opciones": [
+        {
+          "texto": "valuar con los días por vencer de hoy y sumar dos días de premio.",
+          "porQueNo": "El manual no agrega premio; descuenta los dos días al valuar con el plazo que restará el día de liquidación.",
+          "etiquetaError": "liquidacion-sin-ajuste"
+        },
+        {
+          "texto": "restar dos días al plazo y conservar la misma tasa de descuento.",
+          "porQueNo": "Omite el paso 1: el manual primero lleva la tasa a su equivalente en el nuevo plazo.",
+          "etiquetaError": "sin-tasa-equivalente"
+        },
+        {
+          "texto": "llevar la tasa a su equivalente a DIAS + 2 y valuar con DIAS + 2.",
+          "porQueNo": "Suma en lugar de restar: al liquidar dos días después, quedan menos días por vencer.",
+          "etiquetaError": "liquidacion-suma-dias"
+        },
+        {
+          "texto": "llevar la tasa a su equivalente a DIAS − 2 y valuar con DIAS − 2."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Ejemplo del manual: CETES con 72 días y tasa de 8.4% que liquidan a 48 horas. Paso 1: tasa equivalente de 72 a 70 días = 8.39805%. Paso 2: precio con 8.39805% y 70 días = $9.8367.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 201,
+        "textual": "Con la fórmula de tasa equivalente"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l6.q10",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o01",
+      "enunciado": "Un CETE se emitió a 182 días y han transcurrido 47. Si hoy cotiza a una tasa de descuento de 8.35%, ¿cuál es su precio?",
+      "opciones": [
+        {
+          "texto": "$9.5779",
+          "porQueNo": "Usa el plazo de emisión (182 días); el precio depende de los días por vencer.",
+          "etiquetaError": "confunde-dias-transcurridos-por-vencer"
+        },
+        {
+          "texto": "$9.8910",
+          "porQueNo": "Usa los días transcurridos como si fueran los días por vencer.",
+          "etiquetaError": "confunde-dias-transcurridos-por-vencer"
+        },
+        {
+          "texto": "$9.6869"
+        },
+        {
+          "texto": "$9.6964",
+          "porQueNo": "Aplica la fórmula de rendimiento a una tasa de descuento.",
+          "etiquetaError": "confunde-descuento-rendimiento"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "DIAS por vencer = 182 − 47 = 135. $PR = 10 × (1 − 8.35 × 135 ÷ 36000) = $9.6869.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 200,
+        "textual": "Dias por vencer"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l6.q11",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o01",
+      "enunciado": "Un CETE tiene 64 días por vencer y tasa de descuento de 9.20%; la operación liquida a 48 horas. Siguiendo el paso 1 del manual, ¿cuál es la tasa equivalente que debe usarse?",
+      "opciones": [
+        {
+          "texto": "9.1977%"
+        },
+        {
+          "texto": "9.2000%",
+          "porQueNo": "Omite el ajuste de la tasa al nuevo plazo.",
+          "etiquetaError": "sin-tasa-equivalente"
+        },
+        {
+          "texto": "9.2023%",
+          "porQueNo": "Lleva la tasa a 66 días: suma los dos días en lugar de restarlos.",
+          "etiquetaError": "liquidacion-suma-dias"
+        },
+        {
+          "texto": "9.8057%",
+          "porQueNo": "Invierte el exponente (DIAS ÷ DIAEQ en lugar de DIAEQ ÷ DIAS).",
+          "etiquetaError": "exponente-invertido"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Paso 1: %TEQUI = ((1 + 9.20 × 64 ÷ 36000)^(62 ÷ 64) − 1) × 36000 ÷ 62 = 9.1977%. Con esa tasa y 62 días se obtiene el precio de liquidación.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 201,
+        "textual": "liquidando a 48 horas"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l6.q12",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o01",
+      "enunciado": "Una tesorería compra 250,000 CETES con 64 días por vencer a una tasa de descuento de 9.20%, con liquidación a 48 horas. Con el procedimiento del manual, ¿cuánto pagará en total?",
+      "opciones": [
+        {
+          "texto": "$2,460,388.8889",
+          "porQueNo": "Reduce el plazo a 62 días pero conserva la tasa de 9.20% sin llevarla a su equivalente.",
+          "etiquetaError": "sin-tasa-equivalente"
+        },
+        {
+          "texto": "$2,459,111.1111",
+          "porQueNo": "Valúa con 64 días, como si liquidara el mismo día.",
+          "etiquetaError": "liquidacion-sin-ajuste"
+        },
+        {
+          "texto": "$2,457,822.6139",
+          "porQueNo": "Suma dos días al plazo en lugar de restarlos.",
+          "etiquetaError": "liquidacion-suma-dias"
+        },
+        {
+          "texto": "$2,460,398.9553"
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Paso 1: tasa equivalente de 64 a 62 días = 9.197662%. Paso 2: $PR = 10 × (1 − 9.197662 × 62 ÷ 36000) = 9.841596. Total = 250,000 × 9.841596 = $2,460,398.9553.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 201,
+        "textual": "Determine el precio de liquidación de un CETES"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l6.q13",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o01",
+      "enunciado": "Un inversionista compra CETES con 91 días por vencer a una tasa de descuento de 8.00% y los vende 30 días después a una tasa de descuento de 7.60%. ¿Qué rendimiento anual obtuvo en esos 30 días?",
+      "opciones": [
+        {
+          "texto": "0.7496%",
+          "porQueNo": "Es el rendimiento del periodo sin anualizar.",
+          "etiquetaError": "sin-anualizar"
+        },
+        {
+          "texto": "8.9952%"
+        },
+        {
+          "texto": "2.9655%",
+          "porQueNo": "Anualiza con los 91 días del CETE; la inversión duró 30 días.",
+          "etiquetaError": "confunde-plazo-inversion"
+        },
+        {
+          "texto": "9.1202%",
+          "porQueNo": "Anualiza con 365 días.",
+          "etiquetaError": "base-365"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Precio de compra: 10 × (1 − 8.00 × 91 ÷ 36000) = 9.797778. Precio de venta con 61 días por vencer: 10 × (1 − 7.60 × 61 ÷ 36000) = 9.871222. Rendimiento = (venta ÷ compra − 1) × 36000 ÷ 30 = 8.9952%.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 200,
+        "textual": "con cálculos al vencimiento y entre fechas"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l6.q14",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o01",
+      "enunciado": "Si se mantiene fija la tasa de descuento y se alarga el plazo por vencer de un CETE, la diferencia entre su tasa de rendimiento y su tasa de descuento:",
+      "opciones": [
+        {
+          "texto": "disminuye, porque el plazo diluye el descuento.",
+          "porQueNo": "Al crecer el plazo el precio baja, y dividir entre un precio menor amplía la diferencia.",
+          "etiquetaError": "direccion-invertida"
+        },
+        {
+          "texto": "permanece constante, porque la tasa de descuento no cambia.",
+          "porQueNo": "La diferencia depende del plazo: %TR = %TD ÷ (1 − %TD × DIAS ÷ 36000).",
+          "etiquetaError": "direccion-invertida"
+        },
+        {
+          "texto": "se vuelve negativa a partir de 360 días.",
+          "porQueNo": "La tasa de rendimiento nunca es menor que la de descuento para plazos y tasas positivos.",
+          "etiquetaError": "confunde-descuento-rendimiento"
+        },
+        {
+          "texto": "aumenta, porque el precio se aleja más del valor nominal."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Con %TR = %TD ÷ (1 − %TD × DIAS ÷ 36000), al aumentar DIAS el denominador disminuye y %TR crece, mientras %TD sigue igual; por eso la brecha se amplía.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 200,
+        "textual": "sirve para encontrar tanto la tasa de DESCUENTO como la tasa de RENDIMIENTO"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l6.q15",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o01",
+      "enunciado": "Un CETE emitido a 91 días se negocia en $9.828010 a una tasa de rendimiento de 8.40%. ¿Cuántos días le faltan para vencer?",
+      "opciones": [
+        {
+          "texto": "74 días.",
+          "porQueNo": "Despeja con la fórmula de tasa de descuento (divide entre el valor nominal); el dato es una tasa de rendimiento.",
+          "etiquetaError": "confunde-descuento-rendimiento"
+        },
+        {
+          "texto": "76 días.",
+          "porQueNo": "Despeja con 365 días.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "75 días."
+        },
+        {
+          "texto": "16 días.",
+          "porQueNo": "Son los días transcurridos (91 − 75), no los días por vencer.",
+          "etiquetaError": "confunde-dias-transcurridos-por-vencer"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "De $PR = VN ÷ (1 + %TR × DIAS ÷ 36000): DIAS = (VN ÷ $PR − 1) × 36000 ÷ %TR = (10 ÷ 9.828010 − 1) × 36000 ÷ 8.40 = 75 días.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 200,
+        "textual": "SPR=VN + (1 + (XTR x DIAS +36000))"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l7.q01",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o02",
+      "enunciado": "Un Bono M con valor nominal de $100 tiene una tasa cupón de 7.75% y paga intereses cada 182 días. ¿Cuál es el monto de cada cupón?",
+      "opciones": [
+        {
+          "texto": "$3.8750",
+          "porQueNo": "Divide la tasa anual entre dos; el cupón se calcula con los 182 días efectivos sobre 360.",
+          "etiquetaError": "cupon-semestral-exacto"
+        },
+        {
+          "texto": "$3.9181"
+        },
+        {
+          "texto": "$3.8644",
+          "porQueNo": "Usa un año de 365 días.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "$7.7500",
+          "porQueNo": "Es el cupón anual; el Bono M paga cada 182 días.",
+          "etiquetaError": "sin-desanualizar"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Cupón = VN × tasa cupón × días del cupón ÷ 360 = 100 × 0.0775 × 182 ÷ 360 = $3.9181.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 202,
+        "textual": "%CPN = Tasa del Cupón"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l7.q02",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o02",
+      "enunciado": "Un bono con valor nominal de $100 y tasa cupón de 8.00% paga intereses cada 182 días. Han transcurrido 64 días del cupón vigente. ¿Cuáles son los intereses corridos?",
+      "opciones": [
+        {
+          "texto": "$1.4222"
+        },
+        {
+          "texto": "$2.6222",
+          "porQueNo": "Usa los 118 días que faltan para el pago; los intereses corridos se devengan por los días transcurridos.",
+          "etiquetaError": "confunde-dias-transcurridos-por-vencer"
+        },
+        {
+          "texto": "$1.4027",
+          "porQueNo": "Usa 365 días.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "$4.0444",
+          "porQueNo": "Es el cupón completo, no la parte devengada.",
+          "etiquetaError": "cupon-completo"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Intereses corridos = VN × tasa cupón × días transcurridos ÷ 360 = 100 × 0.08 × 64 ÷ 360 = $1.4222.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 202,
+        "textual": "INT= Intereses corridos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l7.q03",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o02",
+      "enunciado": "Un bono de $100 de valor nominal paga cupón de 6.50% cada 182 días. Si su precio sucio es $101.2450 y han transcurrido 120 días del cupón, ¿cuál es su precio limpio?",
+      "opciones": [
+        {
+          "texto": "$103.4117",
+          "porQueNo": "Suma los intereses corridos; el precio limpio se obtiene restándolos del sucio.",
+          "etiquetaError": "confunde-precio-limpio-sucio"
+        },
+        {
+          "texto": "$100.1256",
+          "porQueNo": "Calcula los intereses con los 62 días por transcurrir del cupón.",
+          "etiquetaError": "confunde-dias-transcurridos-por-vencer"
+        },
+        {
+          "texto": "$99.1080",
+          "porQueNo": "Calcula los intereses corridos con 365 días.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "$99.0783"
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Intereses corridos = 100 × 0.065 × 120 ÷ 360 = 2.166667. Precio limpio = precio sucio − intereses = 101.2450 − 2.166667 = $99.0783.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 202,
+        "textual": "Para el precio sucio"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l7.q04",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o02",
+      "enunciado": "Respecto del precio limpio y el precio sucio de un bono cuponado, es correcto afirmar que:",
+      "opciones": [
+        {
+          "texto": "el precio limpio es el sucio más los intereses corridos.",
+          "porQueNo": "Invierte la relación: los intereses corridos se suman al limpio para llegar al sucio.",
+          "etiquetaError": "confunde-precio-limpio-sucio"
+        },
+        {
+          "texto": "el precio sucio es el limpio más los intereses corridos del cupón vigente."
+        },
+        {
+          "texto": "el precio sucio incluye el cupón completo aunque no haya transcurrido.",
+          "porQueNo": "Solo incluye los intereses devengados por los días transcurridos, no el cupón entero.",
+          "etiquetaError": "cupon-completo"
+        },
+        {
+          "texto": "ambos coinciden siempre que el bono cotice bajo par.",
+          "porQueNo": "Coinciden solo el día de pago del cupón, cuando los intereses corridos son cero; no depende de cotizar bajo par.",
+          "etiquetaError": "confunde-precio-limpio-sucio"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "En el ejemplo del manual, precio limpio $105.664023 más intereses corridos 0.1889 da el precio sucio de 105.8529. El sucio es lo que se liquida; el limpio excluye los intereses devengados.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 202,
+        "textual": "Solicitamos los Intereses corridos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l7.q05",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o03",
+      "enunciado": "Al valuar un BPAG91 con la fórmula BONO.S/TASA, la tasa líder vigente que el manual captura es:",
+      "opciones": [
+        {
+          "texto": "la mayor entre la tasa de CETES y la de fondeo gubernamental."
+        },
+        {
+          "texto": "la menor entre la tasa de CETES y la de fondeo gubernamental.",
+          "porQueNo": "Invierte el criterio: se toma la mayor de las dos.",
+          "etiquetaError": "direccion-invertida"
+        },
+        {
+          "texto": "la tasa cupón vigente del propio BPAG91.",
+          "porQueNo": "La tasa cupón se captura por separado (%CPN); la tasa líder es la de referencia de mercado.",
+          "etiquetaError": "confunde-tasa-cupon-mercado"
+        },
+        {
+          "texto": "la tasa de fondeo bancario más la sobretasa.",
+          "porQueNo": "Fondeo bancario es referencia de los BONDES D; además la sobretasa se captura aparte.",
+          "etiquetaError": "confunde-referencia"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "En el ejemplo del manual, CETES a 91 días en 4.33% y fondeo gubernamental en 4.35%: se captura %TLV = 4.35, la mayor entre CETES y fondeo gubernamental.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 204,
+        "textual": "La Mayor entre CETES y Fondeo Gubernamental"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l7.q06",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o02",
+      "enunciado": "Un Bono M con 540 días por vencer paga cupón de 7.00% y se negocia a una tasa de rendimiento de 8.20%, con liquidación el mismo día. ¿Cuál es su precio limpio?",
+      "opciones": [
+        {
+          "texto": "$98.4528",
+          "porQueNo": "Es el precio sucio: no resta los intereses corridos.",
+          "etiquetaError": "confunde-precio-limpio-sucio"
+        },
+        {
+          "texto": "$101.6784",
+          "porQueNo": "Intercambia la tasa cupón con la tasa de rendimiento.",
+          "etiquetaError": "confunde-tasa-cupon-mercado"
+        },
+        {
+          "texto": "$98.3362"
+        },
+        {
+          "texto": "$98.3572",
+          "porQueNo": "Usa 365 días en el cupón y en la tasa por periodo.",
+          "etiquetaError": "base-365"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Cupones restantes = 3; días al siguiente cupón = 540 − 2 × 182 = 176. Cupón = 100 × 0.07 × 182 ÷ 360 = 3.538889; i = 0.082 × 182 ÷ 360. Precio sucio = Σ cupón ÷ (1 + i)^(k − 1 + 176 ÷ 182) + 100 ÷ (1 + i)^(2 + 176 ÷ 182) = 98.452835. Intereses corridos = 100 × 0.07 × 6 ÷ 360 = 0.116667. Limpio = $98.3362.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 202,
+        "textual": "%LIDER = Tasa del Mercado o Tasa exigida e negociada o Tasa pactada"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l7.q07",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o02",
+      "enunciado": "Un Bono M tiene hoy 731 días por vencer, tasa cupón de 8.00% y se negocia a 9.10%. La operación liquida a 48 horas. ¿Cuál es el precio limpio de liquidación?",
+      "opciones": [
+        {
+          "texto": "$98.0007",
+          "porQueNo": "Valúa con 731 días, sin descontar los dos días de la liquidación a 48 horas.",
+          "etiquetaError": "liquidacion-sin-ajuste"
+        },
+        {
+          "texto": "$97.9947",
+          "porQueNo": "Suma los dos días de liquidación en lugar de restarlos.",
+          "etiquetaError": "liquidacion-suma-dias"
+        },
+        {
+          "texto": "$98.0066"
+        },
+        {
+          "texto": "$102.0288",
+          "porQueNo": "Es el precio sucio a 729 días; no resta los intereses corridos.",
+          "etiquetaError": "confunde-precio-limpio-sucio"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "DXV = 731 − 2 = 729. Cupones restantes = 5; días al siguiente cupón = 729 − 4 × 182 = 1. Precio sucio = 102.028848; intereses corridos = 100 × 0.08 × 181 ÷ 360 = 4.022222; limpio = $98.0066.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 202,
+        "textual": "[DXV] = 723 -3=720"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l7.q08",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o04",
+      "enunciado": "Un Udibono tiene un precio limpio de 98.452310 UDIS y sus intereses corridos son 1.250000 UDIS. Si la UDI vale $8.123456, ¿cuál es su precio sucio en pesos?",
+      "opciones": [
+        {
+          "texto": "$799.7730",
+          "porQueNo": "Convierte solo el precio limpio; el sucio incluye los intereses corridos.",
+          "etiquetaError": "confunde-precio-limpio-sucio"
+        },
+        {
+          "texto": "$99.7023",
+          "porQueNo": "Es el precio sucio en UDIS; falta multiplicar por el valor de la UDI.",
+          "etiquetaError": "sin-convertir-udis"
+        },
+        {
+          "texto": "$789.6187",
+          "porQueNo": "Resta los intereses corridos en lugar de sumarlos.",
+          "etiquetaError": "confunde-precio-limpio-sucio"
+        },
+        {
+          "texto": "$809.9273"
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Precio sucio en UDIS = 98.452310 + 1.250000 = 99.702310. En pesos: 99.702310 × 8.123456 = $809.9273.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 202,
+        "textual": "Para determinar los precios en pesos multiplicamos el valor de la UDI"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l7.q09",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o02",
+      "enunciado": "Un Bono M con 900 días por vencer tiene tasa cupón de 7.50%. ¿Cuáles son sus intereses corridos?",
+      "opciones": [
+        {
+          "texto": "$3.5833",
+          "porQueNo": "Toma 172 días, que son los que faltan para el próximo cupón, como si fueran los transcurridos.",
+          "etiquetaError": "confunde-dias-transcurridos-por-vencer"
+        },
+        {
+          "texto": "$0.2083"
+        },
+        {
+          "texto": "$0.2055",
+          "porQueNo": "Usa 365 días.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "$3.7917",
+          "porQueNo": "Es el cupón completo.",
+          "etiquetaError": "cupon-completo"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Cupones restantes = 5 (900 ÷ 182 = 4.95, se redondea hacia arriba). Días al próximo cupón = 900 − 4 × 182 = 172. Días transcurridos = 182 − 172 = 10. Intereses corridos = 100 × 0.075 × 10 ÷ 360 = $0.2083.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 202,
+        "textual": "DXV = Días por vencer"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l7.q10",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o03",
+      "enunciado": "Un BPAG28 con 600 días por vencer tiene una tasa cupón vigente de 4.90%. ¿Cuáles son los intereses corridos (INT$) que entrega la fórmula BONO.S/TASA?",
+      "opciones": [
+        {
+          "texto": "$0.2178"
+        },
+        {
+          "texto": "$0.1633",
+          "porQueNo": "Usa los 12 días que faltan para el próximo cupón en lugar de los 16 transcurridos.",
+          "etiquetaError": "confunde-dias-transcurridos-por-vencer"
+        },
+        {
+          "texto": "$0.3811",
+          "porQueNo": "Es el cupón completo de 28 días.",
+          "etiquetaError": "cupon-completo"
+        },
+        {
+          "texto": "$0.2148",
+          "porQueNo": "Usa 365 días.",
+          "etiquetaError": "base-365"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Cupones de 28 días: 600 − 21 × 28 = 12 días al próximo pago; transcurridos = 28 − 12 = 16. INT$ = 100 × 0.049 × 16 ÷ 360 = $0.2178.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 203,
+        "textual": "Plazo o días del cupón"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l7.q11",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o03",
+      "enunciado": "Un BPAG91 tiene hoy 1,000 días por vencer, tasa cupón de 5.10% y sobretasa de 0.25%. CETES a 91 días cotiza en 5.05% y el fondeo gubernamental en 5.20%. Si la operación liquida a 48 horas, ¿cuál es el precio limpio?",
+      "opciones": [
+        {
+          "texto": "$99.3712",
+          "porQueNo": "Usa la tasa de CETES (5.05%); para BPAG91 se captura la mayor entre CETES y fondeo gubernamental.",
+          "etiquetaError": "confunde-referencia"
+        },
+        {
+          "texto": "$99.3364"
+        },
+        {
+          "texto": "$99.3349",
+          "porQueNo": "No descuenta los dos días de la liquidación a 48 horas.",
+          "etiquetaError": "liquidacion-sin-ajuste"
+        },
+        {
+          "texto": "$99.3789",
+          "porQueNo": "Es el precio sucio; no resta los intereses corridos.",
+          "etiquetaError": "confunde-precio-limpio-sucio"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "DXV = 1,000 − 2 = 998; PZOC = 91; cupones restantes = 11; días al próximo cupón = 88; INT$ = 100 × 0.051 × 3 ÷ 360 = 0.042500. %TLV = 5.20 (la mayor) y ST = 0.25: se descuenta a 5.45%, el cupón vigente a 5.10% y los futuros a 5.20%. PR$ = $99.3364.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 204,
+        "textual": "Para calcular el PRECIO SUCIO le sumamos el precio limpio más los intereses"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l7.q12",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o06",
+      "enunciado": "Un BPA182 con 700 días por vencer paga una tasa cupón vigente de 6.20%; la tasa de CETES semestral cotiza en 5.40% y el bono se negocia con sobretasa de 0.60%. ¿Cuál es su precio limpio?",
+      "opciones": [
+        {
+          "texto": "$99.2411"
+        },
+        {
+          "texto": "$100.3283",
+          "porQueNo": "Omite la sobretasa al descontar los flujos.",
+          "etiquetaError": "omite-sobretasa"
+        },
+        {
+          "texto": "$100.3558",
+          "porQueNo": "Proyecta todos los cupones futuros con la tasa cupón vigente; la fórmula usa la tasa líder para los cupones futuros.",
+          "etiquetaError": "confunde-tasa-cupon-mercado"
+        },
+        {
+          "texto": "$99.7233",
+          "porQueNo": "Es el precio sucio.",
+          "etiquetaError": "confunde-precio-limpio-sucio"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "PZOC = 182; cupones restantes = 4; días al próximo cupón = 700 − 3 × 182 = 154; INT$ = 100 × 0.062 × 28 ÷ 360 = 0.482222. Descuento a 5.40% + 0.60% = 6.00% por periodos de 182 días; cupón vigente a 6.20%, futuros a 5.40%. Precio sucio = 99.723320; limpio = $99.2411.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 204,
+        "textual": "Si la tasa de CETES semestra) cotiza en 4.60%"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l7.q13",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o02",
+      "enunciado": "Un Bono M con 728 días por vencer (hoy pagó cupón) tiene tasa cupón de 7.50% y precio limpio de $98.7654. ¿Cuál es su tasa de rendimiento al vencimiento?",
+      "opciones": [
+        {
+          "texto": "7.5938%",
+          "porQueNo": "Es el rendimiento corriente (cupón anual ÷ precio); ignora la ganancia de capital hasta el vencimiento.",
+          "etiquetaError": "rendimiento-corriente"
+        },
+        {
+          "texto": "7.5000%",
+          "porQueNo": "Es la tasa cupón; como el bono cotiza bajo par, el rendimiento debe ser mayor.",
+          "etiquetaError": "confunde-tasa-cupon-mercado"
+        },
+        {
+          "texto": "8.1834%",
+          "porQueNo": "Resuelve con periodos de 182 ÷ 365 en lugar de 182 ÷ 360.",
+          "etiquetaError": "base-365"
+        },
+        {
+          "texto": "8.1749%"
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Con DXV = 728 quedan 4 cupones completos (intereses corridos = 0). Se busca la tasa que iguala 98.7654 = Σ 3.791667 ÷ (1 + r × 182 ÷ 360)^k + 100 ÷ (1 + r × 182 ÷ 360)^4. En la calculadora: TASA.FIJA.182 con PLIMP = 98.7654 y se resuelve %LIDER = 8.1749%.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 202,
+        "textual": "%LIDER = Tasa del Mercado"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l7.q14",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o02",
+      "enunciado": "En el ejemplo del manual, un Bono M con tasa cupón de 8.5% se valúa a una tasa de rendimiento de 5.47% y su precio limpio supera los $100. En general, un bono de tasa fija cuyo rendimiento exigido es mayor que su tasa cupón cotiza:",
+      "opciones": [
+        {
+          "texto": "sobre par, porque el cupón es menor que la tasa de mercado.",
+          "porQueNo": "Invierte la relación: rendimiento mayor que cupón implica precio menor que el valor nominal.",
+          "etiquetaError": "direccion-invertida"
+        },
+        {
+          "texto": "a la par, porque el cupón se ajusta a la tasa de mercado.",
+          "porQueNo": "El Bono M tiene cupón fijo; no se ajusta al mercado, por eso su precio cambia.",
+          "etiquetaError": "confunde-fija-revisable"
+        },
+        {
+          "texto": "bajo par, con precio limpio menor a su valor nominal."
+        },
+        {
+          "texto": "bajo par solo si faltan menos de 182 días al vencimiento.",
+          "porQueNo": "La relación precio y rendimiento se cumple para cualquier plazo.",
+          "etiquetaError": "restriccion-inventada"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El precio es el valor presente de los flujos. Si se descuentan a una tasa mayor que la del cupón, el valor presente queda por debajo del nominal (bajo par). En el ejemplo del manual ocurre lo contrario: 5.47% < 8.5% y el precio limpio es $105.664023.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 202,
+        "textual": "la tasa cupón de 8.5%"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l7.q15",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+      "objetivoId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o04",
+      "enunciado": "Un Udibono con 1,300 días por vencer tiene tasa cupón de 4.00% y se negocia a una tasa real de 5.25%, con liquidación el mismo día. Si la UDI vale $8.150000, ¿cuál es su precio sucio en pesos?",
+      "opciones": [
+        {
+          "texto": "$781.8596",
+          "porQueNo": "Es el precio limpio en pesos; faltan los intereses corridos.",
+          "etiquetaError": "confunde-precio-limpio-sucio"
+        },
+        {
+          "texto": "$795.9862"
+        },
+        {
+          "texto": "$97.6670",
+          "porQueNo": "Es el precio sucio en UDIS, sin multiplicar por el valor de la UDI.",
+          "etiquetaError": "sin-convertir-udis"
+        },
+        {
+          "texto": "$95.9337",
+          "porQueNo": "Es el precio limpio en UDIS, sin convertir y sin intereses.",
+          "etiquetaError": "sin-convertir-udis"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "TASA.FIJA.182 con %LIDER = 5.25, DXV = 1,300 y %CPN = 4.00: cupones restantes = 8; días al próximo cupón = 26; PLIMP = 95.933690 UDIS; INT = 100 × 0.04 × 156 ÷ 360 = 1.733333 UDIS; sucio = 97.667024 UDIS. En pesos: 97.667024 × 8.150000 = $795.9862.",
+      "tipo": "calculo",
+      "formato": "calculo",
+      "esTrampa": false,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 202,
+        "textual": "Para el precio sucio en UDIS"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l8.q01",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o03",
+      "enunciado": "La subasta en la que todas las posturas con asignación se atienden a la misma tasa de descuento o precio de la última postura que recibe asignación es la subasta:",
+      "opciones": [
+        {
+          "texto": "a tasa múltiple.",
+          "porQueNo": "En la tasa múltiple cada postura se atiende a la tasa o precio que ella misma solicitó.",
+          "etiquetaError": "confunde-tasa-unica-multiple"
+        },
+        {
+          "texto": "interactiva.",
+          "porQueNo": "La interactiva se distingue porque los participantes ven la postura que deben superar, no por la tasa de asignación.",
+          "etiquetaError": "confunde-interactiva"
+        },
+        {
+          "texto": "a tasa única."
+        },
+        {
+          "texto": "de liquidez.",
+          "porQueNo": "La subasta de liquidez se define por su propósito (dotar de recursos a las instituciones), no por un método de asignación.",
+          "etiquetaError": "confunde-deposito-liquidez"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Subasta tasa única: se asigna a partir de la mejor postura para el emisor y todas las posturas con asignación se atienden a la misma tasa o precio de la última postura que recibe asignación.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 205,
+        "textual": "de la última postura que reciba asignación"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l8.q02",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o02",
+      "enunciado": "Banxico da a conocer las convocatorias a las subastas de valores gubernamentales:",
+      "opciones": [
+        {
+          "texto": "a más tardar a las 11:00 horas del segundo día hábil anterior a la colocación.",
+          "porQueNo": "Ese es el límite para presentar posturas, no la publicación de la convocatoria.",
+          "etiquetaError": "confunde-etapa-subasta"
+        },
+        {
+          "texto": "dos días hábiles antes de la subasta, a partir de las 12:00 horas.",
+          "porQueNo": "Es el horario de las convocatorias de permuta de Bonos o Udibonos.",
+          "etiquetaError": "confunde-permuta"
+        },
+        {
+          "texto": "el día hábil anterior a la colocación, a más tardar a las 10:00 horas.",
+          "porQueNo": "Es el límite de posturas para valores del IPAB.",
+          "etiquetaError": "confunde-ipab-gobierno"
+        },
+        {
+          "texto": "a partir de las 11:30 horas del último día hábil bancario de la semana anterior."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El Banco de México da a conocer las convocatorias a partir de las 11:30 horas del último día hábil bancario de la semana inmediata anterior a aquella en que se efectuarán las subastas.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 206,
+        "textual": "a partir de las 11:30:00 horas del"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l8.q03",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o01",
+      "enunciado": "Las subastas que el Banco de México realiza para recibir depósitos a plazo se denominan subastas:",
+      "opciones": [
+        {
+          "texto": "de depósito."
+        },
+        {
+          "texto": "de liquidez.",
+          "porQueNo": "Las de liquidez sirven para dotar de recursos a las instituciones, mediante crédito garantizado o reporto.",
+          "etiquetaError": "confunde-deposito-liquidez"
+        },
+        {
+          "texto": "para permuta de valores.",
+          "porQueNo": "La permuta intercambia valores gubernamentales por otros de mejores condiciones.",
+          "etiquetaError": "confunde-permuta"
+        },
+        {
+          "texto": "de valores del IPAB.",
+          "porQueNo": "En esas Banxico actúa como agente financiero del IPAB para colocar sus valores.",
+          "etiquetaError": "confunde-ipab-gobierno"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Subastas de depósito: las que el Banco de México realiza para recibir depósitos a plazo. Retiran liquidez del sistema.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 205,
+        "textual": "Son las subastas que el Banco de México realice para recibir depósitos a plazo"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l8.q04",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o02",
+      "enunciado": "En el caso de los valores del IPAB, las posturas deben presentarse:",
+      "opciones": [
+        {
+          "texto": "el día hábil bancario inmediato anterior a la colocación, a más tardar a las 10:00 horas."
+        },
+        {
+          "texto": "el segundo día hábil bancario anterior a la colocación, a más tardar a las 11:00 horas.",
+          "porQueNo": "Es la regla de los valores gubernamentales, no la del IPAB.",
+          "etiquetaError": "confunde-ipab-gobierno"
+        },
+        {
+          "texto": "el día hábil bancario inmediato anterior a la colocación, a más tardar a las 11:00 horas.",
+          "porQueNo": "El día es correcto, pero la hora límite del IPAB es a las 10:00.",
+          "etiquetaError": "cuantificador-alterado"
+        },
+        {
+          "texto": "el mismo día de la colocación, a más tardar a las 10:00 horas.",
+          "porQueNo": "Las posturas no se presentan el día de colocación; ese día se liquida.",
+          "etiquetaError": "confunde-etapa-subasta"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Valores gubernamentales: posturas el segundo día hábil bancario anterior a la colocación, a más tardar a las 11:00. Valores del IPAB: el día hábil bancario inmediato anterior, a más tardar a las 10:00.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 206,
+        "textual": "En el caso de los Valores del IPAB, las posturas deberán presentarse"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l8.q05",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o03",
+      "enunciado": "Banxico subasta $15 millones de CETES a tasa única. Posturas: A, $4 millones a 7.10%; B, $6 millones a 7.05%; C, $5 millones a 7.20%; D, $7 millones a 7.15%. ¿A qué tasa de descuento se asigna la postura B?",
+      "opciones": [
+        {
+          "texto": "7.0500%",
+          "porQueNo": "Es la tasa que B solicitó; así se asignaría en una subasta a tasa múltiple.",
+          "etiquetaError": "confunde-tasa-unica-multiple"
+        },
+        {
+          "texto": "7.2000%",
+          "porQueNo": "Es la postura C, que queda fuera porque el monto se agota antes de llegar a ella.",
+          "etiquetaError": "postura-sin-asignacion"
+        },
+        {
+          "texto": "7.1500%"
+        },
+        {
+          "texto": "7.0967%",
+          "porQueNo": "Es el promedio ponderado de las tasas asignadas; en tasa única todos reciben la tasa de la última postura asignada.",
+          "etiquetaError": "promedio-en-vez-de-corte"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Se ordena de menor a mayor tasa (mejor para el emisor): B 7.05% (6), A 7.10% (4, acumulado 10), D 7.15% (recibe 5 de 7, acumulado 15). C queda fuera. En tasa única todos los asignados reciben la tasa de la última postura asignada: 7.15%.",
+      "tipo": "calculo",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 205,
+        "textual": "se atenderán a la misma tasa de descuento o precio, según corresponda"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l8.q06",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o02",
+      "enunciado": "Después de la hora límite de posturas, ¿qué publica Banxico a más tardar 30 minutos después?",
+      "opciones": [
+        {
+          "texto": "La asignación a cada postor en lo particular, por SIAC-BANXICO.",
+          "porQueNo": "La asignación individual se informa a más tardar una hora después, no 30 minutos.",
+          "etiquetaError": "confunde-etapa-subasta"
+        },
+        {
+          "texto": "La convocatoria de la subasta siguiente.",
+          "porQueNo": "Las convocatorias se publican el último día hábil de la semana anterior, a partir de las 11:30.",
+          "etiquetaError": "confunde-etapa-subasta"
+        },
+        {
+          "texto": "La liquidación de los valores a través de INDEVAL.",
+          "porQueNo": "La liquidación ocurre el día de colocación, no 30 minutos después de las posturas.",
+          "etiquetaError": "confunde-etapa-subasta"
+        },
+        {
+          "texto": "Los resultados generales, en su página de internet u otro medio electrónico."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Resultados generales: a más tardar 30 minutos después de la hora límite, en la página de internet. Asignación individual: a más tardar una hora después, por SIAC-BANXICO, con cantidad asignada y precios totales.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 206,
+        "textual": "más tardar 30 minutos después de la hora límite para la presentación de las posturas"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l8.q07",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o04",
+      "enunciado": "En las subastas de permuta de Bonos o Udibonos, debe abstenerse de presentar posturas la persona que tenga una posición larga neta, a valor nominal, mayor al:",
+      "opciones": [
+        {
+          "texto": "50% del monto en circulación de los títulos objeto de la permuta.",
+          "porQueNo": "Porcentaje alterado: el umbral es 60%.",
+          "etiquetaError": "cuantificador-alterado"
+        },
+        {
+          "texto": "60% del monto en circulación de los títulos objeto de la permuta."
+        },
+        {
+          "texto": "65% del monto en circulación de los títulos objeto de la permuta.",
+          "porQueNo": "Confunde con el 65% del aval de la Sociedad Hipotecaria Federal en reporto.",
+          "etiquetaError": "cuantificador-alterado"
+        },
+        {
+          "texto": "60% del monto subastado en la convocatoria.",
+          "porQueNo": "Conserva la cifra pero cambia la base: es el monto en circulación, no el subastado.",
+          "etiquetaError": "cambia-base-calculo"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "La persona que tenga una posición larga neta, a valor nominal, mayor al 60% del monto en circulación de los Bonos o Udibonos objeto de la permuta debe abstenerse de presentar posturas.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 207,
+        "textual": "mayor al 60% del monto en circulación"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l8.q08",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o03",
+      "enunciado": "Banxico coloca $20 millones de CETES a tasa múltiple. Posturas: P1, $8 millones a 6.95%; P2, $5 millones a 6.90%; P3, $9 millones a 7.05%; P4, $6 millones a 6.85%. ¿Cuál es la tasa de descuento promedio ponderada de la colocación?",
+      "opciones": [
+        {
+          "texto": "7.0500%",
+          "porQueNo": "Es la tasa de la última postura asignada, que sería la de todos en una subasta a tasa única.",
+          "etiquetaError": "confunde-tasa-unica-multiple"
+        },
+        {
+          "texto": "6.9375%",
+          "porQueNo": "Es el promedio simple; no pondera por el monto asignado.",
+          "etiquetaError": "promedio-simple"
+        },
+        {
+          "texto": "6.9125%"
+        },
+        {
+          "texto": "6.9518%",
+          "porQueNo": "Pondera con los $9 millones solicitados por P3, aunque solo recibe $1 millón.",
+          "etiquetaError": "pondera-monto-solicitado"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Orden por tasa: P4 6.85% (6), P2 6.90% (5), P1 6.95% (8), P3 7.05% (recibe 1). Promedio ponderado = (6 × 6.85 + 5 × 6.90 + 8 × 6.95 + 1 × 7.05) ÷ 20 = 6.9125%.",
+      "tipo": "calculo",
+      "formato": "caso",
+      "esTrampa": false,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 205,
+        "textual": "se atenderan a la tasa de descuento o precio solicitado"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l8.q09",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o01",
+      "enunciado": "En las subastas de liquidez del Banco de México, las asignaciones pueden formalizarse mediante:",
+      "opciones": [
+        {
+          "texto": "depósitos a plazo de las instituciones.",
+          "porQueNo": "Eso corresponde a las subastas de depósito, que retiran liquidez.",
+          "etiquetaError": "confunde-deposito-liquidez"
+        },
+        {
+          "texto": "crédito garantizado o reporto."
+        },
+        {
+          "texto": "permuta de Bonos por títulos de mayor plazo.",
+          "porQueNo": "La permuta es otra clase de subasta, por cuenta del Gobierno Federal.",
+          "etiquetaError": "confunde-permuta"
+        },
+        {
+          "texto": "préstamo de valores sin garantía.",
+          "porQueNo": "El manual habla de crédito garantizado o reporto, no de préstamo de valores.",
+          "etiquetaError": "confunde-reporto-prestamo"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Subastas de liquidez: las que el Banco de México realiza para dotar de liquidez a las instituciones; las asignaciones pueden formalizarse mediante crédito garantizado o reporto.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 205,
+        "textual": "podrán formalizarse mediante crédito garantizado o reporto"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l8.q10",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o05",
+      "enunciado": "En el esquema de encaje conocido como cuenta única o encaje promedio cero, los saldos deudores de los bancos con Banxico deben compensarse para promediar cero dentro de un ciclo de:",
+      "opciones": [
+        {
+          "texto": "28 días, con la misma fecha de corte para todas las instituciones."
+        },
+        {
+          "texto": "28 días, con una fecha de corte distinta para cada institución.",
+          "porQueNo": "La fecha de corte es la misma para todas las instituciones.",
+          "etiquetaError": "restriccion-inventada"
+        },
+        {
+          "texto": "30 días naturales, con la misma fecha de corte para todos.",
+          "porQueNo": "El ciclo es de 28 días, no de un mes natural.",
+          "etiquetaError": "cuantificador-alterado"
+        },
+        {
+          "texto": "un día, como la tasa de fondeo, con corte diario.",
+          "porQueNo": "Confunde con el plazo de 1 día de las tasas de fondeo; el ciclo de la cuenta única es de 28 días.",
+          "etiquetaError": "cuantificador-alterado"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Con la cuenta única, los saldos deudores de los bancos con Banxico deben compensarse para promediar cero dentro de un ciclo de 28 días; la fecha de corte es la misma para todas las instituciones y el incumplimiento se penaliza.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 208,
+        "textual": "dentro de un ciclo de"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "El OCR de AMIB_1_completo.md dice \"ciclo de 25 días\"; la imagen de la página 208 del PDF dice 28 días y coincide con las notas de Cesar. Se usó 28."
+      ]
+    },
+    {
+      "id": "g.deuda.l8.q11",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o03",
+      "enunciado": "En la subasta interactiva, cuando las ofertas de los postulantes rebasan el monto subastado, los participantes pueden:",
+      "opciones": [
+        {
+          "texto": "ver la postura que deben superar y la institución que la ofreció.",
+          "porQueNo": "El manual precisa que se ve la postura a superar sin saber quién la había ofrecido.",
+          "etiquetaError": "detalle-alterado"
+        },
+        {
+          "texto": "modificar su postura después de conocer la asignación individual.",
+          "porQueNo": "La asignación es el resultado final; no se modifican posturas después de ella.",
+          "etiquetaError": "confunde-etapa-subasta"
+        },
+        {
+          "texto": "obtener asignación a la tasa de la última postura asignada.",
+          "porQueNo": "Eso describe la subasta a tasa única, no la interactiva.",
+          "etiquetaError": "confunde-tasa-unica-multiple"
+        },
+        {
+          "texto": "ver la postura que deben superar, sin saber quién la ofreció."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Subasta interactiva: cuando las ofertas rebasan el monto subastado, los participantes pueden ver la postura que deben superar (sin saber quién la había ofrecido) para lograr asignación.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 205,
+        "textual": "los participantes pueden ver la postura que deben superar"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l8.q12",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o02",
+      "enunciado": "En una semana sin días inhábiles, Banxico colocará BPAG91 del IPAB y Bonos M del Gobierno Federal el jueves. ¿Cuál es el límite para presentar posturas de cada uno?",
+      "opciones": [
+        {
+          "texto": "BPAG91: martes a las 11:00 horas; Bonos M: miércoles a las 10:00 horas.",
+          "porQueNo": "Intercambia las reglas: el IPAB es el día hábil anterior a las 10:00 y el Gobierno Federal, dos días hábiles antes a las 11:00.",
+          "etiquetaError": "confunde-ipab-gobierno"
+        },
+        {
+          "texto": "Ambos: martes a las 11:00 horas.",
+          "porQueNo": "Aplica la regla del Gobierno Federal a los valores del IPAB.",
+          "etiquetaError": "confunde-ipab-gobierno"
+        },
+        {
+          "texto": "BPAG91: miércoles a las 11:00 horas; Bonos M: martes a las 10:00 horas.",
+          "porQueNo": "Acierta en los días pero intercambia las horas límite.",
+          "etiquetaError": "cuantificador-alterado"
+        },
+        {
+          "texto": "BPAG91: miércoles a las 10:00 horas; Bonos M: martes a las 11:00 horas."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Valores gubernamentales: segundo día hábil bancario anterior a la colocación (martes), a más tardar 11:00. Valores del IPAB: día hábil bancario inmediato anterior (miércoles), a más tardar 10:00.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 206,
+        "textual": "las posturas deberán presentarse el Día Hábil Bancario inmediato"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l8.q13",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o04",
+      "enunciado": "Son objetivos de las subastas para permuta de valores que menciona el manual, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "optimizar el perfil de vencimientos de los valores gubernamentales.",
+          "porQueNo": "Sí es un objetivo de la permuta.",
+          "etiquetaError": "excepto-elemento-valido"
+        },
+        {
+          "texto": "promover mayor liquidez y eficiencia en la formación de precios.",
+          "porQueNo": "Sí es un objetivo de la permuta.",
+          "etiquetaError": "excepto-elemento-valido"
+        },
+        {
+          "texto": "dotar de liquidez de corto plazo a las instituciones mediante reporto."
+        },
+        {
+          "texto": "contribuir a reducir el costo y riesgo de financiamiento del Gobierno Federal.",
+          "porQueNo": "Sí es un objetivo de la permuta.",
+          "etiquetaError": "excepto-elemento-valido"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "La permuta busca optimizar el perfil de vencimientos, impulsar el mercado de deuda interna, promover liquidez y eficiencia en la formación de precios y reducir el costo y riesgo de financiamiento del Gobierno Federal. Dotar de liquidez mediante reporto es propio de las subastas de liquidez.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": false,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 206,
+        "textual": "optimizar el perfil de vencimientos de los Valores Gubernamentales"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l8.q14",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o04",
+      "enunciado": "Sobre las subastas de permuta de Bonos o Udibonos, es correcto que Banxico:",
+      "opciones": [
+        {
+          "texto": "informa a cada postor su resultado a más tardar 60 minutos después de la hora límite."
+        },
+        {
+          "texto": "informa a cada postor su resultado a más tardar 30 minutos después de la hora límite.",
+          "porQueNo": "Los 30 minutos corresponden a los resultados generales; el resultado individual es a más tardar 60 minutos.",
+          "etiquetaError": "confunde-etapa-subasta"
+        },
+        {
+          "texto": "publica la convocatoria a las 11:30 del último día hábil de la semana anterior.",
+          "porQueNo": "Ese es el horario de las subastas ordinarias; la permuta se convoca dos días hábiles antes, desde las 12:00.",
+          "etiquetaError": "confunde-permuta"
+        },
+        {
+          "texto": "da a conocer los precios sucios de los bonos que ofrece el Gobierno Federal.",
+          "porQueNo": "Da a conocer los precios limpios.",
+          "etiquetaError": "confunde-precio-limpio-sucio"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "En la permuta, Banxico informa a cada postor, a más tardar 60 minutos después de la hora límite, qué títulos entrega y recibe; los resultados generales salen a más tardar en 30 minutos; la convocatoria se publica dos días hábiles antes desde las 12:00, y se anuncian los precios limpios.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 207,
+        "textual": "a más tardar 60 minutos después de la hora límite"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.deuda.l8.q15",
+      "version": 1,
+      "area": "deuda",
+      "subtemaId": "deuda.titulos-de-deuda-ii.subastas",
+      "objetivoId": "deuda.titulos-de-deuda-ii.subastas.o01",
+      "enunciado": "¿Cuál de las siguientes subastas realiza el Banco de México por cuenta propia y no como agente financiero?",
+      "opciones": [
+        {
+          "texto": "La subasta de BPAG28 y BPAG91.",
+          "porQueNo": "Esos valores son del IPAB; Banxico los subasta como su agente financiero.",
+          "etiquetaError": "confunde-ipab-gobierno"
+        },
+        {
+          "texto": "La subasta de depósito para recibir depósitos a plazo."
+        },
+        {
+          "texto": "La subasta de Bonos M y CETES.",
+          "porQueNo": "Son valores del Gobierno Federal; Banxico actúa como su agente financiero.",
+          "etiquetaError": "confunde-ipab-gobierno"
+        },
+        {
+          "texto": "La subasta de permuta de Bonos o Udibonos.",
+          "porQueNo": "En la permuta el Gobierno Federal actúa por conducto de Banxico como su agente financiero.",
+          "etiquetaError": "confunde-permuta"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Banxico es agente financiero del Gobierno Federal y del IPAB, por eso coloca sus valores y realiza la permuta por cuenta del Gobierno. Las subastas de depósito y de liquidez las realiza por cuenta propia, como banco central, para regular la liquidez.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 205,
+        "textual": "es el agente financiero del Gobierno Federal"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    }
+  ]
+}

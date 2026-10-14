@@ -1,0 +1,648 @@
+{
+  "id": "deuda.reporto-y-prestamo-de-valores",
+  "area": "deuda",
+  "materia": "Títulos de Deuda I",
+  "subtemaId": "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores",
+  "objetivoIds": [
+    "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores.o01",
+    "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores.o02",
+    "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores.o03",
+    "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores.o04",
+    "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores.o05",
+    "deuda.titulos-de-deuda-i.reporto-y-prestamo-de-valores.o06",
+    "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o05"
+  ],
+  "orden": 5,
+  "titulo": "Reporto y préstamo de valores",
+  "resumen": "Operación en directo frente a reporto, quién es reportado y quién reportador, reporto colateralizado, valores que pueden reportarse, cálculo del premio y de los precios de entrada y salida, y el préstamo de valores con sus sujetos, valores y garantías.",
+  "duracionMin": 35,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        160,
+        196,
+        197,
+        198,
+        199
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    },
+    {
+      "documento": "AMIB Data/AMIB Fig 3_vf.docx",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "directo-y-reporto",
+      "titulo": "Dos maneras de operar un título de deuda",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "En el mercado de deuda un título se puede operar de dos formas. En la [[operación en directo]] el inversionista **compra** el instrumento y la operación tiende a ser **al vencimiento** del título: adquiere todos sus derechos y asume su riesgo de precio si vende antes. En el [[reporto]] el inversionista entrega dinero y recibe títulos solo **por un plazo pactado**, con el compromiso de que el intermediario los recompre al mismo precio más un **premio**."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "Operación en directo",
+            "Reporto"
+          ],
+          "filas": [
+            [
+              "Qué hace el inversionista",
+              "Compra el título",
+              "Entrega dinero y recibe títulos temporalmente"
+            ],
+            [
+              "Horizonte",
+              "Tiende a ser al vencimiento del título",
+              "Plazo pactado, anterior al vencimiento del título"
+            ],
+            [
+              "Ganancia del inversionista",
+              "Rendimiento del propio título",
+              "El premio pactado"
+            ],
+            [
+              "Precio al final",
+              "El de mercado si vende antes; el nominal si llega al vencimiento",
+              "Precio de salida fijado desde el inicio"
+            ],
+            [
+              "Contrapartes",
+              "Comprador y vendedor",
+              "Reportado (intermediario) y reportador (inversionista)"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              2
+            ],
+            [
+              4,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen directo y reporto:",
+          "texto": "en directo compras el título y te quedas con él; en reporto prestas tu dinero con títulos de respaldo y ganas un premio conocido desde el primer día."
+        }
+      ],
+      "ampliada": "El manual (6.3.1) define la operación en directo como la compra de instrumentos de deuda que tiende a ser al vencimiento. En el examen aparece como \"obtener los derechos de un instrumento y mantenerlo hasta el vencimiento\". En el mercado de dinero no se cobran comisiones: la casa de bolsa gana con el diferencial entre compra y venta.",
+      "paginas": [
+        196
+      ]
+    },
+    {
+      "id": "sujetos-del-reporto",
+      "titulo": "Los sujetos: reportado y reportador",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Reportado",
+              "El intermediario financiero: **instituciones de crédito y casas de bolsa**. Transfiere los títulos, recibe el dinero, se obliga a recomprarlos y **paga el premio**."
+            ],
+            [
+              "Reportador",
+              "El inversionista. Entrega el dinero, recibe los títulos durante el plazo del reporto y al final **cobra el premio**."
+            ],
+            [
+              "Plazo",
+              "Determinado y **anterior al vencimiento** de los títulos reportados."
+            ],
+            [
+              "Contrato",
+              "Contrato de reporto, celebrado entre la institución financiera (reportada) y el inversionista (reportador)."
+            ]
+          ],
+          "titulo": "Quién es quién en el reporto"
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Las instituciones de crédito y las casas de bolsa pueden celebrar reportos con los siguientes sujetos:"
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Entidades financieras del exterior.",
+            "Entidades nacionales que puedan operar dichos títulos en reporto conforme a las disposiciones que les resulten aplicables.",
+            "Inversionistas institucionales e inversionistas calificados.",
+            "Personas físicas."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El nombre engaña: el [[reportador]] no es el banco, es el **inversionista** que pone el dinero. El [[reportado]] es el intermediario que entrega los títulos y paga el premio. Truco: el reportaDO es quien queda \"obligado\" a recomprar."
+        }
+      ],
+      "ampliada": "El manual 2023 lo explica desde el punto de vista económico: el reportado es el dueño de los títulos que los transfiere para obtener liquidez y paga un premio; el reportador adquiere temporalmente la propiedad a cambio de dinero y recibe el premio. Que las personas físicas aparezcan en la lista es una trampa clásica: muchos creen que solo operan institucionales.",
+      "paginas": [
+        196
+      ]
+    },
+    {
+      "id": "ciclo-del-reporto",
+      "titulo": "Cómo funciona un reporto de principio a fin",
+      "bloques": [
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Pacto",
+              "cuando": "Día de inicio",
+              "texto": "Se acuerdan monto, títulos, plazo del reporto y **tasa premio**. El plazo debe terminar antes del vencimiento de los títulos."
+            },
+            {
+              "titulo": "Entrega de títulos y pago",
+              "cuando": "Día de inicio",
+              "texto": "El reportado transfiere los títulos al reportador al **precio de entrada** (el precio del título a su tasa de mercado) y recibe el dinero."
+            },
+            {
+              "titulo": "Vigencia",
+              "cuando": "Durante el plazo",
+              "texto": "El reportador es propietario temporal de los títulos. En el reporto colateralizado, el reportado cubre las fluctuaciones de los títulos con caución bursátil."
+            },
+            {
+              "titulo": "Recompra",
+              "cuando": "Vencimiento del reporto",
+              "texto": "El reportado recompra los títulos al **precio de salida**: el precio de entrada más el premio. El reportador recupera su dinero más el premio."
+            }
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen del ciclo:",
+          "texto": "entrada (títulos por dinero), plazo pactado, salida (dinero más premio por títulos). El premio se conoce desde el primer día."
+        }
+      ],
+      "ampliada": "El manual 2023 indica que el contrato de reporto pacta precio, premio y plazo, y que este puede ser de 1 a 360 días. El precio de salida no depende de cómo se mueva el mercado durante el plazo: está fijado por la tasa premio.",
+      "paginas": [
+        196,
+        197
+      ]
+    },
+    {
+      "id": "reporto-colateralizado",
+      "titulo": "Reporto simple y reporto colateralizado",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "En el [[reporto colateralizado]], a diferencia del reporto simple, **el reportado** cubre las fluctuaciones posibles de los títulos objeto de reporto que causen un incremento de la exposición neta, mediante **caución bursátil** (colateral)."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "Reporto simple",
+            "Reporto colateralizado"
+          ],
+          "filas": [
+            [
+              "Quién asume el riesgo de que bajen los títulos",
+              "El reportador queda expuesto",
+              "El reportado lo cubre"
+            ],
+            [
+              "Instrumento de cobertura",
+              "No hay colateral adicional",
+              "Caución bursátil"
+            ],
+            [
+              "Disparador",
+              "No aplica",
+              "Fluctuaciones que aumenten la exposición neta"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Quien cubre las fluctuaciones es el **reportado**, no el reportador. Y el mecanismo es la **caución bursátil**, no una carta de crédito (esa aparece en las garantías del préstamo de valores)."
+        }
+      ],
+      "ampliada": "La idea: si el valor de los títulos que tiene el inversionista cae, su exposición neta frente al intermediario aumenta; el colateral la cubre.",
+      "paginas": [
+        196
+      ]
+    },
+    {
+      "id": "valores-reportables",
+      "titulo": "Qué valores pueden reportarse",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los valores objeto de reporto, según su plazo, deben tener la **calificación mínima de al menos dos calificadoras**, conforme a esta tabla:"
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Plazo y escala",
+            "Standard & Poor's",
+            "Moody's",
+            "Fitch",
+            "HR Ratings"
+          ],
+          "filas": [
+            [
+              "Corto plazo, local México",
+              "mxA-3",
+              "MX-3",
+              "F3 (mex)",
+              "HR3"
+            ],
+            [
+              "Corto plazo, global",
+              "A-3",
+              "3",
+              "F3",
+              "HR3 (G)"
+            ],
+            [
+              "Largo plazo, local México",
+              "mxAA-",
+              "Aa3.mx",
+              "AA- (mex)",
+              "HR AA-"
+            ],
+            [
+              "Largo plazo, global",
+              "AA-",
+              "Aa3",
+              "AA-",
+              "HR AA- (G)"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "También pueden reportarse los títulos que cuenten con **garantía de pago o aval de la Sociedad Hipotecaria Federal, S.N.C., de al menos el 65%** de su saldo insoluto por concepto de principal e intereses ordinarios."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Tres detalles que el examen cambia: **dos** calificadoras (no una), el umbral de corto plazo es grado 3 (mxA-3) y el de largo plazo es **AA-** (no A), y el aval de la SHF es de **65%** del saldo insoluto."
+        }
+      ],
+      "ampliada": "La tabla se transcribió de la imagen de la página 197 del PDF, porque el OCR la dejó ilegible; coincide con el manual 2023. El manual 2023 imprime \"Aa3-mx\" para Moody's local; AMIB 1 imprime \"Aa3.mx\". Los mismos parámetros de calificación se exigen a los valores bancarios, gubernamentales y extranjeros que se dan en préstamo.",
+      "paginas": [
+        197
+      ]
+    },
+    {
+      "id": "premio-del-reporto",
+      "titulo": "Cálculo del premio",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[premio]] son los intereses que recibe el reportador al vencimiento del reporto. Se calcula con **interés simple** y **año de 360 días** sobre la inversión inicial y por el **plazo del reporto** (no el del título)."
+        },
+        {
+          "tipo": "formula",
+          "logica": "PREMIO = \\frac{VA \\times TASA \\times DIAS}{36000}",
+          "leyenda": [
+            [
+              "PREMIO",
+              "intereses a recibir al vencimiento del reporto"
+            ],
+            [
+              "VA",
+              "inversión inicial (monto del reporto)"
+            ],
+            [
+              "TASA",
+              "tasa premio pactada, en por ciento anual"
+            ],
+            [
+              "DIAS",
+              "plazo del reporto en días"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** El Sr. García invierte $5,000,000 en un reporto a 4 días con tasa premio de 6.5%. Los CETES reportados tienen 10 días por vencer y tasa de descuento de 8.2%."
+        },
+        {
+          "tipo": "formula",
+          "logica": "PREMIO = \\frac{VA \\times TASA \\times DIAS}{36000}",
+          "leyenda": [],
+          "valores": "PREMIO = \\frac{5{,}000{,}000 \\times 6.5 \\times 4}{36000}",
+          "resultado": "PREMIO = $3,611.11 (a 4 decimales, $3,611.1111)"
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "PREMIO.REPORTO",
+          "entradas": [
+            [
+              "VA",
+              "5,000,000"
+            ],
+            [
+              "TASA",
+              "6.5"
+            ],
+            [
+              "DIAS",
+              "4"
+            ]
+          ],
+          "salida": [
+            "$PREM",
+            "3,611.11"
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Los 10 días por vencer y el 8.2% del CETE **no** entran en el premio: sirven para el precio de entrada. Si usas los días del título o su tasa de descuento, caes en el distractor."
+        }
+      ],
+      "ampliada": "Segundo ejemplo del manual: un reporto gubernamental por $28,959,000 a 28 días con tasa de 3.56%, sobre BPA con cupón de 3.8% y 364 días por vencer. Premio = 28,959,000 × 3.56 × 28 ÷ 36000 = $80,184.25. De nuevo, el cupón y los 364 días del BPA son datos de distracción para el premio.",
+      "paginas": [
+        197,
+        198
+      ]
+    },
+    {
+      "id": "precio-de-entrada",
+      "titulo": "Precio de entrada",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[precio de entrada]] es el nivel de precio al cual la casa de bolsa entrega los títulos al reportador. Para CETES se obtiene con la fórmula de precio a descuento, usando los **días por vencer del título** y su **tasa de descuento**."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$ENTR = VN \\left(1 - \\frac{\\%TD \\times DIAS}{36000}\\right)",
+          "leyenda": [
+            [
+              "\\$ENTR",
+              "precio de entrada por título"
+            ],
+            [
+              "VN",
+              "valor nominal del CETE ($10)"
+            ],
+            [
+              "\\%TD",
+              "tasa de descuento del CETE, en por ciento anual"
+            ],
+            [
+              "DIAS",
+              "días por vencer del CETE"
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$ENTR = VN \\left(1 - \\frac{\\%TD \\times DIAS}{36000}\\right)",
+          "leyenda": [],
+          "valores": "\\$ENTR = 10 \\left(1 - \\frac{8.2 \\times 10}{36000}\\right)",
+          "resultado": "$ENTR = $9.977222, es decir, $9.9772"
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "PRECIO.DSCTO",
+          "entradas": [
+            [
+              "VN",
+              "10"
+            ],
+            [
+              "%TD",
+              "8.2"
+            ],
+            [
+              "DIAS",
+              "10"
+            ]
+          ],
+          "salida": [
+            "$PR",
+            "9.977222"
+          ]
+        }
+      ],
+      "ampliada": "El OCR del manual dice 8.72% en el enunciado, pero la imagen de la página 197 muestra 8.2%, que es el dato que reproduce el resultado $9.977222.",
+      "paginas": [
+        197,
+        198
+      ]
+    },
+    {
+      "id": "precio-de-salida",
+      "titulo": "Precio de salida",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[precio de salida]] es el precio al que el reportado recompra cada título: el precio de entrada capitalizado con la **tasa premio** durante el **plazo del reporto**."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$PSAL = \\$ENTR \\left(1 + \\frac{\\%TR}{36000} \\times DIAS\\right)",
+          "leyenda": [
+            [
+              "\\$PSAL",
+              "precio de salida del reporto"
+            ],
+            [
+              "\\$ENTR",
+              "precio de entrada"
+            ],
+            [
+              "\\%TR",
+              "tasa de rendimiento del reporto (tasa premio)"
+            ],
+            [
+              "DIAS",
+              "plazo del reporto en días"
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$PSAL = \\$ENTR \\left(1 + \\frac{\\%TR}{36000} \\times DIAS\\right)",
+          "leyenda": [],
+          "valores": "\\$PSAL = 9.977222 \\left(1 + \\frac{6.5}{36000} \\times 4\\right)",
+          "resultado": "$PSAL = $9.984428, es decir, $9.9844"
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "P.SALIDA",
+          "entradas": [
+            [
+              "$ENTR",
+              "9.977222"
+            ],
+            [
+              "TREND",
+              "6.5"
+            ],
+            [
+              "DIAS",
+              "4"
+            ]
+          ],
+          "salida": [
+            "PSAL",
+            "9.984428"
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Comprobación.** Con $5,000,000 se reciben 5,000,000 ÷ 9.977222 = 501,141 títulos aproximadamente; multiplicados por la diferencia entre salida y entrada (0.007206 por título) dan los mismos $3,611.11 de premio."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El manual imprime $9.988031 como resultado, pero ese número no sale de su propia fórmula: 9.977222 × (1 + 6.5 × 4 ÷ 36000) = 9.984428. En el examen confía en la fórmula."
+        }
+      ],
+      "ampliada": "El manual 2023 presenta el mismo procedimiento en tres pasos: 1) precio del CETE (precio de entrada) con PRCIO.A.TASA.DESCTO, 2) precio de salida con PRCIO.SALIDA.REPORTO y 3) premio con PREMIO.REPORTO sobre el monto. La \"tasa de rendimiento del reporto\" del objetivo 6.3.6 es la propia tasa premio.",
+      "paginas": [
+        198
+      ]
+    },
+    {
+      "id": "prestamo-de-valores",
+      "titulo": "Préstamo de valores",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[préstamo de valores]] es la operación por la cual se transfiere la propiedad de acciones o valores de su titular, el **prestamista**, al **prestatario**, quien se obliga a restituirlos al vencimiento de la operación."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Prestamista",
+              "Propietario original de los valores prestables. Los otorga en préstamo **a cambio de un premio**, con la condición de que sean operados en corto."
+            ],
+            [
+              "Prestatario",
+              "Persona física o moral que solicita y recibe los valores para **venderlos en un lapso no mayor de 5 días**. Queda en posición corta y debe devolver los valores, **todos sus derechos patrimoniales y el premio pactado**."
+            ],
+            [
+              "Valores prestables",
+              "Acciones, títulos bancarios, valores gubernamentales y valores extranjeros. Los bancarios, gubernamentales y extranjeros deben cumplir la **misma calificación crediticia exigida en reporto**."
+            ],
+            [
+              "Garantías",
+              "Las constituye el **prestatario a favor del prestamista**: valores gubernamentales o efectivo; carta de crédito o título bancario; acciones de alta y media bursatilidad; acciones de fondos de inversión de deuda y de renta variable."
+            ],
+            [
+              "Depósito",
+              "Los valores prestados y los de la garantía deben estar en todo momento depositados en un depositario de valores."
+            ],
+            [
+              "Regulación",
+              "Banco de México, en sus reglas para instituciones de crédito, casas de bolsa, fondos de inversión, Siefores y Financiera Rural."
+            ]
+          ],
+          "titulo": "Ficha del préstamo de valores"
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "Reporto",
+            "Préstamo de valores"
+          ],
+          "filas": [
+            [
+              "Quién pone los títulos",
+              "Reportado (intermediario)",
+              "Prestamista (titular)"
+            ],
+            [
+              "Quién paga el premio",
+              "Reportado",
+              "Prestatario"
+            ],
+            [
+              "Para qué",
+              "Obtener liquidez o invertir a plazo corto",
+              "Vender en corto (en no más de 5 días)"
+            ],
+            [
+              "Garantía",
+              "Caución bursátil si es colateralizado",
+              "Garantías del prestatario a favor del prestamista"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        }
+      ],
+      "ampliada": "Las acciones de mínima bursatilidad, o sin clasificación de la BMV, solo pueden prestarse con autorización previa de la CNBV. Los fondos de inversión y las Siefores pueden operar préstamo de valores si su régimen de inversión lo prevé. Los formadores de mercado pueden pedir CETES y Bonos M en préstamo directamente a Banxico (manual 2023).",
+      "paginas": [
+        160,
+        199
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Operación en directo: compra del título que tiende a ser al vencimiento. Reporto: venta con compromiso de recompra en un plazo anterior al vencimiento, más un premio.",
+    "Reportado: institución de crédito o casa de bolsa; entrega títulos, recibe dinero y paga el premio. Reportador: el inversionista; puede ser incluso una persona física.",
+    "Reporto colateralizado: el reportado cubre con caución bursátil las fluctuaciones que aumenten la exposición neta.",
+    "Valores reportables: calificación mínima de al menos dos calificadoras (corto plazo mxA-3; largo plazo mxAA- en escala local de S&P), o aval de la SHF de al menos 65% del saldo insoluto.",
+    "Premio = VA × TASA × DIAS ÷ 36000, con el plazo del reporto y la tasa premio, nunca con los datos del título.",
+    "Precio de entrada: precio del CETE a su tasa de descuento y días por vencer. Precio de salida = precio de entrada × (1 + tasa premio × días del reporto ÷ 36000).",
+    "Préstamo de valores: el prestatario vende en no más de 5 días, constituye garantías y devuelve valores, derechos patrimoniales y premio al prestamista."
+  ],
+  "practica": [
+    "g.deuda.l5.q01",
+    "g.deuda.l5.q02",
+    "g.deuda.l5.q03",
+    "g.deuda.l5.q04",
+    "g.deuda.l5.q05"
+  ],
+  "miniExamen": [
+    "g.deuda.l5.q06",
+    "g.deuda.l5.q07",
+    "g.deuda.l5.q08",
+    "g.deuda.l5.q09",
+    "g.deuda.l5.q10"
+  ],
+  "reto": [
+    "g.deuda.l5.q11",
+    "g.deuda.l5.q12",
+    "g.deuda.l5.q13",
+    "g.deuda.l5.q14",
+    "g.deuda.l5.q15"
+  ]
+}

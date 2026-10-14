@@ -1,0 +1,611 @@
+{
+  "id": "deuda.valuacion-instrumentos-a-descuento",
+  "area": "deuda",
+  "materia": "Títulos de Deuda II",
+  "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+  "objetivoIds": [
+    "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o01"
+  ],
+  "orden": 6,
+  "titulo": "Valuación de instrumentos a descuento",
+  "resumen": "Precio, tasa de descuento, tasa de rendimiento y plazo de los títulos que cotizan a descuento, conversión entre tasas, tasa equivalente y precio de liquidación a 24 y 48 horas, con los ejemplos resueltos del manual.",
+  "duracionMin": 40,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        200,
+        201
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    },
+    {
+      "documento": "AMIB Data/AMIB Fig 3_vf.docx",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "convenciones",
+      "titulo": "Antes de calcular: las reglas del juego",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los [[instrumentos que cotizan a descuento]] (CETES y demás títulos cupón cero) se compran por debajo de su valor nominal, no pagan intereses durante su vida y liquidan el valor nominal al vencimiento. Toda su ganancia está en la diferencia entre el precio y el nominal."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Año",
+              "**360 días** (por eso las fórmulas dividen entre 36000 cuando la tasa va en por ciento)."
+            ],
+            [
+              "Interés",
+              "**Simple** dentro del plazo; solo la tasa equivalente usa capitalización."
+            ],
+            [
+              "DIAS",
+              "Siempre los **días por vencer**. Si te dan el plazo de emisión y los días transcurridos, réstalos."
+            ],
+            [
+              "Valor nominal",
+              "CETES: **$10**. Otros títulos a descuento suelen tener $100."
+            ],
+            [
+              "Decimales",
+              "El manual muestra precios y tasas a 6 decimales; el examen en línea muestra 4."
+            ]
+          ],
+          "titulo": "Convenciones del manual y del examen"
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen convenciones:",
+          "texto": "tasa en por ciento, 360 días, interés simple y días por vencer. Si un resultado no respeta esto, es un distractor."
+        }
+      ],
+      "ampliada": "El objetivo 6.4.1 pide calcular precio, tasa de rendimiento, tasa de descuento y plazo, \"con cálculos al vencimiento y entre fechas\". Entre fechas significa que el título ya tiene días transcurridos o que se compra y se vende antes de vencer.",
+      "paginas": [
+        200
+      ]
+    },
+    {
+      "id": "precio-con-descuento",
+      "titulo": "Precio con tasa de descuento",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La [[tasa de descuento]] mide el descuento contra el **valor nominal**. Con la misma fórmula se obtiene el precio o, despejando, la tasa."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$PR = VN \\left(1 - \\frac{\\%TD \\times DIAS}{36000}\\right)",
+          "leyenda": [
+            [
+              "\\$PR",
+              "precio del título"
+            ],
+            [
+              "VN",
+              "valor nominal"
+            ],
+            [
+              "\\%TD",
+              "tasa de descuento anual, en por ciento"
+            ],
+            [
+              "DIAS",
+              "días por vencer"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** ¿Cuál es el precio de unos CETES con 94 días por vencer y tasa de descuento de 4.52%?"
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$PR = VN \\left(1 - \\frac{\\%TD \\times DIAS}{36000}\\right)",
+          "leyenda": [],
+          "valores": "\\$PR = 10 \\left(1 - \\frac{4.52 \\times 94}{36000}\\right) = 10\\,(1 - 0.011802)",
+          "resultado": "$PR = $9.881978, es decir, $9.8820"
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "PRECIO.DSCTO",
+          "entradas": [
+            [
+              "VN",
+              "10"
+            ],
+            [
+              "%TD",
+              "4.52"
+            ],
+            [
+              "DIAS",
+              "94"
+            ]
+          ],
+          "salida": [
+            "$PR",
+            "9.881978"
+          ]
+        }
+      ],
+      "ampliada": "En la HP 17bII+ la misma fórmula resuelve cualquier incógnita: si capturas VN, $PR y DIAS, obtienes %TD; si capturas VN, $PR y %TD, obtienes DIAS.",
+      "paginas": [
+        200,
+        201
+      ]
+    },
+    {
+      "id": "precio-con-rendimiento",
+      "titulo": "Precio con tasa de rendimiento",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La [[tasa de rendimiento]] mide la ganancia contra el **precio pagado**. Por eso el valor nominal se **divide** entre el factor de interés simple."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$PR = \\frac{VN}{1 + \\frac{\\%TR \\times DIAS}{36000}}",
+          "leyenda": [
+            [
+              "\\$PR",
+              "precio del título"
+            ],
+            [
+              "VN",
+              "valor nominal"
+            ],
+            [
+              "\\%TR",
+              "tasa de rendimiento anual, en por ciento"
+            ],
+            [
+              "DIAS",
+              "días por vencer"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo.** CETES con 82 días por vencer y tasa de rendimiento de 3.75%:"
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$PR = \\frac{VN}{1 + \\frac{\\%TR \\times DIAS}{36000}}",
+          "leyenda": [],
+          "valores": "\\$PR = \\frac{10}{1 + \\frac{3.75 \\times 82}{36000}}",
+          "resultado": "$PR = $9.915307, es decir, $9.9153"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Con descuento se **multiplica** por (1 − tasa × días ÷ 36000); con rendimiento se **divide** entre (1 + tasa × días ÷ 36000). Cambiar una por otra produce un precio muy cercano: es el distractor favorito."
+        }
+      ],
+      "ampliada": "El ejemplo de 82 días a 3.75% es un ejercicio del manual 2023 (sección 3.8.2), resuelto aquí. La fórmula de la HP es PRCIO.A.TASA.RENDIM.",
+      "paginas": [
+        200
+      ]
+    },
+    {
+      "id": "conversion-de-tasas",
+      "titulo": "Convertir descuento en rendimiento y viceversa",
+      "bloques": [
+        {
+          "tipo": "formula",
+          "logica": "\\%TD = \\frac{\\%TR}{1 + \\frac{\\%TR \\times DIAS}{36000}} \\qquad \\%TR = \\frac{\\%TD}{1 - \\frac{\\%TD \\times DIAS}{36000}}",
+          "leyenda": [
+            [
+              "\\%TD",
+              "tasa de descuento"
+            ],
+            [
+              "\\%TR",
+              "tasa de rendimiento"
+            ],
+            [
+              "DIAS",
+              "días por vencer"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** El CETE de 94 días con tasa de descuento de 4.52%, ¿qué tasa de rendimiento ofrece?"
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\%TR = \\frac{\\%TD}{1 - \\frac{\\%TD \\times DIAS}{36000}}",
+          "leyenda": [],
+          "valores": "\\%TR = \\frac{4.52}{1 - \\frac{4.52 \\times 94}{36000}} = \\frac{4.52}{0.988198}",
+          "resultado": "%TR = 4.573983%, es decir, 4.5740%"
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "DESC.REND",
+          "entradas": [
+            [
+              "%TD",
+              "4.52"
+            ],
+            [
+              "DIAS",
+              "94"
+            ]
+          ],
+          "salida": [
+            "%TR",
+            "4.573983"
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Regla rápida:",
+          "texto": "la tasa de rendimiento **siempre** es mayor que la de descuento para el mismo título, y la brecha crece con el plazo. Si tu conversión da al revés, usaste la fórmula equivocada."
+        }
+      ],
+      "ampliada": "Con interés simple, ambas tasas describen el mismo precio: 10 × (1 − 0.0452 × 94 ÷ 360) = 10 ÷ (1 + 0.04573983 × 94 ÷ 360) = 9.881978.",
+      "paginas": [
+        200,
+        201
+      ]
+    },
+    {
+      "id": "despejes",
+      "titulo": "Despejar la tasa o el plazo",
+      "bloques": [
+        {
+          "tipo": "formula",
+          "logica": "\\%TD = \\left(1 - \\frac{\\$PR}{VN}\\right) \\times \\frac{36000}{DIAS} \\qquad DIAS = \\left(1 - \\frac{\\$PR}{VN}\\right) \\times \\frac{36000}{\\%TD}",
+          "leyenda": [
+            [
+              "\\%TD",
+              "tasa de descuento"
+            ],
+            [
+              "\\$PR",
+              "precio"
+            ],
+            [
+              "VN",
+              "valor nominal"
+            ],
+            [
+              "DIAS",
+              "días por vencer"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual (entre fechas).** ¿Cuál es la tasa de descuento de unos CETES a 91 días que tienen 15 días transcurridos y un precio de $9.890926?"
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\%TD = \\left(1 - \\frac{\\$PR}{VN}\\right) \\times \\frac{36000}{DIAS}",
+          "leyenda": [],
+          "valores": "\\%TD = \\left(1 - \\frac{9.890926}{10}\\right) \\times \\frac{36000}{91 - 15}",
+          "resultado": "%TD = 5.166663%, es decir, 5.1667%"
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "PRECIO.DSCTO",
+          "entradas": [
+            [
+              "VN",
+              "10"
+            ],
+            [
+              "$PR",
+              "9.890926"
+            ],
+            [
+              "DIAS",
+              "91 − 15 = 76"
+            ]
+          ],
+          "salida": [
+            "%TD",
+            "5.166663"
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El manual imprime 5.166563%, pero con sus propios datos el resultado es 5.166663%. Además, el error típico es usar 91 días: el precio depende de los **76 días por vencer**."
+        }
+      ],
+      "ampliada": "Para el plazo con tasa de rendimiento: DIAS = (VN ÷ $PR − 1) × 36000 ÷ %TR. Ejemplo: el CETE de 94 días a 4.52% de descuento tiene $PR = 9.881978, y (1 − 0.9881978) × 36000 ÷ 4.52 = 94 días.",
+      "paginas": [
+        201
+      ]
+    },
+    {
+      "id": "entre-fechas",
+      "titulo": "Comprar y vender antes del vencimiento",
+      "bloques": [
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Precio de compra",
+              "cuando": "Día de compra",
+              "texto": "Con la tasa de descuento de compra y los días por vencer en ese momento."
+            },
+            {
+              "titulo": "Precio de venta",
+              "cuando": "Día de venta",
+              "texto": "Con la tasa de descuento de ese día y los días que **todavía** faltan para vencer."
+            },
+            {
+              "titulo": "Rendimiento del periodo",
+              "cuando": "Al vender",
+              "texto": "Divide precio de venta entre precio de compra y resta 1."
+            },
+            {
+              "titulo": "Anualizar",
+              "cuando": "Al vender",
+              "texto": "Multiplica por 36000 entre los **días que duró la inversión**, no entre el plazo del CETE."
+            }
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "r = \\left(\\frac{P_v}{P_c} - 1\\right) \\times \\frac{36000}{d}",
+          "leyenda": [
+            [
+              "r",
+              "rendimiento anual en por ciento"
+            ],
+            [
+              "P_v",
+              "precio de venta"
+            ],
+            [
+              "P_c",
+              "precio de compra"
+            ],
+            [
+              "d",
+              "días que se mantuvo la inversión"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo.** Se compran CETES con 91 días por vencer a 7.00% de descuento (precio 9.823056) y se venden 35 días después, con 56 días por vencer, a 6.80% (precio 9.894222)."
+        },
+        {
+          "tipo": "formula",
+          "logica": "r = \\left(\\frac{P_v}{P_c} - 1\\right) \\times \\frac{36000}{d}",
+          "leyenda": [],
+          "valores": "r = \\left(\\frac{9.894222}{9.823056} - 1\\right) \\times \\frac{36000}{35}",
+          "resultado": "r = 7.4519% anual"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Sin anualizar el resultado sería 0.7245% del periodo. Si la tasa baja entre compra y venta, el inversionista gana más que la tasa de compra, porque el precio sube."
+        }
+      ],
+      "ampliada": "Este caso combina las dos fórmulas de precio con el concepto de rendimiento sobre lo invertido. El examen lo plantea como \"rendimiento obtenido\" y espera la tasa anualizada con 360 días.",
+      "paginas": [
+        200
+      ]
+    },
+    {
+      "id": "tasa-equivalente",
+      "titulo": "Tasa equivalente: mover una tasa a otro plazo",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La [[tasa equivalente]] lleva una tasa de un plazo a otro reinvirtiendo a la misma tasa, a través de la curva. Es la única fórmula de esta lección con exponente."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\%TEQUI = \\left[\\left(1 + \\frac{\\%TR \\times DIAS}{36000}\\right)^{\\frac{DIAEQ}{DIAS}} - 1\\right] \\times \\frac{36000}{DIAEQ}",
+          "leyenda": [
+            [
+              "\\%TEQUI",
+              "tasa equivalente"
+            ],
+            [
+              "\\%TR",
+              "tasa en el plazo original (de descuento o de rendimiento, según el caso)"
+            ],
+            [
+              "DIAS",
+              "plazo original"
+            ],
+            [
+              "DIAEQ",
+              "plazo al que se quiere llevar la tasa"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** Llevar la tasa de 8.4% a 72 días a un plazo de 70 días:"
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\%TEQUI = \\left[\\left(1 + \\frac{8.4 \\times 72}{36000}\\right)^{\\frac{70}{72}} - 1\\right] \\times \\frac{36000}{70}",
+          "leyenda": [],
+          "valores": "\\%TEQUI = \\left[(1.0168)^{0.972222} - 1\\right] \\times 514.285714",
+          "resultado": "%TEQUI = 8.398051%; el manual muestra 8.39805%"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El exponente es **plazo nuevo entre plazo original** (DIAEQ ÷ DIAS) y se anualiza con DIAEQ. Invertir el exponente o anualizar con el plazo original son los errores típicos."
+        }
+      ],
+      "ampliada": "Si se lleva la tasa a un plazo más largo, la equivalente sube; a uno más corto, baja ligeramente. Ejemplo: 7.50% a 28 días equivale a 7.6214% a 182 días.",
+      "paginas": [
+        200,
+        201
+      ]
+    },
+    {
+      "id": "liquidacion-24-48",
+      "titulo": "Precio de liquidación a 24 y 48 horas",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Si la operación se pacta hoy pero **liquida a 24 o 48 horas**, el título tendrá 1 o 2 días menos por vencer cuando se pague. El manual lo resuelve en dos pasos."
+        },
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Paso 1: tasa equivalente",
+              "cuando": "Plazo DIAS − 2",
+              "texto": "Con la fórmula de tasa equivalente se lleva la tasa del plazo actual al plazo que quedará en la fecha de liquidación."
+            },
+            {
+              "titulo": "Paso 2: precio",
+              "cuando": "Plazo DIAS − 2",
+              "texto": "Se valúa con PRECIO.DSCTO usando la tasa equivalente y los días por vencer en la fecha de liquidación."
+            }
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** Precio de liquidación de un CETE con 72 días por vencer y tasa de descuento de 8.4%, liquidando a 48 horas."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\$PR = VN \\left(1 - \\frac{\\%TEQUI \\times (DIAS - 2)}{36000}\\right)",
+          "leyenda": [],
+          "valores": "\\$PR = 10 \\left(1 - \\frac{8.39805 \\times 70}{36000}\\right)",
+          "resultado": "$PR = $9.836705, es decir, $9.8367"
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "PRECIO.DSCTO",
+          "entradas": [
+            [
+              "VN",
+              "10"
+            ],
+            [
+              "%TD",
+              "8.39805"
+            ],
+            [
+              "DIAS",
+              "70"
+            ]
+          ],
+          "salida": [
+            "$PR",
+            "9.8367"
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Por título, la diferencia entre ajustar o no la tasa casi no se ve a 4 decimales; en montos grandes sí cambia el importe. Lo que nunca debes hacer es **sumar** los días ni valuar con los días de hoy."
+        }
+      ],
+      "ampliada": "En el paso 1 el manual introduce la tasa de descuento (8.4%) directamente en la fórmula de tasa equivalente. Se reproduce así porque es el procedimiento del manual; véase la nota en el archivo de dudas. Los plazos de liquidación del mercado de deuda son mismo día, 24, 48, 72 y hasta 96 horas.",
+      "paginas": [
+        201
+      ]
+    },
+    {
+      "id": "mapa-de-errores",
+      "titulo": "Mapa de errores frecuentes",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Error",
+            "Qué hace",
+            "Cómo detectarlo"
+          ],
+          "filas": [
+            [
+              "Base 365",
+              "Divide entre 36500",
+              "El resultado difiere en el tercer o cuarto decimal"
+            ],
+            [
+              "Descuento por rendimiento",
+              "Usa la fórmula del otro tipo de tasa",
+              "TR debe ser mayor que TD"
+            ],
+            [
+              "Días equivocados",
+              "Usa plazo de emisión o días transcurridos",
+              "DIAS = plazo de emisión menos transcurridos"
+            ],
+            [
+              "Sin anualizar",
+              "Reporta el rendimiento del periodo",
+              "Resultado del orden de 1% o menos"
+            ],
+            [
+              "Liquidación mal ajustada",
+              "Suma días o no los resta",
+              "A 48 horas se valúa con DIAS − 2"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen de la lección:",
+          "texto": "descuento multiplica sobre el nominal; rendimiento divide sobre el precio; tasa equivalente con exponente DIAEQ ÷ DIAS; liquidación a 48 horas con DIAS − 2."
+        }
+      ],
+      "ampliada": "Antes de elegir una opción, verifica el orden de magnitud: un CETE de $10 a menos de un año vale entre $9 y $10, y una tasa anual de mercado de dinero suele estar entre 3% y 12%.",
+      "paginas": [
+        200,
+        201
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Precio con descuento: $PR = VN × (1 − %TD × DIAS ÷ 36000); con rendimiento: $PR = VN ÷ (1 + %TR × DIAS ÷ 36000).",
+    "Conversión: %TR = %TD ÷ (1 − %TD × DIAS ÷ 36000) y %TD = %TR ÷ (1 + %TR × DIAS ÷ 36000); la tasa de rendimiento siempre es mayor.",
+    "DIAS son los días por vencer: plazo de emisión menos días transcurridos.",
+    "Tasa equivalente: ((1 + %TR × DIAS ÷ 36000)^(DIAEQ ÷ DIAS) − 1) × 36000 ÷ DIAEQ.",
+    "Liquidación a 48 horas: primero tasa equivalente a DIAS − 2, después precio con DIAS − 2 (ejemplo del manual: $9.8367).",
+    "Rendimiento entre fechas: (precio de venta ÷ precio de compra − 1) × 36000 ÷ días de la inversión.",
+    "Año de 360 días, interés simple y respuestas a 4 decimales; los distractores salen de usar 365, confundir tasas o no anualizar."
+  ],
+  "practica": [
+    "g.deuda.l6.q01",
+    "g.deuda.l6.q02",
+    "g.deuda.l6.q03",
+    "g.deuda.l6.q04",
+    "g.deuda.l6.q05"
+  ],
+  "miniExamen": [
+    "g.deuda.l6.q06",
+    "g.deuda.l6.q07",
+    "g.deuda.l6.q08",
+    "g.deuda.l6.q09",
+    "g.deuda.l6.q10"
+  ],
+  "reto": [
+    "g.deuda.l6.q11",
+    "g.deuda.l6.q12",
+    "g.deuda.l6.q13",
+    "g.deuda.l6.q14",
+    "g.deuda.l6.q15"
+  ]
+}

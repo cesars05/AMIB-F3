@@ -1,0 +1,633 @@
+{
+  "id": "deuda.valuacion-bonos-cuponados",
+  "area": "deuda",
+  "materia": "Títulos de Deuda II",
+  "subtemaId": "deuda.titulos-de-deuda-ii.valuacion-de-bonos",
+  "objetivoIds": [
+    "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o02",
+    "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o03",
+    "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o04",
+    "deuda.titulos-de-deuda-ii.valuacion-de-bonos.o06"
+  ],
+  "orden": 7,
+  "titulo": "Valuación de bonos cuponados",
+  "resumen": "Cupón, intereses corridos, precio limpio y precio sucio de Bonos M y Udibonos (tasa fija), y de BPAG28, BPAG91 y BPA182 (tasa revisable con sobretasa), con liquidación a 24, 48 y 72 horas y tasa de rendimiento al vencimiento.",
+  "duracionMin": 45,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        202,
+        203,
+        204
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    },
+    {
+      "documento": "AMIB Data/AMIB Fig 3_vf.docx",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "anatomia",
+      "titulo": "Anatomía de un bono cuponado",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Un [[bono cuponado]] paga intereses periódicos (cupones) y amortiza el capital al vencimiento. Los intereses se calculan sobre los días efectivamente transcurridos con **año de 360 días** y se pagan al final de cada periodo."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Instrumento",
+            "Emisor",
+            "Valor nominal",
+            "Plazo del cupón",
+            "Tasa del cupón"
+          ],
+          "filas": [
+            [
+              "Bonos M",
+              "Gobierno Federal",
+              "$100",
+              "182 días",
+              "Fija"
+            ],
+            [
+              "Udibonos",
+              "Gobierno Federal",
+              "100 UDIS",
+              "182 días",
+              "Real fija"
+            ],
+            [
+              "BONDES D",
+              "Gobierno Federal",
+              "$100",
+              "28 días",
+              "Revisable (fondeo bancario)"
+            ],
+            [
+              "BPAG28",
+              "IPAB",
+              "$100",
+              "28 días",
+              "Revisable, la mayor entre CETES y fondeo gubernamental"
+            ],
+            [
+              "BPAG91",
+              "IPAB",
+              "$100",
+              "91 días",
+              "Revisable, la mayor entre CETES y fondeo gubernamental"
+            ],
+            [
+              "BPA182",
+              "IPAB",
+              "$100",
+              "182 días",
+              "Revisable, con protección contra la inflación"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              2
+            ],
+            [
+              4,
+              3
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen cuponados:",
+          "texto": "tasa fija (Bonos M, Udibonos) se valúa con TASA.FIJA.182; tasa revisable con sobretasa (BPAG28, BPAG91, BPA182) con BONO.S/TASA."
+        }
+      ],
+      "ampliada": "La tabla resume el manual 2023 (instrumentos gubernamentales colocados mediante subasta) y las notas de Cesar. Las características completas de cada instrumento se ven en la lección de títulos gubernamentales; aquí interesa su mecánica de cupón.",
+      "paginas": [
+        202,
+        203
+      ]
+    },
+    {
+      "id": "cupon-e-intereses",
+      "titulo": "Cupón e intereses corridos",
+      "bloques": [
+        {
+          "tipo": "formula",
+          "logica": "CUP = VN \\times \\frac{tc \\times p}{36000} \\qquad INT = VN \\times \\frac{tc \\times (p - d)}{36000}",
+          "leyenda": [
+            [
+              "CUP",
+              "monto del cupón"
+            ],
+            [
+              "INT",
+              "intereses corridos (devengados) del cupón vigente"
+            ],
+            [
+              "VN",
+              "valor nominal"
+            ],
+            [
+              "tc",
+              "tasa cupón anual, en por ciento"
+            ],
+            [
+              "p",
+              "días del periodo de cupón (182, 91 o 28)"
+            ],
+            [
+              "d",
+              "días que faltan para el próximo pago de cupón"
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "N = \\left\\lceil \\frac{DXV}{p} \\right\\rceil \\qquad d = DXV - (N - 1)\\,p",
+          "leyenda": [
+            [
+              "N",
+              "cupones por pagar (se redondea hacia arriba)"
+            ],
+            [
+              "DXV",
+              "días por vencer del bono"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** Bono M con 720 días por vencer (en liquidación) y cupón de 8.5%: N = 4, d = 720 − 3 × 182 = 174, días transcurridos = 182 − 174 = 8."
+        },
+        {
+          "tipo": "formula",
+          "logica": "INT = VN \\times \\frac{tc \\times (p - d)}{36000}",
+          "leyenda": [],
+          "valores": "INT = 100 \\times \\frac{8.5 \\times 8}{36000}",
+          "resultado": "INT = 0.188889, el manual lo muestra como 0.1889"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Los intereses corridos usan los días **transcurridos** del cupón (p − d), no los que faltan. Y el cupón de 182 días no es la tasa entre dos: 8.5% × 182 ÷ 360 = 4.2972, no 4.25."
+        }
+      ],
+      "ampliada": "El cupón completo del ejemplo es 100 × 8.5 × 182 ÷ 36000 = $4.297222. El día de pago de cupón los intereses corridos son cero y el precio limpio coincide con el sucio.",
+      "paginas": [
+        202
+      ]
+    },
+    {
+      "id": "limpio-y-sucio",
+      "titulo": "Precio limpio y precio sucio",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Precio limpio",
+              "Precio del bono **sin** los intereses devengados desde el último cupón. Es el que se cotiza en el mercado."
+            ],
+            [
+              "Precio sucio",
+              "Precio que **realmente se paga**: limpio más intereses corridos."
+            ],
+            [
+              "Relación",
+              "Sucio = limpio + intereses corridos; limpio = sucio − intereses corridos."
+            ]
+          ],
+          "titulo": "Dos precios del mismo bono"
+        },
+        {
+          "tipo": "formula",
+          "logica": "P_{sucio} = P_{limpio} + INT",
+          "leyenda": [
+            [
+              "P_{sucio}",
+              "precio sucio"
+            ],
+            [
+              "P_{limpio}",
+              "precio limpio"
+            ],
+            [
+              "INT",
+              "intereses corridos"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo.** Un bono de $100 con cupón de 7.20% cada 182 días, precio sucio de $102.3870 y 95 días transcurridos: INT = 100 × 7.2 × 95 ÷ 36000 = 1.900000; precio limpio = 102.3870 − 1.900000 = $100.4870."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El distractor clásico es dar el precio sucio cuando se pide el limpio (o sumar los intereses en lugar de restarlos). En la HP, la fórmula TASA.FIJA.182 entrega PLIMP; el sucio se obtiene sumando INT."
+        }
+      ],
+      "ampliada": "En subastas de permuta Banxico publica los **precios limpios** de los Bonos y Udibonos que ofrece el Gobierno Federal. En títulos de tasa flotante, según las notas de Cesar, el precio limpio suele quedar por debajo del valor nominal.",
+      "paginas": [
+        202
+      ]
+    },
+    {
+      "id": "bono-m",
+      "titulo": "Valuación de un Bono M (TASA.FIJA.182)",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El precio sucio es el valor presente de los cupones restantes y del nominal, descontados a la [[tasa de rendimiento]] por periodos de 182 días. El primer flujo se descuenta solo por la fracción de periodo que falta (d ÷ 182)."
+        },
+        {
+          "tipo": "formula",
+          "logica": "P_{sucio} = \\sum_{k=1}^{N} \\frac{CUP}{(1+i)^{k-1+\\frac{d}{182}}} + \\frac{VN}{(1+i)^{N-1+\\frac{d}{182}}} \\qquad i = \\frac{\\%LIDER \\times 182}{36000}",
+          "leyenda": [
+            [
+              "\\%LIDER",
+              "tasa de mercado, exigida, negociada o pactada"
+            ],
+            [
+              "i",
+              "tasa por periodo de 182 días"
+            ],
+            [
+              "CUP",
+              "cupón = VN × %CPN × 182 ÷ 36000"
+            ],
+            [
+              "N",
+              "cupones por pagar"
+            ],
+            [
+              "d",
+              "días al próximo cupón"
+            ],
+            [
+              "VN",
+              "valor nominal ($100)"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** Bono M con 723 días por vencer, tasa de rendimiento de 5.47% y cupón de 8.5%, con liquidación dentro de 72 horas: DXV = 723 − 3 = 720."
+        },
+        {
+          "tipo": "formula",
+          "logica": "P_{sucio} = \\sum_{k=1}^{4} \\frac{4.297222}{(1.027654)^{k-1+\\frac{174}{182}}} + \\frac{100}{(1.027654)^{3+\\frac{174}{182}}}",
+          "leyenda": [],
+          "valores": "P_{limpio} = P_{sucio} - INT = 105.852912 - 0.188889",
+          "resultado": "PLIMP = $105.664023 y sucio = 105.8529"
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "TASA.FIJA.182",
+          "entradas": [
+            [
+              "%LIDER",
+              "5.47"
+            ],
+            [
+              "DXV",
+              "723 − 3 = 720"
+            ],
+            [
+              "%CPN",
+              "8.5"
+            ]
+          ],
+          "salida": [
+            "PLIMP",
+            "105.664023"
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Liquidación a 24, 48 o 72 horas: se **restan** 1, 2 o 3 días a los días por vencer antes de valuar. El OCR del manual dice $105.564023, pero la imagen y el cálculo dan $105.664023, consistente con el sucio de 105.8529."
+        }
+      ],
+      "ampliada": "La fórmula se verificó reproduciendo los tres ejemplos del manual (Bono M, Udibono y la pregunta de repaso con 762 días). Como 5.47% es menor que el cupón de 8.5%, el bono cotiza sobre par; si la tasa de mercado fuera mayor que el cupón, cotizaría bajo par.",
+      "paginas": [
+        202
+      ]
+    },
+    {
+      "id": "udibonos",
+      "titulo": "Udibonos: el mismo cálculo, en UDIS",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los [[Udibonos]] se valúan con la misma fórmula TASA.FIJA.182, pero la tasa es **real** y el resultado sale en **UDIS**. Para pasar a pesos se multiplica por el valor de la UDI."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** Udibono con 1,210 días por vencer, cupón de 5.20%, tasa real negociada de 6.50% y UDI de $4.857918."
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "TASA.FIJA.182",
+          "entradas": [
+            [
+              "%LIDER",
+              "6.50"
+            ],
+            [
+              "DXV",
+              "1,210"
+            ],
+            [
+              "%CPN",
+              "5.20"
+            ]
+          ],
+          "salida": [
+            "PLIMP",
+            "96.121811 UDIS"
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "P_{pesos} = P_{UDIS} \\times UDI",
+          "leyenda": [
+            [
+              "P_{pesos}",
+              "precio en pesos"
+            ],
+            [
+              "P_{UDIS}",
+              "precio en UDIS"
+            ],
+            [
+              "UDI",
+              "valor de la UDI en pesos"
+            ]
+          ],
+          "valores": "P_{sucio} = (96.121811 + 0.924444) \\times 4.857918 = 97.046255 \\times 4.857918",
+          "resultado": "Precio limpio $466.9519 y precio sucio $471.4427 (el manual: $466.951874 y $471.442749)"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Dejar el precio en UDIS, o convertir solo el limpio cuando se pide el sucio, son los distractores de este tipo de pregunta."
+        }
+      ],
+      "ampliada": "Detalle del ejemplo: N = 7 cupones, d = 1,210 − 6 × 182 = 118, días transcurridos = 64, INT = 100 × 5.20 × 64 ÷ 36000 = 0.924444 UDIS (el manual muestra 0.9244). El objetivo de tasa real del temario es este cálculo.",
+      "paginas": [
+        202
+      ]
+    },
+    {
+      "id": "sobretasa",
+      "titulo": "Bonos con sobretasa (BONO.S/TASA)",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "En los bonos de tasa revisable, el **cupón vigente** ya se conoce, pero los futuros dependen de la tasa de referencia. La fórmula proyecta los cupones futuros con la [[tasa líder vigente]] y descuenta todos los flujos con la tasa líder **más** la [[sobretasa]]."
+        },
+        {
+          "tipo": "formula",
+          "logica": "P_{sucio} = \\frac{CUP_1}{(1+j)^{\\frac{d}{p}}} + \\sum_{k=2}^{N} \\frac{CUP_f}{(1+j)^{k-1+\\frac{d}{p}}} + \\frac{VN}{(1+j)^{N-1+\\frac{d}{p}}} \\qquad j = \\frac{(\\%TLVG + ST)\\,p}{36000}",
+          "leyenda": [
+            [
+              "CUP_1",
+              "cupón vigente = VN × %CPN × p ÷ 36000"
+            ],
+            [
+              "CUP_f",
+              "cupón futuro = VN × %TLVG × p ÷ 36000"
+            ],
+            [
+              "\\%TLVG",
+              "tasa líder vigente (de mercado o de referencia)"
+            ],
+            [
+              "ST",
+              "sobretasa"
+            ],
+            [
+              "p",
+              "plazo del cupón (PZOC)"
+            ],
+            [
+              "d",
+              "días al próximo cupón"
+            ]
+          ]
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Capturar DXV, PZOC y %CPN.",
+            "Solicitar los intereses corridos con INT$ (siempre).",
+            "Capturar %TLVG y ST.",
+            "Solicitar el precio limpio con PR$.",
+            "Precio sucio = INT$ + PR$."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Para BPAG28 y BPAG91, %TLVG es **la mayor** entre la tasa de CETES y la de fondeo gubernamental. Para BPA182 el manual usa la tasa de CETES semestral."
+        }
+      ],
+      "ampliada": "La fórmula escrita aquí reproduce exactamente los dos ejemplos del manual (98.890348 y 98.9226). El manual 2023 indica que la misma fórmula se usa con BPAG28 (cupón de 28 días), BPAG91 (91 días), BPA (182 días), BONDES de 28 días y bonos con sobretasa en general.",
+      "paginas": [
+        203,
+        204
+      ]
+    },
+    {
+      "id": "ejemplos-sobretasa",
+      "titulo": "Ejemplos resueltos de sobretasa",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "**BPAG91.** 1,372 días por vencer, cupón de 4.38%, sobretasa de 0.32%, CETES a 91 días en 4.33% y fondeo gubernamental en 4.35%, liquidación a 48 horas."
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "BONO.S/TASA",
+          "entradas": [
+            [
+              "DXV",
+              "1,372 − 2 = 1,370"
+            ],
+            [
+              "PZOC",
+              "91"
+            ],
+            [
+              "%CPN",
+              "4.38"
+            ],
+            [
+              "INT$",
+              "1.046333"
+            ],
+            [
+              "%TLVG",
+              "4.35 (la mayor)"
+            ],
+            [
+              "ST",
+              "0.32"
+            ]
+          ],
+          "salida": [
+            "PR$",
+            "98.890348"
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "P_{sucio} = PR\\$ + INT\\$",
+          "leyenda": [],
+          "valores": "P_{sucio} = 98.890348 + 1.046333",
+          "resultado": "Precio sucio = $99.936681, es decir, $99.9367"
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**BPA182 (con protección contra la inflación).** 548 días por vencer, cupón de 5.6%, sobretasa de 0.75% y CETES semestral en 4.60%."
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "BONO.S/TASA",
+          "entradas": [
+            [
+              "DXV",
+              "548"
+            ],
+            [
+              "PZOC",
+              "182"
+            ],
+            [
+              "%CPN",
+              "5.6"
+            ],
+            [
+              "INT$",
+              "2.80"
+            ],
+            [
+              "%TLVG",
+              "4.60"
+            ],
+            [
+              "ST",
+              "0.75"
+            ]
+          ],
+          "salida": [
+            "PR$",
+            "98.9226"
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "P_{sucio} = PR\\$ + INT\\$",
+          "leyenda": [],
+          "valores": "P_{sucio} = 98.9226 + 2.80",
+          "resultado": "Precio sucio = $101.7226"
+        }
+      ],
+      "ampliada": "Comprobación de intereses: BPAG91, 1,370 − 15 × 91 = 5 días al próximo cupón, 86 transcurridos, 100 × 4.38 × 86 ÷ 36000 = 1.046333. BPA182, 548 − 3 × 182 = 2 días al próximo cupón, 180 transcurridos, 100 × 5.6 × 180 ÷ 36000 = 2.80.",
+      "paginas": [
+        204
+      ]
+    },
+    {
+      "id": "rendimiento-y-plazo",
+      "titulo": "Tasa de rendimiento al vencimiento y plazo",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La [[tasa de rendimiento al vencimiento]] es la tasa que iguala el precio del bono con el valor presente de sus flujos. No tiene despeje directo: en la HP se captura el precio y se resuelve %LIDER (o %TLVG en sobretasa). El **plazo** se expresa en días por vencer, que determinan cuántos cupones faltan y cuántos días lleva el cupón vigente."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Si la tasa de mercado es...",
+            "el bono cotiza...",
+            "precio limpio"
+          ],
+          "filas": [
+            [
+              "Menor que la tasa cupón",
+              "Sobre par",
+              "Mayor que el valor nominal"
+            ],
+            [
+              "Igual a la tasa cupón",
+              "A la par (en fecha de cupón)",
+              "Igual al valor nominal"
+            ],
+            [
+              "Mayor que la tasa cupón",
+              "Bajo par",
+              "Menor que el valor nominal"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo.** Un Bono M con 546 días por vencer (sin intereses corridos), cupón de 8.00% y precio de $101.2500 rinde 7.1158% al vencimiento; el rendimiento corriente (8.00 ÷ 101.25 = 7.9012%) no es lo mismo."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen de la lección:",
+          "texto": "calcula N y d, obtén los intereses corridos con los días transcurridos, valúa con la fórmula correcta (fija o sobretasa), ajusta los días por liquidación y distingue siempre limpio de sucio."
+        }
+      ],
+      "ampliada": "Duración y convexidad no forman parte de los objetivos del capítulo 6, por lo que no se incluyen en esta lección. La relación inversa entre precio y rendimiento es la base de esos conceptos y la recogen las notas de Cesar.",
+      "paginas": [
+        202,
+        204
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Cupón = VN × tasa cupón × días del cupón ÷ 36000; en Bonos M es cada 182 días (no la tasa entre dos).",
+    "Cupones por pagar N = DXV ÷ plazo del cupón redondeado hacia arriba; días al próximo cupón d = DXV − (N − 1) × plazo; intereses corridos con plazo − d.",
+    "Precio sucio = precio limpio + intereses corridos; el mercado cotiza limpio y se liquida sucio.",
+    "Bonos M y Udibonos: TASA.FIJA.182; Udibonos en UDIS, a pesos multiplicando por la UDI.",
+    "BONO.S/TASA: DXV, PZOC, %CPN, INT$, luego %TLVG y ST, y PR$; sucio = INT$ + PR$.",
+    "BPAG28 y BPAG91: tasa líder = la mayor entre CETES y fondeo gubernamental.",
+    "Liquidación a 24, 48 o 72 horas: restar 1, 2 o 3 días a los días por vencer.",
+    "Tasa de mercado mayor que el cupón: bajo par; menor: sobre par."
+  ],
+  "practica": [
+    "g.deuda.l7.q01",
+    "g.deuda.l7.q02",
+    "g.deuda.l7.q03",
+    "g.deuda.l7.q04",
+    "g.deuda.l7.q05"
+  ],
+  "miniExamen": [
+    "g.deuda.l7.q06",
+    "g.deuda.l7.q07",
+    "g.deuda.l7.q08",
+    "g.deuda.l7.q09",
+    "g.deuda.l7.q10"
+  ],
+  "reto": [
+    "g.deuda.l7.q11",
+    "g.deuda.l7.q12",
+    "g.deuda.l7.q13",
+    "g.deuda.l7.q14",
+    "g.deuda.l7.q15"
+  ]
+}
