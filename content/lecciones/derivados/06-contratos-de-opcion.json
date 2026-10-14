@@ -1,0 +1,668 @@
+{
+  "id": "derivados.contratos-de-opcion",
+  "area": "derivados",
+  "materia": "Derivados Financieros I y II",
+  "subtemaId": "derivados.derivados-financieros-i.contratos-de-opcion",
+  "objetivoIds": [
+    "derivados.derivados-financieros-i.contratos-de-opcion.o01",
+    "derivados.derivados-financieros-i.contratos-de-opcion.o02",
+    "derivados.derivados-financieros-i.contratos-de-opcion.o03",
+    "derivados.derivados-financieros-i.contratos-de-opcion.o04",
+    "derivados.derivados-financieros-i.contratos-de-opcion.o05",
+    "derivados.derivados-financieros-i.contratos-de-opcion.o07",
+    "derivados.derivados-financieros-ii.contratos-de-opcion.o02",
+    "derivados.derivados-financieros-ii.contratos-de-opcion.o03"
+  ],
+  "orden": 6,
+  "titulo": "Contratos de opción: posiciones, valor y valuación",
+  "resumen": "Call y put; posiciones básicas, perfiles de pago, perfil de riesgo y expectativas; precio de ejercicio, estilo americano y europeo, liquidación en especie y en efectivo; condiciones generales en MexDer; dentro, en y fuera del dinero; valor intrínseco y extrínseco con cálculo; variables de la prima y volatilidad; orden de prelación; Black & Scholes y modelo binomial.",
+  "duracionMin": 50,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        264,
+        265,
+        266,
+        267,
+        268,
+        269,
+        270,
+        271,
+        272,
+        273
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "call-y-put",
+      "titulo": "Call y put: quién tiene el derecho y quién la obligación",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Una [[opción de compra (call)]] es un contrato con fecha de vencimiento y precio de ejercicio establecidos, donde el **comprador tiene el derecho de comprar** el subyacente y el **vendedor la obligación de vender**. Una [[opción de venta (put)]] da al **comprador el derecho de vender** y al **vendedor la obligación de comprar**."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Operación",
+            "Posición",
+            "Derecho u obligación"
+          ],
+          "filas": [
+            [
+              "Comprar call",
+              "Largo call",
+              "**Derecho** a comprar"
+            ],
+            [
+              "Vender call",
+              "Corto call",
+              "**Obligación** de vender"
+            ],
+            [
+              "Comprar put",
+              "Largo put",
+              "**Derecho** a vender"
+            ],
+            [
+              "Vender put",
+              "Corto put",
+              "**Obligación** de comprar"
+            ]
+          ],
+          "trampas": [
+            [
+              3,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Regla de oro:",
+          "texto": "el que **compra** (paga la prima) tiene el **derecho**; el que **vende o emite** (cobra la prima) tiene la **obligación** contraria a la del comprador."
+        }
+      ],
+      "ampliada": "El corto put es el que más confunde: vende un put, pero su obligación es **comprar** el subyacente si el comprador ejerce.",
+      "paginas": [
+        264
+      ]
+    },
+    {
+      "id": "perfiles-de-pago",
+      "titulo": "Perfiles de pago de las cuatro posiciones básicas",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El manual ilustra las cuatro posiciones con **precio de ejercicio $5 y prima $1**. El punto de equilibrio se obtiene sumando o restando la prima al precio de ejercicio."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Posición",
+            "Pérdida máxima",
+            "Ganancia máxima",
+            "Punto de equilibrio"
+          ],
+          "filas": [
+            [
+              "Call largo",
+              "La prima ($1)",
+              "Ilimitada",
+              "Strike + prima = $6"
+            ],
+            [
+              "Call corto",
+              "Ilimitada",
+              "La prima ($1)",
+              "Strike + prima = $6"
+            ],
+            [
+              "Put largo",
+              "La prima ($1)",
+              "Strike − prima ($4), si el subyacente llega a cero",
+              "Strike − prima = $4"
+            ],
+            [
+              "Put corto",
+              "Strike − prima ($4)",
+              "La prima ($1)",
+              "Strike − prima = $4"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "PE_{call} = K + c \\qquad PE_{put} = K - p",
+          "leyenda": [
+            [
+              "PE",
+              "punto de equilibrio al vencimiento"
+            ],
+            [
+              "K",
+              "precio de ejercicio (strike)"
+            ],
+            [
+              "c, p",
+              "prima del call y del put"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El comprador de una opción **nunca pierde más que la prima**; el vendedor **solo gana la prima**. La pérdida ilimitada es del **call corto**, no del put corto, cuya pérdida está acotada por el strike."
+        }
+      ],
+      "ampliada": "Las cifras de pérdida y ganancia máximas se deducen de las gráficas del manual y de las fórmulas de liquidación al vencimiento.",
+      "paginas": [
+        264,
+        265
+      ]
+    },
+    {
+      "id": "riesgo-y-expectativas",
+      "titulo": "Perfil de riesgo y expectativas de mercado (Figura 3)",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Posición",
+            "Expectativa",
+            "Riesgo"
+          ],
+          "filas": [
+            [
+              "Largo call",
+              "**Alza** del subyacente",
+              "Una **baja** en el precio"
+            ],
+            [
+              "Largo put",
+              "**Baja** del subyacente",
+              "Un **alza** en el precio"
+            ],
+            [
+              "Corto put",
+              "**Alza** del subyacente",
+              "Una **baja** en el precio"
+            ],
+            [
+              "Corto call",
+              "**Baja** del subyacente",
+              "Un **alza** en el precio"
+            ],
+            [
+              "Subyacente largo",
+              "Alza",
+              "Baja"
+            ],
+            [
+              "Subyacente corto",
+              "Baja",
+              "Alza"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "**Largo call y corto put** comparten la expectativa alcista; **largo put y corto call**, la bajista. El riesgo de cada posición es siempre el movimiento contrario a su expectativa."
+        }
+      ],
+      "ampliada": "El perfil de riesgo al abrir posiciones es información exclusiva de la Figura 3 en el manual.",
+      "paginas": [
+        265
+      ]
+    },
+    {
+      "id": "caracteristicas-y-liquidacion",
+      "titulo": "Precio de ejercicio, estilo y forma de liquidación",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Precio de ejercicio",
+              "Precio al que el **comprador** puede ejercer el derecho convenido."
+            ],
+            [
+              "Estilo americano",
+              "Faculta al comprador a ejercer **en cualquier momento**, dentro del horario de la Bolsa, **durante la vigencia** del contrato."
+            ],
+            [
+              "Estilo europeo",
+              "Faculta al comprador a ejercer **únicamente en la Fecha de Vencimiento**."
+            ],
+            [
+              "Liquidación en especie",
+              "Entrega física del subyacente al precio de ejercicio; aplica a opciones sobre **acciones, canastas de acciones y títulos de deuda**."
+            ],
+            [
+              "Liquidación en efectivo",
+              "Pago de la diferencia entre el precio del subyacente y el de mercado, o la valuación por cada punto de diferencia de un índice o tasa."
+            ]
+          ],
+          "titulo": "Características de las opciones"
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Al vencimiento, si termina dentro del dinero",
+            "Posición larga",
+            "Posición corta"
+          ],
+          "filas": [
+            [
+              "Call en especie",
+              "Derecho a recibir las unidades contra el pago",
+              "Obligación de entregar las unidades contra el saldo"
+            ],
+            [
+              "Put en especie",
+              "Derecho a recibir el saldo contra la entrega de las unidades",
+              "Obligación de recibir las unidades contra el pago"
+            ],
+            [
+              "Call en efectivo",
+              "Recibe (SPOT − STRIKE) × Unidades",
+              "Entrega (SPOT − STRIKE) × Unidades"
+            ],
+            [
+              "Put en efectivo",
+              "Recibe (STRIKE − SPOT) × Unidades",
+              "Entrega (STRIKE − SPOT) × Unidades"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Son materia de liquidación al vencimiento los **Contratos Abiertos al cierre de negociación en la Fecha de Vencimiento**, igual que en futuros."
+        }
+      ],
+      "ampliada": "En efectivo, lo que recibe el largo es exactamente lo que entrega el corto: la opción es un juego de suma cero antes de considerar la prima.",
+      "paginas": [
+        266,
+        267
+      ]
+    },
+    {
+      "id": "condiciones-opciones",
+      "titulo": "Condiciones generales de las opciones en MexDer",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Rasgo",
+            "Opciones sobre el dólar (DA)",
+            "Opciones sobre el IPC (IP)",
+            "Opciones sobre acciones"
+          ],
+          "filas": [
+            [
+              "Liquidación",
+              "**Efectivo**",
+              "Efectivo",
+              "**Especie**"
+            ],
+            [
+              "Tamaño",
+              "10,000 dólares",
+              "**$10** multiplicados por el precio o valor de la prima",
+              "**100 acciones**"
+            ],
+            [
+              "Periodo",
+              "Trimestral (mar, jun, sep, dic), hasta 1 año",
+              "Trimestral, hasta 1 año",
+              "Trimestral, hasta 1 año"
+            ],
+            [
+              "Fluctuación mínima de la prima",
+              "0.0001 pesos",
+              "**5 puntos** del IPC",
+              "**0.01 pesos**"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Clases sobre acciones listadas: ALFA A (AL), ASUR B (AS), América Móvil L (AX), Cemex CPO (CX), FEMSA UBD (FE), KOF L (KO), GAP B (GP), GMéxico B (GM), LALA B (LL), MEXCHEM (MC), Naftrac ISHRS (NA), PEÑOLES (PE), PINFRA (PI), Televisa CPO (TV) y Walmex V (WA)."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El **futuro** del dólar liquida en **especie**; la **opción** sobre el dólar, en **efectivo**. Las opciones sobre acciones sí son en especie, por 100 acciones."
+        }
+      ],
+      "ampliada": "Datos de la página 266 impresa (268 del PDF), revisados contra la imagen.",
+      "paginas": [
+        268
+      ]
+    },
+    {
+      "id": "dentro-en-fuera-del-dinero",
+      "titulo": "Dentro, en y fuera del dinero",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Clasificación",
+            "Significado",
+            "Call",
+            "Put"
+          ],
+          "filas": [
+            [
+              "In the money (dentro)",
+              "Conviene ejercer",
+              "Strike **<** precio de mercado",
+              "Strike **>** precio de mercado"
+            ],
+            [
+              "At the money (en)",
+              "Es indiferente",
+              "Strike = precio de mercado",
+              "Strike = precio de mercado"
+            ],
+            [
+              "Out of the money (fuera)",
+              "No conviene ejercer",
+              "Strike **>** precio de mercado",
+              "Strike **<** precio de mercado"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplos del manual** con strike 20: un call largo está dentro del dinero con el subyacente en $25, en el dinero con $20 y fuera con $15. Para un put largo es al revés: fuera con $25, en el dinero con $20 y dentro con $15."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La clasificación del put es la **imagen en espejo** del call. Con el mismo strike y el mismo spot, si el call está dentro del dinero, el put está fuera."
+        }
+      ],
+      "ampliada": "Para clasificar, pregúntate si hoy convendría ejercer: si sí, está dentro del dinero.",
+      "paginas": [
+        269
+      ]
+    },
+    {
+      "id": "intrinseco-extrinseco",
+      "titulo": "Valor intrínseco y valor extrínseco, con cálculo",
+      "bloques": [
+        {
+          "tipo": "formula",
+          "logica": "VI_{call} = \\max(S - K, 0) \\qquad VI_{put} = \\max(K - S, 0) \\qquad VE = Prima - VI",
+          "leyenda": [
+            [
+              "VI",
+              "valor intrínseco: la ganancia si la opción se ejerciera"
+            ],
+            [
+              "S",
+              "precio del subyacente (liquidación diaria o al vencimiento)"
+            ],
+            [
+              "K",
+              "precio de ejercicio"
+            ],
+            [
+              "VE",
+              "valor extrínseco: valoración probabilística de mayores beneficios"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** Call de AMX con strike $28; la acción cotiza en $30.50 y la prima es $4.10."
+        },
+        {
+          "tipo": "formula",
+          "logica": "VI = S - K \\qquad VE = Prima - VI",
+          "leyenda": [],
+          "valores": "VI = 30.50 - 28 \\qquad VE = 4.10 - 2.50",
+          "resultado": "VI = $2.5000 y VE = $1.6000."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Situación",
+            "Valor extrínseco"
+          ],
+          "filas": [
+            [
+              "Out of the money",
+              "**Solo** tiene valor extrínseco (VI = 0)"
+            ],
+            [
+              "In the money",
+              "Tiene el **menor** valor extrínseco"
+            ],
+            [
+              "At the money",
+              "Tiene el **mayor** valor extrínseco"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Las opciones siempre cotizan por encima de su valor intrínseco, **salvo el día del vencimiento**, cuando el valor extrínseco desaparece. El intrínseco nunca es negativo."
+        }
+      ],
+      "ampliada": "El valor extrínseco es el valor tiempo: mientras no llegue el vencimiento siempre hay posibilidad de que aumente el beneficio.",
+      "paginas": [
+        270,
+        271
+      ]
+    },
+    {
+      "id": "variables-y-prelacion",
+      "titulo": "Variables de la prima, volatilidad y orden de prelación",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "**Variables que determinan la prima** (seis): tiempo a vencimiento, volatilidad, tasa de interés, dividendo (en su caso), precio del subyacente y precio de ejercicio."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Volatilidad",
+              "Medida de la **frecuencia e intensidad** de los cambios del precio de un activo, definida como la **desviación estándar** de dicho cambio en un horizonte temporal específico; se usa para cuantificar el riesgo."
+            ]
+          ]
+        },
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "a) Hechos de los últimos 5 minutos",
+              "texto": "Promedio ponderado por volumen de los hechos registrados en los últimos 5 minutos.",
+              "cuando": "Primera instancia"
+            },
+            {
+              "titulo": "b) Posturas al cierre",
+              "texto": "Promedio ponderado por volumen cruzado de las posturas y cotizaciones en firme de compra y venta vigentes al final de la sesión.",
+              "cuando": "Solo si existen ambas posturas"
+            },
+            {
+              "titulo": "c) Volatilidad del último hecho",
+              "texto": "Precio teórico con la **volatilidad implícita del hecho más reciente**.",
+              "cuando": "Hechos anteriores a los 5 minutos"
+            },
+            {
+              "titulo": "d) Precio teórico (skew de volatilidad)",
+              "texto": "Metodología de MexDer cuando hay posturas en la serie en el dinero y en la inmediata superior e inferior.",
+              "cuando": "Si no hay lo anterior"
+            }
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "A diferencia de los futuros, el orden de las opciones **no** termina en una subasta ni en la última operación: usa la **volatilidad implícita** del último hecho y después un **precio teórico**."
+        }
+      ],
+      "ampliada": "El objetivo del temario de interés abierto y volumen de opciones se resuelve con el mismo método que en futuros (lección 2).",
+      "paginas": [
+        271
+      ]
+    },
+    {
+      "id": "black-scholes-binomial",
+      "titulo": "Black & Scholes y modelo binomial",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El modelo de **Black & Scholes** da valores teóricos para **opciones put y call europeas sobre acciones que no pagan dividendos**. Su argumento clave: se puede, sin riesgo, compensar posiciones largas con cortas de la acción ajustando continuamente el **ratio de cobertura (delta)**. Asume que el precio sigue un paseo aleatorio y que no hay posibilidades de arbitraje."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Precio actual del subyacente.",
+            "Precio de ejercicio.",
+            "Tipo de interés libre de riesgo.",
+            "Tiempo hasta la fecha de ejercicio.",
+            "Volatilidad del subyacente."
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Rasgo",
+            "Black & Scholes",
+            "Binomial"
+          ],
+          "filas": [
+            [
+              "Tipo de opción",
+              "**Solo europeas**",
+              "**Americanas y europeas**"
+            ],
+            [
+              "Proceso del subyacente",
+              "Estocástico continuo, cambios con distribución normal",
+              "**Multiplicativo discreto**: solo dos valores posibles por periodo, arriba o abajo"
+            ],
+            [
+              "Volatilidad",
+              "**Constante** durante toda la vida del contrato (tasa también constante)",
+              "Útil cuando las probabilidades de alza **varían en el tiempo**"
+            ],
+            [
+              "Otros supuestos o rasgos",
+              "Sin dividendos, sin costos de transacción ni de ventas en corto, subyacente líquido en mercado eficiente",
+              "Ventaja: lógica simple, base para modelos más complejos como Black & Scholes. Limitación: variaciones **discretas** en el tiempo"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Black & Scholes usa **cinco** factores (sin dividendo, porque supone que no hay); la prima en general depende de **seis** variables (con dividendo). Y el modelo para **americanas** es el binomial."
+        }
+      ],
+      "ampliada": "El manual presenta el binomial de un periodo aplicado al tipo de cambio; la misma lógica se extiende a varios periodos.",
+      "paginas": [
+        272,
+        273
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Call: comprador con derecho a **comprar**, vendedor obligado a **vender**. Put: comprador con derecho a **vender**, vendedor obligado a **comprar**.",
+    "Comprador: pérdida máxima la prima. Vendedor: ganancia máxima la prima. Equilibrio: call K + prima; put K − prima.",
+    "Expectativa alcista: largo call y corto put. Bajista: largo put y corto call. El riesgo es el movimiento contrario.",
+    "Americana: ejercicio en cualquier momento de la vigencia. Europea: solo en la fecha de vencimiento. Especie en acciones, canastas y deuda.",
+    "MexDer: opción DA en **efectivo** por 10,000 dólares; opción IPC (clase IP) $10 por prima, tick 5 puntos; acciones en **especie**, 100 acciones, tick $0.01.",
+    "Call ITM si K < S; put ITM si K > S. VI = max(S − K, 0) en call y max(K − S, 0) en put; VE = prima − VI; ATM tiene el mayor VE.",
+    "Prima: seis variables (tiempo, volatilidad, tasa, dividendo, subyacente y strike). Volatilidad = desviación estándar de los cambios de precio.",
+    "Black & Scholes: europeas, sin dividendos, volatilidad y tasa constantes, cinco factores. Binomial: americanas y europeas, proceso multiplicativo discreto."
+  ],
+  "practica": [
+    "g.derivados.l6.q01",
+    "g.derivados.l6.q02",
+    "g.derivados.l6.q03",
+    "g.derivados.l6.q04",
+    "g.derivados.l6.q05"
+  ],
+  "miniExamen": [
+    "g.derivados.l6.q06",
+    "g.derivados.l6.q07",
+    "g.derivados.l6.q08",
+    "g.derivados.l6.q09",
+    "g.derivados.l6.q10"
+  ],
+  "reto": [
+    "g.derivados.l6.q11",
+    "g.derivados.l6.q12",
+    "g.derivados.l6.q13",
+    "g.derivados.l6.q14",
+    "g.derivados.l6.q15"
+  ]
+}

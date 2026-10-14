@@ -1,0 +1,380 @@
+{
+  "id": "derivados.engrapados-y-swaps",
+  "area": "derivados",
+  "materia": "Derivados Financieros I y II",
+  "subtemaId": "derivados.derivados-financieros-ii.operaciones-de-engrapados",
+  "objetivoIds": [
+    "derivados.derivados-financieros-ii.operaciones-de-engrapados.o01",
+    "derivados.derivados-financieros-ii.operaciones-de-engrapados.o02",
+    "derivados.derivados-financieros-ii.operaciones-de-engrapados.o03",
+    "derivados.derivados-financieros-i.contratos-de-swap.o01",
+    "derivados.derivados-financieros-ii.contratos-de-swap.o01"
+  ],
+  "orden": 5,
+  "titulo": "Operaciones de engrapados y contratos de swap",
+  "resumen": "Engrapado de divisas (réplica del forward o swap de tipo de cambio) con el ejemplo de precio del manual; engrapado de tasas de interés; diferencias entre un futuro del dólar y un engrapado; condiciones generales del swap de TIIE28 en MexDer y las curvas con que Asigna y Valmer lo valúan.",
+  "duracionMin": 30,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        242,
+        255,
+        256,
+        262,
+        263
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "engrapado-divisas",
+      "titulo": "Engrapado de divisas: qué replica y cómo se arma",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[engrapado de divisas]] es una operación que busca **replicar la operación conocida como Forward (SWAP) de tipo de cambio**. Se negocia en una línea de MexDer en **puntos forward**."
+        },
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Pata 1: futuro que vence hoy",
+              "texto": "Se compra o vende el futuro del dólar que **vence ese mismo día**, a un precio determinado por MexDer: el **promedio entre la compra y la venta** del tipo de cambio spot peso/dólar publicado por la Bolsa.",
+              "cuando": "Al cerrar la operación"
+            },
+            {
+              "titulo": "Pata 2: operación contraria",
+              "texto": "Operación **contraria** por el **mismo número de contratos**, en la serie con fecha de vencimiento final.",
+              "cuando": "Simultánea"
+            },
+            {
+              "titulo": "Precio de la pata 2",
+              "texto": "Precio del futuro que vence en la fecha de negociación **más los puntos forward** negociados en la línea de engrapados.",
+              "cuando": "Registro"
+            }
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "P_{final} = P_{diario} + PF",
+          "leyenda": [
+            [
+              "P_{final}",
+              "precio de la serie con vencimiento final"
+            ],
+            [
+              "P_{diario}",
+              "precio del futuro que vence el día de la negociación"
+            ],
+            [
+              "PF",
+              "puntos forward negociados"
+            ]
+          ],
+          "valores": "P_{final} = 11.0725 + 0.0025",
+          "resultado": "Ejemplo del manual (marzo de 2005): $11.0750."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Las dos patas son **contrarias** (una compra y una venta) y por el **mismo número de contratos**. Lo que se negocia son los **puntos forward**, no el tipo de cambio completo."
+        }
+      ],
+      "ampliada": "El manual 2023 añade detalles operativos: la clave de pizarra es DEUAF, las posturas se cotizan en puntos forward al diezmilésimo y cada forward se integra por 2 contratos del dólar con vencimiento diario. Son datos operativos que pueden cambiar.",
+      "paginas": [
+        262
+      ]
+    },
+    {
+      "id": "engrapado-tasas",
+      "titulo": "Engrapado de tasas de interés",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Qué es",
+              "Una **mecánica de negociación** reglamentada en MexDer que permite concertar **simultáneamente dos o más series** de una **misma clase** de contrato de futuro, a **un mismo precio o tasa**."
+            ],
+            [
+              "Quién puede celebrarlo",
+              "Los **Socios Liquidadores u Operadores**."
+            ],
+            [
+              "Cómo",
+              "Una **sola Postura en firme** de compra o venta en el Sistema Electrónico de Negociación, sobre futuros de tasas con **Series sucesivas**, a un mismo precio y por el **volumen mínimo** que establezca la Bolsa en su Boletín."
+            ],
+            [
+              "Para qué",
+              "Cambiar tasas **fijas por variables** y **variables por fijas** cuando se presentan o prevén cambios en la tendencia de las tasas."
+            ],
+            [
+              "Alternativa a",
+              "Un **swap de tasas de interés**."
+            ]
+          ],
+          "titulo": "Ficha: engrapado de tasas"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El engrapado de tasas usa **series sucesivas de la misma clase** y **un solo precio** para todas. No combina clases distintas (por ejemplo TIIE con CETE) ni precios distintos por serie."
+        }
+      ],
+      "ampliada": "Una tira de futuros de TIIE a un mismo precio fija la tasa de varios periodos consecutivos: económicamente equivale a pagar fijo y recibir variable (o al revés), como en un swap.",
+      "paginas": [
+        262
+      ]
+    },
+    {
+      "id": "futuro-vs-engrapado",
+      "titulo": "Futuro del dólar frente a engrapado de divisas",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Rasgo",
+            "Futuro del dólar (DA)",
+            "Engrapado de divisas"
+          ],
+          "filas": [
+            [
+              "Qué es",
+              "Un contrato estandarizado de compraventa de dólares a plazo",
+              "Dos operaciones contrarias en futuros del dólar que replican un forward (swap) de tipo de cambio"
+            ],
+            [
+              "Número de operaciones",
+              "**Una**",
+              "**Dos** simultáneas y contrarias, por el mismo número de contratos"
+            ],
+            [
+              "Qué se negocia",
+              "El **precio futuro** del dólar",
+              "Los **puntos forward** (diferencial entre el precio a plazo y el del vencimiento diario)"
+            ],
+            [
+              "Exposición al tipo de cambio",
+              "Sí: gana o pierde con el nivel del dólar",
+              "Se compensa entre las dos patas: queda expuesto al **diferencial** (puntos forward)"
+            ],
+            [
+              "Precio de referencia de entrada",
+              "Precio pactado",
+              "Promedio de compra y venta del spot publicado por la Bolsa, más los puntos forward"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen:",
+          "texto": "el futuro toma posición en el nivel del dólar; el engrapado toma posición en los puntos forward, como un swap de divisas."
+        }
+      ],
+      "ampliada": "La fila de exposición se deduce de la mecánica descrita en el manual (una pata compra y otra vende el mismo número de contratos); el manual no la redacta expresamente.",
+      "paginas": [
+        262
+      ]
+    },
+    {
+      "id": "swap-concepto-y-contrato",
+      "titulo": "El swap y su contrato en MexDer",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Un [[swap]] es una operación que permite un **intercambio de flujos hacia el futuro**, también llamada **permuta financiera**, muy utilizada con tasas de interés: se puede intercambiar un crédito de tasa flotante por uno de tasa fija y viceversa."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Contrato",
+              "Swap sobre **Tasas de Interés Nominales Fijas y Variables (TIIE28)**"
+            ],
+            [
+              "Tamaño",
+              "**$100,000.00** M.N."
+            ],
+            [
+              "Periodo",
+              "Según el **número de cupones de 28 días**"
+            ],
+            [
+              "Clave de pizarra",
+              "# Cupones x 1 (por ejemplo, EJ 130 x 1)"
+            ],
+            [
+              "Unidad de cotización",
+              "Tasa de interés nominal **fija** en puntos porcentuales con **cuatro decimales**"
+            ],
+            [
+              "Puja",
+              "**0.25 pb (0.0025%)**"
+            ],
+            [
+              "Fluctuación máxima",
+              "**No hay** fluctuación máxima de la tasa durante una misma sesión"
+            ],
+            [
+              "Horario",
+              "**7:30 a 14:00** horas, tiempo de la Ciudad de México"
+            ],
+            [
+              "Último día de negociación y vencimiento",
+              "El día en que se determine la tasa variable para el intercambio de la **última fecha de liquidación periódica**"
+            ],
+            [
+              "Liquidación",
+              "Intercambios de flujo en periodos de **28 días naturales** consecutivos a partir de la Fecha Efectiva"
+            ]
+          ],
+          "titulo": "Condiciones generales: swap de TIIE28 en MexDer"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El **contrato de swap** mide $100,000; el **futuro sobre swap** (clase SW) de la tabla de futuros mide **$1,000,000**. Son contratos distintos. La puja del swap es 0.25 pb, no 1 pb."
+        }
+      ],
+      "ampliada": "El manual 2023 indica una puja de 0.0001 pb para el swap; AMIB 1 dice 0.25 pb (0.0025%). Se sigue AMIB 1 y se anota la discrepancia en el archivo de dudas.",
+      "paginas": [
+        242,
+        256,
+        263
+      ]
+    },
+    {
+      "id": "curvas-de-valuacion",
+      "titulo": "Curvas para valuar un swap: Asigna (CME) y Valmer",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Paso de valuación",
+            "Curva que usa Asigna (igual que el CME)"
+          ],
+          "filas": [
+            [
+              "Estimar los flujos de la **pata variable**",
+              "La curva **forward de TIIE28**"
+            ],
+            [
+              "**Descontar** los flujos",
+              "Una curva de **Fondeo Bancario en pesos** equivalente a la de fondeo en dólares: **Overnight Index Swap (OIS) en pesos**"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Valmer** publica las curvas correspondientes: CURVA CME MEXDERSWAP_OISTIIE y CURVA CME MEXDERSWAP_IRSTIIEPR, así como IRMXP_TIIE28_IRS_CME e IRMXP_TIIE28_OIS_CME."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La TIIE28 forward sirve para **proyectar** los flujos variables; la curva OIS (fondeo) sirve para **descontar**. Intercambiar esas funciones es la trampa clásica."
+        }
+      ],
+      "ampliada": "Asigna valúa los swaps igual que el Chicago Mercantile Exchange (CME). El objetivo del temario habla de mercado OTC o reconocido; el manual describe la metodología de Asigna y las curvas de Valmer.",
+      "paginas": [
+        263
+      ]
+    },
+    {
+      "id": "mapa-engrapados-swaps",
+      "titulo": "Mapa de trampas de engrapados y swaps",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Distractor típico",
+            "Lo correcto"
+          ],
+          "filas": [
+            [
+              "El engrapado de divisas replica un futuro",
+              "Replica un **forward (swap) de tipo de cambio**"
+            ],
+            [
+              "El precio del futuro diario es el spot de venta",
+              "Es el **promedio entre compra y venta** del spot publicado por la Bolsa"
+            ],
+            [
+              "El engrapado de tasas combina clases distintas",
+              "Series sucesivas de **una misma clase**, a un mismo precio"
+            ],
+            [
+              "El swap de TIIE mide $1,000,000 y paga cada 91 días",
+              "Mide **$100,000** y liquida cada **28 días**"
+            ],
+            [
+              "Los flujos se descuentan con la TIIE28 forward",
+              "Se descuentan con la curva **OIS en pesos**"
+            ],
+            [
+              "El swap tiene fluctuación máxima diaria",
+              "**No** hay fluctuación máxima en una sesión"
+            ]
+          ],
+          "trampas": []
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen de la lección:",
+          "texto": "engrapado de divisas = dos patas contrarias del DA, precio final = vencimiento diario más puntos forward; engrapado de tasas = una postura para series sucesivas, alternativa al swap; swap TIIE28 de $100,000, puja 0.25 pb, flujos cada 28 días, proyectado con TIIE28 forward y descontado con OIS."
+        }
+      ],
+      "ampliada": "Las condiciones regulatorias de Banco de México para liquidar swaps (objetivo del temario) no aparecen en AMIB 1; se anotaron en el archivo de dudas.",
+      "paginas": [
+        262,
+        263
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Engrapado de divisas: replica el **forward (swap) de tipo de cambio** con dos operaciones contrarias en futuros del dólar por el mismo número de contratos.",
+    "Pata diaria al **promedio de compra y venta** del spot publicado por la Bolsa; pata final al precio diario **más los puntos forward** (ejemplo: 11.0725 + 0.0025 = 11.0750).",
+    "Engrapado de tasas: una sola postura en firme para **series sucesivas de la misma clase** a un mismo precio y volumen mínimo; cambia tasa fija por variable; alternativa al swap.",
+    "Futuro del dólar: posición en el nivel del tipo de cambio. Engrapado: posición en los puntos forward.",
+    "Swap: permuta financiera de flujos, típicamente tasa flotante por fija.",
+    "Swap TIIE28 en MexDer: **$100,000**, cupones de **28 días**, tasa fija con 4 decimales, puja **0.25 pb**, sin fluctuación máxima, horario 7:30 a 14:00.",
+    "Valuación (Asigna igual que CME): flujos variables con la **TIIE28 forward**; descuento con la curva **OIS en pesos**."
+  ],
+  "practica": [
+    "g.derivados.l5.q01",
+    "g.derivados.l5.q02",
+    "g.derivados.l5.q03",
+    "g.derivados.l5.q04",
+    "g.derivados.l5.q05"
+  ],
+  "miniExamen": [
+    "g.derivados.l5.q06",
+    "g.derivados.l5.q07",
+    "g.derivados.l5.q08",
+    "g.derivados.l5.q09",
+    "g.derivados.l5.q10"
+  ],
+  "reto": [
+    "g.derivados.l5.q11",
+    "g.derivados.l5.q12",
+    "g.derivados.l5.q13",
+    "g.derivados.l5.q14",
+    "g.derivados.l5.q15"
+  ]
+}

@@ -1,0 +1,743 @@
+{
+  "id": "derivados.contratos-de-futuro",
+  "area": "derivados",
+  "materia": "Derivados Financieros I y II",
+  "subtemaId": "derivados.derivados-financieros-i.contratos-de-futuro",
+  "objetivoIds": [
+    "derivados.derivados-financieros-i.contratos-de-futuro.o01",
+    "derivados.derivados-financieros-i.contratos-de-futuro.o03",
+    "derivados.derivados-financieros-i.contratos-de-futuro.o04",
+    "derivados.derivados-financieros-i.contratos-de-futuro.o05",
+    "derivados.derivados-financieros-i.liquidacion-en-mercados-organizados.o03",
+    "derivados.derivados-financieros-ii.liquidacion-en-mercados-organizados.o03",
+    "derivados.derivados-financieros-ii.contratos-de-futuro.o01",
+    "derivados.derivados-financieros-ii.contratos-de-futuro.o02",
+    "derivados.derivados-financieros-ii.contratos-de-futuro.o03"
+  ],
+  "orden": 4,
+  "titulo": "Contratos de futuro: precio, base, nocional y resultados",
+  "resumen": "Definición y posiciones; liquidación al vencimiento en especie y en efectivo; precio teórico con costo de acarreo y la fórmula PRECIO.FUTURO (ejemplos del IPC y del dólar); condiciones generales de los futuros de MexDer; canasta de entregables y cheapest to deliver; orden de prelación del precio de liquidación diaria; base, valor nocional y utilidades o pérdidas con los ejemplos del manual.",
+  "duracionMin": 50,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        252,
+        255,
+        256,
+        257,
+        258,
+        259,
+        260,
+        261
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "futuro-y-posiciones",
+      "titulo": "El contrato de futuro y sus dos posiciones",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los [[futuros]] son **contratos estandarizados** en los que dos partes acuerdan una **promesa** de llevar a cabo una compraventa de un bien en un futuro determinado y a un precio acordado preestablecido. Cada operación requiere **dos contrapartes**: comprador y vendedor."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Operación",
+            "Posición",
+            "Gana",
+            "Expectativa o cobertura"
+          ],
+          "filas": [
+            [
+              "Compra de futuros",
+              "Largo futuros",
+              "A la alza",
+              "Alza en el precio del subyacente"
+            ],
+            [
+              "Venta de futuros",
+              "Corto futuros",
+              "A la baja",
+              "Caída en el precio del subyacente"
+            ]
+          ],
+          "trampas": []
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Liquidación al vencimiento.** Son materia de liquidación al vencimiento los **Contratos Abiertos al cierre de negociación en la Fecha de Vencimiento**, en especie o en efectivo según las condiciones generales del contrato."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Liquidación",
+            "Posición larga",
+            "Posición corta"
+          ],
+          "filas": [
+            [
+              "En especie",
+              "Recibe de Asigna las unidades del subyacente **contra el pago** del saldo de liquidación",
+              "Recibe de Asigna el saldo de liquidación **contra la entrega** de las unidades"
+            ],
+            [
+              "En efectivo",
+              "Recibe (SPOT − STRIKE) × Unidades",
+              "Recibe (STRIKE − SPOT) × Unidades"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "En efectivo, una cantidad negativa significa que esa posición **paga**. El largo gana si el spot al vencimiento supera el precio pactado; el corto, si queda por debajo. El manual titula este cuadro como opción de venta, pero describe el futuro (véase el archivo de dudas)."
+        }
+      ],
+      "ampliada": "Recuerda la regla de la lección de MexDer: Asigna es la contraparte de ambos lados, por eso las dos posiciones reciben o entregan frente a Asigna y no entre sí.",
+      "paginas": [
+        252
+      ]
+    },
+    {
+      "id": "precio-teorico",
+      "titulo": "Precio teórico: spot más costo de acarreo",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "En los mercados de derivados, el [[precio teórico futuro]] de un subyacente es el resultado de **sumar a su precio de contado (spot) el costo de financiamiento** hasta el momento futuro y **restarle los rendimientos** obtenidos (dividendos o intereses) desde hoy hasta ese momento."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Factores de mercado:",
+          "texto": "Precio Spot + Costo de Financiamiento − Dividendo o Rendimiento Pagado."
+        },
+        {
+          "tipo": "formula",
+          "logica": "PFWD = \\frac{1 + \\frac{TMAY \\times DIAS}{36000}}{1 + \\frac{TMEN \\times DIAS}{36000}} \\times SPOT",
+          "leyenda": [
+            [
+              "PFWD",
+              "precio forward o teórico del futuro"
+            ],
+            [
+              "TMAY",
+              "tasa en pesos o costo financiero, anual en por ciento"
+            ],
+            [
+              "TMEN",
+              "tasa en dólares o tasa de rendimiento (dividendos del índice), anual en por ciento"
+            ],
+            [
+              "DIAS",
+              "días del contrato"
+            ],
+            [
+              "SPOT",
+              "tipo de cambio o precio actual del subyacente"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La tasa **mayor** (costo de financiamiento en pesos) va en el **numerador** y la de rendimiento (dólares o dividendos) en el **denominador**. Invertirlas o usar base 365 son los dos errores de método que generan los distractores."
+        }
+      ],
+      "ampliada": "Si el costo de financiamiento supera al rendimiento del subyacente, el futuro cotiza por encima del spot. Es el caso normal del dólar frente al peso y del IPC frente a su tasa de dividendos.",
+      "paginas": [
+        252,
+        258
+      ]
+    },
+    {
+      "id": "ejemplos-precio-futuro",
+      "titulo": "Ejemplos del manual: futuro del IPC y del dólar",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo 1 (IPC).** Futuro a 90 días sobre el IPC; el índice paga dividendos de 2% anual, la tasa de interés es 7% anual y el IPC está en 45,200 puntos."
+        },
+        {
+          "tipo": "formula",
+          "logica": "PFWD = \\frac{1 + \\frac{TMAY \\times DIAS}{36000}}{1 + \\frac{TMEN \\times DIAS}{36000}} \\times SPOT",
+          "leyenda": [],
+          "valores": "PFWD = \\frac{1 + \\frac{7 \\times 90}{36000}}{1 + \\frac{2 \\times 90}{36000}} \\times 45{,}200 = \\frac{1.0175}{1.005} \\times 45{,}200",
+          "resultado": "PFWD = 45,762.1891 puntos; el manual lo redondea a 45,762."
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "PRECIO.FUTURO",
+          "entradas": [
+            [
+              "SPOT",
+              "45,200"
+            ],
+            [
+              "TMAY",
+              "7"
+            ],
+            [
+              "TMEN",
+              "2"
+            ],
+            [
+              "DIAS",
+              "90"
+            ]
+          ],
+          "salida": [
+            "PFWD",
+            "45,762.1891"
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo 2 (dólar).** Spot 19.72 pesos por dólar; tasa en México 7.2% anual; tasa en EUA 1.3% anual; futuro a 90 días."
+        },
+        {
+          "tipo": "formula",
+          "logica": "PFWD = \\frac{1 + \\frac{TMAY \\times DIAS}{36000}}{1 + \\frac{TMEN \\times DIAS}{36000}} \\times SPOT",
+          "leyenda": [],
+          "valores": "PFWD = \\frac{1 + \\frac{7.2 \\times 90}{36000}}{1 + \\frac{1.3 \\times 90}{36000}} \\times 19.72 = \\frac{1.018}{1.00325} \\times 19.72",
+          "resultado": "PFWD = $20.0099 (20.009928), que coincide con el manual."
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "PRECIO.FUTURO",
+          "entradas": [
+            [
+              "SPOT",
+              "19.72"
+            ],
+            [
+              "TMAY",
+              "7.2"
+            ],
+            [
+              "TMEN",
+              "1.3"
+            ],
+            [
+              "DIAS",
+              "90"
+            ]
+          ],
+          "salida": [
+            "PFWD",
+            "20.0099"
+          ]
+        }
+      ],
+      "ampliada": "El OCR de esta página dice 50 días, 19.77 y 7.72%; la imagen del PDF confirma 90 días, 19.72 y 7.2%, que son los datos que reproducen los resultados del manual.",
+      "paginas": [
+        258
+      ]
+    },
+    {
+      "id": "condiciones-generales",
+      "titulo": "Condiciones generales de los futuros en MexDer",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Contrato (clase)",
+            "Liquidación",
+            "Tamaño",
+            "Periodo",
+            "Fluctuación mínima y puja"
+          ],
+          "filas": [
+            [
+              "Dólar (DA)",
+              "**Especie**",
+              "10,000 dólares",
+              "Ciclo mensual o trimestral, hasta **15 años**",
+              "0.0001 pesos; puja por contrato **$1**"
+            ],
+            [
+              "Euro (EURO)",
+              "Efectivo",
+              "10,000 euros",
+              "Ciclo mensual, hasta **10 años**",
+              "0.0001 pesos; puja **$1**"
+            ],
+            [
+              "IPC",
+              "Efectivo",
+              "**$10** por punto del IPC",
+              "Trimestral (mar, jun, sep, dic), hasta 1 año",
+              "**5 puntos**; puja **$50**"
+            ],
+            [
+              "Mini IPC (MIP)",
+              "Efectivo",
+              "**$2** por punto del IPC",
+              "Trimestral, hasta 1 año",
+              "**10 puntos**; puja **$20**"
+            ],
+            [
+              "Acciones",
+              "**Especie**",
+              "Según el anexo de términos específicos",
+              "Trimestral, hasta 1 año",
+              "$0.01 por acción; $1.00 por contrato"
+            ],
+            [
+              "TIIE (TE28)",
+              "Efectivo",
+              "$100,000",
+              "",
+              "1 pb"
+            ],
+            [
+              "CETE (CE91)",
+              "Efectivo",
+              "10,000 títulos ($100,000 a valor nominal)",
+              "",
+              "1 pb"
+            ],
+            [
+              "Swap (SW)",
+              "Efectivo",
+              "$1,000,000",
+              "",
+              "1 pb"
+            ],
+            [
+              "Bonos M (M)",
+              "**Especie**",
+              "1,000 bonos ($100,000 a valor nominal)",
+              "",
+              "$0.025"
+            ],
+            [
+              "UDI",
+              "Efectivo",
+              "50,000 UDIS",
+              "",
+              "0.001 pesos por UDI"
+            ],
+            [
+              "Maíz amarillo (MZ)",
+              "Efectivo",
+              "25 toneladas métricas",
+              "Trimestral, hasta **3 años**",
+              "$5; $125 por contrato"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              8,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Entregan en **especie**: DA, acciones y Bonos M. El futuro del dólar liquida en especie, pero la **opción** sobre el dólar liquida en **efectivo**. El mini IPC vale $2 por punto, no $10."
+        }
+      ],
+      "ampliada": "La tabla reproduce la página 254 impresa (256 del PDF), revisada contra la imagen. Las celdas vacías no las especifica el manual.",
+      "paginas": [
+        255,
+        256
+      ]
+    },
+    {
+      "id": "canasta-y-ctd",
+      "titulo": "Futuros de bonos: canasta de entregables y cheapest to deliver",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Canasta de Bonos Entregables",
+              "Todos los **Bonos de Desarrollo del Gobierno Federal a Tasa Fija** que al momento de la entrega cumplen los requisitos de las condiciones generales del futuro (M3, M10 o M20)."
+            ],
+            [
+              "Quién elige",
+              "El **vendedor** selecciona la emisión; los títulos deben ser de **una sola emisión**."
+            ],
+            [
+              "Opción implícita",
+              "La posibilidad de elegir la emisión es para el vendedor una **opción implícita** sobre la canasta."
+            ],
+            [
+              "Precio de los títulos",
+              "Tienen la tasa anual de rendimiento que establezca MexDer conforme a la **tabla de Factores de Conversión**."
+            ],
+            [
+              "Precio de entrega",
+              "Factor de Conversión × Precio de Liquidación Diario + intereses corridos de la emisión al día de la entrega."
+            ],
+            [
+              "Cheapest to Deliver (CTD)",
+              "El vendedor elige el **bono más barato de entregar**."
+            ]
+          ],
+          "titulo": "Ficha: futuros sobre Bonos M"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La opción implícita es del **vendedor** (posición corta), no del comprador; y la entrega es de **una sola emisión**, no una mezcla de la canasta."
+        }
+      ],
+      "ampliada": "Los futuros sobre Bonos M son de los pocos que liquidan en especie, por eso necesitan una canasta y factores de conversión.",
+      "paginas": [
+        257
+      ]
+    },
+    {
+      "id": "prelacion-futuros",
+      "titulo": "Orden de prelación del precio de liquidación diaria (futuros)",
+      "bloques": [
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "a) Últimos 5 minutos",
+              "texto": "Promedio ponderado de los precios pactados en las operaciones de los últimos **5 minutos** de la sesión por Serie, **ajustado a la puja más cercana**.",
+              "cuando": "Primera instancia"
+            },
+            {
+              "titulo": "b) Posturas vigentes",
+              "texto": "Precio promedio ponderado por volumen de las **posturas y cotizaciones en firme** vigentes al final de la sesión.",
+              "cuando": "Si no hubo operaciones en esos 5 minutos"
+            },
+            {
+              "titulo": "c) Última operación",
+              "texto": "El **precio futuro pactado en la última operación** de la sesión.",
+              "cuando": "Si no existe al menos una postura de compra y una de venta"
+            },
+            {
+              "titulo": "d) Subasta",
+              "texto": "El precio que se obtenga de la **subasta convocada por MexDer**.",
+              "cuando": "Si no hubo operación alguna en la sesión"
+            },
+            {
+              "titulo": "e) Subasta sin cruce",
+              "texto": "Promedio ponderado por volumen de las posturas y cotizaciones en firme vigentes al final de la sesión.",
+              "cuando": "Si en la subasta el mayor precio de compra es inferior al menor de venta"
+            }
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El orden es: hechos de 5 minutos, posturas, última operación, subasta. Poner la última operación antes que las posturas es la trampa típica."
+        }
+      ],
+      "ampliada": "Las opciones tienen su propio orden de prelación, que incluye la volatilidad implícita del último hecho y un precio teórico; se verá en la lección de opciones.",
+      "paginas": [
+        257
+      ]
+    },
+    {
+      "id": "base",
+      "titulo": "La base: concepto y cálculo",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La [[base]] es la **diferencia entre el precio del futuro y el precio de mercado (contado)** de un activo en una fecha determinada. Puede ser **positiva o negativa**, según el precio del futuro sea mayor o menor que el de contado."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** Futuro largo del dólar: spot original $15.70, tasas de 1% en dólares y 4.5% en pesos; hoy el dólar cotiza en $15.98 y han transcurrido 20 días del contrato."
+        },
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Paso 1: precio teórico",
+              "texto": "SPOT = 15.70, TMAY = 4.5, TMEN = 1, DIAS = 20; PFWD = 15.7305.",
+              "cuando": "PRECIO.FUTURO"
+            },
+            {
+              "titulo": "Paso 2: base de hoy",
+              "texto": "Al ser largo y ganar a la alza, se resta precio de mercado menos precio del futuro.",
+              "cuando": "Futuro largo"
+            }
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "Base = P_{mercado} - PFWD",
+          "leyenda": [
+            [
+              "P_{mercado}",
+              "precio de contado de hoy"
+            ],
+            [
+              "PFWD",
+              "precio teórico del futuro del paso 1"
+            ]
+          ],
+          "valores": "Base = 15.98 - 15.7305",
+          "resultado": "Base = $0.2495, igual que en el manual."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El manual define la base como futuro menos contado, pero en su ejemplo calcula **contado menos futuro** para el largo, y el manual 2023 la define como contado menos futuro. En el examen sigue el procedimiento del ejemplo y revisa el signo que piden las opciones."
+        }
+      ],
+      "ampliada": "El objetivo del temario pide además cuándo se fortalece o se debilita la base. AMIB 1 no lo desarrolla; se anotó en el archivo de dudas y no se pregunta.",
+      "paginas": [
+        259
+      ]
+    },
+    {
+      "id": "nocional",
+      "titulo": "Valor nocional de los futuros",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[valor nocional]] es el **importe total en pesos** que ampara un contrato. Se calcula según el subyacente:"
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Subyacente",
+            "Fórmula HP",
+            "Multiplicador"
+          ],
+          "filas": [
+            [
+              "Dólar (DA)",
+              "NOUSD = TDC × #CON × 10,000",
+              "10,000 dólares por contrato"
+            ],
+            [
+              "IPC",
+              "NOIPC = IPC × #CON × 10",
+              "$10 por punto"
+            ],
+            [
+              "Acciones",
+              "NOACC = $AC × #CON × 100",
+              "100 acciones por contrato"
+            ]
+          ],
+          "trampas": []
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo 1 del manual.** Cubrir 1,000,000 de dólares con futuros a 91 días; spot 15.4054 a la compra y 15.9420 a la venta; tasa en USD 0.8% y en México 4.5%."
+        },
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "1. Elegir el spot",
+              "texto": "Se usa el de **venta**, 15.9420: la casa de cambio vende y el cliente compra.",
+              "cuando": "Cliente compra"
+            },
+            {
+              "titulo": "2. Precio futuro",
+              "texto": "PFWD = 15.9420 × (1 + 4.5 × 91 ÷ 36000) ÷ (1 + 0.8 × 91 ÷ 36000) = 16.090801.",
+              "cuando": "PRECIO.FUTURO"
+            },
+            {
+              "titulo": "3. Contratos",
+              "texto": "1,000,000 ÷ 10,000 = 100 contratos.",
+              "cuando": "Monto ÷ tamaño"
+            },
+            {
+              "titulo": "4. Nocional",
+              "texto": "100 × 10,000 × 16.090801 = $16,090,801.",
+              "cuando": "NOUSD"
+            }
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplos 2 y 3.** 20 contratos DA a $15.75: 20 × 10,000 × 15.75 = **$3,150,000**. Venta de 10 contratos del IPC a 45,240 puntos: 10 × 10 × 45,240 = **$4,524,000**."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Para una **posición larga** en dólares se usa el tipo de cambio de **venta** del intermediario. El nocional no depende de si la posición es larga o corta: vender 10 IPC tiene el mismo nocional que comprarlos."
+        }
+      ],
+      "ampliada": "El manual imprime #CON = 10,000 en el paso 3 del ejemplo 1, pero ese número es el tamaño del contrato; el número de contratos es 100. El resultado del manual es correcto.",
+      "paginas": [
+        259,
+        260,
+        261
+      ]
+    },
+    {
+      "id": "utilidades-perdidas",
+      "titulo": "Utilidades y pérdidas de posiciones largas y cortas",
+      "bloques": [
+        {
+          "tipo": "formula",
+          "logica": "G = (P_{hoy} - P_{ayer}) \\times U \\times N \\times s",
+          "leyenda": [
+            [
+              "G",
+              "ganancia (positiva) o pérdida (negativa)"
+            ],
+            [
+              "P_{hoy}, P_{ayer}",
+              "precios de liquidación de hoy y de ayer"
+            ],
+            [
+              "U",
+              "unidades o multiplicador del contrato"
+            ],
+            [
+              "N",
+              "número de contratos"
+            ],
+            [
+              "s",
+              "+1 posición larga; −1 posición corta"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo DA del manual.** Posición **corta** de 15,000 contratos DA; liquidación de hoy 15.85 y de ayer 15.70."
+        },
+        {
+          "tipo": "formula",
+          "logica": "G = (P_{hoy} - P_{ayer}) \\times U \\times N \\times s",
+          "leyenda": [],
+          "valores": "G = (15.85 - 15.70) \\times 10{,}000 \\times 15{,}000 \\times (-1)",
+          "resultado": "Pérdida de $1,500 por contrato y de $22,500,000 en total."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo IPC del manual.** Posición **larga** de 1,000 contratos; hoy 45,150 y ayer 44,850 puntos: 300 puntos × $10 = $3,000 por contrato; ganancia total **$3,000,000**."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Corto y alza del precio: **pérdida**. Largo y alza: **ganancia**. El OCR del manual dice $272,500,000 en el ejemplo DA; la imagen del PDF dice **$22,500,000**, que es el resultado correcto."
+        }
+      ],
+      "ampliada": "Es el mismo cálculo que hace Asigna en la liquidación diaria: la diferencia de precios de liquidación por las unidades del contrato y por el número de contratos.",
+      "paginas": [
+        261
+      ]
+    },
+    {
+      "id": "mapa-futuros",
+      "titulo": "Mapa de cálculos y trampas de futuros",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Cálculo",
+            "Fórmula",
+            "Error que genera el distractor"
+          ],
+          "filas": [
+            [
+              "Precio teórico",
+              "SPOT × (1 + TMAY × DIAS ÷ 36000) ÷ (1 + TMEN × DIAS ÷ 36000)",
+              "Invertir las tasas o usar 36500"
+            ],
+            [
+              "Base (ejemplo del manual)",
+              "Precio de mercado − PFWD",
+              "Usar los días totales en lugar de los transcurridos"
+            ],
+            [
+              "Nocional DA",
+              "TDC × #CON × 10,000",
+              "Usar el spot de compra para una posición larga"
+            ],
+            [
+              "Nocional IPC",
+              "IPC × #CON × 10",
+              "Usar $2 (mini IPC) o $50 (puja)"
+            ],
+            [
+              "Utilidad o pérdida",
+              "ΔP × U × N con el signo de la posición",
+              "Invertir el signo de la posición corta"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen de la lección:",
+          "texto": "futuro = promesa estandarizada; precio teórico = spot más acarreo menos rendimiento; especie en DA, acciones y Bonos M; prelación 5 minutos, posturas, última operación, subasta; nocional y resultados con el multiplicador correcto."
+        }
+      ],
+      "ampliada": "Antes de elegir, verifica el orden de magnitud: un futuro del dólar a 90 días difiere del spot en centavos, no en pesos; un nocional DA de pocos contratos está en millones de pesos.",
+      "paginas": [
+        258,
+        259,
+        260,
+        261
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Futuro: contrato **estandarizado** de compraventa a plazo y precio preestablecidos; largo gana a la alza, corto a la baja.",
+    "Liquidación en efectivo al vencimiento: largo (SPOT − STRIKE) × unidades; corto (STRIKE − SPOT) × unidades.",
+    "Precio teórico: spot + costo de financiamiento − rendimiento; PFWD = SPOT × (1 + TMAY × DIAS ÷ 36000) ÷ (1 + TMEN × DIAS ÷ 36000).",
+    "Ejemplos del manual: IPC 45,200 a 90 días con 7% y 2% da **45,762**; dólar 19.72 con 7.2% y 1.3% da **$20.0099**.",
+    "Especie: DA, acciones y Bonos M. IPC $10 por punto (puja $50), mini IPC $2 (puja $20), DA 10,000 dólares (puja $1, hasta 15 años).",
+    "Bonos M: el **vendedor** elige una sola emisión de la canasta (opción implícita) y entrega el **cheapest to deliver**.",
+    "Prelación futuros: hechos de los últimos **5 minutos**, posturas en firme, última operación, subasta de MexDer.",
+    "Nocional: DA = TDC × #CON × 10,000; IPC = IPC × #CON × 10; acciones = precio × #CON × 100. Para comprar dólares se usa el spot de venta."
+  ],
+  "practica": [
+    "g.derivados.l4.q01",
+    "g.derivados.l4.q02",
+    "g.derivados.l4.q03",
+    "g.derivados.l4.q04",
+    "g.derivados.l4.q05"
+  ],
+  "miniExamen": [
+    "g.derivados.l4.q06",
+    "g.derivados.l4.q07",
+    "g.derivados.l4.q08",
+    "g.derivados.l4.q09",
+    "g.derivados.l4.q10"
+  ],
+  "reto": [
+    "g.derivados.l4.q11",
+    "g.derivados.l4.q12",
+    "g.derivados.l4.q13",
+    "g.derivados.l4.q14",
+    "g.derivados.l4.q15"
+  ]
+}

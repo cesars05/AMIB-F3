@@ -1,0 +1,507 @@
+{
+  "id": "derivados.conceptos-basicos",
+  "area": "derivados",
+  "materia": "Derivados Financieros I",
+  "subtemaId": "derivados.derivados-financieros-i.conceptos-basicos",
+  "objetivoIds": [
+    "derivados.derivados-financieros-i.conceptos-basicos.o01",
+    "derivados.derivados-financieros-i.conceptos-basicos.o02",
+    "derivados.derivados-financieros-i.conceptos-basicos.o03",
+    "derivados.derivados-financieros-i.conceptos-basicos.o04"
+  ],
+  "orden": 1,
+  "titulo": "Conceptos básicos de los derivados",
+  "resumen": "Qué es un producto derivado, sus características y las cinco variables de su valor; activo subyacente; futuros, opciones, warrants, forwards y swaps; usos (apalancamiento con cálculo, cobertura, especulación y posiciones cortas); mercado organizado frente a OTC; liquidación en especie y en efectivo, y las características de un contrato listado.",
+  "duracionMin": 35,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        241,
+        242,
+        243,
+        244
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "producto-derivado",
+      "titulo": "Producto derivado: la definición y sus seis rasgos",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Se conoce como **Mercado de Derivados** a las negociaciones que se formulan con base en productos referidos a instrumentos ya existentes. Los [[productos derivados]] son **contratos que se pactan hoy pero que se liquidan en una fecha futura**. Desde el día de la concertación se conocen tres datos: el **tipo de mercancía**, el **precio** a pagar o recibir y la **fecha exacta de vencimiento**."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Naturaleza",
+              "Es un **contrato de índole financiera**."
+            ],
+            [
+              "Vida",
+              "**Madurez finita**: siempre tiene fecha de vencimiento."
+            ],
+            [
+              "Inversión",
+              "**Apalancado por naturaleza**: se desembolsa solo una parte de la exposición."
+            ],
+            [
+              "Valor",
+              "Se **deriva** de un indicador subyacente."
+            ],
+            [
+              "Riesgo",
+              "Expuesto **al menos a dos fuentes de riesgo**: la del subyacente y la del precio del mismo derivado."
+            ],
+            [
+              "Liquidación",
+              "**En especie** (entrega física) o **por diferencias** (en efectivo)."
+            ]
+          ],
+          "titulo": "Principales características de los derivados"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El precio **no** se fija al vencimiento: se pacta hoy. Lo que ocurre en el futuro es la liquidación. Y el riesgo no es uno solo: el manual habla de **al menos dos fuentes**."
+        }
+      ],
+      "ampliada": "El manual define el derivado por su temporalidad: concertación hoy, liquidación futura. Todo lo demás (apalancamiento, riesgo doble, forma de liquidar) se desprende de esa idea.",
+      "paginas": [
+        241
+      ]
+    },
+    {
+      "id": "variables-y-subyacente",
+      "titulo": "Las cinco variables del valor y el activo subyacente",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Existen **cinco variables principales** que explican el valor de un derivado. Conviene memorizarlas como una lista cerrada, porque el examen suele colar un intruso plausible."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Precio del subyacente.",
+            "Precio pactado.",
+            "Tasa de interés.",
+            "Volatilidad del subyacente.",
+            "Tiempo por madurar."
+          ]
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Activo subyacente",
+              "Es aquel **bien o índice de referencia**, objeto de un **Contrato de Futuro** o de un **Contrato de Opción** concertado en la Bolsa."
+            ],
+            [
+              "Ejemplos en MexDer",
+              "Dólar, euro, bonos, acciones, índices (IPC) y tasas de interés."
+            ]
+          ],
+          "titulo": "Activo subyacente"
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen variables:",
+          "texto": "subyacente, pactado, tasa, volatilidad y tiempo. El volumen operado, el interés abierto o la calificación del intermediario **no** están en la lista."
+        }
+      ],
+      "ampliada": "En opciones el manual amplía esta lista a seis variables de la prima (agrega el dividendo, en su caso) y el modelo Black & Scholes usa cinco factores. Se verá en la lección de opciones; aquí la lista es la de los derivados en general.",
+      "paginas": [
+        241
+      ]
+    },
+    {
+      "id": "tipos-de-derivados",
+      "titulo": "Futuros, opciones, warrants, forwards y swaps",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Derivado",
+            "¿Estandarizado?",
+            "Dónde se negocia",
+            "Idea central"
+          ],
+          "filas": [
+            [
+              "Futuro",
+              "Sí",
+              "Bolsa (MexDer)",
+              "Promesa de compraventa de un bien en un plazo y a un precio preestablecidos; su función básica es la **cobertura**"
+            ],
+            [
+              "Opción",
+              "Sí",
+              "Bolsa (MexDer)",
+              "El comprador paga una **prima** y adquiere el **derecho, no la obligación**; el emisor cobra la prima y asume la **obligación**"
+            ],
+            [
+              "Warrant (título opcional)",
+              "**No**",
+              "Bolsas de México y del extranjero, principalmente **OTC**",
+              "Derecho de comprar o vender, dentro de un plazo, un número definido de acciones a cambio de una prima; lo emiten **casas de bolsa y bancos**"
+            ],
+            [
+              "Forward",
+              "**No**",
+              "Fuera de bolsa (OTC)",
+              "Contrato **hecho a la medida** o **adelantado**; **sin mercado secundario** para salir de la posición"
+            ],
+            [
+              "Swap",
+              "Según el mercado",
+              "OTC o MexDer",
+              "**Permuta financiera**: intercambio de flujos hacia el futuro, típicamente tasa flotante por fija"
+            ]
+          ],
+          "trampas": [
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              3
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "En una **opción de compra** el emisor se obliga a **vender**; en una **opción de venta** el emisor se obliga a **comprar** si el tenedor ejerce. El derecho siempre es del comprador, que es quien paga la prima."
+        }
+      ],
+      "ampliada": "El forward es el equivalente no estandarizado del futuro: se pacta entre particulares o con bancos y casas de cambio, que fijan condiciones, precio de liquidación y plazo, con entrega en la fecha, lugar y precio pactados. El warrant es el pariente no estandarizado de la opción.",
+      "paginas": [
+        242
+      ]
+    },
+    {
+      "id": "apalancamiento",
+      "titulo": "Uso 1: apalancamiento, con cálculo",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El [[apalancamiento]] es inherente a cualquier derivado: solo se desembolsa una pequeña parte de la exposición que realmente se obtiene. Esa parte es la **prima** en las opciones o la **garantía** en los futuros."
+        },
+        {
+          "tipo": "formula",
+          "logica": "A = \\frac{E}{G} \\qquad r_G = A \\times r_S",
+          "leyenda": [
+            [
+              "A",
+              "número de veces de apalancamiento"
+            ],
+            [
+              "E",
+              "exposición al subyacente (monto de la inversión)"
+            ],
+            [
+              "G",
+              "garantía o prima desembolsada"
+            ],
+            [
+              "r_S",
+              "variación porcentual del subyacente"
+            ],
+            [
+              "r_G",
+              "resultado porcentual sobre lo desembolsado"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo del manual.** Para una inversión de 10,000 € se pide una garantía de 1,000 €. Si el subyacente sube 10%:"
+        },
+        {
+          "tipo": "formula",
+          "logica": "A = \\frac{E}{G} \\qquad r_G = A \\times r_S",
+          "leyenda": [],
+          "valores": "A = \\frac{10{,}000}{1{,}000} = 10 \\qquad r_G = 10 \\times 10\\%",
+          "resultado": "Se gana 1,000 € sobre 1,000 € de garantía: 100%. Con una subida de 1% se gana 10%."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El apalancamiento multiplica en **ambos sentidos**: con 10 veces, una caída de 10% del subyacente consume el **100%** de la garantía. Por eso el manual advierte que se arriesga perder el 100% de la inversión en poco tiempo."
+        }
+      ],
+      "ampliada": "La caída que agota la garantía es 1 ÷ A. Con garantía de 8% de la exposición (A = 12.5 veces) basta una caída de 8% para perder todo lo aportado.",
+      "paginas": [
+        242,
+        243
+      ]
+    },
+    {
+      "id": "cobertura-especulacion-cortos",
+      "titulo": "Usos 2 a 4: cobertura, especulación y posiciones cortas",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Uso",
+            "Espíritu",
+            "Qué busca"
+          ],
+          "filas": [
+            [
+              "Cobertura",
+              "**Protección**",
+              "Servir de cobertura ante fluctuaciones de precio de los subyacentes; es la **principal función** de los derivados"
+            ],
+            [
+              "Especulación",
+              "Ganancia",
+              "Generar un diferencial, rendimiento o utilidad por las fluctuaciones, al alza o a la baja, del subyacente"
+            ],
+            [
+              "Posiciones cortas",
+              "Ganancia a la baja",
+              "Tomar una posición con la expectativa de que el subyacente **caiga**: ganar a la baja"
+            ],
+            [
+              "Apalancamiento",
+              "Eficiencia del capital",
+              "Obtener una exposición mucho mayor que el dinero desembolsado"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "La cobertura se aplica preferentemente a:"
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Portafolios accionarios.",
+            "Obligaciones contraídas a tasa variable.",
+            "Pagos o cobranzas en moneda extranjera a un determinado plazo.",
+            "Planeación de flujos de efectivo, entre otros."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Una empresa con una deuda en dólares que compra futuros del dólar **se cubre**; un inversionista sin exposición previa que compra los mismos futuros porque espera un alza **especula**. La operación es idéntica; lo que cambia es la posición que se protege."
+        }
+      ],
+      "ampliada": "El manual 2023 resume los usos así: cobertura reduce o elimina el riesgo de volatilidad; especulación permite apostar con una mínima inversión y vender lo que no se tiene; apalancamiento asegura el subyacente con una mínima inversión (AIM en futuros, prima en opciones).",
+      "paginas": [
+        243
+      ]
+    },
+    {
+      "id": "organizado-vs-otc",
+      "titulo": "Mercado organizado frente a mercado OTC",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Rasgo",
+            "Mercado organizado (MexDer)",
+            "Mercado fuera de bolsa (OTC)"
+          ],
+          "filas": [
+            [
+              "Contratos",
+              "**Estandarizados**, bajo normas y reglamentos",
+              "**Hechos a la medida**: monto, tipo de subyacente, precio de ejercicio y vencimiento los fijan las partes"
+            ],
+            [
+              "Quién negocia",
+              "Participantes a través de la Bolsa de Derivados",
+              "Directamente comprador y vendedor (intermediario autorizado y cliente)"
+            ],
+            [
+              "Mercado secundario",
+              "**Sí**: se puede deshacer la posición antes de la expiración",
+              "No (en los forwards, sin mercado secundario para salir)"
+            ],
+            [
+              "Garantía de cumplimiento",
+              "La **Cámara de Compensación** (Asigna) garantiza todos los contratos",
+              "**Alto riesgo crediticio**: no hay entidad de compensación"
+            ],
+            [
+              "Medio",
+              "Sistema de la Bolsa",
+              "Medios de comunicación electrónica"
+            ]
+          ],
+          "trampas": [
+            [
+              3,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "En México la Bolsa de Derivados es **MexDer**, que ofrece **Contratos de Futuro, Contratos de Swap y Contratos de Opción** sobre dólar, euros, bonos, acciones, índices y tasas de interés. Esto permite planear, cubrir y administrar riesgos financieros y optimizar el rendimiento de los portafolios."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen mercados:",
+          "texto": "estandarización, mercado secundario y cámara de compensación caracterizan al mercado organizado; la medida a cada cliente y el riesgo de contraparte caracterizan al OTC."
+        }
+      ],
+      "ampliada": "El objetivo del temario pide distinguir las diferencias: la más preguntada es la garantía de cumplimiento. Si la opción menciona una cámara de compensación en el OTC, es falsa.",
+      "paginas": [
+        243,
+        244
+      ]
+    },
+    {
+      "id": "liquidacion-y-contrato",
+      "titulo": "Liquidación en especie o en efectivo y características del contrato listado",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Liquidación",
+            "Cómo se realiza"
+          ],
+          "filas": [
+            [
+              "En especie",
+              "Mediante la **entrega física** del subyacente, al precio pactado"
+            ],
+            [
+              "En efectivo",
+              "Mediante el pago de una suma de dinero equivalente a la **diferencia entre el precio pactado y el precio de mercado** al vencimiento"
+            ]
+          ],
+          "trampas": []
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Tamaño del contrato",
+              "Número de **unidades del activo subyacente** que ampara un contrato listado en la Bolsa de Derivados (por ejemplo, 10,000 dólares en el DA)."
+            ],
+            [
+              "Puja",
+              "Valor del cambio en el precio futuro de un contrato: resulta de **multiplicar una puja por el número de unidades** del subyacente que ampara el contrato."
+            ],
+            [
+              "Vencimientos",
+              "Fecha de liquidación del contrato. MexDer y Asigna pueden listar series con vencimientos **diarios, mensuales o trimestrales, hasta por quince años**, según el subyacente."
+            ],
+            [
+              "Calidad",
+              "Características específicas del subyacente objeto del contrato."
+            ]
+          ],
+          "titulo": "Características generales de un contrato listado"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "No confundas **tamaño** (unidades que ampara el contrato) con **puja** (cambio mínimo del precio multiplicado por esas unidades). Ejemplo: en el futuro del IPC la fluctuación mínima es 5 puntos y el tamaño $10 por punto, así que la puja por contrato es $50."
+        }
+      ],
+      "ampliada": "Los quince años son el máximo general que permite la regla; cada contrato tiene su propio periodo (el DA hasta 15 años, el IPC hasta 1 año, el maíz hasta 3 años). Esos detalles están en la lección de futuros.",
+      "paginas": [
+        244,
+        255
+      ]
+    },
+    {
+      "id": "mapa-de-trampas",
+      "titulo": "Mapa de trampas de la lección",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Afirmación del distractor",
+            "Por qué es falsa"
+          ],
+          "filas": [
+            [
+              "El precio del derivado se fija al vencimiento",
+              "Se conoce desde hoy; al vencimiento solo se liquida"
+            ],
+            [
+              "El derivado está expuesto a una sola fuente de riesgo",
+              "Al menos dos: la del subyacente y la del precio del propio derivado"
+            ],
+            [
+              "Los warrants son estandarizados y emitidos por Asigna",
+              "No están estandarizados y los emiten casas de bolsa y bancos"
+            ],
+            [
+              "Los forwards tienen mercado secundario",
+              "No lo tienen: no hay forma de salir de la posición en un mercado"
+            ],
+            [
+              "En el OTC la cámara de compensación garantiza",
+              "En el OTC no hay entidad de compensación: alto riesgo crediticio"
+            ],
+            [
+              "La puja es el número de unidades del contrato",
+              "Eso es el tamaño; la puja es el cambio mínimo por las unidades"
+            ]
+          ],
+          "trampas": []
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen de la lección:",
+          "texto": "derivado = contrato hoy, liquidación futura; cinco variables; cinco tipos (dos estandarizados en bolsa, warrant y forward a la medida, swap como permuta); cuatro usos con la cobertura como función principal; organizado con cámara, OTC sin ella."
+        }
+      ],
+      "ampliada": "Antes de responder, identifica si la pregunta habla de un contrato estandarizado o a la medida: con eso se descartan de inmediato las opciones que mezclan cámara de compensación con OTC o mercado secundario con forwards.",
+      "paginas": [
+        241,
+        242,
+        243,
+        244
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Derivado: contrato que se **pacta hoy** y se **liquida en fecha futura**; desde hoy se conocen mercancía, precio y fecha de vencimiento.",
+    "Características: contrato financiero, madurez finita, apalancado, valor derivado de un subyacente, **al menos dos fuentes de riesgo** y liquidación en especie o por diferencias.",
+    "Cinco variables del valor: precio del subyacente, precio pactado, tasa de interés, volatilidad del subyacente y tiempo por madurar.",
+    "Activo subyacente: bien o índice de referencia objeto de un contrato de futuro o de opción concertado en la Bolsa.",
+    "Futuros y opciones son estandarizados; **warrants** (casas de bolsa y bancos, principalmente OTC) y **forwards** (hechos a la medida, sin mercado secundario) no lo son; el swap es una permuta de flujos.",
+    "Apalancamiento A = exposición ÷ garantía; el resultado sobre la garantía es A × variación del subyacente, en ambos sentidos.",
+    "La **cobertura** es la función principal; especulación busca un diferencial; la posición corta gana a la baja.",
+    "Organizado: estandarizado, mercado secundario y cámara de compensación. OTC: a la medida y con alto riesgo crediticio. Vencimientos listados hasta por **quince años**."
+  ],
+  "practica": [
+    "g.derivados.l1.q01",
+    "g.derivados.l1.q02",
+    "g.derivados.l1.q03",
+    "g.derivados.l1.q04",
+    "g.derivados.l1.q05"
+  ],
+  "miniExamen": [
+    "g.derivados.l1.q06",
+    "g.derivados.l1.q07",
+    "g.derivados.l1.q08",
+    "g.derivados.l1.q09",
+    "g.derivados.l1.q10"
+  ],
+  "reto": [
+    "g.derivados.l1.q11",
+    "g.derivados.l1.q12",
+    "g.derivados.l1.q13",
+    "g.derivados.l1.q14",
+    "g.derivados.l1.q15"
+  ]
+}

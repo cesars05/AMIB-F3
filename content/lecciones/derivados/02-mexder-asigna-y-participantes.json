@@ -1,0 +1,469 @@
+{
+  "id": "derivados.mexder-asigna-y-participantes",
+  "area": "derivados",
+  "materia": "Derivados Financieros I",
+  "subtemaId": "derivados.derivados-financieros-i.bolsa-de-derivados-mexder",
+  "objetivoIds": [
+    "derivados.derivados-financieros-i.bolsa-de-derivados-mexder.o01",
+    "derivados.derivados-financieros-i.bolsa-de-derivados-mexder.o02",
+    "derivados.derivados-financieros-i.contratos-de-futuro.o02"
+  ],
+  "orden": 2,
+  "titulo": "MexDer, Asigna y los participantes del mercado",
+  "resumen": "La Bolsa (MexDer), la Cámara de Compensación (Asigna), los socios liquidadores de posición propia y de terceros, los operadores y los formadores de mercado; el índice VIMEX; posición abierta, opuesta y al vencimiento; volumen operado e interés abierto, con el ejemplo resuelto del manual.",
+  "duracionMin": 35,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        245,
+        246,
+        247,
+        253,
+        254
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "mexder",
+      "titulo": "MexDer: la Bolsa de Derivados",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Nombre",
+              "**Mercado Mexicano de Derivados, S.A. de C.V.**, la Bolsa de Derivados de México."
+            ],
+            [
+              "Inicio de operaciones",
+              "**15 de diciembre de 1998**; originalmente se listaron **contratos de futuros sobre subyacentes financieros**."
+            ],
+            [
+              "Naturaleza jurídica",
+              "Sociedad anónima de capital variable, **autorizada por la SHCP**."
+            ],
+            [
+              "Carácter",
+              "**Entidad autorregulatoria**."
+            ],
+            [
+              "Objeto",
+              "Proveer instalaciones y servicios para la **cotización y negociación** de productos derivados."
+            ],
+            [
+              "Utilidad",
+              "Realizar coberturas para operaciones de contado y transferir riesgos."
+            ]
+          ],
+          "titulo": "Ficha: MexDer"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "MexDer **negocia**; no compensa ni liquida. Quien es contraparte y garante es **Asigna**. Y quien autoriza a MexDer es la **SHCP**, no Banxico ni la CNBV."
+        }
+      ],
+      "ampliada": "Las preguntas de esta sección suelen intercambiar funciones entre MexDer y Asigna, o cambiar la autoridad que autoriza. Fija primero quién hace qué.",
+      "paginas": [
+        245
+      ]
+    },
+    {
+      "id": "asigna",
+      "titulo": "Asigna: la Cámara de Compensación y Liquidación",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Qué es",
+              "La **Cámara de Compensación y Liquidación** del Mercado Mexicano de Derivados."
+            ],
+            [
+              "Función central",
+              "Ser la **contraparte** y, por tanto, **garante de todas las obligaciones financieras** que derivan de los contratos negociados."
+            ],
+            [
+              "Normatividad que observa",
+              "La emitida por las autoridades financieras **SHCP, CNBV y Banco de México**, así como las **Reglas de MexDer**."
+            ],
+            [
+              "Constitución",
+              "Entidad autorregulatoria constituida en un **fideicomiso de administración y pago** en Grupo Financiero BBVA Bancomer, como fiduciario, con cargo al patrimonio del Fideicomiso F/30,430."
+            ],
+            [
+              "Administración de riesgos",
+              "Monitoreo **diario y en tiempo real** de las operaciones."
+            ]
+          ],
+          "titulo": "Ficha: Asigna"
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen Asigna:",
+          "texto": "contraparte central, garante, fideicomiso de administración y pago, vigilada por tres autoridades (SHCP, CNBV y Banxico) y sujeta a las Reglas de MexDer."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Asigna es un **fideicomiso**, no una sociedad anónima; MexDer es la S.A. de C.V. Intercambiar la forma jurídica es una trampa frecuente."
+        }
+      ],
+      "ampliada": "Como contraparte central, Asigna pide aportaciones tanto al comprador como al vendedor (se verá en la lección de liquidación).",
+      "paginas": [
+        245
+      ]
+    },
+    {
+      "id": "socios-liquidadores",
+      "titulo": "Socios liquidadores: de terceros y de posición propia",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Participante",
+            "Qué es",
+            "Qué hace"
+          ],
+          "filas": [
+            [
+              "Socio Liquidador por Posición de Terceros",
+              "**Fideicomiso** que participa como **accionista de MexDer** y **aporta el patrimonio de Asigna**",
+              "**Liquidar y celebrar por cuenta de clientes** contratos de futuros y opciones operados en MexDer"
+            ],
+            [
+              "Socio Liquidador por Posición Propia",
+              "Fideicomiso de un grupo financiero",
+              "**Compensar y liquidar** las operaciones de las **instituciones integrantes de su grupo financiero**"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El de **terceros** atiende a **clientes**; el de **posición propia** atiende a las **instituciones de su grupo**. El examen suele intercambiar esas dos frases."
+        }
+      ],
+      "ampliada": "Los socios liquidadores son el enlace entre los clientes y Asigna: todas las aportaciones y liquidaciones con la Cámara pasan por ellos.",
+      "paginas": [
+        245
+      ]
+    },
+    {
+      "id": "operadores-formadores",
+      "titulo": "Operadores y formadores de mercado",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Quiénes son",
+              "Instituciones de crédito, casas de bolsa y demás personas físicas y morales, que **pueden o no ser socios de la Bolsa**."
+            ],
+            [
+              "Función",
+              "Actuar como **comisionistas de uno o más Socios Liquidadores** y, en su caso, como **administradores de Cuentas Globales**, en la celebración de futuros y opciones; pueden acceder al Sistema Electrónico de Negociación."
+            ],
+            [
+              "Tipos de operación",
+              "Por **cuenta propia**, por **cuenta de terceros** y como **formador de mercado**."
+            ],
+            [
+              "Por cuenta propia",
+              "Actúan **como Clientes**."
+            ],
+            [
+              "Por cuenta de terceros",
+              "Actúan **a nombre de sus Clientes**."
+            ]
+          ],
+          "titulo": "Ficha: Operadores"
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Quiénes son",
+              "**Operadores** que obtuvieron la **aprobación de MexDer** para actuar con ese carácter."
+            ],
+            [
+              "Obligación",
+              "Mantener **en forma permanente y por cuenta propia** cotizaciones de compra o venta de futuros y opciones de la Clase en que están registrados."
+            ],
+            [
+              "Finalidad",
+              "**Promover la negociación** (dar liquidez)."
+            ]
+          ],
+          "titulo": "Ficha: Formador de Mercado"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El formador de mercado cotiza **por cuenta propia**, no por cuenta de terceros, y lo aprueba **MexDer**, no Asigna ni la CNBV."
+        }
+      ],
+      "ampliada": "Un operador no necesita ser socio de la Bolsa: es comisionista de los socios liquidadores. Esa frase (pueden o no ser socios) es material de pregunta.",
+      "paginas": [
+        245,
+        246
+      ]
+    },
+    {
+      "id": "vimex",
+      "titulo": "Índice de Volatilidad México (VIMEX)",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Quién lo da a conocer y calcula",
+              "**MexDer**, la Bolsa de Derivados."
+            ],
+            [
+              "Qué mide",
+              "La **volatilidad esperada** del mercado accionario mexicano en el **corto plazo**."
+            ],
+            [
+              "Insumo principal",
+              "Las **volatilidades implícitas** contenidas en el precio de las **opciones del IPC** listadas en MexDer."
+            ]
+          ],
+          "titulo": "Ficha: VIMEX"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El VIMEX no usa la volatilidad **histórica** del IPC ni las opciones sobre acciones individuales: usa la volatilidad **implícita** de las **opciones sobre el IPC**. Y lo calcula MexDer, no la BMV."
+        }
+      ],
+      "ampliada": "Por eso la Bolsa de Derivados, y no la de valores, es quien lo calcula y lo pone a disposición del público.",
+      "paginas": [
+        246
+      ]
+    },
+    {
+      "id": "posiciones",
+      "titulo": "Posición abierta, posición opuesta y posición al vencimiento",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "Definición del manual"
+          ],
+          "filas": [
+            [
+              "Posición abierta",
+              "Se genera cuando dos participantes negocian un contrato de futuros **por primera vez**. Abierta compradora: obligado a comprar. Abierta vendedora: obligado a vender"
+            ],
+            [
+              "Posición opuesta",
+              "Para efectos de las **Aportaciones Iniciales Mínimas**: contratos largos de una Serie con igual número de contratos cortos de **otra Serie de la misma Clase**; se forman sucesivamente con las series de vencimiento **más próximo**"
+            ],
+            [
+              "Posición al vencimiento (futuros)",
+              "Precio de referencia por unidad de subyacente que da a conocer la Bolsa y con base en el cual la Cámara liquida los futuros en la Fecha de Liquidación"
+            ],
+            [
+              "Posición al vencimiento (opciones)",
+              "Precio de ejercicio por unidad de la Serie de opciones que vence y **se liquida en especie**"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La posición opuesta del manual **no** es la que cancela una posición (eso es cerrar o compensar): es la combinación de largos y cortos en **distintas series de una misma clase** que reduce las aportaciones."
+        }
+      ],
+      "ampliada": "El manual 2023 la describe de forma más coloquial (contratos que cancelan los abiertos). Para el examen conviene la definición de AMIB 1, ligada a las AIM.",
+      "paginas": [
+        246
+      ]
+    },
+    {
+      "id": "volumen-interes",
+      "titulo": "Volumen operado e interés abierto",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "Qué cuenta",
+            "Detalle clave"
+          ],
+          "filas": [
+            [
+              "Volumen operado",
+              "Contratos operados (compraventa) durante la jornada",
+              "**Incluye operaciones compensatorias**: si alguien compra 1 contrato y lo cierra el mismo día, el volumen suma 2 aunque su interés abierto neto sea cero"
+            ],
+            [
+              "Interés abierto",
+              "Contratos de futuros **vivos** en una fecha, no compensados con la operación inversa",
+              "Por cada unidad hay **un comprador y un vendedor** (un contrato, dos contrapartidas); al vencimiento es **cero**; mide la **liquidez** del mercado"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "El interés abierto solo disminuye cuando **ambas contrapartes** neutralizan su riesgo. Si un participante cierra contra alguien que abre, el contrato sigue vivo y solo cambia de manos."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Regla práctica:",
+          "texto": "volumen = suma de todos los contratos comprados en la jornada; interés abierto = suma de las posiciones largas netas vivas (igual a la suma de las cortas)."
+        }
+      ],
+      "ampliada": "Mientras mayor es el interés abierto, mayores son las posibilidades de entrar en ese mercado y de cerrar posiciones.",
+      "paginas": [
+        246,
+        253
+      ]
+    },
+    {
+      "id": "ejemplo-interes-abierto",
+      "titulo": "Ejemplo del manual: interés abierto y volumen paso a paso",
+      "bloques": [
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Operación 1",
+              "texto": "Todos abren. Largos: A 10. Cortos: B 5, C 5. **Interés abierto 10, volumen 10**.",
+              "cuando": "A compra 10; B y C venden 5 cada uno"
+            },
+            {
+              "titulo": "Operación 2",
+              "texto": "Ambos abren. Largos: A 10, D 5. Cortos: B 10, C 5. **Interés abierto 15, volumen 15**.",
+              "cuando": "D compra 5; B vende otros 5"
+            },
+            {
+              "titulo": "Operación 3",
+              "texto": "**Ambos cierran** (D era largo y C era corto). Largos: A 10. Cortos: B 10. **Interés abierto 10, volumen 20**.",
+              "cuando": "D vende 5; C compra 5"
+            }
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Participante",
+            "Largo neto",
+            "Corto neto"
+          ],
+          "filas": [
+            [
+              "A",
+              "10",
+              "0"
+            ],
+            [
+              "B",
+              "0",
+              "10"
+            ],
+            [
+              "C",
+              "0",
+              "0"
+            ],
+            [
+              "D",
+              "0",
+              "0"
+            ],
+            [
+              "Interés abierto",
+              "10",
+              "10"
+            ]
+          ],
+          "trampas": []
+        },
+        {
+          "tipo": "formula",
+          "logica": "Vol = \\sum \\text{contratos comprados} \\qquad IA = \\sum \\text{largos netos} = \\sum \\text{cortos netos}",
+          "leyenda": [
+            [
+              "Vol",
+              "volumen operado de la jornada"
+            ],
+            [
+              "IA",
+              "interés abierto al cierre"
+            ]
+          ],
+          "valores": "Vol = 10 + 5 + 5 \\qquad IA = 10",
+          "resultado": "Volumen = 20 contratos; interés abierto = 10 contratos."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Si la operación cierra posiciones de **los dos lados**, el interés abierto baja; si cierra uno y abre el otro, se mantiene. Contar las dos contrapartes en el volumen (40) es el error típico."
+        }
+      ],
+      "ampliada": "El manual 2023 resuelve el mismo tipo de problema con una tabla de compras, ventas y saldos por cliente. El método es idéntico: saldos netos por participante y suma de un solo lado.",
+      "paginas": [
+        253,
+        254
+      ]
+    }
+  ],
+  "puntosClave": [
+    "MexDer: Mercado Mexicano de Derivados, S.A. de C.V., inició el **15 de diciembre de 1998** con futuros sobre subyacentes financieros; autorizada por la **SHCP**; entidad autorregulatoria; provee instalaciones para negociar.",
+    "Asigna: Cámara de Compensación y Liquidación; **contraparte y garante** de todas las obligaciones; fideicomiso de administración y pago (BBVA Bancomer fiduciario); observa normas de SHCP, CNBV, Banxico y las Reglas de MexDer.",
+    "Socio liquidador de **terceros**: fideicomiso accionista de MexDer que aporta el patrimonio de Asigna y liquida por cuenta de **clientes**. De **posición propia**: liquida las operaciones de **su grupo financiero**.",
+    "Operadores: comisionistas de socios liquidadores, pueden o no ser socios de la Bolsa; por cuenta propia actúan como clientes, por cuenta de terceros a nombre de sus clientes.",
+    "Formador de mercado: operador **aprobado por MexDer** que cotiza en forma permanente y **por cuenta propia** para promover la negociación.",
+    "VIMEX: lo calcula MexDer con las **volatilidades implícitas de las opciones del IPC**; mide la volatilidad esperada de corto plazo.",
+    "Volumen: incluye operaciones compensatorias (suma de compras). Interés abierto: contratos vivos; baja solo si ambas contrapartes cierran; al vencimiento es cero."
+  ],
+  "practica": [
+    "g.derivados.l2.q01",
+    "g.derivados.l2.q02",
+    "g.derivados.l2.q03",
+    "g.derivados.l2.q04",
+    "g.derivados.l2.q05"
+  ],
+  "miniExamen": [
+    "g.derivados.l2.q06",
+    "g.derivados.l2.q07",
+    "g.derivados.l2.q08",
+    "g.derivados.l2.q09",
+    "g.derivados.l2.q10"
+  ],
+  "reto": [
+    "g.derivados.l2.q11",
+    "g.derivados.l2.q12",
+    "g.derivados.l2.q13",
+    "g.derivados.l2.q14",
+    "g.derivados.l2.q15"
+  ]
+}

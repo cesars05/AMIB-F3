@@ -1,0 +1,771 @@
+{
+  "id": "derivados.estrategias-griegas-y-notas-estructuradas",
+  "area": "derivados",
+  "materia": "Derivados Financieros I y II",
+  "subtemaId": "derivados.derivados-financieros-ii.contratos-de-opcion",
+  "objetivoIds": [
+    "derivados.derivados-financieros-i.contratos-de-opcion.o08",
+    "derivados.derivados-financieros-i.contratos-de-opcion.o09",
+    "derivados.derivados-financieros-ii.contratos-de-opcion.o04",
+    "derivados.derivados-financieros-ii.contratos-de-opcion.o05",
+    "derivados.derivados-financieros-ii.contratos-de-opcion.o06",
+    "derivados.derivados-financieros-ii.contratos-de-opcion.o07",
+    "derivados.derivados-financieros-ii.contratos-de-opcion.o08",
+    "derivados.derivados-financieros-ii.contratos-de-opcion.o09",
+    "derivados.derivados-financieros-ii.contratos-de-opcion.o10",
+    "derivados.derivados-financieros-ii.contratos-de-opcion.o11",
+    "derivados.derivados-financieros-ii.contratos-de-opcion.o12",
+    "derivados.derivados-financieros-ii.contratos-de-opcion.o13",
+    "derivados.derivados-financieros-ii.contratos-de-opcion.o14",
+    "derivados.derivados-financieros-ii.notas-estructuradas.o01",
+    "derivados.derivados-financieros-ii.notas-estructuradas.o02"
+  ],
+  "orden": 7,
+  "titulo": "Paridad put-call, estrategias, griegas y notas estructuradas",
+  "resumen": "Paridad put-call con cálculo y posiciones sintéticas; bull y bear spread; butterfly, straddle y strangle; ratio spreads, túneles y cóndor; las griegas y sus cálculos con las fórmulas de la HP (delta, prima por delta, delta por gamma, theta, rho y vega) con los ejemplos del manual; cobertura delta neutral; notas estructuradas.",
+  "duracionMin": 55,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        273,
+        274,
+        275,
+        276,
+        277,
+        278,
+        279,
+        280,
+        281,
+        282,
+        283,
+        284,
+        285,
+        286,
+        287,
+        288,
+        289
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "paridad-put-call",
+      "titulo": "Paridad put-call: la fórmula y un cálculo",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La [[paridad put-call]] define la relación de equilibrio entre la prima de un **call europeo** y la de un **put europeo** en un mercado sin fricciones, ambos con el **mismo precio de ejercicio y fecha de expiración**, sobre un subyacente líquido."
+        },
+        {
+          "tipo": "formula",
+          "logica": "C + \\frac{X}{(1+R)^{t}} = S_0 + P",
+          "leyenda": [
+            [
+              "C",
+              "prima del call"
+            ],
+            [
+              "P",
+              "prima del put"
+            ],
+            [
+              "X",
+              "precio de ejercicio (strike) del call o del put"
+            ],
+            [
+              "R",
+              "tasa de interés anual"
+            ],
+            [
+              "t",
+              "tiempo expresado en años"
+            ],
+            [
+              "S_0",
+              "precio inicial del subyacente"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo.** Call europeo a 3 meses con prima $4.20, strike $60, tasa anual 9% y subyacente en $58.50. ¿Cuál es la prima del put de equilibrio?"
+        },
+        {
+          "tipo": "formula",
+          "logica": "P = C + \\frac{X}{(1+R)^{t}} - S_0",
+          "leyenda": [],
+          "valores": "P = 4.20 + \\frac{60}{(1.09)^{0.25}} - 58.50 = 4.20 + 58.7212 - 58.50",
+          "resultado": "P = $4.4212"
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Reordenando con capitalización continua y dividendos, el manual muestra: \\( p = c - S_0 + Ee^{-rT} + D \\) y \\( c = p + S_0 - Ee^{-rT} - D \\)."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El strike se trae a **valor presente**; sumar el strike sin descontar da un put mayor ($5.7000 en el ejemplo). El tiempo va **en años** (3 meses = 0.25)."
+        }
+      ],
+      "ampliada": "Comprar un put equivale a comprar un call y vender la acción; comprar un call equivale a comprar un put y comprar la acción. De esas equivalencias salen las posiciones sintéticas.",
+      "paginas": [
+        273
+      ]
+    },
+    {
+      "id": "sinteticos",
+      "titulo": "Posiciones sintéticas",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Una [[posición sintética]] es un instrumento creado artificialmente combinando las características de otros; las sintéticas de opciones se obtienen de la paridad put-call."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Sintético",
+            "Se forma con",
+            "Para qué"
+          ],
+          "filas": [
+            [
+              "Call sintético largo",
+              "**Put largo + activo o futuro largo**",
+              "Cubrirse con el put de que el activo baje; la ganancia se reduce por el costo del put"
+            ],
+            [
+              "Put sintético largo",
+              "**Call largo + activo o futuro corto**",
+              "Cubrirse con el call de que el activo suba; la ganancia se reduce por el costo del call"
+            ],
+            [
+              "Call sintético corto",
+              "**Put corto + activo o futuro corto**",
+              "La única ganancia posible es la prima del put si no se ejerce"
+            ],
+            [
+              "Put sintético corto",
+              "**Call corto + activo o futuro largo**",
+              "La única ganancia posible es la prima del call si no se ejerce"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Regla para armarlos:",
+          "texto": "el sintético de un **call** usa un **put** y el de un **put** usa un **call**; la opción conserva el sentido (largo o corto) del sintético y el subyacente va largo para call largo y put corto, corto para put largo y call corto."
+        }
+      ],
+      "ampliada": "El manual titula por error la cuarta combinación como compra de put sintético; por la fórmula y la descripción (posición corta) es la venta.",
+      "paginas": [
+        274
+      ]
+    },
+    {
+      "id": "bull-bear",
+      "titulo": "Bull spread y bear spread",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Rasgo",
+            "Bull spread (call bull spread)",
+            "Bear spread (put bear spread)"
+          ],
+          "filas": [
+            [
+              "Estructura",
+              "**Call largo strike menor** (piso) + **call corto strike mayor** (techo)",
+              "**Put largo strike mayor** (techo) + **put corto strike menor** (piso)"
+            ],
+            [
+              "Expectativa",
+              "**Alza moderada** o acotada",
+              "**Baja moderada** o acotada"
+            ],
+            [
+              "Costo",
+              "Más barato que un call solo",
+              "Más barato que un put solo"
+            ],
+            [
+              "Ganancia",
+              "**Limitada**: como máximo techo menos piso",
+              "**Limitada**: como máximo techo menos piso"
+            ],
+            [
+              "Si la expectativa es fuerte",
+              "Mejor un call largo",
+              "Mejor un put largo"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Bull spread al vencimiento:** 1) bajo el piso, el cliente opera en mercado; 2) entre piso y techo, se ejerce el call largo y se obtiene spot menos piso; 3) sobre el techo, se obtiene techo menos piso."
+        },
+        {
+          "tipo": "formula",
+          "logica": "G = \\max(S-K_1,0) - \\max(S-K_2,0) - (c_1 - c_2)",
+          "leyenda": [
+            [
+              "K_1, K_2",
+              "strike menor (piso) y mayor (techo)"
+            ],
+            [
+              "c_1, c_2",
+              "prima pagada por el call largo y cobrada por el call corto"
+            ],
+            [
+              "S",
+              "precio del subyacente al vencimiento"
+            ]
+          ],
+          "valores": "K_1 = 20,\\; K_2 = 24,\\; c_1 = 2.10,\\; c_2 = 0.80,\\; S = 23",
+          "resultado": "G = 3 − 0 − 1.30 = $1.7000 por unidad. Ganancia máxima 4 − 1.30 = $2.70; pérdida máxima $1.30."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "En el bull spread se **compra el strike menor**; en el bear spread se **compra el strike mayor**. Ambos se operan y cotizan como un paquete."
+        }
+      ],
+      "ampliada": "El cálculo de la ganancia neta con primas aplica las fórmulas de liquidación al vencimiento del manual; los valores son ilustrativos.",
+      "paginas": [
+        275,
+        276
+      ]
+    },
+    {
+      "id": "butterfly-straddle-strangle",
+      "titulo": "Butterfly, straddle y strangle",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Estrategia",
+            "Estructura",
+            "Cuándo se usa",
+            "Resultado"
+          ],
+          "filas": [
+            [
+              "Butterfly largo",
+              "1 call largo X1 + **2 calls cortos** X2 + 1 call largo X3 (X1 < X2 < X3, mismo vencimiento)",
+              "Volatilidad futura **menor** que la implícita",
+              "Cero fuera de X1 a X3; positivo entre X1 y X3"
+            ],
+            [
+              "Butterfly corto",
+              "1 call corto X1 + **2 calls largos** X2 + 1 call corto X3",
+              "Volatilidad futura **mayor** que la implícita (no direccional)",
+              "Positivo fuera de X1 a X3; negativo entre ellos"
+            ],
+            [
+              "Straddle largo",
+              "Call largo + put largo, **mismo strike** y vencimiento",
+              "Se espera **más volatilidad** sin saber la dirección",
+              "Pérdida máxima: suma de las dos primas; utilidad ilimitada"
+            ],
+            [
+              "Straddle corto",
+              "Call corto + put corto, mismo strike",
+              "Se espera un cambio mínimo o nulo",
+              "Alto riesgo"
+            ],
+            [
+              "Strangle largo",
+              "Call largo **strike mayor** + put largo **strike menor**",
+              "Movimiento fuerte; necesita más movimiento que el straddle",
+              "Primas menores que el straddle"
+            ],
+            [
+              "Strangle corto",
+              "Call corto + put corto, strike call > strike put",
+              "Cambio muy pequeño o nulo",
+              "Utilidad máxima: suma de primas; pérdidas ilimitadas (call) o muy grandes (put)"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              2
+            ],
+            [
+              4,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "PE_{inf} = K - (c + p) \\qquad PE_{sup} = K + (c + p)",
+          "leyenda": [
+            [
+              "PE",
+              "puntos de equilibrio de un straddle largo"
+            ],
+            [
+              "K",
+              "strike común"
+            ],
+            [
+              "c + p",
+              "primas pagadas"
+            ]
+          ],
+          "valores": "K = 50,\\; c = 2.60,\\; p = 2.20",
+          "resultado": "Equilibrios en $45.20 y $54.80; pérdida máxima $4.80."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Straddle: **mismo** strike. Strangle: strikes **distintos** (call arriba, put abajo). El butterfly largo apuesta a **menos** volatilidad; el straddle largo, a **más**."
+        }
+      ],
+      "ampliada": "En el butterfly X es el precio spot y a > 0: X1 = X − a, X2 = X, X3 = X + a.",
+      "paginas": [
+        277,
+        278,
+        279,
+        280
+      ]
+    },
+    {
+      "id": "ratio-tunel-condor",
+      "titulo": "Ratio spreads, túneles y cóndor",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Estrategia",
+            "Estructura (según la descripción y la gráfica)",
+            "Expectativa"
+          ],
+          "filas": [
+            [
+              "Ratio call spread corto",
+              "1 call largo strike menor + **2 calls cortos strike mayor**",
+              "Pequeña alza seguida de una fuerte caída de la volatilidad"
+            ],
+            [
+              "Ratio put spread largo",
+              "1 put corto strike mayor + **2 puts largos strike menor**",
+              "Importante caída del precio; costo muy bajo o nulo"
+            ],
+            [
+              "Ratio put spread corto",
+              "1 put largo strike mayor + **2 puts cortos strike menor**",
+              "Pequeña baja seguida de una fuerte caída de la volatilidad"
+            ],
+            [
+              "Túnel alcista (risk reversal o collar)",
+              "**Call largo strike mayor + put corto strike menor**, ambos fuera del dinero",
+              "Alcista; prima cero si se arma bien; beneficio y pérdida ilimitados"
+            ],
+            [
+              "Túnel bajista",
+              "**Call corto strike mayor + put largo strike menor**, ambos fuera del dinero",
+              "Bajista; prima cero si se arma bien"
+            ],
+            [
+              "Cóndor",
+              "Call largo X1 (ITM) + call corto X2 (ITM) + call corto X3 (OTM) + call largo X4 (OTM)",
+              "El precio no cambiará de forma importante; valor cero bajo X1 o sobre X4, positivo entre ambos"
+            ]
+          ],
+          "trampas": [
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "En la gráfica del túnel alcista (strikes 55 y 65) se tiene **derecho a comprar a 65** y **obligación de comprar a 55**; en el bajista, **derecho a vender a 55** y **obligación de vender a 65**."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El manual imprime fórmulas de los ratio spreads que contradicen su propia descripción y gráfica, y rotula como alcista la fórmula del túnel bajista. Aquí se sigue la descripción y la gráfica; la discrepancia está en el archivo de dudas."
+        }
+      ],
+      "ampliada": "El cóndor es muy similar al butterfly, pero con cuatro strikes distintos: la zona de ganancia es más ancha.",
+      "paginas": [
+        281,
+        282,
+        283
+      ]
+    },
+    {
+      "id": "griegas-concepto",
+      "titulo": "Las griegas: qué mide cada una",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Griega",
+            "Qué mide",
+            "Derivada",
+            "Signo o relación"
+          ],
+          "filas": [
+            [
+              "Delta",
+              "Cambio de la prima ante el cambio en el precio del subyacente",
+              "**Primera** derivada respecto al **precio**",
+              "Call de 0 a 1 (directa); put de 0 a −1 (inversa)"
+            ],
+            [
+              "Gamma",
+              "Cambio de la **delta** ante el cambio en el subyacente; ajusta la delta en cambios grandes",
+              "**Segunda** derivada respecto al **precio**",
+              "Positiva en posiciones largas; negativa en cortas"
+            ],
+            [
+              "Theta",
+              "Cambio de la prima por el **paso del tiempo**",
+              "Primera derivada respecto al **tiempo**",
+              "Impacto **negativo** sobre la prima"
+            ],
+            [
+              "Vega",
+              "Cambio de la prima por cambios en la **volatilidad**",
+              "Primera derivada respecto a la **volatilidad**",
+              "Relación **directa**"
+            ],
+            [
+              "Rho",
+              "Cambio de la prima por cambios en la **tasa de interés**",
+              "Primera derivada respecto a la **tasa**",
+              "Sube la tasa, sube la prima (según el manual)"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Las griegas representan la sensibilidad de la prima a los componentes de la opción (precio del subyacente, plazo, volatilidad y tasa) y son una herramienta de **gestión del riesgo** de portafolios de opciones."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Gamma es la **segunda** derivada respecto al precio; todas las demás son primeras derivadas. Theta se asocia al **tiempo** y vega a la **volatilidad**: intercambiarlas es el distractor clásico."
+        }
+      ],
+      "ampliada": "El manual afirma que si sube la tasa sube la prima; eso es cierto para los calls. En los puts la relación es inversa en la teoría; véase el archivo de dudas.",
+      "paginas": [
+        284,
+        285
+      ]
+    },
+    {
+      "id": "delta-y-gamma",
+      "titulo": "Cálculos con delta y gamma (ejemplos del manual)",
+      "bloques": [
+        {
+          "tipo": "formula",
+          "logica": "DELTA = \\frac{PRI1 - PRI2}{SUB1 - SUB2} \\qquad PRI2 = PRI1 + DELTA \\times (SUB2 - SUB1)",
+          "leyenda": [
+            [
+              "PRI1, PRI2",
+              "prima inicial y final"
+            ],
+            [
+              "SUB1, SUB2",
+              "subyacente al inicio y al final"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Delta por diferencias.** Call largo con strike $25 que cotiza en $2.54 con el subyacente en $26; el precio sube a $28 y la prima a $3.80."
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "DELTA",
+          "entradas": [
+            [
+              "PRI1",
+              "2.54"
+            ],
+            [
+              "PRI2",
+              "3.80"
+            ],
+            [
+              "SUB1",
+              "26"
+            ],
+            [
+              "SUB2",
+              "28"
+            ]
+          ],
+          "salida": [
+            "DELTA",
+            "0.63"
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Prima por delta.** Call con prima $2.54 y delta 0.4860; el subyacente sube de $26 a $28: PRI2 = 2.54 + 0.4860 × 2 = **$3.512**."
+        },
+        {
+          "tipo": "formula",
+          "logica": "NDEL = DELTA + (SUB2 - SUB1) \\times GAMA \\qquad NDEL = DELTA + CAM\\$ \\times GAMA",
+          "leyenda": [
+            [
+              "NDEL",
+              "nueva delta ajustada por gamma"
+            ],
+            [
+              "GAMA",
+              "gamma"
+            ],
+            [
+              "CAM\\$",
+              "variación positiva o negativa del subyacente"
+            ]
+          ],
+          "valores": "NDEL = 0.43 + (44 - 40) \\times 0.018 \\qquad NDEL = -0.3397 + (-0.10) \\times 0.0832",
+          "resultado": "Call: 0.502. Put: −0.348020."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "En el put la delta es **negativa**: con una baja del subyacente la delta se vuelve más negativa (−0.3397 a −0.3480), es decir, crece en valor absoluto. Olvidar el signo del put o del cambio genera −0.3314."
+        }
+      ],
+      "ampliada": "Interpretación del manual: en un call, al subir el subyacente sube la delta; en un put, al bajar el subyacente se incrementa la delta en valor absoluto.",
+      "paginas": [
+        285,
+        286
+      ]
+    },
+    {
+      "id": "theta-rho-vega",
+      "titulo": "Cálculos con theta, rho y vega (ejemplos del manual)",
+      "bloques": [
+        {
+          "tipo": "formula",
+          "logica": "PTHETA = PRIMA + DIAS \\times \\frac{-THETA}{BASE}",
+          "leyenda": [
+            [
+              "THETA",
+              "theta anual, capturada positiva"
+            ],
+            [
+              "DIAS",
+              "días transcurridos hacia el vencimiento"
+            ],
+            [
+              "BASE",
+              "año base (360)"
+            ]
+          ],
+          "valores": "PTHETA = 20 + 1 \\times \\frac{-32.18}{360}",
+          "resultado": "PTHETA = $19.9106"
+        },
+        {
+          "tipo": "formula",
+          "logica": "PRHO = PRIMA + RHO \\times \\frac{TNVA - TANT}{TANT}",
+          "leyenda": [
+            [
+              "RHO",
+              "rho"
+            ],
+            [
+              "TNVA, TANT",
+              "tasa nueva y tasa anterior"
+            ]
+          ],
+          "valores": "PRHO = 10 + 0.0496 \\times \\frac{7.5 - 10}{10}",
+          "resultado": "PRHO = $9.9876 (la tasa bajó 25%)"
+        },
+        {
+          "tipo": "formula",
+          "logica": "PVEGA = PRIMA + (VOL2 - VOL1) \\times VEGA",
+          "leyenda": [
+            [
+              "VOL1, VOL2",
+              "volatilidad inicial y final, en puntos porcentuales"
+            ],
+            [
+              "VEGA",
+              "vega"
+            ]
+          ],
+          "valores": "PVEGA = 3.80 + (22 - 18) \\times 0.35",
+          "resultado": "PVEGA = $5.20"
+        },
+        {
+          "tipo": "calculadora",
+          "funcion": "PRIMA.THETA",
+          "entradas": [
+            [
+              "PRIMA",
+              "20"
+            ],
+            [
+              "THETA",
+              "32.18"
+            ],
+            [
+              "DIAS",
+              "1"
+            ],
+            [
+              "BASE",
+              "360"
+            ]
+          ],
+          "salida": [
+            "PTHETA",
+            "19.9106"
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La fórmula de rho del manual usa el **cambio relativo** de la tasa ((7.5 − 10) ÷ 10 = −25%), no el cambio en puntos (−2.5). Con puntos saldría 9.8760. En vega, en cambio, la volatilidad entra **en puntos** (22 − 18 = 4), no en decimales."
+        }
+      ],
+      "ampliada": "Son las fórmulas precargadas de la HP 17bII+ que trae el manual. El repaso del manual 2023 confirma la convención de theta: base 360 y días transcurridos.",
+      "paginas": [
+        287,
+        288
+      ]
+    },
+    {
+      "id": "cobertura-delta-y-notas",
+      "titulo": "Cobertura delta neutral y notas estructuradas",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Cobertura delta",
+              "Estrategia de gestión de riesgos de los mediadores de opciones: su cartera de opciones tiene delta positiva o negativa, por lo que un cambio en el subyacente provoca pérdida o ganancia."
+            ],
+            [
+              "Cómo se neutraliza",
+              "El mediador toma una **posición de compensación en el subyacente**, que siempre tiene **delta de valor uno**."
+            ],
+            [
+              "Resultado",
+              "Opciones más posición compensatoria con **delta cero**: posición **neutral a la delta**."
+            ]
+          ],
+          "titulo": "Ficha: cobertura delta"
+        },
+        {
+          "tipo": "formula",
+          "logica": "N_{sub} = -\\Delta_{cartera}",
+          "leyenda": [
+            [
+              "N_{sub}",
+              "unidades del subyacente a tomar (negativo = vender)"
+            ],
+            [
+              "\\Delta_{cartera}",
+              "delta total de las opciones = delta por unidad × unidades"
+            ]
+          ],
+          "valores": "N_{sub} = -(0.60 \\times 5{,}000)",
+          "resultado": "Para neutralizar 5,000 calls largos con delta 0.60 se venden 3,000 unidades del subyacente."
+        },
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Notas estructuradas (Figura 3)",
+              "**Pasivos emitidos por un Banco**, relacionados con operaciones financieras derivadas; su rendimiento depende de las variaciones de precios de activos financieros, tasas de interés o índices a los que esté referenciada la nota."
+            ],
+            [
+              "Componente de renta fija",
+              "Por ejemplo un **bono** con tasa revisable, fija o cupón cero."
+            ],
+            [
+              "Componente de renta variable",
+              "Una o más **opciones o forwards**, indizadas a un subyacente con precios continuos en el mercado."
+            ]
+          ],
+          "titulo": "Ficha: notas estructuradas"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La nota la emite un **banco** como pasivo propio, no un fondo ni una casa de bolsa; y combina **deuda** con una estrategia de **derivados**, no dos bonos."
+        }
+      ],
+      "ampliada": "El número de unidades para neutralizar se deduce de la definición del manual (el subyacente tiene delta uno); el ejemplo es ilustrativo.",
+      "paginas": [
+        288,
+        289
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Paridad put-call: C + X ÷ (1 + R)^t = S0 + P, con opciones europeas del mismo strike y vencimiento; t en años.",
+    "Sintéticos: call largo = put largo + subyacente largo; put largo = call largo + subyacente corto; call corto = put corto + subyacente corto; put corto = call corto + subyacente largo.",
+    "Bull spread: call largo strike menor + call corto strike mayor (alza moderada). Bear spread: put largo strike mayor + put corto strike menor (baja moderada). Ganancia limitada.",
+    "Butterfly largo: 1 largo X1, 2 cortos X2, 1 largo X3 (menos volatilidad). Straddle: call y put del **mismo** strike. Strangle: call strike mayor y put strike menor.",
+    "Túnel alcista: call largo strike mayor + put corto strike menor, fuera del dinero y prima cero. Cóndor: cuatro calls con strikes distintos.",
+    "Delta: primera derivada al precio (call 0 a 1, put 0 a −1). Gamma: segunda derivada (positiva en largos). Theta: tiempo, negativa. Vega: volatilidad, directa. Rho: tasa.",
+    "HP: DELTA = (PRI1 − PRI2) ÷ (SUB1 − SUB2); NDEL = DELTA + ΔSUB × GAMA; PTHETA = PRIMA − DIAS × THETA ÷ BASE; PRHO = PRIMA + RHO × (TNVA − TANT) ÷ TANT; PVEGA = PRIMA + (VOL2 − VOL1) × VEGA.",
+    "Delta neutral: posición compensatoria en el subyacente (delta 1). Nota estructurada: pasivo bancario con un componente de renta fija y uno de derivados."
+  ],
+  "practica": [
+    "g.derivados.l7.q01",
+    "g.derivados.l7.q02",
+    "g.derivados.l7.q03",
+    "g.derivados.l7.q04",
+    "g.derivados.l7.q05"
+  ],
+  "miniExamen": [
+    "g.derivados.l7.q06",
+    "g.derivados.l7.q07",
+    "g.derivados.l7.q08",
+    "g.derivados.l7.q09",
+    "g.derivados.l7.q10"
+  ],
+  "reto": [
+    "g.derivados.l7.q11",
+    "g.derivados.l7.q12",
+    "g.derivados.l7.q13",
+    "g.derivados.l7.q14",
+    "g.derivados.l7.q15"
+  ]
+}

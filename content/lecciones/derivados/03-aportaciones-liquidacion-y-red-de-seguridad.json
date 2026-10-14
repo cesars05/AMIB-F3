@@ -1,0 +1,500 @@
+{
+  "id": "derivados.aportaciones-liquidacion-y-red-de-seguridad",
+  "area": "derivados",
+  "materia": "Derivados Financieros I y II",
+  "subtemaId": "derivados.derivados-financieros-i.liquidacion-en-mercados-organizados",
+  "objetivoIds": [
+    "derivados.derivados-financieros-i.liquidacion-en-mercados-organizados.o01",
+    "derivados.derivados-financieros-i.liquidacion-en-mercados-organizados.o02",
+    "derivados.derivados-financieros-i.liquidacion-en-mercados-organizados.o04",
+    "derivados.derivados-financieros-i.liquidacion-en-mercados-organizados.o05",
+    "derivados.derivados-financieros-i.liquidacion-en-mercados-organizados.o06",
+    "derivados.derivados-financieros-ii.liquidacion-en-mercados-organizados.o01",
+    "derivados.derivados-financieros-ii.liquidacion-en-mercados-organizados.o02",
+    "derivados.derivados-financieros-ii.liquidacion-en-mercados-organizados.o04"
+  ],
+  "orden": 3,
+  "titulo": "Aportaciones, liquidación diaria y red de seguridad de Asigna",
+  "resumen": "Cuenta global; aportaciones iniciales mínimas (individual, por posición opuesta y por entrega), excedentes y extraordinarias; valores aceptados; posición larga, corta y neta; liquidación diaria con cálculo y liquidación extraordinaria; red de seguridad de Asigna en seis niveles; fondo de compensación y fondo de aportaciones.",
+  "duracionMin": 40,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        247,
+        248,
+        249,
+        250,
+        251
+      ]
+    },
+    {
+      "documento": "AMIB Data/702510249-Manual-Asesor-en-Estrategias-de-Inversio-n-2023-004.pdf",
+      "paginas": []
+    }
+  ],
+  "laminas": [
+    {
+      "id": "cuenta-global-y-aportaciones",
+      "titulo": "Cuenta global y los tres tipos de aportaciones",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Cuenta Global",
+              "Cuenta administrada por un **Operador** o por un **Socio Liquidador** en la que se registran las operaciones de uno o varios Clientes siguiendo sus instrucciones en forma **individual y anónima**."
+            ]
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Aportación",
+            "Quién la entrega y a quién",
+            "Para qué"
+          ],
+          "filas": [
+            [
+              "Aportaciones Iniciales Mínimas (AIM)",
+              "Cada **Socio Liquidador** a la **Cámara de Compensación**",
+              "Por **cada Contrato Abierto**"
+            ],
+            [
+              "Aportaciones Excedentes",
+              "Los **Clientes**, en **efectivo**",
+              "Por Contrato Abierto, **en base a su calidad crediticia**"
+            ],
+            [
+              "Aportaciones Extraordinarias",
+              "Cada Socio Liquidador, cuando la Cámara lo exige",
+              "En **situaciones de emergencia** del Reglamento Interior: periodos de **alta volatilidad** o cuando uno o varios Socios Liquidadores **incrementan considerablemente** sus contratos abiertos"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Las excedentes dependen de la **calidad crediticia del cliente**; las extraordinarias, de una **emergencia** (volatilidad o crecimiento fuerte de posiciones). No las cruces."
+        }
+      ],
+      "ampliada": "Las AIM son el corazón del sistema de garantías: Asigna, como contraparte central, las pide al comprador y al vendedor por conducto del socio liquidador.",
+      "paginas": [
+        247
+      ]
+    },
+    {
+      "id": "aim-individual",
+      "titulo": "AIM individual: cómo se calcula y cuándo se libera",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "filas": [
+            [
+              "Qué es",
+              "Efectivo, valores o cualquier otro bien aprobado por las autoridades financieras que los **Socios Liquidadores** entregan a la **Cámara** por **cada contrato operado** en MexDer."
+            ],
+            [
+              "A quién se pide",
+              "**Tanto al vendedor como al comprador**; se entregan por conducto del Socio Liquidador."
+            ],
+            [
+              "Cómo se determina el importe",
+              "**Por tipo de contrato**, con cálculos de **VaR** conforme a **4 métodos**: Monte Carlo, ASIGNA, Paramétrico e Histórico, todos con nivel de confianza del **99%**."
+            ],
+            [
+              "Quién revisa y aprueba los métodos",
+              "Los revisa periódicamente el **Subcomité de Riesgos** y los aprueba el **Comité Técnico**."
+            ],
+            [
+              "Liberación",
+              "Asigna libera las AIM y sus rendimientos **al día siguiente de la Fecha de Liquidación**, o parcialmente cuando sean superiores a las requeridas."
+            ],
+            [
+              "AIM en valores",
+              "Se reciben a través de una institución depositante del **INDEVAL** facultada por Asigna."
+            ]
+          ],
+          "titulo": "Ficha: AIM individual"
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Son **cuatro** métodos de VaR, al **99%** de confianza (no 95%), y el importe se fija **por tipo de contrato**, no por cliente. Quien aprueba es el Comité Técnico; quien revisa, el Subcomité de Riesgos."
+        }
+      ],
+      "ampliada": "El manual 2023 recuerda que en los futuros el apalancamiento se obtiene precisamente con el pago de esta garantía (AIM), mientras que en las opciones se obtiene con la prima.",
+      "paginas": [
+        247,
+        248
+      ]
+    },
+    {
+      "id": "aim-opuesta-entrega-valores",
+      "titulo": "AIM por posición opuesta, AIM por entrega y valores aceptados",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Tipo de AIM",
+            "Cómo se determina"
+          ],
+          "filas": [
+            [
+              "Por Posición Opuesta",
+              "Se aplica una **reducción** en la AIM de cada contrato, con base en la **correlación** entre distintas Series o plazos asociados a posiciones que **replican la estructura de pagos de un swap**, siempre que pertenezcan a una misma Clase, tengan el mismo número de liquidaciones periódicas o formen parte de un mismo Grupo Clase"
+            ],
+            [
+              "Por Entrega",
+              "Pérdidas máximas esperadas a partir de la **volatilidad del subyacente** entre la Fecha de Ejercicio (o de instrucción de entrega, o de Vencimiento) y la Fecha de Liquidación, en contratos cuya liquidación al vencimiento es **en especie**"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Valores aceptados como AIM** (lista cerrada del manual):"
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Valores gubernamentales con vencimiento o revisión de tasa **menor a 182 días**.",
+            "**Acciones** que sean subyacentes de algún contrato listado.",
+            "**T-Bills** con vencimiento **menor a 182 días**."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El plazo es **menor a 182 días** para gubernamentales y T-Bills. Distractores típicos: 364 días, 91 días, acciones de alta bursatilidad o valores con calificación AAA."
+        }
+      ],
+      "ampliada": "La AIM por entrega solo existe cuando hay entrega física: cubre el riesgo del lapso entre el ejercicio o vencimiento y la liquidación.",
+      "paginas": [
+        248
+      ]
+    },
+    {
+      "id": "posiciones-larga-corta-neta",
+      "titulo": "Posición larga, corta y neta",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Posición",
+            "En opciones y futuros",
+            "En contratos de swap (intercambio)"
+          ],
+          "filas": [
+            [
+              "Larga",
+              "Se **compraron** contratos: el cliente actúa como **comprador**",
+              "El cliente actúa como **vendedor**"
+            ],
+            [
+              "Corta",
+              "Se **vendieron** contratos: el cliente actúa como **vendedor**",
+              "El cliente actúa como **comprador**"
+            ],
+            [
+              "Neta",
+              "Diferencia entre contratos abiertos largos y cortos de un inversionista o grupo",
+              "Igual"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "PN = \\text{contratos largos abiertos} - \\text{contratos cortos abiertos}",
+          "leyenda": [
+            [
+              "PN",
+              "posición neta del inversionista o grupo"
+            ]
+          ],
+          "valores": "PN = 40 - 55",
+          "resultado": "Un cliente con 40 contratos largos y 55 cortos tiene posición neta de 15 contratos cortos."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La definición del manual invierte los papeles en los **swaps**: allí la posición larga corresponde al cliente que actúa como **vendedor**. Es un detalle literal que puede aparecer."
+        }
+      ],
+      "ampliada": "La posición neta se usa para dimensionar el riesgo del cliente; el interés abierto, en cambio, mide los contratos vivos de todo el mercado.",
+      "paginas": [
+        248
+      ]
+    },
+    {
+      "id": "liquidacion-diaria",
+      "titulo": "Liquidación diaria: concepto, materia y cálculo",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La [[liquidación diaria]] son las sumas de dinero que deben solicitarse, recibirse y entregarse **diariamente**, resultado de la **valuación diaria** que realiza la Cámara por las variaciones en el **Precio de Cierre** de cada Contrato Abierto respecto al Precio de Cierre del **día hábil inmediato anterior** o, en su caso, respecto al **precio de concertación**. El saldo neto se paga o se cobra **únicamente en efectivo**."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Son materia de liquidación diaria:**"
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Las ganancias y pérdidas por la variación del precio de liquidación diaria de los contratos vigentes, hasta su vencimiento.",
+            "La actualización de los requerimientos de AIM de los contratos abiertos.",
+            "Las aportaciones para constitución del Fondo de Compensación.",
+            "Los rendimientos de los saldos de AIM y del Fondo de Compensación mantenidos al día previo.",
+            "Las cuotas y comisiones de compensación y liquidación de Asigna: se calculan diariamente pero se liquidan **mensualmente**, el primer día hábil del mes siguiente."
+          ]
+        },
+        {
+          "tipo": "formula",
+          "logica": "LD = (P_t - P_{t-1}) \\times U \\times N \\times s",
+          "leyenda": [
+            [
+              "LD",
+              "liquidación diaria (positiva se cobra, negativa se paga)"
+            ],
+            [
+              "P_t",
+              "precio de liquidación de hoy"
+            ],
+            [
+              "P_{t-1}",
+              "precio de liquidación del día hábil anterior (o de concertación, el primer día)"
+            ],
+            [
+              "U",
+              "unidades por contrato o multiplicador ($10 por punto en el IPC; 10,000 dólares en el DA)"
+            ],
+            [
+              "N",
+              "número de contratos"
+            ],
+            [
+              "s",
+              "signo de la posición: +1 larga, −1 corta"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Ejemplo.** Un cliente tiene 25 contratos largos del futuro del IPC. Ayer liquidó en 52,340 puntos y hoy en 52,105."
+        },
+        {
+          "tipo": "formula",
+          "logica": "LD = (P_t - P_{t-1}) \\times U \\times N \\times s",
+          "leyenda": [],
+          "valores": "LD = (52{,}105 - 52{,}340) \\times 10 \\times 25 \\times (+1)",
+          "resultado": "LD = −$58,750: el cliente paga $58,750.0000 en efectivo."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Asigna entrega a los socios liquidadores el **100%** de los rendimientos de las AIM. Y las comisiones de Asigna **no** se cobran a diario: se calculan diario y se liquidan **mensualmente**."
+        }
+      ],
+      "ampliada": "El cálculo usa el mismo procedimiento que el manual aplica a las utilidades y pérdidas de posiciones largas y cortas (p. 259 impresa, página 261 del PDF), que se repasa en la lección de futuros.",
+      "paginas": [
+        249,
+        261
+      ]
+    },
+    {
+      "id": "liquidacion-extraordinaria",
+      "titulo": "Liquidación extraordinaria (llamadas de margen)",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La Cámara de Compensación está facultada para requerir **Liquidaciones Extraordinarias**, que comprenden:"
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Requerimientos de **anticipos de AIM** de una o varias Clases de Contratos, o de los Portafolios de futuros y opciones.",
+            "**Incremento en el porcentaje** para el cálculo de las AIM.",
+            "Liquidación de **pérdidas potenciales** por variaciones en precios y primas, tasas e índices de los futuros y opciones registrados en los Portafolios.",
+            "**Primas pactadas** en la negociación de los Contratos de Opción.",
+            "Si ocurre el día hábil inmediato anterior a una liquidación periódica, los importes de esas liquidaciones correspondientes a las **Posiciones Swap**."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La liquidación diaria es ordinaria y se basa en precios de cierre; la extraordinaria es una **llamada de margen** que la Cámara puede pedir en cualquier momento por riesgo potencial, no realizado."
+        }
+      ],
+      "ampliada": "Las primas de las opciones forman parte de la liquidación extraordinaria según el manual: es un detalle que se presta a preguntas de tipo EXCEPTO.",
+      "paginas": [
+        249,
+        250
+      ]
+    },
+    {
+      "id": "red-de-seguridad",
+      "titulo": "Red de seguridad de Asigna (Figura 3)",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Asigna debe contar con una [[red de seguridad]] que opere si un Cliente deja de entregar las liquidaciones diarias o extraordinarias. Establece las **políticas y procedimientos** que permiten a la Cámara enfrentar cualquier incumplimiento o quebranto de sus Socios Liquidadores y cumplir su función de contraparte."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Estratos de disposición de recursos frente al cliente:** excedentes de AIM a nombre del cliente; solicitud de aportaciones adicionales; liberación de las AIM de sus contratos; excedentes del patrimonio mínimo del Socio Liquidador; y cierre de los contratos abiertos del cliente hasta cubrir el adeudo."
+        },
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "1. Fondo de Aportaciones (AIM)",
+              "texto": "Cubre las variaciones de mercado **en un día** para cada Contrato Abierto.",
+              "cuando": "Efectivo y valores autorizados"
+            },
+            {
+              "titulo": "2. Fondo de Aportaciones Excedentes (EAIM)",
+              "texto": "Por Contrato Abierto, en base a su calidad crediticia.",
+              "cuando": "Efectivo de los Clientes"
+            },
+            {
+              "titulo": "3. Fondo de Compensación (FC)",
+              "texto": "Equivalente al **10% del Fondo de Aportaciones**.",
+              "cuando": "Efectivo de Socios Liquidadores"
+            },
+            {
+              "titulo": "4. Patrimonio mínimo de fideicomisos de Posición de Terceros",
+              "texto": "**5 millones de UDIS o el 8%** del Fondo de Aportaciones de los fideicomisos.",
+              "cuando": "Al menos"
+            },
+            {
+              "titulo": "5. Patrimonio mínimo de fideicomisos de Posición Propia",
+              "texto": "**2.5 millones de UDIS o el 4%** del Fondo de Aportaciones de los fideicomisos.",
+              "cuando": "Al menos"
+            },
+            {
+              "titulo": "6. Patrimonio mínimo de la Cámara",
+              "texto": "**15 millones de UDIS**; el **90%** se compone de recursos líquidos.",
+              "cuando": "Al menos"
+            }
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Al intervenir a un Socio Liquidador incumplido, Asigna designa un **Comisionado de Ejecución** que usa sucesivamente los recursos en hasta **6 niveles**. Cifras que se intercambian: 10% (FC), 8% y 5 millones (terceros), 4% y 2.5 millones (propia), 15 millones y 90% (Cámara)."
+        }
+      ],
+      "ampliada": "Los niveles dependen del tipo de socio liquidador (posición propia o de terceros). Memoriza el orden: primero los recursos del cliente y del socio, al final el patrimonio de la propia Cámara.",
+      "paginas": [
+        250
+      ]
+    },
+    {
+      "id": "fondos",
+      "titulo": "Fondo de compensación y fondo de aportaciones",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Rasgo",
+            "Fondo de Compensación",
+            "Fondo de Aportaciones"
+          ],
+          "filas": [
+            [
+              "Integración",
+              "Aportaciones **en efectivo** de los Socios Liquidadores, adicionales a las AIM, por el **10%** de las AIM",
+              "**AIM en efectivo o en valores**"
+            ],
+            [
+              "Para qué",
+              "Cubrir obligaciones no cubiertas al liquidar, **una vez que el Fondo de Aportaciones resulte insuficiente**",
+              "Cubrir las variaciones de mercado **en un día** de cada Contrato Abierto"
+            ],
+            [
+              "Obligación del socio",
+              "**Constituir y reconstituir diariamente** según aumenten o disminuyan los contratos abiertos",
+              "**Entregar diariamente** las AIM de los contratos abiertos de cada Clase"
+            ],
+            [
+              "Uso entre socios",
+              "Solo entre socios de un **mismo grupo financiero**: el de posición propia puede cubrir a clientes incumplidos del de terceros, tras agotar sus AIM y su Fondo de Compensación",
+              "No aplica"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Inversión de ambos fondos:** depósitos bancarios a la vista, **valores gubernamentales con plazo menor a 90 días** o **reportos** al mismo plazo sobre esos títulos, y los demás valores que se autoricen. El Fondo de Compensación lo **administra Asigna**."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Valores aceptados como AIM: menos de **182** días. Inversión de los fondos: menos de **90** días. Son dos plazos distintos que el examen mezcla."
+        }
+      ],
+      "ampliada": "El orden lógico de uso es: primero el Fondo de Aportaciones del socio incumplido, después su aportación al Fondo de Compensación.",
+      "paginas": [
+        251
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Cuenta global: la administra un Operador o un Socio Liquidador; registra operaciones de uno o varios clientes en forma **individual y anónima**.",
+    "AIM: las entrega el **Socio Liquidador** a la Cámara por cada contrato abierto; se piden a **comprador y vendedor**; importe por tipo de contrato con **4 métodos de VaR al 99%**; se liberan al día siguiente de la Fecha de Liquidación.",
+    "Excedentes: efectivo de los clientes según su **calidad crediticia**. Extraordinarias: emergencias por **alta volatilidad** o aumento considerable de contratos abiertos.",
+    "AIM por posición opuesta: **reducción** por correlación entre series que replican un swap. AIM por entrega: volatilidad hasta la liquidación en **especie**.",
+    "Valores aceptados: gubernamentales y T-Bills **menores a 182 días** y acciones subyacentes de contratos listados.",
+    "Liquidación diaria: variación del precio de cierre contra el día anterior (o de concertación), **solo en efectivo**; las comisiones de Asigna se liquidan mensualmente.",
+    "Red de seguridad en 6 niveles: AIM, excedentes, FC (**10%**), patrimonio terceros (**5 millones de UDIS u 8%**), propia (**2.5 millones u 4%**), Cámara (**15 millones**, 90% líquido).",
+    "Fondos invertidos en depósitos a la vista, gubernamentales **menores a 90 días** o reportos a ese plazo."
+  ],
+  "practica": [
+    "g.derivados.l3.q01",
+    "g.derivados.l3.q02",
+    "g.derivados.l3.q03",
+    "g.derivados.l3.q04",
+    "g.derivados.l3.q05"
+  ],
+  "miniExamen": [
+    "g.derivados.l3.q06",
+    "g.derivados.l3.q07",
+    "g.derivados.l3.q08",
+    "g.derivados.l3.q09",
+    "g.derivados.l3.q10"
+  ],
+  "reto": [
+    "g.derivados.l3.q11",
+    "g.derivados.l3.q12",
+    "g.derivados.l3.q13",
+    "g.derivados.l3.q14",
+    "g.derivados.l3.q15"
+  ]
+}
