@@ -73,3 +73,12 @@ Formato: fecha · etapa · qué se hizo · qué funcionó · qué no · atajos y
 - **Decisión de regla:** la sección es exclusiva de la Figura 3 solo si el marcador está en el tema o en su propio encabezado; un subtema suelto marcado dentro del cuerpo la deja como `fig3Parcial`.
 - **Pendiente:** limpieza de OCR por sección (con diff de cifras), resolver y validar las 130 preguntas de repaso (sin clave), y revisar a mano las secciones con numeración `dudosa` y las 33 sin vínculo.
 
+
+## 2026-10-14 · Verificación de las claves en conflicto (Preguntas Tipo)
+Regla nueva: antes de preguntarle a Cesar, se consulta `AMIB_1_completo.md`. Resultado para las 6 preguntas con conflicto entre letra y texto en negritas (manda el texto):
+1. tipo.01 (Teoría Dow, EXCEPTO): clave a) "la diversificación mitiga el riesgo". **Confirmada**: el manual (9.7.3) lista las seis premisas y ninguna es la diversificación.
+2. tipo.04 (formación de continuación): clave d) "triángulo descendente". **Confirmada**: el manual (9.7.4) ubica los triángulos en formaciones de continuación y la cabeza y hombros en cambio de tendencia (9.7.6).
+3. tipo.10 (tasa real): clave a) 1.94 %. **Confirmada por cálculo**.
+4. tipo.17 (volatilidad de precios en un fondo): clave d) "de mercado". **Confirmada**: el manual define riesgo de mercado como pérdida ante movimientos de precios (cap. 7).
+5. tipo.22 (derechos del instrumento hasta el vencimiento): clave c) "compra en directo". **Confirmada**: el manual (6.1.10 y 6.3.1) describe la operación en directo hasta el vencimiento.
+6. tipo.32 (quién aprueba sobrevaluación y subvaluación): clave a) "el contralor normativo así como el responsable de la administración integral de riesgos". **No verificable en las fuentes**: el manual (7.3.7) explica el mecanismo pero no quién lo aprueba, y el manual 2023 no lo trata. Se mantiene el texto en negritas; queda pendiente de consultar a Cesar o la regulación vigente.

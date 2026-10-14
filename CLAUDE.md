@@ -56,6 +56,9 @@ Todo texto visible para Cesar (lecciones, láminas, preguntas, explicaciones, gu
 - Los rangos numéricos se escriben con palabras ("de 20 a 25 preguntas") o con "a". Las flechas de proceso (→) se permiten solo en diagramas de secuencia.
 - Un validador de contenido debe rechazar esos caracteres en `content/` (pendiente de implementar en `tools/validar.ts`).
 
+## Antes de preguntarle a Cesar
+Toda duda de contenido (claves, cifras, plazos, definiciones) se resuelve primero en `AMIB Data/AMIB_1_completo.md` (base principal); después en el manual 2023 y en las notas de Cesar. Solo si ninguna fuente lo resuelve, se le pregunta, indicando qué se consultó.
+
 ## Lecciones
 - `Preguntas Tipo.docx`: la clave es el **texto** de la opción en negritas. En 6 preguntas (1, 4, 10, 17, 22, 32) la **letra** en negritas no coincide con ese texto. Manda el texto.
 - Convenciones de cálculo del examen (de las preguntas oficiales): año de 360 días, interés simple, tasas del periodo, rendimientos de fondos sin anualizar.
