@@ -1,0 +1,3972 @@
+{
+  "fuente": "Generadas por Claude (Opus) a partir de AMIB_1_completo.md, capítulo 1 (secciones 1.1.1 a 1.4.7), con apoyo del manual oficial de Ética Bursátil y Sanas Prácticas del Mercado de Valores (Manual_EBSPMV_completo.md) y del manual 2023",
+  "generado": "2026-10-14",
+  "preguntas": [
+    {
+      "id": "g.etica.l1.q01",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o01",
+      "enunciado": "La palabra ética proviene del griego ethos, que hace referencia a:",
+      "opciones": [
+        {
+          "texto": "las costumbres transmitidas de generación en generación.",
+          "porQueNo": "Es el sentido de mores, raíz latina de la moral.",
+          "etiquetaError": "confunde-etica-moral"
+        },
+        {
+          "texto": "la conducta conforme a derecho.",
+          "porQueNo": "Lo conforme a derecho define la legalidad, no la ética.",
+          "etiquetaError": "confunde-etica-legalidad"
+        },
+        {
+          "texto": "la práctica de la fe y la vida personal.",
+          "porQueNo": "La práctica de fe distingue a la religión.",
+          "etiquetaError": "confunde-etica-religion"
+        },
+        {
+          "texto": "los hábitos virtuosos."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "La ética viene del griego ethos y hace referencia a los hábitos virtuosos; actuar éticamente es ajustar los actos a las exigencias racionales del bien. La moral, en cambio, viene del latín mores y se refiere a las costumbres.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 5,
+        "textual": "La palabra Ética viene del griego ethos y hace referencia a los hábitos virtuosos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l1.q02",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o01",
+      "enunciado": "Según el manual, el fin de la ética es:",
+      "opciones": [
+        {
+          "texto": "el bien común, que se logra mediante la justicia y las leyes.",
+          "porQueNo": "Ese es el fin de la moral, de orden externo y social.",
+          "etiquetaError": "confunde-fin-etica-moral"
+        },
+        {
+          "texto": "el cumplimiento de la ley por temor a la sanción.",
+          "porQueNo": "La ética es autónoma y no depende de la sanción externa.",
+          "etiquetaError": "confunde-etica-coercion"
+        },
+        {
+          "texto": "la felicidad, esto es, la autorrealización."
+        },
+        {
+          "texto": "la generación de riqueza suficiente para la comunidad.",
+          "porQueNo": "Es una de las finalidades económicas de la empresa.",
+          "etiquetaError": "confunde-fin-empresa"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "La ética se origina en la antigua Grecia, su análisis es de orden interno y personal, y su fin es la felicidad, es decir, la autorrealización. El bien común es el fin de la moral.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 5,
+        "textual": "su fin la felicidad, esto es, la autorrealización"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l1.q03",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o01",
+      "enunciado": "Durante una reunión con un cliente, un promotor estornuda y, sin querer, derrama café sobre el contrato. Desde el punto de vista ético, el estornudo es:",
+      "opciones": [
+        {
+          "texto": "un acto del hombre, porque no es libre y deriva de una determinación fisiológica."
+        },
+        {
+          "texto": "un acto humano, porque lo realiza una persona consciente durante su jornada de trabajo.",
+          "porQueNo": "Que lo realice una persona no basta: el acto humano exige conocimiento y voluntad libre.",
+          "etiquetaError": "confunde-acto-humano-del-hombre"
+        },
+        {
+          "texto": "un acto humano ilícito, porque causó un daño al documento del cliente.",
+          "porQueNo": "No hay elección libre, por lo que no es un acto humano ni puede calificarse como ilícito.",
+          "etiquetaError": "califica-acto-no-libre"
+        },
+        {
+          "texto": "un acto del hombre, porque se realiza con conocimiento pero sin intención.",
+          "porQueNo": "Los actos del hombre se realizan sin conocimiento o voluntad; además el criterio decisivo es la determinación fisiológica.",
+          "etiquetaError": "define-mal-acto-del-hombre"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Los actos del hombre no son libres: se realizan sin conocimiento o voluntad, o derivan de una determinación fisiológica (comer, dormir, caminar). Un estornudo es un acto fisiológico; por eso no es objeto de valoración ética.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 6,
+        "textual": "derivan de una determinación fisiológica"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l1.q04",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o03",
+      "enunciado": "El elemento del acto humano que solo puede ser conocido directamente por la conciencia personal es:",
+      "opciones": [
+        {
+          "texto": "el fin."
+        },
+        {
+          "texto": "el objeto.",
+          "porQueNo": "El objeto es la acción que se realiza; es observable fuera de la conciencia.",
+          "etiquetaError": "confunde-fin-objeto"
+        },
+        {
+          "texto": "las circunstancias.",
+          "porQueNo": "Las circunstancias son condiciones externas al sujeto y al acto.",
+          "etiquetaError": "confunde-fin-circunstancias"
+        },
+        {
+          "texto": "la norma.",
+          "porQueNo": "La norma es toda regla de conducta; no es un elemento del acto humano.",
+          "etiquetaError": "confunde-norma-elemento"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Los elementos del acto humano son objeto, fin y circunstancias. El fin es la intención del sujeto, la dirección que pretende seguir con cada acción, y solo lo conoce directamente su conciencia. Fuera de la conciencia quedan el objeto (acción) y las circunstancias (condiciones externas).",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 6,
+        "textual": "conocido directamente por la conciencia personal es el fin"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l1.q05",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o01",
+      "enunciado": "Característica de la justicia que resulta de ajustar de manera proporcional a cada persona lo que merece:",
+      "opciones": [
+        {
+          "texto": "Justicia.",
+          "porQueNo": "La justicia es dar a cada quien lo que le corresponde según su mérito; la proporcionalidad es la característica que la define como equidad.",
+          "etiquetaError": "confunde-justicia-equidad"
+        },
+        {
+          "texto": "Virtud.",
+          "porQueNo": "La virtud es la disposición constante a hacer el bien.",
+          "etiquetaError": "confunde-virtud-equidad"
+        },
+        {
+          "texto": "Equidad."
+        },
+        {
+          "texto": "Responsabilidad.",
+          "porQueNo": "La responsabilidad es asumir las consecuencias de los propios actos.",
+          "etiquetaError": "confunde-responsabilidad-equidad"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El manual define la equidad como la característica de la justicia que resulta de ajustar de manera proporcional a cada persona lo que merece. La justicia, según Aristóteles, es dar a cada quien lo que le corresponde según su mérito.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 8,
+        "textual": "de la justicia que resulta de ajustar de manera"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l1.q06",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o01",
+      "enunciado": "Son rasgos que el manual atribuye a la moral, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "viene del latín mores.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "se refiere al comportamiento o conducta del ser humano en relación con las costumbres.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "busca el bien de manera más natural que filosófica.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "es un estudio científico y racional de la vida moral como una totalidad."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El estudio científico y racional que observa la vida moral como una totalidad es la ética. La moral viene del latín mores, se refiere a la conducta en relación con las costumbres y busca el bien de manera más natural que filosófica.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 5,
+        "textual": "La Moral viene del latin mores"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l1.q07",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o03",
+      "enunciado": "Un ejecutivo, para ayudar a un cliente que debe pagar con urgencia una cuenta de hospital, utiliza una carta de instrucción apócrifa para transferir los recursos. Conforme a los elementos del acto humano, el acto es:",
+      "opciones": [
+        {
+          "texto": "ético, porque el fin de ayudar al cliente justifica la acción.",
+          "porQueNo": "Un fin bueno no vuelve bueno un objeto malo: el fin no justifica los medios.",
+          "etiquetaError": "fin-justifica-medios"
+        },
+        {
+          "texto": "ilícito, porque el fin es ilícito aunque el objeto sea lícito.",
+          "porQueNo": "Se invirtieron los elementos: la intención de ayudar es lícita; lo ilícito es la carta apócrifa.",
+          "etiquetaError": "invierte-fin-objeto"
+        },
+        {
+          "texto": "ilícito, porque aunque el fin es lícito, el objeto es ilícito."
+        },
+        {
+          "texto": "ético, porque las circunstancias de urgencia eximen de responsabilidad.",
+          "porQueNo": "Las circunstancias no convierten en bueno un objeto ilícito; basta un elemento malo para que el acto sea malo.",
+          "etiquetaError": "circunstancias-eximen"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Es el ejemplo del manual: fin lícito (apoyar al cliente) más objeto ilícito (la carta de instrucción es ilegal) da un acto ilícito. Para que el acto sea éticamente malo basta con que cualquiera de sus elementos lo sea.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 7,
+        "textual": "La carta de instrucción es ilegal"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l1.q08",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o03",
+      "enunciado": "Un asesor integra correctamente los contratos para operar fondos, pero solo recomienda el fondo que le paga la mayor comisión de venta. ¿Qué elemento del acto humano vuelve ilícito su acto?",
+      "opciones": [
+        {
+          "texto": "El objeto, porque el contrato del cliente quedó mal integrado.",
+          "porQueNo": "El caso dice que el contrato está bien integrado: el objeto es lícito.",
+          "etiquetaError": "confunde-fin-objeto"
+        },
+        {
+          "texto": "El fin, porque su intención no es servir al cliente sino cobrar más comisión."
+        },
+        {
+          "texto": "Las circunstancias, porque el fondo recomendado cobra una comisión alta.",
+          "porQueNo": "La comisión no es una condición externa que vicie el acto; el problema es la intención.",
+          "etiquetaError": "confunde-fin-circunstancias"
+        },
+        {
+          "texto": "Ninguno, porque el contrato está bien integrado y, por lo tanto, el acto es ético.",
+          "porQueNo": "Un objeto lícito no basta: con un fin ilícito el acto es ilícito.",
+          "etiquetaError": "basta-objeto-licito"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Es el segundo ejemplo de acto ilícito del manual: fin ilícito (el asesor no actúa con integridad e incumple el Código de Ética) más objeto lícito (el contrato está bien integrado) da un acto ilícito.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 7,
+        "textual": "El asesor no actúa con integridad"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l1.q09",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o01",
+      "enunciado": "Según el manual, el hombre es responsable también de sus omisiones porque:",
+      "opciones": [
+        {
+          "texto": "la ley sanciona toda omisión en materia bursátil.",
+          "porQueNo": "El fundamento del manual es ético, no la sanción legal.",
+          "etiquetaError": "confunde-etica-legalidad"
+        },
+        {
+          "texto": "las omisiones son actos del hombre y no actos humanos.",
+          "porQueNo": "Si fueran actos del hombre no generarían responsabilidad; la omisión libre es un acto humano.",
+          "etiquetaError": "confunde-acto-humano-del-hombre"
+        },
+        {
+          "texto": "no actuar es, de hecho, un modo de actuar."
+        },
+        {
+          "texto": "la responsabilidad solo surge cuando la omisión daña a un tercero.",
+          "porQueNo": "El manual no condiciona la responsabilidad al daño: libertad y responsabilidad van unidas.",
+          "etiquetaError": "condiciona-responsabilidad"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "La libertad trae inseparablemente unida la responsabilidad, que consiste en asumir las consecuencias de los propios actos. El hombre es responsable de sus actos humanos y también de sus omisiones, porque no actuar es de hecho un modo de actuar.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 7,
+        "textual": "no actuar, es de hecho un modo de actuar"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l1.q10",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o01",
+      "enunciado": "Es todo aquello que determina una preferencia en la elección:",
+      "opciones": [
+        {
+          "texto": "Principios.",
+          "porQueNo": "Los principios son las razones que explican por qué se actúa de determinada manera.",
+          "etiquetaError": "confunde-valores-principios"
+        },
+        {
+          "texto": "Virtud.",
+          "porQueNo": "La virtud es la disposición constante a hacer el bien.",
+          "etiquetaError": "confunde-valores-virtud"
+        },
+        {
+          "texto": "Valores."
+        },
+        {
+          "texto": "Libertad.",
+          "porQueNo": "La libertad es la capacidad de elegir por propia determinación; no lo que determina la preferencia.",
+          "etiquetaError": "confunde-valores-libertad"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El manual define los valores como todo aquello que determina una preferencia en la elección. La libertad es la capacidad de elegir; los valores orientan qué se prefiere al elegir.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 7,
+        "textual": "Es todo aquello que determina una preferencia en la elección"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l1.q11",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o02",
+      "enunciado": "¿Cuál de las siguientes parejas identifica correctamente el objeto material y el objeto formal de la ética?",
+      "opciones": [
+        {
+          "texto": "Material: los actos del hombre; formal: aquello que los hace buenos o malos.",
+          "porQueNo": "Los actos del hombre no son libres y no son objeto de la ética.",
+          "etiquetaError": "confunde-acto-humano-del-hombre"
+        },
+        {
+          "texto": "Material: los actos humanos; formal: aquello que los hace buenos o malos."
+        },
+        {
+          "texto": "Material: los actos humanos; formal: la intención con que se realizan.",
+          "porQueNo": "La intención es el fin, un elemento del acto; el objeto formal es la bondad o maldad.",
+          "etiquetaError": "confunde-objeto-formal-fin"
+        },
+        {
+          "texto": "Material: la bondad o maldad de los actos; formal: los actos humanos.",
+          "porQueNo": "Se invirtieron los objetos: lo general son los actos humanos y lo específico su bondad o maldad.",
+          "etiquetaError": "invierte-objeto-material-formal"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Como toda ciencia, la ética tiene un objeto general de estudio, el objeto material (los actos humanos), y un objeto específico de análisis, el objeto formal (aquello que los hace ser buenos o malos).",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 5,
+        "textual": "Aquello que los hace ser buenos o malos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l1.q12",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o03",
+      "enunciado": "Para que un acto humano sea éticamente malo, según el manual:",
+      "opciones": [
+        {
+          "texto": "se requiere que el fin sea malo, porque es el elemento que conoce la conciencia.",
+          "porQueNo": "El fin es el elemento interno, pero no el único que decide: un objeto o unas circunstancias malas también vician el acto.",
+          "etiquetaError": "solo-cuenta-fin"
+        },
+        {
+          "texto": "basta con que cualquiera de sus tres elementos sea malo."
+        },
+        {
+          "texto": "se requiere que al menos dos de sus tres elementos sean malos.",
+          "porQueNo": "El manual no exige mayoría: basta uno.",
+          "etiquetaError": "altera-cuantificador"
+        },
+        {
+          "texto": "se requiere que el objeto y las circunstancias sean malos, por ser externos.",
+          "porQueNo": "Basta un solo elemento malo, sea interno o externo.",
+          "etiquetaError": "solo-cuentan-externos"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Los tres elementos (objeto, fin y circunstancias) deben ser buenos para que el acto lo sea, porque el bien es lo que perfecciona la esencia de la persona. Para que el acto sea éticamente malo, basta con que cualquiera de los tres lo sea.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 6,
+        "textual": "basta con que cualquiera de los tres elementos lo sea"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l1.q13",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o01",
+      "enunciado": "Un promotor sabe que un compañero alteró el perfil de un cliente para venderle un producto de alto riesgo, pero decide no hacer nada \"para no meterse en problemas\". Desde la ética general, su conducta:",
+      "opciones": [
+        {
+          "texto": "no le genera responsabilidad, porque no realizó ninguna acción.",
+          "porQueNo": "El manual sostiene que el hombre es responsable de sus omisiones.",
+          "etiquetaError": "omision-sin-responsabilidad"
+        },
+        {
+          "texto": "es un acto del hombre, porque en ella no intervino su voluntad.",
+          "porQueNo": "Decidió no actuar: hubo conocimiento y voluntad, por lo que es un acto humano.",
+          "etiquetaError": "confunde-acto-humano-del-hombre"
+        },
+        {
+          "texto": "solo genera responsabilidad legal, porque la falta de fondo la cometió un tercero.",
+          "porQueNo": "La responsabilidad ética por la propia omisión existe aunque el acto de fondo lo cometa otro.",
+          "etiquetaError": "confunde-etica-legalidad"
+        },
+        {
+          "texto": "le genera responsabilidad, porque la omisión también es un modo de actuar."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El promotor conoce la falta y decide libremente callar: es un acto humano por omisión. El manual afirma que el hombre es responsable de sus omisiones, porque no actuar es de hecho un modo de actuar. En el Código de Ética esta conducta además incumple el deber de no ser complaciente con las conductas incorrectas de otros.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 7,
+        "textual": "es responsable de sus omisiones"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l1.q14",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o01",
+      "enunciado": "¿Cuál de las siguientes parejas de concepto y definición es correcta según el manual?",
+      "opciones": [
+        {
+          "texto": "Virtud: disposición constante de las personas a hacer el bien."
+        },
+        {
+          "texto": "Justicia: ajustar de manera proporcional a cada persona lo que merece.",
+          "porQueNo": "Esa es la definición de equidad, característica de la justicia.",
+          "etiquetaError": "confunde-justicia-equidad"
+        },
+        {
+          "texto": "Valores: razones fundamentales que explican por qué se actúa así.",
+          "porQueNo": "Esa es la definición de principios.",
+          "etiquetaError": "confunde-valores-principios"
+        },
+        {
+          "texto": "Norma: centro totalizador de nuestra conducta.",
+          "porQueNo": "El centro totalizador de la conducta es el bien; norma es toda regla de conducta.",
+          "etiquetaError": "confunde-norma-bien"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Virtud: disposición constante de las personas a hacer el bien. Equidad: ajuste proporcional de lo que cada quien merece. Principios: razones que explican por qué se actúa de determinada manera. Bien: centro totalizador de la conducta. Norma: toda regla de conducta.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 8,
+        "textual": "La VIRTUD es la disposición constante de las personas a hacer el bien"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l1.q15",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o01",
+      "enunciado": "La ética y la moral buscan el bien en relación con los actos humanos. Según el manual, se distinguen en que:",
+      "opciones": [
+        {
+          "texto": "la moral lo define, explica y fundamenta; la ética lo busca de manera espontánea.",
+          "porQueNo": "Se invirtieron los papeles: la fundamentación racional es propia de la ética.",
+          "etiquetaError": "invierte-etica-moral"
+        },
+        {
+          "texto": "la ética lo define y fundamenta; la moral lo busca de modo más natural que filosófico."
+        },
+        {
+          "texto": "la ética busca el bien común de la sociedad y la moral la felicidad de cada persona.",
+          "porQueNo": "Se invirtieron los fines: la felicidad es el fin de la ética y el bien común el de la moral.",
+          "etiquetaError": "confunde-fin-etica-moral"
+        },
+        {
+          "texto": "la ética es de orden externo y social; la moral, de orden interno y personal.",
+          "porQueNo": "Es al revés: la ética es de orden interno y la moral de orden externo.",
+          "etiquetaError": "invierte-orden-interno-externo"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "La ética y la moral buscan el bien en relación con los actos humanos, pero la ética lo define, explica y fundamenta, mientras que la moral lo busca de manera más natural que filosófica. La ética es de orden interno y busca la felicidad; la moral, de orden externo, busca el bien común.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 5,
+        "textual": "pero la Etica lo define, explica y fundamenta"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l2.q01",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o04",
+      "enunciado": "La ética se concreta en normas que cada sujeto reconoce como válidas racionalmente; por eso su causa es interna y de ahí su:",
+      "opciones": [
+        {
+          "texto": "heteronomía.",
+          "porQueNo": "La heteronomía es el carácter de la moral, producto de una causa externa.",
+          "etiquetaError": "confunde-autonomia-heteronomia"
+        },
+        {
+          "texto": "autonomía."
+        },
+        {
+          "texto": "coercibilidad.",
+          "porQueNo": "La coercibilidad es propia de la norma jurídica; la ética supera el nivel de la coercibilidad.",
+          "etiquetaError": "confunde-etica-legalidad"
+        },
+        {
+          "texto": "bilateralidad.",
+          "porQueNo": "La bilateralidad caracteriza a la norma jurídica; la ética es unilateral.",
+          "etiquetaError": "confunde-unilateral-bilateral"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "La ética es una ciencia que se concreta en un conjunto de normas que cada sujeto reconoce como válidas racionalmente; su causa es interna y de ahí su autonomía. La moral, de causa externa, es heterónoma.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 8,
+        "textual": "su causa entonces es INTERNA y de ahí su AUTONOMÍA"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l2.q02",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o04",
+      "enunciado": "Mientras que la conciencia juzga la ética de un acto y el derecho juzga su legalidad, la religión se distingue porque es:",
+      "opciones": [
+        {
+          "texto": "una práctica de fe, una vivencia personal."
+        },
+        {
+          "texto": "un conjunto de normas que la sociedad transmite de generación en generación.",
+          "porQueNo": "Esa es la definición de moral.",
+          "etiquetaError": "confunde-religion-moral"
+        },
+        {
+          "texto": "un orden social obligatorio que se aplica al hombre de manera externa.",
+          "porQueNo": "Ese es el rasgo de la legalidad.",
+          "etiquetaError": "confunde-religion-legalidad"
+        },
+        {
+          "texto": "una ciencia que estudia los actos humanos en cuanto buenos o malos.",
+          "porQueNo": "Esa es la definición de ética.",
+          "etiquetaError": "confunde-religion-etica"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El manual distingue los cuatro órdenes: la ética la juzga la conciencia, la legalidad la juzga el derecho y la religión es una práctica de fe, una vivencia personal. La moral es el conjunto de normas que la sociedad transmite de generación en generación.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 8,
+        "textual": "PRÁCTICA DE FE, una vivencia personal"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l2.q03",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o06",
+      "enunciado": "La obligatoriedad de la norma jurídica se explica, según el manual, por su carácter:",
+      "opciones": [
+        {
+          "texto": "unilateral.",
+          "porQueNo": "La unilateralidad es propia de la norma ética.",
+          "etiquetaError": "confunde-unilateral-bilateral"
+        },
+        {
+          "texto": "autónomo.",
+          "porQueNo": "La autonomía (ley que proviene de uno mismo) caracteriza a la norma ética.",
+          "etiquetaError": "confunde-autonomia-heteronomia"
+        },
+        {
+          "texto": "interno.",
+          "porQueNo": "La norma jurídica es externa: no soy el autor de las normas que debo respetar.",
+          "etiquetaError": "confunde-interno-externo"
+        },
+        {
+          "texto": "bilateral."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "La obligatoriedad de la norma jurídica se explica por su carácter bilateral: yo no soy el autor de esas normas, y a una obligación corresponde un derecho, como en los contratos. La norma ética es autónoma, interna y unilateral.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 10,
+        "textual": "Se explica mediante el carácter bilateral que posee"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l2.q04",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o07",
+      "enunciado": "Son características de los principios éticos señaladas en el manual AMIB 1, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "coercibilidad."
+        },
+        {
+          "texto": "generalidad.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "totalidad.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "permanencia.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El manual enumera obligatoriedad, generalidad, totalidad y permanencia. La coercibilidad es propia de la norma jurídica: la ética, al contrario, supera el nivel de la coercibilidad y carece de sanción externa.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 10,
+        "textual": "Las normas éticas se conservan en sus principios"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l2.q05",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o05",
+      "enunciado": "Según el manual, la ética se acrecienta cuando se ejercita bien. El orden para llegar a ser virtuoso es:",
+      "opciones": [
+        {
+          "texto": "ampliar los conocimientos, aplicarlos y practicar hasta formar virtudes."
+        },
+        {
+          "texto": "practicar los hábitos, ampliar los conocimientos y después aplicarlos en cada acto.",
+          "porQueNo": "El orden del manual empieza por ampliar los conocimientos y termina con la práctica repetida.",
+          "etiquetaError": "altera-orden-pasos"
+        },
+        {
+          "texto": "aplicar los conocimientos, ampliarlos y someterlos a la autoridad.",
+          "porQueNo": "Primero se amplían los conocimientos; someterlos a la autoridad no es un paso del manual.",
+          "etiquetaError": "altera-orden-pasos"
+        },
+        {
+          "texto": "memorizar los principios, aplicarlos y obtener una certificación.",
+          "porQueNo": "La virtud se forma practicando y repitiendo hábitos, no memorizando ni certificándose.",
+          "etiquetaError": "confunde-virtud-memoria"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Los buenos hábitos se ponen en práctica en cada acto libre hasta llegar a ser virtuoso: 1) ampliar nuestros conocimientos, 2) aplicarlos y 3) practicar y repetir hábitos hasta formar virtudes y costumbres para vivir bien.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 9,
+        "textual": "Practicar, repetir hábitos hasta formar virtudes y costumbres para vivir bien"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l2.q06",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o08",
+      "enunciado": "Son beneficios personales de contar con conocimientos éticos, según el manual, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "supera el nivel de la coercibilidad.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "proporciona un amplio criterio en la toma de decisiones.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "ayuda a tener coherencia y consistencia en los actos.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "evita toda sanción en la actividad profesional."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Los beneficios personales son: lograr la autonomía, superar el nivel de la coercibilidad, tener un amplio criterio para decidir, coherencia y consistencia en los actos, ser mejores personas e instituciones más sólidas. La ética no garantiza la ausencia de sanciones, que dependen de la ley.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 9,
+        "textual": "Proporciona un amplio criterio en la toma de decisiones"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l2.q07",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o07",
+      "enunciado": "Un promotor atiende con esmero y transparencia a sus clientes de mayor patrimonio, pero a los pequeños les omite información de costos porque \"no vale la pena\". ¿Qué característica de los principios éticos desconoce?",
+      "opciones": [
+        {
+          "texto": "Generalidad.",
+          "porQueNo": "La generalidad se refiere a que los principios se aplican a cualquier profesión, no a todas las acciones de una misma persona.",
+          "etiquetaError": "confunde-totalidad-generalidad"
+        },
+        {
+          "texto": "Totalidad."
+        },
+        {
+          "texto": "Permanencia.",
+          "porQueNo": "La permanencia se refiere a que las normas éticas se conservan a lo largo del tiempo.",
+          "etiquetaError": "confunde-totalidad-permanencia"
+        },
+        {
+          "texto": "Obligatoriedad.",
+          "porQueNo": "La obligatoriedad describe cómo obliga la norma ética (desde la conciencia), no su aplicación a todos los actos.",
+          "etiquetaError": "confunde-totalidad-obligatoriedad"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "La totalidad significa que todas nuestras acciones reflejan nuestro ser, por lo que la ética se aplica siempre y en todo momento. El manual EBSPMV precisa que no cabe una aplicación discriminada hacia ciertos clientes por encima de otros.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 10,
+        "textual": "TODAS NUESTRAS ACCIONES REFLEJAN NUESTRO SER"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l2.q08",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o04",
+      "enunciado": "Un operador sostiene que, mientras cumpla la ley, no tiene que preocuparse por la ética, porque \"lo ético es lo legal\". Según el manual, la afirmación es incorrecta porque:",
+      "opciones": [
+        {
+          "texto": "la legalidad es una norma interna y la ética una norma externa.",
+          "porQueNo": "Es al revés: la ética es interna y la legalidad se aplica de manera externa.",
+          "etiquetaError": "invierte-interno-externo"
+        },
+        {
+          "texto": "la ética y la legalidad son conceptos contrarios entre sí.",
+          "porQueNo": "El manual aclara que no tienen por qué ser contrarios: todos estudian el bien desde perspectivas distintas.",
+          "etiquetaError": "etica-contraria-ley"
+        },
+        {
+          "texto": "lo ético y lo moral no versan sobre los límites de lo legal o ilegal."
+        },
+        {
+          "texto": "la ética solo se aplica cuando no existe una ley aplicable al caso concreto.",
+          "porQueNo": "La ética se aplica siempre y en todo momento (totalidad), haya o no ley.",
+          "etiquetaError": "etica-supletoria"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "La legalidad es característica de la ley y se refiere a lo conforme a derecho; lo ético y lo moral no versan sobre los límites de lo legal o ilegal. Por eso cumplir la ley no agota el deber ético, aunque los conceptos no sean contrarios.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 8,
+        "textual": "Lo ético y lo moral no versan sobre los límites de lo legal o ilegal"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l2.q09",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o07",
+      "enunciado": "Conforme a la característica de generalidad de los principios éticos, una actuación profesional que degrada la naturaleza humana:",
+      "opciones": [
+        {
+          "texto": "es éticamente buena si se realiza con gran perfección técnica.",
+          "porQueNo": "El manual dice lo contrario: la perfección técnica no salva una actuación que degrada a la persona.",
+          "etiquetaError": "perfeccion-tecnica-basta"
+        },
+        {
+          "texto": "solo es reprochable si además viola una norma jurídica vigente.",
+          "porQueNo": "La valoración ética no depende de la ley.",
+          "etiquetaError": "confunde-etica-legalidad"
+        },
+        {
+          "texto": "puede ser aceptable, porque cada profesión tiene un deber ser distinto.",
+          "porQueNo": "Cada profesión supone un deber ser que en esencia es el mismo para todas.",
+          "etiquetaError": "deber-ser-distinto"
+        },
+        {
+          "texto": "no puede considerarse éticamente buena, aunque se haga con perfección y arte."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Los principios éticos se aplican de manera universal y general a cualquier profesión; cada profesión supone un deber ser que en esencia es el mismo. Una profesión tiene valor ético si perfecciona la naturaleza humana; si la degrada, no es éticamente buena aun cuando se haga con gran perfección y arte.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 10,
+        "textual": "aun cuando se haga con gran perfección y arte"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l2.q10",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o04",
+      "enunciado": "Según el manual, la moral se caracteriza por ser un conjunto de normas que:",
+      "opciones": [
+        {
+          "texto": "cada sujeto reconoce como válidas racionalmente; su causa es interna y de ahí su carácter autónomo.",
+          "porQueNo": "Esa es la caracterización de la ética.",
+          "etiquetaError": "confunde-etica-moral"
+        },
+        {
+          "texto": "son conformes a derecho; su carácter es bilateral y coercitivo.",
+          "porQueNo": "Ese es el rasgo de la norma jurídica (legalidad).",
+          "etiquetaError": "confunde-moral-legalidad"
+        },
+        {
+          "texto": "la sociedad transmite de generación en generación; su causa es externa y es heterónoma."
+        },
+        {
+          "texto": "derivan de la fe que vincula al hombre con Dios; su carácter es autónomo.",
+          "porQueNo": "Las normas derivadas de la fe son las de la religión.",
+          "etiquetaError": "confunde-moral-religion"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "La moral es un conjunto de normas que la sociedad se encarga de transmitir de generación en generación y que constituyen valores socialmente aceptados; es producto de una causa externa y de ahí su carácter heterónomo.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 8,
+        "textual": "de ahí su carácter de HETERÓNOMA"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l2.q11",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o06",
+      "enunciado": "Al comparar la norma ética con la norma jurídica, es correcto afirmar que:",
+      "opciones": [
+        {
+          "texto": "en la jurídica a cada obligación corresponde un derecho; la ética no obliga a otro hacia uno."
+        },
+        {
+          "texto": "la ética es bilateral, porque obliga a la vez ante la propia conciencia y ante la sociedad.",
+          "porQueNo": "La norma ética es unilateral: obliga solo a nivel de la conciencia individual.",
+          "etiquetaError": "confunde-unilateral-bilateral"
+        },
+        {
+          "texto": "la jurídica es autónoma, porque el sujeto la acepta libremente al celebrar un contrato.",
+          "porQueNo": "La norma jurídica es externa: yo no soy el autor de las normas que debo respetar.",
+          "etiquetaError": "confunde-autonomia-heteronomia"
+        },
+        {
+          "texto": "ambas son heterónomas, porque provienen de una autoridad distinta del propio sujeto obligado.",
+          "porQueNo": "La norma ética es autónoma: somos nuestra propia autoridad.",
+          "etiquetaError": "etica-heteronoma"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "La norma ética es autónoma e interna: cuando una persona cumple una norma que ella misma se impuso, ese cumplimiento no implica una obligación de otra persona hacia ella. En el derecho, en cambio, una obligación corresponde a un derecho y viceversa, como en los contratos (carácter bilateral).",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 10,
+        "textual": "no implica una obligación de otra persona hacia ella"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l2.q12",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o06",
+      "enunciado": "La palabra autonomía, que caracteriza la obligatoriedad de la norma ética, proviene de:",
+      "opciones": [
+        {
+          "texto": "el griego autos, sí mismo, y nomos, ley: ley que proviene de uno mismo."
+        },
+        {
+          "texto": "el latín autos, propio, y mores, costumbre: costumbre propia.",
+          "porQueNo": "Mores es la raíz latina de moral; la etimología de autonomía es griega: autos y nomos.",
+          "etiquetaError": "confunde-raiz-mores"
+        },
+        {
+          "texto": "el griego heteron, otro, y nomos, ley: ley que proviene de otro.",
+          "porQueNo": "Esa es la etimología de heteronomía, carácter de la moral.",
+          "etiquetaError": "confunde-autonomia-heteronomia"
+        },
+        {
+          "texto": "el griego ethos, hábito, y nomos, ley: ley de los hábitos virtuosos.",
+          "porQueNo": "Ethos es la raíz de ética, no de autonomía.",
+          "etiquetaError": "confunde-raiz-ethos"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "La etimología del vocablo autonomía viene del griego autos (sí mismo) y nomos (ley): ley que proviene de uno mismo. Por eso en la norma ética nosotros nos autoimponemos normas y somos nuestra propia autoridad.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 10,
+        "textual": "autos: sí mismo y nomos: ley"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l2.q13",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o07",
+      "enunciado": "¿Qué característica de los principios éticos explica que el deber ser de un asesor de inversiones sea, en esencia, el mismo que el de un médico o un abogado?",
+      "opciones": [
+        {
+          "texto": "Totalidad.",
+          "porQueNo": "La totalidad se refiere a que todas las acciones de una persona reflejan su ser, no a la comparación entre profesiones.",
+          "etiquetaError": "confunde-totalidad-generalidad"
+        },
+        {
+          "texto": "Permanencia.",
+          "porQueNo": "La permanencia se refiere a la conservación de los principios en el tiempo.",
+          "etiquetaError": "confunde-generalidad-permanencia"
+        },
+        {
+          "texto": "Generalidad."
+        },
+        {
+          "texto": "Obligatoriedad.",
+          "porQueNo": "La obligatoriedad describe cómo obliga la norma, no su aplicación a todas las profesiones.",
+          "etiquetaError": "confunde-generalidad-obligatoriedad"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Generalidad: los principios éticos son teóricos y aplicables de manera universal y general a cualquier profesión; cada profesión supone un deber ser que en esencia es el mismo para todas las actividades humanas.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 10,
+        "textual": "Cada profesión supone un deber ser"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l2.q14",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o04",
+      "enunciado": "Considera las siguientes afirmaciones: I. La ética es autónoma e interna. II. La moral es heterónoma. III. La legalidad se aplica al hombre de manera externa. IV. La religión es juzgada por el derecho. Son correctas:",
+      "opciones": [
+        {
+          "texto": "I y IV.",
+          "porQueNo": "La IV es falsa: el derecho juzga la legalidad; la religión es una práctica de fe.",
+          "etiquetaError": "acepta-afirmacion-falsa"
+        },
+        {
+          "texto": "II, III y IV.",
+          "porQueNo": "Omite la I, que es verdadera, e incluye la IV, que es falsa.",
+          "etiquetaError": "acepta-afirmacion-falsa"
+        },
+        {
+          "texto": "I, II, III y IV.",
+          "porQueNo": "La IV es falsa.",
+          "etiquetaError": "acepta-afirmacion-falsa"
+        },
+        {
+          "texto": "I, II y III."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "I: la ética tiene causa interna y de ahí su autonomía. II: la moral es de causa externa y heterónoma. III: la legalidad se aplica al hombre de manera externa. IV es falsa: la conciencia juzga la ética, el derecho juzga la legalidad y la religión es una práctica de fe.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 8,
+        "textual": "La legalidad se caracteriza por aplicarse al hombre de manera EXTERNA"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l2.q15",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-general",
+      "objetivoId": "etica.etica.etica-general.o07",
+      "enunciado": "El manual afirma que la persona no se hace virtuosa por conocer y entender los principios éticos, sino:",
+      "opciones": [
+        {
+          "texto": "memorizando el código de ética de su gremio profesional.",
+          "porQueNo": "Conocer y memorizar no basta; la virtud nace de la práctica.",
+          "etiquetaError": "confunde-virtud-memoria"
+        },
+        {
+          "texto": "poniéndolos en práctica para que se formen en ella hábitos buenos."
+        },
+        {
+          "texto": "aceptando las normas que la sociedad le transmite de generación en generación.",
+          "porQueNo": "Aceptar normas transmitidas describe a la moral, no la formación de la virtud.",
+          "etiquetaError": "confunde-etica-moral"
+        },
+        {
+          "texto": "sometiéndose a la sanción externa cuando los incumple.",
+          "porQueNo": "Las normas éticas carecen de sanción externa; la virtud no surge del castigo.",
+          "etiquetaError": "confunde-etica-coercion"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Al explicar la totalidad, el manual señala que la persona no se hace virtuosa por conocer y entender los principios éticos, sino poniéndolos en práctica con el objetivo de que se formen en ella hábitos buenos, éticos.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 10,
+        "textual": "La persona no se hace virtuosa por conocer y entender los principios éticos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l3.q01",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-de-la-empresa",
+      "objetivoId": "etica.etica.etica-de-la-empresa.o01",
+      "enunciado": "Empresa viene de emprender. Según el manual, el objetivo de ese acto creativo e innovador consiste en:",
+      "opciones": [
+        {
+          "texto": "cubrir una insuficiencia o necesidad social."
+        },
+        {
+          "texto": "maximizar el valor del capital de sus accionistas.",
+          "porQueNo": "El manual coloca el capital en segundo plano; el objetivo es social.",
+          "etiquetaError": "prioriza-capital"
+        },
+        {
+          "texto": "generar empleos para los integrantes de la comunidad.",
+          "porQueNo": "Generar empleos es un efecto, pero el objetivo definido es cubrir una necesidad social.",
+          "etiquetaError": "confunde-efecto-objetivo"
+        },
+        {
+          "texto": "cumplir con las disposiciones de la autoridad.",
+          "porQueNo": "Cumplir la ley es obligatorio, pero no es el objetivo que define a la empresa.",
+          "etiquetaError": "confunde-etica-legalidad"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Empresa viene de emprender: es la realización de un acto creativo, que pretende ser innovador, y cuyo objetivo consiste en cubrir una insuficiencia o necesidad social.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 11,
+        "textual": "CUBRIR UNA INSUFICIENCIA O NECESIDAD SOCIAL"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l3.q02",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-de-la-empresa",
+      "objetivoId": "etica.etica.etica-de-la-empresa.o01",
+      "enunciado": "Según el manual, la ética de la empresa está formada por:",
+      "opciones": [
+        {
+          "texto": "las normas que la autoridad financiera impone a las empresas reguladas.",
+          "porQueNo": "Las normas de la autoridad son regulación pública, no la ética que define la organización.",
+          "etiquetaError": "confunde-etica-regulacion"
+        },
+        {
+          "texto": "los valores que cada colaborador decide aplicar en su trabajo de forma personal.",
+          "porQueNo": "Los principios los define la organización; el colaborador los asume como suyos al integrarse.",
+          "etiquetaError": "etica-empresa-individual"
+        },
+        {
+          "texto": "los principios, normas y valores que la organización define para orientar a su personal."
+        },
+        {
+          "texto": "las políticas comerciales diseñadas para maximizar la rentabilidad.",
+          "porQueNo": "La rentabilidad es una finalidad económica, no la definición de la ética de la empresa.",
+          "etiquetaError": "confunde-etica-rentabilidad"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "La ética de la empresa son todos aquellos principios, normas y valores que la organización define para orientar el comportamiento de sus colaboradores. Cuando una persona se integra a una empresa, asume estos principios como suyos.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 11,
+        "textual": "que la organización define para orientar el comportamiento de sus colaboradores"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l3.q03",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-de-la-empresa",
+      "objetivoId": "etica.etica.etica-de-la-empresa.o02",
+      "enunciado": "Según el manual, en la empresa las personas son:",
+      "opciones": [
+        {
+          "texto": "el principal medio para lograr los fines de la empresa.",
+          "porQueNo": "El manual afirma lo contrario: las personas son fines, no medios.",
+          "etiquetaError": "personas-como-medio"
+        },
+        {
+          "texto": "componentes materiales que pueden sustituirse por tecnología.",
+          "porQueNo": "El capital humano es irremplazable, a diferencia de los componentes materiales.",
+          "etiquetaError": "capital-humano-sustituible"
+        },
+        {
+          "texto": "medios o fines, según la jerarquía que ocupen dentro de la organización.",
+          "porQueNo": "Toda persona es un fin en sí misma, sin importar su jerarquía.",
+          "etiquetaError": "depende-jerarquia"
+        },
+        {
+          "texto": "fines en sí mismas, no medios para lograr los fines de la empresa."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Las personas son fines en sí mismas, no medios para lograr fines de la empresa; son irremplazables, y lo que aporta una persona no lo hará del mismo modo otra. Su valor se acentúa en empresas de servicios como el medio bursátil.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 12,
+        "textual": "SON FINES EN SÍ MISMAS"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l3.q04",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-de-la-empresa",
+      "objetivoId": "etica.etica.etica-de-la-empresa.o03",
+      "enunciado": "Propiciar el desarrollo humano de los integrantes de la empresa, formando habilidades, carácter y virtudes en los colaboradores, corresponde a la finalidad:",
+      "opciones": [
+        {
+          "texto": "económica para la empresa.",
+          "porQueNo": "La finalidad económica para la empresa es generar riqueza suficiente para sus integrantes.",
+          "etiquetaError": "confunde-economica-social"
+        },
+        {
+          "texto": "social para la empresa."
+        },
+        {
+          "texto": "social para la comunidad.",
+          "porQueNo": "La finalidad social para la comunidad es propiciar el desarrollo de los integrantes de la comunidad.",
+          "etiquetaError": "confunde-empresa-comunidad"
+        },
+        {
+          "texto": "económica para la comunidad.",
+          "porQueNo": "La finalidad económica para la comunidad es generar riqueza mediante bienes y servicios.",
+          "etiquetaError": "confunde-economica-social"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Las cuatro finalidades: económica para la empresa (riqueza suficiente para sus integrantes), social para la empresa (desarrollo humano de sus integrantes: habilidades, carácter y virtudes), económica para la comunidad (riqueza mediante bienes y servicios) y social para la comunidad (desarrollo de la comunidad).",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 12,
+        "textual": "Propiciar el Desarrollo Humano de los integrantes de la empresa"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l3.q05",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-de-la-empresa",
+      "objetivoId": "etica.etica.etica-de-la-empresa.o06",
+      "enunciado": "Según el manual, la exigencia ética de una persona es proporcional a:",
+      "opciones": [
+        {
+          "texto": "su antigüedad dentro de la empresa.",
+          "porQueNo": "El manual vincula la exigencia ética con la educación, no con la antigüedad.",
+          "etiquetaError": "confunde-criterio-exigencia"
+        },
+        {
+          "texto": "el monto de los recursos que administra.",
+          "porQueNo": "El monto administrado no es el criterio del manual.",
+          "etiquetaError": "confunde-criterio-exigencia"
+        },
+        {
+          "texto": "la educación y preparación que posee."
+        },
+        {
+          "texto": "el tamaño de la institución en la que trabaja.",
+          "porQueNo": "El tamaño de la institución no determina la exigencia ética.",
+          "etiquetaError": "confunde-criterio-exigencia"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "La exigencia ética es proporcional a la educación y preparación que se posee: mientras más educación, se exige más responsabilidad, tanto profesional como ética.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 14,
+        "textual": "exigencia ética es proporcional a la educación y preparación"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l3.q06",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-de-la-empresa",
+      "objetivoId": "etica.etica.etica-de-la-empresa.o03",
+      "enunciado": "Una casa de bolsa imparte a sus promotores cursos para desarrollar habilidades y virtudes, y además patrocina programas de educación financiera en escuelas públicas de su localidad. Estas acciones corresponden, respectivamente, a las finalidades:",
+      "opciones": [
+        {
+          "texto": "social para la empresa y social para la comunidad."
+        },
+        {
+          "texto": "económica para la empresa y social para la comunidad.",
+          "porQueNo": "Formar habilidades y virtudes es finalidad social, no económica.",
+          "etiquetaError": "confunde-economica-social"
+        },
+        {
+          "texto": "social para la empresa y económica para la comunidad.",
+          "porQueNo": "Los programas educativos aportan beneficios más allá de los bienes y servicios: es finalidad social.",
+          "etiquetaError": "confunde-economica-social"
+        },
+        {
+          "texto": "económica para la empresa y económica para la comunidad.",
+          "porQueNo": "Ninguna de las dos acciones busca generar riqueza.",
+          "etiquetaError": "confunde-economica-social"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Formar habilidades, carácter y virtudes en los colaboradores es la finalidad social para la empresa. Aportar beneficios a la comunidad más allá de los bienes y servicios que ofrece es la finalidad social para la comunidad.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 12,
+        "textual": "Propiciar el desarrollo de los integrantes de la comunidad"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l3.q07",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-de-la-empresa",
+      "objetivoId": "etica.etica.etica-de-la-empresa.o04",
+      "enunciado": "Conforme al principio de proporcionalidad, una empresa puede obtener beneficios siempre que:",
+      "opciones": [
+        {
+          "texto": "el beneficio obtenido supere el costo de los medios empleados para lograrlo.",
+          "porQueNo": "La proporcionalidad no es una relación de costo y beneficio, sino de legitimidad de medios y fines.",
+          "etiquetaError": "proporcionalidad-economica"
+        },
+        {
+          "texto": "el fin que persiga sea lícito, aunque los medios no lo sean.",
+          "porQueNo": "El fin no justifica los medios: ambos deben ser legítimos.",
+          "etiquetaError": "fin-justifica-medios"
+        },
+        {
+          "texto": "la autoridad no haya prohibido expresamente los medios utilizados.",
+          "porQueNo": "La legitimidad ética no se reduce a lo que la ley prohíbe.",
+          "etiquetaError": "confunde-etica-legalidad"
+        },
+        {
+          "texto": "no lo haga a costa de los derechos de empleados, consumidores o proveedores."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "La empresa debe obtener beneficios, pero no puede hacerlo a costa de los derechos de los empleados, de los consumidores o de los proveedores. Debe cuidar que sean legítimos tanto sus fines como los medios que utilice.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 13,
+        "textual": "no puede hacerlo a costa de los derechos de los"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l3.q08",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-de-la-empresa",
+      "objetivoId": "etica.etica.etica-de-la-empresa.o04",
+      "enunciado": "Para cumplir la meta anual de ventas, un fin lícito, el director de una operadora de fondos instruye a sus promotores a no informar a los clientes las comisiones de los fondos. Conforme al principio de proporcionalidad, el acto es:",
+      "opciones": [
+        {
+          "texto": "ético, porque el fin es lícito y beneficia a la empresa.",
+          "porQueNo": "Un fin lícito no legitima medios ilícitos.",
+          "etiquetaError": "fin-justifica-medios"
+        },
+        {
+          "texto": "ilícito, porque una meta de ventas es en sí misma un fin ilícito.",
+          "porQueNo": "Buscar ventas es un fin lícito; lo ilícito es el medio (ocultar comisiones).",
+          "etiquetaError": "invierte-fin-medio"
+        },
+        {
+          "texto": "ético, porque las comisiones ya están en el prospecto del fondo.",
+          "porQueNo": "Ocultarlas al cliente es un medio ilícito, aunque aparezcan en otro documento.",
+          "etiquetaError": "justifica-medio"
+        },
+        {
+          "texto": "ilícito, porque el fin no justifica los medios."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "La proporción entre medios y fines exige que ambos sean adecuados: aunque se tenga un buen fin, si los medios no son buenos tampoco lo son los actos de la empresa. Fin lícito más medios ilícitos da un acto ilícito.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 13,
+        "textual": "La empresa debe cuidar que sean legitimos tanto sus fines"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l3.q09",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-de-la-empresa",
+      "objetivoId": "etica.etica.etica-de-la-empresa.o05",
+      "enunciado": "Atributo del líder moral que consiste en asumir las responsabilidades y obligaciones contraídas, y en lograr el de sus colaboradores con el ejemplo:",
+      "opciones": [
+        {
+          "texto": "Compromiso."
+        },
+        {
+          "texto": "Credibilidad.",
+          "porQueNo": "La credibilidad se funda en el testimonio de sus palabras que refrenda con sus actos.",
+          "etiquetaError": "confunde-compromiso-credibilidad"
+        },
+        {
+          "texto": "Prudencia.",
+          "porQueNo": "La prudencia es la virtud de discernir lo bueno de lo malo en cada caso concreto.",
+          "etiquetaError": "confunde-compromiso-prudencia"
+        },
+        {
+          "texto": "Responsabilidad.",
+          "porQueNo": "Como atributo, la responsabilidad crece con la jerarquía y la educación; asumir las obligaciones contraídas define al compromiso.",
+          "etiquetaError": "confunde-compromiso-responsabilidad"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Los atributos del líder moral son prudencia, responsabilidad, credibilidad y compromiso. El compromiso es asumir las responsabilidades y obligaciones contraídas; el líder debe lograr el compromiso de sus colaboradores con el ejemplo.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 14,
+        "textual": "Es asumir las responsabilidades y obligaciones contraídas"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l3.q10",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-de-la-empresa",
+      "objetivoId": "etica.etica.etica-de-la-empresa.o05",
+      "enunciado": "Según el manual, el líder que carece de credibilidad:",
+      "opciones": [
+        {
+          "texto": "deja de ser líder formal, pero conserva su carácter de líder moral.",
+          "porQueNo": "Se invirtieron los tipos de liderazgo.",
+          "etiquetaError": "invierte-moral-formal"
+        },
+        {
+          "texto": "deja de ser líder moral para ser únicamente líder formal."
+        },
+        {
+          "texto": "se convierte en líder empresarial.",
+          "porQueNo": "El líder empresarial debe ser primero líder moral, capaz de credibilidad.",
+          "etiquetaError": "confunde-empresarial-formal"
+        },
+        {
+          "texto": "conserva el liderazgo moral mientras mantenga su jerarquía.",
+          "porQueNo": "El liderazgo moral no depende del puesto sino de la coherencia.",
+          "etiquetaError": "depende-jerarquia"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "La credibilidad del líder se funda en el testimonio de sus palabras que se refrenda en sus actos. De no contar con ella, deja de ser líder moral para ser únicamente líder formal.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 14,
+        "textual": "para ser únicamente líder formal"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l3.q11",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-de-la-empresa",
+      "objetivoId": "etica.etica.etica-de-la-empresa.o01",
+      "enunciado": "Son ideas que el manual expone sobre la ética de la empresa, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "reconoce determinados valores y derechos compartidos por la sociedad.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "no es posible una ética empresarial sin una ética cívica.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "la ética bursátil, por lo mismo, no es solamente individual, sino también social.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "la responsabilidad de cada individuo se diluye en los fines de la empresa."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Los intermediarios bursátiles deben cumplir funciones y asumir responsabilidades sociales, sin que esto implique que la responsabilidad de los individuos se diluya en el conjunto de los fines empresariales. Las otras tres afirmaciones están en el manual.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 11,
+        "textual": "sin que esto implique que la responsabilidad de los"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l3.q12",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-de-la-empresa",
+      "objetivoId": "etica.etica.etica-de-la-empresa.o03",
+      "enunciado": "Según el manual, el capital ocupa un segundo plano en la empresa porque:",
+      "opciones": [
+        {
+          "texto": "la verdadera creación de riqueza reside en el trabajo que aportan las personas."
+        },
+        {
+          "texto": "la empresa debe distribuir todas sus utilidades entre los integrantes de la comunidad.",
+          "porQueNo": "El manual no dice eso; reconoce que la empresa debe obtener beneficios.",
+          "etiquetaError": "niega-beneficios"
+        },
+        {
+          "texto": "la finalidad económica de la empresa es secundaria frente a la legal.",
+          "porQueNo": "El manual no compara la finalidad económica con la legal.",
+          "etiquetaError": "inventa-jerarquia"
+        },
+        {
+          "texto": "los accionistas no participan en las decisiones éticas de la empresa.",
+          "porQueNo": "No es la razón que da el manual.",
+          "etiquetaError": "razon-inexistente"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El objetivo primordial de la empresa es mejorar condiciones preexistentes en su entorno social. El capital ocupa un segundo plano porque la verdadera creación de riqueza reside en el trabajo que aportan las personas.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 12,
+        "textual": "la verdadera creación de riqueza reside en el trabajo que aportan las personas"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l3.q13",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-de-la-empresa",
+      "objetivoId": "etica.etica.etica-de-la-empresa.o04",
+      "enunciado": "El manual cita el lavado de dinero como ejemplo de un acto en el que:",
+      "opciones": [
+        {
+          "texto": "el fin es lícito, pero los medios son ilícitos.",
+          "porQueNo": "El manual califica como ilícito el fin del lavado de dinero, no solo sus medios.",
+          "etiquetaError": "confunde-combinacion"
+        },
+        {
+          "texto": "tanto el fin como los medios son ilícitos."
+        },
+        {
+          "texto": "el fin es ilícito, pero los medios son lícitos.",
+          "porQueNo": "El manual dice que utiliza medios ilícitos.",
+          "etiquetaError": "confunde-combinacion"
+        },
+        {
+          "texto": "el fin y los medios son lícitos, pero no las circunstancias.",
+          "porQueNo": "El ejemplo se refiere a fin y medios, ambos ilícitos.",
+          "etiquetaError": "confunde-combinacion"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Al explicar la proporción entre medios y fines, el manual pone como ejemplo el lavado de dinero: su fin es ilícito y utiliza medios ilícitos. Las cuatro combinaciones posibles dan acto ilícito salvo la de fin lícito con medios lícitos.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 13,
+        "textual": "fin es ilícito y utiliza medios ilícitos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l3.q14",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-de-la-empresa",
+      "objetivoId": "etica.etica.etica-de-la-empresa.o05",
+      "enunciado": "Una analista sin cargo directivo es seguida por sus compañeros porque siempre hace lo que dice, mientras que el director del área, que contradice con sus actos lo que predica, solo es obedecido por su puesto. Según el manual:",
+      "opciones": [
+        {
+          "texto": "la analista ejerce un liderazgo moral y el director es solo un líder formal."
+        },
+        {
+          "texto": "el director es líder moral por su jerarquía y la analista es líder formal.",
+          "porQueNo": "El liderazgo moral no depende de la jerarquía sino de la consistencia entre palabras y actos.",
+          "etiquetaError": "invierte-moral-formal"
+        },
+        {
+          "texto": "ambos son líderes morales, porque los dos logran ser obedecidos.",
+          "porQueNo": "Ser obedecido por el puesto no es lograr identificación y adhesión.",
+          "etiquetaError": "obediencia-es-liderazgo"
+        },
+        {
+          "texto": "ninguno es líder moral, porque el liderazgo moral exige ocupar un cargo directivo.",
+          "porQueNo": "Una persona sin autoridad formal puede tener alto impacto de líder moral por su coherencia.",
+          "etiquetaError": "depende-jerarquia"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "La credibilidad del líder se funda en el testimonio de sus palabras que se refrenda en sus actos; sin ella solo queda el liderazgo formal. Lo que más convence de un líder es la consistencia entre sus palabras y sus actos, y el manual EBSPMV añade que alguien sin autoridad formal puede ser líder moral por su coherencia.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 14,
+        "textual": "La credibilidad del líder se funda en el"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l3.q15",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-de-la-empresa",
+      "objetivoId": "etica.etica.etica-de-la-empresa.o06",
+      "enunciado": "Virtud que, según el manual, permite al directivo resolver los problemas éticos, dado que los principios éticos no tienen una aplicación unívoca:",
+      "opciones": [
+        {
+          "texto": "Justicia.",
+          "porQueNo": "La justicia es dar a cada quien lo que le corresponde; el manual atribuye a la prudencia el criterio para resolver.",
+          "etiquetaError": "confunde-prudencia-justicia"
+        },
+        {
+          "texto": "Prudencia."
+        },
+        {
+          "texto": "Credibilidad.",
+          "porQueNo": "La credibilidad es un atributo del líder basado en la coherencia, no la virtud que da criterio.",
+          "etiquetaError": "confunde-prudencia-credibilidad"
+        },
+        {
+          "texto": "Compromiso.",
+          "porQueNo": "El compromiso es asumir las obligaciones contraídas.",
+          "etiquetaError": "confunde-prudencia-compromiso"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Los principios éticos no tienen una aplicación unívoca; los problemas éticos requieren a alguien con criterio, lo que solo es posible si se adquiere la virtud de la prudencia: discernir lo bueno de lo malo en cada caso concreto.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 14,
+        "textual": "Virtud de discernir lo bueno de lo malo y en cada caso concreto"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l4.q01",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-bursatil",
+      "objetivoId": "etica.etica.etica-bursatil.o01",
+      "enunciado": "Según el manual AMIB, la ética bursátil es:",
+      "opciones": [
+        {
+          "texto": "el conjunto de disposiciones que emite la CNBV para los intermediarios bursátiles.",
+          "porQueNo": "Las disposiciones de la CNBV son regulación pública, no ética.",
+          "etiquetaError": "confunde-etica-regulacion"
+        },
+        {
+          "texto": "la ciencia teórica que estudia la moral de los inversionistas.",
+          "porQueNo": "La ética es una ciencia práctica y la ética bursátil se aplica a los participantes del mercado.",
+          "etiquetaError": "etica-teorica"
+        },
+        {
+          "texto": "la aplicación de los principios y valores éticos del mercado de valores."
+        },
+        {
+          "texto": "el conjunto de normas que la AMIB impone por ministerio de ley.",
+          "porQueNo": "Esa descripción mezcla la autorregulación con un carácter legal que el manual no le atribuye.",
+          "etiquetaError": "confunde-etica-autorregulacion"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El manual define la ética bursátil como la aplicación de los principios y valores éticos del mercado de valores. Involucra a todos los participantes, que deben reflejar una conducta impecable al interior de las instituciones y frente a sus clientes.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 15,
+        "textual": "Es la aplicación de los principios y valores éticos del mercado de valores"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l4.q02",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-bursatil",
+      "objetivoId": "etica.etica.etica-bursatil.o02",
+      "enunciado": "Una sana práctica de mercado se logra mediante:",
+      "opciones": [
+        {
+          "texto": "la emisión de disposiciones de carácter general por parte de la Comisión Nacional Bancaria y de Valores.",
+          "porQueNo": "Las disposiciones de la CNBV son regulación pública; la sana práctica nace de la comunidad bursátil.",
+          "etiquetaError": "confunde-sana-practica-regulacion"
+        },
+        {
+          "texto": "la repetición de actos aceptados por la comunidad bursátil por beneficiar a todos los participantes."
+        },
+        {
+          "texto": "la repetición de actos que benefician a la institución y a sus accionistas, aunque no al cliente.",
+          "porQueNo": "La sana práctica beneficia a todos: cliente, institución y mercado.",
+          "etiquetaError": "beneficio-parcial"
+        },
+        {
+          "texto": "la firma de un contrato de intermediación entre el cliente y la institución.",
+          "porQueNo": "El contrato es un acto jurídico, no la repetición de actos aceptados por la comunidad.",
+          "etiquetaError": "confunde-sana-practica-contrato"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Una sana práctica se logra mediante la repetición de actos aceptados por la comunidad bursátil porque generan beneficios a todos los participantes: al cliente, a la institución y al mercado en general; así dan fortaleza y sustentabilidad al mercado.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 15,
+        "textual": "aceptados por la comunidad bursátil porque generan beneficios a todos los participantes"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l4.q03",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-bursatil",
+      "objetivoId": "etica.etica.etica-bursatil.o05",
+      "enunciado": "En el concepto de autorregulación adoptado por la AMIB, las normas que fijan los estándares y lineamientos de la práctica profesional se establecen:",
+      "opciones": [
+        {
+          "texto": "en sustitución de la regulación pública.",
+          "porQueNo": "La autorregulación complementa la regulación pública; no la sustituye.",
+          "etiquetaError": "autorregulacion-sustituye"
+        },
+        {
+          "texto": "por mandato de la CNBV, como parte de la regulación pública.",
+          "porQueNo": "Las establece el propio grupo de entidades o profesionales, no la autoridad.",
+          "etiquetaError": "confunde-autorregulacion-regulacion"
+        },
+        {
+          "texto": "en adición a la regulación pública."
+        },
+        {
+          "texto": "solo cuando no existe una regulación pública aplicable.",
+          "porQueNo": "El manual dice \"en adición\", sin condicionarla a la falta de ley.",
+          "etiquetaError": "autorregulacion-supletoria"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Autorregulación: conjunto de normas mediante las cuales un grupo de entidades o profesionales de cierta actividad establecen los estándares y lineamientos sobre los que debe conducirse su práctica profesional, en adición a la regulación pública, para coadyuvar en el logro de un mercado eficiente, equitativo, transparente, seguro y de calidad.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 17,
+        "textual": "en adición a la regulación pública"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l4.q04",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-bursatil",
+      "objetivoId": "etica.etica.etica-bursatil.o03",
+      "enunciado": "Es un beneficio de la cultura autorregulatoria para el sistema financiero:",
+      "opciones": [
+        {
+          "texto": "sustituir por completo la supervisión de la autoridad por la del organismo autorregulatorio.",
+          "porQueNo": "El organismo autorregulatorio avisa a la autoridad; no la sustituye.",
+          "etiquetaError": "autorregulacion-sustituye"
+        },
+        {
+          "texto": "eliminar la necesidad de sancionar a los profesionales bursátiles.",
+          "porQueNo": "Los organismos autorregulatorios sí aplican sanciones.",
+          "etiquetaError": "elimina-sanciones"
+        },
+        {
+          "texto": "la oportuna alarma ante la autoridad frente a conductas violatorias de la normatividad."
+        },
+        {
+          "texto": "garantizar la rentabilidad de los intermediarios que se asocian.",
+          "porQueNo": "La rentabilidad no es un beneficio de la cultura autorregulatoria señalado en el manual.",
+          "etiquetaError": "beneficio-inexistente"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "La cultura autorregulatoria contribuye a la integridad al negocio (confianza del público y de la autoridad), estimula un desarrollo más sano del mercado y genera la oportuna alarma del organismo autorregulatorio ante la autoridad frente a la conducta de un profesional que viole la normatividad o sea constitutiva de delito.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 16,
+        "textual": "Genera la oportuna alarma por parte del organismo autorregulatorio"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l4.q05",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-bursatil",
+      "objetivoId": "etica.etica.etica-bursatil.o06",
+      "enunciado": "Son funciones de los organismos autorregulatorios señaladas en el manual, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "recoger las sanas prácticas del mercado.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "elevar los estándares profesionales.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "contribuir al orden de un mercado íntegro y transparente.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "fijar las tasas de interés de referencia del mercado."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Las funciones del organismo autorregulatorio son: recoger las sanas prácticas del mercado, elevar los estándares profesionales y contribuir al orden de un mercado íntegro y transparente donde exista la libre formación de precios. Fijar tasas de referencia no es una de ellas.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 17,
+        "textual": "Recoge las sanas prácticas del mercado"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l4.q06",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-bursatil",
+      "objetivoId": "etica.etica.etica-bursatil.o04",
+      "enunciado": "¿Cuál de los siguientes es un beneficio de la certificación para el profesional bursátil, y no para el mercado de valores?",
+      "opciones": [
+        {
+          "texto": "Generar confianza en el público inversionista.",
+          "porQueNo": "Es un beneficio para el mercado de valores.",
+          "etiquetaError": "confunde-beneficio-mercado-profesional"
+        },
+        {
+          "texto": "Su valor curricular, con mayores expectativas de desarrollo."
+        },
+        {
+          "texto": "Reducir riesgos humanos, operativos, legales y reputacionales.",
+          "porQueNo": "Es un beneficio para el mercado de valores.",
+          "etiquetaError": "confunde-beneficio-mercado-profesional"
+        },
+        {
+          "texto": "Fomentar la cultura bursátil entre la población.",
+          "porQueNo": "Es un beneficio para el mercado de valores.",
+          "etiquetaError": "confunde-beneficio-mercado-profesional"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Para el profesional: cumplir la ley por convicción, adoptar principios éticos por convencimiento, superación personal y valor curricular. Para el mercado: verdaderos profesionales, menos riesgos, competencia leal, confianza del público y cultura bursátil.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 16,
+        "textual": "representa un valor curricular para el profesional bursátil"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l4.q07",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-bursatil",
+      "objetivoId": "etica.etica.etica-bursatil.o02",
+      "enunciado": "Son ejemplos de sanas prácticas de mercado mencionados en el manual, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "considerar el perfil del cliente para hacerle sugerencias de inversión.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "evitar que un promotor sea cotitular de cuentas de parientes y de clientes.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "llevar un control de las operaciones que permita tomar decisiones adecuadas.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "dar a los clientes información de emisoras que aún no es pública."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "La sana práctica es proporcionar a los clientes solo la información pública respecto de las emisoras. Usar información no pública, aunque beneficie al cliente, es contrario a las sanas prácticas y al Código de Ética (información privilegiada).",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 15,
+        "textual": "sólo la información pública respecto de las emisoras"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l4.q08",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-bursatil",
+      "objetivoId": "etica.etica.etica-bursatil.o06",
+      "enunciado": "Según el manual, una vez que la autorregulación demuestra ser eficiente y benéfica para el negocio:",
+      "opciones": [
+        {
+          "texto": "la regulación oficial debería aligerarse y ampliarse la acción de los organismos autorregulatorios."
+        },
+        {
+          "texto": "la autoridad debería asumir las funciones de los organismos autorregulatorios.",
+          "porQueNo": "Es al revés: se amplía el campo de los organismos autorregulatorios.",
+          "etiquetaError": "invierte-autoridad-oar"
+        },
+        {
+          "texto": "los organismos autorregulatorios deberían dejar de sancionar a sus miembros.",
+          "porQueNo": "La eficiencia de la autorregulación no elimina su función sancionadora.",
+          "etiquetaError": "elimina-sanciones"
+        },
+        {
+          "texto": "la regulación oficial debería endurecerse para vigilar más de cerca a los organismos autorregulatorios.",
+          "porQueNo": "El manual propone aligerar la regulación oficial, no endurecerla.",
+          "etiquetaError": "invierte-aligerar"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Una vez que la autorregulación demuestra ser eficiente y benéfica, la regulación oficial debería aligerarse y permitir que el campo de acción de los organismos autorregulatorios se expanda; en los mercados desarrollados la autoridad regula solo lo general.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 17,
+        "textual": "la regulación oficial debería aligerarse"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l4.q09",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-bursatil",
+      "objetivoId": "etica.etica.etica-bursatil.o06",
+      "enunciado": "Para cumplir sus funciones preventivas y correctivas, los organismos autorregulatorios generan órganos:",
+      "opciones": [
+        {
+          "texto": "legislativos, ejecutivos y judiciales.",
+          "porQueNo": "Son los poderes del Estado, no los órganos de un organismo autorregulatorio.",
+          "etiquetaError": "confunde-poderes-estado"
+        },
+        {
+          "texto": "normativos, de inversión y de arbitraje.",
+          "porQueNo": "El manual no menciona órganos de inversión; la tríada es normativos, de vigilancia y sancionadores.",
+          "etiquetaError": "altera-terna"
+        },
+        {
+          "texto": "consultivos, de auditoría y de calificación.",
+          "porQueNo": "No son los órganos que menciona el manual.",
+          "etiquetaError": "altera-terna"
+        },
+        {
+          "texto": "normativos, de vigilancia y sancionadores."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Los organismos autorregulatorios crean las estructuras necesarias y les asignan funciones preventivas y correctivas mediante órganos normativos, de vigilancia y sancionadores, en los que participan representantes de sus asociados.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 17,
+        "textual": "órganos normativos, de vigilancia y sancionadores"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l4.q10",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-bursatil",
+      "objetivoId": "etica.etica.etica-bursatil.o06",
+      "enunciado": "Los organismos autorregulatorios se han reservado funciones de supervisión formal y de aplicación de penas con el fin de:",
+      "opciones": [
+        {
+          "texto": "evitar conductas que puedan implicar una competencia desleal."
+        },
+        {
+          "texto": "sustituir a la autoridad en la imposición de sanciones penales.",
+          "porQueNo": "Los organismos autorregulatorios no imponen sanciones penales ni sustituyen a la autoridad.",
+          "etiquetaError": "autorregulacion-sustituye"
+        },
+        {
+          "texto": "garantizar la rentabilidad de sus asociados frente a sus competidores.",
+          "porQueNo": "El fin es evitar la competencia desleal, no proteger utilidades.",
+          "etiquetaError": "beneficio-inexistente"
+        },
+        {
+          "texto": "fijar las comisiones que deben cobrar los intermediarios.",
+          "porQueNo": "Fijar precios entre competidores sería contrario a la competencia leal.",
+          "etiquetaError": "fijacion-precios"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Los organismos autorregulatorios se han reservado ciertas funciones de supervisión formal y de aplicación de penas que garantizan la estricta observancia de la normatividad que emiten, a fin de evitar conductas que puedan implicar una competencia desleal.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 17,
+        "textual": "a fin de evitar conductas que puedan implicar una competencia desleal"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l4.q11",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-bursatil",
+      "objetivoId": "etica.etica.etica-bursatil.o06",
+      "enunciado": "En los mercados desarrollados, según el manual, las funciones se reparten así:",
+      "opciones": [
+        {
+          "texto": "los organismos autorregulatorios regulan lo general y la autoridad las particularidades del negocio.",
+          "porQueNo": "Se invirtieron los papeles.",
+          "etiquetaError": "invierte-autoridad-oar"
+        },
+        {
+          "texto": "la autoridad regula todo y los organismos autorregulatorios solo certifican a los profesionales.",
+          "porQueNo": "El manual describe una ampliación del campo de acción de los organismos autorregulatorios.",
+          "etiquetaError": "reduce-oar"
+        },
+        {
+          "texto": "los organismos autorregulatorios sustituyen por completo a la autoridad oficial.",
+          "porQueNo": "La autoridad sigue regulando lo general.",
+          "etiquetaError": "autorregulacion-sustituye"
+        },
+        {
+          "texto": "la autoridad regula solo lo general y los organismos autorregulatorios las particularidades del negocio."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El proceso común en mercados desarrollados es que la autoridad oficial regule solo lo general, dejando en manos de los organismos autorregulatorios las particularidades del negocio. El objetivo último de la autorregulación es la confianza.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 17,
+        "textual": "la autoridad oficial regula sólo lo general"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l4.q12",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-bursatil",
+      "objetivoId": "etica.etica.etica-bursatil.o04",
+      "enunciado": "Selecciona los beneficios de la certificación para el mercado de valores: 1. Generar una competencia leal que promueva las sanas prácticas. 2. Adoptar principios éticos por convencimiento. 3. Reducir riesgos humanos, operativos, legales y reputacionales. 4. Atender las disposiciones legales por convicción.",
+      "opciones": [
+        {
+          "texto": "2 y 4.",
+          "porQueNo": "Son los beneficios para el profesional (convencimiento y convicción).",
+          "etiquetaError": "confunde-beneficio-mercado-profesional"
+        },
+        {
+          "texto": "1 y 3."
+        },
+        {
+          "texto": "1, 2 y 3.",
+          "porQueNo": "El 2 es beneficio para el profesional.",
+          "etiquetaError": "confunde-beneficio-mercado-profesional"
+        },
+        {
+          "texto": "3 y 4.",
+          "porQueNo": "El 4 es beneficio para el profesional y falta el 1.",
+          "etiquetaError": "confunde-beneficio-mercado-profesional"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Para el mercado de valores: verdaderos profesionales, reducir riesgos humanos, operativos, legales y reputacionales, competencia leal, confianza del público y cultura bursátil. Atender las disposiciones legales por convicción y adoptar principios éticos por convencimiento son beneficios para el profesional.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 16,
+        "textual": "Reducir riesgos humanos, operativos, legales y reputacionales"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l4.q13",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-bursatil",
+      "objetivoId": "etica.etica.etica-bursatil.o06",
+      "enunciado": "Según el manual de Ética Bursátil de la AMIB, ¿cuál de las siguientes entidades tiene el carácter de organismo autorregulatorio por reconocimiento de la CNBV y no por ministerio de ley?",
+      "opciones": [
+        {
+          "texto": "La AMIB."
+        },
+        {
+          "texto": "La BMV.",
+          "porQueNo": "Las bolsas de valores son organismos autorregulatorios por ministerio de la Ley del Mercado de Valores.",
+          "etiquetaError": "confunde-origen-oar"
+        },
+        {
+          "texto": "La Contraparte Central de Valores.",
+          "porQueNo": "Las contrapartes centrales de valores lo son por ministerio de la ley.",
+          "etiquetaError": "confunde-origen-oar"
+        },
+        {
+          "texto": "El Banco de México.",
+          "porQueNo": "Banxico es una autoridad financiera, no un organismo autorregulatorio.",
+          "etiquetaError": "confunde-autoridad-oar"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El art. 228 de la Ley del Mercado de Valores, citado por el manual EBSPMV, otorga el carácter de organismo autorregulatorio por ministerio de ley a las bolsas de valores y a las contrapartes centrales de valores; las asociaciones gremiales lo obtienen si las reconoce la CNBV. La AMIB obtuvo ese reconocimiento a petición propia.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+        "pagina": 49,
+        "textual": "cuyo reconocimiento fue otorgado por la CNBV a petición de la primera"
+      },
+      "vigencia": "por-verificar",
+      "estado": "validada",
+      "notas": [
+        "El manual AMIB 1 no trata el origen legal de los organismos autorregulatorios; la cita proviene del manual EBSPMV (p. 49 del PDF). Datos normativos sujetos a verificación con la ley vigente."
+      ]
+    },
+    {
+      "id": "g.etica.l4.q14",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-bursatil",
+      "objetivoId": "etica.etica.etica-bursatil.o06",
+      "enunciado": "Un intermediario sostiene que adoptar las normas de su organismo autorregulatorio es opcional, porque \"solo obligan las normas de la autoridad\". Según el manual, los estándares de los organismos autorregulatorios:",
+      "opciones": [
+        {
+          "texto": "son recomendaciones sin consecuencias, porque no provienen de la autoridad.",
+          "porQueNo": "El manual señala la consecuencia ineludible de quedar sujeto a la normatividad y a las sanciones.",
+          "etiquetaError": "oar-sin-consecuencias"
+        },
+        {
+          "texto": "requieren aceptación por convencimiento y sujetan a sanciones a quien se compromete."
+        },
+        {
+          "texto": "solo obligan cuando la CNBV los publica como disposiciones de carácter general obligatorias.",
+          "porQueNo": "Obligan por el compromiso de sus destinatarios, no por publicación de la autoridad.",
+          "etiquetaError": "confunde-autorregulacion-regulacion"
+        },
+        {
+          "texto": "solo obligan a los directivos de los intermediarios, no a sus empleados.",
+          "porQueNo": "Obligan a todos aquellos a quienes van destinados y que se comprometen a cumplirlos.",
+          "etiquetaError": "reduce-destinatarios"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Los estándares deben contar con la aceptación por convencimiento de todos aquellos a quienes van destinados y que se comprometen a su cumplimiento, con la consecuencia ineludible de que estarán sujetos a la normatividad resultante y a las sanciones aplicables por su infracción.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 17,
+        "textual": "con la consecuencia ineludible de que estarán sujetos a la normatividad resultante"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l4.q15",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.etica-bursatil",
+      "objetivoId": "etica.etica.etica-bursatil.o06",
+      "enunciado": "Por involucrar el interés público, la autorregulación gremial:",
+      "opciones": [
+        {
+          "texto": "se limita a asuntos propios de las empresas, como su gobierno corporativo.",
+          "porQueNo": "El manual dice que los trasciende, no que se limita a ellos.",
+          "etiquetaError": "invierte-trasciende"
+        },
+        {
+          "texto": "trasciende asuntos propios de las empresas, como su gobierno corporativo o control interno."
+        },
+        {
+          "texto": "solo puede abarcar a los intermediarios, nunca a emisores o inversionistas.",
+          "porQueNo": "Puede abarcar a intermediarios, inversionistas, emisores o a algunos de ellos.",
+          "etiquetaError": "reduce-alcance"
+        },
+        {
+          "texto": "sustituye a la regulación pública en materia de gobierno corporativo.",
+          "porQueNo": "La autorregulación se da en adición a la regulación pública.",
+          "etiquetaError": "autorregulacion-sustituye"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Por involucrar el interés público, la autorregulación gremial trasciende asuntos propios de las empresas, como su gobierno corporativo, la implementación de códigos de ética o de conducta y el control interno. Puede abarcar a intermediarios, inversionistas, emisores o a algunos de ellos.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 17,
+        "textual": "la autorregulación gremial trasciende asuntos propios de las empresas"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l5.q01",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o01",
+      "enunciado": "La finalidad del Código de Ética Profesional de la Comunidad Bursátil Mexicana es:",
+      "opciones": [
+        {
+          "texto": "lograr un mercado eficiente, equitativo, transparente, seguro y de calidad.",
+          "porQueNo": "Ese es el objeto de la autorregulación.",
+          "etiquetaError": "confunde-codigo-autorregulacion"
+        },
+        {
+          "texto": "sancionar penalmente las conductas contrarias a la ley del mercado.",
+          "porQueNo": "El Código es un instrumento ético y autorregulatorio; no impone sanciones penales.",
+          "etiquetaError": "confunde-codigo-ley"
+        },
+        {
+          "texto": "sustituir la regulación emitida por la CNBV para los intermediarios.",
+          "porQueNo": "El Código complementa la normatividad; no la sustituye.",
+          "etiquetaError": "autorregulacion-sustituye"
+        },
+        {
+          "texto": "garantizar en los profesionales prácticas sanas y eficaces."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "La finalidad del Código es garantizar en los profesionales prácticas sanas y eficaces, que establezcan con claridad las acciones, políticas y procedimientos que deben normar su actuación, tanto en sus relaciones internas como con sus clientes.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 18,
+        "textual": "Garantizar en los profesionales prácticas sanas y eficaces"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l5.q02",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o06",
+      "enunciado": "Principio ético general que se define como la congruencia en todo momento entre el ser y hacer, de acuerdo con principios y valores:",
+      "opciones": [
+        {
+          "texto": "Honestidad.",
+          "porQueNo": "La honestidad es la manera de actuar con rectitud.",
+          "etiquetaError": "confunde-integridad-honestidad"
+        },
+        {
+          "texto": "Probidad.",
+          "porQueNo": "La probidad es la constancia en observar los deberes.",
+          "etiquetaError": "confunde-integridad-probidad"
+        },
+        {
+          "texto": "Integridad."
+        },
+        {
+          "texto": "Buena fe.",
+          "porQueNo": "La buena fe es la intención recta.",
+          "etiquetaError": "confunde-integridad-buena-fe"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "Los seis principios éticos generales: honestidad (actuar con rectitud), integridad (congruencia entre ser y hacer), probidad (constancia en observar los deberes), diligencia (esmero, cuidado y oportunidad), imparcialidad (criterios objetivos) y buena fe (intención recta).",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 20,
+        "textual": "Congruencia en todo momento entre el ser y hacer"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l5.q03",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o02",
+      "enunciado": "Según el manual, lo importante de un Código de Ética es que el profesional:",
+      "opciones": [
+        {
+          "texto": "lo memorice para poder aplicarlo de manera literal.",
+          "porQueNo": "El manual dice expresamente que lo importante no es memorizarlo.",
+          "etiquetaError": "confunde-virtud-memoria"
+        },
+        {
+          "texto": "se apropie de él y lo integre a su propia vida profesional."
+        },
+        {
+          "texto": "lo firme al ingresar a la institución donde trabaja.",
+          "porQueNo": "La firma no es lo que el manual destaca como importante.",
+          "etiquetaError": "formalismo"
+        },
+        {
+          "texto": "lo consulte únicamente cuando enfrente un conflicto de interés con sus clientes.",
+          "porQueNo": "Debe integrarlo a toda su vida profesional, no solo a los conflictos.",
+          "etiquetaError": "aplicacion-parcial"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Lo importante de un Código de Ética no es que el profesional lo memorice, sino que se apropie de él: que lo comprenda bien para después integrarlo a la propia vida profesional, generando hábitos y actitudes de excelencia.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 18,
+        "textual": "sino que se apropie de él"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l5.q04",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o05",
+      "enunciado": "Al adherirse al Código, el profesional bursátil asume la responsabilidad de conocer clara y profundamente lo siguiente, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "las estrategias de los competidores."
+        },
+        {
+          "texto": "las normas de autorregulación.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "las políticas empresariales.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "los productos y servicios que vende y asesora.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El profesional debe conocer las normas de regulación pública, las normas de autorregulación, las políticas empresariales y los productos y servicios que vende y asesora. El conocimiento es solo un punto de partida: se espera su aplicación estricta y la diligencia en el manejo de la información.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 19,
+        "textual": "Las Normas de Autorregulación"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l5.q05",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o15",
+      "enunciado": "Un operador recibe de su director la instrucción de registrar una operación con una fecha anterior a la real. Se niega a hacerlo e informa de la situación a sus supervisores. ¿Qué principio fundamental está cumpliendo?",
+      "opciones": [
+        {
+          "texto": "Haz prevalecer el interés de tu cliente.",
+          "porQueNo": "El caso no trata del interés de un cliente sino de no ejecutar una instrucción contraria a la regulación.",
+          "etiquetaError": "confunde-p1-p3"
+        },
+        {
+          "texto": "Proporciona al mercado información veraz, clara, completa y oportuna.",
+          "porQueNo": "El principio 5 se refiere a la información que se difunde al mercado, no a instrucciones internas ilegales.",
+          "etiquetaError": "confunde-p1-p5"
+        },
+        {
+          "texto": "Actúa de acuerdo con las disposiciones aplicables y las sanas prácticas de mercado."
+        },
+        {
+          "texto": "Actúa con base en una conducta profesional íntegra que permita el desarrollo transparente y ordenado del mercado.",
+          "porQueNo": "El caso no altera la formación de precios ni la operación del mercado: se trata de no ejecutar una instrucción contraria a la regulación.",
+          "etiquetaError": "confunde-p1-p2"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El principio 1 obliga a abstenerse de ejecutar instrucciones contrarias a la regulación vigente o a las sanas prácticas y, en su caso, informar de ello a los supervisores. Aplica también cuando los superiores incitan al personal a realizar actividades contrarias a la ley.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 20,
+        "textual": "informar de ello a sus supervisores"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l5.q06",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o03",
+      "enunciado": "Son objetivos del Código de Ética Profesional de la Comunidad Bursátil Mexicana, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "lograr un mercado eficiente, equitativo, transparente, seguro y de calidad."
+        },
+        {
+          "texto": "ser la base de actuación de todo profesional que participa en el mercado bursátil.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "preservar la integridad del mercado bursátil.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "proteger los intereses del público inversionista.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Los tres objetivos del Código son: ser la base de actuación de todo profesional en el mercado bursátil, preservar la integridad del mercado bursátil y proteger los intereses del público inversionista. Lograr un mercado eficiente, equitativo, transparente, seguro y de calidad es el objeto de la autorregulación.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 18,
+        "textual": "Proteger los intereses del público inversionista"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l5.q07",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o04",
+      "enunciado": "¿Cuál de los siguientes sujetos está obligado a cumplir los principios del Código de Ética, según el manual?",
+      "opciones": [
+        {
+          "texto": "Solo los promotores certificados de las casas de bolsa.",
+          "porQueNo": "El Código obliga a todos los que actúan habitual y profesionalmente en el mercado, no solo a promotores.",
+          "etiquetaError": "reduce-sujetos"
+        },
+        {
+          "texto": "Un empleado de una emisora de valores privada."
+        },
+        {
+          "texto": "Las casas de bolsa y los bancos, pero no sus empleados.",
+          "porQueNo": "Los empleados de intermediarios, emisores y prestadores de servicios también están sujetos.",
+          "etiquetaError": "excluye-empleados"
+        },
+        {
+          "texto": "Quien realiza operaciones bursátiles en forma ocasional.",
+          "porQueNo": "El Código se dirige a quienes actúan en forma habitual y profesional.",
+          "etiquetaError": "altera-habitual"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "El Código se dirige a todas las personas que realizan en forma habitual y profesional actividades en o relacionadas con el mercado bursátil, incluidas las que pueden influir en la opinión pública. El esquema del manual incluye intermediarios, emisores de valores (gubernamentales, financieros y privados) y prestadores de servicios, con sus empleados.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 19,
+        "textual": "realizan en forma habitual y profesional actividades en o relacionadas con el mercado"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l5.q08",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o17",
+      "enunciado": "Un asesor observa que un cliente jubilado invierte con frecuencia en un instrumento poco adecuado para su perfil, pero que deja una buena comisión. El asesor decide no sugerirle ningún cambio. ¿Qué principio fundamental incumple?",
+      "opciones": [
+        {
+          "texto": "Evita los conflictos entre tu interés personal y el de terceros.",
+          "porQueNo": "No hay un incentivo de un tercero ni una actividad incompatible; la falta es no orientar al cliente según sus objetivos.",
+          "etiquetaError": "confunde-p3-p4"
+        },
+        {
+          "texto": "Compite en forma leal.",
+          "porQueNo": "No se trata de atraer o retener clientes con beneficios indebidos frente a un competidor.",
+          "etiquetaError": "confunde-p3-p8"
+        },
+        {
+          "texto": "Haz prevalecer el interés de tu cliente."
+        },
+        {
+          "texto": "Actúa con base en una conducta profesional íntegra que permita el desarrollo transparente y ordenado del mercado.",
+          "porQueNo": "El caso no afecta la formación de precios ni la operación del mercado.",
+          "etiquetaError": "confunde-p3-p2"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El principio 3 obliga a identificar los objetivos de inversión de los clientes para que lo recomendado sea lo más apropiado y a no inducirlos a negocios con el único fin del beneficio propio. El manual EBSPMV ilustra este deber con el cliente que invierte en un instrumento que no le genera un rendimiento adecuado, independientemente de la comisión que genere.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 21,
+        "textual": "Identificar los objetivos de inversión de sus clientes"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l5.q09",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o06",
+      "enunciado": "Principio ético general que consiste en tomar decisiones con base en criterios objetivos:",
+      "opciones": [
+        {
+          "texto": "Imparcialidad."
+        },
+        {
+          "texto": "Probidad.",
+          "porQueNo": "La probidad es la constancia en observar los deberes.",
+          "etiquetaError": "confunde-imparcialidad-probidad"
+        },
+        {
+          "texto": "Diligencia.",
+          "porQueNo": "La diligencia es el esmero, cuidado y oportunidad en el actuar.",
+          "etiquetaError": "confunde-imparcialidad-diligencia"
+        },
+        {
+          "texto": "Integridad.",
+          "porQueNo": "La integridad es la congruencia entre el ser y hacer.",
+          "etiquetaError": "confunde-imparcialidad-integridad"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "La imparcialidad, según el manual AMIB 1, es tomar decisiones con base en criterios objetivos. Las otras opciones son principios éticos generales con definiciones distintas.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 20,
+        "textual": "Tomar decisiones con base en criterios objetivos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l5.q10",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o16",
+      "enunciado": "Un grupo de promotores, cuyos clientes compraron una acción que no ha subido de precio, acuerda difundir comentarios infundados sobre una próxima adquisición de la emisora para aumentar su demanda. ¿Qué principio fundamental violan principalmente?",
+      "opciones": [
+        {
+          "texto": "Actúa con base en una conducta profesional íntegra que permita el desarrollo transparente y ordenado del mercado."
+        },
+        {
+          "texto": "No uses ni divulgues información privilegiada.",
+          "porQueNo": "Los comentarios son infundados: no hay información privilegiada, sino un rumor fabricado para mover el precio.",
+          "etiquetaError": "confunde-rumor-privilegiada"
+        },
+        {
+          "texto": "Haz prevalecer el interés de tu cliente.",
+          "porQueNo": "Aunque busquen beneficiar a sus clientes, la conducta altera la formación de precios del mercado.",
+          "etiquetaError": "confunde-p2-p3"
+        },
+        {
+          "texto": "Actúa de acuerdo con las disposiciones aplicables y las sanas prácticas de mercado.",
+          "porQueNo": "Es un principio general de cumplimiento; alterar precios por medio del rumor está previsto de forma específica en el principio 2.",
+          "etiquetaError": "elige-principio-generico"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El principio 2 prohíbe participar en actividades que alteren los precios o tasas por medio del engaño o el rumor, o que creen condiciones falsas de demanda u oferta. El manual EBSPMV usa este mismo ejemplo para ilustrar el principio.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 21,
+        "textual": "Alteren los precios o tasas por medio del engaño o el rumor"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l5.q11",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o17",
+      "enunciado": "Al presentar una recomendación, un promotor separa con claridad lo que dice el reporte de su área de análisis, lo que informó la emisora y lo que es su opinión personal. ¿Qué principio fundamental cumple de manera directa con esta conducta?",
+      "opciones": [
+        {
+          "texto": "Proporciona al mercado información veraz, clara, completa y oportuna.",
+          "porQueNo": "Ese principio pide opiniones fundadas en información pública, pero el deber de distinguir información y recomendación al cliente está en el principio 3.",
+          "etiquetaError": "confunde-p3-p5"
+        },
+        {
+          "texto": "Actúa de acuerdo con las disposiciones aplicables y las sanas prácticas de mercado.",
+          "porQueNo": "Es un principio general de cumplimiento normativo; la conducta descrita es un deber específico frente al cliente.",
+          "etiquetaError": "elige-principio-generico"
+        },
+        {
+          "texto": "Actúa con base en una conducta profesional íntegra que permita el desarrollo transparente y ordenado del mercado.",
+          "porQueNo": "No se relaciona con la formación de precios ni con la operación del mercado.",
+          "etiquetaError": "confunde-p3-p2"
+        },
+        {
+          "texto": "Haz prevalecer el interés de tu cliente."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "Entre los deberes del principio 3 está, al hacer recomendaciones a los clientes, distinguir entre lo que es información de los emisores o de mercado y la recomendación personal. Es una trampa frecuente porque el principio 5 también habla de recomendaciones.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 21,
+        "textual": "Al hacer recomendaciones a sus clientes, distinguir entre lo que es"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l5.q12",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o07",
+      "enunciado": "De conformidad con el principio \"Actúa de acuerdo con las disposiciones aplicables y las sanas prácticas de mercado\", los profesionales deberán, EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "supervisar que sus colaboradores realicen sus actividades conforme al régimen legal vigente.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "no ser complacientes o consecuentes con las conductas incorrectas de otros.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "informar y, de ser posible, aportar la evidencia de las violaciones que conozcan.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "ejecutar instrucciones irregulares de sus superiores si queda constancia escrita."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El principio 1 exige abstenerse de ejecutar instrucciones contrarias a la regulación o a las sanas prácticas (dejar constancia no lo justifica), supervisar a los colaboradores, promover con el ejemplo la rectitud, no ser complaciente con conductas incorrectas e informar y aportar evidencia de las violaciones a las autoridades y entidades autorregulatorias.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 20,
+        "textual": "aportar la evidencia de las violaciones"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l5.q13",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o06",
+      "enunciado": "¿Qué distingue a los principios éticos generales de los principios fundamentales de actuación del Código?",
+      "opciones": [
+        {
+          "texto": "Los generales son ocho normas en imperativo y los fundamentales son seis definiciones de conducta.",
+          "porQueNo": "Es al revés: los generales son seis y los fundamentales ocho, expresados en imperativo.",
+          "etiquetaError": "invierte-generales-fundamentales"
+        },
+        {
+          "texto": "Los generales fijan la forma de actuación; los fundamentales, criterios propios del mercado bursátil."
+        },
+        {
+          "texto": "Los fundamentales son recomendaciones opcionales y los generales son obligaciones para todos.",
+          "porQueNo": "Los fundamentales se expresan en imperativo porque son normas para poner en práctica.",
+          "etiquetaError": "fundamentales-opcionales"
+        },
+        {
+          "texto": "Los generales solo aplican a los directivos y los fundamentales a todos los empleados.",
+          "porQueNo": "Ambos aplican a todos los profesionales del mercado bursátil.",
+          "etiquetaError": "reduce-sujetos"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "Los principios éticos generales (honestidad, integridad, probidad, diligencia, imparcialidad y buena fe) establecen la forma de actuación de los profesionales. Los ocho principios fundamentales establecen los criterios de actuación en el mercado bursátil en particular, con base en las sanas prácticas y la normatividad, y se expresan en imperativo.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 20,
+        "textual": "establecen los criterios de actuación en el mercado bursátil en particular"
+      },
+      "vigencia": "no-aplica",
+      "estado": "borrador",
+      "notas": [
+        "La clave del repaso del libro (pregunta 5) atribuye a los principios fundamentales la frase \"establecen la forma de actuación\", que el texto del manual (p. 20) reserva a los principios éticos generales. Pendiente de confirmar con Cesar (docs/dudas/etica.md)."
+      ]
+    },
+    {
+      "id": "g.etica.l5.q14",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o17",
+      "enunciado": "Dos clientes envían órdenes de compra de la misma emisora con minutos de diferencia: la primera es de un pequeño inversionista y la segunda de un cliente institucional muy importante. El promotor ejecuta primero la del cliente institucional. ¿Qué principio fundamental incumple?",
+      "opciones": [
+        {
+          "texto": "Evita los conflictos entre tu interés personal y el de terceros.",
+          "porQueNo": "No hay un incentivo personal del promotor; el problema es el trato desigual a los clientes.",
+          "etiquetaError": "confunde-p3-p4"
+        },
+        {
+          "texto": "Compite en forma leal.",
+          "porQueNo": "No se trata de competir con otro intermediario.",
+          "etiquetaError": "confunde-p3-p8"
+        },
+        {
+          "texto": "Haz prevalecer el interés de tu cliente."
+        },
+        {
+          "texto": "Salvaguarda la confidencialidad de la información de los clientes.",
+          "porQueNo": "No se divulgó información de ningún cliente.",
+          "etiquetaError": "confunde-p3-p6"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El principio 3 obliga a ejecutar las instrucciones de los clientes conforme a principios de igualdad de trato y oportunidad. El manual EBSPMV lo resume como primero en tiempo, primero en derecho, sin distinguir el monto de la inversión ni el tipo de persona.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": false,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 22,
+        "textual": "Ejecutar las instrucciones de sus clientes conforme a principios de igualdad"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l5.q15",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o06",
+      "enunciado": "Antes de operar, una promotora revisa con esmero y a tiempo la documentación de cada cliente. ¿Qué principio ético general, definido como esmero, cuidado y oportunidad en el actuar, pone en práctica?",
+      "opciones": [
+        {
+          "texto": "Probidad.",
+          "porQueNo": "La probidad es la constancia en observar los deberes; el esmero y la oportunidad definen la diligencia.",
+          "etiquetaError": "confunde-diligencia-probidad"
+        },
+        {
+          "texto": "Diligencia."
+        },
+        {
+          "texto": "Honestidad.",
+          "porQueNo": "La honestidad es actuar con rectitud.",
+          "etiquetaError": "confunde-diligencia-honestidad"
+        },
+        {
+          "texto": "Buena fe.",
+          "porQueNo": "La buena fe es la intención recta.",
+          "etiquetaError": "confunde-diligencia-buena-fe"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "La diligencia es el esmero, cuidado y oportunidad en el actuar. La probidad, con la que suele confundirse, es la constancia en observar los deberes.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 20,
+        "textual": "Esmero, cuidado y oportunidad en el actuar"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l6.q01",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o18",
+      "enunciado": "Un promotor acepta figurar como cotitular de la cuenta de inversión de uno de sus clientes de confianza. ¿Qué principio fundamental incumple?",
+      "opciones": [
+        {
+          "texto": "Salvaguarda la confidencialidad de la información de los clientes.",
+          "porQueNo": "No se revela información del cliente; el problema es el interés personal del promotor en la cuenta.",
+          "etiquetaError": "confunde-p4-p6"
+        },
+        {
+          "texto": "Haz prevalecer el interés de tu cliente.",
+          "porQueNo": "El manual lista la cotitularidad entre los conflictos de interés del principio 4.",
+          "etiquetaError": "confunde-p4-p3"
+        },
+        {
+          "texto": "Evita los conflictos entre tu interés personal y el de terceros."
+        },
+        {
+          "texto": "Compite en forma leal.",
+          "porQueNo": "No se trata de competir con otro intermediario.",
+          "etiquetaError": "confunde-p4-p8"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El principio 4 aplica a cualquier situación en la que pueda existir un conflicto de interés o que sea incompatible con las funciones del promotor: operar cuentas de familiares, fungir como cotitular de las cuentas de los clientes, trabajar para dos intermediarios u operar directamente cuentas personales.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 22,
+        "textual": "cotitular de las cuentas de los clientes"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l6.q02",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o12",
+      "enunciado": "El principio \"Salvaguarda la confidencialidad de la información de los clientes\" permite proporcionar información de los clientes únicamente cuando exista un requerimiento:",
+      "opciones": [
+        {
+          "texto": "verbal de cualquier funcionario de la institución financiera, aunque no sea autoridad.",
+          "porQueNo": "Un funcionario interno no es autoridad competente y el requerimiento debe ser expreso, fundado y motivado.",
+          "etiquetaError": "requerimiento-informal"
+        },
+        {
+          "texto": "escrito, fundado y motivado de un familiar directo del cliente, como su cónyuge.",
+          "porQueNo": "Los familiares no son autoridad competente.",
+          "etiquetaError": "requerimiento-familiar"
+        },
+        {
+          "texto": "expreso y por escrito de otra institución financiera con la que opere el mismo cliente.",
+          "porQueNo": "Otra institución no es autoridad ni entidad autorregulatoria competente.",
+          "etiquetaError": "requerimiento-tercero"
+        },
+        {
+          "texto": "expreso, fundado y motivado de las autoridades y entidades autorregulatorias."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El principio 6 limita la divulgación de la información de los clientes a las autoridades y entidades autorregulatorias competentes, y solo cuando exista requerimiento expreso, fundado y motivado.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 23,
+        "textual": "requerimiento expreso, fundado y motivado"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l6.q03",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o22",
+      "enunciado": "Un promotor ofrece a los padres de sus amigos devolverles la mitad de la comisión de cada operación si abren o incrementan su cuenta con él. ¿Qué principio fundamental viola?",
+      "opciones": [
+        {
+          "texto": "Evita los conflictos entre tu interés personal y el de terceros.",
+          "porQueNo": "No recibe un incentivo; otorga un beneficio indebido para captar clientes, conducta propia del principio 8.",
+          "etiquetaError": "confunde-p8-p4"
+        },
+        {
+          "texto": "Compite en forma leal."
+        },
+        {
+          "texto": "Haz prevalecer el interés de tu cliente.",
+          "porQueNo": "Aunque el cliente parezca beneficiado, la conducta es una forma de competencia desleal.",
+          "etiquetaError": "confunde-p8-p3"
+        },
+        {
+          "texto": "Salvaguarda la confidencialidad de la información de los clientes.",
+          "porQueNo": "No se divulga información de clientes.",
+          "etiquetaError": "confunde-p8-p6"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "El principio 8 prohíbe atraer a clientes potenciales o conservar a los actuales otorgando beneficios no permitidos por la normatividad. El manual EBSPMV usa este ejemplo: la comisión es la ganancia legítima por un servicio y no cabe ofrecerla a cambio de abrir una cuenta.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 24,
+        "textual": "otorgando beneficios no permitidos por la normatividad vigente"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l6.q04",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o11",
+      "enunciado": "Según el manual, la mayor parte de la información y de los eventos relevantes que exige el principio \"Proporciona al mercado información veraz, clara, completa y oportuna\" corresponde comunicarla a:",
+      "opciones": [
+        {
+          "texto": "los promotores de las casas de bolsa.",
+          "porQueNo": "El promotor debe usar información de dominio público, pero la revelación de eventos relevantes corresponde sobre todo a los emisores.",
+          "etiquetaError": "confunde-sujeto-revelacion"
+        },
+        {
+          "texto": "la Comisión Nacional Bancaria y de Valores.",
+          "porQueNo": "La CNBV supervisa; quien revela la información de la empresa es la emisora.",
+          "etiquetaError": "confunde-autoridad-emisor"
+        },
+        {
+          "texto": "los emisores de valores."
+        },
+        {
+          "texto": "los organismos autorregulatorios del mercado.",
+          "porQueNo": "Los organismos autorregulatorios no generan la información de las emisoras.",
+          "etiquetaError": "confunde-oar-emisor"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El principio 5 se basa principalmente en la revelación oportuna de la información, y el manual precisa que la mayor parte de la información y de los eventos relevantes le corresponde comunicarla a los emisores de valores. Para el promotor, la obligación es usar solo información de dominio público.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 23,
+        "textual": "le corresponde comunicarla a los emisores de valores"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l6.q05",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o13",
+      "enunciado": "Negociar o inducir a terceros a negociar valores cuyo precio pueda ser influido por la información privilegiada que se posee es una conducta prohibida por el principio:",
+      "opciones": [
+        {
+          "texto": "Salvaguarda la confidencialidad de la información de los clientes.",
+          "porQueNo": "El principio 6 protege la información de los clientes, no la información no pública de las emisoras.",
+          "etiquetaError": "confunde-p6-p7"
+        },
+        {
+          "texto": "Proporciona al mercado información veraz, clara, completa y oportuna.",
+          "porQueNo": "El principio 5 trata de la difusión de información al mercado.",
+          "etiquetaError": "confunde-p5-p7"
+        },
+        {
+          "texto": "No uses ni divulgues información privilegiada."
+        },
+        {
+          "texto": "Actúa con base en una conducta profesional íntegra que permita el desarrollo transparente y ordenado del mercado.",
+          "porQueNo": "Aunque afecta al mercado, el deber específico de no negociar con información privilegiada está en el principio 7.",
+          "etiquetaError": "elige-principio-generico"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El principio 7 prohíbe divulgar a terceros la información privilegiada que se posea y negociar o inducir a terceros a negociar valores o derivados cuyo precio pueda ser influido por esa información.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": false,
+      "dificultad": 2,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 24,
+        "textual": "inducir a terceros a negociar valores"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l6.q06",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o10",
+      "enunciado": "Son conductas que el manual ubica en el principio \"Evita los conflictos entre tu interés personal y el de terceros\", EXCEPTO:",
+      "opciones": [
+        {
+          "texto": "replicar las estrategias que ordena un cliente."
+        },
+        {
+          "texto": "operar cuentas de familiares.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "trabajar para dos intermediarios al mismo tiempo.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        },
+        {
+          "texto": "operar directamente cuentas personales.",
+          "porQueNo": "Es una afirmación verdadera según el manual; la pregunta pide la que no corresponde.",
+          "etiquetaError": "lee-mal-excepto"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "Operar cuentas de familiares, fungir como cotitular de cuentas de clientes, trabajar para dos intermediarios y operar directamente cuentas personales son conflictos de interés (principio 4). Replicar las estrategias de un cliente con el resto de la cartera está prohibido por el principio 6, como parte del secreto bursátil.",
+      "tipo": "teoria",
+      "formato": "excepto",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 22,
+        "textual": "Trabajar para dos intermediarios al mismo tiempo"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l6.q07",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o20",
+      "enunciado": "Un promotor nota que las órdenes de compra de uno de sus clientes suelen ser muy acertadas y decide replicarlas en las cuentas de sus demás clientes. ¿Qué principio fundamental incumple?",
+      "opciones": [
+        {
+          "texto": "No uses ni divulgues información privilegiada.",
+          "porQueNo": "Las órdenes de un cliente no son información privilegiada de una emisora; su uso está regulado por el principio 6.",
+          "etiquetaError": "confunde-p6-p7"
+        },
+        {
+          "texto": "Haz prevalecer el interés de tu cliente.",
+          "porQueNo": "Aunque pretenda beneficiar a otros clientes, la falta es usar la información de las órdenes de uno de ellos.",
+          "etiquetaError": "confunde-p6-p3"
+        },
+        {
+          "texto": "Salvaguarda la confidencialidad de la información de los clientes."
+        },
+        {
+          "texto": "Actúa con base en una conducta profesional íntegra que permita el desarrollo transparente y ordenado del mercado.",
+          "porQueNo": "El caso no describe una manipulación de precios.",
+          "etiquetaError": "confunde-p6-p2"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El principio 6 obliga a no utilizar la información de las órdenes que se manejan para obtener un beneficio propio, para la institución o para cualquier tercero. El manual añade la prohibición total de replicar las estrategias ordenadas por un cliente con el resto de la cartera del promotor.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 23,
+        "textual": "prohibición de replicar estrategias ordenadas por un cliente"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l6.q08",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o19",
+      "enunciado": "Un promotor acostumbra recomendar compras a sus clientes con base en pláticas informales con colegas y en rumores no confirmados, sin revisar los reportes del área de análisis. ¿Qué principio fundamental incumple?",
+      "opciones": [
+        {
+          "texto": "Actúa con base en una conducta profesional íntegra que permita el desarrollo transparente y ordenado del mercado.",
+          "porQueNo": "No busca mover el precio ni crear demanda artificial; la falta está en recomendar sin fundamento.",
+          "etiquetaError": "confunde-p5-p2"
+        },
+        {
+          "texto": "No uses ni divulgues información privilegiada.",
+          "porQueNo": "Los rumores no confirmados no son información privilegiada.",
+          "etiquetaError": "confunde-rumor-privilegiada"
+        },
+        {
+          "texto": "Actúa de acuerdo con las disposiciones aplicables y las sanas prácticas de mercado.",
+          "porQueNo": "Es un principio general; la conducta encaja en el deber específico de recomendar con opinión fundada.",
+          "etiquetaError": "elige-principio-generico"
+        },
+        {
+          "texto": "Proporciona al mercado información veraz, clara, completa y oportuna."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El principio 5 obliga a abstenerse de difundir rumores y a formular a los clientes recomendaciones que representen una opinión fundada, con base en información del dominio público. El manual EBSPMV usa este ejemplo para ilustrar el principio.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 23,
+        "textual": "Formular a sus clientes recomendaciones que representen su opinión fundada"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l6.q09",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o18",
+      "enunciado": "Un cliente corporativo regala a un promotor boletos de alto costo para un evento deportivo, con la expectativa de recibir un trato preferente en sus órdenes. ¿Qué principio fundamental incumpliría el promotor si acepta el regalo?",
+      "opciones": [
+        {
+          "texto": "Haz prevalecer el interés de tu cliente.",
+          "porQueNo": "El trato preferente sería una consecuencia; aceptar el incentivo que resta objetividad es lo que prohíbe el principio 4.",
+          "etiquetaError": "confunde-p4-p3"
+        },
+        {
+          "texto": "Evita los conflictos entre tu interés personal y el de terceros."
+        },
+        {
+          "texto": "Compite en forma leal.",
+          "porQueNo": "El principio 8 trata de los beneficios que el profesional otorga para competir, no de los que recibe.",
+          "etiquetaError": "confunde-p4-p8"
+        },
+        {
+          "texto": "Salvaguarda la confidencialidad de la información de los clientes.",
+          "porQueNo": "No hay divulgación de información de clientes.",
+          "etiquetaError": "confunde-p4-p6"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "El principio 4 establece que los profesionales no podrán ofrecer, dar, solicitar o aceptar incentivos que les originen un compromiso personal y que puedan restarles objetividad. Aplica básicamente a regalos, invitaciones o prestaciones que busquen influenciar el buen juicio del promotor.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": false,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 22,
+        "textual": "No podrán ofrecer, dar, solicitar o aceptar incentivos"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l6.q10",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o22",
+      "enunciado": "Para atraer a un inversionista importante, el director de promoción de una casa de bolsa le ofrece una comisión de 0.05% cuando la comisión promedio es de 0.15%, a sabiendas de que los costos operativos de la institución son superiores. ¿Qué principio fundamental incumple?",
+      "opciones": [
+        {
+          "texto": "Haz prevalecer el interés de tu cliente.",
+          "porQueNo": "Que el cliente pague menos no convierte la conducta en un servicio a su interés: es una tarifa por debajo de costos para ganar el negocio.",
+          "etiquetaError": "confunde-p8-p3"
+        },
+        {
+          "texto": "Compite en forma leal."
+        },
+        {
+          "texto": "Evita los conflictos entre tu interés personal y el de terceros.",
+          "porQueNo": "No hay un incentivo personal del director.",
+          "etiquetaError": "confunde-p8-p4"
+        },
+        {
+          "texto": "Actúa de acuerdo con las disposiciones aplicables y las sanas prácticas de mercado.",
+          "porQueNo": "Es un principio general; la conducta está descrita de forma específica en el principio 8.",
+          "etiquetaError": "elige-principio-generico"
+        }
+      ],
+      "clave": 1,
+      "explicacion": "El principio 8 prohíbe ofrecer productos o servicios a precios o tarifas inferiores a sus costos operativos con el objeto de obtener un negocio en perjuicio de un competidor. El manual EBSPMV usa este ejemplo (0.05% frente a 0.15%).",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 3,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 24,
+        "textual": "Ofrecer productos, servicios o combinaciones de ambos a precios o"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l6.q11",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o21",
+      "enunciado": "Un analista de banca de inversión comenta a un amigo, promotor de otra casa de bolsa, que una emisora está por adquirir a la empresa líder de su sector, operación que aún no se anuncia. El promotor se lo cuenta a un cliente, quien compra acciones. Según el manual:",
+      "opciones": [
+        {
+          "texto": "violan el principio de información privilegiada tanto el analista como el promotor."
+        },
+        {
+          "texto": "solo viola el principio el analista, porque el promotor no operó por cuenta propia.",
+          "porQueNo": "Divulgar a terceros o inducirlos a negociar también está prohibido, aunque el promotor no opere.",
+          "etiquetaError": "solo-viola-quien-opera"
+        },
+        {
+          "texto": "solo incurre en falta el cliente, porque fue quien compró las acciones.",
+          "porQueNo": "El promotor divulgó e indujo a negociar: también viola el principio 7.",
+          "etiquetaError": "solo-viola-quien-opera"
+        },
+        {
+          "texto": "el promotor viola la confidencialidad de los clientes, no el de información privilegiada.",
+          "porQueNo": "La información es un hecho no público de una emisora, no información de un cliente.",
+          "etiquetaError": "confunde-p6-p7"
+        }
+      ],
+      "clave": 0,
+      "explicacion": "El principio 7 prohíbe divulgar a terceros la información privilegiada que se posea y negociar o inducir a terceros a negociar con ella. El manual EBSPMV usa este ejemplo y concluye que viola el principio quien divulga la información, al igual que la persona que la compartió.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 24,
+        "textual": "la Información privilegiada que posean"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l6.q12",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o20",
+      "enunciado": "El esposo de una clienta llama al promotor y le pide los movimientos de la cuenta personal de inversiones de ella, \"porque son matrimonio\". El promotor:",
+      "opciones": [
+        {
+          "texto": "puede informar, porque el cónyuge tiene derechos sobre el patrimonio familiar.",
+          "porQueNo": "La información solo se proporciona ante requerimiento expreso, fundado y motivado de autoridad competente.",
+          "etiquetaError": "requerimiento-familiar"
+        },
+        {
+          "texto": "puede informar solo si el esposo también es cliente de la institución.",
+          "porQueNo": "Ser cliente no lo convierte en autoridad competente.",
+          "etiquetaError": "requerimiento-tercero"
+        },
+        {
+          "texto": "debe informar, pero avisar después a la clienta de lo que reveló.",
+          "porQueNo": "Avisar después no subsana la violación de la confidencialidad.",
+          "etiquetaError": "subsana-despues"
+        },
+        {
+          "texto": "debe negarse, porque informar violaría la confidencialidad de su clienta."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El principio 6 obliga a guardar en forma confidencial la información de los clientes y de las operaciones de sus cuentas. El manual EBSPMV usa este ejemplo: si el promotor da al marido cualquier información de la cuenta de la esposa, viola el principio.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 23,
+        "textual": "la información de sus clientes y de las operaciones que"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l6.q13",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o20",
+      "enunciado": "Una agencia de viajes ofrece a un promotor un viaje gratuito a cambio de la lista con nombres, teléfonos y saldos de sus clientes, para promocionar sus servicios. Según el ejemplo del manual de Ética Bursátil, si el promotor acepta, viola gravemente el principio:",
+      "opciones": [
+        {
+          "texto": "Evita los conflictos entre tu interés personal y el de terceros.",
+          "porQueNo": "Aceptar un regalo sugiere un conflicto de interés, pero el manual ubica este caso en el principio 6 porque lo grave es revelar los datos de los clientes.",
+          "etiquetaError": "confunde-p6-p4"
+        },
+        {
+          "texto": "No uses ni divulgues información privilegiada.",
+          "porQueNo": "Los datos de los clientes no son información privilegiada de una emisora.",
+          "etiquetaError": "confunde-p6-p7"
+        },
+        {
+          "texto": "Salvaguarda la confidencialidad de la información de los clientes."
+        },
+        {
+          "texto": "Proporciona al mercado información veraz, clara, completa y oportuna.",
+          "porQueNo": "No se trata de difundir información al mercado, sino de entregar a un tercero los datos de los clientes.",
+          "etiquetaError": "confunde-p6-p5"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El principio 6 obliga a proporcionar información de los clientes solo ante requerimiento expreso, fundado y motivado de autoridad competente; el secreto bursátil protege datos personales, montos y valores de las cuentas. El manual EBSPMV usa este ejemplo para ilustrar una violación grave de este principio, que además infringe diversos ordenamientos legales.",
+      "tipo": "teoria",
+      "formato": "caso",
+      "esTrampa": true,
+      "dificultad": 5,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 23,
+        "textual": "los montos o valores de las cuentas de los clientes"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": [
+        "El caso también podría leerse como aceptación de un incentivo (principio 4); la clave sigue la ubicación expresa del manual EBSPMV (p. 69 del PDF)."
+      ]
+    },
+    {
+      "id": "g.etica.l6.q14",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o19",
+      "enunciado": "El rumor aparece de forma expresa en dos principios fundamentales del Código. ¿Cuáles son?",
+      "opciones": [
+        {
+          "texto": "El 3 (interés del cliente) y el 7 (información privilegiada).",
+          "porQueNo": "Ninguno de los dos menciona el rumor de forma expresa.",
+          "etiquetaError": "confunde-rumor-privilegiada"
+        },
+        {
+          "texto": "El 6 (confidencialidad) y el 8 (competencia leal).",
+          "porQueNo": "Ninguno de los dos menciona el rumor.",
+          "etiquetaError": "asocia-mal-rumor"
+        },
+        {
+          "texto": "El 2 (conducta íntegra) y el 5 (información veraz)."
+        },
+        {
+          "texto": "El 1 (disposiciones aplicables) y el 4 (conflictos de interés).",
+          "porQueNo": "Ninguno de los dos menciona el rumor de forma expresa.",
+          "etiquetaError": "asocia-mal-rumor"
+        }
+      ],
+      "clave": 2,
+      "explicacion": "El principio 2 prohíbe participar en actividades que alteren los precios o tasas por medio del engaño o el rumor (y aplica a la manipulación, los rumores y la simulación). El principio 5 obliga a abstenerse de difundir rumores o información que distorsione la formación de precios.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 23,
+        "textual": "Abstenerse de difundir rumores o información que distorsione"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    },
+    {
+      "id": "g.etica.l6.q15",
+      "version": 1,
+      "area": "etica",
+      "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+      "objetivoId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o14",
+      "enunciado": "Selecciona las conductas que violan el principio \"Compite en forma leal\": 1. Garantizar rendimientos que no deriven de la naturaleza del instrumento. 2. Aceptar un regalo de un cliente que reste objetividad. 3. Ofrecer servicios por debajo de sus costos operativos para perjudicar a un competidor. 4. Replicar las órdenes de un cliente en otras cuentas.",
+      "opciones": [
+        {
+          "texto": "1, 2 y 3.",
+          "porQueNo": "Aceptar un regalo que resta objetividad corresponde al principio 4.",
+          "etiquetaError": "confunde-p8-p4"
+        },
+        {
+          "texto": "2 y 4.",
+          "porQueNo": "El 2 corresponde al principio 4 y el 4 al principio 6.",
+          "etiquetaError": "confunde-p8-p6"
+        },
+        {
+          "texto": "1, 3 y 4.",
+          "porQueNo": "Replicar órdenes de un cliente corresponde al principio 6.",
+          "etiquetaError": "confunde-p8-p6"
+        },
+        {
+          "texto": "1 y 3."
+        }
+      ],
+      "clave": 3,
+      "explicacion": "El principio 8 prohíbe atraer o conservar clientes con beneficios no permitidos, ofrecer productos o servicios por debajo de sus costos operativos para perjudicar a un competidor y garantizar rendimientos que no deriven de la naturaleza de los instrumentos. Aceptar regalos es principio 4; replicar órdenes, principio 6.",
+      "tipo": "teoria",
+      "formato": "directa",
+      "esTrampa": true,
+      "dificultad": 4,
+      "extra": false,
+      "fuente": "generada",
+      "cita": {
+        "documento": "AMIB Data/AMIB_1_completo.md",
+        "pagina": 24,
+        "textual": "Garantizar rendimientos a sus clientes que no deriven de la naturaleza"
+      },
+      "vigencia": "no-aplica",
+      "estado": "validada",
+      "notas": []
+    }
+  ]
+}

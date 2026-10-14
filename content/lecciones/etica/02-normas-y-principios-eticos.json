@@ -1,0 +1,403 @@
+{
+  "id": "etica.normas-y-principios-eticos",
+  "area": "etica",
+  "materia": "Ética",
+  "subtemaId": "etica.etica.etica-general",
+  "objetivoIds": [
+    "etica.etica.etica-general.o04",
+    "etica.etica.etica-general.o05",
+    "etica.etica.etica-general.o06",
+    "etica.etica.etica-general.o07",
+    "etica.etica.etica-general.o08"
+  ],
+  "orden": 2,
+  "titulo": "Ética, moral, legalidad y religión; características y beneficios de la ética",
+  "resumen": "Diferencias entre ética, moral, legalidad y religión; obligatoriedad de la norma ética frente a la jurídica; las características de los principios éticos (generalidad, totalidad, permanencia) y la importancia y los beneficios personales de la ética.",
+  "duracionMin": 25,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+      "paginas": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "cuatro-ordenes",
+      "titulo": "Ética, moral, legalidad y religión",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los cuatro conceptos se relacionan pero **no son lo mismo**. No tienen por qué ser contrarios, porque todos enfocan sus objetos al **estudio del bien**, desde perspectivas distintas."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "Qué es",
+            "Causa o aplicación",
+            "Rasgo que pregunta el examen"
+          ],
+          "filas": [
+            [
+              "Ética",
+              "Ciencia que se concreta en un conjunto de normas que **cada sujeto reconoce como válidas racionalmente**",
+              "Causa **interna**",
+              "**Autonomía**. Sirve para la **adquisición y formación de valores**"
+            ],
+            [
+              "Moral",
+              "Conjunto de normas que **la sociedad transmite de generación en generación**; valores socialmente aceptados",
+              "Causa **externa**",
+              "**Heteronomía** (carácter heterónomo)"
+            ],
+            [
+              "Legalidad",
+              "Característica de la ley: lo que es **conforme a derecho**; pretende establecer los parámetros de la **justicia**",
+              "Se aplica al hombre de manera **externa**",
+              "La norma jurídica establece un **orden social obligatorio**, no sujeto a la voluntad personal"
+            ],
+            [
+              "Religión",
+              "**Práctica de fe**, una vivencia personal",
+              "Vincula al hombre con Dios",
+              "Se distingue porque no la juzga la conciencia ni el derecho"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Mientras que **la conciencia juzga la ética** de un acto y **el derecho juzga la legalidad** del mismo, la religión se distingue porque es una práctica de fe. Lo ético y lo moral **no versan sobre los límites de lo legal o ilegal**."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "\"Orden social obligatorio, no sujeto a la voluntad personal, que se aplica de manera externa\" describe la **legalidad (derecho)**, no la moral. La moral es externa por su causa (la sociedad), pero lo que la define es la transmisión generacional de valores."
+        }
+      ],
+      "ampliada": "El cuadro del manual AMIB 1 (p. 8) se completa con el del manual EBSPMV (pp. 16 y 17): normas éticas, adoptadas por convencimiento para lograr el perfeccionamiento; normas morales, transmitidas porque identifican los valores indispensables del orden social; normas legales, basadas en las leyes y de carácter coercitivo; normas de la religión, derivadas de la fe que vincula al hombre con Dios. Las tres primeras se clasifican como internas (ética) y externas (moral y legal).",
+      "paginas": [
+        8
+      ]
+    },
+    {
+      "id": "obligatoriedad",
+      "titulo": "Obligatoriedad: norma ética frente a norma jurídica",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Rasgo",
+            "Norma ética",
+            "Norma jurídica"
+          ],
+          "filas": [
+            [
+              "Origen",
+              "**Autónoma e interna**: propia de la conciencia individual; nos autoimponemos normas",
+              "**Externa**: yo no soy el autor de las normas que tengo que respetar"
+            ],
+            [
+              "Carácter",
+              "**Unilateral**: cumplirla no implica una obligación de otra persona hacia mí",
+              "**Bilateral**: una obligación corresponde a un derecho y viceversa"
+            ],
+            [
+              "Cómo obliga",
+              "A nivel de **conciencia individual**",
+              "Se tiene que cumplir; es **coercitiva**"
+            ],
+            [
+              "Ejemplo",
+              "Cumplir un contrato **con buena intención** tiene mérito ético",
+              "En un contrato, las partes tienen derechos y también obligaciones"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "La etimología de **autonomía** viene del griego **autos** (sí mismo) y **nomos** (ley): ley que proviene de uno mismo. En la norma ética somos nuestra propia autoridad."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La norma ética es **unilateral**; la jurídica es **bilateral**. Heterónoma y externa son rasgos de la norma jurídica (y de la moral), nunca de la ética."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen obligatoriedad:",
+          "texto": "Ética: autónoma, interna, unilateral, sin sanción externa. Derecho: externo, bilateral, coercitivo."
+        }
+      ],
+      "ampliada": "El manual EBSPMV (p. 19) agrega que la obligatoriedad ética no es de carácter legal sino individual, pero que derecho y ética se pueden entrelazar: realizar los deberes de un contrato con buena intención legalmente no tiene mérito, pero éticamente sí. En la característica de \"no coerción externa\" (p. 20) explica que las normas éticas carecen de sanción externa.",
+      "paginas": [
+        10
+      ]
+    },
+    {
+      "id": "generalidad-totalidad-permanencia",
+      "titulo": "Características de los principios éticos",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Característica",
+            "Qué significa",
+            "Frase clave"
+          ],
+          "filas": [
+            [
+              "Obligatoriedad",
+              "La norma ética obliga desde la conciencia (autónoma, interna); la jurídica, desde fuera (bilateral)",
+              "\"Somos nuestra propia autoridad\""
+            ],
+            [
+              "Generalidad",
+              "Los principios éticos son teóricos y aplicables de manera **universal y general a cualquier profesión**; cada profesión supone un **deber ser** que en esencia es el mismo",
+              "\"Aun cuando se haga con gran perfección y arte\""
+            ],
+            [
+              "Totalidad",
+              "**Todas nuestras acciones reflejan nuestro ser**: la ética se aplica siempre y en todo momento; radica en la racionalidad (inteligencia y voluntad)",
+              "\"No puede existir una ética para la familia y otra para el trabajo\""
+            ],
+            [
+              "Permanencia",
+              "Las normas éticas **se conservan en sus principios a lo largo del tiempo**",
+              "\"A lo largo del tiempo\""
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "**Generalidad** explica que una profesión tiene valor ético solo si perfecciona la naturaleza humana: quien la degrada con su actuación profesional no actúa éticamente bien, aunque lo haga con gran perfección y arte. **Totalidad** explica que la persona no se hace virtuosa por conocer los principios, sino poniéndolos en práctica hasta formar hábitos buenos."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Un promotor que es honesto con sus clientes grandes pero no con los pequeños, o con su familia pero no en la oficina, viola el principio de **totalidad**, no el de generalidad. Generalidad habla de **profesiones**; totalidad, de **todas las acciones** de una misma persona."
+        }
+      ],
+      "ampliada": "El manual AMIB 1 (p. 10) enumera obligatoriedad, generalidad, totalidad y permanencia. El manual EBSPMV (pp. 18 a 20) añade dos más: **conciencia** (todo principio ético supone que la persona actúa guiada por su sentido común y por el conocimiento de las normas aplicables a su actividad) y **no coerción externa** (las normas éticas carecen de sanción externa). También precisa que la totalidad impide \"una aplicación discriminada hacia ciertos clientes por encima de otros, ni una moral para el jefe y otra para el empleado\".",
+      "paginas": [
+        10
+      ]
+    },
+    {
+      "id": "importancia-de-la-etica",
+      "titulo": "Importancia y utilidad de la ética",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Practicar la ética tiene muchos beneficios, pero primero hay que **aprender a desarrollar las virtudes** que permitan aplicarla. La educación en la ética implica la **adquisición de conocimientos y la formación de hábitos**, de costumbres para vivir bien, dignamente."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "La adquisición de buenas costumbres otorga a la persona **libertad y seguridad** entre lo que quiere y lo que puede hacer. La ética **se acrecienta cuando se ejercita bien**, hasta llegar a ser virtuoso."
+        },
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Ampliar nuestros conocimientos",
+              "texto": "Conocer los principios y las normas."
+            },
+            {
+              "titulo": "Aplicar estos conocimientos",
+              "texto": "Llevarlos a cada acto que realizamos libremente."
+            },
+            {
+              "titulo": "Practicar y repetir hábitos",
+              "texto": "Hasta formar virtudes y costumbres para vivir bien."
+            }
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El orden importa: primero **conocer**, después **aplicar** y al final **repetir** hasta formar virtudes. La virtud no llega por conocer los principios, sino por practicarlos."
+        }
+      ],
+      "ampliada": "El manual EBSPMV (p. 20) formula la misma idea así: adquirir buenos hábitos nos otorga libertad y congruencia entre lo que quiero y lo que debo hacer.",
+      "paginas": [
+        9
+      ]
+    },
+    {
+      "id": "beneficios-personales",
+      "titulo": "Beneficios personales de contar con conocimientos éticos",
+      "bloques": [
+        {
+          "tipo": "lista",
+          "items": [
+            "Con ella logramos la **autonomía**.",
+            "**Supera el nivel de la coercibilidad**.",
+            "Proporciona un **amplio criterio en la toma de decisiones**.",
+            "Ayuda a tener **coherencia y consistencia** en los actos.",
+            "Nos hace **mejores personas**.",
+            "Permite que nuestras **instituciones** sean más sólidas, más eficientes, más exitosas y más prósperas por quienes laboramos en ellas."
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "El beneficio personal y social se resume en que la ética es **la ciencia que nos enseña a bien vivir**, a vivir como es propio de un ser humano, lo que supone descubrir y ordenar nuestros actos en la dirección que permita alcanzar la **plenitud humana**."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Son distractores típicos: \"garantiza el éxito económico\", \"evita toda sanción legal\", \"sustituye a la ley\". La ética **supera** la coercibilidad: se cumple por convicción, no por miedo a la sanción."
+        }
+      ],
+      "ampliada": "El manual EBSPMV (p. 21) redacta el primer beneficio como \"con ella se logra autonomía, madurez y ser dueño de sí mismo\". La pregunta del ensayo oficial de ética sobre la utilidad de la ética combina dos de estos beneficios: el amplio criterio en la toma de decisiones y la superación de la coercibilidad.",
+      "paginas": [
+        9
+      ]
+    },
+    {
+      "id": "repaso-ordenes-y-caracteristicas",
+      "titulo": "Repaso: palabras que delatan la respuesta",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Palabra o frase en el enunciado",
+            "Respuesta"
+          ],
+          "filas": [
+            [
+              "Autonomía, causa interna, reconocida racionalmente",
+              "Ética"
+            ],
+            [
+              "Heteronomía, transmitida de generación en generación",
+              "Moral"
+            ],
+            [
+              "Conforme a derecho, orden social obligatorio, coercitiva, bilateral",
+              "Legalidad (norma jurídica)"
+            ],
+            [
+              "Práctica de fe, vivencia personal",
+              "Religión"
+            ],
+            [
+              "La juzga la conciencia",
+              "Ética"
+            ],
+            [
+              "Aplicable a cualquier profesión, deber ser común",
+              "Generalidad"
+            ],
+            [
+              "Siempre y en todo momento, todas las acciones reflejan nuestro ser",
+              "Totalidad"
+            ],
+            [
+              "Se conserva a lo largo del tiempo",
+              "Permanencia"
+            ],
+            [
+              "Sirve para la adquisición y formación de valores",
+              "Ética"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen lección 2:",
+          "texto": "Ética: interna, autónoma, unilateral. Moral: externa, heterónoma. Legalidad: externa, bilateral, coercitiva. Religión: práctica de fe. Principios éticos: obligatoriedad, generalidad, totalidad y permanencia. Beneficios: autonomía, supera la coercibilidad, criterio, coherencia, mejores personas e instituciones."
+        }
+      ],
+      "ampliada": "Este cuadro reúne las pp. 8 a 10 del manual AMIB 1. Las preguntas de esta área suelen dar la definición y pedir el concepto, de modo que una sola palabra (interna, externa, bilateral) decide la respuesta.",
+      "paginas": [
+        8,
+        9,
+        10
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Ética: normas reconocidas **racionalmente** por cada sujeto; causa **interna**; **autonomía**; sirve para la **adquisición y formación de valores**.",
+    "Moral: normas transmitidas **de generación en generación**; causa **externa**; **heteronomía**.",
+    "Legalidad: lo **conforme a derecho**; se aplica de manera **externa**; orden social **obligatorio**. Religión: **práctica de fe**.",
+    "La **conciencia** juzga la ética; el **derecho** juzga la legalidad.",
+    "Norma ética: **autónoma, interna y unilateral**. Norma jurídica: **externa y bilateral** (a toda obligación corresponde un derecho).",
+    "Características de los principios éticos: **obligatoriedad, generalidad** (cualquier profesión), **totalidad** (todas las acciones, siempre) y **permanencia** (a lo largo del tiempo).",
+    "Desarrollo de la ética: **ampliar** conocimientos, **aplicarlos**, **practicar** hasta formar virtudes.",
+    "Beneficios: autonomía, **supera la coercibilidad**, amplio criterio para decidir, coherencia y consistencia, mejores personas, instituciones más sólidas."
+  ],
+  "practica": [
+    "g.etica.l2.q01",
+    "g.etica.l2.q02",
+    "g.etica.l2.q03",
+    "g.etica.l2.q04",
+    "g.etica.l2.q05"
+  ],
+  "miniExamen": [
+    "g.etica.l2.q06",
+    "g.etica.l2.q07",
+    "g.etica.l2.q08",
+    "g.etica.l2.q09",
+    "g.etica.l2.q10"
+  ],
+  "reto": [
+    "g.etica.l2.q11",
+    "g.etica.l2.q12",
+    "g.etica.l2.q13",
+    "g.etica.l2.q14",
+    "g.etica.l2.q15"
+  ]
+}

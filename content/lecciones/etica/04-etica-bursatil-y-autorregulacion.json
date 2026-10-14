@@ -1,0 +1,469 @@
+{
+  "id": "etica.etica-bursatil-y-autorregulacion",
+  "area": "etica",
+  "materia": "Ética",
+  "subtemaId": "etica.etica.etica-bursatil",
+  "objetivoIds": [
+    "etica.etica.etica-bursatil.o01",
+    "etica.etica.etica-bursatil.o02",
+    "etica.etica.etica-bursatil.o03",
+    "etica.etica.etica-bursatil.o04",
+    "etica.etica.etica-bursatil.o05",
+    "etica.etica.etica-bursatil.o06"
+  ],
+  "orden": 4,
+  "titulo": "Ética bursátil, sanas prácticas y autorregulación",
+  "resumen": "Concepto de ética bursátil, sanas prácticas de mercado, marco regulatorio y responsabilidad fiduciaria, concepto y objeto de la autorregulación según la AMIB, beneficios de la cultura autorregulatoria y de la certificación, y funciones de los organismos autorregulatorios.",
+  "duracionMin": 30,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        7,
+        15,
+        16,
+        17,
+        18
+      ]
+    },
+    {
+      "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+      "paginas": [
+        33,
+        34,
+        35,
+        36,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51
+      ]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "etica-bursatil",
+      "titulo": "La actividad bursátil y la ética bursátil",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La **actividad bursátil** impulsa el desarrollo económico del país movilizando los bienes financieros hacia proyectos de gran alcance, a corto, mediano y largo plazo; con ello se beneficia toda la sociedad y se favorece el **bien común**."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "La [[ética bursátil]] es **la aplicación de los principios y valores éticos del mercado de valores**. Involucra a todos los participantes del sector, entidades o personas, que deben reflejar una **conducta impecable** al interior de las instituciones y frente a proveedores y, muy particularmente, frente a sus **clientes**."
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: por qué importa la ética en el medio bursátil",
+          "filas": [
+            [
+              "Diferenciador",
+              "Los profesionales que trabajan con motivaciones de **ética y competencia profesional** generan **lealtad y satisfacción** del cliente"
+            ],
+            [
+              "Para el cliente",
+              "Saber que los profesionales siguen un Código de Ética es una garantía que produce **confianza y credibilidad**"
+            ],
+            [
+              "Responsabilidad",
+              "El manejo del patrimonio de los clientes impone una responsabilidad **extraordinaria**"
+            ],
+            [
+              "Doble responsabilidad",
+              "Ante **uno mismo** y también **frente a los demás**: los principios éticos se atienden con el mismo cuidado que los objetivos de la institución"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La definición oficial de ética bursátil de la pregunta tipo de AMIB es \"conocimiento práctico que muestra la necesidad de un comportamiento apegado a principios y valores del mercado\"; la del manual es \"aplicación de los principios y valores éticos del mercado de valores\". Ambas giran sobre **principios y valores del mercado**; los distractores cambian a \"normas de la CNBV\" o \"ciencia teórica\"."
+        }
+      ],
+      "ampliada": "El manual EBSPMV (p. 33) llama a la doble responsabilidad \"el doble compromiso de la ética\" y precisa que el patrimonio de terceros es producto de su esfuerzo.",
+      "paginas": [
+        15
+      ]
+    },
+    {
+      "id": "sanas-practicas",
+      "titulo": "Las sanas prácticas de mercado",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Una [[sana práctica]] se logra mediante la **repetición de actos aceptados por la comunidad bursátil** porque **generan beneficios a todos los participantes: al cliente, a la institución y al mercado en general**; así dan **fortaleza y sustentabilidad** al mercado. Buenas prácticas generan buenos resultados en el corto y en el largo plazo."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Las sanas prácticas **están totalmente relacionadas con la ética**, ya que buscan lograr el bien de todos los participantes del mercado de valores. **Basadas en las sanas prácticas**, las instituciones establecieron los principios que integran el **Código de Ética Profesional de la Comunidad Bursátil Mexicana**."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Guardar confidencialidad respecto a la información del cliente.",
+            "Proporcionar a los clientes **solo la información pública** respecto de las emisoras.",
+            "Considerar el **perfil del cliente** para hacerle sugerencias de inversión.",
+            "Dar información al cliente para entender los **riesgos y los beneficios** de los instrumentos.",
+            "Llevar un **control de las operaciones** que permita tomar decisiones adecuadas en el futuro.",
+            "Evitar que un promotor pueda ser **cotitular de cuentas** de parientes y de clientes."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La sana práctica no la impone la autoridad: nace de la **repetición de actos aceptados por la comunidad bursátil**. Y beneficia a los tres participantes (cliente, institución y mercado), no solo a la institución."
+        }
+      ],
+      "ampliada": "La lista de ejemplos es abierta: el manual cierra con \"entre muchas otras\". El manual EBSPMV (p. 34) reproduce el mismo texto.",
+      "paginas": [
+        15,
+        16
+      ]
+    },
+    {
+      "id": "marco-y-responsabilidad-fiduciaria",
+      "titulo": "Marco regulatorio y responsabilidad fiduciaria",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Nivel",
+            "Quién lo emite",
+            "Ejemplos"
+          ],
+          "filas": [
+            [
+              "Regulación pública",
+              "Congreso de la Unión y **CNBV**",
+              "Ley del Mercado de Valores, Ley de Instituciones de Crédito, Ley de Sociedades de Inversión (hoy Ley de Fondos de Inversión) y disposiciones de la CNBV"
+            ],
+            [
+              "Autorregulación",
+              "**Organismo autorregulatorio** (AMIB)",
+              "Normas de autorregulación"
+            ],
+            [
+              "Políticas internas",
+              "Cada **institución** (casa de bolsa, banco, operadora)",
+              "Políticas y procedimientos internos"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "La [[responsabilidad fiduciaria]] viene del latín **fides** (fe, confianza): es la **obligación extraordinaria** que asume una institución financiera y su personal frente a su clientela, derivada de la confianza que esta deposita en ella. Obliga a **manejar los recursos de la clientela como si fueran propios**."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La responsabilidad fiduciaria descansa en la **confianza** del cliente, la misma que el manual AMIB 1 (p. 7) pone como ejemplo de principio universal. No es una obligación contractual de rendimiento: es actuar como si los recursos fueran propios."
+        }
+      ],
+      "ampliada": "Esta lámina proviene del manual EBSPMV (pp. 35 y 36), que el examen de ética usa como referencia; el manual AMIB 1 solo menciona la responsabilidad fiduciaria en la p. 7. Los nombres de las leyes se dan como los cita ese manual (Ley de Sociedades de Inversión); la ley vigente es la Ley de Fondos de Inversión, por lo que el dato se considera por verificar.",
+      "paginas": [
+        7
+      ]
+    },
+    {
+      "id": "autorregulacion",
+      "titulo": "Autorregulación: concepto adoptado por la AMIB y objeto",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "En los términos adoptados por la **AMIB**, la [[autorregulación]] es **el conjunto de normas mediante las cuales un grupo de entidades o profesionales de cierta actividad establecen los estándares y lineamientos sobre los que debe conducirse su práctica profesional, en adición a la regulación pública**, con el objeto de coadyuvar en el logro de un mercado **eficiente, equitativo, transparente, seguro y de calidad**."
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: elementos del concepto",
+          "filas": [
+            [
+              "Qué es",
+              "Un **conjunto de normas**"
+            ],
+            [
+              "Quién las establece",
+              "Un **grupo de entidades o profesionales** de cierta actividad"
+            ],
+            [
+              "Qué fijan",
+              "**Estándares y lineamientos** de su práctica profesional"
+            ],
+            [
+              "Relación con la ley",
+              "**En adición** a la regulación pública (no la sustituye)"
+            ],
+            [
+              "Objeto",
+              "Mercado financiero **eficiente, equitativo, transparente, seguro y de calidad**, con estándares éticos, dispuesto a **rendir cuentas y ser evaluado** por resultados concretos"
+            ],
+            [
+              "Objetivo último",
+              "La **confianza**"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Memoriza los cinco adjetivos en orden: **eficiente, equitativo, transparente, seguro y de calidad**. Los distractores cambian uno: \"rentable\", \"equilibrado\", \"sin riesgo\" o \"de confianza\". La confianza es el **objetivo último**, no uno de los cinco adjetivos."
+        }
+      ],
+      "ampliada": "El repaso del manual AMIB 1 incluye una pregunta (19) que describe exactamente el objeto de la autorregulación; la clave del libro marca \"objeto del Código de Ética\", lo que contradice el propio manual (p. 17). Se registró como posible errata.",
+      "paginas": [
+        17,
+        18
+      ]
+    },
+    {
+      "id": "beneficios-autorregulacion",
+      "titulo": "Beneficios de la autorregulación y de la certificación",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Para el **sistema financiero**, la adopción de una cultura autorregulatoria:"
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Contribuye a la **integridad al negocio**, lo que se traduce en la **confianza del público y de la autoridad**.",
+            "Estimula un **desarrollo más sano del mercado**, con imagen de madurez y responsabilidad.",
+            "Genera la **oportuna alarma** del organismo autorregulatorio ante la autoridad frente a la conducta de un profesional que viole la normatividad o sea constitutiva de delito."
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Para el mercado de valores (5)",
+            "Para el profesional bursátil (4)"
+          ],
+          "filas": [
+            [
+              "1. Contar con **verdaderos profesionales** que conozcan sus productos, servicios y normatividad",
+              "1. Atender el cumplimiento de las disposiciones legales **por convicción**"
+            ],
+            [
+              "2. **Reducir riesgos** humanos, operativos, legales y reputacionales",
+              "2. Adoptar y aplicar principios éticos **por convencimiento**, que se traduzcan en **honorabilidad**"
+            ],
+            [
+              "3. Generar una **competencia leal** que promueva las sanas prácticas",
+              "3. Convencimiento de obtener conocimientos técnicos para una **superación personal** y excelencia profesional"
+            ],
+            [
+              "4. Generar **confianza en el público inversionista**",
+              "4. La certificación es un **valor curricular**: mayores expectativas de desarrollo y crecimiento"
+            ],
+            [
+              "5. **Fomentar la cultura bursátil**",
+              ""
+            ]
+          ],
+          "trampas": [
+            [
+              3,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El examen mezcla las dos columnas. Lo que habla de **convicción, convencimiento, superación personal o valor curricular** es beneficio **para el profesional**; lo que habla de **confianza del público, competencia leal, reducción de riesgos o cultura bursátil**, para el **mercado**."
+        }
+      ],
+      "ampliada": "Los tres beneficios para el sistema financiero están en la p. 16; los de la certificación, en las pp. 16 y 17. La pregunta 14 del repaso del manual AMIB 1 combina beneficios de ambas columnas.",
+      "paginas": [
+        16,
+        17
+      ]
+    },
+    {
+      "id": "organismos-autorregulatorios",
+      "titulo": "Organismos autorregulatorios (OAR): cómo funcionan",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Para que la autorregulación funcione deben existir organismos que **supervisen su cumplimiento y sancionen su violación**: los [[Organismos Autorregulatorios]] (OAR), reconocidos a nivel mundial y casi siempre **precursores** de la cultura autorregulatoria."
+        },
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Estructura",
+              "texto": "Crean **órganos normativos, de vigilancia y sancionadores**, con funciones **preventivas y correctivas**."
+            },
+            {
+              "titulo": "Integración",
+              "texto": "Participan **representantes de sus asociados**, seleccionados por su amplio conocimiento del negocio bursátil y su exitosa trayectoria."
+            },
+            {
+              "titulo": "Normas",
+              "texto": "Elaboran normas y procedimientos para **prevenir y, en su caso, sancionar** conductas que deterioren la confianza del público inversionista."
+            },
+            {
+              "titulo": "Aceptación",
+              "texto": "Los estándares requieren la **aceptación por convencimiento** de sus destinatarios, que quedan sujetos a la normatividad y a las sanciones."
+            },
+            {
+              "titulo": "Supervisión",
+              "texto": "Se reservan funciones de **supervisión formal y aplicación de penas** para evitar conductas que impliquen **competencia desleal**."
+            }
+          ]
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: funciones del OAR",
+          "filas": [
+            [
+              "1",
+              "Recoge las **sanas prácticas** del mercado"
+            ],
+            [
+              "2",
+              "**Eleva los estándares** profesionales"
+            ],
+            [
+              "3",
+              "Contribuye al orden de un mercado **íntegro y transparente**, con **libre formación de precios** y condiciones adecuadas de seguridad para los inversionistas"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Cuando la autorregulación demuestra ser eficiente, la **regulación oficial debería aligerarse**: en los mercados desarrollados la autoridad regula **solo lo general** y deja a los OAR las **particularidades del negocio**. Por involucrar el interés público, la autorregulación gremial **trasciende** asuntos propios de las empresas (gobierno corporativo, códigos de ética, control interno) y puede abarcar a **intermediarios, inversionistas y emisores**."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Los OAR no sustituyen a la autoridad ni \"regulan lo general\": la autoridad regula lo general y el OAR las **particularidades**. Y su supervisión busca evitar la **competencia desleal**."
+        }
+      ],
+      "ampliada": "Texto de las pp. 17 y 18 del manual AMIB 1, idéntico al del manual EBSPMV (pp. 44 a 47).",
+      "paginas": [
+        17,
+        18
+      ]
+    },
+    {
+      "id": "oar-en-mexico",
+      "titulo": "Los OAR en México y la AMIB",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Organismo",
+            "Origen de su carácter de OAR"
+          ],
+          "filas": [
+            [
+              "Bolsa Mexicana de Valores (BMV)",
+              "Por **ministerio de ley** (LMV)"
+            ],
+            [
+              "Contraparte Central de Valores (CCV)",
+              "Por **ministerio de ley** (LMV)"
+            ],
+            [
+              "S. D. Indeval",
+              "Reconocido en ley según el manual EBSPMV"
+            ],
+            [
+              "MexDer y Asigna",
+              "MexDer surgió como mercado netamente autorregulatorio"
+            ],
+            [
+              "**AMIB**",
+              "Reconocimiento otorgado por la **CNBV** a petición de la propia AMIB"
+            ]
+          ],
+          "trampas": [
+            [
+              4,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "La Ley del Mercado de Valores (art. 228, según el manual EBSPMV) señala que los OAR tienen por objeto **implementar estándares de conducta y operación entre sus miembros** a fin de contribuir al **sano desarrollo del mercado de valores**. Las **bolsas de valores** y las **contrapartes centrales de valores** lo son por ministerio de la ley; las **asociaciones gremiales** de intermediarios o de asesores en inversiones lo son si las reconoce la **CNBV**, previo acuerdo de su Junta de Gobierno."
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: la AMIB como OAR",
+          "filas": [
+            [
+              "Reconocimiento",
+              "La CNBV le otorgó el reconocimiento como OAR y la autorización como **organismo certificador** el 20 de agosto de 2002"
+            ],
+            [
+              "Supervisión",
+              "Se sujeta a la supervisión y vigilancia de la **CNBV**, que tiene **facultad de veto** sobre sus normas"
+            ],
+            [
+              "Sanciones previstas",
+              "Amonestación privada, gremial o pública, pena económica, suspensión y expulsión"
+            ],
+            [
+              "Certificación",
+              "Requisito para presentar los exámenes: asistir a un **curso de ética bursátil**"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La AMIB **no** es OAR por ministerio de ley: su carácter lo **reconoce la CNBV**. La SHCP y Banxico no son organismos autorregulatorios."
+        }
+      ],
+      "ampliada": "Toda esta lámina proviene del manual EBSPMV (pp. 46 a 50), con terminología y fechas de su edición; por tratarse de datos normativos que pueden haber cambiado, las preguntas que los usan están marcadas como por verificar.",
+      "paginas": [
+        17
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Ética bursátil: **aplicación de los principios y valores éticos del mercado de valores**; doble responsabilidad, ante uno mismo y frente a los demás.",
+    "Sana práctica: **repetición de actos aceptados por la comunidad bursátil** porque benefician al cliente, a la institución y al mercado; el Código de Ética se basó en ellas.",
+    "Autorregulación (AMIB): conjunto de normas con que un grupo de entidades o profesionales fija **estándares y lineamientos** de su práctica, **en adición a la regulación pública**.",
+    "Objeto: mercado **eficiente, equitativo, transparente, seguro y de calidad**, con estándares éticos y dispuesto a rendir cuentas. Objetivo último: **la confianza**.",
+    "Beneficios para el sistema financiero: **integridad al negocio**, desarrollo más sano, **oportuna alarma** ante la autoridad.",
+    "Certificación, para el mercado: verdaderos profesionales, menos riesgos, competencia leal, confianza del público, cultura bursátil. Para el profesional: **convicción**, **convencimiento**, superación personal, valor curricular.",
+    "Funciones del OAR: recoge las **sanas prácticas**, **eleva los estándares**, contribuye a un mercado íntegro y transparente con **libre formación de precios**. Órganos normativos, de vigilancia y sancionadores.",
+    "BMV y contrapartes centrales son OAR por ministerio de ley; la **AMIB**, por reconocimiento de la **CNBV**, que supervisa y puede vetar sus normas."
+  ],
+  "practica": [
+    "g.etica.l4.q01",
+    "g.etica.l4.q02",
+    "g.etica.l4.q03",
+    "g.etica.l4.q04",
+    "g.etica.l4.q05"
+  ],
+  "miniExamen": [
+    "g.etica.l4.q06",
+    "g.etica.l4.q07",
+    "g.etica.l4.q08",
+    "g.etica.l4.q09",
+    "g.etica.l4.q10"
+  ],
+  "reto": [
+    "g.etica.l4.q11",
+    "g.etica.l4.q12",
+    "g.etica.l4.q13",
+    "g.etica.l4.q14",
+    "g.etica.l4.q15"
+  ]
+}

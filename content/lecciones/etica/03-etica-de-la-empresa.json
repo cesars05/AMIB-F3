@@ -1,0 +1,422 @@
+{
+  "id": "etica.etica-de-la-empresa",
+  "area": "etica",
+  "materia": "Ética",
+  "subtemaId": "etica.etica.etica-de-la-empresa",
+  "objetivoIds": [
+    "etica.etica.etica-de-la-empresa.o01",
+    "etica.etica.etica-de-la-empresa.o02",
+    "etica.etica.etica-de-la-empresa.o03",
+    "etica.etica.etica-de-la-empresa.o04",
+    "etica.etica.etica-de-la-empresa.o05",
+    "etica.etica.etica-de-la-empresa.o06"
+  ],
+  "orden": 3,
+  "titulo": "Ética de la empresa y liderazgo moral",
+  "resumen": "Concepto de empresa y de ética de la empresa, importancia del capital humano, finalidades económica y social (interna y externa), principio de proporcionalidad entre medios y fines, y el líder moral con su exigencia ética y sus cuatro atributos.",
+  "duracionMin": 30,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+      "paginas": [
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "empresa",
+      "titulo": "Qué es una empresa",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "**Empresa** viene de **emprender**: estamos ante la realización de un **acto creativo**, que por lo mismo pretende ser **innovador**, y cuyo objetivo consiste en **cubrir una insuficiencia o necesidad social**."
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: la empresa según el manual",
+          "filas": [
+            [
+              "Etimología",
+              "De **emprender**: acto creativo e innovador"
+            ],
+            [
+              "Objetivo",
+              "Cubrir una **insuficiencia o necesidad social**"
+            ],
+            [
+              "Qué es",
+              "Una **comunidad de personas** capaz de generar riqueza, de responder a necesidades sociales y de evaluar las dimensiones de su productividad"
+            ],
+            [
+              "Legitimidad",
+              "Se plantea como una institución legitimada en el marco de **principios éticos compartidos** por quienes se relacionan con ella"
+            ],
+            [
+              "Función social",
+              "Además de crear e innovar, procura vivir la **cooperación y la justicia**"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La empresa no se define por el capital ni por la ganancia: se define como **comunidad de personas** que cubre una **necesidad social**."
+        }
+      ],
+      "ampliada": "El manual EBSPMV (p. 23) añade que, para generar un proyecto de empresa, es indispensable que siente sus bases en principios con implicaciones éticas y que esos principios queden plasmados en un Código de Ética.",
+      "paginas": [
+        11
+      ]
+    },
+    {
+      "id": "etica-de-la-empresa",
+      "titulo": "Ética de la empresa y moral cívica",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La [[ética de la empresa]] son **todos aquellos principios, normas y valores que la organización define para orientar el comportamiento de sus colaboradores**. Cuando una persona se integra a una empresa, **asume estos principios como suyos**."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "La ética empresarial tiene también una **parte cívica**: toma en cuenta la **moral cívica** en la que se desarrolla, porque reconoce determinados valores y derechos compartidos por la sociedad. No es posible una ética empresarial sin una **ética cívica**, porque la empresa se encuentra **inmersa en un contexto social**."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Los intermediarios bursátiles, como toda organización, **no se reducen a la suma de sus miembros**: deben cumplir funciones y asumir claras responsabilidades sociales, **sin que la responsabilidad de los individuos se diluya** en el conjunto de los fines empresariales. Por eso la ética bursátil **no es solamente individual, sino también social**."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Dos trampas: la ética de la empresa la **define la organización** (no cada colaborador por su cuenta), y la responsabilidad individual **no desaparece** dentro de la responsabilidad social de la empresa."
+        }
+      ],
+      "ampliada": "El manual AMIB 1 (p. 11) titula esta parte \"Importancia y la utilidad de la Ética de la empresa\" (sección 1.2.1, que corresponde al objetivo de identificar el concepto de ética de la empresa).",
+      "paginas": [
+        11
+      ]
+    },
+    {
+      "id": "capital-humano",
+      "titulo": "Importancia del capital humano",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El **capital humano** es **irremplazable**, como no lo son los componentes materiales de la empresa: es el hombre quien tiene la capacidad **emprendedora, creativa e innovadora**, y es responsable de las acciones que realice para conseguir sus objetivos y de los medios de que se valga para lograrlos."
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: capital humano",
+          "filas": [
+            [
+              "Finalidad del intermediario bursátil",
+              "Contribuir al **bien común** en el ámbito que le es propio, reconociendo el valor de las personas que laboran en él"
+            ],
+            [
+              "Principio rector",
+              "Las personas son **fines en sí mismas**, no medios para lograr fines de la empresa"
+            ],
+            [
+              "Irremplazabilidad",
+              "Lo que aporta una persona no lo hará del mismo modo otra"
+            ],
+            [
+              "Dónde pesa más",
+              "En las empresas que **prestan servicios**, como el medio bursátil, donde la actuación de los profesionales es determinante en la creación del **valor agregado**"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Si una opción dice que las personas son \"el principal medio\" o \"un recurso sustituible\" para los fines de la empresa, es falsa: son **fines en sí mismas**."
+        }
+      ],
+      "ampliada": "El manual EBSPMV (p. 24) llama a las personas el \"agente transformador\" de la organización.",
+      "paginas": [
+        11,
+        12
+      ]
+    },
+    {
+      "id": "finalidades",
+      "titulo": "Finalidad económica y finalidad social de la empresa",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Para quién",
+            "Finalidad económica",
+            "Finalidad social"
+          ],
+          "filas": [
+            [
+              "Para la empresa (interna)",
+              "Generar **riqueza suficiente para los integrantes** de la empresa: rentabilidad, permanencia y recompensa a los colaboradores",
+              "Propiciar el **desarrollo humano** de los integrantes: formar y desarrollar habilidades, carácter y virtudes"
+            ],
+            [
+              "Para la comunidad (externa)",
+              "Generar **riqueza para los integrantes de la comunidad**, proporcionando los bienes y servicios por los que se creó",
+              "Propiciar el **desarrollo de la comunidad**: aportar beneficios más allá de los bienes y servicios que ofrece"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "El **objetivo primordial** de una empresa es **mejorar condiciones preexistentes en su entorno social**. Esa mejora persigue ciertos **bienes sociales**, que se concretan en el **bienestar común**. El **capital ocupa un segundo plano**, porque la verdadera creación de riqueza reside en el **trabajo** que aportan las personas."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Para progresar, los principios sobre los que se cimienta el trabajo deben ser **firmes, coherentes, consistentes** y relacionados con el objetivo por el cual fue creada. Su **responsabilidad** es generar bienes sociales: que lo que produce o los servicios que presta contribuyan en verdad a satisfacer necesidades sociales."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Formar habilidades y virtudes en los colaboradores es finalidad **social interna**, no económica. Generar riqueza para la comunidad mediante bienes y servicios es finalidad **económica externa**, no social."
+        }
+      ],
+      "ampliada": "El manual EBSPMV (p. 25) explica que crear bienes y servicios es lo que legitima la existencia de las organizaciones ante la sociedad: a diferencia de las personas, cuya existencia no requiere legitimación, las organizaciones sí la necesitan. Por eso la pregunta oficial sobre la legitimación de las empresas tiene como respuesta proporcionar a la sociedad bienes y servicios.",
+      "paginas": [
+        12
+      ]
+    },
+    {
+      "id": "proporcionalidad",
+      "titulo": "El principio de proporcionalidad: el fin no justifica los medios",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La empresa **debe obtener beneficios**, pero no a costa de los derechos de los **empleados, consumidores o proveedores**; tampoco el beneficio de sus miembros puede pasar por delante de los derechos de las personas. Logra **legitimidad social** produciendo los bienes que de ella se esperan y respetando los derechos y valores que comparte la sociedad."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Como **el fin no justifica los medios**, aunque haya un buen fin, si los medios no son buenos tampoco lo son los actos de la empresa. La **proporción entre medios y fines** es la regla y criterio seguro para entender que **ambos deben ser adecuados**."
+        },
+        {
+          "tipo": "formula",
+          "logica": "\\text{Fin} + \\text{Medios} = \\text{Acto}",
+          "leyenda": [
+            [
+              "Fin",
+              "lo que la empresa o la persona busca"
+            ],
+            [
+              "Medios",
+              "las acciones que utiliza para lograrlo"
+            ],
+            [
+              "Acto",
+              "ético solo si fin y medios son lícitos"
+            ]
+          ],
+          "valores": "\\text{Fin lícito} + \\text{Medios ilícitos} = \\text{Acto ilícito}",
+          "resultado": "Las cuatro combinaciones: lícito y lícito da acto ético; las otras tres (lícito e ilícito, ilícito y lícito, ilícito e ilícito) dan acto ilícito."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Caso",
+            "Fin",
+            "Medios",
+            "Resultado"
+          ],
+          "filas": [
+            [
+              "**Lavado de dinero** (ejemplo del manual)",
+              "Ilícito",
+              "Ilícitos",
+              "Ilícito"
+            ],
+            [
+              "Alcanzar la meta de captación ofreciendo rendimientos garantizados",
+              "Lícito",
+              "Ilícitos",
+              "Ilícito"
+            ],
+            [
+              "Abrir cuentas para clientes nuevos con toda su documentación",
+              "Lícito",
+              "Lícitos",
+              "Ético"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La proporcionalidad no se cumple con \"una buena intención\" ni con \"buenos resultados para la empresa\": se exige que **fines y medios** sean legítimos a la vez."
+        }
+      ],
+      "ampliada": "El manual AMIB 1 (p. 13) usa el lavado de dinero como ejemplo de fin ilícito con medios ilícitos. La fórmula de cuatro combinaciones aparece en el manual EBSPMV (p. 27). El caso de rendimientos garantizados se ilustra aquí como aplicación; en el Código de Ética esa conducta viola el principio \"Compite en forma leal\".",
+      "paginas": [
+        13
+      ]
+    },
+    {
+      "id": "lider-moral",
+      "titulo": "El líder moral en la empresa",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "En toda empresa existen líderes, que pueden ser **morales** en virtud de una personalidad **vigorosa y persuasiva**, con **capacidad de decisión y mando**, guiados por la **prudencia, virtud de la recta razón**."
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: líder moral",
+          "filas": [
+            [
+              "Definición",
+              "Es **capaz de hacerse seguir por otros** y lograr de ellos **identificación y adhesión** a las causas que pretende conseguir"
+            ],
+            [
+              "Lo que más convence",
+              "La **consistencia entre sus palabras y sus actos**"
+            ],
+            [
+              "Rasgo propio",
+              "**Dejarse aconsejar y saber rectificar**"
+            ],
+            [
+              "Función social",
+              "Es el **motor**, la fuerza emocional capaz de sacar adelante un proyecto, generando empleos y abriendo cauces al desarrollo"
+            ],
+            [
+              "Conclusión del manual",
+              "Un **líder empresarial** ha de ser primero un **líder moral**: una persona capaz de **credibilidad y de compromiso social**"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "El **directivo** es un factor decisivo para que la empresa se convierta en un espacio ético: genera un **ethos** (costumbres virtuosas o hábitos) que da **identidad empresarial**. A mayor jerarquía, mayores facultades y también **mayores responsabilidades**. La cooperación entre directivos y empleados se funda en la **confianza y el compañerismo**."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El líder moral se define por hacerse seguir y lograr **identificación y adhesión**; no por el puesto. Quien tiene autoridad formal pero no coherencia es solo **líder formal**."
+        }
+      ],
+      "ampliada": "El manual EBSPMV (p. 29) añade que una persona con autoridad formal no necesariamente es líder, y que una persona sin altos niveles de autoridad puede tener un alto impacto de líder moral por su coherencia.",
+      "paginas": [
+        13,
+        14
+      ]
+    },
+    {
+      "id": "exigencia-y-atributos",
+      "titulo": "Exigencia ética y atributos del líder moral",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La **exigencia ética es proporcional a la educación y preparación** que se posee: mientras **más educación**, se exige **más responsabilidad**, tanto profesional como ética. Los principios éticos **no tienen una aplicación unívoca**: los problemas éticos requieren a alguien con **criterio**, lo cual solo es posible si se adquiere la virtud de la **prudencia**."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Atributo",
+            "Definición del manual"
+          ],
+          "filas": [
+            [
+              "Prudencia",
+              "Virtud de **discernir lo bueno de lo malo en cada caso concreto**; permite analizar si, además del fin del acto, lo son también su objeto y sus circunstancias"
+            ],
+            [
+              "Responsabilidad",
+              "Mientras **más alta jerarquía**, mayor libertad de acción y mucho mayor responsabilidad; a mayor educación, mayor conciencia de las consecuencias"
+            ],
+            [
+              "Credibilidad",
+              "Se funda en el **testimonio de sus palabras que se refrenda en sus actos**; sin ella deja de ser líder moral y es **solo líder formal**"
+            ],
+            [
+              "Compromiso",
+              "**Asumir las responsabilidades y obligaciones contraídas**; el líder logra el compromiso de sus colaboradores **con el ejemplo**"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Credibilidad y compromiso se confunden: credibilidad es que **los actos respalden las palabras**; compromiso es **asumir las obligaciones contraídas**. Y la virtud que da criterio para resolver dilemas es la **prudencia**, no la inteligencia ni la confianza."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen líder moral:",
+          "texto": "Cuatro atributos: **prudencia, responsabilidad, credibilidad y compromiso**. Exigencia ética: a más educación y jerarquía, más responsabilidad."
+        }
+      ],
+      "ampliada": "La clave del repaso del manual AMIB 1 (pregunta 8) da la prudencia como principal característica del líder moral, coherente con la p. 13 (\"guiados por la prudencia, virtud de la recta razón\"). El ensayo del manual EBSPMV pregunta por una característica propia del líder moral y responde la coherencia entre la palabra y la acción. Ambas ideas son del manual; en el examen conviene leer si piden la virtud que lo guía (prudencia) o lo que más convence de él (consistencia entre palabras y actos).",
+      "paginas": [
+        14
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Empresa: de **emprender**; acto creativo e innovador para **cubrir una necesidad social**; comunidad de personas.",
+    "Ética de la empresa: **principios, normas y valores que la organización define** para orientar a sus colaboradores, quienes los asumen como suyos; reconoce la **moral cívica**.",
+    "La ética bursátil es **individual y también social**; la responsabilidad de los individuos **no se diluye** en la empresa.",
+    "Capital humano: **irremplazable**; las personas son **fines en sí mismas**; pesa más en empresas de **servicios** como el medio bursátil.",
+    "Finalidades: económica interna (riqueza para integrantes), social interna (desarrollo humano), económica externa (riqueza para la comunidad vía bienes y servicios), social externa (desarrollo de la comunidad). Objetivo primordial: **mejorar condiciones preexistentes** del entorno social.",
+    "Proporcionalidad: **el fin no justifica los medios**; solo fin lícito con medios lícitos da acto ético. Ejemplo de fin y medios ilícitos: **lavado de dinero**.",
+    "Líder moral: se hace seguir y logra **identificación y adhesión**; lo que más convence es la **consistencia entre palabras y actos**; el líder empresarial debe ser primero líder moral.",
+    "Atributos: **prudencia, responsabilidad, credibilidad, compromiso**. Exigencia ética proporcional a la **educación y preparación**."
+  ],
+  "practica": [
+    "g.etica.l3.q01",
+    "g.etica.l3.q02",
+    "g.etica.l3.q03",
+    "g.etica.l3.q04",
+    "g.etica.l3.q05"
+  ],
+  "miniExamen": [
+    "g.etica.l3.q06",
+    "g.etica.l3.q07",
+    "g.etica.l3.q08",
+    "g.etica.l3.q09",
+    "g.etica.l3.q10"
+  ],
+  "reto": [
+    "g.etica.l3.q11",
+    "g.etica.l3.q12",
+    "g.etica.l3.q13",
+    "g.etica.l3.q14",
+    "g.etica.l3.q15"
+  ]
+}

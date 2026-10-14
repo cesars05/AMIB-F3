@@ -1,0 +1,573 @@
+{
+  "id": "etica.conceptos-y-acto-humano",
+  "area": "etica",
+  "materia": "Ética",
+  "subtemaId": "etica.etica.etica-general",
+  "objetivoIds": [
+    "etica.etica.etica-general.o01",
+    "etica.etica.etica-general.o02",
+    "etica.etica.etica-general.o03"
+  ],
+  "orden": 1,
+  "titulo": "Ética general: conceptos, objeto y acto humano",
+  "resumen": "Diferencia entre ética y moral, objeto material y formal de la ética, actos humanos frente a actos del hombre, los tres elementos del acto humano con su valoración, y los conceptos básicos (principios, valores, libertad, responsabilidad, justicia, equidad, virtud, bien y norma).",
+  "duracionMin": 30,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+      "paginas": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "etica-y-moral",
+      "titulo": "Ética y moral: origen, diferencia y relación",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La palabra [[ética]] viene del griego **ethos** y hace referencia a los **hábitos virtuosos**. La ética es la vivencia cotidiana de las virtudes y los valores que prevalecen cuando actuamos; actuar éticamente es **ajustar nuestros actos a las exigencias racionales del bien**."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "La palabra [[moral]] viene del latín **mores** y se refiere al comportamiento o conducta del ser humano **en relación a las costumbres**. En el lenguaje común se usan como sinónimos, pero desde el punto de vista filosófico **no tienen un significado idéntico**."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Rasgo",
+            "Ética",
+            "Moral"
+          ],
+          "filas": [
+            [
+              "Etimología",
+              "Griego **ethos**: hábitos virtuosos",
+              "Latín **mores**: costumbres"
+            ],
+            [
+              "Origen",
+              "Antigua **Grecia**",
+              "**Roma**"
+            ],
+            [
+              "Naturaleza",
+              "Estudio **científico y racional** que observa la vida moral como una totalidad",
+              "Conocimiento **espontáneo** que todos poseemos, derivado de las costumbres"
+            ],
+            [
+              "Orden",
+              "**Interno**, personal",
+              "**Externo**, social"
+            ],
+            [
+              "Fin",
+              "La **felicidad**, esto es, la autorrealización",
+              "El **bien común**, que se logra mediante la justicia y las leyes"
+            ],
+            [
+              "Frente al bien",
+              "Lo **define, explica y fundamenta**",
+              "Lo busca de manera **más natural que filosófica**"
+            ]
+          ],
+          "trampas": [
+            [
+              4,
+              1
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              3,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen ética y moral:",
+          "texto": "Ambas buscan el **bien** en relación con los actos humanos. La ética es griega, interna y busca la **felicidad**; la moral es romana, externa y busca el **bien común**."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El examen intercambia los fines: la **felicidad** (autorrealización) es el fin de la ética; el **bien común** es el fin de la moral. También intercambia los idiomas: ethos es griego y mores es latín."
+        }
+      ],
+      "ampliada": "El manual AMIB 1 (p. 5) da la etimología, el origen griego, el orden interno y el fin de la ética. Los esquemas del manual oficial de Ética Bursátil (EBSPMV, pp. 9 y 10) completan la contraparte: la moral surge en Roma, es de orden externo y su fin es el bien común que se logra por medio de la justicia y las leyes. El mismo manual EBSPMV describe la moral como \"el conocimiento espontáneo que todos poseemos\".",
+      "paginas": [
+        5
+      ]
+    },
+    {
+      "id": "objeto-de-estudio",
+      "titulo": "La ética como ciencia práctica: objeto material y objeto formal",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La ética es **práctica** porque aplica **principios generales de buena conducta a casos individuales** donde interviene el **libre albedrío**. Como toda ciencia, tiene un objeto general de estudio (objeto material) y un objeto específico de análisis (objeto formal)."
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: objeto de la ética",
+          "filas": [
+            [
+              "Objeto material (general)",
+              "Los **actos humanos**"
+            ],
+            [
+              "Objeto formal (específico)",
+              "Aquello que los hace ser **buenos o malos**: la bondad o maldad de los actos"
+            ],
+            [
+              "Misión o tarea",
+              "Establecer **criterios racionales** para actuar en función del bien, lo que implica una **evaluación de motivos y consecuencias**"
+            ],
+            [
+              "Criterio de valoración",
+              "Descubrir si un acto determinado es bueno, esto es, si **construye o destruye** al sujeto que lo realiza"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Objeto **material** = actos humanos (no los actos del hombre, ni la voluntad, ni las circunstancias). Objeto **formal** = bondad o maldad (no la intencionalidad, ni la racionalidad, ni la libertad con que se actúa)."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen objeto:",
+          "texto": "Material: **qué** estudia (actos humanos). Formal: **desde qué ángulo** los estudia (si son buenos o malos)."
+        }
+      ],
+      "ampliada": "El objeto material es la materia que estudian varias ciencias (la psicología o el derecho también estudian actos humanos); el objeto formal es el punto de vista propio de la ética: su bondad o maldad. El manual EBSPMV (p. 10) llama \"tarea de la ética\" a lo que el manual AMIB 1 (p. 5) llama \"misión\".",
+      "paginas": [
+        5
+      ]
+    },
+    {
+      "id": "actos-humanos-y-del-hombre",
+      "titulo": "Actos humanos frente a actos del hombre",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Criterio",
+            "Actos del hombre",
+            "Actos humanos"
+          ],
+          "filas": [
+            [
+              "Libertad",
+              "**No son libres**",
+              "**Son libres**: elegimos realizar o no la acción"
+            ],
+            [
+              "Origen",
+              "Se realizan **sin conocimiento o voluntad**, o derivan de una **determinación fisiológica**",
+              "Proceden de un análisis **racional** (conocimiento) y **voluntario** (querer hacerlo)"
+            ],
+            [
+              "Ejemplos",
+              "Comer, dormir, caminar",
+              "Abrir un contrato, recomendar un fondo, ejecutar una orden"
+            ],
+            [
+              "Responsabilidad",
+              "No generan responsabilidad ética",
+              "Somos dueños y creadores de nuestra conducta: hay que **asumir la responsabilidad** de cada decisión"
+            ],
+            [
+              "¿Objeto de la ética?",
+              "**No**",
+              "**Sí**: son el objeto material"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ],
+            [
+              4,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "En los actos humanos se ejerce el dominio de los actos por medio de la **voluntad y la razón**, es decir, de una **voluntad deliberada**. El manual lo subraya: estos actos, los humanos, y no los del hombre, son objeto de estudio de la ética."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Los \"actos que carecen de inteligencia, voluntad y libertad\" son los **actos del hombre**. Las \"acciones libres y conscientes que se desprenden de la racionalidad\" son los **actos humanos**. Basta cambiar una palabra para invertir la respuesta."
+        }
+      ],
+      "ampliada": "El manual EBSPMV (p. 14) define el acto del hombre como el determinado por leyes fisiológicas, que carece de inteligencia, voluntad y libertad, y el acto humano como la acción libre que procede de un análisis racional y voluntario.",
+      "paginas": [
+        6
+      ]
+    },
+    {
+      "id": "elementos-del-acto-humano",
+      "titulo": "Los tres elementos del acto humano",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: elementos del acto humano",
+          "filas": [
+            [
+              "Objeto",
+              "La **acción** que se realiza"
+            ],
+            [
+              "Fin",
+              "La **intención** del sujeto: la dirección que pretende seguir con cada acción"
+            ],
+            [
+              "Circunstancias",
+              "**Condición externa** al sujeto y al acto en las que el mismo decide realizar la acción"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "El elemento que **solo puede ser conocido directamente por la conciencia personal** es el **fin**. Fuera de la conciencia, los elementos del acto realizado son el **objeto** (acción) y las **circunstancias** (condiciones externas)."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Los tres elementos deben ser buenos para que el acto lo sea, porque el bien es todo aquello que perfecciona la esencia de la persona. Para que el acto sea éticamente malo, **basta con que cualquiera de los tres elementos lo sea**."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "\"Las buenas intenciones no son suficientes\": un fin bueno no salva un objeto malo. Y el elemento interno es el **fin**, no el objeto ni las circunstancias."
+        }
+      ],
+      "ampliada": "El manual EBSPMV (p. 11) precisa que el acto humano tiene estos tres elementos \"en virtud de que el acto humano es el objeto material de estudio de la ética\", y añade (p. 12) que para calificar la plenitud ética de los actos es necesario conocer previamente sus consecuencias.",
+      "paginas": [
+        6
+      ]
+    },
+    {
+      "id": "valoracion-del-acto",
+      "titulo": "Cómo se valora un acto: fin, objeto y resultado",
+      "bloques": [
+        {
+          "tipo": "formula",
+          "logica": "\\text{Fin} + \\text{Objeto} = \\text{Resultado ético}",
+          "leyenda": [
+            [
+              "Fin",
+              "intención del sujeto; lícito o ilícito"
+            ],
+            [
+              "Objeto",
+              "acción que se realiza; lícita o ilícita"
+            ],
+            [
+              "Resultado",
+              "acto ético solo si ambos son lícitos; en cualquier otro caso, acto ilícito"
+            ]
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Fin",
+            "Objeto",
+            "Resultado",
+            "Ejemplo del manual"
+          ],
+          "filas": [
+            [
+              "Lícito",
+              "Lícito",
+              "**Acto ético**",
+              "El asesor abre un contrato cumpliendo cabalmente los procedimientos de la legislación vigente y las sanas prácticas"
+            ],
+            [
+              "Lícito",
+              "Ilícito",
+              "**Acto ilícito**",
+              "Para ayudar a un cliente que debe pagar un hospital, el ejecutivo usa una **carta apócrifa** para hacer la transferencia"
+            ],
+            [
+              "Ilícito",
+              "Lícito",
+              "**Acto ilícito**",
+              "El asesor integra bien los contratos de fondos, pero solo recomienda el fondo que le da **mayor comisión de venta**"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El caso de la carta apócrifa engaña porque la intención es noble; el del fondo con mayor comisión engaña porque el contrato está bien integrado. En ambos el resultado es **acto ilícito**: basta un elemento malo."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen valoración:",
+          "texto": "Un solo \"ilícito\" en la suma vuelve ilícito todo el acto. Solo **lícito más lícito** da acto ético."
+        }
+      ],
+      "ampliada": "La tabla del manual AMIB 1 (p. 6) presenta tres combinaciones; el manual EBSPMV (p. 27) agrega la cuarta, fin ilícito más medios ilícitos, que también da acto ilícito (el ejemplo del manual es el lavado de dinero, que se estudia en la lección de ética de la empresa). En el caso del fondo, el manual explica que el asesor no actúa con integridad e incumple el Código de Ética.",
+      "paginas": [
+        6,
+        7
+      ]
+    },
+    {
+      "id": "principios-valores-libertad",
+      "titulo": "Principios, valores, libertad y responsabilidad",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "Definición del manual",
+            "Idea clave"
+          ],
+          "filas": [
+            [
+              "Principios",
+              "Razones fundamentales que explican **por qué** se actúa de determinada manera; razones básicas de las que parte el conocimiento para llevar a cabo los actos humanos",
+              "Se vuelven universales: decir la verdad, respetar vidas y propiedades ajenas; la **confianza** se refleja en la responsabilidad fiduciaria"
+            ],
+            [
+              "Valores",
+              "Todo aquello que **determina una preferencia en la elección**",
+              "Orientan lo que elegimos"
+            ],
+            [
+              "Libertad (libre albedrío)",
+              "**Dominio de sí mismo**; capacidad de **elegir por propia determinación**",
+              "El hombre es libre porque es racional; así se hace creador y dueño de sus actos"
+            ],
+            [
+              "Responsabilidad",
+              "**Asumir las consecuencias** de los propios actos",
+              "Va inseparablemente unida a la libertad; incluye las **omisiones**"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "El manual subraya que el hombre es responsable de sus actos humanos y también de sus **omisiones**, \"porque no actuar, es de hecho un modo de actuar\". Esta idea sostiene los casos en que un promotor calla ante una irregularidad."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "\"Determina una preferencia en la elección\" define **valores**, no principios. \"Razones básicas de las que parte el conocimiento\" define **principios**, no valores ni verdades."
+        }
+      ],
+      "ampliada": "El manual EBSPMV (pp. 13 y 14) define la libertad como la cualidad de la voluntad mediante la cual elegimos entre dos o más bienes (u opciones) y por la cual somos los verdaderos autores de nuestra conducta, y la responsabilidad como la propiedad del acto libre que consiste en dar cuenta de nuestras acciones y asumir sus consecuencias, buenas o malas.",
+      "paginas": [
+        7
+      ]
+    },
+    {
+      "id": "justicia-equidad-virtud-bien-norma",
+      "titulo": "Justicia, equidad, virtud, bien y norma",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Concepto",
+            "Definición del manual"
+          ],
+          "filas": [
+            [
+              "Justicia",
+              "Aristóteles: \"**Dar a cada quien lo que le corresponde, según su mérito**\"; indica las relaciones que van bien (justas) y las que van mal (injustas)"
+            ],
+            [
+              "Equidad",
+              "**Característica de la justicia** que resulta de ajustar de manera **proporcional** a cada persona lo que merece"
+            ],
+            [
+              "Virtud",
+              "**Disposición constante** de las personas a **hacer el bien**; instrumento por el cual se debe conducir el hombre, especialmente en su profesión"
+            ],
+            [
+              "Bien",
+              "\"Lo que **perfecciona la naturaleza** de una cosa o la esencia de la persona\"; lo malo es lo que atenta contra su naturaleza. Funciona como **centro totalizador** de la conducta"
+            ],
+            [
+              "Norma",
+              "**Toda regla de conducta**"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "El bien es centro totalizador porque siempre que hacemos algo es con la intención de obtener un bien, o lo que suponemos que lo es, aunque no siempre así sea."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La equidad no es un concepto distinto de la justicia: es una **característica** de ella que añade la **proporcionalidad**. Si la opción dice \"según su mérito\", es justicia; si dice \"de manera proporcional\", es equidad."
+        }
+      ],
+      "ampliada": "El manual EBSPMV (p. 13) define la virtud como el hábito que adquirimos de hacer el bien, que se construye al repetir actos virtuosos, y añade que el hombre virtuoso busca el justo medio entre emociones, pasiones y acciones. Agrega (p. 15) que la justicia es el objeto de las normas y por eso tiene gran importancia para la ética.",
+      "paginas": [
+        8
+      ]
+    },
+    {
+      "id": "sintesis-conceptos",
+      "titulo": "Síntesis de conceptos y confusiones típicas",
+      "bloques": [
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Si la opción dice...",
+            "El concepto es",
+            "No confundir con"
+          ],
+          "filas": [
+            [
+              "Hábitos virtuosos; ethos",
+              "Ética",
+              "Moral (mores, costumbres)"
+            ],
+            [
+              "Conjunto de normas transmitidas de generación en generación",
+              "Moral",
+              "Ética (normas reconocidas racionalmente por cada sujeto)"
+            ],
+            [
+              "Aquello que hace buenos o malos a los actos",
+              "Objeto formal",
+              "Objeto material (actos humanos)"
+            ],
+            [
+              "Intención del sujeto, conocida solo por la conciencia",
+              "Fin",
+              "Objeto (la acción)"
+            ],
+            [
+              "Condición externa al sujeto y al acto",
+              "Circunstancias",
+              "Objeto"
+            ],
+            [
+              "Capacidad de elegir por propia determinación",
+              "Libertad",
+              "Responsabilidad (asumir consecuencias)"
+            ],
+            [
+              "Disposición constante a hacer el bien",
+              "Virtud",
+              "Valor (preferencia en la elección)"
+            ],
+            [
+              "Perfecciona la naturaleza; centro totalizador",
+              "Bien",
+              "Virtud"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              6,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen conceptos:",
+          "texto": "Ética (ethos, interna, felicidad), moral (mores, externa, bien común); objeto material: actos humanos; objeto formal: bondad o maldad; elementos: objeto, fin y circunstancias; para que el acto sea malo basta un elemento malo."
+        }
+      ],
+      "ampliada": "El manual EBSPMV trae una síntesis equivalente (p. 14) y un ejercicio de relacionar columnas (p. 22) que usa exactamente estas parejas de definiciones.",
+      "paginas": [
+        5,
+        6,
+        7,
+        8
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Ética: griego **ethos**, hábitos virtuosos; orden **interno**; fin: **felicidad** (autorrealización). Moral: latín **mores**, costumbres; orden **externo**; fin: **bien común**.",
+    "La ética **define, explica y fundamenta** el bien; la moral lo busca de manera más natural que filosófica.",
+    "Objeto **material**: los actos humanos. Objeto **formal**: aquello que los hace buenos o malos.",
+    "Actos del hombre: **no libres** (sin conocimiento o voluntad, o fisiológicos). Actos humanos: **libres**, racionales y voluntarios; solo estos estudia la ética.",
+    "Elementos del acto humano: **objeto** (acción), **fin** (intención, solo lo conoce la conciencia) y **circunstancias** (condición externa). Basta un elemento malo para que el acto sea malo.",
+    "Valores: lo que **determina una preferencia en la elección**. Principios: **razones** que explican por qué se actúa. Libertad: elegir por propia determinación. Responsabilidad: asumir consecuencias, también de las **omisiones**.",
+    "Justicia: dar a cada quien lo que le corresponde **según su mérito**. Equidad: característica de la justicia, ajuste **proporcional**. Virtud: disposición constante a hacer el bien. Bien: lo que **perfecciona** la naturaleza. Norma: toda regla de conducta."
+  ],
+  "practica": [
+    "g.etica.l1.q01",
+    "g.etica.l1.q02",
+    "g.etica.l1.q03",
+    "g.etica.l1.q04",
+    "g.etica.l1.q05"
+  ],
+  "miniExamen": [
+    "g.etica.l1.q06",
+    "g.etica.l1.q07",
+    "g.etica.l1.q08",
+    "g.etica.l1.q09",
+    "g.etica.l1.q10"
+  ],
+  "reto": [
+    "g.etica.l1.q11",
+    "g.etica.l1.q12",
+    "g.etica.l1.q13",
+    "g.etica.l1.q14",
+    "g.etica.l1.q15"
+  ]
+}

@@ -1,0 +1,506 @@
+{
+  "id": "etica.codigo-de-etica-fundamentos",
+  "area": "etica",
+  "materia": "Ética",
+  "subtemaId": "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana",
+  "objetivoIds": [
+    "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o01",
+    "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o02",
+    "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o03",
+    "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o04",
+    "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o05",
+    "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o06",
+    "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o07",
+    "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o08",
+    "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o09",
+    "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o15",
+    "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o16",
+    "etica.etica.codigo-de-etica-profesional-de-la-comunidad-bursatil-mexicana.o17"
+  ],
+  "orden": 5,
+  "titulo": "Código de Ética I: fundamentos, principios generales y principios 1 a 3",
+  "resumen": "Finalidad, importancia, objetivos y sujetos obligados del Código de Ética Profesional de la Comunidad Bursátil Mexicana; conocimientos exigidos al profesional; los seis principios éticos generales con su definición exacta; la lista de los ocho principios fundamentales y el detalle de los principios 1 a 3 con sus casos.",
+  "duracionMin": 40,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "documento": "AMIB Data/Manual_EBSPMV_completo.md",
+      "paginas": [
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66
+      ]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "finalidad-e-importancia",
+      "titulo": "Finalidad, importancia y objetivos del Código de Ética",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: Código de Ética Profesional de la Comunidad Bursátil Mexicana",
+          "filas": [
+            [
+              "Finalidad",
+              "**Garantizar en los profesionales prácticas sanas y eficaces**, que establezcan con claridad las acciones, políticas y procedimientos que deben normar su actuación, tanto en sus **relaciones internas** como con los **clientes** a quienes de manera natural se deben"
+            ],
+            [
+              "Qué contiene",
+              "Un repertorio de **enunciados de conducta** que permiten saber a qué atenerse y cómo actuar; tiene la finalidad de **esclarecer los límites que no deben traspasarse**"
+            ],
+            [
+              "Qué supone",
+              "Un **ideal de comportamiento** para todos sus integrantes: enuncia los comportamientos que interesa **fomentar** y los que deben ser **evitados**"
+            ],
+            [
+              "Importancia",
+              "No que el profesional **lo memorice**, sino que **se apropie de él**: comprenderlo bien e integrarlo a la vida profesional para generar hábitos y actitudes de excelencia"
+            ]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "El Código tiene **tres objetivos**:"
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Ser la **base de actuación** de todo profesional en el mercado bursátil.",
+            "**Preservar la integridad** del mercado bursátil.",
+            "**Proteger los intereses del público inversionista**."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Finalidad y objetivos no son lo mismo. La **finalidad** es garantizar prácticas **sanas y eficaces**; los **objetivos** son tres (base de actuación, integridad del mercado, intereses del público). El \"mercado eficiente, equitativo, transparente, seguro y de calidad\" es el objeto de la **autorregulación**, no del Código."
+        }
+      ],
+      "ampliada": "El manual EBSPMV (p. 54) agrega los antecedentes: el Código se expidió en 1988 como documento autorregulatorio y complemento de la normatividad bursátil, y en julio de 1997 el Consejo de Administración de la Bolsa Mexicana de Valores acordó reformarlo íntegramente. El manual 2023 resume la finalidad como \"ser la base de actuación de los profesionales del mercado bursátil que preserve la integridad, genere confianza y credibilidad, proteger los intereses del público inversionista y asegurar el crecimiento del sector\".",
+      "paginas": [
+        18
+      ]
+    },
+    {
+      "id": "sujetos-obligados",
+      "titulo": "Sujetos obligados por el Código",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El Código establece principios fundamentales a los que debe sujetarse la actuación de **todas las personas que realizan en forma habitual y profesional actividades en o relacionadas con el mercado bursátil**, incluyendo **aquellas que, en virtud de sus funciones, pueden influir a la opinión pública** en materia bursátil."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Intermediarios",
+            "Emisores de valores",
+            "Prestadores de servicios"
+          ],
+          "filas": [
+            [
+              "Casas de bolsa",
+              "Gubernamentales",
+              "Bolsas de valores"
+            ],
+            [
+              "Bancos",
+              "Financieros",
+              "Instituciones para el depósito de valores"
+            ],
+            [
+              "Sociedades operadoras de sociedades de inversión",
+              "Privados",
+              "Contrapartes centrales de valores"
+            ],
+            [
+              "",
+              "",
+              "Asigna y MexDer"
+            ],
+            [
+              "Empleados: promotores, asesores, operadores, entre otros",
+              "Empleados",
+              "Empleados"
+            ]
+          ],
+          "trampas": [
+            [
+              3,
+              2
+            ],
+            [
+              4,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Los **emisores** y sus empleados también están obligados, igual que las **bolsas** y los prestadores de servicios. Y no solo los empleados: también quien, por sus funciones, puede **influir en la opinión pública** en materia bursátil."
+        }
+      ],
+      "ampliada": "El diagrama de la p. 19 del manual AMIB 1 se leyó en la imagen del PDF; la columna de prestadores de servicios dice \"Instituciones de Valores\", que en el manual EBSPMV (p. 55) aparece igual. Se entiende como instituciones para el depósito de valores (Indeval).",
+      "paginas": [
+        19
+      ]
+    },
+    {
+      "id": "conocimientos-del-profesional",
+      "titulo": "Responsabilidad del profesional: qué debe conocer",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Al adherirse al Código, los miembros del sector asumen **una responsabilidad superior** que significa conocer **clara y profundamente**:"
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Las **normas de regulación pública**.",
+            "Las **normas de autorregulación**.",
+            "Las **políticas empresariales**.",
+            "Los **productos y servicios** que vende y asesora."
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "El conocimiento es **solo un punto de partida**: lo que se espera, además, es la **aplicación estricta** de estas normas y la **diligencia** en el manejo de la información de los productos y servicios."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Son cuatro conocimientos. Distractores frecuentes: \"la situación financiera personal del cliente\", \"las estrategias de la competencia\", \"la contabilidad de la emisora\". Tampoco basta conocer: se exige **aplicación estricta y diligencia**."
+        }
+      ],
+      "ampliada": "Coinciden el manual AMIB 1 (p. 19) y el manual EBSPMV (p. 56).",
+      "paginas": [
+        19
+      ]
+    },
+    {
+      "id": "principios-eticos-generales",
+      "titulo": "Los seis principios éticos generales",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los **principios éticos generales** establecen **la forma de actuación** de los profesionales en el mercado bursátil. En todo momento tienen el deber de conducirse con:"
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Principio",
+            "Definición exacta",
+            "Cómo distinguirlo"
+          ],
+          "filas": [
+            [
+              "Honestidad",
+              "Manera de actuar con **rectitud**",
+              "Rectitud en el actuar"
+            ],
+            [
+              "Integridad",
+              "**Congruencia** en todo momento entre el **ser y hacer**, de acuerdo con principios y valores",
+              "Ser y hacer coinciden"
+            ],
+            [
+              "Probidad",
+              "**Constancia** en observar los **deberes**",
+              "Cumplir los deberes siempre, sin excepción"
+            ],
+            [
+              "Diligencia",
+              "**Esmero, cuidado y oportunidad** en el actuar",
+              "Hacerlo bien y a tiempo"
+            ],
+            [
+              "Imparcialidad",
+              "Tomar decisiones con base en **criterios objetivos**",
+              "Sin favoritismos"
+            ],
+            [
+              "Buena fe",
+              "**Intención** recta",
+              "Lo que se busca al actuar"
+            ]
+          ],
+          "trampas": [
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              5,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Las cuatro confusiones típicas: **rectitud** es honestidad (no integridad); **congruencia entre ser y hacer** es integridad; **constancia en observar los deberes** es probidad (no diligencia); **intención recta** es buena fe (no honestidad). La diligencia incluye la **oportunidad**."
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen principios generales:",
+          "texto": "Son seis: honestidad, integridad, probidad, diligencia, imparcialidad y buena fe. Establecen la **forma de actuación**; los principios fundamentales fijan los **criterios de actuación** en el mercado bursátil en particular."
+        }
+      ],
+      "ampliada": "El manual 2023 define la imparcialidad como \"no sacrificio de la justicia por intereses o consideraciones personales\" y la diligencia solo como \"esmero y cuidado\"; el manual AMIB 1 (p. 20) y el EBSPMV (p. 56) usan las definiciones de la tabla, que son las que se deben memorizar. El manual EBSPMV agrega que estos principios generales se proponen para el medio bursátil como base de los fundamentales.",
+      "paginas": [
+        20
+      ]
+    },
+    {
+      "id": "ocho-principios",
+      "titulo": "Los ocho principios fundamentales de actuación",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El contenido del Código consiste en **ocho Principios Fundamentales de Actuación**, presentes en todas las actividades del mercado bursátil. Establecen los **criterios de actuación en el mercado bursátil en particular**, con base en las sanas prácticas y la normatividad, y se expresan **en imperativo** para enfatizar que son **normas para poner en práctica**, no simples enunciados."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Actúa de acuerdo con las **disposiciones aplicables** y las **sanas prácticas** de mercado.",
+            "Actúa con base en una **conducta profesional íntegra** que permita el **desarrollo transparente y ordenado** del mercado.",
+            "Haz prevalecer el **interés de tu cliente**.",
+            "Evita los **conflictos** entre tu interés personal y el de terceros.",
+            "Proporciona al mercado información **veraz, clara, completa y oportuna**.",
+            "Salvaguarda la **confidencialidad** de la información de los clientes.",
+            "No uses ni divulgues **información privilegiada**.",
+            "Compite en forma **leal**."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Fíjate en la redacción exacta: \"información **veraz, clara, completa y oportuna**\" (no \"suficiente\" ni \"pública\"); \"conflictos entre tu interés personal y **el de terceros**\" (no \"de la institución\"); \"desarrollo **transparente y ordenado**\" (no \"eficiente y equitativo\")."
+        }
+      ],
+      "ampliada": "El manual EBSPMV (p. 58) señala que los dos primeros principios son los más importantes, porque marcan una pauta de comportamiento que se generaliza y se aplica en los otros seis.",
+      "paginas": [
+        20
+      ]
+    },
+    {
+      "id": "principio-1",
+      "titulo": "Principio 1: actúa de acuerdo con las disposiciones aplicables y las sanas prácticas",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La actuación de los profesionales debe estar apegada a las **leyes, reglamentos y disposiciones de carácter general** expedidas por las autoridades y a la **normatividad de las entidades autorregulatorias**; por eso requieren un **conocimiento amplio de la normatividad** bursátil."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "**Abstenerse de ejecutar instrucciones** contrarias a la regulación vigente o a las sanas prácticas y, en su caso, **informar** de ello a sus supervisores.",
+            "**Supervisar** que sus colaboradores actúen conforme al régimen legal vigente y a las sanas prácticas.",
+            "**Promover con el ejemplo** la rectitud de actuación con los demás profesionales.",
+            "**No ser complaciente** o consecuente con las conductas incorrectas de otros.",
+            "**Informar** y, de ser posible, **aportar la evidencia** de las violaciones que conozcan a las autoridades competentes y a las entidades autorregulatorias."
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Este principio aplica cuando...",
+            "Ejemplo"
+          ],
+          "filas": [
+            [
+              "Se incumple la legislación vigente",
+              "Abrir contratos sin la documentación completa"
+            ],
+            [
+              "Un subordinado actúa contra la ley",
+              "El jefe no lo supervisa ni lo corrige"
+            ],
+            [
+              "Los superiores incitan al personal a actuar contra la ley",
+              "El director pide alterar la asignación de operaciones"
+            ],
+            [
+              "Se detecta a un compañero en actividades ilegales",
+              "Callar al ver que sustrae recursos de un cliente"
+            ],
+            [
+              "En sentido correcto: se reporta un ilícito a los superiores o a las autoridades",
+              "Denunciar con evidencia ante el contralor normativo"
+            ]
+          ],
+          "trampas": [
+            [
+              3,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Ser testigo y **callar** viola el principio 1 (no ser complaciente, informar las violaciones), aunque el acto de fondo lo cometa otro. Recuerda que la responsabilidad incluye las **omisiones**."
+        }
+      ],
+      "ampliada": "El manual AMIB 1 (p. 20) dice \"informar de ello a sus supervisores\"; el manual EBSPMV (p. 59) y el manual 2023 dicen \"a sus superiores\". El sentido es el mismo. Los ejemplos de la tabla ilustran los supuestos del manual (p. 21); varios provienen de las preguntas de repaso y del ensayo oficial.",
+      "paginas": [
+        20,
+        21
+      ]
+    },
+    {
+      "id": "principio-2",
+      "titulo": "Principio 2: conducta profesional íntegra para un mercado transparente y ordenado",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Es responsabilidad del profesional **actuar con integridad personal**, pues su conducta afecta su reputación, la de la persona moral con la que se vincula y la del **mercado bursátil en su totalidad**. Para permitir el desarrollo transparente y ordenado del mercado, los profesionales **NO** deberán participar en actividades que:"
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Creen **condiciones falsas de demanda u oferta** que influyan en los precios o tasas.",
+            "**Alteren los precios o tasas** por medio del **engaño o el rumor**.",
+            "**No deriven del libre contacto** de la oferta y la demanda.",
+            "**Alteren o interrumpan sin justificación** la normalidad de las operaciones."
+          ]
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": [
+            "Supuesto de aplicación",
+            "Ejemplo"
+          ],
+          "filas": [
+            [
+              "Alterar la libre cotización y formación de precios: **manipulación, rumores, simulación**",
+              "Promotores que difunden un rumor para subir el precio de una acción que no ha subido"
+            ],
+            [
+              "Alterar o manipular los **sistemas de información** (hacking)",
+              "Vulnerar el sistema de operación o ignorar sus alarmas de seguridad"
+            ]
+          ],
+          "trampas": [
+            [
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El principio 2 protege la **formación de precios y la operación del mercado**. Si el caso habla de **manipular precios, simular operaciones, crear demanda artificial o interrumpir el sistema**, es el principio 2, aunque haya un rumor de por medio."
+        }
+      ],
+      "ampliada": "El ejemplo de los promotores que generan rumores para elevar la demanda de un valor está en el manual EBSPMV (p. 61), dentro de este principio; el de ignorar las advertencias de seguridad de los sistemas, en la p. 62. La pregunta 10 del repaso de AMIB 1 (operador que escucha rumores sobre una acción que tiene en posición) tiene como clave este principio.",
+      "paginas": [
+        21
+      ]
+    },
+    {
+      "id": "principio-3",
+      "titulo": "Principio 3: haz prevalecer el interés de tu cliente",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El **público inversionista es la razón de ser** del mercado bursátil; los profesionales deben generar confianza mediante una actuación **transparente, imparcial y de buena fe**, sin anteponer otros intereses. Deberán:"
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "**Identificar los objetivos de inversión** de sus clientes, para que lo recomendado sea lo más apropiado.",
+            "Proporcionar **toda la información disponible y relevante** para decisiones fundamentadas.",
+            "Al recomendar, **distinguir** entre la información de los emisores o del mercado y la **recomendación personal**.",
+            "Asegurarse de que conozcan la **naturaleza de las operaciones y sus riesgos**.",
+            "Hacer de su conocimiento las **políticas de cobro** por servicios y los eventuales gastos.",
+            "**No inducir** a sus clientes a negocios con el único fin del beneficio propio o de la institución.",
+            "Ejecutar sus instrucciones conforme a **igualdad de trato y oportunidad**, en las **mejores condiciones de mercado**.",
+            "**Ejecutar y asignar** las operaciones con **transparencia** y conforme a la normatividad."
+          ]
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Ficha: aspectos en los que aplica",
+          "filas": [
+            [
+              "Revelación integral de la información",
+              "Características del producto, riesgos, costos operativos y características operativas"
+            ],
+            [
+              "Perfil",
+              "Apegarse al **perfil y necesidades** del cliente"
+            ],
+            [
+              "Equidad",
+              "Aplicar el principio de **equidad en el trato** con los clientes"
+            ],
+            [
+              "Inducción",
+              "No inducir operaciones porque representan un **mayor ingreso al promotor**"
+            ]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Recomendar un producto por la **comisión** que deja, ocultar costos, no aplicar el cuestionario de perfil o asignar operaciones para favorecer a un cliente importante: todo es principio 3. Si en cambio el promotor **recibe un regalo o incentivo** que le resta objetividad, es el principio 4."
+        }
+      ],
+      "ampliada": "El manual EBSPMV (pp. 63 a 66) ilustra la ejecución de instrucciones con la regla \"primero en tiempo, primero en derecho, sin distinguir el monto de la inversión o el tipo de persona\", y el no inducir con la venta de valores estructurados de alto riesgo a una persona de la tercera edad de perfil conservador porque dan más comisión.",
+      "paginas": [
+        21,
+        22
+      ]
+    }
+  ],
+  "puntosClave": [
+    "Finalidad del Código: **garantizar en los profesionales prácticas sanas y eficaces**; es un ideal de comportamiento que esclarece los límites que no deben traspasarse.",
+    "Importancia: no memorizarlo, sino **apropiarse de él** e integrarlo a la vida profesional.",
+    "Objetivos (3): ser la **base de actuación** de todo profesional, **preservar la integridad** del mercado y **proteger los intereses del público inversionista**.",
+    "Sujetos: quienes actúan en forma **habitual y profesional** en o relacionados con el mercado bursátil, y quienes pueden **influir en la opinión pública**: intermediarios, emisores y prestadores de servicios, con sus empleados.",
+    "El profesional debe conocer: normas de **regulación pública**, normas de **autorregulación**, **políticas empresariales** y los **productos y servicios** que vende y asesora.",
+    "Honestidad: **rectitud**. Integridad: congruencia entre **ser y hacer**. Probidad: **constancia** en observar los deberes. Diligencia: **esmero, cuidado y oportunidad**. Imparcialidad: **criterios objetivos**. Buena fe: **intención recta**.",
+    "Principio 1: cumplir la normatividad, supervisar, dar el ejemplo, no ser complaciente, **informar y aportar evidencia** de violaciones.",
+    "Principio 2: no crear condiciones falsas de oferta o demanda, no alterar precios por **engaño o rumor**, no interrumpir la operación. Principio 3: perfil, información, riesgos, costos, **no inducir**, igualdad de trato, asignación transparente."
+  ],
+  "practica": [
+    "g.etica.l5.q01",
+    "g.etica.l5.q02",
+    "g.etica.l5.q03",
+    "g.etica.l5.q04",
+    "g.etica.l5.q05"
+  ],
+  "miniExamen": [
+    "g.etica.l5.q06",
+    "g.etica.l5.q07",
+    "g.etica.l5.q08",
+    "g.etica.l5.q09",
+    "g.etica.l5.q10"
+  ],
+  "reto": [
+    "g.etica.l5.q11",
+    "g.etica.l5.q12",
+    "g.etica.l5.q13",
+    "g.etica.l5.q14",
+    "g.etica.l5.q15"
+  ]
+}
