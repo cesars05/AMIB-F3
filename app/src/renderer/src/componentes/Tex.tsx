@@ -14,7 +14,7 @@ interface TexProps {
  */
 export function Tex({ tex, bloque = false }: TexProps) {
   const html = useMemo(
-    () => katex.renderToString(tex, { displayMode: bloque, throwOnError: false, trust: false, strict: 'ignore', output: 'htmlAndMathml', maxExpand: 500 }),
+    () => katex.renderToString(tex, { displayMode: bloque, throwOnError: false, trust: false, strict: 'ignore', output: 'htmlAndMathml', maxExpand: 500, maxSize: 20 }),
     [tex, bloque]
   )
   return <span className={bloque ? 'tex tex-bloque' : 'tex'} dangerouslySetInnerHTML={{ __html: html }} />

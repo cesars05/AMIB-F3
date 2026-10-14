@@ -1,5 +1,8 @@
 /** Registro de los canales IPC (ADR-002). Cada entrada se valida con Zod antes de llegar a los servicios. */
-import { readFileSync, writeFileSync } from 'node:fs'
+import { readFileSync, statSync, writeFileSync } from 'node:fs'
+
+/** Tamaño máximo de un respaldo importado (50 MB). */
+const MAX_RESPALDO_BYTES = 50 * 1024 * 1024
 import type { z } from 'zod'
 import type { InfoApp, ResultadoRespaldo } from '../preload/api'
 import {
@@ -112,6 +115,7 @@ export function registrarIpc(ipc: IpcLike, ctx: ContextoIpc): void {
     const ruta = await ctx.dialogos.abrir(ev)
     if (!ruta) return { ok: false, cancelado: true }
     try {
+      if (statSync(ruta).size > MAX_RESPALDO_BYTES) throw new Error('El respaldo excede el tamaño máximo de 50 MB.')
       const crudo = JSON.parse(readFileSync(ruta, 'utf8')) as unknown
       // Se valida antes de pedir confirmación: un archivo ajeno no llega a borrar nada.
       EsquemaRespaldo.parse(crudo)

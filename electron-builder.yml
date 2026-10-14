@@ -26,3 +26,10 @@ nsis:
   createDesktopShortcut: true
   shortcutName: AMIB F3
 publish: null
+electronFuses:
+  runAsNode: false
+  enableCookieEncryption: true
+  enableNodeOptionsEnvironmentVariable: false
+  enableNodeCliInspectArguments: false
+  enableEmbeddedAsarIntegrityValidation: true
+  onlyLoadAppFromAsar: true

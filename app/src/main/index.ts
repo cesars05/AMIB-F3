@@ -10,6 +10,11 @@ import type { InfoApp } from '../preload/api'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
+// Las variables de desarrollo nunca se respetan en la app empaquetada.
+const urlDev = (): string | undefined => (app.isPackaged ? undefined : process.env['ELECTRON_RENDERER_URL'])
+/** Dominios que se pueden abrir en el navegador del sistema (videos y documentación). */
+const DOMINIOS_EXTERNOS = new Set(['www.youtube.com', 'youtube.com', 'youtu.be', 'www.banxico.org.mx', 'www.amib.com.mx', 'www.cnbv.gob.mx'])
+
 let db: ReturnType<typeof abrirBaseDeDatos> | undefined
 
 function ventanaDe(ev: EventoIpc): BrowserWindow | null {
@@ -60,7 +65,8 @@ function crearVentana(): void {
       contextIsolation: true,
       sandbox: true,
       nodeIntegration: false,
-      webSecurity: true
+      webSecurity: true,
+      devTools: !app.isPackaged
     }
   })
   win.once('ready-to-show', () => win.show())
@@ -69,17 +75,28 @@ function crearVentana(): void {
   win.webContents.on('will-navigate', (e, url) => {
     if (url !== win.webContents.getURL()) e.preventDefault()
   })
+  win.webContents.on('will-attach-webview', (e) => e.preventDefault())
+  win.webContents.on('will-frame-navigate', (e) => {
+    if (!e.isMainFrame) e.preventDefault()
+  })
   win.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith('https://')) void shell.openExternal(url)
+    try {
+      const u = new URL(url)
+      if (u.protocol === 'https:' && DOMINIOS_EXTERNOS.has(u.hostname)) void shell.openExternal(url)
+    } catch {
+      // URL inválida: se ignora.
+    }
     return { action: 'deny' }
   })
 
-  if (process.env['ELECTRON_RENDERER_URL']) void win.loadURL(process.env['ELECTRON_RENDERER_URL'])
+  const dev = urlDev()
+  if (dev) void win.loadURL(dev)
   else void win.loadFile(join(__dirname, '../renderer/index.html'))
 }
 
 app.whenReady().then(() => {
   session.defaultSession.setPermissionRequestHandler((_wc, _permiso, cb) => cb(false))
+  session.defaultSession.setPermissionCheckHandler(() => false)
   db = abrirBaseDeDatos(join(app.getPath('userData'), 'amib.db'))
 
   const raiz = resolverRaizContenido({ empaquetado: app.isPackaged, recursos: process.resourcesPath, raizApp: app.getAppPath(), entorno: process.env['AMIB_CONTENT_DIR'] })
@@ -88,7 +105,7 @@ app.whenReady().then(() => {
 
   registrarIpc(ipcMain, {
     servicios,
-    urlDev: process.env['ELECTRON_RENDERER_URL'],
+    urlDev: urlDev(),
     dialogos,
     info: (): InfoApp => ({
       version: app.getVersion(),
@@ -101,7 +118,7 @@ app.whenReady().then(() => {
   // Defensa en profundidad: la sesión solo acepta contenido de la propia app (el permiso de red ya está cerrado por la CSP).
   session.defaultSession.webRequest.onBeforeRequest((detalles, cb) => {
     const u = detalles.url
-    const permitido = u.startsWith('file://') || u.startsWith('devtools://') || u.startsWith('data:') || remitenteConfiable(u, process.env['ELECTRON_RENDERER_URL']) || u.startsWith('ws://localhost')
+    const permitido = u.startsWith('file://') || u.startsWith('devtools://') || u.startsWith('data:') || remitenteConfiable(u, urlDev()) || u.startsWith('ws://localhost')
     cb({ cancel: !permitido })
   })
 
