@@ -27,6 +27,12 @@ describe('PreguntaSchema', () => {
     expect(() => PreguntaSchema.parse({ ...base, clave: null })).toThrow()
     expect(PreguntaSchema.parse({ ...base, clave: null, estado: 'borrador' }).clave).toBeNull()
   })
+  it('numeroLibro es opcional y debe ser un entero positivo', () => {
+    expect(PreguntaSchema.parse(base).numeroLibro).toBeUndefined()
+    expect(PreguntaSchema.parse({ ...base, numeroLibro: 14 }).numeroLibro).toBe(14)
+    expect(() => PreguntaSchema.parse({ ...base, numeroLibro: 0 })).toThrow()
+    expect(() => PreguntaSchema.parse({ ...base, numeroLibro: 2.5 })).toThrow()
+  })
   it('rechaza ids con formato inválido y áreas desconocidas', () => {
     expect(() => PreguntaSchema.parse({ ...base, id: 'Tipo 21' })).toThrow()
     expect(() => PreguntaSchema.parse({ ...base, area: 'mexder' })).toThrow()

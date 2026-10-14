@@ -78,6 +78,8 @@ export const PreguntaSchema = z
     subtemaId: Slug.optional(),
     objetivoId: Slug.optional(),
     enunciado: z.string().min(5),
+    /** Número de la pregunta en el libro de origen (p. ej. el repaso del capítulo), cuando se pudo determinar con fiabilidad. */
+    numeroLibro: z.number().int().positive().optional(),
     opciones: z.array(OpcionSchema).length(4),
     /** Índice 0–3 de la opción correcta, o null si aún no se conoce (repasos sin clave). */
     clave: z.number().int().min(0).max(3).nullable(),
