@@ -3,6 +3,7 @@
 App de escritorio (Electron + React + TypeScript) para estudiar el examen **AMIB Figura 3 · Asesor en Estrategias de Inversión (Serie 210)**. Usuario único: Cesar. Interfaz y documentación en **español**.
 
 **Antes de trabajar, lee:**
+0. `docs/traspaso-de-sesion.md`: estado actual, decisiones de Cesar y pendientes (se actualiza en cada hito; mantenlo al día).
 1. `docs/plan-maestro.md`: el plan aprobado, con etapas, decisiones y alcance.
 2. `docs/mapa-del-repo.md`: qué hay en cada archivo y carpeta y sus trampas.
 3. `docs/bitacora.md`: qué se hizo, qué funcionó y qué no.
