@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main, 'claude/**']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pruebas:
+    name: Pruebas (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: sudo apt-get update && sudo apt-get install -y xvfb
+      - run: npm run e2e:linux
+      - name: Captura de pantalla
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: capturas
+          path: test-results/*.png
+          if-no-files-found: ignore
+
+  instalador-windows:
+    name: Instalador de Windows
+    needs: pruebas
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run dist:win
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AMIB-F3-instalador-windows
+          path: release/*.exe
+          if-no-files-found: error

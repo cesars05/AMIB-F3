@@ -1,0 +1,14 @@
+node_modules/
+out/
+release/
+test-results/
+playwright-report/
+coverage/
+*.log
+.DS_Store
+Thumbs.db
+desktop.ini
+# Datos locales de usuario (progreso). Nunca se suben.
+*.db
+*.db-wal
+*.db-shm

@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": { "jsx": "react-jsx", "lib": ["ES2023", "DOM", "DOM.Iterable"], "types": [], "outDir": "out/tsc-web" },
+  "include": ["app/src/renderer/**/*", "app/src/core/**/*", "app/src/preload/api.d.ts"]
+}
