@@ -1,52 +1,102 @@
-import { useEffect, useState } from 'react'
-import { AREAS, DURACION_MINUTOS, META_ACIERTOS_OBLIGATORIA, TOTAL_PREGUNTAS } from '@core/examen'
-import type { InfoApp } from '../../preload/api'
+import { useEffect, useRef } from 'react'
+import { AppProvider, useApp, type Destino } from './estado'
+import { Cargando } from './componentes/Comunes'
+import { Ajustes } from './pantallas/Ajustes'
+import { Diagnostico } from './pantallas/Diagnostico'
+import { HoyPantalla } from './pantallas/Hoy'
+import { Inicio } from './pantallas/Inicio'
+import { LeccionVisor } from './pantallas/Leccion'
+import { Lecciones } from './pantallas/Lecciones'
+import { Onboarding } from './pantallas/Onboarding'
+import { Practicar } from './pantallas/Practicar'
+import { Simulacro } from './pantallas/Simulacro'
 
-export function App() {
-  const [info, setInfo] = useState<InfoApp | null>(null)
+const NAV: { p: Destino['p']; etiqueta: string; destino: Destino }[] = [
+  { p: 'inicio', etiqueta: 'Inicio', destino: { p: 'inicio' } },
+  { p: 'lecciones', etiqueta: 'Lecciones', destino: { p: 'lecciones' } },
+  { p: 'practicar', etiqueta: 'Practicar', destino: { p: 'practicar' } },
+  { p: 'diagnostico', etiqueta: 'Diagnóstico', destino: { p: 'diagnostico' } },
+  { p: 'simulacro', etiqueta: 'Simulacro', destino: { p: 'simulacro' } },
+  { p: 'ajustes', etiqueta: 'Ajustes', destino: { p: 'ajustes' } }
+]
+
+function seccionActiva(p: Destino['p']): Destino['p'] {
+  return p === 'leccion' ? 'lecciones' : p === 'hoy' ? 'inicio' : p
+}
+
+function Pantalla() {
+  const { destino, ajustes, resumen, error } = useApp()
+  if (error && !ajustes) {
+    return (
+      <div className="error-caja" role="alert">
+        No se pudo cargar la aplicación: {error}
+      </div>
+    )
+  }
+  if (!ajustes || !resumen) return <Cargando texto="Cargando tu progreso" />
+  switch (destino.p) {
+    case 'onboarding':
+      return <Onboarding />
+    case 'inicio':
+      return <Inicio />
+    case 'hoy':
+      return <HoyPantalla />
+    case 'lecciones':
+      return <Lecciones />
+    case 'leccion':
+      return <LeccionVisor key={destino.id} id={destino.id} />
+    case 'practicar':
+      return <Practicar key={JSON.stringify(destino)} destino={destino} />
+    case 'diagnostico':
+      return <Diagnostico />
+    case 'simulacro':
+      return <Simulacro key={`${destino.tipo ?? ''}${destino.area ?? ''}`} destino={destino} />
+    case 'ajustes':
+      return <Ajustes />
+  }
+}
+
+function Estructura() {
+  const { destino, ir, bloqueado } = useApp()
+  const principal = useRef<HTMLElement>(null)
+  // Al cambiar de pantalla el foco pasa al contenido: así el teclado y los lectores de pantalla no se pierden.
   useEffect(() => {
-    window.amib.info().then(setInfo).catch(() => setInfo(null))
-  }, [])
-
+    principal.current?.focus({ preventScroll: true })
+    window.scrollTo(0, 0)
+  }, [destino.p])
+  const activa = seccionActiva(destino.p)
   return (
-    <div className="flex h-full flex-col">
-      <header className="flex items-center justify-between border-b border-borde bg-panel px-5 py-2 font-mono text-xs">
-        <span className="font-semibold tracking-widest text-ambar">AMIB F3 · TERMINAL DE ESTUDIO</span>
-        <span className="text-tenue" data-testid="estado-db">
-          {info ? `v${info.version} · DB esquema ${info.esquemaDb} · Electron ${info.electron}` : 'conectando…'}
-        </span>
+    <div className="app">
+      <a className="saltar" href="#principal" onClick={(e) => (e.preventDefault(), principal.current?.focus())}>
+        Saltar al contenido
+      </a>
+      <header className="cabecera">
+        <div className="cabecera-in">
+          <button className="marca" onClick={() => !bloqueado && ir({ p: 'inicio' })} aria-label="AMIB F3, ir al inicio" disabled={bloqueado}>
+            AMIB <i>F3</i> Estudio
+          </button>
+          {destino.p !== 'onboarding' && (
+            <nav className="nav" aria-label="Secciones">
+              {NAV.map((n) => (
+                <button key={n.p} onClick={() => ir(n.destino)} aria-current={activa === n.p ? 'page' : undefined} disabled={bloqueado}>
+                  {n.etiqueta}
+                </button>
+              ))}
+            </nav>
+          )}
+        </div>
       </header>
-
-      <main className="flex-1 overflow-auto p-6">
-        <h1 className="text-2xl font-semibold">Asesor en Estrategias de Inversión · Serie 210</h1>
-        <p className="mt-1 text-sm text-tenue">
-          {TOTAL_PREGUNTAS} preguntas · {Math.floor(DURACION_MINUTOS / 60)} h {DURACION_MINUTOS % 60} min · aprobatorio 600
-          (escala 200–1100) · meta por área obligatoria {Math.round(META_ACIERTOS_OBLIGATORIA * 100)}%
-        </p>
-
-        <table className="mt-6 w-full max-w-4xl border-collapse font-mono text-sm" data-testid="tabla-areas">
-          <thead>
-            <tr className="border-b border-borde text-left text-xs uppercase tracking-wider text-tenue">
-              <th className="py-2 pr-4">Área</th>
-              <th className="py-2 pr-4 text-right">Preguntas</th>
-              <th className="py-2 pr-4 text-right">Peso</th>
-              <th className="py-2">Obligatoria</th>
-            </tr>
-          </thead>
-          <tbody>
-            {AREAS.map((a) => (
-              <tr key={a.id} className="border-b border-borde/60">
-                <td className="py-2 pr-4 font-sans">{a.nombre}</td>
-                <td className="py-2 pr-4 text-right">{a.preguntas}</td>
-                <td className="py-2 pr-4 text-right">{((a.preguntas / TOTAL_PREGUNTAS) * 100).toFixed(2)}%</td>
-                <td className="py-2">{a.obligatoria ? <span className="text-naranja">● Sí</span> : <span className="text-tenue">—</span>}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <p className="mt-8 text-xs text-tenue">Etapa E0 · esqueleto listo. Las pantallas de estudio llegan en E1.</p>
+      <main id="principal" ref={principal} tabIndex={-1} className="principal" data-pantalla={destino.p}>
+        <Pantalla />
       </main>
     </div>
+  )
+}
+
+export function App() {
+  return (
+    <AppProvider>
+      <Estructura />
+    </AppProvider>
   )
 }

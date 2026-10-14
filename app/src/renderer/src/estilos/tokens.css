@@ -1,0 +1,175 @@
+/*
+ * Tokens de diseño. Todos los componentes usan solo estas variables: nunca colores literales.
+ * Los temas se eligen con data-tema en <html> (o en cualquier contenedor, p. ej. las muestras de Ajustes).
+ * La tipografía se elige con data-letra.
+ */
+:root,
+[data-tema='claro'] {
+  color-scheme: light;
+  --fondo: #ffffff;
+  --superficie: #ffffff;
+  --suave: #f4f5f7;
+  --linea: #dcdfe4;
+  --linea-fuerte: #121212;
+  --texto: #121212;
+  --tenue: #5b6168;
+  --acento: #e3120b;
+  --sobre-acento: #ffffff;
+  --primario: #121212;
+  --sobre-primario: #ffffff;
+  --enlace: #1f5fa8;
+  --ok: #1a7f37;
+  --mal: #c4161c;
+  --aviso: #9a5b00;
+  --ok-fondo: #eef7f0;
+  --mal-fondo: #fbefef;
+  --info-fondo: #f2f6fb;
+  --termino: #c00000;
+  --titulo-lamina: #7030a0;
+  --resumen: #3a7c22;
+  --resumen-fondo: #f1f7ee;
+  --graf-prog: #1f5fa8;
+  --radio: 6px;
+  --radio-lg: 8px;
+  --grosor-cabecera: 6px;
+  --borde-cabecera: var(--acento);
+  --sombra: 0 1px 2px rgb(0 0 0 / 0.06);
+  --velo: rgb(0 0 0 / 0.45);
+  --fuente-datos: var(--fuente);
+  --fuente-titulo: var(--fuente);
+  --peso-titulo: 700;
+}
+
+[data-tema='terminal'] {
+  color-scheme: dark;
+  --fondo: #0b0d10;
+  --superficie: #13171c;
+  --suave: #1a2027;
+  --linea: #252b33;
+  --linea-fuerte: #e6e1d6;
+  --texto: #e6e1d6;
+  --tenue: #8a8f98;
+  --acento: #ffb000;
+  --sobre-acento: #0b0d10;
+  --primario: #ffb000;
+  --sobre-primario: #0b0d10;
+  --enlace: #ffb000;
+  --ok: #2fbf71;
+  --mal: #ff4d4f;
+  --aviso: #ff7a1a;
+  --ok-fondo: #0f2a1b;
+  --mal-fondo: #2c1517;
+  --info-fondo: #14202c;
+  --termino: #ff7a1a;
+  --titulo-lamina: #ffb000;
+  --resumen: #2fbf71;
+  --resumen-fondo: #10231a;
+  --graf-prog: #5aa0e6;
+  --radio: 2px;
+  --radio-lg: 2px;
+  --grosor-cabecera: 1px;
+  --borde-cabecera: var(--linea);
+  --sombra: none;
+  --velo: rgb(0 0 0 / 0.6);
+  --fuente-datos: 'Cascadia Mono', 'JetBrains Mono', Consolas, ui-monospace, monospace;
+  --peso-titulo: 700;
+}
+
+[data-tema='editorial'] {
+  color-scheme: light;
+  --fondo: #fff1e5;
+  --superficie: #fff7ef;
+  --suave: #f6e6d6;
+  --linea: #e3cfbd;
+  --linea-fuerte: #33302e;
+  --texto: #33302e;
+  --tenue: #6e6259;
+  --acento: #990f3d;
+  --sobre-acento: #fff7ef;
+  --primario: #33302e;
+  --sobre-primario: #fff1e5;
+  --enlace: #0d7680;
+  --ok: #007a3d;
+  --mal: #c20000;
+  --aviso: #8f4d00;
+  --ok-fondo: #e3f3e6;
+  --mal-fondo: #fbe3e0;
+  --info-fondo: #e5f1f1;
+  --termino: #990f3d;
+  --titulo-lamina: #990f3d;
+  --resumen: #0b6b45;
+  --resumen-fondo: #e3f1e9;
+  --graf-prog: #0d7680;
+  --radio: 0px;
+  --radio-lg: 2px;
+  --grosor-cabecera: 3px;
+  --borde-cabecera: var(--linea-fuerte);
+  --sombra: none;
+  --velo: rgb(51 48 46 / 0.45);
+  --fuente-titulo: Georgia, 'Times New Roman', serif;
+  --peso-titulo: 600;
+}
+
+[data-tema='enfoque'] {
+  color-scheme: dark;
+  --fondo: #121315;
+  --superficie: #1b1c1f;
+  --suave: #222327;
+  --linea: #2c2e33;
+  --linea-fuerte: #f2f2f0;
+  --texto: #f2f2f0;
+  --tenue: #9a9ca3;
+  --acento: #f5a524;
+  --sobre-acento: #121315;
+  --primario: #f2f2f0;
+  --sobre-primario: #121315;
+  --enlace: #f5a524;
+  --ok: #34c759;
+  --mal: #ff453a;
+  --aviso: #f5a524;
+  --ok-fondo: #12281a;
+  --mal-fondo: #2d1715;
+  --info-fondo: #1c2430;
+  --termino: #f5a524;
+  --titulo-lamina: #f5a524;
+  --resumen: #34c759;
+  --resumen-fondo: #14261b;
+  --graf-prog: #5aa0e6;
+  --radio: 12px;
+  --radio-lg: 16px;
+  --grosor-cabecera: 0px;
+  --borde-cabecera: transparent;
+  --sombra: none;
+  --velo: rgb(0 0 0 / 0.6);
+  --peso-titulo: 600;
+}
+
+/* Derivados de los tokens base (iguales en todos los temas). */
+:root,
+[data-tema] {
+  --graf-ok: var(--ok);
+  --graf-riesgo: var(--mal);
+  --graf-meta: var(--acento);
+  --graf-vacio: var(--suave);
+  --nivel-0: var(--linea);
+  --nivel-1: var(--graf-prog);
+  --nivel-2: color-mix(in srgb, var(--graf-prog) 50%, var(--ok));
+  --nivel-3: color-mix(in srgb, var(--graf-prog) 25%, var(--ok));
+  --nivel-4: var(--ok);
+  --duracion: 160ms;
+  --duracion-entrada: 200ms;
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --fuente-mono: Consolas, 'Cascadia Mono', ui-monospace, monospace;
+}
+
+/* Tipografía elegible (Cesar). */
+:root,
+[data-letra='arial'] {
+  --fuente: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+}
+[data-letra='calibri'] {
+  --fuente: Calibri, Carlito, 'Segoe UI', Arial, sans-serif;
+}
+[data-letra='segoe'] {
+  --fuente: 'Segoe UI', 'Segoe UI Variable', system-ui, Arial, sans-serif;
+}

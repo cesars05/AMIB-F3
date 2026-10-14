@@ -1,0 +1,2 @@
+/* Solo el reinicio base de Tailwind. Los componentes se estilan con tokens propios (estilos/tokens.css). */
+@import 'tailwindcss/preflight.css' layer(base);

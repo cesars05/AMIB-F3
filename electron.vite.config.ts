@@ -20,8 +20,9 @@ export default defineConfig({
     }
   },
   renderer: {
+    // Sin datos en línea: la CSP solo admite fuentes de 'self' (las de KaTeX deben salir como archivos).
+    build: { assetsInlineLimit: 0, rollupOptions: { input: resolve(__dirname, 'app/src/renderer/index.html') } },
     root: resolve(__dirname, 'app/src/renderer'),
-    build: { rollupOptions: { input: resolve(__dirname, 'app/src/renderer/index.html') } },
     resolve: { alias: { '@core': resolve(__dirname, 'app/src/core') } },
     plugins: [react(), tailwindcss()]
   }

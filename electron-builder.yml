@@ -8,6 +8,12 @@ files:
   - package.json
   - '!**/*.map'
 asar: true
+# El contenido va como recurso externo (resources/content): se puede actualizar sin recompilar la app (ADR-002).
+extraResources:
+  - from: content
+    to: content
+    filter:
+      - '**/*'
 win:
   target:
     - target: nsis
