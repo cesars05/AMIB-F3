@@ -180,6 +180,9 @@ El **Plan de hoy** mezcla estos modos según la intensidad y el diagnóstico. Po
   - Extrae las preguntas de "Repaso del capítulo" como `borrador`, porque no traen clave.
   - Completa `exclusivoFig3` en la taxonomía.
 - **Limpieza** (modelos, por sección): corrige errores de OCR sin cambiar ninguna cifra. Un script compara números, porcentajes y plazos antes y después. El manual 2023, que sí tiene texto, sirve de respaldo para pasajes ilegibles.
+- **Base principal: `AMIB_1_completo.md`** (decisión de Cesar). El manual 2023 y las notas de Cesar solo complementan o aclaran pasajes ilegibles del OCR.
+- **Orden de los temas**: el del manual (1 Ética, 2 Servicios de Inversión, 3 Marco Normativo, 4 Matemáticas Financieras y Portafolios, 5 Mercado de Capitales, 6 Títulos de Deuda, 7 Fondos de Inversión, 8 Derivados y Riesgos, 9 Análisis Económico, Financiero y Técnico). El Repaso completo sigue ese orden.
+- **Claves de los repasos**: la página 359 del PDF trae "Respuestas Cuestionarios - Libro" (175 claves, girada 90 grados; el OCR no la leyó). Se transcribió a `content/claves/respuestas-libro-amib1.json` y se aplica a las preguntas de repaso alineando por número del libro.
 - **Redacción de lecciones** (Opus, por subtema): láminas con el formato de las notas de Cesar. Cada lámina cita su página del manual. Se empieza con Títulos de Deuda (capítulo 6) y se combina con sus notas.
 
 
