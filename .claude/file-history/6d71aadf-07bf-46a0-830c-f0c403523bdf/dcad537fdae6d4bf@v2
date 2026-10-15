@@ -1,0 +1,60 @@
+"""Phase 1: split 'Attribution' into 'Attribution 2024-2026' and 'Attribution YTD'; rename chart tabs."""
+import time, pickle, pywintypes
+from attach import get_app
+app = get_app(); wb = app.Workbooks("AZTD - Top Holdings Peers_v2.xlsx")
+def R(fn):
+    for i in range(300):
+        try: return fn()
+        except pywintypes.com_error as e:
+            if e.args[0] in (-2147418111, -2147417846, -2146777998): time.sleep(1); continue
+            raise
+    raise RuntimeError("busy")
+R(lambda: setattr(app, "Calculation", -4135)); R(lambda: setattr(app, "ScreenUpdating", False))
+names = [s.Name for s in wb.Worksheets]
+assert "Attribution" in names and "Attribution YTD" not in names
+A = wb.Worksheets("Attribution")
+for co in A.ChartObjects(): R(lambda: setattr(co, "Placement", 3))
+R(lambda: A.Copy(After=A))
+Y = wb.Worksheets(A.Index + 1); R(lambda: setattr(Y, "Name", "Attribution YTD"))
+for co in Y.ChartObjects(): R(lambda: setattr(co, "Placement", 3))
+R(lambda: setattr(A, "Name", "Attribution 2024-2026"))
+def delrows(ws, a, b): R(lambda: ws.Rows(f"{a}:{b}").Delete())
+def delcells_left(ws, rng): R(lambda: ws.Range(rng).Delete(-4159))
+def clear(ws, rng):
+    R(lambda: ws.Range(rng).Clear()); R(lambda: ws.Range(rng).FormatConditions.Delete())
+# ---------- 2024-2026: remove YTD pieces (bottom-up)
+delrows(A, 174, 190)          # missing names YTD
+delrows(A, 145, 156)          # detractors YTD
+delrows(A, 121, 132)          # top contributors YTD
+clear(A, "G78:I107")          # Brinson YTD columns (sector + region)
+delrows(A, 66, 76)            # region contribution YTD
+delrows(A, 37, 53)            # sector contribution YTD
+for c in ("J", "H", "E"):     # performance table YTD columns
+    delcells_left(A, f"{c}5:{c}12")
+for co in list(A.ChartObjects()):
+    t = co.Chart.ChartTitle.Text if co.Chart.HasTitle else ""
+    if "YTD" in t: R(lambda: co.Delete())
+R(lambda: setattr(A.Range("C2"), "Value", "Performance Attribution - AZTD vs Peers, Jan-24 to Aug-26"))
+# ---------- YTD: remove period pieces (bottom-up)
+delrows(Y, 199, 240)          # 2025 focus
+delrows(Y, 157, 173)          # missing names period
+delrows(Y, 133, 144)          # detractors period
+delrows(Y, 109, 120)          # top contributors period
+delcells_left(Y, "D78:F107")  # Brinson period columns -> YTD columns move to D:F
+delrows(Y, 54, 65)            # region contribution period
+delrows(Y, 20, 36)            # sector contribution period
+delrows(Y, 14, 19)            # by calendar year
+for c in ("I", "G", "F", "D"):
+    delcells_left(Y, f"{c}5:{c}12")
+for co in list(Y.ChartObjects()):
+    t = co.Chart.ChartTitle.Text if co.Chart.HasTitle else ""
+    if "YTD" not in t: R(lambda: co.Delete())
+k = 0
+for co in sorted(list(Y.ChartObjects()), key=lambda c: c.Top):
+    R(lambda: setattr(co, "Top", Y.Range("O5").Top + k * 345)); R(lambda: setattr(co, "Left", Y.Range("O5").Left)); k += 1
+R(lambda: setattr(Y.Range("C2"), "Value", "Performance Attribution - AZTD vs Peers, YTD-26 (Jan-Aug)"))
+# ---------- chart tabs
+wb.Worksheets("Performance Charts").Name = "Charts 2024-2026"
+wb.Worksheets("Charts").Name = "Charts Aug-26"
+R(lambda: setattr(app, "ScreenUpdating", True))
+print("split done", [s.Name for s in wb.Worksheets])

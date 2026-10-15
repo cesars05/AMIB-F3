@@ -1,0 +1,147 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+$sm=T { $wb.Worksheets.Item("Segment Model") }
+$q='"'
+$emp=$q+$q
+
+# ---------- GUARDAS ----------
+if([string](T { $sm.Range("C81").Text }) -ne "Water Management"){ throw "ABORTO: r81 no es WM (activos)" }
+if([double](T { $sm.Range("K81").Value2 }) -ne 44721){ throw "ABORTO: K81 no es 44721" }
+if([double](T { $sm.Range("K90").Value2 }) -ne 12165){ throw "ABORTO: K90 no es 12165 (pasivos WM)" }
+if([double](T { $sm.Range("K21").Value2 }) -ne 3255){ throw "ABORTO: K21 no es 3255" }
+if([double](T { $sm.Range("K132").Value2 }) -ne 3179){ throw "ABORTO: K132 no es 3179 (capex WM)" }
+if([double](T { $sm.Range("K30").Value2 }) -ne 2840){ throw "ABORTO: K30 no es 2840 (D&A WM)" }
+foreach($a in "C74","C75","C202","C204","C217"){ if([string](T { $sm.Range($a).Text }).Trim() -ne ""){ throw ("ABORTO: "+$a+" no esta vacia") } }
+Write-Output "guardas OK - mapa confirmado y celdas destino vacias"
+$xl.Calculation=-4135
+$xl.ScreenUpdating=$false
+
+# ================= BLOQUE 1: ROIC por segmento (r74-r79) =================
+T { $sm.Range("C100:S100").Copy() }; T { $sm.Range("C74:S74").PasteSpecial(-4122) }
+T { $sm.Range("C101:S101").Copy() }; T { $sm.Range("C79:S79").PasteSpecial(-4122) }
+foreach($r in 75,76,77,78){ T { $sm.Range("C102:S102").Copy() }; T { $sm.Range("C"+$r+":S"+$r).PasteSpecial(-4122) } }
+T { $xl.CutCopyMode=0 }
+T { $sm.Range("C74").Value2="Segment ROIC (NOPAT / average capital employed)" }
+T { $sm.Range("D74").Formula="=+D12" }
+T { $sm.Range("D74:Q74").FillRight() }
+
+$seg=@{}
+$seg[75]=@("Water Management",21,81,90)
+$seg[76]=@("Building Envelope",22,82,91)
+$seg[77]=@("Housebuilding Products",23,83,92)
+$seg[78]=@("Total Trading Segments",24,84,93)
+foreach($r in ($seg.Keys | Sort-Object)){
+  $s=$seg[$r]
+  T { $sm.Cells.Item($r,3).Value2=[string]$s[0] }
+  $f="=+IFERROR(IF(D"+$s[2]+"=0,"+$emp+",E"+$s[1]+"*(1-'Consolidated Model'!E86)/AVERAGE(E"+$s[2]+"-E"+$s[3]+",D"+$s[2]+"-D"+$s[3]+")),"+$emp+")"
+  T { $sm.Cells.Item($r,5).Formula=$f }
+  T { $sm.Range("E"+$r+":Q"+$r).FillRight() }
+  T { $sm.Range("E"+$r+":Q"+$r).NumberFormat="0.0%" }
+}
+T { $sm.Range("C79").Value2="Capital employed = segment assets less segment liabilities (per segmental note, incl. allocated goodwill); NOPAT at the Group effective tax rate; averaged opening and closing." }
+Write-Output "bloque ROIC escrito en r74-r79"
+
+# ================= BLOQUE 2: puente de capex (r202-r221) =================
+T { $sm.Range("C100:S100").Copy() }; T { $sm.Range("C202:S202").PasteSpecial(-4122) }
+foreach($r in 203,209,215,221){ T { $sm.Range("C101:S101").Copy() }; T { $sm.Range("C"+$r+":S"+$r).PasteSpecial(-4122) } }
+foreach($r in 204,205,206,207,210,211,212,213,217,218,219){ T { $sm.Range("C116:S116").Copy() }; T { $sm.Range("C"+$r+":S"+$r).PasteSpecial(-4122) } }
+T { $xl.CutCopyMode=0 }
+T { $sm.Range("C202").Value2="Capex Bridge: Maintenance vs Growth" }
+T { $sm.Range("D202").Formula="=+D12" }
+T { $sm.Range("D202:Q202").FillRight() }
+T { $sm.Range("C203").Value2="Maintenance capex (= depreciation & amortisation)" }
+T { $sm.Range("C209").Value2="Growth capex (= total capex less D&A)" }
+
+$cap=@{}
+$cap[204]=@("Water Management",30,132)
+$cap[205]=@("Building Envelope",31,133)
+$cap[206]=@("Housebuilding Products",32,134)
+foreach($r in ($cap.Keys | Sort-Object)){
+  $s=$cap[$r]
+  T { $sm.Cells.Item($r,3).Value2=[string]$s[0] }
+  T { $sm.Cells.Item($r,4).Formula="=+IFERROR(D"+$s[1]+","+$emp+")" }
+  T { $sm.Range("D"+$r+":Q"+$r).FillRight() }
+  $g=$r+6
+  T { $sm.Cells.Item($g,3).Value2=[string]$s[0] }
+  T { $sm.Cells.Item($g,4).Formula="=+IFERROR(D"+$s[2]+"-D"+$s[1]+","+$emp+")" }
+  T { $sm.Range("D"+$g+":Q"+$g).FillRight() }
+}
+T { $sm.Range("C207").Value2="Total Trading Segments" }
+T { $sm.Range("D207").Formula="=SUM(D204:D206)" }
+T { $sm.Range("D207:Q207").FillRight() }
+T { $sm.Range("C213").Value2="Total Trading Segments" }
+T { $sm.Range("D213").Formula="=SUM(D210:D212)" }
+T { $sm.Range("D213:Q213").FillRight() }
+
+# --- intensidad de capital de crecimiento ---
+T { $sm.Range("C215").Value2="Growth capital intensity - capex FY2022-FY2026 vs revenue growth FY2021-FY2026" }
+T { $sm.Range("C101:S101").Copy() }; T { $sm.Range("C216:S216").PasteSpecial(-4122) }; T { $xl.CutCopyMode=0 }
+$hdr=@("Cumulative capex","Cumulative D&A","Net new capital","Revenue growth","Intensity")
+for($i=0;$i -lt 5;$i++){
+  T { $sm.Cells.Item(216,4+$i).Value2=$hdr[$i] }
+  T { $sm.Cells.Item(216,4+$i).Font.Bold=$true }
+  T { $sm.Cells.Item(216,4+$i).HorizontalAlignment=-4152 }
+}
+$int=@{}
+$int[217]=@("Water Management",132,30,13)
+$int[218]=@("Building Envelope",133,31,14)
+$int[219]=@("Housebuilding Products",134,32,15)
+foreach($r in ($int.Keys | Sort-Object)){
+  $s=$int[$r]
+  T { $sm.Cells.Item($r,3).Value2=[string]$s[0] }
+  T { $sm.Cells.Item($r,4).Formula="=SUM(G"+$s[1]+":K"+$s[1]+")" }
+  T { $sm.Cells.Item($r,5).Formula="=SUM(G"+$s[2]+":K"+$s[2]+")" }
+  T { $sm.Cells.Item($r,6).Formula="=+D"+$r+"-E"+$r }
+  T { $sm.Cells.Item($r,7).Formula="=+K"+$s[3]+"-F"+$s[3] }
+  T { $sm.Cells.Item($r,8).Formula="=+IFERROR(F"+$r+"/G"+$r+","+$emp+")" }
+  T { $sm.Range("H"+$r).NumberFormat="0.0%" }
+  T { $sm.Range("I"+$r+":Q"+$r).ClearContents() }
+}
+T { $sm.Range("C221").Value2="Intensity = net new capital (capex less D&A) per GBP 1 of incremental revenue. Capex is accrual basis incl. right-of-use additions, consistent with the DCF." }
+
+$xl.Calculation=-4105
+$xl.ScreenUpdating=$true
+T { $xl.CalculateFullRebuild() }; T { $xl.CalculateFullRebuild() }
+$wb.Save()
+Write-Output "bloque de capex escrito en r202-r221"
+Write-Output ""
+Write-Output "==================== VERIFICACION ===================="
+$h="  "+"".PadRight(26)
+for($c=6;$c -le 14;$c++){ $h+=([string](T { $sm.Cells.Item(9,$c).Text })).PadLeft(9) }
+Write-Output $h
+foreach($r in 74,75,76,77,78){
+  $lab=[string](T { $sm.Cells.Item($r,3).Text }); if($lab.Length -gt 25){ $lab=$lab.Substring(0,25) }
+  $v=""
+  for($c=6;$c -le 14;$c++){ $v+=([string](T { $sm.Cells.Item($r,$c).Text })).PadLeft(9) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(26)+$v)
+}
+Write-Output ""
+foreach($r in 202,203,204,205,206,207,209,210,211,212,213){
+  $lab=[string](T { $sm.Cells.Item($r,3).Text }); if($lab.Length -gt 25){ $lab=$lab.Substring(0,25) }
+  $v=""
+  for($c=6;$c -le 14;$c++){ $v+=([string](T { $sm.Cells.Item($r,$c).Text })).PadLeft(9) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(26)+$v)
+}
+Write-Output ""
+Write-Output ("  "+"".PadRight(26)+"Capex ac.".PadLeft(12)+"D&A ac.".PadLeft(12)+"Cap.neto".PadLeft(12)+"D Ingresos".PadLeft(12)+"Intensidad".PadLeft(12))
+foreach($r in 217,218,219){
+  $lab=[string](T { $sm.Cells.Item($r,3).Text }); if($lab.Length -gt 25){ $lab=$lab.Substring(0,25) }
+  $v=""
+  for($c=4;$c -le 8;$c++){ $v+=([string](T { $sm.Cells.Item($r,$c).Text })).PadLeft(12) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(26)+$v)
+}
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=T { $wb.Worksheets.Item($nm) }
+  $e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

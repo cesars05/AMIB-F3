@@ -1,0 +1,86 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t = $null; foreach ($w in $xl.Workbooks) { if ($w.Name -eq '20260922_SETSA Transportes.xlsx') { $t = $w } }
+$t.SaveCopyAs("$PSScriptRoot\backup_antes_titlecase.xlsx")
+$m  = $t.Worksheets.Item('Modelo SETSA')
+$tx = $t.Worksheets.Item('Transacciones Precedentes')
+$small = @('de','del','la','las','el','los','y','e','o','u','a','al','en','por','para','con','sin','sobre','vs.','x','un','una','que','se')
+
+function To-Title([string]$s) {
+    if ($s -eq '') { return $s }
+    $out = New-Object System.Text.StringBuilder
+    $depth = 0; $first = $true
+    $tokens = $s -split '(\s+)'
+    foreach ($tok in $tokens) {
+        if ($tok -match '^\s+$' -or $tok -eq '') { [void]$out.Append($tok); continue }
+        $opens = ($tok.ToCharArray() | Where-Object { $_ -eq '(' }).Count
+        $closes = ($tok.ToCharArray() | Where-Object { $_ -eq ')' }).Count
+        $inParen = ($depth -gt 0) -or ($tok.StartsWith('(') -and $tok -notmatch '^\((Aumento|Disminuci|-|\+|=)')
+        $new = $tok
+        if (-not $inParen) {
+            $lead = ''; $core = $tok
+            while ($core.Length -gt 0 -and '(/+-=''"'.Contains($core.Substring(0,1))) { $lead += $core.Substring(0,1); $core = $core.Substring(1) }
+            if ($core.Length -gt 0 -and $core -notmatch '\d' -and $core -cmatch '^[a-záéíóúñ]') {
+                $low = $core.ToLower()
+                if ($first -or -not ($small -contains $low)) { $core = $core.Substring(0,1).ToUpper() + $core.Substring(1) }
+            }
+            $new = $lead + $core
+        }
+        [void]$out.Append($new)
+        $depth += $opens - $closes; if ($depth -lt 0) { $depth = 0 }
+        $first = $false
+    }
+    return $out.ToString()
+}
+
+# ---------- 1) Title case en etiquetas ----------
+$changed = @()
+$last = $m.Cells.Item($m.Rows.Count, 3).End(-4162).Row
+for ($r = 13; $r -le $last; $r++) {
+    $c = $m.Cells.Item($r, 3); $v = [string]$c.Value2
+    if ($v -eq '' -or ([string]$c.Formula).StartsWith('=')) { continue }
+    $n = To-Title $v
+    if ($n -cne $v) { $c.Value2 = $n; $changed += "M$r : $v  ->  $n" }
+}
+for ($r = 27; $r -le 60; $r++) {
+    $c = $tx.Cells.Item($r, 2); $v = [string]$c.Value2
+    if ($v -eq '' -or ([string]$c.Formula).StartsWith('=')) { continue }
+    $n = To-Title $v
+    if ($n -cne $v) { $c.Value2 = $n; $changed += "TX B$r : $v  ->  $n" }
+}
+foreach ($addr in 'G31','G34','K32') {
+    $c = $tx.Range($addr); $v = [string]$c.Value2
+    if ($v -ne '' -and -not ([string]$c.Formula).StartsWith('=')) { $n = To-Title $v; if ($n -cne $v) { $c.Value2 = $n; $changed += "TX $addr : $v -> $n" } }
+}
+# Target -> español
+if ([string]$tx.Range('C11').Value2 -eq 'Target') { $tx.Range('C11').Value2 = 'Empresa Adquirida'; $changed += 'TX C11 : Target -> Empresa Adquirida' }
+
+# ---------- 2) Capex: crecimiento YoY ----------
+$rCapG = 0; $rCapCF = 0
+for ($r = 13; $r -le $last; $r++) {
+    $v = [string]$m.Cells.Item($r, 3).Value2
+    if ($rCapCF -eq 0 -and $v.StartsWith('Capex Neto')) { $rCapCF = $r }
+    if ($v -ceq 'Capex' -or $v -ceq 'Capex (%)') { $rCapG = $r }
+}
+if ($rCapG -eq 0 -or $rCapCF -eq 0) { throw "no encontre filas de capex ($rCapG / $rCapCF)" }
+$m.Rows.Item($rCapG - 1).Copy() | Out-Null
+$m.Rows.Item($rCapG).PasteSpecial(-4122) | Out-Null      # solo formatos
+$xl.CutCopyMode = $false
+$m.Cells.Item($rCapG, 3).Value2 = 'Capex (%)'
+foreach ($c in 'F','G','H') { $p = [char]([int][char]$c - 1); $m.Range("$c$rCapG").Formula = "=$c$rCapCF/$p$rCapCF-1" }
+$m.Range("D$($rCapG):E$($rCapG)").ClearContents() | Out-Null; $m.Range("I$rCapG").ClearContents() | Out-Null
+$changed += "Capex YoY en fila $rCapG (fuente fila $rCapCF)"
+
+# ---------- 3) quitar comentarios ----------
+$m.Range("K12:K$($last + 5)").ClearContents() | Out-Null
+$nArrow = 0
+for ($r = 12; $r -le $last; $r++) { $v = [string]$m.Cells.Item($r, 5).Value2; if ($v.StartsWith('<--')) { $m.Cells.Item($r, 5).ClearContents() | Out-Null; $nArrow++ } }
+$changed += "comentarios columna K eliminados; notas '<--' en supuestos eliminadas: $nArrow"
+
+$xl.CalculateFull()
+$err = 0
+foreach ($ws in $t.Worksheets) { foreach ($c in $ws.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $err++; "ERR " + $ws.Name + "!" + $c.Address($false,$false) } } }
+$changed | Out-File -Encoding utf8 "$PSScriptRoot\titlecase_log.txt"
+"cambios: " + $changed.Count + " | errores=$err"
+"Capex YoY: F=" + $m.Range("F$rCapG").Text + " G=" + $m.Range("G$rCapG").Text + " H=" + $m.Range("H$rCapG").Text
+$t.Save(); "guardado=" + $t.Saved

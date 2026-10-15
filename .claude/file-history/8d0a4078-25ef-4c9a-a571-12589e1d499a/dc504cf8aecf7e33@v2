@@ -1,0 +1,15 @@
+---
+name: user-research-style
+description: "How the user (Aztlan equity research, Spanish-speaking, new to the industries studied) wants company deep-dives delivered"
+metadata:
+  node_type: memory
+  type: user
+  originSessionId: 8d0a4078-25ef-4c9a-a571-12589e1d499a
+  modified: 2026-10-12T17:21:11.278Z
+---
+
+The user works on equity research at Aztlan (folder `Research/Company Research/Materials/<company>`). They write to me in Spanish, do not know the industry of the company under study, and want to understand how **business fundamentals show up in the financials** (capex, depreciation, margins, input costs), not just a summary.
+
+**Why:** they prepare decks and a company-overview workflow (`Prompt_Company_Overview_v0.2`, `Prompt_Segment_Analysis_Framework_v0.2`) and iterate on prompts; they asked for a prompt and per-folder notes so later sessions start faster.
+
+**How to apply:** write learning-oriented deep-dives in Spanish with industry terms defined inline; keep the house tags [D]/[I]/[ND], FY labels (FY03/2026), no em dashes, no "likely"; save deliverables as .md inside the company folder and link [[fuso-chemical-folder-lessons]]; leave `_NOTES.md` per folder; never save the Excel model with openpyxl.

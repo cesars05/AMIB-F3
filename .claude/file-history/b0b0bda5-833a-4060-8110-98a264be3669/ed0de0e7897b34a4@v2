@@ -1,0 +1,40 @@
+# Adaptar, no copiar: todas las recetas son puntos de partida
+
+Regla general de la skill, pedida explícitamente por el usuario: **ningún layout, receta, diagrama ni import de think-cell es estático.** Cada uno trae un *lenguaje visual* (formas, colores, jerarquía, orden de lectura) y una *estructura de ejemplo*. El lenguaje visual se conserva; la estructura se rehace para el mensaje concreto.
+
+Cambiar solo el texto de una receta **no cuenta** como adaptarla. Antes de construir un slide, decide estas 6 cosas:
+
+## 1. Las 6 decisiones de cada slide
+| # | Decisión | Opciones | Pregunta guía |
+|---|---|---|---|
+| 1 | **Forma del mensaje** | lineal · convergente (muchos → uno) · divergente (uno → muchos) · hub (converge + diverge) · jerárquica (árbol) · contenedora (anidada) · cíclica · comparativa (A vs B) · rango/posición · resta/puente | ¿Qué relación existe entre las piezas? |
+| 2 | **Cuántas piezas** | las que pida el contenido (de 2 a 8 por nivel); agrupa si son más | ¿Sobra o falta alguna caja respecto al ejemplo? |
+| 3 | **Dirección** | izquierda→derecha · arriba→abajo · centro→afuera · en ciclo | ¿Cómo debe recorrerlo el ojo? |
+| 4 | **Dónde está el foco** | un paso, un rango de pasos, un nodo central, una rama | ¿Qué parte debe ver primero el lector? (marco rojo punteado, color de marca, alpha) |
+| 5 | **Capa de lectura** | tarjetas de detalle · barra con cola + columnas · bullets a la derecha · callouts sobre el diagrama · tabla alineada debajo | ¿Dónde queda escrita la interpretación? |
+| 6 | **Densidad** | deck para leer (denso) · deck para presentar (una idea) | ¿Lo van a leer solos o lo vas a explicar en voz? |
+
+## 2. Qué se puede variar en cada familia (y qué no)
+| Familia | Se conserva (lenguaje) | Se puede variar (estructura) | Herramientas |
+|---|---|---|---|
+| Cadena / flujo (KLA s7) | tipos de caja (input/neutral/focus/end), contornos 2.25 pt, alpha decreciente en el foco, marco rojo punteado, flechas de color oscuro | número de pasos, filas, convergencias y divergencias, hubs altos, loops arriba o abajo, orientación vertical | `node, flow, merge, fan, loop_back, focus_frame`; `process_chain` como atajo lineal |
+| Árbol / estructura (ALLOC s3) | el relleno codifica la categoría, con leyenda; panel explicativo gris | niveles, número de hijos, cajas que se juntan, flechas en codo, árbol horizontal en vez de vertical | `struct_box, connect, legend_items` |
+| Anidado (ALLOC s4) | contorno exterior y rellenos internos; líneas guía con punto | 2 a 5 anillos, concéntricos o alineados abajo, callouts a izquierda o derecha | `nested_circles` (escala por anillo) |
+| Puente / resta (ALLOC s8) | piezas que se achican hasta un final en color de marca; operadores en círculo | número de etapas, operadores, varios brackets; versión waterfall si se repite | `cylinder_bridge`, `waterfall` |
+| Progresión → conclusión (ALLOC s16) | color de gris a marca como progreso; barra con triángulo tenue | 3 a 6 chevrons, cajas con contenidos distintos, 2 a 4 columnas de lectura, barra a media altura | `chevron_row(fills=progression(n)), boxed_columns, tail_bar, bullet_columns` |
+| Rango (ALLOC s14) | eje con flecha, pills de valor, banda punteada | número de marcas, varias bandas, eje vertical | `price_range` (+ `line`, `pill`) |
+| Boxes de encabezado (KLA s3, D1) | header de color + caja con borde + bullets | 2 a 5 columnas, alturas distintas, una caja resaltada, conclusión debajo | `header_bar, bullet_box, conclusion_bar` |
+| Gráficas | reglas de `charts.md` (sin grid en barras, labels, un acento) | tipo de gráfica según la pregunta, anotaciones, tabla o pills alineadas | recetas de `charts.md` |
+| Diagramas think-cell | colores recoloreados, formas originales | número de elementos que se usan (vaciar slots), combinación con callouts y barra de conclusión, escala 0.8–1.1 | `import_elements` + primitivas encima |
+| Marco del slide | grid, título, subtítulo, regla, source, logo | **nada**: el marco es lo único fijo | `content_slide` |
+
+## 3. Ejemplo de referencia
+`Slide Construction\Ejemplos\ejemplo_adaptado_v2.py`. La cadena lineal de KLA (8 pasos) se convirtió en: 3 fuentes que convergen → 1 hub → 4 destinos que divergen → 2 que vuelven a converger, con el loop por abajo y la lectura en una barra con cola en vez de tarjetas. Comparación: `Ejemplos\Ejemplo_reestructurado_vs_original.png`.
+
+## 4. Revisión antes de entregar cada slide
+- [ ] ¿La forma del diagrama imita la relación real (decisión 1), o solo se copió la del ejemplo?
+- [ ] ¿El número de cajas sale del contenido y no del ejemplo?
+- [ ] ¿Hay un solo foco claro?
+- [ ] ¿Queda escrita la interpretación (capa de lectura)?
+- [ ] ¿El lenguaje visual sigue siendo el del sistema (colores, contornos, tipografía), aunque la estructura sea nueva?
+- [ ] ¿El slide se distingue del anterior? Ver la rotación en `rotation-qc.md`.

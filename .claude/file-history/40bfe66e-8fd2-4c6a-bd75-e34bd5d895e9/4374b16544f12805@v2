@@ -1,0 +1,454 @@
+# 07 — Requisitos mínimos y estructura del reporte
+
+**Fecha:** 12 septiembre 2026
+**Fuentes primarias leídas directamente (no el digest):** `research-challenge-official-rules.pdf` (Rule 2.5–2.7, 3.5–3.6, 4.2, Apéndices A–G), `rc-written-report-guidelines.pdf`, `rc-equity-research-report-essentials.pdf`, `rc-report-cover-pages-new.docx`.
+
+> Complementa `02-guia-reporte-escrito.md`. Lo que agrega es: (1) un hallazgo
+> sobre cómo funciona realmente la rúbrica que cambia la estrategia de
+> estructura, (2) el checklist de contenido mínimo derivado del único estándar
+> de contenido que CFA publica, (3) errores concretos detectados en los
+> reportes pasados, y (4) las preguntas que hay que hacer al host el 17 de sep.
+
+---
+
+## 1. El hallazgo que cambia la estrategia: la rúbrica no tiene subcriterios
+
+Extraje el Apéndice D ("Research Report Evaluation Form") del PDF de reglas y también el que viene en `rc-written-report-guidelines.pdf`. **Son idénticos, y son una forma en blanco:**
+
+```
+SECCIÓN                                MAX PUNTOS    COMENTARIOS
+Business Description                        5          [vacío]
+Industry Overview & Competitive Positioning 10         [vacío]
+Investment Summary                          15         [vacío]
+Valuation                                   20         [vacío]
+Financial Analysis                          20         [vacío]
+Investment Risks                            15         [vacío]
+Environmental, Social, Governance           15         [vacío]
+Total                                      100
+```
+
+Eso es todo. **No hay descriptores de desempeño, no hay subcriterios, no hay lista de razones de deducción.** La columna "COMMENTS" es un espacio en blanco para que el grader escriba a mano.
+
+**Verificación, porque esto es contraintuitivo y el documento parece decir lo contrario.** `rc-written-report-guidelines.pdf` trae esta frase justo antes de la tabla:
+
+> *"The reports will be graded based on the following scoring rubric. **Take note of the comments section, which presents reasons why points may be deducted from each section.**"*
+
+Esa frase sugiere que la columna COMMENTS debería traer las razones de deducción. **No las trae.** Lo verifiqué con tres extractores distintos sobre los dos PDF (el de guidelines y el Apéndice D del PDF de reglas):
+
+| Método | Resultado |
+|---|---|
+| `pdftotext` (modo layout y modo crudo) | Columna COMMENTS vacía |
+| `pdfplumber` (extracción de tabla celda por celda) | Las 8 celdas de COMMENTS devuelven cadena vacía `''` |
+| `PyMuPDF` (spans a nivel de coordenada, + anotaciones + campos de formulario) | El encabezado "COMMENTS" existe en x≈326 (guidelines) y x≈249 (Apéndice D), pero **no hay ningún span de texto en esa columna**. Sin anotaciones. Sin campos de formulario |
+
+O sea: no es un problema de extracción, la columna está genuinamente vacía en el archivo que CFA distribuye. La lectura razonable de esa frase es que **los comentarios que el grader escriba ahí serán la explicación de por qué se dedujeron puntos** — es información para después, cuando llegue el reporte calificado, no un criterio que el equipo pueda consultar antes de escribir. (La otra posibilidad es que la frase sea un remanente de una versión de la forma que sí traía texto preimpreso.) En cualquiera de los dos casos: **el equipo no obtiene criterios de ahí.**
+
+**Tres implicaciones directas:**
+
+**(a) El grader tiene discrecionalidad total dentro de cada sección.** No va comparando contra una lista de verificación. Va a calificar según lo que un profesional de research espera ver en una sección con ese nombre. Por lo tanto:
+
+**(b) El único estándar de contenido que CFA publica es `rc-equity-research-report-essentials.pdf`.** Ese documento de 4 páginas es, en la práctica, la rúbrica detallada. **Todo lo que ese documento menciona hay que cubrirlo explícitamente**, porque es lo que el grader leyó. El §3 de abajo lo convierte en checklist.
+
+**(c) Los nombres de sección tienen que ser los siete literales de la rúbrica.** El grader tiene siete renglones que llenar. Si tu sección se llama "Company Overview" y la rúbrica dice "Business Description", le estás pidiendo al grader que haga el mapeo. Si se llama "Executive Summary" pero la rúbrica dice "Investment Summary", igual. **Usar los siete nombres exactos, en ese orden de etiquetas, no es cosmético: es reducir la fricción de quien asigna los puntos.**
+
+> Esto contrasta con la presentación: el Apéndice E sí tiene una pregunta
+> explícita por criterio ("How thorough was their analysis of the industry,
+> company, and competitors?"). El reporte no. En el reporte hay más espacio
+> para perder puntos por omisión silenciosa.
+
+### Quién califica el reporte
+
+Rule 3.6: *"Graders will **independently** evaluate each written report"*, y **todos los graders deben ser profesionales de inversión con experiencia escribiendo y revisando reportes de research.**
+
+Comparar con los jueces de presentación (Rule 3.5): para ellos esa experiencia es solo *"recommended"*, y se exige mínimo 3 por panel. **Para los graders del reporte la experiencia escribiendo research es obligatoria, y no hay número mínimo estipulado.**
+
+Traducción: el reporte lo revisa gente que escribe research para vivir, de forma independiente. Los atajos que un juez generalista podría no ver — un WACC sin sustento, un peer set arbitrario, un valor terminal que carga el 85% del valor — ahí sí se ven.
+
+---
+
+## 2. Requisitos duros — lo que es obligatorio, no recomendable
+
+De Rule 2.6 y Apéndice A. Cada renglón es una condición de cumplimiento, no un consejo:
+
+| # | Requisito | Fuente | Nota |
+|---|---|---|---|
+| 1 | **≤10 páginas A4** (210×297 mm / 8.27"×11.69"), sin contar la portada de CFA | Ap. A | La portada no cuenta |
+| 2 | **Apéndice ≤10 páginas A4** | Ap. A | Adicionales a las 10 |
+| 3 | **En inglés** | Rule 2.6c | |
+| 4 | **Solo información públicamente disponible** | Rule 2.6d | |
+| 5 | **Trabajo original de los integrantes** | Rule 2.6e | |
+| 6 | **Citado con un sistema de citación generalmente aceptado** | Rule 2.6f | **Es regla, no sugerencia.** Chicago, Harvard y MLA se nombran como ejemplos, con "incluyendo pero no limitado a" |
+| 7 | **Perspectiva de analista de research independiente** | Rule 2.6g | |
+| 8 | **Entregado al host en la fecha límite** | Rule 2.6h | **Penalizaciones a discreción del host, "incluyendo pero no limitado a deducción de puntos o descalificación"** |
+| 9 | **Portada oficial de CFA**, solo llenando los campos resaltados, sin alterar nada más incluyendo el logo | Ap. A y C | |
+| 10 | **Header en la primera página** con los campos del §2.1 | Ap. A | |
+| 11 | **Las 7 secciones de la rúbrica** | Ap. A | Se pueden agregar secciones extra |
+| 12 | **Sin ayuda de ningún otro profesional de inversiones** para escribir el contenido | Rule 2.6 preámbulo | Solo faculty advisor e industry mentor |
+
+### 2.1 El header de la primera página — hay una discrepancia menor entre dos documentos oficiales
+
+`rc-written-report-guidelines.pdf` lista **8 campos** (Sector e Industry por separado):
+
+- Company name · Exchange · Ticker symbol · **Sector** · **Industry** · Recommendation (buy/sell/hold) · Current price (as of __date) · Target price (% increase/decrease)
+
+El Apéndice A del PDF de reglas lista **7**, fusionando **"Sector/Industry"** en uno.
+
+**Resolución: poner ambos por separado.** Cumple con las dos versiones y no cuesta nada. Y usar GICS explícitamente (como hicieron Fibra MTY Tec y La Comer) porque es lo que un profesional espera.
+
+Dos detalles de forma que se pierden fácil:
+- **"Current price (as of __date)"** — la fecha es parte del campo obligatorio, no un adorno. Un precio sin fecha es un campo incompleto.
+- **"Target price (% increase/decrease)"** — el porcentaje también es parte del campo. Precio objetivo sin el % de upside/downside está incompleto.
+
+Y del `Essentials`, tres campos que **no** están en la lista obligatoria pero que CFA describe como esperados en "BASIC INFORMATION" y que casi nadie pone (§3.1): **market capitalization, liquidez y float, y los accionistas principales.**
+
+### 2.2 La portada: hay dos versiones del texto en la carpeta, y difieren
+
+Comparé el texto del disclaimer entre las dos fuentes oficiales que tenemos:
+
+| Fuente | Redacción |
+|---|---|
+| **Apéndice C** del PDF de reglas | "The following report was prepared **in compliance with the Official Rules of the CFA Institute Research Challenge**, is submitted by a team of university students as part of this annual educational initiative..." |
+| **`rc-report-cover-pages-new.docx`** (el archivo editable) | "The following report was prepared by a team of university students as part of this annual educational initiative..." — **sin la frase de compliance** |
+
+No es un detalle inventado: verifiqué qué usó cada reporte pasado.
+
+| Reporte | Redacción usada |
+|---|---|
+| Waterloo 2024 (ganador global) | **La del Apéndice C** (con "in compliance with the Official Rules") |
+| Waterloo 2026 (ganador global) | **La del Apéndice C** |
+| Kozminski 2025 (ganador global) | La del DOCX |
+| La Comer, UDLAP, Campus Monterrey | La del DOCX |
+
+**Los dos reportes de Waterloo — ambos ganadores globales, ambos de CFA Society Toronto — usan la redacción del Apéndice C.** Los demás usan la del DOCX.
+
+**Recomendación:** usar el **DOCX**, porque es el archivo que CFA distribuye para llenar y Rule 2.6a dice "conform to Appendix A (the cover page is shown in Appendix C)" — o sea el Apéndice C *muestra* la portada, el DOCX *es* la portada. Pero **preguntarlo al host el 17 de septiembre**, porque es gratis preguntarlo y es un tema de cumplimiento formal. Nota que el PPTX del equipo ya trae la redacción del DOCX en su diapositiva 1, así que hoy están consistentes con esa opción.
+
+### 2.3 Error concreto en dos reportes pasados: corchetes sin resolver
+
+Revisé si los reportes pasados resolvieron los campos de elección de la portada. **Dos de los seis entregaron con los corchetes del template literalmente puestos:**
+
+| Reporte | Estado |
+|---|---|
+| La Comer (ganador local México 2025) | **`[holds/does not hold]` y `[knows/does not know]` sin resolver** |
+| Kozminski (ganador global 2025) | **`[holds/does not hold]` y `[knows/does not know]` sin resolver** |
+| Waterloo 2024, Waterloo 2026, UDLAP, Campus Monterrey | Resueltos correctamente |
+
+Los dos ganaron a pesar de eso, así que no es fatal. Pero es un descuido visible en la primera página, en la sección de disclosures, en un reporte calificado por gente que revisa disclosures de research profesionalmente. **Es la corrección más barata del proyecto: resolver los tres campos de elección.**
+
+Los campos a resolver en la portada:
+1. `[holds / does not hold]` interés financiero en los valores de la empresa
+2. `[knows / does not know]` de la existencia de conflictos de interés
+3. `[The conflict of interest is...]` — solo si aplica el caso anterior
+4. Nombre del local challenge: "hosted by/in CFA Society Mexico"
+5. Nombre del equipo
+6. `[society name]` dentro del texto del disclaimer → "CFA Society Mexico"
+
+El punto 6 se olvida seguido porque está enterrado en el párrafo del disclaimer, no resaltado como campo.
+
+---
+
+## 3. Contenido mínimo por sección — checklist derivado del `Essentials`
+
+Como el Apéndice D no tiene subcriterios (§1), esta es la lista de lo que el grader espera. Cada punto sale del texto de `rc-equity-research-report-essentials.pdf`. **Tratar como checklist de cobertura: si un punto no aparece en el reporte, es una omisión silenciosa.**
+
+### 3.1 BASIC INFORMATION (no es sección con puntos, pero el grader lo lee primero)
+- [ ] Ticker symbol
+- [ ] Bolsa principal donde cotiza
+- [ ] Sector e industria primarios
+- [ ] Recomendación de inversión
+- [ ] Precio actual **y capitalización de mercado**
+- [ ] Precio objetivo
+- [ ] **Liquidez** — el grado en que la acción se puede comprar y vender sin afectar el precio, **y cómo cambia eso en periodos de estrés financiero**
+- [ ] **Float** — acciones en manos del público, excluyendo restringidas y de insiders. CFA dice literalmente que *"un float relativamente pequeño merece mención"* y que es consideración importante para institucionales grandes
+- [ ] **Accionistas principales identificados** — "es buena práctica"
+
+> En Bimbo estos tres últimos no son relleno. El control familiar (Servitje) hace que float y accionistas principales sean un argumento de valuación: si el float limita la entrada de institucionales, eso es una razón estructural de descuento en múltiplo, y decirlo diferencia.
+
+### 3.2 BUSINESS DESCRIPTION — 5 pts
+- [ ] Descripción detallada de la empresa, productos y servicios
+- [ ] **Entendimiento claro de la economía del negocio** — no la historia
+- [ ] **Discusión de los drivers clave de ingresos** — explícita
+- [ ] **Discusión de los drivers clave de gastos** — explícita
+- [ ] Fuentes: la empresa, sus filings regulatorios, publicaciones de industria
+
+Vale 5 puntos. Media página (§3.2 de `06`). Lo que NO puede faltar es el par ingresos/gastos: es lo único que el `Essentials` pide nombradamente aquí.
+
+### 3.3 INDUSTRY OVERVIEW & COMPETITIVE POSITIONING — 10 pts
+- [ ] Panorama de la dinámica de la industria
+- [ ] Análisis competitivo de la industria
+- [ ] **Grupo de comparables (peer group) construido** para el análisis competitivo
+- [ ] **Porter's Five Forces** — CFA lo llama "an effective tool" (recomendado, no obligatorio; ver nota abajo)
+- [ ] **Niveles de capacidad de producción**
+- [ ] **Precios**
+- [ ] **Distribución**
+- [ ] **Estabilidad de la participación de mercado**
+- [ ] **La fuente de la ventaja competitiva identificada**: fuerza de marca, liderazgo en costos, o acceso a tecnología o recursos protegidos. CFA cita el "moat" de Buffett
+
+Los cuatro del medio (capacidad, precios, distribución, estabilidad de market share) son los que más se omiten. En Bimbo los cuatro son directamente abordables: capacidad instalada de panificadoras, price/mix que la empresa reporta por trimestre, la red de distribución como foso, y participación por categoría y región.
+
+**Nota sobre Porter.** Revisé los 6 reportes:
+
+| Reporte | Porter | PESTEL |
+|---|---|---|
+| Campus Monterrey | **Sí** (Apéndice C) | no |
+| UDLAP (ganador local '24) | **Sí** | Sí |
+| La Comer (ganador local '25) | **Sí** | Sí |
+| Waterloo '24 (ganador global) | **Sí** | no |
+| Kozminski (ganador global '25) | **no** | Sí |
+| Waterloo '26 (ganador global) | **no** | no |
+
+Porter está en 4 de 6. **Los tres reportes mexicanos lo usan** — y los graders mexicanos son quienes leen este reporte, así que conviene tenerlo.
+
+Lo que sí vale la pena copiar de Waterloo '26 y Kozminski no es la ausencia de Porter, es **cómo etiquetan cada factor de industria por su signo para la empresa**: "Competitive NA PoS landscape – **Negative** for LSPD", "Strict and fragmented EU regulatory environment – **Positive** for LSPD", "OVERALL MARKET DYNAMICS - **NEUTRAL**", "CONSOLIDATION AHEAD - **POSITIVE**". Eso conecta la industria con la tesis en vez de describirla en abstracto. Ninguno de los tres reportes mexicanos etiqueta signos.
+
+(No hay evidencia de que omitir Porter haya contribuido a esas dos victorias — dos casos contra cuatro no alcanzan para concluir eso. El hallazgo aprovechable es el etiquetado, no la omisión.)
+
+**Recomendación:** factores de industria con signo explícito en el cuerpo del reporte, **más** la matriz de Porter completa en el apéndice. Se cubre la herramienta que CFA recomienda y lo que esperan los graders locales, sin gastar espacio del reporte describiendo un framework genérico.
+
+### 3.4 INVESTMENT SUMMARY — 15 pts
+- [ ] Descripción breve de la empresa
+- [ ] **Desarrollos recientes significativos**
+- [ ] **Pronóstico de utilidades (earnings forecast)**
+- [ ] Resumen de valuación
+- [ ] La acción de inversión recomendada
+- [ ] **Explicación clara y concisa de por qué el valor está mal valuado**, que responda las dos preguntas textuales de CFA:
+  - **¿Qué está el mercado descontando incorrectamente hoy en el precio?**
+  - **¿Qué va a provocar que el mercado reprecie el valor?** (el catalizador)
+
+Las dos últimas son la razón por la que esta sección se queda a medias en la mayoría de los reportes. Ver `06` §3.5 para cómo las contestaron los ganadores.
+
+**Ojo con "earnings forecast":** es un requisito nombrado y se omite seguido. Tiene que haber una cifra de EPS proyectada visible en esta sección, no solo en el apéndice.
+
+### 3.5 VALUATION — 20 pts
+- [ ] Análisis de valuación exhaustivo con métricas y fórmulas **convencionales**
+- [ ] **Más de un modelo** — CFA lo justifica: "because model outputs can vary"
+- [ ] Al menos un modelo **absoluto / de valor intrínseco** (flujos descontados)
+- [ ] Al menos un modelo **relativo** — el `Essentials` nombra cuatro: **P/S, P/E, P/CF, P/B**
+- [ ] Supuestos explícitos
+- [ ] Análisis de sensibilidad
+
+Notas de calibración desde el benchmark (`06` §3.7): los ganadores usan **3–4 metodologías**, no dos; declaran los **pesos en tabla y los justifican**; y tratan los outliers del peer set de frente. Monte Carlo aparece en 4 de 6 reportes y en ambos ganadores locales mexicanos.
+
+### 3.6 FINANCIAL ANALYSIS — 20 pts
+- [ ] Análisis detallado del desempeño financiero **histórico**
+- [ ] **Pronóstico** del desempeño futuro
+- [ ] **Lectura cuidadosa de las notas a los estados financieros** — CFA lo llama "an essential part of any examination of earnings quality"
+- [ ] Búsqueda explícita de distorsiones, con los cuatro ejemplos que da CFA:
+  - **Eventos no recurrentes**
+  - **Financiamiento fuera de balance**
+  - **Reconocimiento de ingresos y de reservas**
+  - **Políticas de depreciación**
+- [ ] Modelo financiero que permita medir el efecto de cambios en inputs sobre los estados financieros
+- [ ] **Cuidado explícito con extrapolar tendencias pasadas**, sobre todo en empresas cíclicas. CFA: "proyectar hacia adelante desde el techo o el piso de un ciclo de negocio es un error común"
+- [ ] **Ratios específicos de la industria.** CFA da tres ejemplos de otras industrias (reservas probadas/acción en petroleras, ingreso/suscriptor en cable, ingreso/habitación disponible en hoteles)
+
+Dos cosas aquí son el corazón de los 20 puntos y del desempate #1:
+
+**(a) La calidad de utilidades.** CFA es inusualmente directo: *"Financial results are commonly manipulated to portray firms in the most favorable light. It is the responsibility of the analyst to understand the underlying financial reality."* Un reporte que solo repite las cifras reportadas no está haciendo lo que esta sección pide. Para esto se necesitan **los estados auditados con notas** — y ahí está el hueco de la carpeta (`06` §5.2): el `Annual Report 2024` las tiene, el `IA25` no.
+
+Concretamente en Bimbo: la empresa reporta **"Adjusted EBITDA"** y crecimiento **"excluding FX"**. Ambos son ajustes legítimos y ambos son exactamente donde un analista debe preguntar qué se está excluyendo y por qué. Reconciliar el EBITDA ajustado contra el reportado y explicar el puente es material de 20 puntos.
+
+**(b) Los ratios de industria.** CFA pide los específicos del sector y solo da ejemplos de otros sectores, así que hay que construirlos. Para una panificadora de consumo: **volumen vendido, precio por kg, descomposición de price/mix vs. volumen, margen por región, ingreso por punto de venta o por ruta, y costo de trigo y energía como % del COGS.**
+
+**Advertencia sobre qué hay realmente disponible.** Revisé el reporte de 2Q26 celda por celda. Lo que Bimbo publica en el comunicado trimestral:
+
+- **Sí, cuantificado y por segmento** (Norteamérica, México, EAA, Latinoamérica): Net Sales, Gross Profit, Operating Income y Adjusted EBITDA, cada uno con cifra del trimestre, comparativo del año anterior, % Δ en pesos, **% Δ excluyendo FX**, y márgenes con variación en puntos porcentuales.
+- **No, solo como prosa:** el desglose **price/mix vs. volumen**. El comunicado dice cosas como *"driven by favorable price/mix and positive volume growth"* y *"Net Sales rose 4.7%, driven by a favorable mix and volume gains"*, pero **no da la descomposición numérica** — ni consolidada ni por segmento.
+
+Así que el ratio más útil para una panificadora es precisamente el que no viene servido. **Separar precio de volumen es trabajo de investigación, no de captura de datos**: hay que buscarlo en el reporte anual, en las llamadas trimestrales (el Q&A con analistas es donde suele salir), o estimarlo y declarar el método. Si se estima, decir que es estimación propia y mostrar cómo — eso suma en lugar de restar.
+
+*(Dato útil de paso: cada comunicado trimestral trae el comparativo del mismo trimestre del año anterior. O sea el de 2Q26 ya contiene 2Q25, y el de 1Q26 contiene 1Q25. Eso reduce el hueco de `06` §5.2: para completar la serie faltan los comunicados de 3Q25 y 4Q25, no los cuatro trimestres de 2025.)*
+
+### 3.7 INVESTMENT RISKS — 15 pts
+- [ ] Desarrollos negativos potenciales **de industria** que amenacen la tesis
+- [ ] Desarrollos negativos potenciales **de la empresa**
+- [ ] Riesgos **operativos**
+- [ ] Riesgos **financieros**
+- [ ] Riesgos **regulatorios**
+- [ ] **Procesos legales**
+- [ ] Juicio propio del analista sobre riesgos subjetivos y difíciles de cuantificar. CFA da el ejemplo de "la amenaza de una tecnología competidora" y dice **"It is the job of the analyst to make these determinations"**
+- [ ] Revisar y reportar si existen **"qualified opinions" del auditor** o **"material weakness in internal control over financial reporting"** — CFA los llama **"automatic red flags"**
+
+Los dos últimos puntos son los que separan esta sección de una copia de la sección de riesgos del reporte anual. Y el último es una verificación concreta: hay que ir al **Informe del Auditor Independiente** del `Annual Report 2024` (está ahí, lo verifiqué) y a los estados de FY2025 cuando se bajen, y **decir explícitamente en el reporte si la opinión fue limpia o con salvedades.** Es una frase, y es una frase que el grader busca.
+
+Del benchmark: numerar los riesgos para que respondan a las tesis, matriz probabilidad × impacto, y bear/bull case cuantificado sobre el precio objetivo.
+
+### 3.8 ENVIRONMENTAL, SOCIAL & GOVERNANCE — 15 pts
+
+El `Essentials` da listas de ejemplos por pilar. Cobertura mínima:
+
+**Environmental** — "¿cómo trabaja la empresa hacia la conservación del mundo natural?"
+- [ ] Cambio climático y **emisiones de carbono**
+- [ ] **Contaminación de aire y agua**
+- [ ] **Eficiencia energética**
+- [ ] **Gestión de residuos**
+
+**Social** — "¿cómo considera la empresa a las personas y las relaciones?"
+- [ ] **Relaciones con la comunidad**
+- [ ] **Derechos humanos**
+- [ ] **Género y diversidad**
+- [ ] **Estándares laborales**
+- [ ] **Satisfacción del cliente**
+- [ ] **Engagement de empleados**
+
+**Governance** — "¿cuáles son los estándares para conducir la empresa?"
+- [ ] **Composición del consejo**
+- [ ] **Estructura del comité de auditoría**
+- [ ] **Compensación de ejecutivos**
+- [ ] **Plan de sucesión**
+- [ ] **Experiencia del liderazgo**
+- [ ] **Políticas de soborno y corrupción**
+
+Son **16 subtemas nombrados** en 1.5 páginas. No cabe un párrafo por cada uno — pero sí cabe una tabla que los cubra todos con una métrica y una fuente por renglón, más 3–4 párrafos sobre los materiales. **Y en Bimbo, el subtema de governance con más contenido real es plan de sucesión + composición del consejo + independencia, por el control familiar.** El apéndice absorbe el resto.
+
+Ver `05-esg-y-clima.md` para los seis métodos de integración ESG y el marco climático, y `06` §5.1 para el material de Bimbo disponible (tablas GRI, marco de financiamiento sostenible y su Second Party Opinion).
+
+---
+
+## 4. Estructura recomendada, página por página
+
+Combina la Arquitectura B del benchmark (`06` §3.3) con los nombres literales de la rúbrica y la asignación de páginas calibrada contra los ganadores.
+
+| Pág | Contenido | Sección de rúbrica |
+|---|---|---|
+| **1** | Header obligatorio (8 campos + market cap + float/liquidez + accionistas principales) · `INVESTMENT SUMMARY` con recomendación, resumen de valuación, earnings forecast, desarrollos recientes, y **Investment Thesis Highlights: las 3 tesis en una línea cada una** | Investment Summary (15) |
+| **2** | `BUSINESS DESCRIPTION` (media pág: drivers de ingresos y de gastos) · inicio de `INDUSTRY OVERVIEW & COMPETITIVE POSITIONING` | Business Desc. (5) + Industry (10) |
+| **3** | Industry: dinámica, capacidad, precios, distribución, estabilidad de market share · Porter resumido (matriz completa al apéndice) | Industry (10) |
+| **4** | `COMPETITIVE POSITIONING`: peer group, fuente del moat · **Tesis #1** | Industry (10) |
+| **5** | **Tesis #2** (mecanismo + cifra + por qué el mercado no lo ve) | Investment Summary (15) |
+| **6** | **Tesis #3** | Investment Summary (15) |
+| **7** | `VALUATION`: tabla de metodologías con pesos justificados, supuestos, WACC build-up, g terminal, sensibilidad resumida | Valuation (20) |
+| **8** | `FINANCIAL ANALYSIS`: histórico + proyección, ratios de industria, **calidad de utilidades y puente de EBITDA ajustado** | Financial Analysis (20) |
+| **9** | Financial Analysis (cont.) · `INVESTMENT RISKS` numerados #1–#4 contra las tesis, matriz, bear/bull | Fin. Analysis (20) + Risks (15) |
+| **10** | `ENVIRONMENTAL, SOCIAL, AND GOVERNANCE` — 1.5 págs contando lo que baja de la pág. 9 | ESG (15) |
+
+**Apéndice (10 páginas), en orden de valor para el desempate:**
+1. Modelo de tres estados completo (histórico + proyección)
+2. Build-up de WACC detallado y tabla de comparables extendida
+3. Sensibilidades bivariadas y escenarios / Monte Carlo
+4. Puente de EBITDA ajustado vs. reportado y notas de calidad de utilidades
+5. Porter completo y PESTEL
+6. Matriz de riesgos probabilidad × impacto con impacto cuantificado en el precio objetivo
+7. Tablas ESG: los 16 subtemas con métrica y fuente, Scope 1/2/3, matriz de materialidad
+8. Consejo de administración: composición, independencia, sucesión
+9. Estructura accionaria y float
+10. Metodología de la encuesta al canal de distribución + resultados (si se hace)
+11. Bibliografía completa y **bitácora de uso de IA**
+
+*(Son más de 10 entradas: hay que priorizar. Las primeras cuatro son las que pesan en el desempate — Financial Analysis y Valuation son los criterios 1 y 2.)*
+
+---
+
+## 5. Reporte vs. presentación: la ponderación cambia, y bastante
+
+Comparar el Apéndice D (reporte) con el Apéndice E (presentación) deja ver que **no son el mismo documento con otro formato.**
+
+| Criterio | Reporte (Ap. D) | Presentación (Ap. E) |
+|---|---|---|
+| Business Description | 5 | **— (no existe)** |
+| Industry Overview & Competitive Positioning | 10 | *absorbido en Financial Analysis* |
+| Investment Summary | 15 | **— (no existe)** |
+| Valuation | 20 | 20 |
+| Financial Analysis | 20 | **20** — pero la pregunta es *"qué tan exhaustivo fue su análisis de la **industria, la empresa y los competidores**"* |
+| Investment Risks | 15 | **— (no existe)** |
+| ESG | 15 | **10** |
+| Presentation (efectividad, lógica, si los hechos sustentan la recomendación) | — | **20** |
+| Question & Answer | — | **20** |
+| Team Involvement | — | 5 |
+| Materials (calidad de slides) | — | 5 |
+| **Total** | **100** | **100** |
+
+Tres lecturas:
+
+1. **En la presentación, 45 de 100 puntos son ejecución, no contenido** (Presentation 20 + Q&A 20 + Team Involvement 5). En el reporte, 100 de 100 son contenido.
+2. **El criterio "Financial Analysis" de la presentación no significa lo mismo que en el reporte.** Ahí incluye industria, empresa y competidores — o sea absorbe lo que en el reporte son las secciones de Industry y Competitive Positioning. Son 20 puntos que cubren mucho más terreno.
+3. **ESG baja de 15 a 10, pero sigue valiendo el doble que Materials y Team Involvement juntos.**
+
+Consecuencia práctica: **el deck no es el reporte resumido.** Investment Risks y Business Description no tienen renglón propio en la presentación; el tiempo de los 10 minutos se reparte según el Apéndice E, no según el Apéndice D. Ver `03-presentacion-y-rondas.md`, que ya desarrolla esto.
+
+---
+
+## 6. Dos reglas de proceso que están subutilizadas
+
+### 6.1 El tiempo del advisor monitoreando entrevistas NO cuenta contra su tope
+
+Rule 2.5f, texto literal: el equipo debe someter sus preguntas al faculty advisor o industry mentor antes de contactar a la empresa, sus clientes, competidores, ex-empleados o proveedores. El advisor debe participar en cada comunicación, **pero solo para asegurar que no se discuta información material no pública** — y no puede hacer preguntas ni dar opiniones sobre la empresa. Y entonces:
+
+> *"The time spent by the faculty advisor or industry mentor while monitoring this kind of communication **will not count toward the maximum number of hours** allotted for faculty advisor or industry mentor involvement."*
+
+Está en el digest (`01` línea 104) pero no se refleja en el checklist de `00`, y vale la pena decirlo directo: **la investigación de campo es gratis en términos de horas de asesor.** Las 10 horas del faculty advisor son un recurso escaso que hay que gastar en criticar la tesis y el modelo; el acompañamiento de entrevistas no las consume. Eso quita el único argumento de costo contra hacer trabajo de campo a escala — que es la principal vía de diferenciación en una empresa tan cubierta como Bimbo (`06` §6).
+
+Aun así: **llevar la bitácora igual**, con las horas de monitoreo marcadas aparte como exentas. Si alguien impugna, la bitácora es la defensa.
+
+### 6.2 Para la presentación, la prohibición incluye profesores de finanzas
+
+Rule 2.7a es más amplia que la regla equivalente del reporte. Para el reporte (Rule 2.6) la prohibición es "any other investment management professionals". Para la presentación:
+
+> no se puede pedir ayuda a *"any other person who has ever been employed as an investment management professional **or finance faculty member**"* en preparar contenido o evaluar la presentación, **incluyendo paneles de jueces simulados.**
+
+O sea: **un profesor de finanzas del Tec que no sea el faculty advisor registrado no puede dar feedback sobre la presentación.** Ni un mock panel con profesores. Esto es fácil de violar sin mala intención, porque es el favor más natural de pedir en una escuela de negocios. `03` ya lo marca; lo repito porque el riesgo es de descalificación.
+
+---
+
+## 7. Una regla de Rule 4.2 que puede cambiar la ruta competitiva
+
+Rule 4.2, texto literal:
+
+> *"Local level hosts may choose to evaluate all the team reports and presentations **or they may choose to utilize the university to evaluate the reports**. In the case where the university is evaluating the report, they must grade according to the criteria set forth in Appendix D. **The university then identifies the top teams that will participate in the evaluations completed by the local host.**"*
+
+Con **6 campus del Tec participando** este año, esto importa: si CFA Society Mexico delega la primera evaluación de reportes a la universidad, **Campus Monterrey podría tener que ganar una ronda interna del Tec antes de llegar a la evaluación del host.** Eso cambia contra quién se compite primero.
+
+No hay forma de saberlo desde los documentos que tenemos. **Es la primera pregunta para el host.**
+
+Y el formato de competencia no es opcional para el host revelarlo: Rule 4.2 dice que debe ser *"selected by the local host and **disclosed to teams in advance of the local kickoff meeting**"*. Así que para el 17 de septiembre el equipo tiene derecho a saberlo.
+
+Recordatorio de por qué importa (Rule 4.2, formatos):
+- **Classic:** ganador = 50% reporte + 50% presentación.
+- **Staggered A:** los equipos con los mejores reportes (**mínimo tres**) avanzan a presentar ante un solo panel. Si todos los reportes los calificaron **los mismos** graders → ganador = 50% reporte + 50% presentación. Si los calificaron **distintos** graders → **ganador = solo el puntaje de presentación.**
+- **Staggered B:** grupos semifinales, avanza el mejor de cada grupo por 50/50, y **la final se decide solo por presentación.**
+
+Con 16 equipos y anuncio de finalistas el 19 de noviembre, Staggered A es lo más probable — y entonces **el reporte es el filtro para siquiera presentar**, independientemente de cuánto pese al final.
+
+---
+
+## 8. Preguntas para el host — kickoff, 17 de septiembre
+
+En orden de impacto sobre las decisiones del equipo:
+
+1. **¿Qué formato de competencia se usará?** Classic, Staggered A, o Staggered B. (Rule 4.2 obliga a revelarlo antes del kickoff.)
+2. **Si es Staggered A: ¿los reportes de todos los equipos los califican los mismos graders o distintos?** Determina si el ganador es 50/50 o solo presentación.
+3. **¿Cuántos equipos avanzan a presentar el 8 de diciembre?** (El mínimo por regla es tres.)
+4. **¿El host evalúa todos los reportes, o se delega a la universidad una primera ronda?** (Rule 4.2 — §7 arriba. Con 6 campus del Tec esto es material.)
+5. **¿Medio y formato exacto de entrega del reporte?** PDF, plataforma, nombre de archivo, hora límite y zona horaria del 5 de noviembre.
+6. **¿Hay penalización por entrega tardía y de qué tipo?** (Rule 2.6h la deja a discreción del host.)
+7. **¿Se asignará industry mentor al equipo?** Cambia el presupuesto de horas disponible (6 hrs + 2 por ronda).
+8. **Para la portada: ¿usamos el DOCX tal cual, o la redacción del Apéndice C?** (§2.2 — difieren.)
+9. **¿Habrá una sesión de follow-up con Bimbo además de la informativa del kickoff?** Es el único contacto permitido con la empresa.
+10. **¿El host agrega requisitos propios** además de los de las Official Rules? (Rule 4.2 se lo permite si no entran en conflicto.)
+
+---
+
+## 9. Checklist de cumplimiento formal — pasada final antes de entregar
+
+Todo esto es verificable mecánicamente y nada de esto es sobre la calidad del análisis. Es lo que se pierde por descuido.
+
+- [ ] Conteo de páginas en el **PDF final**: ≤10 de reporte, ≤10 de apéndice, portada aparte
+- [ ] Tamaño de página **A4** confirmado (210×297 mm), no Letter — el `.docx` del equipo ya está en A4
+- [ ] Los **7 nombres de sección literales** de la rúbrica presentes (§1c)
+- [ ] Header de primera página con los **8 campos**, Sector e Industry por separado (§2.1)
+- [ ] **Precio actual con fecha explícita**; **precio objetivo con % de upside/downside**
+- [ ] Market cap, **float, liquidez y accionistas principales** incluidos (§3.1)
+- [ ] Portada oficial sin alterar; **logo de CFA intacto**
+- [ ] Los **6 campos de la portada resueltos**, incluyendo `[society name]` dentro del disclaimer (§2.3)
+- [ ] **Cero corchetes del template** en el documento final — buscar `[` en el PDF
+- [ ] **Un solo sistema de citación**, consistente de principio a fin (Rule 2.6f)
+- [ ] **Todas** las figuras y tablas con fuente citada
+- [ ] `earnings forecast` visible en Investment Summary, no solo en el apéndice (§3.4)
+- [ ] **Al menos 3 metodologías** de valuación con pesos declarados y justificados
+- [ ] Opinión del auditor verificada y **declarada** en Investment Risks (§3.7)
+- [ ] Los **16 subtemas ESG** cubiertos entre reporte y apéndice (§3.8)
+- [ ] Todo en **inglés**, revisado de gramática
+- [ ] **Bitácora de IA** lista para defenderse ante los jueces, con las cuatro capacidades del Apéndice B: **acknowledge, verify, evaluate, reflect**
+- [ ] **Bitácora de horas** de advisor y mentor, con las horas de monitoreo de entrevistas marcadas como exentas (§6.1)
+- [ ] Revisión anti-plagio, incluyendo parafraseo cercano
+- [ ] **Auto-calificación con el Apéndice D por alguien que no escribió la sección**

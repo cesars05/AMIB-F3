@@ -1,0 +1,182 @@
+"""Attribution presentation tab - all formulas on 'Attr Setup' / 'Attr Holdings' / 'Attr Returns'."""
+import pickle, time, pywintypes
+import engine as E
+from attach import get_app
+from build_live_helpers import *   # noqa
+
+X = pickle.load(open(E.S + "/live_refs.pkl", "rb"))
+FS, b5 = X["FS"], X["b5"]
+FUNDS, PEERS = E.FUNDS, E.PEERS
+SECS = E.GICS + ["Unclassified"]
+REGS = E.REGIONS
+PLAB = "Jan-24 to Aug-26"
+A = sheet("Attribution", "DFIS"); base(A)
+A.Cells.Font.Size = 10
+fmt_from(TITLE, A.Range("C2:P2")); A.Range("C2").Value = "Performance Attribution - AZTD vs Peers"
+note(A, "C3", "Holdings-based: SEC N-PORT + Workspace Derived Holdings, Workspace total returns in USD (calendar months). "
+              "Period " + PLAB + " annualized (32 months); YTD = Jan-Aug 26. Peer avg = equal-weight AVDV, ISCF, DISV, DFIS. All cells are formulas.")
+A.Columns("C").ColumnWidth = 40
+for c in "DEFGHIJKLM": A.Columns(c).ColumnWidth = 13
+PCT, PP, PPD = "0.0%;-0.0%;-", "+0.00%;-0.00%;-", "+0.0%;-0.0%;-"
+def st(stat, f):
+    return f"'Attr Setup'!${FS[stat]}${X['STATROW'][f]}"
+def gap_cf(rng):
+    fc = A.Range(rng).FormatConditions; fc.Delete()
+    c1 = fc.Add(1, 5, "=0"); c1.Font.Color = 0x006100; c1.Interior.Color = 0xCEEFC6
+    c2 = fc.Add(1, 6, "=0"); c2.Font.Color = 0x06009C; c2.Interior.Color = 0xCEC7FF
+def hdr(r, labels, c2):
+    fmt_from(BAR, A.Range(f"C{r}:{c2}{r}")); put(A, f"C{r}", [labels])
+    A.Range(f"D{r}:{c2}{r}").WrapText = True; A.Rows(r).RowHeight = 42; A.Range(f"D{r}:{c2}{r}").HorizontalAlignment = -4108
+
+# ---- 1. performance ----
+r = 5
+hdr(r, ["Fund Performance", "Actual " + PLAB + " (ann.)", "Actual YTD-26", "SEC 3Y (ann.)", "Holdings-based " + PLAB + " (ann.)",
+        "Holdings-based YTD-26", "Actual - holdings (ann.)", "Actual - holdings YTD"], "J")
+for i, f in enumerate(FUNDS):
+    rr = r + 1 + i
+    put(A, f"C{rr}", [[f, "=" + st("Actual ann.", f), "=" + st("Actual YTD-26", f), f"='{f}'!K7",
+                       "=" + st("Holdings ann.", f), "=" + st("Holdings YTD-26", f), f"=D{rr}-G{rr}", f"=E{rr}-H{rr}"]])
+pa = r + 6
+put(A, f"C{pa}", [["Peer average"] + [f"=AVERAGE({c}{r+2}:{c}{r+5})" for c in "DEFGHIJ"]])
+put(A, f"C{pa+1}", [["AZTD vs peer average"] + [f"={c}{r+1}-{c}{pa}" for c in "DEFGHIJ"]])
+A.Range(f"D{r+1}:J{pa}").NumberFormat = PCT; A.Range(f"I{r+1}:J{pa}").NumberFormat = PPD
+A.Range(f"D{pa+1}:J{pa+1}").NumberFormat = PPD
+A.Range(f"D{r+1}:J{pa+1}").HorizontalAlignment = -4108
+A.Range(f"C{pa}:J{pa}").Borders(8).LineStyle = 1; A.Range(f"C{pa+1}:J{pa+1}").Font.Bold = True
+gap_cf(f"D{pa+1}:J{pa+1}")
+PERF = pa + 1
+# by year
+ry = PERF + 2
+hdr(ry, ["By calendar year", "AZTD actual", "AZTD holdings-based", "AZTD actual - holdings", "Peer avg actual",
+         "Peer avg holdings-based", "Peer avg actual - holdings", "AZTD vs peers (actual)"], "J")
+for i, (lab, a, h) in enumerate((("2024", "Actual 2024", "Holdings 2024"), ("2025", "Actual 2025", "Holdings 2025"),
+                                  ("2026 YTD (Jan-Aug)", "Actual YTD-26", "Holdings YTD-26"))):
+    yy = ry + 1 + i
+    pav = lambda k: "=AVERAGE(" + ",".join(st(k, p) for p in PEERS) + ")"
+    put(A, f"C{yy}", [[lab, "=" + st(a, "AZTD"), "=" + st(h, "AZTD"), f"=D{yy}-E{yy}", pav(a), pav(h), f"=G{yy}-H{yy}", f"=D{yy}-G{yy}"]])
+A.Range(f"C{ry+1}").NumberFormat = "@"
+A.Range(f"D{ry+1}:J{ry+3}").NumberFormat = PCT
+for c in "FIJ": A.Range(f"{c}{ry+1}:{c}{ry+3}").NumberFormat = PPD
+A.Range(f"D{ry+1}:J{ry+3}").HorizontalAlignment = -4108
+gap_cf(f"J{ry+1}:J{ry+3}")
+note(A, f"C{ry+4}", "Actual - holdings = what month-end holdings (buy-and-hold within the month) do not explain: intra-month trading/rebalancing, fees (AZTD 0.75%), cash and data gaps.")
+
+# ---- 2. contribution blocks (sector / region) ----
+def contrib_block(r, title, groups, dim_rng, ckey, wkey, resid_key):
+    ccol = X["HCP"] if ckey == "P" else X["HCY"]; wcol = X["HWP"] if wkey == "P" else X["HWY"]
+    hdr(r, [title] + FUNDS + ["Peer avg", "AZTD vs peer", "Avg wt AZTD", "Avg wt peers"], "L")
+    for i, g in enumerate(groups):
+        rr = r + 1 + i
+        row = [g] + [f'=SUMIFS({ccol},{X["HFUND"]},"{f}",{dim_rng},$C{rr})' for f in FUNDS]
+        row += [f"=AVERAGE(E{rr}:H{rr})", f"=D{rr}-I{rr}", f'=SUMIFS({wcol},{X["HFUND"]},"AZTD",{dim_rng},$C{rr})',
+                "=(" + "+".join(f'SUMIFS({wcol},{X["HFUND"]},"{p}",{dim_rng},$C{rr})' for p in PEERS) + f")/{len(PEERS)}"]
+        put(A, f"C{rr}", [row])
+        A.Range(f"C{rr}").Borders(9).LineStyle = 1
+    t = r + 1 + len(groups)
+    put(A, f"C{t}", [["Total holdings-based"] + [f"=SUM({c}{r+1}:{c}{t-1})" for c in "DEFGHIJKL"]])
+    hk, ak = ("Holdings ann.", "Actual ann.") if resid_key == "P" else ("Holdings YTD-26", "Actual YTD-26")
+    put(A, f"C{t+1}", [["Actual - holdings (trading, fees, cash)"] + [f"={st(ak, f)}-{st(hk, f)}" for f in FUNDS] +
+                       [f"=AVERAGE(E{t+1}:H{t+1})", f"=D{t+1}-I{t+1}"]])
+    put(A, f"C{t+2}", [["Fund return (actual)"] + [f"={c}{t}+{c}{t+1}" for c in "DEFGHIJ"]])
+    A.Range(f"C{t}:L{t}").Font.Bold = True; A.Range(f"C{t}:L{t}").Borders(8).LineStyle = 1
+    A.Range(f"C{t+1}:J{t+1}").Font.Italic = True
+    A.Range(f"C{t+2}:J{t+2}").Font.Bold = True; A.Range(f"C{t+2}:J{t+2}").Borders(8).LineStyle = 1
+    A.Range(f"D{r+1}:J{t+2}").NumberFormat = PP; A.Range(f"K{r+1}:L{t}").NumberFormat = PCT
+    A.Range(f"D{r+1}:L{t+2}").HorizontalAlignment = -4108
+    gap_cf(f"J{r+1}:J{t+2}")
+    return t + 2
+
+r = ry + 6
+SEC_P = r; r = contrib_block(r, "Sector contribution " + PLAB + " (pp / yr)", SECS, X["HSEC"], "P", "P", "P") + 2
+SEC_Y = r; r = contrib_block(r, "Sector contribution YTD-26 (pp)", SECS, X["HSEC"], "Y", "Y", "Y") + 2
+REG_P = r; r = contrib_block(r, "Region contribution " + PLAB + " (pp / yr)", REGS, X["HREG"], "P", "P", "P") + 2
+REG_Y = r; r = contrib_block(r, "Region contribution YTD-26 (pp)", REGS, X["HREG"], "Y", "Y", "Y") + 2
+note(A, f"C{r-1}", "Contribution = start-of-month weight x monthly USD return, summed and scaled so that it adds up to each fund's holdings-based (annualized) return.")
+
+# ---- 3. Brinson (period-level, formulas) ----
+def brinson_block(r, title, blkP, blkY, groups):
+    hdr(r, [title, "Allocation " + PLAB, "Selection " + PLAB, "Total " + PLAB, "Allocation YTD", "Selection YTD", "Total YTD"], "I")
+    n = len(groups)
+    for i, g in enumerate(groups):
+        rr = r + 1 + i
+        row = [g]
+        for blk in (blkP, blkY):
+            s = blk + 1 + i; t = blk + 1 + n
+            wa, wp, ca, cp, RP = f"$K${s}", f"$L${s}", f"$D${s}", f"$I${s}", f"$I${t}"
+            rps = f"IF({wp}<0.01,{RP},{cp}/{wp})"; ras = f"IFERROR({ca}/{wa},0)"
+            alloc = f"=({wa}-{wp})*({rps}-{RP})"
+            sel = f"={wa}*({ras}-{rps})"
+            row += [alloc, sel, None]
+        put(A, f"C{rr}", [[row[0], row[1], row[2], f"=D{rr}+E{rr}", row[4], row[5], f"=G{rr}+H{rr}"]])
+        A.Range(f"C{rr}").Borders(9).LineStyle = 1
+    rc = r + 1 + n
+    tP, tY = blkP + 1 + n, blkY + 1 + n
+    put(A, f"C{rc}", [["Cash & non-equity", f"=((1-$K${tP})-(1-$L${tP}))*(0-$I${tP})", None, f"=D{rc}",
+                       f"=((1-$K${tY})-(1-$L${tY}))*(0-$I${tY})", None, f"=G{rc}"]])
+    put(A, f"C{rc+1}", [["Actual - holdings (trading, fees, cash)", None, None, f"=$J${tP+1}", None, None, f"=$J${tY+1}"]])
+    A.Range(f"C{rc+1}:I{rc+1}").Font.Italic = True
+    put(A, f"C{rc+2}", [["Total gap vs peers (actual)"] + [f"=SUM({c}{r+1}:{c}{rc+1})" for c in "DEFGHI"]])
+    A.Range(f"C{rc+2}:I{rc+2}").Font.Bold = True; A.Range(f"C{rc+2}:I{rc+2}").Borders(8).LineStyle = 1
+    A.Range(f"D{r+1}:I{rc+2}").NumberFormat = PP; A.Range(f"D{r+1}:I{rc+2}").HorizontalAlignment = -4108
+    gap_cf(f"F{r+1}:F{rc+1}"); gap_cf(f"I{r+1}:I{rc+1}")
+    return rc + 2
+
+BR = r; r = brinson_block(r, "Attribution vs peer average - by sector", SEC_P, SEC_Y, SECS) + 1
+note(A, f"C{r}", "Brinson-Fachler on period averages: Allocation = (AZTD wt - peer wt) x (peer sector return - peer total); "
+                 "Selection = AZTD wt x (AZTD sector return - peer sector return). Sector return = contribution / avg weight; where peers hold <1% (e.g. US) the peer total return is used.")
+r += 2
+BRR = r; r = brinson_block(r, "Attribution vs peer average - by region", REG_P, REG_Y, REGS) + 3
+
+# ---- 4. names (dynamic arrays) ----
+def names_block(r, title, name_rng, sec_rng, w_rng, c_rng, cond, n, desc=True):
+    fmt_from(BAR, A.Range(f"C{r}:F{r}")); put(A, f"C{r}", [[title, "Sector", "Avg wt", "Contribution"]])
+    A.Range(f"D{r}:F{r}").HorizontalAlignment = -4108
+    tbl = f"HSTACK({name_rng},{sec_rng},{w_rng},{c_rng})"
+    order = -1 if desc else 1
+    fx = f"=IFERROR(TAKE(SORT(FILTER({tbl},{cond}),4,{order}),{n}),\"\")"
+    R(lambda: setattr(A.Range(f"C{r+1}"), "Formula2", fx))
+    A.Range(f"E{r+1}:E{r+n}").NumberFormat = PCT; A.Range(f"F{r+1}:F{r+n}").NumberFormat = PP
+    A.Range(f"D{r+1}:F{r+n}").HorizontalAlignment = -4108; A.Range(f"D{r+1}:D{r+n}").Font.Size = 9
+    return r + n + 2
+
+az = f'({X["HFUND"]}="AZTD")'
+NAMES = r
+r = names_block(r, "AZTD top contributors " + PLAB + " (pp / yr)", X["HNAME"], X["HSEC"], X["HWP"], X["HCP"], f'{az}*({X["HCP"]}<>0)', 10)
+r = names_block(r, "AZTD top contributors YTD-26 (pp)", X["HNAME"], X["HSEC"], X["HWY"], X["HCY"], f'{az}*({X["HCY"]}<>0)', 10)
+r = names_block(r, "AZTD largest detractors " + PLAB + " (pp / yr)", X["HNAME"], X["HSEC"], X["HWP"], X["HCP"], f'{az}*({X["HCP"]}<>0)', 10, False)
+r = names_block(r, "AZTD largest detractors YTD-26 (pp)", X["HNAME"], X["HSEC"], X["HWY"], X["HCY"], f'{az}*({X["HCY"]}<>0)', 10, False)
+RPC = X["RPC"]
+MISS = r
+r = names_block(r, "Top peer contributors not held by AZTD " + PLAB + " (pp / yr)", X["RNAME"], X["RSEC"], RPC[2], RPC[0],
+                f"({RPC[4]}=0)*({RPC[0]}<>0)", 15)
+MISS_Y = r
+r = names_block(r, "Top peer contributors not held by AZTD YTD-26 (pp)", X["RNAME"], X["RSEC"], RPC[3], RPC[1],
+                f"({RPC[5]}=0)*({RPC[1]}<>0)", 15)
+note(A, f"C{r-1}", "Peer composite = equal-weight of the 4 peers; 'Avg wt' = composite average weight.")
+
+# ---- charts ----
+def bar_chart(anchor, title, series, cats, h=330):
+    ch = A.ChartObjects().Add(A.Range(anchor).Left, A.Range(anchor).Top, 540, h)
+    c = ch.Chart; c.ChartType = 57
+    for nm, rng, color in series:
+        s = c.SeriesCollection().NewSeries(); s.Name = nm; s.Values = A.Range(rng); s.XValues = A.Range(cats)
+        s.Format.Fill.ForeColor.RGB = color
+    c.HasTitle = True; c.ChartTitle.Text = title; c.ChartTitle.Font.Size = 11; c.ChartTitle.Font.Bold = True
+    c.HasLegend = True; c.Legend.Position = -4107
+    c.Axes(2).TickLabels.NumberFormat = "0.0%"; c.Axes(1).ReversePlotOrder = True; c.Axes(1).TickLabelPosition = -4134
+    return ch
+n = len(E.GICS)
+bar_chart("O5", "Gap vs peers by sector, " + PLAB + " (pp / yr)",
+          [("Allocation", f"D{BR+1}:D{BR+n}", 0x5E2F1F), ("Selection", f"E{BR+1}:E{BR+n}", 0xC9A26B)], f"C{BR+1}:C{BR+n}")
+bar_chart("O29", "Gap vs peers by region, " + PLAB + " (pp / yr)",
+          [("Allocation", f"D{BRR+1}:D{BRR+len(REGS)}", 0x5E2F1F), ("Selection", f"E{BRR+1}:E{BRR+len(REGS)}", 0xC9A26B)],
+          f"C{BRR+1}:C{BRR+len(REGS)}", 260)
+bar_chart("O49", "Sector contribution " + PLAB + " (pp / yr)",
+          [("AZTD", f"D{SEC_P+1}:D{SEC_P+n}", 0x5E2F1F), ("Peer avg", f"I{SEC_P+1}:I{SEC_P+n}", 0xC9A26B)], f"C{SEC_P+1}:C{SEC_P+n}")
+A.Activate(); A.Range("A1").Select()
+pickle.dump(dict(SEC_P=SEC_P, SEC_Y=SEC_Y, REG_P=REG_P, REG_Y=REG_Y, BR=BR, BRR=BRR, PERF=PERF, NAMES=NAMES,
+                 MISS=MISS, MISS_Y=MISS_Y, nsec=len(SECS), nreg=len(REGS)), open(E.S + "/layout.pkl", "wb"))
+print("attribution written", SEC_P, SEC_Y, REG_P, REG_Y, BR, BRR, MISS, MISS_Y)
+
+app.Calculation = -4105
+app.ScreenUpdating = True

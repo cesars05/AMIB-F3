@@ -1,0 +1,81 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions")
+$cm=$wb.Worksheets.Item("Consolidated Model")
+$sm=$wb.Worksheets.Item("Segment Model")
+$d =$wb.Worksheets.Item("DCF")
+if([string]$as.Range("J74").Text -ne ""){ throw "ABORTO: J74 no estaba vacio, el modulo ya venia encendido" }
+
+function Dump($titulo){
+  Write-Output ""
+  Write-Output ("---------------- "+$titulo+" ----------------")
+  $hdr="  "+"".PadRight(36)
+  for($c=11;$c -le 17;$c++){ $hdr+=([string]$cm.Cells.Item(9,$c).Text).PadLeft(10) }
+  Write-Output $hdr
+  foreach($x in @(@(13,"Group revenue"),@(53,"Adj. EBITDA"),@(21,"Non-underlying (ganancia)"),@(63,"Impuesto s/ no-underlying"),@(30,"Profit statutory"),@(64,"Adj. Net Income"),@(70,"Adj. EPS (p)"))){
+    $r=[int]$x[0]; $v=""
+    for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(10) }
+    Write-Output ("  "+([string]$x[1]).PadRight(36)+$v)
+  }
+  Write-Output "  . . . modulo de desinversion . . ."
+  foreach($x in @(@(366,"Flag"),@(367,"EBITDA segmento (ultimo ano)"),@(368,"Ingreso bruto (EV)"),@(370,"Ingreso neto"),@(371,"Valor en libros vendido"),@(372,"Ganancia pre-impuesto"),@(373,"Capital de trabajo liberado"),@(374,"Activos fijos retirados"),@(375,"  de los cuales Goodwill"),@(376,"  de los cuales Intangibles"),@(377,"  de los cuales PP&E propio"),@(378,"Dividendo por la venta"))){
+    $r=[int]$x[0]; $v=""
+    for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(10) }
+    Write-Output ("  "+([string]$x[1]).PadRight(36)+$v)
+  }
+  Write-Output "  . . . balance y caja . . ."
+  foreach($x in @(@(135,"Goodwill"),@(136,"Otros intangibles"),@(133,"PP&E propio"),@(126,"Caja"),@(199,"Dividendo extraordinario total"),@(198,"Dividendo ordinario"),@(168,"CHECK balance"),@(215,"CHECK caja"))){
+    $r=[int]$x[0]; $v=""
+    for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(10) }
+    Write-Output ("  "+([string]$x[1]).PadRight(36)+$v)
+  }
+  Write-Output ("  DCF = "+[string]$d.Range("E41").Text+" ("+[string]$d.Range("E42").Text+")    EV = "+[string]$d.Range("E30").Text+"    VP ingresos venta = "+[string][math]::Round(([double]$d.Range("C27").Value2+[double]$d.Range("D27").Value2+[double]$d.Range("E27").Value2+[double]$d.Range("F27").Value2+[double]$d.Range("G27").Value2+[double]$d.Range("H27").Value2),1))
+  $tot=0
+  foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+    $s=$wb.Worksheets.Item($nm); $e=0
+    try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+    if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+    $tot+=$e
+  }
+  Write-Output ("  celdas con error: "+$tot)
+}
+
+Dump "MODULO APAGADO"
+
+$xl.Calculation=-4135
+$as.Range("J74").Value2="Water Management"
+$as.Range("J75").Value2=2029
+$as.Range("J76").Value2=7.9
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+Dump "VENTA DE WATER MANAGEMENT, ultimo ano completo FY2029, 7.9x"
+
+# sensibilidad al multiplo: si sube el multiplo, el DCF debe subir
+$xl.Calculation=-4135
+$as.Range("J76").Value2=12.0
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild()
+Write-Output ""
+Write-Output ("PRUEBA DE SENSIBILIDAD  multiplo 12.0x -> DCF = "+[string]$d.Range("E41").Text+"   ingreso bruto = "+[string]$cm.Range("O368").Text)
+$xl.Calculation=-4135
+$as.Range("J76").Value2=4.0
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild()
+Write-Output ("PRUEBA DE SENSIBILIDAD  multiplo  4.0x -> DCF = "+[string]$d.Range("E41").Text+"   ingreso bruto = "+[string]$cm.Range("O368").Text)
+
+# restaurar: modulo apagado
+$xl.Calculation=-4135
+$as.Range("J76").Value2=7.9
+$as.Range("J74").ClearContents()
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ""
+Write-Output ("RESTAURADO: J74 = '"+[string]$as.Range("J74").Text+"'    DCF = "+[string]$d.Range("E41").Text)

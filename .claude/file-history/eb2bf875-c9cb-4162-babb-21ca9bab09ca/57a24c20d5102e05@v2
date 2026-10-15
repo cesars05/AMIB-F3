@@ -1,0 +1,49 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 30;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 900 } }; return "" }
+$xl=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); break }catch{ Start-Sleep -Milliseconds 900 } }
+$wb=$null; foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("Segment Beta") }
+
+Write-Output "=== datos de beta por peer ==="
+Write-Output ("   "+"RIC".PadRight(9)+"Company".PadRight(26)+"MktCap".PadLeft(11)+"Leases".PadLeft(10)+"TotDebt".PadLeft(11)+"Cash".PadLeft(10)+"D/E".PadLeft(10)+"Tax".PadLeft(9)+"Beta".PadLeft(8)+"BetaU".PadLeft(8))
+for($r=12;$r -le 26;$r++){
+  $ric=[string](T { $s.Cells.Item($r,3).Text })
+  $nm=[string](T { $s.Cells.Item($r,4).Text })
+  if(($ric+$nm).Trim() -eq ""){ continue }
+  $line="   "+$ric.PadRight(9)
+  if($nm.Length -gt 25){ $nm=$nm.Substring(0,25) }
+  $line+=$nm.PadRight(26)
+  foreach($c in 5,7,8,10,29,34,31,32){ $line+=([string](T { $s.Cells.Item($r,$c).Text })).PadLeft(10) }
+  Write-Output $line
+}
+Write-Output ""
+Write-Output "=== formato: alturas de fila y fuentes ==="
+foreach($r in 2,5,10,11,12,13,14,15){
+  $ht=[string](T { $s.Rows.Item($r).RowHeight })
+  $fn=[string](T { $s.Cells.Item($r,4).Font.Name })
+  $fs=[string](T { $s.Cells.Item($r,4).Font.Size })
+  $fb=[string](T { $s.Cells.Item($r,4).Font.Bold })
+  $fi=[string](T { $s.Cells.Item($r,4).Font.Italic })
+  $fc=[string](T { $s.Cells.Item($r,4).Font.Color })
+  $bg=[string](T { $s.Cells.Item($r,4).Interior.Color })
+  Write-Output ("  r"+([string]$r).PadRight(3)+" h="+$ht.PadRight(7)+" fuente="+$fn.PadRight(9)+" tam="+$fs.PadRight(5)+" bold="+$fb.PadRight(6)+" ital="+$fi.PadRight(6)+" color="+$fc.PadRight(12)+" fondo="+$bg)
+}
+Write-Output ""
+Write-Output "=== alguien mas en el libro referencia 'Segment Beta'? ==="
+$hit=0
+foreach($ws in $wb.Worksheets){
+  if($ws.Name -eq "Segment Beta"){ continue }
+  $fc=$null; try{ $fc=$ws.UsedRange.SpecialCells(-4123) }catch{ continue }
+  if($fc -eq $null){ continue }
+  foreach($ar in $fc.Areas){ foreach($cl in $ar.Cells){
+    $f=""; try{ $f=[string]$cl.Formula }catch{}
+    if($f -match "Segment Beta"){ Write-Output ("   "+$ws.Name+"!"+$cl.Address(0,0)+" -> "+$f); $hit++ }
+  } }
+}
+if($hit -eq 0){ Write-Output "   ninguna - la hoja es independiente, puedo reestructurar sin romper nada" }
+Write-Output ""
+Write-Output ("  AF13 (mediana unlevered) = "+[string](T { $s.Range("AF13").Text })+"   frm="+[string](T { $s.Range("AF13").Formula }))
+Write-Output ("  AF14 (pure peers median) = "+[string](T { $s.Range("AF14").Text })+"   frm="+[string](T { $s.Range("AF14").Formula }))
+Write-Output ("  AC12 frm = "+[string](T { $s.Range("AC12").Formula }))
+Write-Output ("  AG12 frm = "+[string](T { $s.Range("AG12").Formula }))

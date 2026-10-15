@@ -1,0 +1,146 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t  = $xl.Workbooks.Item('20260922_SETSA Transportes.xlsx')
+$m  = $t.Worksheets.Item('Modelo SETSA')
+$tx = $t.Worksheets.Item('Transacciones Precedentes')
+$t.SaveCopyAs("$PSScriptRoot\backup_antes_deuda.xlsx")
+$ia = [char]0xED; $o = [char]0xF3; $a = [char]0xE1; $e = [char]0xE9; $u = [char]0xFA
+
+function Find-In($ws, [string]$col, [string]$needle, [int]$from = 1, [switch]$exact) {
+    $v = $ws.Range("$($col)1:$($col)450").Value2
+    for ($r = $from; $r -le 450; $r++) {
+        $s = [string]$v[$r, 1]
+        if ($exact) { if ($s -ceq $needle) { return $r } } elseif ($s.Contains($needle)) { return $r }
+    }
+    throw "No encontrado: $needle"
+}
+$log = @()
+
+# ============ 1) quitar el switch: CxP CP = deuda financiera siempre ============
+$rSW = Find-In $m 'C' 'CxP a corto plazo como deuda financiera'
+$ref = "`$D`$$rSW"
+$opRows = @()
+foreach ($ws in $m, $tx) {
+    foreach ($c in $ws.UsedRange.Cells) {
+        $f = [string]$c.Formula
+        if (-not $f.Contains($ref)) { continue }
+        if ($ws.Name -eq 'Modelo SETSA' -and $f.Contains("(1-$ref)")) { $opRows += $c.Row; continue }
+        $c.Formula = $f.Replace("*$ref", "").Replace("$ref*", "")
+    }
+}
+$opRows = $opRows | Sort-Object -Unique -Descending
+foreach ($r in $opRows) { $log += "borro fila operativa $r : " + $m.Cells.Item($r,3).Value2; $m.Rows.Item($r).Delete() | Out-Null }
+$rSW = Find-In $m 'C' 'CxP a corto plazo como deuda financiera'
+$m.Rows.Item($rSW).Delete() | Out-Null
+$log += "switch eliminado"
+# verificar que ya nadie use el switch
+foreach ($ws in $m, $tx) { foreach ($c in $ws.UsedRange.Cells) { if (([string]$c.Formula).Contains('#REF')) { throw "REF en " + $ws.Name + "!" + $c.Address($false,$false) } } }
+
+# etiquetas y notas
+$r = Find-In $m 'C' 'en CxP corto plazo (financiamiento)'
+$m.Cells.Item($r, 3).Value2 = "Aumento / (disminuci${o}n) en deuda financiera de corto plazo"
+$m.Cells.Item($r, 11).Value2 = "CxP corto plazo = cr${e}ditos Banorte, Navistar y Afirme"
+$r = Find-In $m 'C' 'Deuda financiera (seg'
+$m.Cells.Item($r, 3).Value2 = "Deuda financiera total (bancos y Navistar)"
+$r = Find-In $m 'C' 'Cuentas por pagar a corto plazo'
+$m.Cells.Item($r, 11).Value2 = "100% deuda financiera: Banorte, Navistar y Afirme (integraci${o}n a jun-26)"
+$r = Find-In $m 'C' 'Cuentas por pagar a largo plazo'
+$m.Cells.Item($r, 11).Value2 = "100% deuda financiera: Banorte, Navistar y Afirme (integraci${o}n a jun-26)"
+$r = Find-In $m 'C' 'Proveedores' -exact
+$m.Cells.Item($r, 11).Value2 = "Sin saldo: las compras (di${e}sel, mantenimiento) se pagan pr${a}cticamente de contado"
+$rDeuCP = Find-In $m 'C' 'Cuentas por pagar a corto plazo' (Find-In $m 'C' 'Deuda e Intereses' -exact)
+$m.Cells.Item($rDeuCP, 11).Value2 = "Deuda financiera de corto plazo"
+
+# ============ 2) DPO con proveedores + acreedores diversos ============
+$rProv = Find-In $m 'C' 'Proveedores' -exact
+$rAcr  = Find-In $m 'C' 'Acreedores diversos' -exact
+$rIVA  = Find-In $m 'C' 'Tasa IVA'
+$rDays = Find-In $m 'C' 'por a'
+$rBase = Find-In $m 'C' 'Costos y gastos pagados a terceros'
+$rDPO  = Find-In $m 'C' 'DPO: d'
+foreach ($c in 'D','E','F','G','H','I') {
+    $m.Range("$c$rDPO").Formula = "=($c$rProv+$c$rAcr)/($c$rBase*(1+`$D`$$rIVA))*`$D`$$rDays"
+}
+$m.Cells.Item($rDPO, 3).Value2 = "DPO: d${ia}as de proveedores y acreedores (con IVA x 360)"
+$m.Cells.Item($rDPO, 11).Value2 = "CxP corto plazo es deuda bancaria: con proveedores casi no hay cr${e}dito"
+$log += "DPO redefinido"
+
+# ============ 3) integración de deuda por acreedor (jun-26) ============
+$rAF = Find-In $m 'C' 'Activo Fijo y Flotilla' -exact
+$lines = @(
+  @('Banorte', 164135.07, 0), @('Banorte', 1088649.80, 0), @('Banorte', 3453443.85, 1568420.61),
+  @('Navistar', 8660287.60, 9850813.93), @('Banorte', 4973184.47, 11480617.11), @('Afirme', 3750005.26, 4375000.00),
+  @('Banorte', 193905.99, 452559.52), @('Banorte', 516634.76, 1205780.04), @('Afirme', 516634.76, 1205780.04),
+  @('Afirme', 1033816.65, 2411012.95), @('Afirme', 8000000.00, 0))
+$lenders = @('Banorte', 'Navistar', 'Afirme')
+$nRows = 2 + $lines.Count + 1 + 1 + 1 + $lenders.Count + 1 + 1   # subtitulo, encabezado, lineas, total, blanco, subtitulo, prestamistas, total, blanco
+$m.Range("$($rAF):$($rAF + $nRows - 1)").EntireRow.Insert() | Out-Null
+$fmtRow = Find-In $m 'C' 'Deuda de largo plazo' (Find-In $m 'C' 'Deuda e Intereses' -exact)
+$m.Rows.Item($fmtRow).Copy($m.Range("$($rAF):$($rAF + $nRows - 2)")) | Out-Null
+$m.Range("D$($rAF):I$($rAF + $nRows - 2)").ClearContents() | Out-Null
+$m.Range("K$($rAF):K$($rAF + $nRows - 2)").ClearContents() | Out-Null
+
+$r = $rAF
+$m.Cells.Item($r, 3).Value2 = "Integraci${o}n de deuda financiera a jun-26 (por cr${e}dito)"; $m.Cells.Item($r, 3).Font.Bold = $true; $m.Cells.Item($r, 3).Font.Italic = $false
+$r++; $hdrRow = $r
+$m.Cells.Item($r, 3).Value2 = 'Acreedor'
+$m.Cells.Item($r, 4).Value2 = 'Corto plazo'; $m.Cells.Item($r, 5).Value2 = 'Largo plazo'; $m.Cells.Item($r, 6).Value2 = 'Total'; $m.Cells.Item($r, 7).Value2 = '% del total'
+$m.Range("C$($r):G$($r)").Font.Bold = $true; $m.Range("D$($r):G$($r)").HorizontalAlignment = -4152
+$m.Range("C$($r):G$($r)").Borders.Item(9).LineStyle = 1
+$first = $r + 1
+foreach ($ln in $lines) {
+    $r++
+    $m.Cells.Item($r, 3).Value2 = $ln[0]
+    $m.Cells.Item($r, 4).Value2 = [double]$ln[1]; $m.Cells.Item($r, 5).Value2 = [double]$ln[2]
+    $m.Range("D$($r):E$($r)").Font.Color = 16711680      # azul (input)
+}
+$last = $r
+$r++; $totRow = $r
+$m.Cells.Item($r, 3).Value2 = 'Total deuda financiera'; $m.Range("C$($r):G$($r)").Font.Bold = $true; $m.Range("C$($r):G$($r)").Font.Italic = $false
+$m.Range("D$r").Formula = "=SUM(D$($first):D$last)"; $m.Range("E$r").Formula = "=SUM(E$($first):E$last)"
+$m.Range("C$($r):G$($r)").Borders.Item(8).LineStyle = 1
+for ($k = $first; $k -le $totRow; $k++) {
+    $m.Range("F$k").Formula = "=D$k+E$k"
+    $m.Range("G$k").Formula = "=F$k/`$F`$$totRow"
+    $m.Range("G$k").NumberFormat = '0.0%;\(0.0%\);"-"'
+}
+$r += 2
+$m.Cells.Item($r, 3).Value2 = 'Resumen por acreedor'; $m.Cells.Item($r, 3).Font.Bold = $true; $m.Cells.Item($r, 3).Font.Italic = $false
+$lfirst = $r + 1
+foreach ($ld in $lenders) {
+    $r++
+    $m.Cells.Item($r, 3).Value2 = $ld
+    $m.Range("D$r").Formula = "=SUMIF(`$C`$$($first):`$C`$$last,`$C$r,D`$$($first):D`$$last)"
+    $m.Range("E$r").Formula = "=SUMIF(`$C`$$($first):`$C`$$last,`$C$r,E`$$($first):E`$$last)"
+    $m.Range("F$r").Formula = "=D$r+E$r"
+    $m.Range("G$r").Formula = "=F$r/`$F`$$totRow"; $m.Range("G$r").NumberFormat = '0.0%;\(0.0%\);"-"'
+}
+$m.Cells.Item($lfirst + 1, 11).Value2 = "Financiamiento directo de unidades International"
+$m.Cells.Item($lfirst + 2, 11).Value2 = "Incluye cr${e}dito de $8M 100% corto plazo (revolvente)"
+$r++
+$m.Cells.Item($r, 3).Value2 = 'Deuda de corto plazo / deuda total'; $m.Range("C$($r):G$($r)").Font.Bold = $true
+$m.Range("F$r").Formula = "=D$totRow/F$totRow"; $m.Range("F$r").NumberFormat = '0.0%;\(0.0%\);"-"'
+$m.Cells.Item($r, 11).Value2 = "50% vence en 12 meses: riesgo de refinanciamiento"
+$log += "integracion de deuda agregada en filas $rAF-$r"
+
+# ============ 4) checks de la integración al final ============
+$rCli = Find-In $m 'C' 'Check: cartera en concurso - balance'
+$rCPbs = Find-In $m 'C' 'Cuentas por pagar a corto plazo'
+$rLPbs = Find-In $m 'C' 'Cuentas por pagar a largo plazo'
+$m.Range("$($rCli + 1):$($rCli + 2)").EntireRow.Insert() | Out-Null
+$m.Rows.Item($rCli).Copy($m.Range("$($rCli + 1):$($rCli + 2)")) | Out-Null
+$m.Range("D$($rCli + 1):I$($rCli + 2)").ClearContents() | Out-Null
+$m.Range("K$($rCli + 1):K$($rCli + 2)").ClearContents() | Out-Null
+$m.Cells.Item($rCli + 1, 3).Value2 = "Check: deuda CP integraci${o}n - balance (jun-26)"
+$m.Cells.Item($rCli + 2, 3).Value2 = "Check: deuda LP integraci${o}n - balance (jun-26)"
+$m.Range("I$($rCli + 1)").Formula = "=ROUND(D$totRow-I$rCPbs,0)"
+$m.Range("I$($rCli + 2)").Formula = "=ROUND(E$totRow-I$rLPbs,0)"
+
+$xl.CalculateFull()
+$err = 0
+foreach ($ws in $t.Worksheets) { foreach ($c in $ws.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $err++; "ERR " + $ws.Name + "!" + $c.Address($false,$false) + " " + $c.Formula } } }
+$log += "errores=$err"
+$log
+"integracion total: CP=" + $m.Range("D$totRow").Text + " LP=" + $m.Range("E$totRow").Text + " Total=" + $m.Range("F$totRow").Text
+for ($k = $lfirst; $k -le $lfirst + 3; $k++) { "  " + $m.Cells.Item($k,3).Value2 + " | " + $m.Range("D$k").Text + " | " + $m.Range("E$k").Text + " | " + $m.Range("F$k").Text + " | " + $m.Range("G$k").Text }
+"checks integracion: " + $m.Range("I$($rCli + 1)").Text + " / " + $m.Range("I$($rCli + 2)").Text

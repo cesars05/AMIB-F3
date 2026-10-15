@@ -1,0 +1,48 @@
+# Analysis of the professor's dashboard (FINA 405 — `Project_CP1.html`)
+Saved copy: `01_Brief/professor_dashboard/` (HTML files from his public repo https://luisceballos.github.io/FINA405-Dashboard/ ; HAL object extracted to `01_Brief/professor_dashboard/HAL/`; HAL/Kuwait series exported to `08_Assets/data/prof_dashboard_*.csv`). Reviewed live in the browser (1440×900) and from source. Instructor-mode (password + Firestore) was **not** touched.
+Context from Canvas mail (Prof. Ceballos, 18–27 Sep 2026): the dashboard is the instructor's *"Dashboard actualizado — Empresa asignada"* for Project Check-in 1 (Sections 1 & 2); CP1 deck was due 30-Sep (format free; 4 random teams present 10 min each); **the 21-Oct video is judged by an external jury on content *and* presentation quality**; "think visually"; the last slide must answer *how the country's macro environment affects the firm's financing strategy*; the project note says **teams will demonstrate a live scenario in the final presentation**.
+
+## 1. What it is
+Single-file HTML app (≈ 2.4 MB, all data embedded in a JS object `ALL_DATA`), **22 firms** (11 assigned groups G1–G11 + 11 "SAMPLE" firms), one scrolling page per firm, switcher buttons (`switchFirm('HAL')`). Libraries: Plotly 2.27.1 (charts), Firebase 9.23 Firestore (instructor notes, document `fina405_dashboard/instructor`), Google Fonts (Libre Baskerville for headings, DM Sans for body). Light/dark via `prefers-color-scheme`, breakpoints 600/760/900/960 px. Data sources shown in footnotes: Yahoo Finance, World Bank, FRED, SEC EDGAR 10-K text (risk excerpts).
+
+## 2. Page anatomy (HAL view)
+1. **Hero band (navy #1A3A6B, gold rule #C4901A):** ticker + name (serif), sector/industry/exchange/country, instructor tag, timestamp. Two KPI rows — *Company:* last price, YTD, market cap, P/E, beta, revenue (LTM), net margin, D/E; *Country:* GDP growth, CPI, local-ccy/USD, FX change (2y), sovereign rating, FX regime.
+2. **Three risk cards:** FX risk of issuing in the country (LOW–MEDIUM…), interest-rate/sovereign risk, hedging instruments (FX forwards per coupon, CCS if tenor > 2y, IRS+FRA).
+3. **Risk Analysis Assessment box:** verbatim 10-K excerpts on FX (for HAL: *"10-K data not available. Run the script with --tickers HAL to fetch it."* → empty).
+4. **Business overview + debt structure:** description, total assets/equity/D/E/interest coverage/current ratio/net debt-EBITDA, debt tiles (total, LT, ST, LT %, debt/assets) + generated paragraph on currency/maturity/serviceability.
+5. **Charts:** balance-sheet evolution (bars + total debt line), leverage & liquidity (D/E, current ratio), geographic revenue mix (pie).
+6. **Company analysis:** 3-yr stock price with MA50/MA200, annual financials (revenue/EBITDA/net income), return & margin trends, KPI tiles (EBIT/net margin, ROE, ROA), **peer table** (HAL vs SLB, BKR, NOV: market cap, P/E, P/B, beta, div yield).
+7. **Country overview:** narrative paragraph, KPI tiles (GDP, CPI, current account, unemployment, FX, policy rate, 10y yield, term spread, CDS range, stance badge), charts: GDP growth, CPI, FX 2y, local-gov spread vs UST, policy vs 10y, current account.
+8. **Instructor mode (🔐):** SHA-256 password gate, per-firm comment/rating fields saved to Firestore.
+
+## 3. Strengths worth copying
+* Strict, repeatable structure per firm (same KPIs, same chart set) → easy to compare and grade.
+* Hero KPI band + three risk cards: instantly answers "how big is the exposure and what instrument fits".
+* Each chart has a source footnote; data tied to primary sources (10-K, WB, FRED, Yahoo).
+* Responsive and dark-mode aware; plain HTML = trivially hostable.
+
+## 4. Defects and gaps seen on the HAL/Kuwait page (opportunities for us)
+| # | Issue | Evidence | Our fix |
+|---|---|---|---|
+| 1 | **No rate data for Kuwait**: policy rate, 10y yield, term spread, stance all "—"; "Insufficient rate data to determine stance" | `macro.pol_s="—"`, `yld_s="—"`, `rates` chart = null | CBK discount 3.50% (K05), KIBOR ON–1Y curve (K07), MUFG interbank/forward points (K06, X05), US curve; stance badge computed |
+| 2 | Section titles say **"United Kingdom — Local Gov Bond Yield Spread…"** on the Kuwait page (leftover from MSFT template) | page headings | dynamic labels from `country` config |
+| 3 | Dividend yield shown as **200.00 %** (and SLB 227 %, BKR 163 %) — unit bug (per-share dividend × 100) | peer table, KPI | validate ranges; show 1.9 % (H18) |
+| 4 | Debt = **$8.13B incl. leases**, D/E 0.78x, Net debt/EBITDA 2.79x (Yahoo EBITDA 2.12bn) vs filings: borrowings 7.158bn, D/E 0.68x (H10) and BBG ND/EBITDA 1.63x (H11) — metrics undefined | KPIs + debt text | show *definition toggle* (borrowings only / incl. leases / Bloomberg) with the reconciliation (E1) |
+| 5 | HAL **risk-assessment box empty** (10-K excerpt missing) | page | fill from 10-K facts: $81M FX sensitivity, no swaps, $7.2bn fixed (H17) |
+| 6 | Chart bugs: x-axis ticks "2022, 2022.5, 2023…" on 4-point annual charts; legend overlaps; default Plotly styling; "Geographic Revenue Mix (approx.)" slices disagree with filings (ME/Asia 26%) | screenshots | categorical axes; exact regional data (H02) |
+| 7 | Ratings: sovereign shown as **A+** (S&P) while Fitch is **AA-** — agency not named | cfg `sov` | always label agency (K14) |
+| 8 | Stale / generic text: "significant revenue and/or operational exposure", "Insufficient rate data" | country_text | templated text from FACT_BASE with numbers |
+| 9 | Static: no scenario inputs, no calculators for FRA/bond/forward although those are Sections 3–5 | — | interactive calculators (see spec) |
+| 10 | Data model is monolithic (2.4 MB, no data provenance) | `ALL_DATA` | compact JSON with `source`, `asof`, `fact_id` on every number |
+| 11 | Design: navy/gold + serif feels generic "report"; low contrast muted labels; cards look alike; no visual hierarchy between KPI and context | screenshots | HAL-red system consistent with the deck, tabular numerals, section nav, sticky key metrics |
+
+## 5. Other course tools on his site (interaction patterns to borrow)
+| Page | Pattern | Reuse idea |
+|---|---|---|
+| `fx_dashboard.html` | Two tabs (Overview / Rate Table), filterable table (pair, region, rate, 1D/1W/1M/YTD, 52W high/low), modal detail, Plotly | Evidence/Fact browser with filter + modal; KWD pair detail modal |
+| `FX_demand_supply.html` | 27 market events 2000–2025 as filter pills, event list, **animated playback** of price series with speed control | Hormuz / conflict timeline with play button on KWD, oil and HAL price |
+| `FX_triangular.html` | Currency selectors, rate inputs with nudge buttons, "inject arbitrage", compute instantly | Forward/IRP simulator: edit rates, nudge ±10 bp, see forward & hedge result |
+| `FX_Arbitrage_Quiz.html` | Auto-graded numeric questions with hints | optional: "self-check" panel that validates our calculator against hand-computed examples |
+
+## 6. Data we already extracted from his HAL object (reuse, cite as "professor's dashboard (Yahoo/WB)")
+Stock daily 21-Aug-2023 → 17-Sep-2026 (772 pts, MA50/MA200) · annual financials 2022–25 (revenue 20.30/23.02/22.94/22.18bn; EBITDA 2.60/3.76/3.59/2.12; net income 1.57/2.64/2.50/1.28) · balance sheet (total debt 8.94/8.81/8.60/8.13bn; equity 7.95/9.39/10.51/10.46) · returns · Kuwait GDP growth/CPI/current account 2016–25 · USD/KWD daily 19-Aug-2024 → 17-Sep-2026 (539 pts; last 0.3084 → KWD/USD 3.2424; 52-w range 3.2247–3.2852; annualized vol 2.03%) · peers (SLB mkt cap $75.9B P/E 24.9x; BKR $56.7B 18.4x; NOV $7.2B 74.6x).

@@ -1,0 +1,38 @@
+$ErrorActionPreference="Stop"
+function Try1($__sb){ for($__k=0;$__k -lt 15;$__k++){ try{ return & $__sb }catch{ if($_.Exception.Message -match "0x80010001|RPC_E_CALL|Call was rejected|0x800AC472"){ Start-Sleep -Milliseconds 700 } else { throw } } }; throw "exhausted" }
+$wb=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); if([int]$xl.Workbooks.Count -gt 0){ foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } } } }catch{}; if($wb -ne $null){break}; Start-Sleep -Milliseconds 800 }
+$cm=$null
+for($i=0;$i -lt 30;$i++){ try{ $cm=$wb.Worksheets.Item("Consolidated Model"); if($cm -ne $null){ break } }catch{}; Start-Sleep -Milliseconds 700 }
+Write-Output ("Libro: "+$wb.Name)
+
+$Q=[char]34
+$RED=255
+# formato condicional en la fila de breach
+$rng=$null
+for($i=0;$i -lt 20;$i++){ try{ $rng=$cm.Range("D290:Q290"); if($rng -ne $null){ break } }catch{}; Start-Sleep -Milliseconds 700 }
+if($rng -eq $null){ throw "no pude obtener el rango D290:Q290" }
+try{ $rng.FormatConditions.Delete() }catch{}
+$fc=$rng.FormatConditions.Add(1,3,"="+$Q+"BREACH"+$Q)
+$fc.Font.Color=$RED
+$fc.Font.Bold=$true
+$fc.Interior.Color=13551615
+Write-Output "  formato condicional aplicado a D290:Q290"
+
+$xl.CalculateFullRebuild()
+$xl.CalculateFullRebuild()
+Write-Output ""
+Write-Output ("        "+"".PadRight(48)+((4..17 | ForEach-Object { $i=$_; ([string]$cm.Cells.Item(277,$i).Text).PadLeft(8) }) -join "")+"       S")
+for($r=277;$r -le 297;$r++){
+  $lab=[string]$cm.Cells.Item($r,3).Text
+  $v=(4..17 | ForEach-Object { $i=$_; ([string]$cm.Cells.Item($r,$i).Text).PadLeft(8) }) -join ""
+  $s=[string]$cm.Cells.Item($r,19).Text
+  if(($lab+$v+$s).Trim() -ne ""){ Write-Output ("r"+$r+"  "+$lab.PadRight(48)+$v+"  "+$s.PadLeft(8)) }
+}
+$tot=0
+foreach($ws in $wb.Worksheets){ if(@("Assumptions","Segment Model","Consolidated Model","DCF","EPV") -contains $ws.Name){ $bc=$null; try{ $bc=$ws.UsedRange.SpecialCells(-4123,16) }catch{ $bc=$null }; if($bc -ne $null){ $n=0; try{$n=[int]$bc.Count}catch{}; if($n -gt 0){ Write-Output ("  !! "+$ws.Name+" "+$n); $tot+=$n } } } }
+Write-Output ("")
+Write-Output ("  Errores: "+$tot)
+Write-Output ("  Balance check: "+((11..17 | ForEach-Object { $i=$_; [string]$cm.Cells.Item(164,$i).Text }) -join " | "))
+$wb.Save()
+Write-Output "guardado"

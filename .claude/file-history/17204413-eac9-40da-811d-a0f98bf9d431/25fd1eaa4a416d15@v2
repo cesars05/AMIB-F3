@@ -1,0 +1,53 @@
+"""Que campos de valuacion forward hay por empresa, y que RICs resuelven."""
+import lseg.data as ld
+import warnings; warnings.filterwarnings("ignore")
+import pandas as pd
+pd.set_option("display.width", 220, "display.max_columns", 30)
+ld.open_session()
+
+# --- 1. RICs candidatos por bloque ---
+BLOQUES = {
+ "WFE":      ["ASML.OQ", "ASML.AS", "AMAT.OQ", "LRCX.OQ", "KLAC.OQ", "8035.T", "TER.OQ"],
+ "Memoria":  ["MU.OQ", "000660.KS", "005930.KS", "WDC.OQ", "SNDK.OQ", "6532.T"],
+ "Computo":  ["NVDA.OQ", "AMD.OQ", "AVGO.OQ", "MRVL.OQ", "TSM.N", "2330.TW"],
+ "Hyper":    ["AMZN.OQ", "GOOGL.OQ", "META.OQ", "MSFT.OQ", "ORCL.N"],
+ "Red/Pwr":  ["ANET.N", "CRDO.OQ", "ALAB.OQ", "VRT.N", "GEV.N", "CIEN.N"],
+ "Port":     ["MU.OQ", "AMZN.OQ", "GOOGL.OQ", "META.OQ", "MSFT.OQ",
+              "CRWD.OQ", "FSLR.OQ", "ORLA.TO", "ORLA.N"],
+}
+todos = sorted({r for v in BLOQUES.values() for r in v})
+print("=== Resuelven? (TR.CommonName + precio) ===")
+try:
+    d = ld.get_data(universe=todos, fields=["TR.CommonName", "TR.PriceClose"])
+    print(d.to_string(index=False))
+except Exception as e:
+    print("fallo:", str(e)[:200])
+
+# --- 2. Campos de valuacion forward ---
+print("\n=== Campos de P/E forward ===")
+PRUEBA = ["MU.OQ", "KLAC.OQ", "LRCX.OQ", "NVDA.OQ", "005930.KS"]
+for campos in (["TR.FwdPE"],
+               ["TR.PriceToEPSMeanEstFY1"],
+               ["TR.PE"],
+               ["TR.EPSMean", "TR.PriceClose"],
+               ["TR.EPSMeanEstFY1", "TR.EPSMeanEstFY2"],
+               ["TR.RevenueMeanEstFY1", "TR.EBITDAMeanEstFY1"],
+               ["TR.CompanyMarketCap"]):
+    try:
+        d = ld.get_data(universe=PRUEBA, fields=campos)
+        print(f"  OK  {campos}")
+        print(d.to_string(index=False))
+    except Exception as e:
+        print(f"  --  {campos}: {str(e)[:110]}")
+
+# --- 3. Serie historica de P/E forward ---
+print("\n=== Historico de P/E forward (SDate/EDate/Frq=W) ===")
+for campos in (["TR.PriceClose", "TR.EPSMean"], ["TR.FwdPE"]):
+    try:
+        d = ld.get_data(universe=["MU.OQ"], fields=campos,
+                        parameters={"SDate": "2024-09-01", "EDate": "2026-09-15", "Frq": "W"})
+        print(f"  OK  {campos}  filas={len(d)}")
+        print(d.tail(3).to_string(index=False))
+    except Exception as e:
+        print(f"  --  {campos}: {str(e)[:130]}")
+ld.close_session()

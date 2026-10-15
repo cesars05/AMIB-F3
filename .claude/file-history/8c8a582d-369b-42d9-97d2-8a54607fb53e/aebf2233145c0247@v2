@@ -1,0 +1,86 @@
+# PowerPoint COM forensics: exports PNG per slide + JSONL with effective formatting of every shape.
+# Usage: powershell -File ppt_forensics.ps1 -Pptx <file> -OutDir <dir> [-Width 1920]
+param([Parameter(Mandatory=$true)][string]$Pptx, [Parameter(Mandatory=$true)][string]$OutDir, [int]$Width = 1920)
+$ErrorActionPreference = 'Continue'
+function Rgb($v) { try { if ($v -lt 0) { return $null }; $r = $v -band 255; $g = ($v -shr 8) -band 255; $b = ($v -shr 16) -band 255; return ('#{0:X2}{1:X2}{2:X2}' -f $r,$g,$b) } catch { return $null } }
+function Pt2In($v) { try { return [math]::Round($v / 72.0, 3) } catch { return $null } }
+
+New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
+$app = New-Object -ComObject PowerPoint.Application
+$pres = $app.Presentations.Open($Pptx, $true, $false, $false)
+$H = [int]($Width * $pres.PageSetup.SlideHeight / $pres.PageSetup.SlideWidth)
+
+# ---- deck-level info
+$deck = [ordered]@{
+  file = [IO.Path]::GetFileName($Pptx)
+  slide_w_in = Pt2In $pres.PageSetup.SlideWidth
+  slide_h_in = Pt2In $pres.PageSetup.SlideHeight
+  slides = $pres.Slides.Count
+  theme_major_font = $null; theme_minor_font = $null; theme_colors = @(); layouts = @()
+}
+try { $deck.theme_major_font = $pres.SlideMaster.Theme.ThemeFontScheme.MajorFont.Item(1).Name } catch {}
+try { $deck.theme_minor_font = $pres.SlideMaster.Theme.ThemeFontScheme.MinorFont.Item(1).Name } catch {}
+try { for ($i = 1; $i -le 12; $i++) { $deck.theme_colors += (Rgb $pres.SlideMaster.Theme.ThemeColorScheme.Colors($i).RGB) } } catch {}
+try { foreach ($l in $pres.SlideMaster.CustomLayouts) { $deck.layouts += $l.Name } } catch {}
+($deck | ConvertTo-Json -Depth 4) | Set-Content -Path (Join-Path $OutDir 'deck.json') -Encoding UTF8
+
+function Dump-Shape($sh, $depth) {
+  $o = [ordered]@{
+    name = $sh.Name; type = $sh.Type; depth = $depth
+    x = Pt2In $sh.Left; y = Pt2In $sh.Top; w = Pt2In $sh.Width; h = Pt2In $sh.Height
+  }
+  try { if ($sh.Type -eq 1) { $o.autoshape = $sh.AutoShapeType } } catch {}
+  try { $o.fill = if ($sh.Fill.Visible) { Rgb $sh.Fill.ForeColor.RGB } else { 'none' } } catch {}
+  try { if ($sh.Line.Visible) { $o.line = Rgb $sh.Line.ForeColor.RGB; $o.line_pt = $sh.Line.Weight } else { $o.line = 'none' } } catch {}
+  try {
+    if ($sh.HasTextFrame -and $sh.TextFrame.HasText) {
+      $tf = $sh.TextFrame
+      $o.text_anchor = $tf.VerticalAnchor
+      $o.margins_in = @((Pt2In $tf.MarginLeft), (Pt2In $tf.MarginTop), (Pt2In $tf.MarginRight), (Pt2In $tf.MarginBottom))
+      $runs = @()
+      foreach ($r in $tf.TextRange.Runs()) {
+        $t = $r.Text; if ($t.Length -gt 70) { $t = $t.Substring(0, 70) }
+        $runs += [ordered]@{ t = ($t -replace "[\r\n\v]+", ' / '); font = $r.Font.Name; size = $r.Font.Size; bold = [bool]$r.Font.Bold; ital = [bool]$r.Font.Italic; color = (Rgb $r.Font.Color.RGB); align = $r.ParagraphFormat.Alignment; bullet = [bool]$r.ParagraphFormat.Bullet.Visible }
+        if ($runs.Count -ge 8) { break }
+      }
+      $o.runs = $runs
+    }
+  } catch {}
+  try {
+    if ($sh.HasTable) {
+      $tb = $sh.Table; $o.table = [ordered]@{ rows = $tb.Rows.Count; cols = $tb.Columns.Count; col_w_in = @(); row_h_in = @(); cells = @() }
+      for ($c = 1; $c -le $tb.Columns.Count; $c++) { $o.table.col_w_in += (Pt2In $tb.Columns($c).Width) }
+      for ($r = 1; $r -le [math]::Min($tb.Rows.Count, 12); $r++) {
+        $o.table.row_h_in += (Pt2In $tb.Rows($r).Height)
+        for ($c = 1; $c -le [math]::Min($tb.Columns.Count, 8); $c++) {
+          if ($r -le 3 -or $c -le 2) {
+            $cell = $tb.Cell($r, $c); $tr = $cell.Shape.TextFrame.TextRange
+            $o.table.cells += [ordered]@{ r = $r; c = $c; text = ($tr.Text -replace "[\r\n\v]+", ' / '); font = $tr.Font.Name; size = $tr.Font.Size; bold = [bool]$tr.Font.Bold; color = (Rgb $tr.Font.Color.RGB); fill = $(if ($cell.Shape.Fill.Visible) { Rgb $cell.Shape.Fill.ForeColor.RGB } else { 'none' }); align = $tr.ParagraphFormat.Alignment
+              border_bottom = $(try { if ($cell.Borders(3).Visible) { (Rgb $cell.Borders(3).ForeColor.RGB) + ' ' + $cell.Borders(3).Weight } else { 'none' } } catch { $null }) }
+          }
+        }
+      }
+    }
+  } catch {}
+  try { if ($sh.HasChart) { $o.chart = [ordered]@{ type = $sh.Chart.ChartType; has_title = $sh.Chart.HasTitle; legend = $sh.Chart.HasLegend } } } catch {}
+  try { if ($sh.Type -eq 14) { $o.placeholder = $sh.PlaceholderFormat.Type } } catch {}
+  $o
+  try { if ($sh.Type -eq 6) { foreach ($g in $sh.GroupItems) { Dump-Shape $g ($depth + 1) } } } catch {}
+}
+
+$jsonl = Join-Path $OutDir 'slides.jsonl'
+if (Test-Path $jsonl) { Remove-Item $jsonl }
+$n = $pres.Slides.Count
+for ($i = 1; $i -le $n; $i++) {
+  $s = $pres.Slides($i)
+  $png = Join-Path $OutDir ('slide_{0:D2}.png' -f $i)
+  try { $s.Export($png, 'PNG', $Width, $H) } catch { Write-Host "export fail $i" }
+  $sd = [ordered]@{ slide = $i; layout = $s.CustomLayout.Name; bg = $null; shapes = @() }
+  try { $sd.bg = if ($s.FollowMasterBackground) { 'master:' + (Rgb $s.Master.Background.Fill.ForeColor.RGB) } else { Rgb $s.Background.Fill.ForeColor.RGB } } catch {}
+  foreach ($sh in $s.Shapes) { foreach ($d in (Dump-Shape $sh 0)) { $sd.shapes += $d } }
+  $line = ($sd | ConvertTo-Json -Depth 9 -Compress) + "`n"
+  for ($try = 0; $try -lt 8; $try++) { try { [IO.File]::AppendAllText($jsonl, $line, (New-Object Text.UTF8Encoding($false))); break } catch { Start-Sleep -Milliseconds 400 } }
+}
+$pres.Close(); $app.Quit()
+[System.Runtime.InteropServices.Marshal]::ReleaseComObject($app) | Out-Null
+Write-Host "done $Pptx slides=$n"

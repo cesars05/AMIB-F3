@@ -1,0 +1,53 @@
+# Chart analysis of the research reports (what each chart says, whether to reuse, how)
+> Read-outs marked ≈ are visual estimates from chart images (not tabulated data) — re-read from the source figure before quoting; exact values live in FACT_BASE.
+
+Figure PNGs: `08_Assets/charts_extracted/<doc>/FIG-NNN.png` (110 dpi page renders; native images in `08_Assets/company_images/`). Auto index with heading context: `08_Assets/ASSET_CATALOG_auto.md`. Decision codes: **R** = rebuild natively in house style from numbers (preferred) · **X** = use the original as a framed exhibit · **–** = skip.
+
+## 1. Bloomberg Intelligence — "Halliburton Vulnerable to Shale Vicissitudes" (17-Aug-2026; 14 figures)
+Style of BI charts: black-background Terminal exports, orange/blue bars, "Source: Bloomberg Intelligence" footer → **cannot sit in the white deck** (R).
+| FIG | Content | Read-out | Dec. |
+|---|---|---|---|
+| 001 | Highlights box | Revenue +6% QoQ incl. 6% overseas gain, +1% NA; adj. EBIT margin −40 bp; C&P 130 bp decline in D&E… | – (text in FACT_BASE) |
+| 002 | BI financial model table 2024–2028 | Revenue 22,944 / 22,184 / 22,406 / 23,723 / 25,103; adj. EBIT 3,938 / 3,091 / 3,030 / 3,426 / 3,876; EPS 2.91 / 2.75 / 2.46 / 2.93 / 3.43; FCF 2,349 / 1,957 / 1,916 / 2,172 / 2,659 vs consensus (H24) | R (table T1/T4) |
+| 003 | Multiples vs comps (Bloomberg) | HAL P/E 15.6x, EV/EBITDA 9.0x, EV/EBIT 12.2x vs peers median 19.1x / 9.6x / 13.7x → HAL at −19% / −6% / −11% premium to comps; SLB 19.6x, NOV 19.8x, WFRD 15.7x, BKR 25.0x P/E | R (valuation context) |
+| 004 | Market-share pie (2025 global OFS) | SLB 36.15%, HAL 22.46%, BKR 28.07%, NOV 8.85% … (HAL third by revenue behind SLB & BKR) | R |
+| 005 | Sankey 2025 revenue: 22,184 → International 13,118 / NA 9,066 → ME/Asia 5,832, LatAm 3,935, Europe/Africa/CIS 3,351 | exact regional split (H02) | **R as Sankey/stacked bar** (D-family) |
+| 006 / 007 | Segment revenue 2016–2027E (C&P, D&E) actual vs estimate | C&P 12,782 (2025) vs 13,588 (2027E); D&E 9,402 vs 10,078 | R |
+| 008–009 | FCF vs adjusted EBIT; FCF vs buybacks vs dividends 2015–2025 | FCF 1,672 (latest) vs adj. EBIT 3,091; buybacks 1,007; dividends 579 | R (capital-return slide) |
+| 010 | Revenue actual vs estimate 2015–2026 | 2025 22.94bn → 2026E 21.60bn BI (red arrow = decline) | R |
+| 011 | Segment operating margin by quarter Q4'23–Q3'25 | C&P 21→15.9%, D&E 14.6→14.4% | R (margin compression) |
+| 012 | FCF actual vs estimate | 2.658bn vs 2.158bn | – |
+| 013–014 | (second contact sheet) valuation/peer tables | see `charts_extracted/BI_HAL…/FIG-013/014` | R if used |
+
+## 2. UBS Evidence Lab — "Hormuz tracker: day 139" (17-Jul-2026; 19 figures, all Kpler data)
+UBS style = white, brown/sand palette, grey-labelled — **closest to house style; can be shown as framed exhibit (X) or rebuilt (R).**
+| FIG | Caption | Read-out for Kuwait case | Dec. |
+|---|---|---|---|
+| 001–003 | Tankers passing/exiting/entering Hormuz (ships/day) | ~45–60 ships/day (Feb) → ≈0–5/day from 4-Mar; partial recovery ≈10–20/day from mid-Jun | **R** line/column (one chart "Hormuz transits") |
+| 004–005 | Estimated oil & gas flows (Mboe/d) | same shape in barrels-equivalent | – |
+| 006–007 | Hormuz transit by destination | Jan–Feb avg: China ≈ 4.2 Mb/d, India 3.5, Japan 2.3, S. Korea 2.2, Singapore 1.0, Rest of Asia 2.8, Europe 1.3, RoW 3.4 | R (who loses) |
+| 008 | Weekly crude loadings in ME by location | total ≈ 18–19 Mb/d (pre-war) → ≈ 6 Mb/d; bypass Yanbu+Fujairah ≈ 5–7 Mb/d; Iran ≈ 1–2; Gulf ex-Iran ≈ 14→ ~0–4 | **R** — shows Kuwait has **no bypass route** (Gulf ex-Iran collapses) |
+| 009 | Iran loadings by port (Kharg etc.) | monthly avg 2.2 → 0.3 Mb/d | – |
+| 010 | **Middle East Gulf oil on water (Mb)** | ≈ 80 Mb (Jan–Feb avg) → **≈ 185 Mb from 1-Mar**, drifting to ≈ 85 Mb by early Jul (stranded barrels cleared) | **R** (headline exhibit for Section 2 risk) |
+| 011–014 | Yanbu loadings, Bab el-Mandeb flows | Red-Sea reroute volumes | – |
+| 015–017 | Product loadings; exports via Hormuz by country | country breakdown of exports | R if Kuwait share is legible |
+| 017/018–019 | Strikes on vessels / energy infrastructure tables | **Kuwait**: Mina al-Ahmadi & Mina Abdullah refineries (19-Mar), Mina al-Ahmadi (3-Apr), KOC offshore drilling platform (12-Jul, material damage, 1 injured); power & desalination plants (≈ 17-Jul) | R as event timeline (D-family timeline, TC s17) |
+
+## 3. MUFG — "Middle East Daily" (23-Jul-2026; 6 figures)
+| FIG | Content | Read-out | Dec. |
+|---|---|---|---|
+| 002 | GCC bond issuance (USD bn) 2020–2026 YTD by issuer | 2026 YTD ≈ 68bn (Saudi ≈ 23, Abu Dhabi ≈ 18, Qatar ≈ 5, Kuwait ≈ 16 (brown block, post-USD 6bn deal)) vs 2025 ≈ 70bn | **R** — GCC issuance context for Section 4 |
+| 003–006 | Market-indicator tables (stocks, sovereign bonds, interbank, FX, commodities) | Kuwait stocks 10,101 (+16.25% YTD); Kuwait 3M interbank 3.56%; USD/KWD 1Y fwd −152.33; Brent 88.48 / WTI 82.50 (table date); Kuwait 2027 yield 4.541% | R (K06, X05, X06) |
+| text | Kuwait USD 6bn 3-tranche deal | orders 14.8bn, T+70–85 bp (K08) | quote card |
+
+## 4. Goldman Sachs — NBK (Kuwait) mortgage law (23-Sep-2026; 2 tables)
+FIG-001: draft law vs KCB (6% rate = KIBOR + 2%, 25-yr vs 15-yr, DBR 50% vs 40%, max loan KWD 200k vs 70k). FIG-002: housing backlog 103,000 + 92,700 over decade = 195,700. **R** as T5 table / real-estate (Track B module 5).
+
+## 5. Halliburton Q2-2026 IR deck & Q4-2025 deck (63 / 41 figures)
+Official **red/grey** charts + photography = on-brand. Charts to rebuild with identical numbers: revenue indexed vs peers (fig-054), **adjusted ROCE (fig-055 / table fig-058)**, **cash-flow performance (fig-056)**, **debt maturity profile (fig-057)**, **capex % of revenue (fig-039)**, **2Q26 revenue donut by region (fig-052)**, segment/region quarterly table (fig-053 → T4 appendix). Native-resolution photographs (see `08_Assets/ASSET_CATALOG.md`).
+
+## 6. Team Act-3 report figures (5)
+FIG-002 company/ratings table, FIG-003 KWD chart (Yahoo), FIG-004 Hormuz-oil context, FIG-005 regional revenue chart → superseded by rebuilt charts (data in FACT_BASE).
+
+## 7. Reports not chart-analysed
+`HAL_Proxy-Filing` (governance; 36 MB of figures, sampled only), `HAL_Q1/Q2-2026_10-Q` figure PDFs (page renders of statements, no charts).

@@ -1,0 +1,44 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+$su=T { $wb.Worksheets.Item("Summary") }
+Write-Output "### Summary r1-28 (que sobrevive del football field) ###"
+for($r=1;$r -le 28;$r++){
+  $line=""
+  for($c=2;$c -le 14;$c++){
+    $t=[string](T { $su.Cells.Item($r,$c).Text })
+    if($t.Trim() -ne ""){
+      $col=""; $n=$c; while($n -gt 0){ $m=($n-1)%26; $col=[char](65+$m)+$col; $n=[math]::Floor(($n-1)/26) }
+      if($t.Length -gt 20){ $t=$t.Substring(0,20) }
+      $line+=("["+$col+"="+$t+"] ")
+    }
+  }
+  if($line.Trim() -ne ""){ Write-Output ("r"+([string]$r).PadRight(4)+$line) }
+}
+Write-Output ""
+Write-Output "### Summary: TODAS las formulas que referencian DCF / SOTP / EPV ###"
+for($r=1;$r -le 70;$r++){
+  for($c=2;$c -le 24;$c++){
+    $f=[string](T { $su.Cells.Item($r,$c).Formula })
+    if($f -match "DCF!|SOTP!|EPV!"){
+      $col=""; $n=$c; while($n -gt 0){ $m=($n-1)%26; $col=[char](65+$m)+$col; $n=[math]::Floor(($n-1)/26) }
+      $s=$f; if($s.Length -gt 110){ $s=$s.Substring(0,110)+".." }
+      Write-Output ("  "+($col+$r).PadRight(6)+" = "+$s)
+    }
+  }
+}
+Write-Output ""
+Write-Output ("### r29 encabezado del snapshot ###")
+$l=""
+for($c=3;$c -le 12;$c++){
+  $col=""; $n=$c; while($n -gt 0){ $m=($n-1)%26; $col=[char](65+$m)+$col; $n=[math]::Floor(($n-1)/26) }
+  $t=[string](T { $su.Cells.Item(29,$c).Text }); if($t.Trim() -ne ""){ $l+=("["+$col+"="+$t+"] ") }
+}
+Write-Output ("  "+$l)
+Write-Output ("  Assumptions F10 escenario activo = "+[string](T { $wb.Worksheets.Item("Assumptions").Range("F10").Text }))

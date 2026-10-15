@@ -1,0 +1,147 @@
+import win32com.client as w
+from openpyxl.utils import get_column_letter as L
+x=w.GetActiveObject('Excel.Application'); wb=x.Workbooks('Bimbo Financial Model_v4.xlsx')
+wb.SaveCopyAs(r'C:\Users\cesar\AppData\Local\Temp\claude\C--Users-cesar-OneDrive---Instituto-Tecnologico-y-de-Estudios-Superiores-de-Monterrey-CFA\d3818e61-a352-41c5-8183-298c3fb598b1\scratchpad\v4_backup_before_edits.xlsx')
+RA=wb.Worksheets('Regional Assumptions'); MG=wb.Worksheets('Market Growth & Inflation')
+RM=wb.Worksheets('Regional Model'); CM=wb.Worksheets('Consolidated Model'); AS=wb.Worksheets('Assumptions')
+BLUE=16711680; BLACK=0
+x.ScreenUpdating=False; x.Calculation=-4135
+def find(ws,p,start=1,end=500):
+    v=ws.Range('B1:B%d'%end).Value2
+    for r in range(start,end+1):
+        t=v[r-1][0]
+        if isinstance(t,str) and t.strip().startswith(p): return r
+    raise Exception('nf '+p)
+def fmt(ws,src,dst):
+    ws.Range(src).Copy(); ws.Range(dst).PasteSpecial(-4122); x.CutCopyMode=False
+
+# ===== 1. Regional Assumptions: market share block =====
+ins_at=find(RA,'2. Adj. EBITDA margin')-1      # blank row before section 2
+RA.Rows('%d:%d'%(ins_at,ins_at+13)).Insert(Shift=-4121,CopyOrigin=0)
+RA.Range('A%d:I%d'%(ins_at,ins_at+13)).ClearFormats()
+RA.Range('A%d:I%d'%(ins_at,ins_at+13)).Font.Name='Arial'; RA.Range('A%d:I%d'%(ins_at,ins_at+13)).Font.Size=11
+s=ins_at
+hdr,sel,act,colh=s,s+2,s+3,s+5
+seg0=s+6
+fmt(RA,'B11:H11','B%d:H%d'%(hdr,hdr)); RA.Cells(hdr,2).Value='1b. Market Share by Segment (pp change in share per year)'
+RA.Cells(sel,2).Value='Market share scenario (0 = follow main scenario, 1 = Loss, 2 = Hold, 3 = Gain)'
+fmt(RA,'C13','C%d'%sel); RA.Cells(sel,3).Value=0; RA.Cells(sel,3).NumberFormat='0'
+RA.Cells(act,2).Value='Active market share case'
+RA.Cells(act,3).Formula='=IF(C%d=0,$C$4,C%d)'%(sel,sel); RA.Cells(act,3).NumberFormat='0'
+RA.Cells(act,4).Formula='=CHOOSE(C%d,"Loss","Hold","Gain")'%act
+RA.Range('C%d:D%d'%(act,act)).Font.Bold=True
+for c,t in zip('BCDEFG',['Segment (Bimbo share change, pp per year)','Loss','Hold','Gain','Active','Hist. avg 2021-25']):
+    RA.Range('%s%d'%(c,colh)).Value=t
+fmt(RA,'B9:G9','B%d:G%d'%(colh,colh)); RA.Range('B%d:G%d'%(colh,colh)).Font.Color=BLACK
+RA.Range('C%d:G%d'%(colh,colh)).HorizontalAlignment=-4152
+RA.Range('B%d:G%d'%(colh,colh)).Borders(9).LineStyle=1
+segs=[('Mexico, Baked Goods',9,-0.0019,0.0005),('Mexico, Savoury Snacks',10,-0.0005,0.0012),('United States, Baked Goods',11,-0.0006,0.0),
+      ('United States, Savoury Snacks',12,-0.0002,0.0004),('Canada, Baked Goods',13,-0.0010,0.0003),('EAA (Spain proxy)',14,-0.0017,0.0),('Latin America (Brazil proxy)',15,-0.0005,0.0003)]
+for i,(lab,mgr,loss,gain) in enumerate(segs):
+    r=seg0+i
+    RA.Cells(r,2).Value=lab; RA.Cells(r,2).IndentLevel=1
+    for c,v in ((3,loss),(5,gain)):
+        fmt(RA,'C13',ws_a:='%s%d'%(L(c),r)); RA.Cells(r,c).Value=v; RA.Cells(r,c).NumberFormat='0.00%'
+    RA.Cells(r,4).Value=0; RA.Cells(r,4).NumberFormat='0.00%'
+    RA.Cells(r,6).Formula='=CHOOSE($C$%d,C%d,D%d,E%d)'%(act,r,r,r); RA.Cells(r,6).NumberFormat='0.00%'; RA.Cells(r,6).Font.Bold=True
+    RA.Cells(r,7).Formula="=AVERAGE('Market Growth & Inflation'!H%d:K%d)"%(mgr,mgr); RA.Cells(r,7).NumberFormat='0.00%'; RA.Cells(r,7).Font.Color=52224
+RA.Cells(seg0,8).Value='Loss = 2021-25 average change for each segment; Gain only where the trend supports it (snacks, small Canada / Mexico baked / Brazil).'
+RA.Cells(seg0,8).Font.Italic=True
+SEG={n:seg0+i for i,n in enumerate(['mxb','mxs','usb','uss','ca','eaa','la'])}
+# spreads -> 0, relabel, weighted share change in E/F
+spread_rows=[find(RA,'Spread',start=12,end=40)]
+r=spread_rows[0]
+while True:
+    try: r=find(RA,'Spread',start=r+1,end=40); spread_rows.append(r)
+    except Exception: break
+spread_rows=spread_rows[:4]
+weights={0:("=SUMPRODUCT(F{a}:F{c},'Market Growth & Inflation'!K102:K104)/SUM('Market Growth & Inflation'!K102:K104)").format(a=SEG['usb'],c=SEG['ca']),
+         1:("=(F{a}*'Market Growth & Inflation'!K138+F{b}*'Market Growth & Inflation'!K160)/('Market Growth & Inflation'!K138+'Market Growth & Inflation'!K160)").format(a=SEG['mxb'],b=SEG['mxs']),
+         2:'=F%d'%SEG['eaa'],3:'=F%d'%SEG['la']}
+for k,r in enumerate(spread_rows):
+    RA.Cells(r,2).Value='Market growth spread (±)'
+    RA.Cells(r,3).Value=0
+    RA.Cells(r,5).Value='Δ share, weighted (pp/yr)'; RA.Cells(r,5).Font.Italic=True; RA.Cells(r,5).HorizontalAlignment=-4152
+    RA.Cells(r,6).Formula=weights[k]; RA.Cells(r,6).NumberFormat='0.00%'; RA.Cells(r,6).Font.Bold=True
+print('RA share block rows',s,'segments',SEG,'spreads',spread_rows)
+
+# ===== 2. Market Growth: wire segment rows =====
+labels={9:'Mexico Baked Goods',10:'Mexico Savoury Snacks',11:'United States Baked Goods',12:'United States Savoury Snacks',13:'Canada Baked Goods',14:'EAA (Spain proxy)',15:'Latin America (Brazil proxy)'}
+hist_src={10:159,12:74,13:95}
+segkey={9:'mxb',10:'mxs',11:'usb',12:'uss',13:'ca',14:'eaa',15:'la'}
+for r,lab in labels.items():
+    MG.Cells(r,2).Value=lab
+    if r in hist_src:
+        MG.Range('D%d:K%d'%(r,r)).Formula=tuple([tuple('=%s%d'%(L(c),hist_src[r]) for c in range(4,12))])
+        fmt(MG,'D9:K9','D%d:K%d'%(r,r)) if r!=9 else None
+        MG.Range('D%d:K%d'%(r,r)).Borders(8).LineStyle=-4142
+    MG.Range('L%d:P%d'%(r,r)).Formula="='Regional Assumptions'!$F$%d"%SEG[segkey[r]]
+    MG.Range('L%d:P%d'%(r,r)).Font.Color=BLACK; MG.Range('L%d:P%d'%(r,r)).Interior.ColorIndex=-4142
+for r,src in ((159,10),(74,12),(95,13)):
+    MG.Range('L%d:P%d'%(r,r)).Formula='=L$%d'%src
+print('MG wired')
+
+# ===== 3. Margins, D&A, capex hardcodes =====
+paths={'Adj. EBITDA margin':{'North America':[.098,.100,.103,.105,.105],'Mexico':[.209,.209,.210,.210,.210],'EAA':[.120,.121,.122,.124,.125],'Latin America':[.078,.083,.089,.093,.095]},
+       'D&A % of sales':{'North America':[.056,.0555,.055,.0545,.054],'Mexico':[.0505,.050,.0495,.049,.0485],'EAA':[.059,.0585,.058,.0575,.057],'Latin America':[.066,.065,.064,.063,.062]},
+       'capex % of sales':{'North America':[.023,.025,.026,.027,.028],'Mexico':[.047,.048,.049,.050,.050],'EAA':[.070,.070,.070,.070,.070],'Latin America':[.075,.072,.070,.070,.070]}}
+notes={'Adj. EBITDA margin':'Team assumption: gradual recovery from 2025A, consolidated ~+70 bps in 2026 (guidance +70 to 120 bps); NA capped at 2023 level (10.5%), LatAm dips in 2026 on Wickbold integration.',
+       'D&A % of sales':'Team assumption: D&A trends ~5-10 bps lower per year as capex normalizes (2026 capex guidance US$1.0-1.2 bn).',
+       'capex % of sales':'Team assumption: 2026 consolidated capex ~MXN 19.7 bn (~US$1.1 bn, mid of guidance), gradual normalization after.'}
+for key,regs in paths.items():
+    for reg,vals in regs.items():
+        r=find(RA,'%s — %s'%(reg,key))
+        base=r+2
+        assert RA.Cells(base,2).Value.strip()=='Base',(reg,key,RA.Cells(base,2).Value)
+        for j,v in enumerate(vals):
+            c=RA.Cells(base,3+j); c.Value=v; c.Font.Color=BLUE
+        RA.Cells(base,8).Value=notes[key]
+print('paths written')
+
+# ===== 4. Consolidated Model: working capital at 360 days, average basis =====
+for r in (260,261,262):
+    CM.Range('C%d:R%d'%(r,r)).Replace(What='*365',Replacement='*360',LookAt=2)
+for i,c in enumerate('MNOPQ'):
+    a=L(3+i); p=L(12+i)  # Assumptions column, prior column
+    CM.Range('%s247'%c).Formula='=2*Assumptions!%s59*%s8/360-%s247'%(a,c,p)
+    CM.Range('%s248'%c).Formula='=2*Assumptions!%s65*-%s9/360-%s248'%(a,c,p)
+    CM.Range('%s249'%c).Formula='=2*Assumptions!%s71*-%s9/360-%s249'%(a,c,p)
+for col in range(3,18):
+    c=L(col); CM.Range('%s382'%c).Formula='=%s147/%s8*360'%(c,c)
+print('WC done')
+
+# ===== 5. Assumptions notes =====
+AS.Range('H1:H120').Replace(What='C6 = 2',Replacement='C7 = 2',LookAt=2)
+
+# ===== 6. Regional Model: unit economics =====
+p0=find(RM,'Bakeries and Plants (year-end)')
+pl=[p0+1,p0+2,p0+3,p0+4]; plc=p0+5
+for r in pl:
+    for col in range(13,18):
+        c=RM.Cells(r,col); c.Value=RM.Cells(r,12).Value2; c.Font.Color=BLUE
+RM.Range('L%d:Q%d'%(plc,plc)).FillRight()
+for lab in ('Net Sales per Plant','Adj. EBITDA per Plant'):
+    h=find(RM,lab)
+    for r in range(h+1,h+6): RM.Range('L%d:Q%d'%(r,r)).FillRight()
+eb=find(RM,'Adj. EBITDA per Plant'); last=eb+5
+RM.Rows('%d:%d'%(last+1,last+7)).Insert(Shift=-4121,CopyOrigin=0)
+RM.Range('A%d:S%d'%(last+1,last+7)).ClearFormats()
+RM.Range('A%d:S%d'%(last+1,last+7)).Font.Name='Arial'; RM.Range('A%d:S%d'%(last+1,last+7)).Font.Size=11
+cp=last+2
+for k in range(7):
+    if k==0: continue
+    fmt(RM,'B%d:R%d'%(eb+k-1,eb+k-1),'B%d:R%d'%(cp+k-1,cp+k-1))
+RM.Cells(cp,2).Value='Capex per Plant (MXN mm)'
+for k,n in enumerate(['   North America','   Mexico','   EAA','   Latin America','Grupo Bimbo (Consolidated)'],start=1):
+    RM.Cells(cp+k,2).Value=n
+capr=find(RM,'Capital Expenditures (PP&E Additions)')
+for k in range(5):
+    src=capr+1+k if k<4 else capr+6
+    prow=pl[k] if k<4 else plc
+    RM.Range('C%d:Q%d'%(cp+1+k,cp+1+k)).Formula=tuple([tuple('=IFERROR(%s%d/%s%d,"")'%(L(c),src,L(c),prow) for c in range(3,18))])
+u=find(RM,'Unit Economics by Region')
+RM.Range('M%d:Q%d'%(u,u)).Formula=tuple([tuple('=%s$6'%L(c) for c in range(13,18))])
+RM.Cells(u,19).Value='Plants held flat at 2025 (team assumption) to extend per-plant metrics into the forecast.'
+print('unit economics rows',p0,cp,'capex src',capr)
+x.Calculation=-4105; x.ScreenUpdating=True; x.Calculate()
+print('done')

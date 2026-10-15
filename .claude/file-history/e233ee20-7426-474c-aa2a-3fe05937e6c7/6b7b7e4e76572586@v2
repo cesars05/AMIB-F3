@@ -1,0 +1,98 @@
+# Phase 1: Portfolio Fixes - Discussion Log
+
+> **Audit trail only.** Do not use as input to planning, research, or execution agents.
+> Decisions are captured in CONTEXT.md; this log preserves the alternatives considered.
+
+**Date:** 2026-09-24
+**Phase:** 01-portfolio-fixes
+**Areas discussed:** Cash statement chain, Non-zero residual, IBKR drop folder, TWR threshold (PFIX-04), Export content, Python environment
+
+---
+
+## Cash statement chain
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Non-overlapping download set | César downloads one Transaction History per calendar year; overlapping files with different starts are rejected | |
+| Code chooses the chain | Keep every file; code builds the best non-overlapping coverage for FX rows | ✓ |
+| Recompute FX translation | Ignore IBKR FX rows, compute from per-currency balances and FX rates | |
+
+**User's choice:** Code chooses the chain.
+**Notes:** Follow-up after explaining that the FX translation posts as one lump at period end:
+
+| Question | Options | Selected |
+|----------|---------|----------|
+| New YTD, same start, later end | Replace entirely / Keep both and warn | Replace entirely |
+| Role of the Activity Statement | Out of ledger / NAV Cash checkpoint / Positions only | NAV Cash checkpoint |
+| Residual currency | USD base total / Per currency | USD base total |
+| Where the residual must be zero | Zero at chain boundaries / Tolerance mid-chain / Zero everywhere | Zero at chain boundaries |
+| What enters from the Activity Statement | NAV Cash only / Also its transactions | NAV Cash only |
+| Chain does not reach the latest date | Report exact period to download / Use latest FX row | Report exact period |
+
+---
+
+## Non-zero residual
+
+| Question | Options | Selected |
+|----------|---------|----------|
+| exportar.py on a boundary residual above tolerance | Block / Export flagged / Warn only | Block |
+| What consumers see when blocked | Last good export with as_of / No portfolio data | Last good export |
+| Where César sees the residual | Ingest/export output / API endpoint / Panel in current frontend | Panel in current frontend (`data/` page) |
+| Tolerance | Half a cent / One cent / One dollar | Half a cent |
+
+---
+
+## IBKR drop folder
+
+| Question | Options | Selected |
+|----------|---------|----------|
+| Location | Dedicated folder in data/ / Downloads filtered / OneDrive | Dedicated folder in data/ |
+| After ingest | Stay in place / Move to processed/ | Stay in place |
+| Account number in tracked config.py | Move to .env / Move to .env and rewrite history | Move to .env |
+| Existing files in backend/IBRK Data | Move CSVs, leave PDF / Move all | Move CSVs, leave PDF |
+
+---
+
+## TWR threshold (PFIX-04)
+
+**Notes:** Raised before asking: the cache uses `auto_adjust=True` (dividend adjusted) while ledger cash already books dividends, so a same-basis rebuild cannot detect a dividend double count.
+
+| Question | Options | Selected |
+|----------|---------|----------|
+| Comparison variants | Three variants (current, same-basis rebuild, auto_adjust=False) / Rebuild only | Three variants |
+| Differ threshold | >=1 bp daily or cumulative / Cumulative only / Any difference | >=1 bp daily or cumulative |
+| IBKR-reported TWR | Reference only / Pass/fail / Not used | Reference only |
+| Record location | Phase folder .md / data/ | Phase folder .md |
+
+---
+
+## Export content
+
+| Question | Options | Selected |
+|----------|---------|----------|
+| Closing valuation price | Backend yfinance close / LSEG close / Both labeled | Backend yfinance close |
+| Holdings detail | Aggregated positions / Positions and lots | Aggregated positions |
+| Ticker to RIC mapping | Backend, in the export / Engine keeps its own | Backend, in the export |
+
+---
+
+## Python environment
+
+| Question | Options | Selected |
+|----------|---------|----------|
+| Environment | System Python + constraints.txt / Project venv | System Python + constraints.txt |
+| Pin strictness | Exact versions / Upper bounds only | Exact versions |
+
+---
+
+## Claude's Discretion
+
+- DB move mechanics (copy, then verify against a rebuild; leave the old snapshot untouched)
+- Test layout, pytest config, fixture format
+- New names for the two live-LSEG `test_*.py` scripts
+- Export JSON field names, placeholder output path, status-file schema, residual endpoint shape
+- Migration error matching in `backend/db.py`
+
+## Deferred Ideas
+
+None.

@@ -1,0 +1,66 @@
+"""Estructura real de comisiones: todas las operaciones de todos los estados."""
+import csv, glob, os, sys
+import pandas as pd
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+pd.set_option("display.width", 200)
+
+filas = {}
+for f in sorted(glob.glob(r"C:\Users\cesar\Downloads\U18244610_*.csv")):
+    cols = None
+    for r in csv.reader(open(f, encoding="utf-8-sig")):
+        if len(r) < 3:
+            continue
+        if r[0] == "Trades" and r[1] == "Header" and "Comm/Fee" in r:
+            cols = r[2:]
+        elif r[0] == "Trades" and r[1] == "Data" and cols and len(r) > 4:
+            d = dict(zip(cols, r[2:]))
+            if d.get("Asset Category") != "Stocks" or d.get("DataDiscriminator") != "Order":
+                continue
+            try:
+                monto = abs(float(d["Proceeds"]))
+                com = abs(float(d["Comm/Fee"]))
+                cant = abs(float(d["Quantity"]))
+                px = float(d["T. Price"])
+            except (ValueError, KeyError):
+                continue
+            # dedupe: los estados se traslapan
+            clave = (d["Symbol"], d["Date/Time"], d["Quantity"], d["T. Price"])
+            if monto > 0:
+                filas[clave] = dict(simbolo=d["Symbol"], fecha=d["Date/Time"][:10],
+                                    cant=cant, precio=px, monto=monto, com=com,
+                                    pct=com / monto * 100,
+                                    lado="compra" if float(d["Quantity"]) > 0 else "venta",
+                                    archivo=os.path.basename(f))
+
+df = pd.DataFrame(filas.values()).sort_values("monto")
+print(f"{len(df)} operaciones unicas de acciones\n")
+
+print("=== distribucion de la tasa ===")
+print(df["pct"].describe().round(4).to_string())
+
+print("\n=== por tamano de operacion ===")
+bins = [0, 1, 5, 20, 50, 100, 200, 500, 1200]
+df["tramo"] = pd.cut(df["monto"], bins)
+g = df.groupby("tramo", observed=True).agg(
+    n=("pct", "size"), monto_prom=("monto", "mean"),
+    com_prom=("com", "mean"), pct_prom=("pct", "mean"),
+    pct_min=("pct", "min"), pct_max=("pct", "max"))
+print(g.round(4).to_string())
+
+print("\n=== las 10 mas chicas ===")
+print(df.head(10)[["simbolo", "fecha", "monto", "com", "pct"]].to_string(index=False))
+print("\n=== las 10 mas grandes ===")
+print(df.tail(10)[["simbolo", "fecha", "monto", "com", "pct"]].to_string(index=False))
+
+# hay minimo o maximo?
+print(f"\ncomision minima observada: {df['com'].min():.6f} USD")
+print(f"comision maxima observada: {df['com'].max():.6f} USD")
+print(f"operacion mas chica:       {df['monto'].min():.4f} USD")
+print(f"operacion mas grande:      {df['monto'].max():.2f} USD")
+exactos = (df["pct"].round(2) == 1.00).sum()
+print(f"\noperaciones a exactamente 1.00%: {exactos} de {len(df)}")
+print(f"total operado {df['monto'].sum():,.2f}  comisiones {df['com'].sum():.2f}  "
+      f"= {df['com'].sum() / df['monto'].sum() * 100:.3f}%")

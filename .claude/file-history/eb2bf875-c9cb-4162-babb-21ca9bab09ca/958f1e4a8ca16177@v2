@@ -1,0 +1,40 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 40;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 1200 } }; return "??" }
+$xl=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); break }catch{ Start-Sleep -Milliseconds 900 } }
+$wb=$null; foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("Segment Beta") }
+
+Write-Output "=== estado de r16 antes ==="
+foreach($c in 4,5,6,7,8,10,13){ Write-Output ("   col "+$c+" = "+[string](T { $s.Cells.Item(16,$c).Text })+"   frm="+[string](T { $s.Cells.Item(16,$c).Formula })) }
+
+# re-escribir las formulas TR de las filas de datos para ensuciar la cadena
+foreach($r in 15,16,17,21,25,26,27,28){
+  foreach($c in 4,5,6,7,8,10,13){
+    $f=[string](T { $s.Cells.Item($r,$c).Formula })
+    if($f -match "^=.*TR\("){ T { $s.Cells.Item($r,$c).Formula=$f } }
+  }
+}
+Write-Output "`n  formulas TR re-escritas"
+T { $xl.CalculateFullRebuild() }
+Start-Sleep -Seconds 20
+T { $xl.Calculate() }
+Start-Sleep -Seconds 10
+
+Write-Output ""
+Write-Output ("      "+"RIC".PadRight(9)+"Company".PadRight(28)+"MktCap".PadLeft(12)+"TotDebt".PadLeft(11)+"Cash".PadLeft(10)+"D/E".PadLeft(9)+"Beta".PadLeft(8)+"BetaU".PadLeft(8))
+foreach($r in 12,15,16,17,18,21,22,25,26,27,28,29){
+  $ric=[string](T { $s.Cells.Item($r,3).Text }); $nm=[string](T { $s.Cells.Item($r,4).Text })
+  if($nm.Length -gt 27){ $nm=$nm.Substring(0,27) }
+  $line="   "+$ric.PadRight(9)+$nm.PadRight(28)
+  foreach($c in 5,7,8,9,10,11){ $line+=([string](T { $s.Cells.Item($r,$c).Text })).PadLeft(11) }
+  Write-Output ("r"+([string]$r).PadRight(3)+$line)
+}
+Write-Output ""
+for($r=34;$r -le 37;$r++){
+  $line=([string](T { $s.Cells.Item($r,4).Text })).PadRight(40)
+  foreach($c in 5,6,7){ $line+=([string](T { $s.Cells.Item($r,$c).Text })).PadLeft(14) }
+  Write-Output ("r"+([string]$r).PadRight(3)+" "+$line)
+}
+T { $wb.Save() }
+Write-Output "`nguardado"

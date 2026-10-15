@@ -1,0 +1,140 @@
+$ErrorActionPreference="Stop"
+$wb=$null; $xl=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $sm=$wb.Worksheets.Item("Segment Model")
+$cm=$wb.Worksheets.Item("Consolidated Model"); $d=$wb.Worksheets.Item("DCF")
+$vs=$wb.Worksheets.Item("Valuation Summary"); $ns=$wb.Worksheets.Item("Scenarios Summary")
+$er=$wb.Worksheets.Item("Expected Returns"); $so=$wb.Worksheets.Item("SOTP"); $ep=$wb.Worksheets.Item("EPV")
+$COL=@{12="L";13="M";14="N";15="O";16="P";17="Q"}
+function Lab($sh,$i){ foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$sh.Cells.Item($i,$cc).Text }catch{}; if($t.Trim() -ne ""){ return $t } }; return "" }
+$orig=[string]$as.Range("F10").Text
+Write-Output ("LIBRO "+[string]$wb.Name)
+Write-Output ("estado: escenario='"+$orig+"'  venta='"+[string]$as.Range("J74").Text+"'  J75="+[string]$as.Range("J75").Text+"  J76="+[string]$as.Range("J76").Text+"  sweep='"+[string]$as.Range("J80").Text+"'  iterativo="+[string]$xl.Iteration)
+Write-Output ("        ER: entrada "+[string]$er.Range("D15").Text+"  part. "+[string]$er.Range("D17").Text+"  salida "+[string]$er.Range("D21").Text+" a "+[string]$er.Range("D32").Text)
+
+Write-Output ""
+Write-Output "===== A) Consistencia de formulas L..Q ====="
+foreach($pr in @(@($sm,"SM",10,237),@($cm,"CM",10,380))){
+  $sh=$pr[0]; $nm=[string]$pr[1]; $bad=0
+  for($i=[int]$pr[2];$i -le [int]$pr[3];$i++){
+    $base=""; $dif=@()
+    foreach($c in 12,13,14,15,16,17){
+      $f=""; try{ $f=[string]$sh.Cells.Item($i,$c).FormulaR1C1 }catch{}
+      if($f -eq ""){ continue }
+      if($base -eq ""){ $base=$f; continue }
+      if($f -ne $base){ $dif+=([string]$COL[$c]) }
+    }
+    if($dif.Count -gt 0){
+      $lab=Lab $sh $i
+      if($lab.Length -gt 42){ $lab=$lab.Substring(0,42) }
+      Write-Output ("  "+$nm+" r"+([string]$i).PadRight(5)+$lab.PadRight(43)+" difieren: "+($dif -join ","))
+      $bad++
+    }
+  }
+  Write-Output ("  -> "+$nm+": "+$bad)
+}
+Write-Output ""
+Write-Output "===== B) Numeros duros en la proyeccion ====="
+foreach($pr in @(@($sm,"SM",10,237),@($cm,"CM",10,380))){
+  $sh=$pr[0]; $nm=[string]$pr[1]; $n=0
+  for($i=[int]$pr[2];$i -le [int]$pr[3];$i++){
+    $duras=@()
+    foreach($c in 12,13,14,15,16,17){
+      $f=""; try{ $f=[string]$sh.Cells.Item($i,$c).Formula }catch{}
+      if($f -eq "" -or $f.StartsWith("=")){ continue }
+      $x=0.0
+      if([double]::TryParse($f,[ref]$x)){ if($x -ne 0){ $duras+=([string]$COL[$c]+"="+$f) } }
+    }
+    if($duras.Count -gt 0){
+      $lab=Lab $sh $i
+      if($lab.Length -gt 40){ $lab=$lab.Substring(0,40) }
+      Write-Output ("  "+$nm+" r"+([string]$i).PadRight(5)+$lab.PadRight(41)+" "+($duras -join "  "))
+      $n++
+    }
+  }
+  Write-Output ("  -> "+$nm+": "+$n)
+}
+Write-Output ""
+Write-Output "===== C) Checks por escenario, con y sin venta ====="
+foreach($esc in "Downside","Stagnation","Partial Success"){
+  foreach($v in $false,$true){
+    $as.Range("F10").Value2=$esc
+    if($v){ $as.Range("J74").Value2="Water Management" } else { [void]$as.Range("J74").ClearContents() }
+    $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+    $pb=0.0; $pc=0.0
+    for($c=4;$c -le 17;$c++){
+      $x=0.0; try{ $x=[double]$cm.Cells.Item(168,$c).Value2 }catch{}
+      if([math]::Abs($x) -gt [math]::Abs($pb)){ $pb=$x }
+      $y=0.0; try{ $y=[double]$cm.Cells.Item(215,$c).Value2 }catch{}
+      if([math]::Abs($y) -gt [math]::Abs($pc)){ $pc=$y }
+    }
+    $err=0
+    foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Valuation Summary","Expected Returns","Scenarios Summary"){
+      $s=$wb.Worksheets.Item($nm); $e=0
+      try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+      $err+=$e
+    }
+    $vt="sin venta"; if($v){ $vt="con venta " }
+    Write-Output ("  "+$esc.PadRight(17)+$vt+"  balance |max|="+([string][math]::Round([math]::Abs($pb),2)).PadLeft(7)+"  caja |max|="+([string][math]::Round([math]::Abs($pc),2)).PadLeft(7)+"  errores="+([string]$err).PadLeft(3)+"  DCF="+([string]$d.Range("E41").Text).PadLeft(9)+"  EPS32="+[string]$cm.Range("Q70").Text)
+  }
+}
+[void]$as.Range("J74").ClearContents()
+Write-Output ""
+Write-Output "===== D) Snapshots: siguen vivos? ====="
+foreach($esc in "Downside","Stagnation","Partial Success"){
+  $as.Range("F10").Value2=$esc
+  $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+  $fila=30; if($esc -eq "Stagnation"){ $fila=31 }; if($esc -eq "Downside"){ $fila=32 }
+  $dif=0.0
+  $cols=@("F","G","H","I","J","K","L")
+  $dcols=@("C","D","E","F","G","H","I")
+  for($k=0;$k -lt 7;$k++){
+    $a=[double]$vs.Range($cols[$k]+[string]$fila).Value2
+    $b=[double]$d.Range($dcols[$k]+"23").Value2
+    if([math]::Abs($a-$b) -gt [math]::Abs($dif)){ $dif=$a-$b }
+  }
+  $ffRow=14; if($esc -eq "Stagnation"){ $ffRow=15 }; if($esc -eq "Downside"){ $ffRow=16 }
+  Write-Output ("  "+$esc.PadRight(17)+" snapshot FCFF vs vivo: peor dif = "+([string][math]::Round($dif,0)).PadLeft(8)+"     football field "+([string]$vs.Cells.Item($ffRow,5).Text).PadLeft(8)+" vs DCF vivo "+([string]$d.Range("E41").Text).PadLeft(9))
+}
+Write-Output ""
+Write-Output "===== E) Coherencia entre hojas (Partial Success) ====="
+$as.Range("F10").Value2="Partial Success"
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$difs=0
+for($c=11;$c -le 17;$c++){
+  $a=[double]$cm.Cells.Item(13,$c).Value2; $b=[double]$sm.Cells.Item(16,$c).Value2
+  if([math]::Abs($a-$b) -gt 1){ Write-Output ("  ingresos CM r13 vs SM r16 col "+$COL[$c]); $difs++ }
+}
+for($i=0;$i -lt 6;$i++){
+  $a=[double]$vs.Cells.Item(41,(6+$i)).Value2; $b=[double]$cm.Cells.Item(13,(12+$i)).Value2
+  if([math]::Abs($a-$b) -gt 1){ Write-Output ("  Valuation Summary r41 vs CM r13 col "+[string](6+$i)+": "+[string][math]::Round($a,0)+" vs "+[string][math]::Round($b,0)); $difs++ }
+}
+for($i=0;$i -lt 6;$i++){
+  $a=[double]$d.Cells.Item(13,(3+$i)).Value2; $b=[double]$cm.Cells.Item(53,(12+$i)).Value2
+  if([math]::Abs($a-$b) -gt 1){ Write-Output ("  DCF EBITDA vs CM r53 col "+[string](3+$i)); $difs++ }
+}
+Write-Output ("  -> discrepancias: "+$difs)
+Write-Output ("  SOTP "+[string]$so.Range("D112").Text+" (VS dice "+[string]$vs.Range("E18").Text+")    EPV "+[string]$ep.Range("E61").Text+" (VS dice "+[string]$vs.Range("E17").Text+")")
+Write-Output ""
+Write-Output "===== F) Scenarios Summary vs Expected Returns ====="
+Write-Output ("  ER hoy: entrada "+[string]$er.Range("D15").Text+"  part "+[string]$er.Range("D17").Text+"   NS dice entrada "+[string]$ns.Range("D21").Text+"  part "+[string]$ns.Range("D22").Text)
+Write-Output ("  NS caso C: MOIC "+[string]$ns.Range("H16").Text+"  IRR "+[string]$ns.Range("I16").Text)
+$as.Range("F10").Value2="Partial Success"
+[void]$as.Range("J74").ClearContents()
+$er.Range("D21").Value2=[double]2029
+$er.Range("D32").Value2=[double]7.5
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+Write-Output ("  recalculado ahora: MOIC "+[string]$er.Range("D54").Text+"  IRR "+[string]$er.Range("D55").Text)
+$er.Range("D21").Value2=[double]2032
+$er.Range("D32").Value2=[double]8.5
+$as.Range("F10").Value2=$orig
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ""
+Write-Output ("restaurado: escenario "+[string]$as.Range("F10").Text+"   venta='"+[string]$as.Range("J74").Text+"'")

@@ -1,0 +1,207 @@
+import pandas as pd
+import numpy as np
+import yfinance as yf
+import os
+import matplotlib.pyplot as plt
+from datetime import datetime
+
+# ==============================================================================
+# BLOOMBERG ELITE TERMINAL STYLE CONFIGURATION
+# ==============================================================================
+BB_COLORS = {
+    'bg': '#000000',
+    'text': '#FFFFFF',
+    'accent': '#FF9900',  # Bloomberg Orange
+    'pos': '#00FF00',     # Bloomberg Green
+    'neg': '#FF0000',     # Bloomberg Red
+    'grid': '#222222',
+    'sma': '#0055FF',      # Bloomberg Blue
+    'bb': '#555555',       # Steel Grey
+    'rsi_area': '#1A1A1A'
+}
+
+plt.rcParams.update({
+    'figure.facecolor': BB_COLORS['bg'],
+    'axes.facecolor': BB_COLORS['bg'],
+    'axes.edgecolor': BB_COLORS['grid'],
+    'axes.labelcolor': BB_COLORS['text'],
+    'xtick.color': BB_COLORS['text'],
+    'ytick.color': BB_COLORS['text'],
+    'text.color': BB_COLORS['text'],
+    'font.family': 'Segoe UI',
+    'grid.color': BB_COLORS['grid']
+})
+
+# 1. Load Quant Model
+script_dir = os.path.dirname(os.path.abspath(__file__))
+target_file = r"data_2026-09-30 (2).csv"
+possible_paths = [
+    os.path.join(script_dir, 'v3', target_file),
+    os.path.join(script_dir, target_file)
+]
+
+file_path = None
+for p in possible_paths:
+    if os.path.exists(p):
+        file_path = p
+        break
+
+if not file_path:
+    csv_files = [f for f in os.listdir(script_dir) if f.endswith('.csv') and 'reporte' not in f.lower()]
+    if csv_files:
+        file_path = os.path.join(script_dir, csv_files[0])
+    else:
+        print("Error: No source CSV found.")
+        exit()
+
+df_csv = pd.read_csv(file_path)
+df_csv['ticker_base'] = df_csv['RIC'].apply(lambda x: str(x).split('.')[0] if pd.notna(x) else '')
+
+# 2. Ticker Universes
+tickers_mx_yf = [
+    "AC.MX", "ACTINVRB.MX", "ALFAA.MX", "ALPEKA.MX", "ALSEA.MX", "AMXB.MX",
+    "ASURB.MX", "BIMBOA.MX", "BOLSAA.MX", "CEMEXCPO.MX", "CHDRAUIB.MX",
+    "CUERVO.MX", "ELEKTRA.MX", "FEMSAUBD.MX", "GAPB.MX", "GCARSOT1.MX",
+    "GCC.MX", "GENTERA.MX", "GFINBURO.MX", "GFNORTEO.MX", "GMEXICOB.MX",
+    "GRUMAB.MX", "KIMBERA.MX", "KOFUBL.MX", "LABB.MX", "LASITEB.MX",
+    "LIVEPOLC1.MX", "MEGACPO.MX", "MFRISCOA1.MX", "OMAB.MX", "ORBIA.MX",
+    "PE&OLES.MX", "PINFRA.MX", "Q.MX", "RA.MX", "SITESB1.MX", "VESTA.MX",
+    "VOLARA.MX", "WALMEX.MX", "BBAJIOO.MX"
+]
+tickers_global_yf = [
+    "AAPL", "ABBV", "ABNB", "AMAT", "AMD", "AMZN", "AVGO", "BA", "BABA",
+    "COST", "CRM", "CVX", "DIS", "GOOGL", "INTC", "JPM", "LLY", "MA",
+    "MCD", "MELI", "META", "MSFT", "NVDA", "ORCL", "PEP", "PG", "PLTR",
+    "PYPL", "QCOM", "TSLA", "UBER", "V", "WMT", "XOM", "QQQ", "SPY", "PSQ"
+]
+all_tickers_yf = tickers_mx_yf + tickers_global_yf
+
+print(f"Fetching data for {len(all_tickers_yf)} assets...")
+data = yf.download(all_tickers_yf, period="1y", auto_adjust=True, progress=False)
+
+if isinstance(data.columns, pd.MultiIndex):
+    df_prices = data['Close']
+else:
+    df_prices = data[['Close']] if 'Close' in data.columns else data
+
+def calcular_rsi(series, window=14):
+    delta = series.diff()
+    gain = (delta.where(delta > 0, 0)).rolling(window=window).mean()
+    loss = (-delta.where(delta < 0, 0)).rolling(window=window).mean()
+    rs = gain / loss
+    return 100 - (100 / (1 + rs))
+
+# 3. Technical Processing
+resultados_tecnicos = []
+for ticker_yf in df_prices.columns:
+    series = df_prices[ticker_yf].dropna()
+    if len(series) < 30: continue
+    try:
+        precio_actual = series.iloc[-1]
+        sma_30 = series.rolling(window=30).mean().iloc[-1]
+        pct_vs_sma30 = ((precio_actual - sma_30) / sma_30) * 100
+        ret_1m = ((precio_actual / series.iloc[-21]) - 1) * 100 if len(series) >= 21 else np.nan
+        rsi_actual = calcular_rsi(series).iloc[-1]
+
+        ath = series.max()
+        dist_ath = ((precio_actual / ath) - 1) * 100
+
+        last_3m = series.tail(63)
+        three_m_high = last_3m.max()
+        mom_index = (last_3m >= (three_m_high * 0.98)).sum()
+
+        resultados_tecnicos.append({
+            'Ticker_YF': ticker_yf,
+            'ticker_base': ticker_yf.replace('.MX', ''),
+            'Mercado': 'MÉXICO' if '.MX' in ticker_yf else 'GLOBAL',
+            'Precio_Actual': round(precio_actual, 2),
+            'SMA_30': round(sma_30, 2),
+            '%_vs_SMA30': round(pct_vs_sma30, 2),
+            'RSI_14': round(rsi_actual, 1),
+            'Ret_1M_%': round(ret_1m, 2),
+            'Dist_ATH_%': round(dist_ath, 2),
+            'Mom_Index': mom_index
+        })
+    except: continue
+
+df_tec = pd.DataFrame(resultados_tecnicos)
+columnas_modelo = [col for col in ['ticker_base', 'EARNREV'] if col in df_csv.columns]
+df_merged = pd.merge(df_tec, df_csv[columnas_modelo], on='ticker_base', how='left')
+
+if 'EARNREV' in df_merged.columns:
+    df_merged['Momentum_Score'] = (df_merged['%_vs_SMA30'].fillna(0)*0.3) + (df_merged['Ret_1M_%'].fillna(0)*0.3) + (df_merged['EARNREV'].fillna(0.5)*100*0.4)
+else:
+    df_merged['Momentum_Score'] = (df_merged['%_vs_SMA30'].fillna(0)*0.5) + (df_merged['Ret_1M_%'].fillna(0)*0.5)
+
+df_ranking = df_merged.sort_values(by='Momentum_Score', ascending=False)
+
+# 4. Deep Fundamental Layer (The Top 25)
+print("Analyzing Analyst Targets & Forward P/E for Top 25...")
+top_25_tickers = df_ranking.head(25)['Ticker_YF'].tolist()
+fund_results = []
+
+for t in top_25_tickers:
+    try:
+        info = yf.Ticker(t).info
+        curr = info.get('currentPrice', np.nan)
+        target = info.get('targetMeanPrice', np.nan)
+        fwd_pe = info.get('forwardPE', np.nan)
+        upside = ((target / curr) - 1) * 100 if pd.notna(target) and pd.notna(curr) else np.nan
+        fund_results.append({
+            'Ticker_YF': t,
+            'Forward_PE': fwd_pe,
+            'Target_Price': target,
+            'Last_Close': curr,
+            'Upside_%': round(upside, 2) if pd.notna(upside) else np.nan
+        })
+    except:
+        fund_results.append({'Ticker_YF': t, 'Forward_PE': np.nan, 'Target_Price': np.nan, 'Last_Close': np.nan, 'Upside_%': np.nan})
+
+df_fund = pd.DataFrame(fund_results)
+df_final = pd.merge(df_ranking, df_fund, on='Ticker_YF', how='left')
+
+# 5. Bloomberg-style Visualization
+def plot_terminal_chart(ticker):
+    if ticker not in df_prices.columns: return
+    series = df_prices[ticker].dropna()
+    if len(series) < 20: return
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8), gridspec_kw={'height_ratios': [3, 1]})
+    ax1.plot(series.index, series, color=BB_COLORS['text'], linewidth=1.5, label='PRICE')
+    sma30 = series.rolling(window=30).mean()
+    ax1.plot(series.index, sma30, color=BB_COLORS['sma'], linestyle='--', linewidth=1, label='SMA 30')
+    std = series.rolling(window=20).std()
+    ma20 = series.rolling(window=20).mean()
+    ax1.plot(series.index, ma20 + (std*2), color=BB_COLORS['bb'], alpha=0.4, linewidth=0.8, label='UPPER BB')
+    ax1.plot(series.index, ma20 - (std*2), color=BB_COLORS['bb'], alpha=0.4, linewidth=0.8, label='LOWER BB')
+    ax1.fill_between(series.index, ma20 - (std*2), ma20 + (std*2), color=BB_COLORS['bb'], alpha=0.1)
+    ax1.set_title(f"EQUITY ANALYSIS: {ticker}", color=BB_COLORS['accent'], fontsize=14, fontweight='bold', loc='left')
+    ax1.legend(loc='upper left', facecolor=BB_COLORS['bg'], edgecolor=BB_COLORS['grid'], labelcolor=BB_COLORS['text'], fontsize=9)
+    ax1.grid(True, alpha=0.1)
+    rsi = calcular_rsi(series)
+    ax2.plot(series.index, rsi, color=BB_COLORS['accent'], linewidth=1.2)
+    ax2.axhline(70, color=BB_COLORS['neg'], linestyle='--', alpha=0.6)
+    ax2.axhline(30, color=BB_COLORS['pos'], linestyle='--', alpha=0.6)
+    ax2.set_ylim(0, 100)
+    ax2.set_ylabel('RSI (14)', color=BB_COLORS['text'], fontsize=10)
+    ax2.grid(True, alpha=0.1)
+    plt.tight_layout()
+    plt.savefig(os.path.join(script_dir, f"analysis_{ticker}.png"), facecolor=BB_COLORS['bg'])
+    plt.close()
+
+top_absolute = df_final.head(15)['Ticker_YF'].tolist()
+for t in top_absolute:
+    plot_terminal_chart(t)
+
+plt.figure(figsize=(12, 6))
+ytd_data = df_final.head(10)[['Ticker_YF', 'Ret_1M_%']]
+colors = [BB_COLORS['pos'] if x > 0 else BB_COLORS['neg'] for x in ytd_data['Ret_1M_%']]
+plt.bar(ytd_data['Ticker_YF'], ytd_data['Ret_1M_%'], color=colors)
+plt.title('MOMENTUM INDEX - TOP 10', color=BB_COLORS['accent'], fontsize=16, fontweight='bold', loc='left')
+plt.xticks(rotation=45)
+plt.grid(True, axis='y', alpha=0.1)
+plt.tight_layout()
+plt.savefig(os.path.join(script_dir, "momentum_scores.png"), facecolor=BB_COLORS['bg'])
+plt.close()
+
+df_final.to_csv(os.path.join(script_dir, "v1_reporte_final.csv"), index=False)
+print(f"Successfully generated Bloomberg-style assets for Top {len(top_absolute)} assets.")

@@ -1,0 +1,118 @@
+p = r"C:\Users\cesar\OneDrive\Documentos\Slide Construction\skill\slide-construction\scripts\house.py"
+s = open(p, encoding="utf-8").read()
+
+old_start = s.index("    def _chain_step(self, s, x, y, w, h, label, kind, img, fc, size, alpha=None):")
+old_end = s.index("    def detail_card(")
+s = s[:old_start] + '''    def _chain_step(self, s, x, y, w, h, label, kind, img, fc, size, alpha=None, shape="pentagon", tip=0.34,
+                    align="left"):
+        S = self.S
+        shp = {"pentagon": MSO_SHAPE.PENTAGON, "chevron": MSO_SHAPE.CHEVRON, "rect": MSO_SHAPE.RECTANGLE,
+               "round": MSO_SHAPE.ROUNDED_RECTANGLE}[shape]
+        common = dict(shape=shp, align=align, line_w=2.25)
+        if kind == "input":
+            sh = self.rect(s, x, y, w, h, fill="#FFFFFF", line=fc, text=label, size=size + 2, bold=True,
+                           inset=0.15, **common)
+            if img:
+                s.shapes.add_picture(img, Inches(x + w * 0.52), Inches(y + 0.1), height=Inches(h - 0.2))
+        elif kind == "neutral":
+            sh = self.rect(s, x, y, w, h, fill="#A6A6A6", line="#7F7F7F", text=label, size=size + 1, bold=True,
+                           color="#FFFFFF", inset=0.12, **common)
+        elif kind == "end":
+            sh = self.rect(s, x, y, w, h, fill=S["tint1"], line=S["tint1"], text=label, size=size, bold=True,
+                           color="#FFFFFF", inset=0.12, **common)
+        else:  # focus
+            sh = self.rect(s, x, y, w, h, fill=fc, line=fc, text=label, size=size, bold=True, color="#FFFFFF",
+                           inset=0.12, **common)
+            if alpha is not None:
+                self._alpha(sh, alpha)
+        if shape in ("pentagon", "chevron"):
+            sh.adjustments[0] = min(tip / min(w, h), 0.9)
+        elif shape == "round":
+            sh.adjustments[0] = 0.12
+        return (x, y, w, h)
+
+    # ---------------------------------------------------------------- free-layout flow kit
+    # The KLA visual language (input / neutral / focus / end boxes, red dashed focus frame, elbow loops,
+    # detail cards) with NO fixed arrangement: place nodes anywhere, any count, any orientation, and
+    # connect them. Use it to converge (many sources -> one hub), diverge (hub -> many uses), branch,
+    # stack vertically or close loops. process_chain() is just one arrangement of these primitives.
+
+    def node(self, s, x, y, w, h, label, kind="neutral", shape="pentagon", alpha=None, size=11, tip=0.3,
+             align="left", image=None):
+        """One flow box. kind: input|neutral|focus|end. shape: pentagon|chevron|rect|round."""
+        return self._chain_step(s, x, y, w, h, label, kind, image, self.S["primary"], size, alpha=alpha,
+                                shape=shape, tip=tip, align=align)
+
+    def flow(self, s, a, b, color=None, width=2.0, side_a="right", side_b="left", via=None, arrow=True):
+        """Connector from box a to box b (boxes = (x,y,w,h)). Straight if aligned, otherwise elbow through
+        x=via (horizontal routing) . side_*: right|left|top|bottom anchor points."""
+        col = color or self.S["primary_dark"]
+        pt = {"right": lambda q: (q[0] + q[2], q[1] + q[3] / 2), "left": lambda q: (q[0], q[1] + q[3] / 2),
+              "top": lambda q: (q[0] + q[2] / 2, q[1]), "bottom": lambda q: (q[0] + q[2] / 2, q[1] + q[3])}
+        (ax, ay), (bx, by) = pt[side_a](a), pt[side_b](b)
+        if side_a in ("right", "left") and side_b in ("right", "left"):
+            if abs(ay - by) < 0.01:
+                self.line(s, ax, ay, bx, by, color=col, width=width, arrow=arrow)
+                return
+            mx = via if via is not None else (ax + bx) / 2
+            self.line(s, ax, ay, mx, ay, color=col, width=width)
+            self.line(s, mx, ay, mx, by, color=col, width=width)
+            self.line(s, mx, by, bx, by, color=col, width=width, arrow=arrow)
+        else:  # vertical routing
+            if abs(ax - bx) < 0.01:
+                self.line(s, ax, ay, bx, by, color=col, width=width, arrow=arrow)
+                return
+            my = via if via is not None else (ay + by) / 2
+            self.line(s, ax, ay, ax, my, color=col, width=width)
+            self.line(s, ax, my, bx, my, color=col, width=width)
+            self.line(s, bx, my, bx, by, color=col, width=width, arrow=arrow)
+
+    def fan(self, s, src, targets, trunk_x=None, color=None, width=2.0):
+        """Diverge: one box -> many boxes stacked to its right, through a shared vertical trunk."""
+        tx = trunk_x if trunk_x is not None else (src[0] + src[2] + min(t[0] for t in targets)) / 2
+        for t in targets:
+            self.flow(s, src, t, via=tx, color=color, width=width)
+
+    def merge(self, s, sources, dst, trunk_x=None, color=None, width=2.0):
+        """Converge: many boxes -> one box to their right, through a shared vertical trunk."""
+        tx = trunk_x if trunk_x is not None else (max(q[0] + q[2] for q in sources) + dst[0]) / 2
+        for q in sources:
+            self.flow(s, q, dst, via=tx, color=color, width=width)
+
+    def loop_back(self, s, a, b, side="top", offset=0.25, label=None, color=None, width=2.0):
+        """Feedback arrow from a back to b, routed above (side='top') or below the boxes."""
+        col = color or self.S["primary_dark"]
+        if side == "top":
+            ya = a[1]
+            yb = b[1]
+            yy = min(ya, yb) - offset
+        else:
+            ya = a[1] + a[3]
+            yb = b[1] + b[3]
+            yy = max(ya, yb) + offset
+        ax, bx = a[0] + a[2] * 0.45, b[0] + b[2] * 0.45
+        self.line(s, ax, ya, ax, yy, color=col, width=width)
+        self.line(s, ax, yy, bx, yy, color=col, width=width)
+        self.line(s, bx, yy, bx, yb, color=col, width=width, arrow=True)
+        if label:
+            lx = min(ax, bx) + 0.1
+            self.text(s, lx, yy - 0.24 if side == "top" else yy + 0.02, abs(ax - bx) - 0.2, 0.22, label, size=9,
+                      italic=True, color=col, align="center", inset=0)
+
+    def focus_frame(self, s, boxes, label=None, pad=0.1, label_side="top"):
+        """Red dashed frame around any set of boxes + bold italic label (KLA 'Process Control')."""
+        S = self.S
+        x0 = min(b[0] for b in boxes) - pad
+        y0 = min(b[1] for b in boxes) - pad
+        x1 = max(b[0] + b[2] for b in boxes) + pad
+        y1 = max(b[1] + b[3] for b in boxes) + pad
+        self.rect(s, x0, y0, x1 - x0, y1 - y0, line=S["dash_red"], line_w=2.25, dash="dash")
+        if label:
+            ly = y0 - 0.33 if label_side == "top" else y1 + 0.02
+            self.text(s, x0, ly, x1 - x0, 0.3, label, size=14, bold=True, italic=True, color=S["primary_dark"],
+                      align="center", inset=0)
+        return (x0, y0, x1 - x0, y1 - y0)
+
+''' + s[old_end:]
+open(p, "w", encoding="utf-8").write(s)
+print("ok")

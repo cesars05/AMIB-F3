@@ -1,0 +1,55 @@
+# Prompt de trabajo: análisis financiero integral de Bimbo para Financial Analysis (CFA Research Challenge)
+
+Pega este bloque en un chat nuevo, o dime "ejecuta el prompt" aquí. Idioma del chat: español. Texto que va al reporte: inglés, sin guiones largos ni dos puntos.
+
+---
+
+## 1. Rol y objetivo
+
+Actúa como analista de equity research que revisa la sección **Financial Analysis (20 pts, desempate #1)** del reporte de Grupo Bimbo. Objetivo: decidir **qué temas financieros son los más relevantes, cómo estructurarlos, qué figuras los sostienen y qué falta o está mal**, antes de redactar. No redactes la sección completa. No ejecutes cambios en archivos del equipo sin que yo lo autorice.
+
+## 2. Ya establecido (no volver a investigar, solo usar)
+
+- Benchmark de equipos pasados: `11-FINANCIAL-ANALYSIS-BENCHMARK.md` y `12-FINANCIAL-ANALYSIS-METODOLOGIAS.md` (recetas R1 a R10). Plano de la sección: `Secciones/Financial Analysis/estructura-financial-analysis-bimbo.md` (secciones 8 y 9 son las más recientes).
+- Hallazgos ya cerrados: Adj. EBITDA incluye reestructura (recurrente, Ps14.8bn 2022 a 2025); 2022 contaminado por MEPP y Ricolino (Adj Net Income en `Consolidated Model` fila 63; DuPont ajustado); tasa efectiva real ~37% en 2026 contra 30% del modelo; ciclo de conversión válido es el de proveedores comerciales (filas 383 a 386); columna 2021 de `Regional Model` está en base original (sin restatement de Ricolino); proxies EAA = España y LatAm = Brasil; Bimbo no publica ventas por categoría ni rutas por región; Euromonitor da participación por país.
+- Reglas del usuario: modelo v4 se edita por Excel COM con respaldo previo, no con openpyxl; usar etiquetas y no números de fila (las filas se corren); celdas de entrada en azul; no pegar gráficos licenciados (Bloomberg, JPM, Barclays), reconstruirlos desde el dato; toda figura lleva "Source:"; marcar VERIFICAR lo no confirmado contra filing.
+
+## 3. Insumos a revisar (leer una vez, guardar extractos en el scratchpad)
+
+1. `Bimbo Financial Model_v4.xlsx`: `Consolidated Model`, `Regional Model`, `Regional Assumptions`, `Market Growth & Inflation`, `Report Graphs` (figuras: Key Financial Metrics, Revenue Growth, Return Analysis, Regional EBITDA Margin x2), `Terminal g`, `DCF`. Si está abierto, leer una copia o por COM en modo lectura.
+2. `Presentación BIMBO.pptx`: diapositivas 7 y 8 (Financial Analysis; la 8 está vacía), 9 a 11 (Valuation) para coherencia, y las figuras ya generadas.
+3. Comunicados 4T23 a 2T26 (ventas y márgenes por región, sin FX), estados auditados 2025 (notas), informe anual 2025.
+4. Sell-side en la carpeta Bloomberg (solo para contexto y frase contra consenso).
+
+## 4. Workflow (cada fase termina con un entregable corto; no pasar a la siguiente sin cerrarlo)
+
+**F0. Inventario y errores (rápido).** Lista cada tabla y figura existente (modelo y pptx), qué muestra y de qué fila sale. Marca inconsistencias numéricas entre el texto de la diapositiva 7 y el modelo (por ejemplo el CAGR de 5.95% desde 2021 y el de Norteamérica de 1.79%, que parecen usar bases distintas de 2021) y entre figuras. *Entregable:* tabla Figura | Fuente en el modelo | Estado (OK, corregir, falta).
+
+**F1. Diagnóstico por tema (solo lectura, en paralelo).** Para cada tema de la lista larga (sección 5): 3 cifras clave, qué señal da (a favor, en contra, ambigua), calidad del dato y fuente. *Entregable:* tabla de hallazgos.
+
+**F2. Benchmark aplicable.** No rehacer 11 y 12. Solo cruzar la lista larga con lo que hicieron los 14 reportes y decir qué es **aplicable a Bimbo, con qué dato y a qué costo**. *Entregable:* matriz Tema x Equipos que lo hicieron x Aplicabilidad (alta, media, baja).
+
+**F3. Priorización.** Puntuar cada tema de 1 a 5 en: impacto en la rúbrica, evidencia disponible, diferenciación frente a los reportes mexicanos pasados, costo de construir, y espacio (1.5 páginas de cuerpo + 10 de apéndice). Elegir 5 bloques de cuerpo y hasta 5 de apéndice, y dar **2 o 3 alternativas** por bloque. *Entregable:* ranking con justificación de una línea.
+
+**F4. Figuras y tablas.** Para cada bloque elegido: la figura propuesta (tipo, series, filas del modelo, fuente), y una crítica de las figuras actuales (cuáles sirven tal cual, cuáles cambiar, cuáles faltan). Usar el estilo de la diapositiva existente (tabla arriba, figura al lado). *Entregable:* lista de figuras con especificación.
+
+**F5. Cierre.** (a) Lista de cambios propuestos al modelo y a la diapositiva, **sin ejecutarlos**; (b) preguntas abiertas para IR; (c) próxima acción recomendada. *Entregable:* resumen de máximo 2 páginas, más archivo `.md` en `Secciones/Financial Analysis/`.
+
+## 5. Lista larga de temas a evaluar (puntúa y agrega los que falten)
+
+Crecimiento de ventas (pesos contra sin FX, mezcla regional, orgánico contra adquisiciones, participación); márgenes y puente de Adj. EBITDA; brecha EBITDA a EBIT (D&A, IFRS 16); unit economics por planta y por región; retornos (DuPont ajustado, ROIC contra capital invertido, ROIIC); asignación de capital (capex, M&A, dividendos, recompras, cascada del flujo operativo); apalancamiento y costo financiero (cobertura, vencimientos, mezcla de monedas); capital de trabajo y flujo libre; tasa de impuestos; calidad de utilidades (Beneish, Piotroski, Altman, con advertencia de FX); materias primas y price deck (trigo, energía); sensibilidades y escenarios; comparación contra consenso; coherencia pronóstico contra histórico (qué se está extrapolando).
+
+## 6. Reglas de ejecución (eficiencia)
+
+- Leer cada archivo grande **una sola vez** y guardar los extractos en el scratchpad; no releer.
+- Paralelizar lecturas independientes; no lanzar subagentes salvo que yo lo pida.
+- Cada cifra con fuente; lo no confirmado va como VERIFICAR; distinguir dato de la empresa, dato de tercero y cálculo propio.
+- No proponer análisis que dependa de datos que Bimbo no publica (ventas por categoría, rutas por región, precio contra volumen) sin decir cómo se estimaría o que se preguntaría a IR.
+- Respuesta final corta, con tablas; el detalle va al archivo.
+
+## 7. Decisiones que necesito de ti antes de F3
+
+1. ¿Cuántas páginas de cuerpo le tocan a Financial Analysis (el plan dice 1.5)?
+2. ¿Autorizas editar el modelo o la diapositiva cuando termine F5, o solo entregar propuestas?
+3. ¿Ya hay tesis y recomendación? Si no, el orden de los bloques es provisional.
+4. ¿Los gráficos nuevos van en el modelo (`Report Graphs`) y se pegan al pptx, o se hacen directo en el pptx?

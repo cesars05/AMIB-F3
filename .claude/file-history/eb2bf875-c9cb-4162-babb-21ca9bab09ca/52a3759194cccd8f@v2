@@ -1,0 +1,111 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $er=$wb.Worksheets.Item("Expected Returns"); $d=$wb.Worksheets.Item("DCF")
+$xl.Calculation=-4105
+
+# localizar filas por etiqueta, no por numero memorizado
+$R=@{}
+for($r=1;$r -le 70;$r++){
+  $lab=([string]$er.Cells.Item($r,2).Text).Trim()
+  switch -Wildcard ($lab){
+    "Exit Year (FY)"                {$R["exitYear"]=$r}
+    "% of the Company Acquired"     {$R["pct"]=$r}
+    "Entry Stock Price*"            {$R["px"]=$r}
+    "Shares Outstanding*"           {$R["sh"]=$r}
+    "Net Debt at Entry*"            {$R["nd0"]=$r}
+    "FY2026 Adj. EBITDA"            {$R["eb0"]=$r}
+    "Entry EV / EBITDA"             {$R["mult"]=$r}
+    "Exit Year Adj. EBITDA*"        {$R["ebX"]=$r}
+    "Exit EV / EBITDA*"             {$R["multX"]=$r}
+    "(-) Net Debt at Exit"          {$R["ndX"]=$r}
+    "Exit Equity Value"             {$R["eqX"]=$r}
+    "Exit Price per Share*"         {$R["pxX"]=$r}
+    "Fiscal Year"                   {$R["yr"]=$r}
+    "Ordinary Dividends"            {$R["d1"]=$r}
+    "Extraordinary Dividend*"       {$R["d2"]=$r}
+    "Special Dividend*"             {$R["d3"]=$r}
+    "Total Dividends Received"      {$R["divTot"]=$r}
+    "Gross Money Multiple*"         {$R["moic"]=$r}
+    "IRR"                           {$R["irr"]=$r}
+  }
+}
+foreach($k in "exitYear","pct","px","sh","nd0","eb0","mult","ebX","ndX","eqX","pxX","yr","d1","d2","d3","divTot","moic","irr"){
+  if(-not $R.ContainsKey($k)){ throw ("ABORTO: no encontre la fila '"+$k+"'") }
+}
+Write-Output ("filas localizadas: salida r"+$R["exitYear"]+"  MoIC r"+$R["moic"]+"  IRR r"+$R["irr"]+"  equity r"+$R["eqX"]+"  %empresa r"+$R["pct"]+" = "+[string]$er.Cells.Item($R["pct"],3).Text)
+
+$mult=[double]$er.Cells.Item($R["mult"],3).Value2
+$eb0 =[double]$er.Cells.Item($R["eb0"],3).Value2
+$nd0 =[double]$er.Cells.Item($R["nd0"],3).Value2
+$pct =[double]$er.Cells.Item($R["pct"],3).Value2
+$eq0 =[double]$er.Cells.Item($R["px"],3).Value2*[double]$er.Cells.Item($R["sh"],3).Value2/100
+Write-Output ("entrada: equity "+[string][math]::Round($eq0,0)+"   deuda neta "+[string][math]::Round($nd0,0)+"   EBITDA FY2026 "+[string][math]::Round($eb0,0)+"   multiplo "+[string][math]::Round($mult,2)+"x")
+
+function Corrida($etiqueta){
+  Write-Output ""
+  Write-Output ("=========== "+$etiqueta+" ===========")
+  Write-Output "  salir en  EBITDA  deuda neta   equity  p/accion    MoIC     IRR   | retorno de aguantar ese ano"
+  $eqPrev=$eq0
+  foreach($y in 2027,2028,2029,2030,2031,2032){
+    $er.Cells.Item($R["exitYear"],3).Value2=[double]$y
+    $xl.CalculateFullRebuild()
+    $eq=[double]$er.Cells.Item($R["eqX"],3).Value2
+    $col=0
+    foreach($c in 4,5,6,7,8,9){ if([double]$er.Cells.Item($R["yr"],$c).Value2 -eq $y){ $col=$c } }
+    $divAno=0.0
+    if($col -gt 0 -and $pct -ne 0){ $divAno=([double]$er.Cells.Item($R["d1"],$col).Value2+[double]$er.Cells.Item($R["d2"],$col).Value2+[double]$er.Cells.Item($R["d3"],$col).Value2)/$pct }
+    $marg=($eq+$divAno)/$eqPrev-1
+    Write-Output ("  FY"+[string]$y+([string]$er.Cells.Item($R["ebX"],3).Text).PadLeft(9)+([string]$er.Cells.Item($R["ndX"],3).Text).PadLeft(12)+([string]$er.Cells.Item($R["eqX"],3).Text).PadLeft(10)+([string]$er.Cells.Item($R["pxX"],3).Text).PadLeft(10)+([string]$er.Cells.Item($R["moic"],3).Text).PadLeft(8)+([string]$er.Cells.Item($R["irr"],3).Text).PadLeft(8)+"   |"+([string][math]::Round($marg*100,1)+"%").PadLeft(10))
+    $eqPrev=$eq
+  }
+  $er.Cells.Item($R["exitYear"],3).Value2=[double]2032
+  $xl.CalculateFullRebuild()
+  $eq=[double]$er.Cells.Item($R["eqX"],3).Value2
+  $ndX=[double]$er.Cells.Item($R["ndX"],3).Value2
+  $ebX=[double]$er.Cells.Item($R["ebX"],3).Value2
+  $divTot=0.0
+  if($pct -ne 0){ $divTot=[double]$er.Cells.Item($R["divTot"],3).Value2/$pct }
+  Write-Output ""
+  Write-Output ("  DE DONDE SALE EL VALOR, horizonte completo a FY2032 (100% de la empresa, GBP 000):")
+  Write-Output ("    equity de entrada                       "+([string][math]::Round($eq0,0)).PadLeft(10))
+  Write-Output ("    (+) crecimiento de EBITDA x "+[string][math]::Round($mult,2)+"x         "+([string][math]::Round($mult*($ebX-$eb0),0)).PadLeft(10))
+  Write-Output ("    (+) baja de deuda neta                  "+([string][math]::Round($nd0-$ndX,0)).PadLeft(10))
+  Write-Output ("    (+) re-rating del multiplo                       0   <-- el modelo NO le da credito")
+  Write-Output ("    = equity de salida                      "+([string][math]::Round($eq,0)).PadLeft(10))
+  Write-Output ("    (+) dividendos cobrados en el camino    "+([string][math]::Round($divTot,0)).PadLeft(10))
+  Write-Output ("    = valor total recibido                  "+([string][math]::Round($eq+$divTot,0)).PadLeft(10))
+  Write-Output ("      MoIC "+[string]$er.Cells.Item($R["moic"],3).Text+"   IRR "+[string]$er.Cells.Item($R["irr"],3).Text)
+}
+
+$xl.Calculation=-4135
+$as.Range("J74").ClearContents()
+$xl.Calculation=-4105; $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+Corrida "A) PASIVO - aguantar los 3 segmentos"
+
+$xl.Calculation=-4135
+$as.Range("J74").Value2="Water Management"; $as.Range("J75").Value2=[double]2029; $as.Range("J76").Value2=[double]7.9
+$xl.Calculation=-4105; $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+Corrida "B) ACTIVISTA - vender Water Management en FY2029 a 7.9x"
+
+Write-Output ""
+Write-Output "=========== C) Y SI ADEMAS EL MERCADO RE-CALIFICA? (salida FY2032, WM vendido) ==========="
+$g=[string]$er.Cells.Item($R["multX"],3).Formula
+foreach($m in 6.29,7.0,7.5,8.0,8.5){
+  $er.Cells.Item($R["multX"],3).Formula="="+[string]$m
+  $xl.CalculateFullRebuild()
+  Write-Output ("  multiplo de salida "+([string]$m+"x").PadLeft(6)+"   equity "+([string]$er.Cells.Item($R["eqX"],3).Text).PadLeft(10)+"   p/accion "+([string]$er.Cells.Item($R["pxX"],3).Text).PadLeft(8)+"   MoIC "+([string]$er.Cells.Item($R["moic"],3).Text).PadLeft(6)+"   IRR "+([string]$er.Cells.Item($R["irr"],3).Text).PadLeft(7))
+}
+$er.Cells.Item($R["multX"],3).Formula=$g
+$xl.Calculation=-4135
+$as.Range("J74").ClearContents()
+$xl.Calculation=-4105; $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ""
+Write-Output ("RESTAURADO: J74='"+[string]$as.Range("J74").Text+"'  salida "+[string]$er.Cells.Item($R["exitYear"],3).Text+"  multiplo salida "+[string]$er.Cells.Item($R["multX"],3).Formula+"  MoIC "+[string]$er.Cells.Item($R["moic"],3).Text+"  IRR "+[string]$er.Cells.Item($R["irr"],3).Text+"  DCF "+[string]$d.Range("E41").Text)

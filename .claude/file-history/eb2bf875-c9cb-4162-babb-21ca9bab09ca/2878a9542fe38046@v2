@@ -1,0 +1,103 @@
+$ErrorActionPreference="Stop"
+$wb=$null; $xl=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $cm=$wb.Worksheets.Item("Consolidated Model"); $d=$wb.Worksheets.Item("DCF")
+$er=$wb.Worksheets.Item("Expected Returns")
+
+# ---------- GUARDAS ----------
+if([string]$as.Range("H77").Text -ne "Transaction costs (% of EV)"){ throw "ABORTO: H77 cambio" }
+foreach($c in 8,9,10,11){ if(([string]$as.Cells.Item(78,$c).Text).Trim() -ne ""){ throw "ABORTO: fila 78 no esta vacia" } }
+if([string]$cm.Range("L29").Formula -ne '=-IFERROR(INDEX(Assumptions!$D$89:$F$89,Assumptions!$F$9)*L28,"")'){ throw "ABORTO: r29 cambio" }
+if([string]$cm.Range("L63").Formula -ne '=-INDEX(Assumptions!$D$89:$F$89,Assumptions!$F$9)*L21'){ throw "ABORTO: r63 cambio" }
+if([string]$cm.Range("L378").Formula -notlike "*L366=1*"){ throw "ABORTO: r378 cambio" }
+if([string]$d.Range("C27").Formula -notlike "*L370*"){ throw "ABORTO: DCF C27 cambio" }
+Write-Output "guardas OK"
+
+$xl.Calculation=-4135
+
+# ---------- 1) el switch ----------
+$as.Range("H76").Copy() | Out-Null
+$as.Range("H78").PasteSpecial(-4122) | Out-Null
+$as.Range("J76").Copy() | Out-Null
+$as.Range("J78").PasteSpecial(-4122) | Out-Null
+$xl.CutCopyMode=0
+$as.Range("H78").Value2="Disposal Structure"
+$as.Range("J78").NumberFormat="General"
+$as.Range("J78").Value2="Share sale"
+$dv=$as.Range("J78").Validation
+try{ $dv.Delete() }catch{}
+$dv.Add(3,1,1,"Share sale,Asset sale")
+$dv.IgnoreBlank=$false
+$dv.InCellDropdown=$true
+$dv.ShowInput=$false
+$dv.ShowError=$true
+$dv.ErrorTitle="Share sale / Asset sale"
+$dv.ErrorMessage="Share sale = gain exempt under the Substantial Shareholding Exemption. Asset sale = gain taxed at the corporation tax rate."
+
+# ---------- 2) impuesto estatutario: excluir la ganancia exenta ----------
+$cm.Range("L29").Formula='=-IFERROR(INDEX(Assumptions!$D$89:$F$89,Assumptions!$F$9)*(L28-IF(Assumptions!$J$78="Share sale",L372,0)),"")'
+$cm.Range("L29:Q29").FillRight()
+
+# ---------- 3) impuesto sobre no-underlying: que cuadre ----------
+$cm.Range("L63").Formula='=-INDEX(Assumptions!$D$89:$F$89,Assumptions!$F$9)*(L21-IF(Assumptions!$J$78="Share sale",L372,0))'
+$cm.Range("L63:Q63").FillRight()
+
+# ---------- 4) dividendo especial: sin impuesto si es venta de acciones ----------
+$cm.Range("L378").Formula='=+IF(L366=1,MAX(MIN(L268-L269,MAX(L370-IF(Assumptions!$J$78="Share sale",0,INDEX(Assumptions!$D$89:$F$89,Assumptions!$F$9)*L372),0)),0),0)'
+$cm.Range("L378:Q378").FillRight()
+
+# ---------- 5) DCF: valor presente de los ingresos ----------
+$d.Range("C27").Formula='=+IF(C11<>0,MAX(''Consolidated Model''!L370-IF(Assumptions!$J$78="Share sale",0,$P$13*''Consolidated Model''!L372),0)*C25,0)'
+$d.Range("D27").Formula='=+IF(D11<>0,MAX(''Consolidated Model''!M370-IF(Assumptions!$J$78="Share sale",0,$P$13*''Consolidated Model''!M372),0)*D25,0)'
+$d.Range("E27").Formula='=+IF(E11<>0,MAX(''Consolidated Model''!N370-IF(Assumptions!$J$78="Share sale",0,$P$13*''Consolidated Model''!N372),0)*E25,0)'
+$d.Range("F27").Formula='=+IF(F11<>0,MAX(''Consolidated Model''!O370-IF(Assumptions!$J$78="Share sale",0,$P$13*''Consolidated Model''!O372),0)*F25,0)'
+$d.Range("G27").Formula='=+IF(G11<>0,MAX(''Consolidated Model''!P370-IF(Assumptions!$J$78="Share sale",0,$P$13*''Consolidated Model''!P372),0)*G25,0)'
+$d.Range("H27").Formula='=+IF(H11<>0,MAX(''Consolidated Model''!Q370-IF(Assumptions!$J$78="Share sale",0,$P$13*''Consolidated Model''!Q372),0)*H25,0)'
+
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output "switch creado en J78; r29, r63, r378 y DCF r27 recableadas"
+Write-Output ""
+
+# ---------- verificacion ----------
+$sh=[double]$er.Range("D12").Value2
+$as.Range("F10").Value2="Partial Success"
+$as.Range("J74").Value2="Water Management"
+$as.Range("J75").Value2=[double]2027
+$as.Range("J76").Value2=[double]7.9
+foreach($est in "Asset sale","Share sale"){
+  $as.Range("J78").Value2=$est
+  $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+  $neto=0.0; $gan=0.0; $esp=0.0
+  for($c=12;$c -le 17;$c++){ $neto+=[double]$cm.Cells.Item(370,$c).Value2; $gan+=[double]$cm.Cells.Item(372,$c).Value2; $esp+=[double]$cm.Cells.Item(378,$c).Value2 }
+  Write-Output ("--- "+$est+" ---")
+  Write-Output ("   ingreso neto "+([string][math]::Round($neto,0)).PadLeft(8)+"   ganancia "+([string][math]::Round($gan,0)).PadLeft(8)+"   dividendo especial "+([string][math]::Round($esp,0)).PadLeft(8)+" = "+[string][math]::Round($esp/$sh*100,1)+"p")
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item(29,$c).Text).PadLeft(10) }
+  Write-Output ("   impuesto estatutario r29"+$v)
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item(70,$c).Text).PadLeft(10) }
+  Write-Output ("   Adj. EPS (p)            "+$v)
+  Write-Output ("   DCF "+[string]$d.Range("E41").Text+"   MoIC "+[string]$er.Range("D54").Text+"   IRR "+[string]$er.Range("D55").Text+"   check balance FY2032 "+[string]$cm.Range("Q168").Text+"   caja "+[string]$cm.Range("Q215").Text)
+}
+$as.Range("J78").Value2="Share sale"
+$as.Range("J74").ClearContents()
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ""
+Write-Output ("RESTAURADO: J74='"+[string]$as.Range("J74").Text+"'  J78='"+[string]$as.Range("J78").Text+"'  escenario "+[string]$as.Range("F10").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary","Expected Returns"){
+  $s=$wb.Worksheets.Item($nm); $e=0
+  try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

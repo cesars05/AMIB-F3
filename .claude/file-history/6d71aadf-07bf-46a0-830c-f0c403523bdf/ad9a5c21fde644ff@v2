@@ -1,0 +1,89 @@
+import os, time, shutil
+from xlproxy import *
+def log(*a): print(time.strftime("%H:%M:%S"),*a,flush=True)
+S=os.path.dirname(os.path.abspath(__file__))
+FULL=os.path.join(S,"AZTD vs Peers Performance.xlsx"); LIGHT=os.path.join(S,"AZTD vs Peers Performance - Light.xlsx")
+x,t=private_excel()
+wb=x.Workbooks.Open(FULL,UpdateLinks=0); t.Close(False); log("opened")
+REPL=[("'Quant Model Aug'","'Quant Model Sep'"),("Quant Model Aug","Quant Model Sep"),("(single snapshot, 31-Aug-26)","(single snapshot, 30-Sep-26)"),
+      ("'Quant Model Sep' (31-Aug-26)","'Quant Model Sep' (30-Sep-26)"),("weights, scores as of 31-Aug-26","weights as of 31-Aug-26, scores as of 30-Sep-26"),
+      ("holdings, weights, scores as of 31-Aug-26","holdings and weights as of 31-Aug-26, scores as of 30-Sep-26")]
+skip={"AZTD Data","AVDV Data","ISCF Data","DISV Data","DFIS Data","Attr Returns","Attr Holdings","Quant Model Sep"}
+n=0
+for ws in wb.Worksheets:
+    if ws.Visible!=-1 or ws.Name in skip: continue
+    for term in ["Quant Model Aug","31-Aug-26"]:
+        ur=ws.UsedRange; f=ur.Find(term,LookIn=-4163,LookAt=2)
+        if f is None: continue
+        first=f.Address; cells=[]
+        while len(cells)<200:
+            cells.append(f.Address); f=ur.FindNext(f)
+            if f is None or f.Address==first: break
+        for a in cells:
+            c=ws.Range(a)
+            if c.HasFormula or not isinstance(c.Value,str): continue
+            v=c.Value; nv=v
+            for o,p_ in REPL: nv=nv.replace(o,p_)
+            if "scores" in nv.lower() and "31-Aug-26" in nv and "30-Sep-26" not in nv: nv=nv.replace("31-Aug-26","31-Aug-26 (holdings); scores 30-Sep-26")
+            if nv!=v: c.Value=nv; n+=1
+log("labels changed",n)
+g=wb.Worksheets("Guide")
+r=g.Range("B100").End(-4162).Row+2
+g.Range(f"B{r}").Value="Quant update"; g.Range(f"C{r}").Value="Quant scores (Model 1.1, Stability, Slope, Tactical) updated to the 30-Sep-26 file (Quant Model/data_2026-09-30.csv), tab 'Quant Model Sep'. Holdings remain as of 31-Aug-26; returns to 30-Sep-26."
+g.Range(f"B{r}").Font.Bold=True
+wb.Save(); log("full saved")
+# ---------------- light version
+wb.SaveAs(LIGHT,51); log("saved as light")
+VAL=["AZTD Data","AVDV Data","ISCF Data","DISV Data","DFIS Data","Attr Setup","Attr Returns","Attr Holdings","Quant History","Aztlan Strategies"]
+for nm in VAL:
+    ws=wb.Worksheets(nm); ur=ws.UsedRange
+    nr,nc=ur.Rows.Count,ur.Columns.Count
+    step=2000
+    for r0 in range(0,nr,step):
+        blk=ur.Rows(f"{r0+1}:{min(nr,r0+step)}")
+        blk.Value=blk.Value
+    log("values",nm,ur.Address)
+for nm in ["AZTD","AVDV","ISCF","DISV","DFIS"]:
+    ws=wb.Worksheets(nm); ur=ws.UsedRange; cells=[]
+    f=ur.Find("TR(",LookIn=-4123,LookAt=2)
+    if f is not None:
+        first=f.Address
+        while len(cells)<500:
+            cells.append(f.Address); f=ur.FindNext(f)
+            if f is None or f.Address==first: break
+    for a in cells:
+        c=ws.Range(a)
+        if c.HasSpill: rg=c.SpillingToRange; rg.Value=rg.Value
+        else: c.Value=c.Value
+    log("tr cells to values",nm,len(cells))
+# remaining TR formulas anywhere?
+left=0
+for ws in wb.Worksheets:
+    f=ws.UsedRange.Find("TR(",LookIn=-4123,LookAt=2)
+    if f is not None and ws.Visible==-1: log("TR left in",ws.Name,f.Address); left+=1
+# drop Workspace audit sheets (very hidden)
+x.DisplayAlerts=False
+for ws in list(wb.Worksheets):
+    if ws.Visible==2:
+        try: ws.Visible=-1; ws.Delete()
+        except Exception as e: log("del err",e)
+g=wb.Worksheets("Guide")
+g.Range(f"B{r+1}").Value="Light version"; g.Range(f"B{r+1}").Font.Bold=True
+g.Range(f"C{r+1}").Value="All Workspace (TR) formulas were replaced by their values as of 30-Sep-26 (data tabs, attribution engine, fund tabs). Analysis tabs, period selectors, filters and charts keep their formulas and still work. No Workspace connection needed; to refresh data use the full version 'AZTD vs Peers Performance.xlsx'."
+x.Calculation=-4105; x.Calculate()
+for i in range(200):
+    if x.CalculationState==0: break
+    time.sleep(3)
+S_=wb.Worksheets("Attr Setup"); log("stats",[[round(v,4) if isinstance(v,float) else v for v in r_] for r_ in S_.Range("C46:J48").Value])
+sm=wb.Worksheets("Selection Main"); a=sm.Range("E8").Value
+sm.Range("D5").Value="2025 (calendar year)"; x.Calculate(); time.sleep(3); b=sm.Range("E8").Value
+sm.Range("D5").Value="2024-2026 (annualized)"; x.Calculate(); time.sleep(3)
+log("selector test",str(a)[:80],"||",str(b)[:80])
+errs=0
+for ws in wb.Worksheets:
+    try: errs+=ws.UsedRange.SpecialCells(-4123,16).Count
+    except Exception: pass
+log("formula errors in light",errs,"TR left",left)
+wb.Worksheets("Guide").Activate(); wb.Save(); log("light saved")
+wb.Worksheets("Charts Aug-26").ExportAsFixedFormat(0,os.path.join(S,"uv","light_charts_aug.pdf"))
+wb.Close(False)

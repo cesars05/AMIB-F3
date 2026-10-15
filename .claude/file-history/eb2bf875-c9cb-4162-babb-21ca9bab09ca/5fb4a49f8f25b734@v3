@@ -1,0 +1,29 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+$ep=$wb.Worksheets.Item("EPV"); $sm=$wb.Worksheets.Item("Segment Model")
+$LT=@{1="A";2="B";3="C";4="D";5="E";6="F";7="G";8="H";9="I";10="J";11="K";12="L";13="M";14="N";15="O";16="P";17="Q";18="R";19="S";20="T";21="U";22="V"}
+Write-Output "### Celdas con error en EPV ###"
+$err=$null
+try{ $err=$ep.UsedRange.SpecialCells(-4123,16) }catch{}
+if($err -ne $null){
+  foreach($cell in $err){
+    $i=$cell.Row; $c=$cell.Column
+    $lab=""
+    foreach($cc in 2,3){ $x=""; try{ $x=[string]$ep.Cells.Item($i,$cc).Text }catch{}; if($x.Trim() -ne ""){ $lab=$x; break } }
+    Write-Output ("  "+$LT[$c]+$i+" = "+[string]$cell.Text+"  '"+$lab+"'  f="+[string]$cell.Formula)
+  }
+}
+Write-Output ""
+Write-Output "### Segment Model: formulas en R/S de filas % ###"
+foreach($i in 45,51,56,61,69,103,161,177,193){
+  $lab=""
+  foreach($cc in 2,3,4){ $x=""; try{ $x=[string]$sm.Cells.Item($i,$cc).Text }catch{}; if($x.Trim() -ne ""){ $lab=$x; break } }
+  Write-Output ("  r"+([string]$i).PadRight(4)+$lab.PadRight(30)+" R= "+[string]$sm.Cells.Item($i,18).Formula)
+  Write-Output ("       "+"".PadRight(30)+" S= "+[string]$sm.Cells.Item($i,19).Formula)
+}

@@ -1,0 +1,31 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+$as=T { $wb.Worksheets.Item("Assumptions") }
+$cm=T { $wb.Worksheets.Item("Consolidated Model") }
+$d =T { $wb.Worksheets.Item("DCF") }
+if([math]::Round([double](T { $as.Range("F89").Value2 }),4) -ne 0.262){ throw "ABORTO: F89 no esta en 26.2%" }
+$xl.Calculation=-4135
+foreach($c in 4,5,6){ T { $as.Cells.Item(89,$c).Value2=0.249 } }
+$xl.Calculation=-4105
+T { $xl.CalculateFullRebuild() }; T { $xl.CalculateFullRebuild() }
+$wb.Save()
+Write-Output "Assumptions r89 -> 24.9% (ETR estatutaria FY2026)"
+Write-Output ""
+Write-Output ("  Assumptions D89="+[string](T { $as.Range("D89").Text })+"  E89="+[string](T { $as.Range("E89").Text })+"  F89="+[string](T { $as.Range("F89").Text }))
+Write-Output ("  CM r86 Effective Tax Rate:   J(FY25)="+[string](T { $cm.Range("J86").Text })+"   K(FY26)="+[string](T { $cm.Range("K86").Text })+"   L(FY27)="+[string](T { $cm.Range("L86").Text }))
+Write-Output ("  DCF P13 = "+[string](T { $d.Range("P13").Text })+"    P16 WACC = "+[string](T { $d.Range("P16").Text })+"    P19 Kd = "+[string](T { $d.Range("P19").Text }))
+Write-Output ("  DCF E41 precio implicito = "+[string](T { $d.Range("E41").Text })+"    E42 upside = "+[string](T { $d.Range("E42").Text }))
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=T { $wb.Worksheets.Item($nm) }
+  $e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  $tot+=$e
+}
+Write-Output ("  celdas con error en el libro: "+$tot)

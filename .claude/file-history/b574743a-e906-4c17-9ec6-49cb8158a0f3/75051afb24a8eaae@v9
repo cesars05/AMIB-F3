@@ -1,0 +1,335 @@
+# PLAN V2: prompt maestro y workflow de Aurex Capital (versión consolidada)
+
+Fecha: 11-oct-2026. Estado: **solo plan; no se ha tocado ningún entregable.** Se ejecuta al aprobar (sección 14). Este archivo reemplaza las versiones parciales anteriores; si algo contradice a otro documento, manda este.
+
+Entregables a modificar (en `08_Proyecto_Final/entregables/`):
+
+| Entregable | Archivo | Rol |
+|---|---|---|
+| Excel | `PF_Modelo_AurexCapital.xlsx` | Fuente única de cifras |
+| Word | `PF_Memorandum_AurexCapital.docx` | Memorándum (PPM) de 4 a 6 páginas más anexos |
+| PowerPoint | `PF_Deck_AurexCapital.pptx` | Pitch deck: portada, 15 láminas de contenido, cierre, anexos |
+| Resumen | `RESUMEN_PARA_REVISION.md` | Cambios, decisiones y cifras para el equipo |
+
+**Regla maestra: todo cambio se hace en los tres archivos (Excel, Word y PowerPoint) y se sincroniza con un script. Ninguna cifra, nombre, fecha ni término puede quedar distinto entre ellos.** La matriz de la sección 4 dice qué cambia en cada uno.
+
+---
+
+## 1. Pedidos del equipo (consolidado)
+
+| # | Pedido | Dónde se aplica |
+|---|---|---|
+| 1 | Portada con el diseño de FEMSA y el fondo adaptado del prompt de Halliburton, en verdes de energía | PPT (sección 9.1) |
+| 2 | Aceptar supuestos razonables en el Excel; que fallen 2 o 3 empresas (las de tesis más débil); datos de gobierno; llenar los datos faltantes | Excel, Word, PPT |
+| 3 | Deck más gráfico, láminas siempre llenas, negritas en lo clave, estilo Aztlan con la skill de `07_Skill` | PPT |
+| 4 | Narrativa en orden; los 6 bloques hablados (idea, cómo funciona, a quién, caso, retorno, salida) bien visibles | PPT, Word |
+| 5 | Agregar agenda y resumen ejecutivo | PPT (Word ya tiene resumen) |
+| 6 | Lámina de oportunidad con datos reales de gobierno; documentos y noticias oficiales; región de los proyectos | PPT, Word, Excel |
+| 7 | Football field de retorno con MOIC e IRR (análisis en `USD x ITESM\07_Template_Analysis`) | Excel, PPT, Word |
+| 8 | Decir en qué vehículo se hace el fondo; tesis literal en una lámina; callable (llamadas de capital) con mínimos y máximos; anexos con lo que haga falta | PPT, Word, Excel |
+| 9 | Las 8 empresas entran escalonadas en los años 1 a 3 | Excel, Word, PPT |
+| 10 | Máximo 15 láminas de contenido, sin contar portada, cierre ni anexos | PPT |
+| 11 | Sin guiones largos; negritas en lo importante | PPT, Word, Excel |
+| 12 | Cero pendientes en pantalla; lo no encontrado va a un script de faltantes; resolver todo lo resoluble | PPT, Word, Excel |
+| 13 | Gráficos con valor: al menos 5 categorías o series, más formas, recursos think-cell, alineación en rejilla, sin escalas logarítmicas | PPT |
+| 14 | Waterfall de uso de fondos, protecciones al LP, proceso de inversión (aprobados); roadmap del fondo con `tc:18` | PPT, Excel |
+| 15 | Usar la gramática de las láminas Shibaura 5, Ryerson 4, 6 y 7, Howmet 4, 5 y 6 | PPT |
+| 16 | Apoyarse en el memorándum y en el deck del compañero (nombres, competidores, precedentes) sin heredar sus cifras | PPT, Word |
+
+---
+
+## 2. Decisiones y supuestos (con opción por defecto)
+
+**Conflictos de cifras.** Hay tres juegos en circulación: el documento de Pablo (7-oct, modelo v1: US$251M de salidas, 2.21x neto, TIR con fechas 19.9%), el deck del otro compañero (1.76x neto, TIR 12.4%, US$176M, XC como caso) y el nuestro (1.92x, 14.5%). **Se unifican en el Excel nuevo**, que incorpora el calendario de entradas y las 3 fallas; v1 queda como sensibilidad.
+
+**Supuestos tomados (editables en azul en `Escenarios`, `Hoja1_Portafolio` y `Llamadas_Capital`):**
+1. **Empresas que fallan:** Uriel/BRM (0.25x), FAZT (0.5x por preferencia de liquidación; depende de utilización y subsidios, ticket chico frente al capex) y S2G Energy (0.5x; la más pequeña y con más condiciones FICAP). Son las de menos "Cumple" en `Criterios`.
+2. **Orden de magnitud esperado** (guía, se recalcula): salidas ≈US$165 a 170M, ≈1.65x neto, TIR neta ≈11 a 12%, carry 0 en base.
+3. **BioEsol** reemplaza a Verdigris (Verdigris es de California, sin operación en México).
+4. **Caso de inversión:** Pireos Power (valuación pre-money supuesta de US$40M, US$10M por 20%, pool 10%), con derivación de la valuación a partir de rondas y comparables públicos en F1.
+5. **Vehículo:** fideicomiso privado mexicano de capital de riesgo (arts. 192 y 193 LISR), colocación privada a inversionistas calificados; las AFOREs no pueden entrar a un fideicomiso no listado.
+6. **Fecha de defensa** sigue sin confirmar (11-oct o 14-15 oct); no bloquea la construcción.
+7. **Equipo (nombres y roles, tomados del deck del compañero):** Julio César Silva De la Rosa (líder y Managing Partner), Roberto Flores Valadez (inversiones), Mariana González (operación del fondo), Tomás Salgado Tapia (relación con inversionistas), Pablo Belmonte y Miguel Montalvo Villarreal (números).
+
+---
+
+## 3. Reglas globales (aplican a Excel, Word y PowerPoint)
+
+1. **Una sola fuente de cifras:** el Excel. Deck y memo leen de `Summary`; un script de sincronía compara.
+2. **Cero guiones largos** (— y –). Rangos con "a" o guion corto: US$2 a 10M, 2-10. Coma, dos puntos, paréntesis o punto en lugar del guion largo.
+3. **Negritas** en cifras clave y en la idea central de cada viñeta o bloque (una o dos por viñeta).
+4. **Cero pendientes en pantalla:** nada de "[Nombre]", "pendiente", "falta verificar", "por confirmar", "n.d." en ninguno de los tres archivos. Todo faltante va a `faltantes/FALTA.py`. Antes de mandar algo a ese script se intenta, en orden: (a) buscarlo en fuentes oficiales y en `fuentes_investigacion/`; (b) derivarlo de datos verificados; (c) fijar un supuesto razonable y consistente (azul en el Excel, presentado como supuesto del fondo, sin lenguaje de duda); (d) solo entonces va al script.
+5. **Datos verificados:** 2026 preferido; lo anterior etiquetado con su año; cada cifra con fuente primaria, URL y fecha. Cifras de gobierno desde una sola tabla única (`Mercado_Gobierno`).
+6. **Láminas llenas y con riqueza:** cada gráfico con **al menos 5 categorías o series**, etiquetas de datos y lectura al lado. Si el mensaje tiene 3 datos, se amplía la comparación o se acompaña con diagramas y tarjetas. Se evitan escalas logarítmicas, ejes técnicos y barras donde una aplasta a las demás. Todo claro, pero denso.
+7. **Gráficas nativas y editables** (nunca imágenes), un acento por lámina, rojo solo para riesgo, sin gradientes ni 3-D. Think-cell: `tc:2`, `tc:4`, `tc:8`, `tc:10`, `tc:13`, `tc:18`, `tc:20`, `tc:24`.
+8. **Formato del Excel:** Icarus en verdes, código IB (azul inputs, negro fórmulas, verde enlaces entre hojas, nunca letra verde sobre fondo verde). Paleta: `#0B3D2E`, `#1B7F4B`, `#4C9F70`, `#8BC53F`, `#DDEFE3`, `#F2B705` (acento), `#C0392B` (riesgo).
+9. **Rejilla y alineación** (sección 9.4) y **revisión visual** de cada lámina renderizada.
+10. **No se envía nada a nadie;** el líder del equipo manda el correo único.
+
+---
+
+## 4. Matriz de cambios por entregable (qué se toca en Excel, Word y PowerPoint)
+
+| Cambio | Excel | Word (memorándum) | PowerPoint |
+|---|---|---|---|
+| **Entradas escalonadas, años 1 a 3** | `Hoja1_Portafolio`: años de entrada y follow-on; recalcula TIR con fechas, `Curva_J`, comisiones, `Llamadas_Capital` | Punto de estrategia de inversión y de calendario; Anexo A (portafolio) con año de entrada y salida | Roadmap (lám. 8), A quién invertimos (lám. 10), anexo F |
+| **Caso con 3 fallas** | `Escenarios`: conjunto "Base con fallas" en uso; Alto = sin fallas; Bajo se mantiene; `Criterios` coherente | Punto de retorno esperado, riesgos, Anexo C; texto de por qué fallan | Retorno (lám. 12), riesgos (lám. 15), anexo A |
+| **Callable: mínimos y máximos** | Hoja nueva `Llamadas_Capital` con los términos de 12.2 y el calendario por año | Punto de términos del fondo y nuevo **Anexo D: llamadas de capital** | Lámina 7 y anexo E; mención en lám. 6 |
+| **Vehículo** (fideicomiso privado, LISR 192-193) | Nota en `Fuentes` y `Hoja2_Distribucion` (cascada) | Punto de estructura legal y fiscal (ya existe; se actualiza con riesgos) | Lámina 6 (diagrama del vehículo) |
+| **Tesis literal en una lámina** | Título de `Summary` | Resumen ejecutivo y portada del memo (misma frase) | Lámina 4 |
+| **Football field con MOIC e IRR** | Hoja nueva `Football_Field` (rangos por método y escenario) | Punto de retorno esperado, con tabla de rangos | Lámina 12 |
+| **Datos de gobierno y región de proyectos** | Hojas `Mercado_Gobierno` y `Proyectos_Region`; `Fuentes` actualizada | Punto de mercado y oportunidad; **Anexo E: mapa y tabla de proyectos por región** | Lámina 3 (mapa de oportunidad) y lámina 10 (mapa del portafolio); anexo D |
+| **A dónde va cada dólar** (waterfall) | `Hoja1_Portafolio`: bloque de fees, gastos e inversión con cifras que alimentan el gráfico | Punto de economía del fondo (comisiones y gastos) | Lámina 9 |
+| **Proceso de inversión y protecciones al LP** | `Criterios` (filtros) | Puntos de gobierno, LPAC, key man, concentración | Láminas 10 y 14 |
+| **Equipo con nombres y roles** | No aplica | Punto de equipo y portada | Portada y lámina 5 |
+| **Agenda y resumen ejecutivo** | No aplica | Resumen ejecutivo ya existe; se alinea | Láminas 1 y 2 |
+| **Sin guiones largos, sin pendientes, negritas** | Textos de notas y encabezados | Todo el documento | Todo el deck |
+| **Cifras de retorno (MOIC, TIR, carry, proceeds)** | `Summary` (origen) | Cifras copiadas del Excel | Cifras leídas del Excel |
+
+**Orden para evitar discrepancias:** Excel primero (origen), luego Word (lee el Excel), luego PowerPoint (lee el Excel y reutiliza texto del Word), y al final el script de sincronía (sección 11).
+
+---
+
+## 5. Workflow por fases
+
+| Fase | Qué se hace | Salida | Criterio de terminado |
+|---|---|---|---|
+| **F0. Orden** | Aprobar el plan; mover lo obsoleto a `99_Archivo`; crear `faltantes/` | Carpeta limpia | Plan aprobado |
+| **F1. Investigación** | Sección 6 | `fuentes_investigacion/gobierno_oportunidad_2026.md`, `proyectos_por_region.md`, PDFs en `descargas/` | Cada dato con fuente primaria y fecha |
+| **F2. Excel** | Sección 7 | `PF_Modelo_AurexCapital.xlsx` | Todos los checks en OK; recalculado con Excel; sin celdas de entrada vacías |
+| **F3. Word** | Sección 8 | `PF_Memorandum_AurexCapital.docx` | 4 a 6 páginas más anexos; 9 puntos de la guía; cifras = Excel |
+| **F4. PowerPoint** | Sección 9 | `PF_Deck_AurexCapital.pptx` | Cada lámina renderizada y revisada; 0 críticos |
+| **F5. Sincronía y cierre** | Sección 11 | Tres archivos consistentes y `RESUMEN_PARA_REVISION.md` actualizado | 0 discrepancias numéricas y de texto |
+
+(El equipo pidió el orden investigación, memorándum, Excel, deck; como las cifras nacen en el Excel, se recalcula primero el Excel y el memorándum se redacta con esas cifras. El resultado para el equipo es el mismo orden de lectura.)
+
+Paralelización: F1 corre con agentes de búsqueda en paralelo (gobierno y CFE, fondos y AFORE, mercado de capital privado, proyectos por región, comparables y precedentes). F2 a F4 son secuenciales.
+
+---
+
+## 6. F1: Investigación (gobierno, mercado, región de proyectos)
+
+**6.1 Fuentes oficiales y noticias de fuentes oficiales (2026 preferido):** gob.mx y Presidencia (Informe de Gobierno, Plan de Fortalecimiento y Expansión del Sistema Eléctrico Nacional), SENER (PLADESE, PRODESEN, convocatorias, Fondo para la Transición Energética), CNE (antes CRE), CENACE, CFE (esquemas mixtos), Hacienda (vehículo con AFOREs), DOF, IMCO, AMEXCAP, BMV y comunicados de las propias empresas. Lo ya descargado (`fuentes_investigacion/descargas/`: AMEXCAP, IMCO PLADESE, SENER, BMV Esentia, LAVCA, Von Wobeser) se reutiliza.
+
+**6.2 Cifras a verificar** (el equipo pegó este texto; cada punto es hipótesis hasta verificarlo contra su fuente):
+
+| Cifra | Origen del dato | Verificación |
+|---|---|---|
+| Estrategia energética a 2030 por 1.17 billones de pesos (≈US$64,900M) | Texto del equipo | Informe de Gobierno, SENER, Hacienda |
+| I Squared Capital elegida por Hacienda para un vehículo con AFOREs | Texto del equipo | Comunicado de Hacienda o CONSAR |
+| México Infrastructure Partners / FIEMEX (≈8.5 GW), FONADIN | Texto del equipo | Sitio de MIP, FONADIN |
+| Esquema mixto CFE 54% y privado 46% | Texto del equipo | CFE, SENER |
+| ≈38,000 MW nuevos; hasta 200,000 millones de pesos privados y 452,000 millones en proyectos mixtos | Texto del equipo | Plan de expansión |
+| 21,846 MW de capacidad nueva; 5.2 GW distribuidos en ≈600 mil contratos; 2,216 MW de baterías 2027-2030; 6,400 MW de generación limpia para privados | Deck del compañero | Plan de Expansión del SEN, CNE |
+| 5,551 MW de baterías 2025-2030 y 7,405 MW de renovables privadas; demanda récord 54,300 MW (23-jul-2026) | Nuestro deck v1 | PLADESE (DOF), CENACE |
+| Conflicto 2,216 MW vs. 5,551 MW de baterías | | Aclarar plan, periodo y alcance de cada uno |
+
+**Salida:** una **tabla única de cifras de gobierno** (cifra, unidad, plan, periodo, fuente, URL, fecha) en `Mercado_Gobierno`; cada lámina y párrafo usa solo esa tabla. Lo que no se confirme se descarta o se sustituye por una cifra verificada equivalente. Aclaración que debe quedar en la lámina 3: la oportunidad pública valida la tesis, pero el fondo no es de generación mayorista ni del esquema CFE (la generación distribuida C&I sigue su propio régimen).
+
+**6.3 Región de los proyectos:**
+1. Por empresa (Niko, Quartux, Pireos, BioEsol, XC, FAZT, S2G, Uriel/BRM): proyectos con **estado y ciudad**, tipo, capacidad si existe, cliente si es público, fuente y fecha. Si no hay proyectos publicados, sede y estados de clientes públicos; se aplica el orden (a)-(d) de la regla 4 antes de pasar al script de faltantes.
+2. Oportunidad pública: MW planeados por región (regiones de CENACE o estados) y por tecnología, proyectos mixtos y convocatorias.
+3. Archivos: `fuentes_investigacion/proyectos_por_region.md` y hoja `Proyectos_Region` del Excel (estado, ciudad, empresa, vertical, capacidad, fuente, fecha, latitud y longitud).
+4. **Mapa de México:** límites estatales de INEGI (Marco Geoestadístico) o Natural Earth, como formas editables por estado o vector; puntos con un color por vertical (solar C&I, baterías, carga EV, software de eficiencia, biogás) y leyenda, como en Ryerson 4. Dos versiones alineadas a la misma rejilla: oportunidad pública (lámina 3) y portafolio (lámina 10). Cada mapa con una frase de conclusión apoyada en datos (por ejemplo, concentración en el Bajío y el norte).
+
+**6.4 Otros datos a asegurar:** valuaciones y rondas públicas de las 8 empresas (para derivar la del caso Pireos), comparables de salida y precedentes con nombre (Shell con Volta US$169M 2023; Enel con EnerNOC US$250M 2017; Shell con sonnen 2019; Fluence, Engie, Schneider, Siemens, Enel X), mapa de competidores (General Atlantic, Artha, Ignia, Nexxus), estadísticas AMEXCAP 1S-2026 (TIR mediana 16.15%, 111 salidas, US$11.4 mil M invertidos) y AINDA I (TIR neta estimada 15.5%).
+
+---
+
+## 7. F2: Excel (cambios detallados)
+
+Hojas finales: **Hoja1_Portafolio** y **Hoja2_Distribucion** (las que pide la guía), más anexos: `Summary`, `Escenarios`, `Criterios`, `Curva_J`, **`Llamadas_Capital` (nueva)**, **`Football_Field` (nueva)**, **`Mercado_Gobierno` y `Proyectos_Region` (nuevas)**, `1_Comparables`, `2_Simulacion`, `3_Precios`, `4_Rendimientos`, `Fuentes`.
+
+**7.1 Calendario de entradas (años 1 a 3):**
+
+| Año | Entran | Inicial (US$M) | Follow-on posterior |
+|---|---|---|---|
+| 1 | Pireos Power 10, Quartux 8, Niko Energy 6 | 24 | Pireos 5, Quartux 3, Niko 3 |
+| 2 | XC Generation 9, BioEsol 9, FAZT 6 | 24 | XC 5, BioEsol 5, FAZT 3 |
+| 3 | S2G Energy 6, Uriel/BRM 2 | 8 | S2G 2, Uriel 0 |
+| Total | 8 empresas | 56 | 26, total invertido US$82M |
+
+- Follow-on entre los años 3 y 5, solo si se cumplen hitos; ninguna empresa nueva después del año 3. Salidas escalonadas entre los años 6 y 9; extensiones 1+1 solo si hay empresas pendientes.
+- Años de salida propuestos: Niko 6, Uriel 6, Quartux 7, FAZT 7, S2G 7, Pireos 8, BioEsol 8, XC 9. Al cambiar los años en cartera cambia la regla calibrada (crecimiento por años), así que **los múltiplos se recalculan**, no se copian.
+
+**7.2 Caso con fallas:** en `Escenarios`, nuevo conjunto "Base con fallas" (en uso): Uriel 0.25x, FAZT 0.5x, S2G 0.5x con override y fundamento; el resto por la regla (crecimiento anual de EBITDA, dilución y cociente de múltiplos ≤1.0x). "Alto" = sin fallas; "Bajo" = factor 0.5. Se conservan v1 y v2 como sensibilidades y la cascada europea por conjunto.
+
+**7.3 `Llamadas_Capital` (callable):**
+
+| Concepto | Mínimo | Máximo |
+|---|---|---|
+| Primer cierre | US$40M comprometidos | |
+| Cierre final | | US$100M; 12 meses desde el primer cierre |
+| Compromiso por LP | US$1M | 20% del fondo (US$20M) |
+| Monto de cada llamada | 5% del compromiso de cada LP | 25% del compromiso de cada LP |
+| Aviso previo | 10 días hábiles | |
+| Frecuencia | | 4 llamadas por año |
+| Total llamado | | 100% del compromiso |
+| Reserva para follow-on | | US$26M |
+| Concentración por empresa | | 15% del fondo (US$15M) |
+| Reciclaje de distribuciones | | 10% del fondo, solo en periodo de inversión |
+| Comisión de administración | | Por semestre, por adelantado |
+
+Incumplimiento del LP: interés de mora (TIIE + 5 puntos), a los 30 días pérdida de derechos de voto y distribución, reparto del faltante entre los demás LPs hasta su tope. Calendario por año (monto, % del comprometido, destino: inversión, fees, gastos, saldo por llamar); ritmo esperado ≈60% en años 1 a 3, ≈30% en años 4 a 5, resto en 6 a 10. Enlazada a `Curva_J`. Valores en azul (supuestos del fondo, editables).
+
+**7.4 `Football_Field`:** rangos de MOIC neto y TIR neta por método y escenario: calibrado (base con fallas), Monte Carlo P10 a P90, equipo v1, Bajo, Base, Alto; líneas de referencia (AMEXCAP 16.15% de TIR mediana, AINDA I 15.5%, hurdle 8%, 1.0x). Incluye una tabla de **sensibilidades para el tornado** (fallan 0, 1, 2 y 3 empresas; salida un año tarde; múltiplo de salida -20%; dilución +10 puntos; tipo de cambio) con efecto en MOIC y TIR, y gráficos nativos que alimentan la lámina 12.
+
+**7.5 Uso de fondos (alimenta el waterfall):** US$100M comprometidos, comisiones años 1 a 5, comisiones años 6 a 10, gastos, capital invertido US$82M por empresa (inicial y follow-on); verificación de que suma 100.
+
+**7.6 `Mercado_Gobierno` y `Proyectos_Region`:** tablas de 6.2 y 6.3 con fuente, URL y fecha.
+
+**7.7 Reglas de calidad:** una sola TIR a comunicar (neta, con fechas, en USD) y el MOIC; checks en OK; Excel recalculado con Excel (COM); sin celdas de entrada vacías ni textos de pendiente; nada de escala logarítmica; formato Icarus en verdes y código IB.
+
+---
+
+## 8. F3: Word (memorándum)
+
+Cambios sobre `PF_Memorandum_AurexCapital.docx` (4 a 6 páginas de cuerpo más anexos; los 9 puntos de la guía se mantienen):
+1. **Portada y resumen ejecutivo:** tesis literal, vehículo, cifras nuevas del Excel (caso base con 3 fallas), nombres y roles del equipo.
+2. **Mercado y oportunidad:** datos de gobierno de la tabla única, con fuente y fecha, y la aclaración de por qué valida la tesis sin ser la cartera.
+3. **Estrategia y calendario:** entradas escalonadas años 1 a 3, follow-on años 3 a 5, salidas años 6 a 9.
+4. **Términos y vehículo:** fideicomiso privado (LISR 192-193), llamadas de capital con mínimos y máximos (nuevo párrafo y tabla), cascada europea, comisiones, LPAC, key man, concentración, clawback, compromiso del GP.
+5. **Retorno esperado:** caso base con fallas, tabla Bajo/Base/Alto y rangos del football field, MOIC y TIR.
+6. **Riesgos y mitigaciones:** las 3 fallas explicadas, riesgo de salida, concentración, regulatorio.
+7. **Anexos:** A portafolio (con años de entrada y salida), B salidas con compradores y precedentes, C riesgos, **D llamadas de capital (nuevo)**, **E proyectos por región con mapa y tabla (nuevo)**, F fuentes.
+8. Sin guiones largos, sin textos de pendiente, negritas en lo clave; credenciales redactadas con lo verificable de cada integrante.
+9. Se reutiliza en el deck el texto del memo (frases de tesis, términos) para mantener coherencia.
+
+---
+
+## 9. F4: PowerPoint
+
+### 9.1 Portada (diseño FEMSA, fondo Halliburton adaptado, en verdes)
+
+- **De FEMSA** (`USD x ITESM\06_Templates\M&A FEMSA.pptx`, lámina 1): fondo de un color profundo con haces de líneas paralelas finas, translúcidas, más intensos a la derecha y abajo; título blanco bold abajo-izquierda del centro, fecha en cursiva, **integrantes en cursiva blanca** y **logo blanco arriba a la derecha**.
+- **De Halliburton** (`USD x ITESM\08_Assets\cover\cover_qhd.jpg` y el prompt del equipo): color dominante profundo con bandas diagonales suaves en blanco desvanecido y gris, mucha zona limpia a la izquierda.
+- **Aurex:** verde bosque `#0B3D2E` dominante, verde `#1B7F4B` en bandas, lima `#8BC53F` solo en líneas finas, blanco y gris verdoso desvanecidos. Concepto: corrientes de energía (líneas de transmisión, contornos de irradiancia); sin paneles, personas, logos, texto ni círculos como motivo principal (el bucle de FEMSA se sustituye por curvas abiertas tipo ola).
+- **Cómo producirla:** (1) procedural con Python (numpy y PIL a 3840x2160): recomendado, color exacto y regenerable; (2) imagen generada con `generate_image` de Canva o Gamma con el prompt de abajo (2 o 3 variantes); (3) combinación.
+- **Prompt de imagen:** *Premium 16:9 corporate presentation cover background for an energy-transition private equity fund. Dominant deep forest green (#0B3D2E) with medium green (#1B7F4B) structural bands, darker green-black tones for depth, and subtle faded white, soft gray and desaturated gray-green translucent elements; tiny lime (#8BC53F) accents only in the thinnest lines. Abstract forms inspired by power transmission lines, solar irradiance contours and energy flow: several thin, precisely spaced parallel lines that curve and intersect organically, plus two or three bold smooth translucent green bands. Clean, generous negative space on the left and center for a title; complexity toward the right and lower-right. Executive, minimal, Fortune 500 / investment banking quality. No text, no logo, no people, no photographs, no solar panels or turbines, no literal imagery, no circles as main motif, no glossy effects, no neon, no strong gradients, not excessive white. Clean premium vector style.*
+- **Montaje con `house.py`:** imagen a pantalla completa; logo Aurex blanco arriba-derecha; "Aurex Capital" en Arial bold 40 blanco; frase del fondo en cursiva; **6 integrantes con su rol** en cursiva blanca; fecha; pie "Capital Privado y Capital Emprendedor, Tec de Monterrey".
+
+### 9.2 Estructura: portada, 15 láminas de contenido, cierre y anexos
+
+Hilo narrativo: hay un hueco de capital en México para cheques de US$2 a 10M en energía distribuida (dato de gobierno) → tesis y vehículo → equipo → cómo funciona el dinero → a quién y un caso → cuánto retorna (con fallas) → cómo salimos → protecciones y riesgos.
+
+| # | Lámina | Bloque hablado | Patrón de referencia | Exhibits (todos con 5 o más categorías cuando son gráficos) | Datos |
+|---|---|---|---|---|---|
+| | **Portada** | | FEMSA | Sección 9.1 | Nombres y roles |
+| 1 | **Agenda** | Mapa de los 6 bloques y tiempos | tc:24 | 6 chevrones numerados (idea 90 s, fondo 90 s, a quién 2 min, caso 2-3 min, retorno 1-2 min, salida 1 min) con la lámina que sostiene cada bloque | Guía |
+| 2 | **Resumen ejecutivo** | 1 La idea | Shibaura 5 | 4 bloques (Qué compramos, Dónde, Cómo funciona, Cómo salimos) con 2 viñetas; panel derecho "Retorno objetivo" con MOIC y TIR; 6 KPI | Excel `Summary` |
+| 3 | **La oportunidad: datos de gobierno** | 1 La idea | Howmet 4 + Ryerson 4 | Cintas de dato arriba; barras apiladas pública vs. privada; barras de MW por tecnología; **mapa de México por región** con MW; road map de convocatorias (tc:18); caja "lo que no hacemos" | `Mercado_Gobierno` |
+| 4 | **Tesis del fondo y qué nos diferencia** | 1 La idea | Howmet 5 | Banner con la tesis literal (*Invertimos US$2-10M en empresas mexicanas de energía distribuida y eficiencia con ingresos recurrentes, para escalar solar, baterías y gestión de energía en clientes industriales y comerciales.*); 3 columnas de lo que otros no ven; **matriz de cheques** (semilla, US$2 a 10M, US$50M o más) con Ignia, Artha, Nexxus, General Atlantic y Aurex resaltado (tc:10) | AMEXCAP, F1 |
+| 5 | **Equipo y por qué este equipo** | 1 La idea | Tarjetas | 6 tarjetas con foto circular, rol y credencial; 3 razones verificables; límite honesto (primer fondo) con mitigaciones (LPAC, key man, aportación del GP) | Equipo |
+| 6 | **Cómo funciona: vehículo, términos y cascada** | 2 El fondo | Shibaura 5 + tc:8, tc:24 | Diagrama del vehículo (LPs, fideicomiso, GP, 8 empresas con porcentajes); bloques Vehículo, Términos, Cascada; chevrones de los 4 escalones con cifras | `Hoja2_Distribucion` |
+| 7 | **Llamadas de capital: mínimos, máximos y calendario** | 2 El fondo | Ryerson 7 | 3 bloques (años 1 a 3, 4 a 5, 6 a 10); tabla de mín y máx; columnas apiladas de 10 años (inversión, fees, gastos) con el tramo proyectado enmarcado | `Llamadas_Capital` |
+| 8 | **Roadmap del fondo a 10 años** | 2 El fondo | tc:18 | Carretera con 7 pines (año 0 primer cierre; año 1 tres entradas; año 2 tres entradas; año 3 dos entradas y primeros follow-on; años 4 y 5 follow-on y fin del periodo de inversión con cambio de comisión; años 6 a 9 salidas; año 10 liquidación); franja inferior de 10 columnas con llamadas y distribuciones | `Hoja1_Portafolio`, `Curva_J` |
+| 9 | **A dónde va cada dólar** | 2 El fondo | Ryerson 6 | Parrilla de KPI (comprometido, invertido, fees, gastos, reserva); **waterfall** de más de 10 barras (US$100M, fees 1 a 5, fees 6 a 10, gastos, invertido, abierto en 8 empresas); "Key Highlights" | Excel 7.5 |
+| 10 | **A quién invertimos y cómo elegimos** | 3 A quién | Howmet 5 + Ryerson 4 + tc:2, tc:24 | Dona por vertical y tabla de 8 empresas con logo, ticket, entrada y salida; bloques de color por vertical; **mapa de México del portafolio**; embudo de selección y 4 pasos (originar, due diligence, term sheet, seguimiento) | `Proyectos_Region` |
+| 11 | **Caso de inversión: Pireos Power** | 4 Caso | Ryerson 4 + tc:13 | Fichas oscuras (fecha, ticket, valuación); "antes y después" 0% a 20%; cap table antes y después; puente de valor (waterfall de entrada a salida); hitos de 5 fases (tc:13); términos (preferencia 1x, consejo, vetos, arrastre, vesting) | Excel, F1 |
+| 12 | **Retorno: football field y qué pasa si fallan 3 empresas** | 5 Retorno | Ryerson 6 + 7 | Parrilla de KPI (MOIC, TIR, DPI, carry) por escenario; **football field** de MOIC y TIR por método; **waterfall de proceeds por empresa** (8 barras + total, con líneas de capital US$100M y hurdle US$115.9M); **tornado** de 6 o más sensibilidades; caja punteada en el caso base | `Football_Field` |
+| 13 | **Cómo recuperamos el dinero** | 6 Salida | Howmet 6 + tc:20 | 3 filas (venta estratégica, a fondo mayor, secundaria) con compradores y precedentes con nombre; línea de tiempo de salidas por año y empresa; ejemplo de Pireos | `Escenarios`, F1 |
+| 14 | **Cómo protegemos al LP** | Cierre del fondo | Howmet 6 + tc:4 | Pirámide de capas (LPAC, key man, tope de 15%, clawback, aportación del GP, cascada europea, informes) con una frase cada una | Términos |
+| 15 | **Riesgos y mitigaciones** | Riesgos | Howmet 6 + Ryerson 6 | 6 riesgos en filas con bloque de etiqueta (línea en rojo); mapa de calor de probabilidad e impacto; las 3 empresas que fallan en primer plano | Excel, memo |
+| | **Cierre** | | | Preguntas, calendario de cierres, ticket mínimo, próximos pasos | |
+
+**Anexos (sin límite):** A criterios por empresa (tabla semáforo); B cascada paso a paso (waterfall); C seis preguntas del comité con quién responde; D mercado y gobierno completo (tablas y mapa); E llamadas de capital y términos de gestión; F curva J y detalle por empresa; G valor agregado del GP y términos del caso; H fuentes y notas metodológicas.
+
+### 9.3 Gramática visual Aztlan (de las 7 láminas de referencia)
+
+Referencias: Shibaura 4Q26 lámina 5; Ryerson 1Q26 láminas 4, 6 y 7; Howmet 1Q26 láminas 4, 5 y 6 (PDF en `C:\Users\cesar\Downloads\`). Elementos a replicar:
+- **Marco:** línea fina arriba, título 28 a la izquierda, subtítulo con el "so what" cuantificado, logo a la derecha, pie con firma a la izquierda, "Empresa, periodo" en cursiva al centro y número a la derecha.
+- **Bloques de etiqueta en degradado** (1.6 pulgadas, texto blanco bold, un tono por fila del más oscuro al más claro), con 2 o 3 viñetas con frase inicial en negrita y **líneas punteadas** entre filas.
+- **Panel derecho con banda oscura** y caja con borde; **parrilla de KPI** (encabezado oscuro, cifra grande, variación con signo); **antes y después con flecha**; **fichas oscuras de datos**; **cintas de dato**; **tabla pequeña con la columna actual enmarcada**; **dona con tabla** y bloques cuyo color coincide con la dona; **mapa con puntos por color**; **columnas de 5 períodos con el proyectado en recuadro punteado**.
+- **Color con significado:** negrita en verde oscuro para la idea clave, rojo solo para riesgo, verde claro solo para objetivo.
+- Howmet 6 es la más texto: se usa siempre con un gráfico o diagrama al lado.
+
+### 9.4 Rejilla, alineación y densidad (verificables)
+
+1. **Rejilla:** márgenes x de 0.575 a 12.877 pulgadas; contenido de y 1.446 a 6.78; línea superior en y 0.313; título 28, subtítulo 16, cuerpo 14/12/11, fuente 10, pie 8; ningún texto menor a 8.
+2. **Bordes:** todo borde izquierdo y derecho cae sobre la rejilla; encabezados y gráficos arrancan y terminan en los mismos márgenes.
+3. **Centrado:** cada número, texto o ícono centrado en su figura; logo centrado en la banda del título y dentro del margen.
+4. **Fuente a la izquierda** en todas las láminas con datos; número de página a la derecha.
+5. **Densidad:** menos de ≈25% de superficie vacía en el cuerpo; cada lámina con dos o tres exhibits, una barra de conclusión y la fuente.
+
+### 9.5 Catálogo de gráficos y recursos think-cell
+
+| Mensaje | Gráfico | Recurso |
+|---|---|---|
+| Oportunidad pública | Barras apiladas pública vs. privada, MW por tecnología, mapa por región | `stacked_columns`, mapa, tc:18 |
+| Posicionamiento | Matriz de cheques | tc:10 |
+| Estructura del fondo | Diagrama de vehículo | tc:8, `structural-diagrams.md` |
+| Cascada | Chevrones numerados | tc:24 |
+| Llamadas de capital | Columnas apiladas de 10 años con tramo proyectado en recuadro | `stacked_columns` |
+| Roadmap | Carretera con 7 pines | tc:18 |
+| Uso de fondos y proceeds por empresa | Waterfall | `waterfall` |
+| Selección de empresas | Embudo | tc:2 |
+| Fases del caso | 4 o 5 tarjetas sobre línea | tc:13 |
+| Retorno | Football field y tornado | `football_field`, `tornado` |
+| Portafolio por vertical | Dona con tabla y bloques de color | gráfica nativa |
+| Salidas | Línea de tiempo con tarjetas | tc:20 |
+| Protecciones | Pirámide de capas | tc:4 |
+| Riesgos | Mapa de calor | `heat map` |
+
+---
+
+## 10. Faltantes (script)
+
+`08_Proyecto_Final/faltantes/FALTA.py`: al ejecutarlo imprime la lista numerada de pendientes (qué falta, qué archivos afecta, quién lo resuelve, valor usado mientras tanto). Contenido inicial: credenciales y fotos de los 6 integrantes y foto de equipo, conflicto de interés familiar (D2), fecha de defensa, nombre exacto de archivos con el profesor, validación legal y fiscal (abogado y fiscalista), valuaciones privadas de las 8 empresas (si no se derivan), experiencia energética de los fundadores de BioEsol. Los espacios de foto en el deck quedan como contenedores limpios con nombre y rol, sin letreros de aviso.
+
+---
+
+## 11. F5: Revisión y sincronía (scripts)
+
+1. **Sincronía de cifras:** extrae del Excel (`Summary`, `Hoja1`, `Hoja2`, `Llamadas_Capital`, `Football_Field`) los valores clave (US$100M, 8 empresas, US$82M, fees, gastos, proceeds, a LPs, carry, MOIC, TIR por escenario, calendario de entradas, mínimos y máximos de llamadas, años de salida) y confirma que **aparecen idénticos en el Word y en el PowerPoint** (incluido texto de notas y anexos). Falla ante cualquier discrepancia.
+2. **Texto:** busca guiones largos, "pendiente", "falta", "n.d.", "[", "TODO" y "por confirmar" en los tres archivos.
+3. **Deck:** formas fuera de margen, bordes fuera de rejilla, vacío mayor a 25%, texto menor a 8 pt, láminas de contenido distintas de 15, gráficos con menos de 5 categorías.
+4. **Excel:** checks en OK, sin celdas de entrada vacías, sin errores (#REF, #VALUE), colores IB respetados.
+5. **Visual:** render de cada lámina del deck a PNG y de cada página del Word a imagen; se miran una por una, y QC por severidad (crítico, importante, menor) con 0 críticos.
+6. **Cierre:** actualizar `RESUMEN_PARA_REVISION.md`, `00_LEEME_WORKFLOW.md`, `ESTADO_Y_PENDIENTES.md` y la memoria del proyecto; regenerar los PDF de revisión.
+
+---
+
+## 12. Prompt maestro (copiar a una sesión nueva si se retoma por partes)
+
+> **ROL.** Eres diseñador sénior de presentaciones de banca de inversión y analista de capital privado. Construyes los tres entregables de **Aurex Capital** (fondo de US$100M, México, energía distribuida y eficiencia, etapa de crecimiento, tickets de US$2 a 10M) para el Comité de LPs de Capital Privado y Capital Emprendedor: **Excel, Word y PowerPoint**, que deben quedar idénticos en cifras, nombres, fechas y términos.
+>
+> **LEE PRIMERO:** `00_LEEME_WORKFLOW.md`; `08_Proyecto_Final/PLAN_V2_PROMPT_Y_WORKFLOW.md` (este plan, completo); `01_Guia_Proyecto_Final/_LEEME.md`; `08_Proyecto_Final/entregables/RESUMEN_PARA_REVISION.md`; `08_Proyecto_Final/insumos_equipo/Supuestos iniciales.docx`; `07_Skill/slide-construction/SKILL.md` y referencias (`charts.md`, `thinkcell-library.md`, `style-systems.md`, `adaptation.md`); `C:\Users\cesar\Downloads\USD x ITESM\07_Template_Analysis\` (`STYLE_GUIDE.md`, `LAYOUT_LIBRARY.md`, `specs\M_A_FEMSA.md`, renders); el deck de referencia del compañero `C:\Users\cesar\Downloads\AUREX Capital_Pitch deck.pdf` (solo nombres y roles, mapa de competidores, precedentes de salida y prueba de resistencia; ninguna de sus cifras de retorno); las láminas de referencia Shibaura 4Q26 (5), Ryerson 1Q26 (4, 6, 7) y Howmet 1Q26 (4, 5, 6).
+>
+> **ORDEN:** F1 investigación → F2 Excel → F3 Word → F4 PowerPoint → F5 sincronía. No pases a la siguiente fase sin cumplir su criterio de terminado.
+>
+> **REGLAS NO NEGOCIABLES:**
+> 1. Todo cambio se hace en **Excel, Word y PowerPoint** según la matriz de la sección 4; ninguna cifra distinta entre archivos; el Excel es el origen.
+> 2. Ningún número sin fuente oficial verificada (2026 preferido, con URL y fecha) o sin derivación del Excel; una sola tabla de cifras de gobierno.
+> 3. Cero guiones largos; negritas en lo clave; cero textos de pendiente en pantalla (todo faltante a `faltantes/FALTA.py`, tras intentar resolverlo con búsqueda, derivación o supuesto razonable).
+> 4. Las 8 empresas entran en los años 1 a 3 (follow-on en años 3 a 5; salidas en años 6 a 9); el caso base incluye 3 fallas (Uriel/BRM, FAZT, S2G).
+> 5. Llamadas de capital con mínimos y máximos (sección 7.3) en Excel, Word (anexo D) y PowerPoint (lámina 7 y anexo E).
+> 6. Vehículo explícito (fideicomiso privado de capital de riesgo, LISR 192-193) y tesis literal en una lámina.
+> 7. Deck: portada estilo FEMSA con fondo propio en verdes; **máximo 15 láminas de contenido** más portada, cierre y anexos; agenda y resumen ejecutivo; los 6 bloques hablados con lámina que los sostenga; football field con MOIC e IRR; mapas de México con región de proyectos.
+> 8. Cada gráfico con al menos 5 categorías o series; sin escalas logarítmicas; waterfall de uso de fondos, protecciones al LP, proceso de inversión y roadmap `tc:18` de 7 pines; think-cell `tc:2`, `tc:4`, `tc:8`, `tc:10`, `tc:13`, `tc:18`, `tc:20`, `tc:24`.
+> 9. Gramática Aztlan de las láminas de referencia (sección 9.3); rejilla y alineación (9.4); láminas llenas con menos de 25% de vacío.
+> 10. Excel Icarus en verdes con código IB; sin celdas de entrada vacías; recalculado con Excel.
+> 11. No envíes nada a nadie.
+>
+> **CIERRE:** renderiza y mira cada lámina y cada página; corre los scripts de la sección 11; actualiza el resumen para revisión y los LEEME.
+
+---
+
+## 13. Preguntas abiertas (con opción por defecto)
+
+1. ¿Confirmamos las 3 empresas que fallan (Uriel/BRM, FAZT, S2G)? *Por defecto sí; se cambian en una celda.*
+2. ¿Portada procedural (recomendada) o con IA? *Por defecto procedural, más 2 variantes de IA para comparar si se quiere.*
+3. ¿Se mantiene el orden de las láminas con Equipo en la lámina 5 (fusionado con "por qué este equipo")? *Por defecto sí; la guía lo pone en la 9 y se puede mover sin rehacer.*
+
+---
+
+## 14. Archivos y rutas de trabajo
+
+- Entregables: `08_Proyecto_Final/entregables/` (xlsx, docx, pptx, `RESUMEN_PARA_REVISION.md`).
+- Constructores: `08_Proyecto_Final/modelo_financiero/_builder/` (`build_v3.py`, `build_v3_tail.py`, `build_escenarios.py`, `model_config.py`, `build_memo.py`, `build_deck.py`, `docx_kit.py`, `imgkit.py`, `xlkit.py`, `recalc_save.ps1`, `xl2pdf.ps1`). Se ajustan estos scripts y se regenera; no se edita a mano.
+- Investigación: `08_Proyecto_Final/fuentes_investigacion/` y `descargas/`.
+- Activos: `08_Proyecto_Final/assets/` (logos, fotos de empresas, `fotos_equipo/`).
+- Faltantes: `08_Proyecto_Final/faltantes/FALTA.py`.
+- Skill y plantillas: `07_Skill/slide-construction/` y `C:\Users\cesar\Downloads\USD x ITESM\` (plantillas FEMSA, Thinkcell, Halliburton cover).
+- Equipo y supuestos: `08_Proyecto_Final/insumos_equipo/Supuestos iniciales.docx`.
+- Guía: `01_Guia_Proyecto_Final/`.
+- Entrega: memo y modelo el domingo 11-oct-2026 a las 11:59 pm; deck y defensa en la fecha que confirme el profesor; el líder del equipo manda el único correo.

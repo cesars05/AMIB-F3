@@ -1,0 +1,52 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+$vs=$wb.Worksheets.Item("Valuation Summary")
+$LT=@{2="B";3="C";4="D";5="E";6="F";7="G";8="H";9="I";10="J";11="K";12="L";13="M";14="N"}
+Write-Output "### CONTENIDO filas 1..70 ###"
+for($i=1;$i -le 70;$i++){
+  $lab=""
+  foreach($cc in 2,3){ $x=""; try{ $x=[string]$vs.Cells.Item($i,$cc).Text }catch{}; if($x.Trim() -ne ""){ $lab=$x; break } }
+  $v=""
+  foreach($c in 4,5,6,7,8,9,10,11,12){ $v+=([string]$vs.Cells.Item($i,$c).Text).PadLeft(10) }
+  if(($lab+$v).Trim() -ne ""){
+    if($lab.Length -gt 32){ $lab=$lab.Substring(0,32) }
+    Write-Output ("r"+([string]$i).PadRight(4)+$lab.PadRight(33)+$v)
+  }
+}
+Write-Output ""
+Write-Output "### ANCHOS DE COLUMNA ###"
+$w=""
+foreach($c in 1..14){ $w+=($LT[$c]+"="+[string][math]::Round([double]$vs.Columns.Item($c).ColumnWidth,1)+"  ") }
+Write-Output ("  "+$w)
+Write-Output ""
+Write-Output "### FORMATO DE CELDAS CLAVE ###"
+function F($a){
+  $c=$vs.Range($a)
+  Write-Output ("  "+$a.PadRight(5)+" '"+([string]$c.Text).PadRight(26)+"' fuente="+([string]$c.Font.Name).PadRight(10)+" tam="+([string]$c.Font.Size).PadRight(5)+" negr="+([string]$c.Font.Bold).PadRight(6)+" colorFuente="+([string]$c.Font.Color).PadRight(11)+" fondo="+([string]$c.Interior.Color).PadRight(11)+" fmt='"+[string]$c.NumberFormat+"'")
+}
+foreach($a in "C2","C4","C8","C12","D12","C14","D14","C17","C19","D19","C20","D20","C21","D21","C23","D23","C24","D24","C29","D29","F29","C30","F30","C34","F34","C62","C63","D63","C64","D64"){ F $a }
+Write-Output ""
+Write-Output "### BORDES ###"
+foreach($a in "D12","D20","D21","D63"){
+  $c=$vs.Range($a)
+  Write-Output ("  "+$a+"  arriba="+[string]$c.Borders.Item(8).LineStyle+"  abajo="+[string]$c.Borders.Item(9).LineStyle+"  peso arriba="+[string]$c.Borders.Item(8).Weight)
+}
+Write-Output ""
+Write-Output "### ALTURAS DE FILA ###"
+$h=""
+foreach($i in 12,13,14,19,20,21,22,23,29,30){ $h+=("r"+$i+"="+[string][math]::Round([double]$vs.Rows.Item($i).RowHeight,1)+"  ") }
+Write-Output ("  "+$h)
+Write-Output ""
+Write-Output "### FORMULAS del bloque de valuacion ###"
+for($i=12;$i -le 25;$i++){
+  foreach($c in 3,4,5,6){
+    $f=[string]$vs.Cells.Item($i,$c).Formula
+    if($f -ne "" -and $f.StartsWith("=")){ Write-Output ("   "+$LT[$c]+$i+" = "+$f) }
+  }
+}

@@ -1,0 +1,44 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$ep=$wb.Worksheets.Item("EPV"); $cm=$wb.Worksheets.Item("Consolidated Model"); $sm=$wb.Worksheets.Item("Segment Model")
+$LT=@{1="A";2="B";3="C";4="D";5="E";6="F";7="G";8="H";9="I";10="J";11="K";12="L";13="M";14="N";15="O";16="P";17="Q";18="R";19="S";20="T";21="U";22="V"}
+
+Write-Output "### 1) Celdas con error en EPV ###"
+for($i=1;$i -le 65;$i++){
+  foreach($c in 1..22){
+    $t=""; try{ $t=[string]$ep.Cells.Item($i,$c).Text }catch{}
+    if($t -like "*#*"){
+      $lab=""
+      foreach($cc in 2,3){ $x=""; try{ $x=[string]$ep.Cells.Item($i,$cc).Text }catch{}; if($x.Trim() -ne ""){ $lab=$x; break } }
+      Write-Output ("  "+$LT[$c]+$i+" = "+$t+"   etiqueta='"+$lab+"'   formula="+[string]$ep.Cells.Item($i,$c).Formula)
+    }
+  }
+}
+Write-Output ""
+Write-Output "### 2) Quien referencia 'Consolidated Model'!R135 o la columna R/S ###"
+foreach($nm in "EPV","SOTP","DCF","Summary","Segment Model","Consolidated Model"){
+  $sh=$wb.Worksheets.Item($nm)
+  $ur=$sh.UsedRange
+  $r1=$ur.Row; $c1=$ur.Column; $rn=$ur.Rows.Count; $cn=$ur.Columns.Count
+  for($i=$r1;$i -lt ($r1+$rn);$i++){
+    for($c=$c1;$c -lt ($c1+$cn);$c++){
+      $f=""; try{ $f=[string]$sh.Cells.Item($i,$c).Formula }catch{}
+      if($f -match '\$?R\$?135|\$?R\$?9\b' -and $f -like "*!*"){ Write-Output ("  "+$nm+" "+$LT[$c]+$i+" = "+$f) }
+    }
+  }
+}
+Write-Output ""
+Write-Output "### 3) Segment Model: formulas actuales en R de las filas % ###"
+foreach($i in 45,46,51,56,57,61,64,69,103,161,166,177,193){
+  $lab=""
+  foreach($cc in 2,3,4){ $x=""; try{ $x=[string]$sm.Cells.Item($i,$cc).Text }catch{}; if($x.Trim() -ne ""){ $lab=$x; break } }
+  Write-Output ("  r"+([string]$i).PadRight(4)+$lab.PadRight(34)+" R= "+[string]$sm.Cells.Item($i,18).Formula)
+  Write-Output ("       "+"".PadRight(34)+" S= "+[string]$sm.Cells.Item($i,19).Formula)
+}

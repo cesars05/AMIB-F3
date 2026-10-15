@@ -1,0 +1,121 @@
+PS C:\Users\cesar\AppData\Local\Programs\Microsoft VS Code> & C:\Users\cesar\AppData\Local\Programs\Python\Python314\python.exe c:/Users/cesar/Downloads/Actinver/ACTINVER.py
+Descargando precios históricos (México + Globales) desde Yahoo Finance...
+VOLARA.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[                       0%                       ]UBER: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[*                      3%                       ]  2 of 77 completedTSLA: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[*                      3%                       ]  2 of 77 completedALPEKA.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**                     5%                       ]  4 of 77 completedCRM: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[***                    6%                       ]  5 of 77 completedGAPB.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[****                   8%                       ]  6 of 77 completedMCD: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[****                   9%                       ]  7 of 77 completedMSFT: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[*****                 10%                       ]  8 of 77 completedBIMBOA.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[******                12%                       ]  9 of 77 completedAMD: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[******                13%                       ]  10 of 77 completedACTINVRB.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+XOM: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[*******               14%                       ]  11 of 77 completedNVDA: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[********              16%                       ]  12 of 77 completedAMZN: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[********              17%                       ]  13 of 77 completedOMAB.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[*********             18%                       ]  14 of 77 completedBOLSAA.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[*********             19%                       ]  15 of 77 completedPINFRA.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********            21%                       ]  16 of 77 completedAC.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[***********           22%                       ]  17 of 77 completedPLTR: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[***********           23%                       ]  18 of 77 completedORBIA.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[************          25%                       ]  19 of 77 completedFEMSAUBD.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[************          26%                       ]  20 of 77 completedSPY: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[*************         27%                       ]  21 of 77 completedGFNORTEO.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**************        29%                       ]  22 of 77 completedHTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: GCARSOT1.MX"}}}
+V: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**************        30%                       ]  23 of 77 completedCHDRAUIB.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[***************       31%                       ]  24 of 77 completedGRUMAB.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[***************       32%                       ]  25 of 77 completedORCL: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[****************      34%                       ]  26 of 77 completedKIMBERA.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[*****************     35%                       ]  27 of 77 completedBA: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[*****************     36%                       ]  28 of 77 completedPEP: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[******************    38%                       ]  29 of 77 completedGOOGL: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[*******************   39%                       ]  30 of 77 completedQQQ: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[*******************   40%                       ]  31 of 77 completedPYPL: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[********************  42%                       ]  32 of 77 completedDIS: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[********************* 43%                       ]  33 of 77 completedWMT: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[********************* 44%                       ]  34 of 77 completedQ.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************45%                       ]  35 of 77 completed$GCARSOT1.MX: possibly delisted; no price data found  (period=6m) (Yahoo error = "No data found, symbol may be delisted")
+[**********************47%                       ]  36 of 77 completedVESTA.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************48%                       ]  37 of 77 completedPSQ: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************49%                       ]  38 of 77 completedMEGACPO.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************51%                       ]  39 of 77 completedHTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: LASITEB.MX"}}}
+ALSEA.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************52%                       ]  40 of 77 completedLLY: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************53%                       ]  41 of 77 completedWALMEX.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************55%*                      ]  42 of 77 completedINTC: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************56%**                     ]  43 of 77 completedAVGO: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************57%**                     ]  44 of 77 completedMETA: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************58%***                    ]  45 of 77 completedMELI: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************60%****                   ]  46 of 77 completed$MFRISCOA1.MX: possibly delisted; no price data found  (period=6m) (Yahoo error = "No data found, symbol may be delisted")
+[**********************61%****                   ]  47 of 77 completedKOFUBL.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************62%*****                  ]  48 of 77 completedGCC.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************64%******                 ]  49 of 77 completedPE&OLES.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************65%******                 ]  50 of 77 completedAAPL: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************66%*******                ]  51 of 77 completedJPM: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************68%********               ]  52 of 77 completed$ELEKTRA.MX: possibly delisted; no price data found  (period=6m) (Yahoo error = "No data found, symbol may be delisted")
+[**********************69%********               ]  53 of 77 completedABNB: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************70%*********              ]  54 of 77 completed$SITESB1.MX: possibly delisted; no price data found  (period=6m) (Yahoo error = "No data found, symbol may be delisted")
+[**********************71%*********              ]  55 of 77 completedCUERVO.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************73%**********             ]  56 of 77 completedGFINBURO.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************74%***********            ]  57 of 77 completedGMEXICOB.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************75%***********            ]  58 of 77 completedCEMEXCPO.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************77%************           ]  59 of 77 completedCVX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************78%************           ]  60 of 77 completedCOST: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************79%*************          ]  61 of 77 completedGENTERA.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************81%**************         ]  62 of 77 completedABBV: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************82%**************         ]  63 of 77 completedLABB.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************83%***************        ]  64 of 77 completedASURB.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************84%***************        ]  65 of 77 completed$LASITEB.MX: possibly delisted; no price data found  (period=6m) (Yahoo error = "No data found, symbol may be delisted")
+[**********************86%****************       ]  66 of 77 completedQCOM: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************87%*****************      ]  67 of 77 completedRA.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************88%*****************      ]  68 of 77 completedAMXB.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************90%******************     ]  69 of 77 completedAMAT: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************91%*******************    ]  70 of 77 completedBBAJIOO.MX: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************92%*******************    ]  71 of 77 completedPG: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************94%********************   ]  72 of 77 completedMA: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************95%*********************  ]  73 of 77 completedBABA: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+[**********************96%*********************  ]  74 of 77 completed$LIVEPOLC1.MX: possibly delisted; no price data found  (period=6m) (Yahoo error = "No data found, symbol may be delisted")
+[**********************97%********************** ]  75 of 77 completed$ALFAA.MX: possibly delisted; no price data found  (period=6m) (Yahoo error = "No data found, symbol may be delisted")
+[*********************100%***********************]  77 of 77 completed
+
+77 Failed downloads:
+['VOLARA.MX', 'UBER', 'TSLA', 'ALPEKA.MX', 'CRM', 'GAPB.MX', 'MCD', 'MSFT', 'BIMBOA.MX', 'AMD', 'ACTINVRB.MX', 'XOM', 'NVDA', 'AMZN', 'OMAB.MX', 'BOLSAA.MX', 'PINFRA.MX', 'AC.MX', 'PLTR', 'ORBIA.MX', 'FEMSAUBD.MX', 'SPY', 'GFNORTEO.MX', 'V', 'CHDRAUIB.MX', 'GRUMAB.MX', 'ORCL', 'KIMBERA.MX', 'BA', 'PEP', 'GOOGL', 'QQQ', 'PYPL', 'DIS', 'WMT', 'Q.MX', 'VESTA.MX', 'PSQ', 'MEGACPO.MX', 'ALSEA.MX', 'LLY', 'WALMEX.MX', 'INTC', 'AVGO', 'META', 'MELI', 'KOFUBL.MX', 'GCC.MX', 'PE&OLES.MX', 'AAPL', 'JPM', 'ABNB', 'CUERVO.MX', 'GFINBURO.MX', 'GMEXICOB.MX', 'CEMEXCPO.MX', 'CVX', 'COST', 'GENTERA.MX', 'ABBV', 'LABB.MX', 'ASURB.MX', 'QCOM', 'RA.MX', 'AMXB.MX', 'AMAT', 'BBAJIOO.MX', 'PG', 'MA', 'BABA']: Period '6m' is invalid, must be one of: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+['GCARSOT1.MX', 'MFRISCOA1.MX', 'ELEKTRA.MX', 'SITESB1.MX', 'LASITEB.MX', 'LIVEPOLC1.MX', 'ALFAA.MX']: possibly delisted; no price data found  (period=6m) (Yahoo error = "No data found, symbol may be delisted")
+Traceback (most recent call last):
+  File "c:\Users\cesar\Downloads\Actinver\ACTINVER.py", line 89, in <module>
+    df_merged = pd.merge(df_tec, df_csv[columnas_modelo_existentes], on='ticker_base', how='left')
+  File "C:\Users\cesar\AppData\Local\Programs\Python\Python314\Lib\site-packages\pandas\core\reshape\merge.py", line 170, in merge
+    op = _MergeOperation(
+        left_df,
+    ...<10 lines>...
+        validate=validate,
+    )
+  File "C:\Users\cesar\AppData\Local\Programs\Python\Python314\Lib\site-packages\pandas\core\reshape\merge.py", line 794, in __init__
+    ) = self._get_merge_keys()
+        ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\cesar\AppData\Local\Programs\Python\Python314\Lib\site-packages\pandas\core\reshape\merge.py", line 1311, in _get_merge_keys
+    left_keys.append(left._get_label_or_level_values(lk))
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^
+  File "C:\Users\cesar\AppData\Local\Programs\Python\Python314\Lib\site-packages\pandas\core\generic.py", line 1914, in _get_label_or_level_values
+    raise KeyError(key)
+KeyError: 'ticker_base'
+PS C:\Users\cesar\AppData\Local\Programs\Microsoft VS Code> & C:\Users\cesar\AppData\Local\Programs\Python\Python314\python.exe c:/Users/cesar/Downloads/Actinver/ACTINVER.py
+Descargando precios históricos (México + Globales) desde Yahoo Finance...
+[************          26%                       ]  20 of 77 completedHTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: LIVEPOLC1.MX"}}}
+[*******************   39%                       ]  30 of 77 completedHTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ALFAA.MX"}}}
+[**********************51%                       ]  39 of 77 completed$LIVEPOLC1.MX: possibly delisted; no price data found  (period=6mo) (Yahoo error = "No data found, symbol may be delisted")
+[**********************52%                       ]  40 of 77 completed$ELEKTRA.MX: possibly delisted; no price data found  (period=6mo) (Yahoo error = "No data found, symbol may be delisted")
+[**********************65%******                 ]  50 of 77 completed$SITESB1.MX: possibly delisted; no price data found  (period=6mo) (Yahoo error = "No data found, symbol may be delisted")
+[**********************66%*******                ]  51 of 77 completed$ALFAA.MX: possibly delisted; no price data found  (period=6mo) (Yahoo error = "No data found, symbol may be delisted")
+[**********************81%**************         ]  62 of 77 completed$MFRISCOA1.MX: possibly delisted; no price data found  (period=6mo) (Yahoo error = "No data found, symbol may be delisted")
+[**********************96%*********************  ]  74 of 77 completed$LASITEB.MX: possibly delisted; no price data found  (period=6mo) (Yahoo error = "No data found, symbol may be delisted")
+[**********************97%********************** ]  75 of 77 completed$GCARSOT1.MX: possibly delisted; no price data found  (period=6mo) (Yahoo error = "No data found, symbol may be delisted")
+[*********************100%***********************]  77 of 77 completed
+
+7 Failed downloads:
+['LIVEPOLC1.MX', 'ELEKTRA.MX', 'SITESB1.MX', 'ALFAA.MX', 'MFRISCOA1.MX', 'LASITEB.MX', 'GCARSOT1.MX']: possibly delisted; no price data found  (period=6mo) (Yahoo error = "No data found, symbol may be delisted")
+Error: No se pudieron descargar datos suficientes de Yahoo Finance para calcular indicadores.
+PS C:\Users\cesar\AppData\Local\Programs\Microsoft VS Code> 

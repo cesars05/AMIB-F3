@@ -1,0 +1,18 @@
+# 04 · Excels del Profesor (herramientas de clase)
+
+**Qué es:** los Excel que el Prof. Rincón usó en clase. Convención de color de todos ellos (y que respetamos): **azul = celda de entrada · negro = fórmula de la hoja · verde = vínculo a otra hoja · negritas = resultado.** Todos con fórmulas vivas.
+
+| Archivo | Hojas | Qué hace | Cómo se usa en Aurex |
+|---|---|---|---|
+| `Taller_Cascada_Distribucion_Fondo_PE.xlsx` | Supuestos · Cascada Europea · Cascada Americana + Clawback · Comparativo (con gráfica) · Respuestas (clave del profesor) | Fondo $100M, fee 2%×10 años, carry 20%, hurdle 8% compuesto, catch-up 100%. Tres escenarios: A 1.3x, B 2.5x, C 0.9x. Muestra que en A el GP cobra **$0 de carry** (el preferente acumulado a 10 años = $115.89M > ganancia $30M) pero sí $20M de fee. Convención del profesor: hurdle = comprometido × ((1+h)^años − 1) sobre TODO el capital comprometido. | **Es la base de la Hoja 2 del modelo de Aurex** (`PF_Modelo_AurexCapital*.xlsx` la replica). Su "Respuestas" sirve para verificar nuestros resultados. |
+| `Ejercicio Cap Table.xlsx` | 1. Ejercicio (en blanco) · 2. Solución · 3. Explicación | *Fondeo Ágil*: Serie A de $4M a $12M pre-money, option pool 15% post-ronda; cap table antes/después, pool creado antes vs después de la ronda ("shuffle"), dilución por Series B (20%) y C (15%). | Para la lámina del **caso de inversión** (precio por acción, % que compra Aurex, dilución en follow-on). |
+| `Liquidation Preference.xlsx` | Waterfall 3 estructuras | Misma empresa, $20M de capital preferente, 60% comunes; ventas de $20/50/100/300M bajo 1x non-participating, 1x participating y 2x participating. A valuaciones bajas la estructura decide todo. | Para protección al inversionista del caso de inversión (Uriel recupera 0.25x gracias a la preferencia 1x). |
+
+## Fórmulas clave a no romper
+- Preferente acumulado = Comprometido × ((1+hurdle)^años − 1)
+- Catch-up objetivo = Preferente pagado × carry / (1 − carry)
+- Carry total (europea, catch-up 100%) = 20% de la ganancia bruta **solo si** proceeds > comprometido + preferente + catch-up
+- TIR simplificada = (múltiplo neto)^(1/años) − 1 (subestima: asume todo entra en año 0 y sale en año 10)
+
+## Lección que ya está en la cascada del equipo (importante para el pitch)
+Con hurdle compuesto sobre capital comprometido, el GP necesita ≈ **2.16x bruto sobre lo comprometido** antes de cobrar un peso de carry. Cualquier caso base por debajo de 2.16x deja el carry en $0 (ver `../08_Proyecto_Final/`).

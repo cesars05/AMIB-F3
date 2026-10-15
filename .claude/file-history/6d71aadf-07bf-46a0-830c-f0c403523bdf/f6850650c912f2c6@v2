@@ -1,0 +1,31 @@
+"""Add 3Y Performance (SEC, ann.) to peer tabs (same as AZTD K5:K7) and to Summary ETF Main Data."""
+import time
+from attach import get_app
+app = get_app()
+wb = app.Workbooks("AZTD - Top Holdings Peers_v2.xlsx")
+AZ = wb.Worksheets("AZTD")
+for t in ("AVDV", "ISCF", "DISV", "DFIS"):
+    ws = wb.Worksheets(t)
+    if str(ws.Range("K6").Value).strip() == "3Y Performance":
+        print(t, "already has 3Y"); continue
+    ws.Range("K5:K7").Insert(-4161)          # shift right, rows 5-7 only
+    AZ.Range("K5:K7").Copy(); ws.Range("K5:K7").PasteSpecial(-4122)
+    ws.Range("K5").Value = "TR.FundSEC3YearPerf"
+    ws.Range("K6").Value = "3Y Performance"
+    ws.Range("K7").Formula = "=+TR($D4,K$5)*1%"
+    # extend title / header bar formatting one more column
+    ws.Range("O2").Copy(); ws.Range("P2").PasteSpecial(-4122)
+    print(t, "3Y added:", ws.Range("L6").Value, "| Summary refs ok")
+app.CutCopyMode = False
+S = wb.Worksheets("Summary")
+if str(S.Range("H7").Value) != "3Y Perf. (SEC ann.)":
+    S.Range("H7:H13").Insert(-4161)
+    S.Range("I7:I13").Copy(); S.Range("H7:H13").PasteSpecial(-4122)
+    S.Range("H7").Value = "3Y Perf. (SEC ann.)"
+    for i, t in enumerate(("AZTD", "AVDV", "ISCF", "DISV", "DFIS")):
+        S.Range(f"H{8+i}").Formula = f"='{t}'!K7"
+    S.Range("H13").Formula = '=IFERROR(H8-AVERAGE(H9:H12),"")'
+    S.Range("K2").Copy(); S.Range("L2").PasteSpecial(-4122)
+app.CutCopyMode = False
+print("Summary row 7:", [S.Cells(7, c).Text for c in range(2, 13)])
+print("Summary row 9:", [S.Cells(9, c).Formula for c in range(8, 13)])

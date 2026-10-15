@@ -1,0 +1,67 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $cm=$wb.Worksheets.Item("Consolidated Model")
+$er=$wb.Worksheets.Item("Expected Returns"); $d=$wb.Worksheets.Item("DCF")
+$so=$wb.Worksheets.Item("SOTP"); $ep=$wb.Worksheets.Item("EPV")
+if([string]$as.Range("J74").Text -ne ""){ throw "ABORTO: el modulo venia encendido" }
+
+function Fila($r){ $v=""; foreach($c in 3,4,5,6,7,8,9){ $v+=([string]$er.Cells.Item($r,$c).Text).PadLeft(12) }; return $v }
+function Tabla($t){
+  Write-Output ""
+  Write-Output ("------ "+$t+" ------")
+  Write-Output ("  "+"".PadRight(42)+(Fila 42))
+  foreach($x in @(@(43,"Entry Investment"),@(44,"Ordinary Dividends"),@(45,"Extraordinary Dividend"),@(46,"Special Div. from Divestiture"),@(47,"Exit Proceeds"),@(48,"TOTAL"))){
+    Write-Output ("  "+([string]$x[1]).PadRight(42)+(Fila ([int]$x[0])))
+  }
+  Write-Output ("  Exit EBITDA "+[string]$er.Range("C31").Text+"   Exit EV "+[string]$er.Range("C33").Text+"   Net debt "+[string]$er.Range("C34").Text+"   Exit equity "+[string]$er.Range("C35").Text+"  ("+[string]$er.Range("C36").Text+"p/accion)")
+  Write-Output ("  Dividendos "+[string]$er.Range("C51").Text+"   Salida "+[string]$er.Range("C52").Text+"   MoIC "+[string]$er.Range("C53").Text+"   IRR "+[string]$er.Range("C54").Text)
+  Write-Output ("  DCF "+[string]$d.Range("E41").Text+"   SOTP "+[string]$so.Range("D112").Text+"   EPV "+[string]$ep.Range("E61").Text)
+  $tot=0
+  foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary","Expected Returns"){
+    $s=$wb.Worksheets.Item($nm); $e=0
+    try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+    if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+    $tot+=$e
+  }
+  Write-Output ("  errores: "+$tot+"   check balance FY2032 "+[string]$cm.Range("Q168").Text+"   check caja FY2032 "+[string]$cm.Range("Q215").Text)
+}
+
+Tabla "A) MANTENER TODO (modulo apagado)"
+$mantenerTot=[double]$er.Range("C51").Value2+[double]$er.Range("C52").Value2
+
+$xl.Calculation=-4135
+$as.Range("J74").Value2="Water Management"; $as.Range("J75").Value2=2029; $as.Range("J76").Value2=7.9
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+Tabla "B) VENDER WATER MANAGEMENT a 7.9x, ultimo ano completo FY2029"
+$venderTot=[double]$er.Range("C51").Value2+[double]$er.Range("C52").Value2
+$netoDespImp=([double]$cm.Range("O370").Value2)-0.25*([double]$cm.Range("O372").Value2)
+Write-Output ""
+Write-Output "  === PRUEBA ANTI DOBLE-CONTEO ==="
+Write-Output ("  efectivo total al inversionista, mantener = "+[string][math]::Round($mantenerTot,0))
+Write-Output ("  efectivo total al inversionista, vender   = "+[string][math]::Round($venderTot,0))
+Write-Output ("  diferencia                                = "+[string][math]::Round($venderTot-$mantenerTot,0))
+Write-Output ("  ingresos netos despues de impuestos x 5%  = "+[string][math]::Round($netoDespImp*0.05,0))
+Write-Output ("  (si la diferencia fuera ~2x lo de abajo, habria doble conteo)")
+
+# escenarios por segmento
+$xl.Calculation=-4135
+foreach($seg in "Water Management","Building Envelope","Housebuilding Products"){
+  $as.Range("J74").Value2=$seg
+  $xl.Calculation=-4105; $xl.CalculateFullRebuild()
+  Write-Output ("  "+$seg.PadRight(24)+"  EBITDA vendido "+([string]$cm.Range("O367").Text).PadLeft(8)+"  ingreso neto "+([string]$cm.Range("O370").Text).PadLeft(9)+"  ganancia "+([string]$cm.Range("O372").Text).PadLeft(9)+"  div. especial "+([string]$cm.Range("O378").Text).PadLeft(9)+"  IRR "+([string]$er.Range("C54").Text).PadLeft(7)+"  DCF "+([string]$d.Range("E41").Text).PadLeft(8))
+  $xl.Calculation=-4135
+}
+$as.Range("J74").ClearContents()
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ""
+Write-Output ("RESTAURADO: J74='"+[string]$as.Range("J74").Text+"'   DCF "+[string]$d.Range("E41").Text+"   IRR "+[string]$er.Range("C54").Text)

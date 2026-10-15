@@ -1,0 +1,171 @@
+﻿function Retry([scriptblock]$b) { for ($k=0; $k -lt 80; $k++) { try { $res = & $b; return ,$res } catch { Start-Sleep -Milliseconds 600 } }; throw "gave up: $b" }
+function RangeOf($addr) { for ($k=0; $k -lt 80; $k++) { try { $x = $ws.Range($addr); return ,$x } catch { Start-Sleep -Milliseconds 600 } }; throw "gave up range $addr" }
+function RGB($r,$g,$b) { return $r + 256*$g + 65536*$b }
+
+$excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb = Retry { $excel.Workbooks.Item(1) }
+$ws = Retry { $wb.Sheets.Item("Peers") }
+trap { try { $excel.ScreenUpdating = $true; $excel.Calculation = -4105 } catch {}; Write-Output "FAILED: $_"; break }
+Retry { $excel.Calculation = -4135 }
+Retry { $excel.ScreenUpdating = $false }
+
+Retry { $ws.Cells.Clear() } | Out-Null
+Retry { $ws.Cells.FormatConditions.Delete() } | Out-Null
+try { $ws.Outline.ShowLevels(0, 2) | Out-Null } catch {}
+try { $ws.Columns("T:AD").Ungroup() | Out-Null } catch {}
+Retry { $ws.Cells.Font.Name = "Aptos Narrow" }
+Retry { $ws.Cells.Font.Size = 11 }
+
+$groups = @(
+  @{ Label = "Electronics Distribution";        Focus = "ARW.N";   Rics = @("ARW.N","AVT.OQ","SNX.N","3702.TW") },
+  @{ Label = "Specialty Apparel Retail";        Focus = "VSXY.N";  Rics = @("VSXY.N","AEO.N","ANF.N","GAP.N") },
+  @{ Label = "Semiconductor Inspection";        Focus = "CAMT.OQ"; Rics = @("CAMT.OQ","KLAC.OQ","ONTO.N","NVMI.OQ") },
+  @{ Label = "Oilfield Equipment";              Focus = "FET.N";   Rics = @("FET.N","NOV.N","OIS.N","TS.N","WHD.N") },
+  @{ Label = "B2B Marketplace / E-commerce";    Focus = "GCT.OQ";  Rics = @("GCT.OQ","W.N","AMZN.OQ") },
+  @{ Label = "Semiconductor Automation";        Focus = "6323.T";  Rics = @("6323.T","6506.T","6383.T","6258.T","AMAT.OQ") },
+  @{ Label = "Oilfield Services";               Focus = "PTEN.OQ"; Rics = @("PTEN.OQ","HP.N","NBR.N","LBRT.N","PUMP.N","HAL.N") },
+  @{ Label = "Japan Auctions & Resale";         Focus = "3964.T";  Rics = @("3964.T","4732.T","2780.T","9270.T") }
+)
+
+# Presentation columns B..R, inputs T..AB
+$hdr = @{2="Company";3="RIC";4="Mkt Cap (USD M)";5="YTD";6="3MO";7="ROE";8="Gross Margin";9="EBIT Margin";10="Net Margin LTM";11="Net Debt / EBITDA";12="Fwd PE";13="Capex as % of Rev";14="Rev Growth Last Q";15="Rev CAGR Next 2Y";16="Dividend";17="Model 1.1";18="Slope";
+         20="Rev FY0";21="Rev FQ0";22="Rev FQ-4";23="Gross FY0";24="EBIT FY0";25="NI FY0";26="Equity FY0";27="Rev FY1e";28="Rev FY3e"}
+
+Retry { $ws.Cells.Item(2,2).Value2 = "Peer Comparison" }
+Retry { $ws.Cells.Item(2,2).Font.Size = 14 }
+Retry { $ws.Cells.Item(2,2).Font.Bold = $true }
+Retry { $ws.Cells.Item(2,5).Value2 = "Colors vs peer average (ex focus company). Green = better, red = worse. Fwd PE and Net Debt / EBITDA: lower is better." }
+Retry { $ws.Cells.Item(2,5).Font.Italic = $true }
+Retry { $ws.Cells.Item(2,5).Font.Color = (RGB 89 89 89) }
+Retry { $ws.Cells.Item(3,20).Value2 = "LSEG inputs (USD M, FY0 = last fiscal year)" }
+Retry { $ws.Cells.Item(3,20).Font.Italic = $true }
+
+foreach ($c in $hdr.Keys) { Retry { $ws.Cells.Item(4,$c).Value2 = $hdr[$c] } }
+foreach ($rng in @("B4:R4","T4:AB4")) {
+  $h = RangeOf $rng
+  Retry { $h.Interior.Color = 6299648 }; Retry { $h.Font.Color = 16777215 }; Retry { $h.Font.Bold = $true }
+  Retry { $h.WrapText = $true }; Retry { $h.HorizontalAlignment = -4108 }; Retry { $h.VerticalAlignment = -4108 }
+}
+Retry { $ws.Rows(4).RowHeight = 32 }
+
+$P = 'Scale=6 Curn=USD'
+$row = 6
+$avgRows = @()
+foreach ($g in $groups) {
+  # Group header
+  $gh = RangeOf "B${row}:R${row}"
+  Retry { $ws.Cells.Item($row,2).Value2 = "$($g.Label) ($($g.Focus))" }
+  Retry { $gh.Font.Bold = $true }; Retry { $gh.Interior.Color = (RGB 217 225 242) }
+  $row++
+  $first = $row
+  foreach ($ric in $g.Rics) {
+    $r = $row
+    $f = @{
+      2  = "=IFERROR(TR(`$C$r,""TR.CommonName""),`$C$r)"
+      4  = "=IFERROR(1*TR(`$C$r,""TR.CompanyMarketCapitalization"",""$P""),""n/a"")"
+      5  = "=IFERROR(TR(`$C$r,""PCTCHG_YTD"")/100,""n/a"")"
+      6  = "=IFERROR(TR(`$C$r,""TR.TotalReturn3Mo"")/100,""n/a"")"
+      7  = "=IFERROR(Y$r/Z$r,""n/a"")"
+      8  = "=IFERROR(W$r/T$r,""n/a"")"
+      9  = "=IFERROR(X$r/T$r,""n/a"")"
+      10 = "=IFERROR(TR(`$C$r,""TR.PCNetMarginPct"",""Period=LTM"")/100,""n/a"")"
+      11 = "=IFERROR(1*TR(`$C$r,""TR.F.NetDebtToEBITDATTM""),""n/a"")"
+      12 = "=IFERROR(1*TR(`$C$r,""TR.FwdPtoEPSSmartEst"",""Period=FY1""),""n/a"")"
+      13 = "=IFERROR(TR(`$C$r,""TR.F.CAPEXTotPctTotRevTTM"")/100,""n/a"")"
+      14 = "=IFERROR(U$r/V$r-1,""n/a"")"
+      15 = "=IFERROR((AB$r/AA$r)^(1/2)-1,""n/a"")"
+      16 = "=IFERROR(TR(`$C$r,""TR.F.DivYldComStockIssuePct"",""Period=FY0"")/100,""n/a"")"
+      20 = "=IFERROR(1*TR(`$C$r,""TR.F.TotRevBizActiv"",""Period=FY0 $P""),""n/a"")"
+      21 = "=IFERROR(1*TR(`$C$r,""TR.F.TotRevBizActiv"",""Period=FQ0 $P""),""n/a"")"
+      22 = "=IFERROR(1*TR(`$C$r,""TR.F.TotRevBizActiv"",""Period=FQ-4 $P""),""n/a"")"
+      23 = "=IFERROR(1*TR(`$C$r,""TR.F.GROSSPROFINDPROPTOT"",""Period=FY0 $P""),""n/a"")"
+      24 = "=IFERROR(1*TR(`$C$r,""TR.F.OPPROFBEFNONRECURINCEXPN"",""Period=FY0 $P""),""n/a"")"
+      25 = "=IFERROR(1*TR(`$C$r,""TR.F.NETINCAFTERMININTR"",""Period=FY0 $P""),""n/a"")"
+      26 = "=IFERROR(1*TR(`$C$r,""TR.F.TOTSHHOLDEQ"",""Period=FY0 $P""),""n/a"")"
+      27 = "=IFERROR(1*TR(`$C$r,""TR.RevenueMeanEstimate"",""Period=FY1 $P""),""n/a"")"
+      28 = "=IFERROR(1*TR(`$C$r,""TR.RevenueMeanEstimate"",""Period=FY3 $P""),""n/a"")"
+    }
+    $lk = $ric; if ($ric -eq "TS.N") { $lk = "TENR.MI" }
+    $f[17] = "=IFERROR(VALUE(XLOOKUP(""$lk"",'Quant Model'!`$A:`$A,'Quant Model'!`$G:`$G)),""n/a"")"
+    $f[18] = "=IFERROR(VALUE(XLOOKUP(""$lk"",'Quant Model'!`$A:`$A,'Quant Model'!`$I:`$I)),""n/a"")"
+    Retry { $ws.Cells.Item($r,3).Value2 = $ric }
+    foreach ($c in $f.Keys) { $formula = $f[$c]; Retry { $ws.Cells.Item($r,$c).Formula = $formula } }
+    if ($ric -eq $g.Focus) {
+      $fr = RangeOf "B${r}:R${r}"
+      Retry { $fr.Font.Bold = $true }; Retry { $fr.Interior.Color = (RGB 242 242 242) }
+    }
+    $row++
+  }
+  $last = $row - 1
+  $peerFirst = $first + 1
+  # Peer average row (excludes focus company, which is always first)
+  $a = $row
+  Retry { $ws.Cells.Item($a,2).Value2 = "Peer average (ex $($g.Focus))" }
+  foreach ($c in 4..18) {
+    $col = [char](64+$c)
+    $formula = "=IFERROR(AVERAGE(${col}${peerFirst}:${col}${last}),""n/a"")"
+    Retry { $ws.Cells.Item($a,$c).Formula = $formula }
+  }
+  $ar = RangeOf "B${a}:R${a}"
+  Retry { $ar.Font.Italic = $true }; Retry { $ar.Font.Bold = $true }
+  Retry { $ar.Borders.Item(8).LineStyle = 1 }; Retry { $ar.Borders.Item(8).Weight = 2 }
+  Retry { $ar.Interior.Color = (RGB 255 242 204) }
+  $avgRows += @{ First = $first; Last = $last; Avg = $a }
+  $row += 2
+}
+$end = $row
+
+# Number formats
+Retry { $ws.Range("D6:D$end").NumberFormat = "#,##0" }
+Retry { $ws.Range("E6:J$end").NumberFormat = "0.0%" }
+Retry { $ws.Range("K6:L$end").NumberFormat = "0.0""x""" }
+Retry { $ws.Range("M6:R$end").NumberFormat = "0.0%" }
+Retry { $ws.Range("T6:AB$end").NumberFormat = "#,##0" }
+Retry { $ws.Range("C6:R$end").HorizontalAlignment = -4108 }
+
+# Conditional formatting vs peer average
+Retry { $ws.Activate() }
+$higherBetter = @("E","F","G","H","I","J","N","O","P","Q","R")
+$lowerBetter = @("K","L")
+$green = RGB 198 239 206; $greenF = RGB 0 97 0
+$red = RGB 255 199 206; $redF = RGB 156 0 6
+foreach ($blk in $avgRows) {
+  foreach ($col in ($higherBetter + $lowerBetter)) {
+    $rng = RangeOf "$col$($blk.First):$col$($blk.Last)"
+    Retry { $rng.Select() } | Out-Null
+    $cell = "$col$($blk.First)"; $avg = "$col`$$($blk.Avg)"
+    if ($lowerBetter -contains $col) {
+      if ($col -eq "L") { $good = "=AND(ISNUMBER($cell),ISNUMBER($avg),$cell>0,$cell<$avg)" }
+      else { $good = "=AND(ISNUMBER($cell),ISNUMBER($avg),$cell<$avg)" }
+      $bad  = "=AND(ISNUMBER($cell),ISNUMBER($avg),$cell>$avg)"
+    } else {
+      $good = "=AND(ISNUMBER($cell),ISNUMBER($avg),$cell>$avg)"
+      $bad  = "=AND(ISNUMBER($cell),ISNUMBER($avg),$cell<$avg)"
+    }
+    $fc1 = Retry { $rng.FormatConditions.Add(2, [Type]::Missing, $good) }
+    Retry { $fc1.Interior.Color = $green }; Retry { $fc1.Font.Color = $greenF }
+    $fc2 = Retry { $rng.FormatConditions.Add(2, [Type]::Missing, $bad) }
+    Retry { $fc2.Interior.Color = $red }; Retry { $fc2.Font.Color = $redF }
+  }
+}
+
+# Layout
+Retry { $ws.Columns.Item(1).ColumnWidth = 2 }
+Retry { $ws.Columns.Item(2).ColumnWidth = 34 }
+Retry { $ws.Columns.Item(3).ColumnWidth = 10 }
+foreach ($c in 4..18) { Retry { $ws.Columns.Item($c).ColumnWidth = 10.5 } }
+Retry { $ws.Columns.Item(19).ColumnWidth = 3 }
+foreach ($c in 20..28) { Retry { $ws.Columns.Item($c).ColumnWidth = 11 } }
+Retry { $ws.Columns("T:AB").Group() } | Out-Null
+Retry { $ws.Outline.ShowLevels(0, 1) } | Out-Null
+Retry { $excel.ActiveWindow.FreezePanes = $false }
+Retry { $ws.Range("D5").Select() } | Out-Null
+Retry { $excel.ActiveWindow.FreezePanes = $true }
+Retry { $excel.ActiveWindow.DisplayGridlines = $false }
+Retry { $ws.Range("B2").Select() } | Out-Null
+
+Retry { $excel.ScreenUpdating = $true }
+Retry { $excel.Calculation = -4105 }
+Write-Output "Built rows 6..$end"
+
+

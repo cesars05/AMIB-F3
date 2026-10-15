@@ -1,0 +1,144 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$sm=$wb.Worksheets.Item("Segment Model")
+$cm=$wb.Worksheets.Item("Consolidated Model")
+$su=$wb.Worksheets.Item("Summary")
+
+# ---------------- GUARDAS DE ESTRUCTURA ----------------
+if([string]$sm.Cells.Item(9,6).Text  -ne "FY2021"){ throw "ABORTO: SM col F no es FY2021" }
+if([string]$sm.Cells.Item(9,10).Text -ne "FY2025"){ throw "ABORTO: SM col J no es FY2025" }
+if([string]$sm.Cells.Item(9,11).Text -ne "FY2026"){ throw "ABORTO: SM col K no es FY2026" }
+if([string]$sm.Cells.Item(9,17).Text -ne "FY2032"){ throw "ABORTO: SM col Q no es FY2032" }
+if([string]$cm.Cells.Item(9,6).Text  -ne "FY2021"){ throw "ABORTO: CM col F no es FY2021" }
+if([string]$cm.Cells.Item(9,17).Text -ne "FY2032"){ throw "ABORTO: CM col Q no es FY2032" }
+if([string]$su.Cells.Item(37,5).Text -ne "FY2026"){ throw "ABORTO: Summary col E no es FY2026" }
+if([string]$su.Cells.Item(37,11).Text -ne "FY2032"){ throw "ABORTO: Summary col K no es FY2032" }
+if([string]$su.Cells.Item(37,12).Text -ne "CAGR"){ throw "ABORTO: Summary L37 no dice CAGR" }
+Write-Output "guardas de estructura OK"
+
+function CAGR($a,$b,$n){ return ('=IFERROR(IF(OR(N('+$a+')=0,N('+$b+')=0,SIGN('+$a+')<>SIGN('+$b+')),"",(ABS('+$b+')/ABS('+$a+'))^(1/'+$n+')-1),"")') }
+function PROM($rng){ return ('=IFERROR(AVERAGE('+$rng+'),"")') }
+function Lab($sh,$i){ foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$sh.Cells.Item($i,$cc).Text }catch{}; if($t.Trim() -ne ""){ return $t } }; return "" }
+
+$xl.Calculation=-4135
+$xl.ScreenUpdating=$false
+$FMT='0.0%;(0.0%);"-"'
+$rep=@()
+
+# ================= 1) SEGMENT MODEL =================
+$growSM=@(45,46,47,48)   # bloque "YoY Revenue Growth": el promedio excluye el primer ano
+$nLvl=0; $nPct=0
+for($i=10;$i -le 237;$i++){
+  $fr=""; try{ $fr=[string]$sm.Cells.Item($i,18).Formula }catch{}
+  if($fr -eq ""){ continue }
+  if($fr -notlike "*^(1/*"){ continue }              # respeta filas de encabezado (=+R9)
+  $nf=""; try{ $nf=[string]$sm.Cells.Item($i,11).NumberFormat }catch{}
+  if($nf -like "*%*"){
+    if($growSM -contains $i){ $sm.Cells.Item($i,18).Formula=(PROM ("G"+$i+":J"+$i)); $sm.Cells.Item($i,19).Formula=(PROM ("L"+$i+":Q"+$i)) }
+    else                    { $sm.Cells.Item($i,18).Formula=(PROM ("F"+$i+":J"+$i)); $sm.Cells.Item($i,19).Formula=(PROM ("K"+$i+":Q"+$i)) }
+    $nPct++
+  } else {
+    $sm.Cells.Item($i,18).Formula=(CAGR ("F"+$i) ("J"+$i) 4)
+    $sm.Cells.Item($i,19).Formula=(CAGR ("K"+$i) ("Q"+$i) 6)
+    $nLvl++
+  }
+}
+$sm.Cells.Item(9,18).Value2="CAGR / Avg FY21-25"
+$sm.Cells.Item(9,19).Value2="CAGR / Avg FY26-32"
+$rep+=("Segment Model: "+$nLvl+" filas de nivel -> CAGR robusto, "+$nPct+" filas % -> promedio")
+
+# ================= 2) CONSOLIDATED MODEL =================
+$viejo135=[string]$cm.Cells.Item(135,18).Formula
+$nLvl2=0; $nPct2=0
+for($i=10;$i -le 380;$i++){
+  $fr=""; try{ $fr=[string]$cm.Cells.Item($i,18).Formula }catch{}
+  if($fr -eq ""){ continue }
+  if($fr -notlike "*^(1/*" -and $i -ne 135){ continue }
+  $cm.Cells.Item($i,18).Formula=(CAGR ("F"+$i) ("J"+$i) 4)
+  $cm.Cells.Item($i,19).Formula=(CAGR ("K"+$i) ("Q"+$i) 6)
+  $nLvl2++
+}
+# bloque de ratios r78..r123: promedios (estaba vacio, con encabezado que ya decia "Average")
+$growCM=@(94,95,96,97,98,99)
+for($i=78;$i -le 123;$i++){
+  $nf=""; try{ $nf=[string]$cm.Cells.Item($i,11).NumberFormat }catch{}
+  if($nf -notlike "*%*" -and $nf -notlike "*x*"){ continue }
+  $kv=""; try{ $kv=[string]$cm.Cells.Item($i,11).Text }catch{}
+  if($kv.Trim() -eq ""){ continue }
+  if($growCM -contains $i){ $cm.Cells.Item($i,18).Formula=(PROM ("G"+$i+":J"+$i)); $cm.Cells.Item($i,19).Formula=(PROM ("L"+$i+":Q"+$i)) }
+  else                    { $cm.Cells.Item($i,18).Formula=(PROM ("F"+$i+":J"+$i)); $cm.Cells.Item($i,19).Formula=(PROM ("K"+$i+":Q"+$i)) }
+  $cm.Cells.Item($i,18).NumberFormat=[string]$cm.Cells.Item($i,11).NumberFormat
+  $cm.Cells.Item($i,19).NumberFormat=[string]$cm.Cells.Item($i,11).NumberFormat
+  $nPct2++
+}
+$cm.Cells.Item(9,18).Value2="CAGR / Avg FY21-25"
+$cm.Cells.Item(9,19).Value2="CAGR / Avg FY26-32"
+$cm.Cells.Item(12,18).Value2="CAGR FY21-25"
+$cm.Cells.Item(12,19).Value2="CAGR FY26-32"
+$cm.Cells.Item(77,18).Value2="Average FY21-25"
+$cm.Cells.Item(77,19).Value2="Average FY26-32"
+$rep+=("Consolidated: "+$nLvl2+" filas de nivel -> CAGR FY21-25 / FY26-32, "+$nPct2+" ratios -> promedio")
+$rep+=("Consolidated r135: formula suelta reemplazada, la vieja era: "+$viejo135)
+
+# ================= 3) SUMMARY =================
+$growSU=@(42)
+$nS=0
+for($i=38;$i -le 59;$i++){
+  if((Lab $su $i) -eq ""){ continue }
+  $nf=""; try{ $nf=[string]$su.Cells.Item($i,5).NumberFormat }catch{}
+  if($nf -like "*%*"){
+    if($growSU -contains $i){ $su.Cells.Item($i,12).Formula=(PROM ("F"+$i+":K"+$i)) }
+    else                    { $su.Cells.Item($i,12).Formula=(PROM ("E"+$i+":K"+$i)) }
+  } else {
+    $su.Cells.Item($i,12).Formula=(CAGR ("E"+$i) ("K"+$i) 6)
+  }
+  $su.Cells.Item($i,12).NumberFormat=$FMT
+  $nS++
+}
+$su.Cells.Item(37,12).Value2="CAGR / Avg FY26-32"
+$rep+=("Summary: "+$nS+" filas pobladas en la columna L (antes solo habia 1)")
+
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$xl.ScreenUpdating=$true
+$wb.Save()
+foreach($r in $rep){ Write-Output ("  "+$r) }
+
+# ================= VERIFICACION =================
+$as=$wb.Worksheets.Item("Assumptions")
+Write-Output ""
+Write-Output ("ESTADO: venta J74='"+[string]$as.Range("J74").Text+"'   sweep J80='"+[string]$as.Range("J80").Text+"'")
+Write-Output ""
+Write-Output "########## SUMMARY con la columna nueva ##########"
+Write-Output ("  "+"".PadRight(26)+"FY2025".PadLeft(10)+"FY2026".PadLeft(10)+"FY2032".PadLeft(10)+"CAGR/Avg".PadLeft(11))
+for($i=38;$i -le 59;$i++){
+  $l=Lab $su $i
+  if($l -eq ""){ continue }
+  Write-Output ("  "+$l.PadRight(26)+([string]$su.Cells.Item($i,4).Text).PadLeft(10)+([string]$su.Cells.Item($i,5).Text).PadLeft(10)+([string]$su.Cells.Item($i,11).Text).PadLeft(10)+([string]$su.Cells.Item($i,12).Text).PadLeft(11))
+}
+Write-Output ""
+Write-Output "########## SEGMENT MODEL: muestra ##########"
+foreach($i in 13,14,15,16,45,46,56,57,58,59,69,70,71,103,104,105){
+  Write-Output ("  r"+([string]$i).PadRight(4)+(Lab $sm $i).PadRight(38)+" R="+([string]$sm.Cells.Item($i,18).Text).PadLeft(9)+"  S="+([string]$sm.Cells.Item($i,19).Text).PadLeft(9))
+}
+Write-Output ""
+Write-Output "########## CONSOLIDATED: muestra ##########"
+foreach($i in 13,15,22,28,30,41,43,53,56,79,81,88,91,94,97,104,106){
+  Write-Output ("  r"+([string]$i).PadRight(4)+(Lab $cm $i).PadRight(38)+" R="+([string]$cm.Cells.Item($i,18).Text).PadLeft(9)+"  S="+([string]$cm.Cells.Item($i,19).Text).PadLeft(9))
+}
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary","Expected Returns"){
+  $s=$wb.Worksheets.Item($nm); $e=0
+  try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("")
+Write-Output ("  celdas con error: "+$tot)

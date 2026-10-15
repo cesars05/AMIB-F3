@@ -1,0 +1,35 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 900 } }; return "??" }
+$xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb=$null; foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("SOTP") }
+Write-Output ("Libro: "+[string]$wb.Name+"   SOTP UsedRange="+[string](T { $s.UsedRange.Address(0,0) }))
+Write-Output ""
+Write-Output "=== celdas que usan `$P`$16 (WACC) o `$P`$12 (g) ==="
+$fc=$null; try{ $fc=$s.UsedRange.SpecialCells(-4123) }catch{}
+if($fc -ne $null){
+  foreach($ar in $fc.Areas){ foreach($cl in $ar.Cells){
+    $f=""; try{ $f=[string]$cl.Formula }catch{}
+    if($f -match "\`$P\`$16|\`$P\`$12"){ Write-Output ("   "+[string]$cl.Address(0,0)+" = "+$f) }
+  } }
+}
+Write-Output ""
+Write-Output "=== bloque de assumptions a la derecha (O:S, filas 11-32) ==="
+for($r=11;$r -le 32;$r++){
+  $line=""
+  for($c=14;$c -le 19;$c++){
+    $t=[string](T { $s.Cells.Item($r,$c).Text })
+    if($t.Trim() -ne ""){ $line+=("["+[char](64+$c)+$r+"="+$t+"] ") }
+  }
+  if($line.Trim() -ne ""){ Write-Output ("  "+$line) }
+}
+Write-Output ""
+Write-Output "=== filas de factor de descuento por bloque ==="
+foreach($r in 25,45,65,85){
+  Write-Output ("   C"+$r+" ["+[string](T { $s.Cells.Item($r,2).Text })+"] = "+[string](T { $s.Range("C"+$r).Formula }))
+}
+Write-Output ""
+Write-Output "=== summary: TV por segmento ==="
+foreach($r in 91,92,93,94){
+  Write-Output ("   r"+$r+" ["+[string](T { $s.Cells.Item($r,2).Text })+"]  D="+[string](T { $s.Range("D"+$r).Formula })+"   E="+[string](T { $s.Range("E"+$r).Formula }))
+}

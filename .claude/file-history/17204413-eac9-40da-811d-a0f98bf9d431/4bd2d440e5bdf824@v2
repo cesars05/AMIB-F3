@@ -1,0 +1,390 @@
+"""Libreria de indicadores para monitoreo semanal -- un solo punto de entrada.
+
+    python indicadores.py --tier 1      # nucleo semanal del reporte
+    python indicadores.py --tier 2      # rotacion y posicionamiento
+    python indicadores.py --tier all    # monitor completo
+    python indicadores.py --solo Crack321 GoldSPX
+
+Cada indicador se declara en INDICADORES; el script hace UNA bajada de datos
+(deduplicando RICs), una pasada de render y un JSON con last/YTD/MTD.
+
+POR QUE ESTE ARCHIVO EXISTE
+---------------------------
+Los generadores previos (macro, curva, valuacion...) abrian cada uno su sesion
+y repetian el mismo codigo de ejes/bandas/callouts. Ya hubo una colision real:
+generar_curva.py y generar_macro.py escribian ambos Spread2s10s.png. Con 40
+indicadores ese patron vuelve a chocar y las copias se desincronizan.
+
+NOTA DE ENTITLEMENTS (barrido del 2026-09-15)
+---------------------------------------------
+Los 26 indicadores economicos =ECI probados estan TODOS bloqueados: CPI, PCE,
+nominas, desempleo, PIB, housing starts, ISM, ventas minoristas. La sintaxis
+del RIC es correcta -- es un hueco de licencia, no de codigo. Por eso:
+  - Inflacion  -> breakevens (nominal menos TIPS). Es de mercado y diario.
+  - Vivienda   -> XHB / ITB / .HGX / constructoras. Proxy de mercado, NO la
+                  serie economica; etiquetarlo asi en el slide.
+  - Credito    -> HYG/LQD, porque los indices ICE BofA tampoco estan.
+"""
+import sys
+sys.path.append(r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs")
+
+import argparse
+import json
+import os
+import warnings
+import lseg.data as ld
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+from datetime import datetime
+from grafico_banquero import configurar_estilo_banquero, banda_sigma, PALETA
+
+warnings.filterwarnings("ignore")
+
+TAMANO = (3.90, 2.09)      # placeholder del layout "Grid"
+SALIDA = "indicadores"
+GAL_POR_BBL = 42           # RBOB y Heating Oil cotizan en $/galon; WTI en $/barril
+
+# ---------------------------------------------------------------------------
+# Campo por clase de instrumento -- EXPLICITO A PROPOSITO.
+#
+# No usar un loop "prueba TRDPRC_1, si falla MID_PRICE, si falla MID_YLD_1":
+# US3MT=RR responde a los DOS y da numeros distintos (3.96 con MID_PRICE,
+# 4.06 con MID_YLD_1) porque los T-bills cotizan a descuento. Un fallback
+# graficaria precio donde se pidio rendimiento sin lanzar ningun error.
+# ---------------------------------------------------------------------------
+YLD = "MID_YLD_1"    # benchmarks de tasas (=RR)
+MID = "MID_PRICE"    # FX y metales spot
+PRC = "TRDPRC_1"     # futuros, ETFs, indices
+
+# calc: (serie_a, campo_a, operador, serie_b, campo_b)  |  "crack321"
+INDICADORES = {
+# --- TIER 1: nucleo semanal -------------------------------------------------
+    "VIX":         dict(ric=".VIX",  campo=PRC, tier=1, fmt="{:,.1f}",
+                        titulo="VIX", unidad="idx", color="rojo"),
+    "MOVE":        dict(ric=".MOVE", campo=PRC, tier=1, fmt="{:,.0f}",
+                        titulo="MOVE Index (bond volatility)", unidad="idx", color="rojo"),
+    "Spread2s10s": dict(calc=("US10YT=RR", YLD, "-", "US2YT=RR", YLD), escala=100,
+                        tier=1, fmt="{:,.0f}", titulo="US 2s10s spread",
+                        unidad="bp", color="azul", tipo="area"),
+    "Breakeven10Y": dict(calc=("US10YT=RR", YLD, "-", "US10YTIP=RR", YLD), tier=1,
+                         fmt="{:.2f}%", titulo="10Y breakeven inflation",
+                         unidad="pct", color="naranja"),
+    "Breakeven5Y": dict(calc=("US5YT=RR", YLD, "-", "US5YTIP=RR", YLD), tier=1,
+                        fmt="{:.2f}%", titulo="5Y breakeven inflation",
+                        unidad="pct", color="naranja"),
+    "DXY":         dict(ric=".DXY", campo=PRC, tier=1, fmt="{:,.1f}",
+                        titulo="US Dollar Index", unidad="idx", color="azul"),
+    "USDMXN":      dict(ric="MXN=", campo=MID, tier=1, fmt="{:,.2f}",
+                        titulo="USD/MXN", unidad="fx", color="azul"),
+    "EURUSD":      dict(ric="EUR=", campo=MID, tier=1, fmt="{:,.4f}",
+                        titulo="EUR/USD", unidad="fx", color="gris_azulado"),
+    "USDJPY":      dict(ric="JPY=", campo=MID, tier=1, fmt="{:,.1f}",
+                        titulo="USD/JPY", unidad="fx", color="gris_azulado"),
+    "WTI":         dict(ric="CLc1", campo=PRC, tier=1, fmt="{:,.2f}",
+                        titulo="WTI crude", unidad="usd", color="naranja"),
+    "Brent":       dict(ric="LCOc1", campo=PRC, tier=1, fmt="{:,.2f}",
+                        titulo="Brent crude", unidad="usd", color="naranja"),
+    "Oro":         dict(ric="XAU=", campo=MID, tier=1, fmt="{:,.0f}",
+                        titulo="Gold spot", unidad="usd", color="gris_azulado"),
+    # sigma=False: subio de 20 a 65 en linea recta; una media del anio completo
+    # no describe ningun nivel en el que la serie haya estado de verdad.
+    "Crack321":    dict(calc="crack321", tier=1, fmt="{:,.1f}", sigma=False,
+                        titulo="3-2-1 crack spread", unidad="usd", color="naranja"),
+    "CreditoHYGLQD": dict(calc=("HYG.P", PRC, "/", "LQD.P", PRC), tier=1,
+                          fmt="{:.3f}", titulo="HYG / LQD (credit risk appetite)",
+                          unidad="ratio", color="azul"),
+# --- TIER 2: rotacion y posicionamiento -------------------------------------
+    "GoldSPX":     dict(calc=("XAU=", MID, "/", ".SPX", PRC), tier=2, fmt="{:.4f}",
+                        titulo="Gold / S&P 500", unidad="ratio", color="naranja"),
+    # sigma=False: quiebre de regimen en marzo (80 -> 50). La media queda a
+    # caballo del quiebre y la banda cubre 44-70, donde la serie casi no estuvo.
+    "GoldOil":     dict(calc=("XAU=", MID, "/", "CLc1", PRC), tier=2, fmt="{:,.1f}",
+                        sigma=False, titulo="Gold / Oil ratio", unidad="ratio", color="naranja"),
+    "CobreOro":    dict(calc=("HGc1", PRC, "/", "XAU=", MID), tier=2, fmt="{:.5f}",
+                        titulo="Copper / Gold (growth signal)", unidad="ratio", color="verde"),
+    "RSPvsSPY":    dict(calc=("RSP.P", PRC, "/", "SPY.P", PRC), tier=2, fmt="{:.3f}",
+                        titulo="Equal weight vs cap weight (RSP/SPY)", unidad="ratio", color="azul"),
+    "IWMvsSPY":    dict(calc=("IWM.P", PRC, "/", "SPY.P", PRC), tier=2, fmt="{:.3f}",
+                        titulo="Small vs large caps (IWM/SPY)", unidad="ratio", color="azul"),
+    "XLYvsXLP":    dict(calc=("XLY.P", PRC, "/", "XLP.P", PRC), tier=2, fmt="{:.3f}",
+                        titulo="Cyclicals vs defensives (XLY/XLP)", unidad="ratio", color="verde"),
+    "SOX":         dict(ric=".SOX", campo=PRC, tier=2, fmt="{:,.0f}",
+                        titulo="Philadelphia Semiconductor Index", unidad="idx", color="celeste"),
+    "Homebuilders": dict(ric="XHB.P", campo=PRC, tier=2, fmt="{:,.1f}",
+                         titulo="Homebuilders ETF (XHB)", unidad="usd", color="celeste"),
+    "HGX":         dict(ric=".HGX", campo=PRC, tier=2, fmt="{:,.0f}",
+                        titulo="PHLX Housing Sector Index", unidad="idx", color="celeste"),
+    "Regionales":  dict(ric="KRE.P", campo=PRC, tier=2, fmt="{:,.1f}",
+                        titulo="Regional banks ETF (KRE)", unidad="usd", color="gris_azulado"),
+    "Biotech":     dict(ric="XBI.P", campo=PRC, tier=2, fmt="{:,.1f}",
+                        titulo="Biotech ETF (XBI)", unidad="usd", color="gris_azulado"),
+    "Retail":      dict(ric="XRT.P", campo=PRC, tier=2, fmt="{:,.1f}",
+                        titulo="Retail ETF (XRT)", unidad="usd", color="gris_azulado"),
+    "GasNatural":  dict(ric="NGc1", campo=PRC, tier=2, fmt="{:.2f}",
+                        titulo="Natural gas (Henry Hub)", unidad="usd", color="naranja"),
+    "Cobre":       dict(ric="HGc1", campo=PRC, tier=2, fmt="{:.2f}",
+                        titulo="Copper", unidad="usd", color="verde"),
+# --- TIER 3: contexto -------------------------------------------------------
+    "BalticDry":   dict(ric=".BADI", campo=PRC, tier=3, fmt="{:,.0f}",
+                        titulo="Baltic Dry Index (freight)", unidad="idx", color="gris_azulado"),
+    "Bitcoin":     dict(ric="BTC=", campo=MID, tier=3, fmt="{:,.0f}",
+                        titulo="Bitcoin", unidad="usd", color="naranja"),
+    "USDBRL":      dict(ric="BRL=", campo=MID, tier=3, fmt="{:,.2f}",
+                        titulo="USD/BRL", unidad="fx", color="azul"),
+    "USDKRW":      dict(ric="KRW=", campo=MID, tier=3, fmt="{:,.0f}",
+                        titulo="USD/KRW", unidad="fx", color="azul"),
+    "USDCLP":      dict(ric="CLP=", campo=MID, tier=3, fmt="{:,.0f}",
+                        titulo="USD/CLP", unidad="fx", color="azul"),
+    "USDCAD":      dict(ric="CAD=", campo=MID, tier=3, fmt="{:.3f}",
+                        titulo="USD/CAD", unidad="fx", color="azul"),
+    "Uranio":      dict(ric="URA.P", campo=PRC, tier=3, fmt="{:,.1f}",
+                        titulo="Uranium ETF (URA)", unidad="usd", color="verde"),
+    "Solar":       dict(ric="TAN.P", campo=PRC, tier=3, fmt="{:,.1f}",
+                        titulo="Solar ETF (TAN)", unidad="usd", color="verde"),
+    "Mineras":     dict(ric="COPX.P", campo=PRC, tier=3, fmt="{:,.1f}",
+                        titulo="Copper miners ETF (COPX)", unidad="usd", color="verde"),
+    "Aerolineas":  dict(ric="JETS.P", campo=PRC, tier=3, fmt="{:,.1f}",
+                        titulo="Airlines ETF (JETS)", unidad="usd", color="gris_azulado"),
+}
+
+# Componentes del crack spread 3-2-1
+CRACK = {"RBc1": PRC, "HOc1": PRC, "CLc1": PRC}
+
+
+# ---------------------------------------------------------------------------
+# Bajada de datos: una sola pasada, deduplicando (ric, campo)
+# ---------------------------------------------------------------------------
+def rics_necesarios(seleccion):
+    pares = set()
+    for nombre in seleccion:
+        cfg = INDICADORES[nombre]
+        if "ric" in cfg:
+            pares.add((cfg["ric"], cfg["campo"]))
+        elif cfg["calc"] == "crack321":
+            pares.update(CRACK.items())
+        else:
+            a, ca, _, b, cb = cfg["calc"]
+            pares.update({(a, ca), (b, cb)})
+    return pares
+
+
+def bajar(pares, inicio, fin):
+    """Agrupa por campo para minimizar llamadas; devuelve {(ric, campo): Series}."""
+    series = {}
+    por_campo = {}
+    for ric, campo in pares:
+        por_campo.setdefault(campo, []).append(ric)
+
+    for campo, rics in por_campo.items():
+        print(f"  bajando {len(rics):2d} RICs con {campo}...")
+        d = ld.get_history(universe=rics, fields=[campo], interval="daily",
+                            start=inicio, end=fin)
+        for ric in rics:
+            try:
+                if isinstance(d.columns, pd.MultiIndex):
+                    s = d[ric][campo]
+                elif len(rics) == 1:
+                    s = d.iloc[:, 0]
+                else:
+                    s = d[ric]
+                s = s.astype(float).dropna()
+                if len(s):
+                    series[(ric, campo)] = s
+                else:
+                    print(f"    -- {ric} sin datos")
+            except Exception:
+                print(f"    -- {ric} no disponible")
+    return series
+
+
+def construir(nombre, series):
+    """Resuelve un indicador a una sola Series, ya sea directo o calculado."""
+    cfg = INDICADORES[nombre]
+
+    if "ric" in cfg:
+        return series.get((cfg["ric"], cfg["campo"]))
+
+    if cfg["calc"] == "crack321":
+        try:
+            rb, ho, cl = (series[(r, c)] for r, c in CRACK.items())
+        except KeyError:
+            return None
+        # RBOB y HO cotizan en $/galon -> x42 para pasarlos a $/barril antes de
+        # restar el crudo. Sin la conversion el spread sale en -101 en vez de +65.
+        # Ojo: son contratos continuos con fechas de roll distintas entre si,
+        # asi que la serie tiene saltos espurios en los rolls. No se corrige.
+        idx = cl.index
+        rb = rb.reindex(idx).ffill()
+        ho = ho.reindex(idx).ffill()
+        return ((2 * rb * GAL_POR_BBL + ho * GAL_POR_BBL - 3 * cl) / 3).dropna()
+
+    a, ca, op, b, cb = cfg["calc"]
+    sa, sb = series.get((a, ca)), series.get((b, cb))
+    if sa is None or sb is None:
+        return None
+    sb = sb.reindex(sa.index).ffill()
+    s = (sa - sb) if op == "-" else (sa / sb)
+    return (s * cfg.get("escala", 1)).dropna()
+
+
+# ---------------------------------------------------------------------------
+# Render
+# ---------------------------------------------------------------------------
+def valor_base(serie, antes_de):
+    """Ultimo cierre ESTRICTAMENTE anterior al inicio del periodo.
+
+    Es la convencion de Workspace: el retorno YTD se mide contra el cierre del
+    anio previo, no contra el primer dato dentro del rango.
+    """
+    previos = serie[serie.index < antes_de]
+    return previos.iloc[-1] if not previos.empty else serie.iloc[0]
+
+
+def graficar(serie, cfg, archivo, inicio_ytd, inicio_mtd):
+    s_ytd = serie[serie.index >= inicio_ytd]
+    s_mtd = s_ytd[s_ytd.index >= inicio_mtd]
+    color = PALETA[cfg.get("color", "azul")]
+    fmt = cfg["fmt"]
+
+    fig, ax = plt.subplots(figsize=TAMANO, dpi=300)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_color(PALETA["eje"])
+    ax.spines["bottom"].set_color(PALETA["eje"])
+    ax.tick_params(axis="both", length=3, color=PALETA["eje"],
+                   labelsize=6.5, labelcolor="black")
+
+    if len(s_mtd):
+        ax.axvspan(s_mtd.index[0], s_ytd.index[-1], color="#D9D9D9", alpha=0.5, zorder=0)
+
+    if cfg.get("tipo") == "area":
+        # En un spread la referencia relevante es el cero, no la media
+        ax.axhline(0, color=PALETA["eje"], linewidth=0.9, zorder=2)
+        ax.fill_between(s_ytd.index, 0, s_ytd.values, color=color, alpha=0.18, zorder=2)
+        ax.plot(s_ytd.index, s_ytd.values, color=color, linewidth=1.3, zorder=3)
+        ax.set_ylim(bottom=min(0, s_ytd.min() * 1.05))
+    elif cfg.get("sigma", True):
+        # OJO: la banda es media +/- 1 sigma de TODO el periodo. Si la serie
+        # tuvo un quiebre de regimen (Gold/Oil paso de 78 a 50 en dias en
+        # marzo), la media queda a caballo del quiebre y la banda no dice
+        # nada. Revisar el panel antes de publicarlo.
+        banda_sigma(ax, s_ytd, fontsize=5.5)
+        ax.plot(s_ytd.index, s_ytd.values, color=color, linewidth=1.3, zorder=3)
+    else:
+        ax.plot(s_ytd.index, s_ytd.values, color=color, linewidth=1.3, zorder=3)
+
+    primeros = s_ytd.index.to_series().groupby(s_ytd.index.to_period("M")).first()
+    ax.set_xticks(primeros.values)
+    ax.set_xticklabels([d.strftime("%b") for d in primeros.index.to_timestamp()])
+    ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: fmt.format(v)))
+    ax.margins(x=0)
+
+    ax.annotate(fmt.format(s_ytd.iloc[-1]), xy=(s_ytd.index[-1], s_ytd.iloc[-1]),
+                xytext=(4, 0), textcoords="offset points", va="center", ha="left",
+                fontsize=6.5, fontweight="bold", color=color, annotation_clip=False)
+
+    fig.savefig(archivo, dpi=300, bbox_inches="tight", pad_inches=0.02)
+    plt.close(fig)
+    return s_ytd
+
+
+def fmt_seguro(fmt, valor):
+    try:
+        return fmt.format(valor)
+    except (ValueError, TypeError):
+        return str(valor)
+
+
+def main():
+    ap = argparse.ArgumentParser(description="Generador de indicadores de monitoreo")
+    ap.add_argument("--tier", default="1", help="1, 2, 3 o all")
+    ap.add_argument("--solo", nargs="*", help="nombres especificos de INDICADORES")
+    args = ap.parse_args()
+
+    if args.solo:
+        seleccion = [n for n in args.solo if n in INDICADORES]
+        faltan = set(args.solo) - set(seleccion)
+        if faltan:
+            print(f"No existen: {', '.join(sorted(faltan))}")
+    elif args.tier == "all":
+        seleccion = list(INDICADORES)
+    else:
+        t = int(args.tier)
+        seleccion = [n for n, c in INDICADORES.items() if c["tier"] == t]
+
+    if not seleccion:
+        print("Nada que generar.")
+        return
+
+    configurar_estilo_banquero()
+    os.makedirs(SALIDA, exist_ok=True)
+    ld.open_session()
+
+    hoy = datetime.now()
+    inicio_ytd = f"{hoy.year}-01-01"
+    inicio_mtd = hoy.replace(day=1).strftime("%Y-%m-%d")
+    inicio_descarga = f"{hoy.year - 1}-12-01"   # colchon para el valor base
+    fin = hoy.strftime("%Y-%m-%d")
+
+    print(f"{len(seleccion)} indicadores")
+    series = bajar(rics_necesarios(seleccion), inicio_descarga, fin)
+
+    resultados, sin_datos = {}, []
+    print()
+    for nombre in seleccion:
+        cfg = INDICADORES[nombre]
+        s = construir(nombre, series)
+        if s is None or len(s[s.index >= inicio_ytd]) < 2:
+            sin_datos.append(nombre)
+            continue
+
+        archivo = f"{SALIDA}/{nombre}.png"
+        s_ytd = graficar(s, cfg, archivo, inicio_ytd, inicio_mtd)
+
+        ultimo = float(s_ytd.iloc[-1])
+        base_y = float(valor_base(s, inicio_ytd))
+        base_m = float(valor_base(s, inicio_mtd))
+
+        if cfg["unidad"] == "bp":
+            # Un spread se reporta en cambio absoluto (pb), no en %
+            ytd_txt = f"{ultimo - base_y:+.0f}bp"
+            mtd_txt = f"{ultimo - base_m:+.0f}bp"
+        elif cfg["unidad"] == "pct":
+            # Una tasa cambia en puntos porcentuales, no en % relativo
+            ytd_txt = f"{ultimo - base_y:+.2f}pp"
+            mtd_txt = f"{ultimo - base_m:+.2f}pp"
+        else:
+            ytd_txt = f"{(ultimo / base_y - 1) * 100:+.1f}%"
+            mtd_txt = f"{(ultimo / base_m - 1) * 100:+.1f}%"
+
+        resultados[nombre] = {
+            "titulo": cfg["titulo"], "archivo": archivo, "tier": cfg["tier"],
+            "last": round(ultimo, 5), "ytd": ytd_txt, "mtd": mtd_txt,
+            "fecha": str(s_ytd.index[-1].date()),
+        }
+        print(f"OK  {cfg['titulo']:44s} {fmt_seguro(cfg['fmt'], ultimo):>12s}   "
+              f"YTD {ytd_txt:>9s}; MTD {mtd_txt:>9s}")
+
+    if sin_datos:
+        print(f"\nSin datos ({len(sin_datos)}): {', '.join(sin_datos)}")
+
+    # Merge, no sobrescritura: una corrida con --solo no debe borrar del JSON
+    # los indicadores que no pidio. El deck lee este archivo completo.
+    acumulado = {}
+    if os.path.exists("datos_indicadores.json"):
+        try:
+            with open("datos_indicadores.json", encoding="utf-8") as f:
+                acumulado = json.load(f)
+        except (ValueError, OSError):
+            acumulado = {}
+    acumulado.update(resultados)
+    with open("datos_indicadores.json", "w", encoding="utf-8") as f:
+        json.dump(acumulado, f, indent=2, ensure_ascii=False)
+
+    print(f"\nListo: {SALIDA}/ ({len(resultados)} graficos), datos_indicadores.json")
+    ld.close_session()
+
+
+if __name__ == "__main__":
+    main()

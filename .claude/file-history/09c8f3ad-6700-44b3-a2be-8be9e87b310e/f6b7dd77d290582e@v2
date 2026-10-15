@@ -1,0 +1,305 @@
+"""Helpers for editing the Aztlan Athabasca deck with python-pptx."""
+import copy
+from lxml import etree
+from pptx.util import Emu, Pt
+from pptx.dml.color import RGBColor
+from pptx.chart.data import CategoryChartData
+from pptx.enum.chart import XL_CHART_TYPE, XL_LABEL_POSITION, XL_LEGEND_POSITION
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.oxml.ns import qn
+
+A = 'http://schemas.openxmlformats.org/drawingml/2006/main'
+NAVY = '002060'
+NAVY2 = '1F3A7D'
+GOLD = 'F5C400'
+STEEL = '7F8FA9'
+LBLUE = 'ACCBF9'
+GREY = '7F7F7F'
+LGREY = 'F2F2F2'
+DGREY = '404040'
+RED = 'C00000'
+GREEN = '42825D'
+IN = 914400
+
+
+def rgb(h):
+    return RGBColor.from_string(h)
+
+
+def shape_by_name(slide, name, nth=0):
+    hits = [s for s in slide.shapes if s.name == name]
+    return hits[nth]
+
+
+def shape_by_id(slide, sid):
+    for s in slide.shapes:
+        if s.shape_id == sid:
+            return s
+    raise KeyError(sid)
+
+
+def delete(shape):
+    shape._element.getparent().remove(shape._element)
+
+
+def set_geom(shape, x=None, y=None, w=None, h=None):
+    if x is not None: shape.left = Emu(int(x))
+    if y is not None: shape.top = Emu(int(y))
+    if w is not None: shape.width = Emu(int(w))
+    if h is not None: shape.height = Emu(int(h))
+
+
+def set_simple_text(shape, text):
+    """Replace text keeping the first run's formatting."""
+    tf = shape.text_frame
+    p = tf.paragraphs[0]
+    runs = p.runs
+    runs[0].text = text
+    for r in runs[1:]:
+        r._r.getparent().remove(r._r)
+    for extra in tf.paragraphs[1:]:
+        extra._p.getparent().remove(extra._p)
+
+
+def _rpr(parent_tag, size=None, b=False, i=False, color=None):
+    rpr = etree.SubElement(parent_tag, qn('a:rPr'))
+    rpr.set('lang', 'en-US')
+    if size: rpr.set('sz', str(int(size * 100)))
+    if b: rpr.set('b', '1')
+    if i: rpr.set('i', '1')
+    rpr.set('dirty', '0')
+    if color:
+        sf = etree.SubElement(rpr, qn('a:solidFill'))
+        c = etree.SubElement(sf, qn('a:srgbClr'))
+        c.set('val', color)
+    return rpr
+
+
+def mk_para(runs, size=12, lvl=0, bullet=True, algn='l', spc_bef=None, line_pts=None, default_color='000000'):
+    """runs: list of str or (str, dict(b,i,color,size))"""
+    p = etree.Element(qn('a:p'))
+    ppr = etree.SubElement(p, qn('a:pPr'))
+    if bullet:
+        if lvl == 0:
+            ppr.set('marL', '182880'); ppr.set('indent', '-182880')
+        else:
+            ppr.set('marL', '411480'); ppr.set('lvl', '1'); ppr.set('indent', '-137160')
+    else:
+        ppr.set('marL', '0'); ppr.set('indent', '0')
+    ppr.set('algn', algn)
+    if line_pts:
+        ls = etree.SubElement(ppr, qn('a:lnSpc'))
+        sp = etree.SubElement(ls, qn('a:spcPts')); sp.set('val', str(int(line_pts * 100)))
+    if spc_bef is not None:
+        sb = etree.SubElement(ppr, qn('a:spcBef'))
+        sp = etree.SubElement(sb, qn('a:spcPts')); sp.set('val', str(int(spc_bef * 100)))
+    if bullet:
+        bf = etree.SubElement(ppr, qn('a:buFont'))
+        if lvl == 0:
+            bf.set('typeface', 'Arial'); bc = etree.SubElement(ppr, qn('a:buChar')); bc.set('char', '•')
+        else:
+            bf.set('typeface', 'Courier New'); bc = etree.SubElement(ppr, qn('a:buChar')); bc.set('char', 'o')
+    else:
+        etree.SubElement(ppr, qn('a:buNone'))
+    for r in runs:
+        if isinstance(r, str):
+            txt, fmt = r, {}
+        else:
+            txt, fmt = r
+        rr = etree.SubElement(p, qn('a:r'))
+        _rpr(rr, size=fmt.get('size', size), b=fmt.get('b', False), i=fmt.get('i', False),
+             color=fmt.get('color', default_color))
+        t = etree.SubElement(rr, qn('a:t')); t.text = txt
+    return p
+
+
+def write_paras(shape, paras):
+    """paras: list of lxml a:p elements (from mk_para). Replaces existing paragraphs."""
+    tb = shape.text_frame._txBody
+    for p in tb.findall(qn('a:p')):
+        tb.remove(p)
+    for p in paras:
+        tb.append(p)
+
+
+def B(t, color=NAVY, **kw):
+    d = {'b': True, 'color': color}; d.update(kw)
+    return (t, d)
+
+
+def I(t, **kw):
+    d = {'i': True}; d.update(kw)
+    return (t, d)
+
+
+def add_textbox(slide, x, y, w, h, paras, anchor=None, wrap=True, margins=(0, 0, 0, 0)):
+    tb = slide.shapes.add_textbox(Emu(int(x)), Emu(int(y)), Emu(int(w)), Emu(int(h)))
+    tf = tb.text_frame
+    tf.word_wrap = wrap
+    tf.margin_left, tf.margin_top, tf.margin_right, tf.margin_bottom = [Emu(m) for m in margins]
+    if anchor: tf.vertical_anchor = anchor
+    write_paras(tb, paras)
+    return tb
+
+
+def add_note(slide, text, y=5900000, h=420000, size=8):
+    paras = [mk_para([I(text, size=size, color='595959')], size=size, bullet=False, algn='l')]
+    return add_textbox(slide, 525464, y, 11247957, h, paras)
+
+
+def add_rect(slide, x, y, w, h, fill=NAVY, line=None, shape=MSO_SHAPE.RECTANGLE):
+    s = slide.shapes.add_shape(shape, Emu(int(x)), Emu(int(y)), Emu(int(w)), Emu(int(h)))
+    s.shadow.inherit = False
+    if fill:
+        s.fill.solid(); s.fill.fore_color.rgb = rgb(fill)
+    else:
+        s.fill.background()
+    if line:
+        s.line.color.rgb = rgb(line); s.line.width = Pt(0.75)
+    else:
+        s.line.fill.background()
+    # kill theme style effects
+    st = s._element.find(qn('p:style'))
+    if st is not None:
+        s._element.remove(st)
+    return s
+
+
+def fill_shape_text(shape, paras, anchor=MSO_ANCHOR.MIDDLE, margins=(91440, 45720, 91440, 45720)):
+    tf = shape.text_frame
+    tf.word_wrap = True
+    tf.margin_left, tf.margin_top, tf.margin_right, tf.margin_bottom = [Emu(m) for m in margins]
+    tf.vertical_anchor = anchor
+    write_paras(shape, paras)
+
+
+# ---------------------------------------------------------------- tables
+def _set_border(tcPr, tag, color=None, w=6350):
+    ln = etree.Element(qn(tag))
+    if color is None:
+        ln.set('w', '0'); etree.SubElement(ln, qn('a:noFill'))
+    else:
+        ln.set('w', str(w)); ln.set('cap', 'flat'); ln.set('cmpd', 'sng'); ln.set('algn', 'ctr')
+        sf = etree.SubElement(ln, qn('a:solidFill'))
+        c = etree.SubElement(sf, qn('a:srgbClr')); c.set('val', color)
+        etree.SubElement(ln, qn('a:prstDash')).set('val', 'solid')
+    return ln
+
+
+def add_table(slide, x, y, col_w, rows, row_h, size=10, header_fill=NAVY, aligns=None,
+              bold_first_col=False, zebra=True, highlight_rows=(), hl_fill='EAF0FB'):
+    nrows, ncols = len(rows), len(col_w)
+    gf = slide.shapes.add_table(nrows, ncols, Emu(int(x)), Emu(int(y)), Emu(int(sum(col_w))), Emu(int(row_h * nrows)))
+    tbl = gf.table
+    tblPr = tbl._tbl.tblPr
+    for a in ('firstRow', 'bandRow', 'firstCol', 'lastRow', 'lastCol', 'bandCol'):
+        if a in tblPr.attrib: del tblPr.attrib[a]
+    sid = tblPr.find(qn('a:tableStyleId'))
+    if sid is None:
+        sid = etree.SubElement(tblPr, qn('a:tableStyleId'))
+    sid.text = '{2D5ABB26-0587-4C30-8999-92F81FD0307C}'  # No Style, No Grid
+    for j, w in enumerate(col_w):
+        tbl.columns[j].width = Emu(int(w))
+    for i in range(nrows):
+        tbl.rows[i].height = Emu(int(row_h))
+        for j in range(ncols):
+            cell = tbl.cell(i, j)
+            val = rows[i][j]
+            fmt = {}
+            if isinstance(val, tuple): val, fmt = val
+            is_h = (i == 0)
+            tf = cell.text_frame
+            tf.word_wrap = True
+            cell.margin_left = Emu(54864); cell.margin_right = Emu(54864)
+            cell.margin_top = Emu(18288); cell.margin_bottom = Emu(18288)
+            cell.vertical_anchor = MSO_ANCHOR.MIDDLE
+            al = (aligns[j] if aligns else ('l' if j == 0 else 'ctr'))
+            color = 'FFFFFF' if is_h else fmt.get('color', '000000')
+            bold = is_h or fmt.get('b', False) or (bold_first_col and j == 0)
+            para = mk_para([(val, {'b': bold, 'color': color, 'size': fmt.get('size', size), 'i': fmt.get('i', False)})],
+                           size=size, bullet=False, algn=al)
+            txb = cell._tc.txBody
+            for p in txb.findall(qn('a:p')): txb.remove(p)
+            txb.append(para)
+            # fill + borders
+            tcPr = cell._tc.get_or_add_tcPr()
+            for ch in list(tcPr): tcPr.remove(ch)
+            tcPr.append(_set_border(tcPr, 'a:lnL')); tcPr.append(_set_border(tcPr, 'a:lnR'))
+            tcPr.append(_set_border(tcPr, 'a:lnT', '000000', 12700) if is_h else _set_border(tcPr, 'a:lnT'))
+            last = (i == nrows - 1)
+            tcPr.append(_set_border(tcPr, 'a:lnB', '000000' if last else 'BFBFBF', 12700 if last else 6350))
+            if is_h:
+                f = etree.SubElement(tcPr, qn('a:solidFill')); etree.SubElement(f, qn('a:srgbClr')).set('val', header_fill)
+            elif i in highlight_rows:
+                f = etree.SubElement(tcPr, qn('a:solidFill')); etree.SubElement(f, qn('a:srgbClr')).set('val', hl_fill)
+            elif zebra and i % 2 == 0:
+                f = etree.SubElement(tcPr, qn('a:solidFill')); etree.SubElement(f, qn('a:srgbClr')).set('val', LGREY)
+            else:
+                etree.SubElement(tcPr, qn('a:noFill'))
+    return gf
+
+
+# ---------------------------------------------------------------- charts
+def add_chart(slide, x, y, w, h, cats, series, kind='col', stacked=False, gap=80, font=10,
+              label_fmt='#,##0', legend=False, label_series=None, label_colors=None, point_colors=None,
+              reverse_cats=False, vmax=None):
+    """series: list of (name, values, color). label_series: indexes with data labels."""
+    cd = CategoryChartData()
+    cd.categories = cats
+    for name, vals, _ in series:
+        cd.add_series(name, vals)
+    if kind == 'col':
+        ct = XL_CHART_TYPE.COLUMN_STACKED if stacked else XL_CHART_TYPE.COLUMN_CLUSTERED
+    else:
+        ct = XL_CHART_TYPE.BAR_STACKED if stacked else XL_CHART_TYPE.BAR_CLUSTERED
+    gf = slide.shapes.add_chart(ct, Emu(int(x)), Emu(int(y)), Emu(int(w)), Emu(int(h)), cd)
+    ch = gf.chart
+    ch.font.size = Pt(font); ch.font.name = 'Arial'
+    ch.has_title = False
+    ch.has_legend = legend
+    if legend:
+        ch.legend.position = XL_LEGEND_POSITION.BOTTOM
+        ch.legend.include_in_layout = False
+        ch.legend.font.size = Pt(font)
+    plot = ch.plots[0]
+    plot.gap_width = gap
+    if stacked: plot.overlap = 100
+    plot.vary_by_categories = False
+    va = ch.value_axis
+    va.visible = False
+    va.has_major_gridlines = False
+    va.has_minor_gridlines = False
+    va.minimum_scale = 0
+    if vmax: va.maximum_scale = vmax
+    ca = ch.category_axis
+    ca.has_major_gridlines = False
+    ca.format.line.color.rgb = rgb('000000'); ca.format.line.width = Pt(1)
+    ca.tick_labels.font.size = Pt(font)
+    from pptx.enum.chart import XL_TICK_MARK
+    ca.major_tick_mark = XL_TICK_MARK.NONE
+    if reverse_cats: ca.reverse_order = True
+    for idx, (name, vals, color) in enumerate(series):
+        s = plot.series[idx]
+        s.format.fill.solid(); s.format.fill.fore_color.rgb = rgb(color)
+        s.format.line.fill.background()
+        s.invert_if_negative = False
+        if point_colors and idx in point_colors:
+            for pi, pc in point_colors[idx].items():
+                pt = s.points[pi]
+                pt.format.fill.solid(); pt.format.fill.fore_color.rgb = rgb(pc)
+                pt.format.line.fill.background()
+        if label_series is None or idx in label_series:
+            dl = s.data_labels
+            dl.show_value = True
+            dl.number_format = label_fmt
+            dl.number_format_is_linked = False
+            dl.font.size = Pt(font)
+            dl.font.bold = True
+            col = (label_colors or {}).get(idx, '000000')
+            dl.font.color.rgb = rgb(col)
+            if stacked:
+                dl.position = XL_LABEL_POSITION.CENTER
+            else:
+                dl.position = XL_LABEL_POSITION.OUTSIDE_END
+    return gf

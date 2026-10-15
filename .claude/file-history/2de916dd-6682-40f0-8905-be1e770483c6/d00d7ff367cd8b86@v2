@@ -1,0 +1,175 @@
+import win32com.client as w, sys
+
+xl = w.GetActiveObject('Excel.Application')
+wb = [xl.Workbooks(i) for i in range(1, xl.Workbooks.Count + 1) if xl.Workbooks(i).Name == 'Bimbo Financial Model_v2.xlsx'][0]
+wc = wb.Worksheets('Consolidated Model')
+wr = wb.Worksheets('Regional Model')
+GRAY = 217 + 217 * 256 + 217 * 65536          # #D9D9D9
+BLUEFILL = 218 + 228 * 256 + 241 * 65536      # #DAE4F1
+BLUEFONT = 255 * 65536                        # 0000FF inputs
+BLACK = 0
+COLS = range(3, 13)                            # C..L = 2016..2025
+YCOL = {2021: 8, 2022: 9, 2023: 10, 2024: 11, 2025: 12}
+
+def lab(ws, r): return str(ws.Cells(r, 2).Value or '').strip()
+
+# ---------------- guards ----------------
+if not (lab(wr, 65).startswith('Depreciation & Amortization') and all(lab(wr, r) == '' for r in (61, 62, 63, 64))):
+    sys.exit('Regional layout not as expected')
+if not (lab(wc, 375).startswith('Other Financials') and lab(wc, 370).startswith('Total Adj. EBITDA') and all(lab(wc, r) == '' for r in (371, 372, 373, 374))):
+    sys.exit('Consolidated layout not as expected')
+if wc.Range('C5').Value != 2016 or wr.Range('L5').Value != 2025:
+    sys.exit('year columns not as expected')
+
+def note(cell, t):
+    if cell.Comment is not None: cell.Comment.Delete()
+    cell.AddComment(t)
+
+prev = xl.Calculation
+xl.ScreenUpdating = False; xl.Calculation = -4135
+try:
+    # ======================= REGIONAL: Unit Economics by Region at row 63 =======================
+    wr.Rows('65:85').Insert()                  # D&A header moves 65 -> 86
+    body_src = wr.Rows(56)                     # plain body row style (margin row)
+    hdr_row = 86                               # D&A header, used as header style source
+    fnt, fsz = wr.Cells(56, 2).Font.Name, wr.Cells(56, 2).Font.Size
+    wr.Range('B63:L85').ClearFormats()
+    wr.Range('B63:L85').ClearContents()
+    for r in range(63, 86):
+        wr.Rows(r).RowHeight = wr.Rows(56).RowHeight
+    rng = wr.Range('B63:L85'); rng.Font.Name = fnt; rng.Font.Size = fsz
+    # header row copies the D&A header style, then blue analysis fill
+    wr.Range(f'B{hdr_row}:L{hdr_row}').Copy(); wr.Range('B63:L63').PasteSpecial(Paste=-4122); xl.CutCopyMode = False
+    wr.Rows(63).RowHeight = wr.Rows(hdr_row).RowHeight
+    wr.Range('B63:L63').Interior.Color = BLUEFILL
+    wr.Range('B63').Value2 = 'Unit Economics by Region'
+    for i, c in enumerate(COLS):
+        wr.Cells(63, c).Value2 = 2016 + i
+    wr.Range('B85:L85').Borders(9).LineStyle = 1   # line before next header, as elsewhere
+    wr.Range('B85:L85').Borders(9).Weight = wr.Range(f'B{hdr_row - 1}').Borders(9).Weight
+
+    # locate segment rows (after insert)
+    def find(ws, text, start=1, end=260):
+        for r in range(start, end):
+            if lab(ws, r) == text: return r
+        sys.exit('not found ' + text)
+    ebh = find(wr, 'Adjusted EBITDA', 86)
+    seg = ['   North America', '   Mexico', '   EAA', '   Latin America']
+    names = ['North America', 'Mexico', 'EAA', 'Latin America']
+    ns_rows = [6, 7, 8, 9]; ns_tot = 11
+    eb_rows = [ebh + 1, ebh + 2, ebh + 3, ebh + 4]; eb_tot = ebh + 6
+    assert lab(wr, ebh + 1) == 'North America' and lab(wr, eb_tot).startswith('Grupo Bimbo')
+
+    plants = {2021: [79, 39, 54, 36], 2022: [80, 35, 53, 37], 2024: [77, 37, 70, 39], 2025: [77, 38, 92, 42]}
+    def sub(r, text): wr.Cells(r, 2).Value2 = text; wr.Cells(r, 2).Font.Bold = True
+    sub(64, 'Bakeries and Plants (year-end)')
+    for j in range(4):
+        r = 65 + j; wr.Cells(r, 2).Value2 = names[j]
+        for y, v in plants.items():
+            wr.Cells(r, YCOL[y]).Value2 = v[j]
+        wr.Range(wr.Cells(r, 3), wr.Cells(r, 12)).Font.Color = BLUEFONT
+        wr.Range(wr.Cells(r, 3), wr.Cells(r, 12)).NumberFormat = '#,##0;(#,##0);"-"'
+    wr.Cells(69, 2).Value2 = 'Grupo Bimbo (Consolidated)'; wr.Range('B69:L69').Font.Bold = True
+    for c in COLS:
+        col = wr.Cells(1, c).Address.split('$')[1]
+        wr.Cells(69, c).Formula = f'=IF(COUNT({col}65:{col}68)=0,"",SUM({col}65:{col}68))'
+    wr.Range('C69:L69').NumberFormat = '#,##0;(#,##0);"-"'
+    wr.Range('B68:L68').Borders(9).LineStyle = 1
+
+    def ratio_block(top, title, num_rows, num_tot, fmt):
+        sub(top, title)
+        for j in range(4):
+            r = top + 1 + j; wr.Cells(r, 2).Value2 = seg[j]
+            for c in COLS:
+                col = wr.Cells(1, c).Address.split('$')[1]
+                wr.Cells(r, c).Formula = f'=IFERROR({col}{num_rows[j]}/{col}{65 + j},"")'
+        r = top + 5; wr.Cells(r, 2).Value2 = '   Grupo Bimbo (Consolidated)'; wr.Range(f'B{r}:L{r}').Font.Bold = True
+        for c in COLS:
+            col = wr.Cells(1, c).Address.split('$')[1]
+            wr.Cells(r, c).Formula = f'=IFERROR({col}{num_tot}/{col}69,"")'
+        wr.Range(wr.Cells(top + 1, 3), wr.Cells(top + 5, 12)).NumberFormat = fmt
+        wr.Range(wr.Cells(top + 1, 3), wr.Cells(top + 5, 12)).Font.Color = BLACK
+    ratio_block(71, 'Net Sales per Plant (MXN mm)', ns_rows, ns_tot, '#,##0;(#,##0);"-"')
+    ratio_block(78, 'Adj. EBITDA per Plant (MXN mm)', eb_rows, eb_tot, '#,##0;(#,##0);"-"')
+
+    note(wr.Range('B63'), 'Plants per BMV annual reports (section 10.1, productive facilities at 31 Dec) for 2021, 2022, 2024 and 2025. A plant is any bakery or production site regardless of size, capacity is not disclosed, so compare each region over time rather than across regions. EAA includes many small acquired bakeries (Europe 26 in 2021 to 61 in 2025). 2023 not split by region in available filings, 2016-2020 not in folder. 2021 sales and EBITDA are on the original basis including Ricolino, consistent with the 2021 plant count.')
+    note(wr.Range('H69'), 'Reported total was 206 in 2021 and 204 in 2022 vs 208 and 205 summing the regional list.')
+
+    # ======================= CONSOLIDATED: Unit Economics at row 372 =======================
+    wc.Rows('375:390').Insert()                # Other Financials header moves 375 -> 391
+    hdr = 391
+    assert lab(wc, hdr).startswith('Other Financials')
+    last = wc.Cells(hdr, wc.Columns.Count).End(-4159).Column   # last used col in header row
+    last = max(last, 12)
+    L = lambda c: wc.Cells(1, c).Address.split('$')[1]
+    area = f'B371:{L(last)}390'
+    wc.Range(area).ClearContents(); wc.Range(area).ClearFormats()
+    f2, s2 = wc.Cells(365, 2).Font.Name, wc.Cells(365, 2).Font.Size
+    wc.Range(area).Font.Name = f2; wc.Range(area).Font.Size = s2
+    for r in range(371, 391):
+        wc.Rows(r).RowHeight = wc.Rows(365).RowHeight
+    # line before header (pattern used in the sheet) and header copied from Other Financials
+    wc.Range(f'B371:{L(last)}371').Borders(9).LineStyle = 1
+    wc.Range(f'B{hdr}:{L(last)}{hdr}').Copy(); wc.Range(f'B372:{L(last)}372').PasteSpecial(Paste=-4122); xl.CutCopyMode = False
+    wc.Rows(372).RowHeight = wc.Rows(hdr).RowHeight
+    wc.Range(f'B372:{L(last)}372').Interior.Color = GRAY
+    wc.Range('B372').Value2 = 'Unit Economics'
+    for c in range(3, last + 1):
+        if wc.Cells(hdr, c).HasFormula:
+            wc.Cells(372, c).Formula = f'=+{L(c)}$5'
+    wc.Range(f'B390:{L(last)}390').Borders(9).LineStyle = 1
+    ind = wc.Cells(365, 2).IndentLevel
+
+    inputs = [('Bakeries and Plants (year-end)', {2021: 206, 2022: 204, 2023: 217, 2024: 223, 2025: 249}),
+              ('Distribution Routes', {2021: 54000, 2022: 55000, 2023: 57000, 2024: 58000, 2025: 54000}),
+              ('Sales Centers', {2021: 1600, 2022: 1600, 2023: 1500, 2024: 1500, 2025: 1700}),
+              ('Associates', {2021: 137000, 2022: 139000, 2023: 149000, 2024: 152000, 2025: 153000})]
+    r = 374
+    rows = {}
+    for name, vals in inputs:
+        wc.Cells(r, 2).Value2 = name; wc.Cells(r, 2).IndentLevel = ind
+        for y, v in vals.items():
+            wc.Cells(r, YCOL[y]).Value2 = v
+        wc.Range(wc.Cells(r, 3), wc.Cells(r, 12)).Font.Color = BLUEFONT
+        wc.Range(wc.Cells(r, 3), wc.Cells(r, 12)).NumberFormat = '#,##0;(#,##0);"-"'
+        rows[name] = r; r += 1
+    wc.Range('B377:L377').Borders(9).LineStyle = 1
+    P, R, SC, A = rows['Bakeries and Plants (year-end)'], rows['Distribution Routes'], rows['Sales Centers'], rows['Associates']
+    ratios = [(379, 'Net Sales per Route (MXN mm)', '{c}7/{c}%d' % R, '#,##0.00', True),
+              (380, 'Gross Profit per Route (MXN mm)', '{c}16/{c}%d' % R, '#,##0.00', False),
+              (381, 'Distribution Cost per Route (MXN mm)', '-{c}19/{c}%d' % R, '#,##0.00', False),
+              (382, 'Adj. EBITDA per Route (MXN mm)', '{c}36/{c}%d' % R, '#,##0.00', True),
+              (384, 'Net Sales per Plant (MXN mm)', '{c}7/{c}%d' % P, '#,##0', False),
+              (385, 'Adj. EBITDA per Plant (MXN mm)', '{c}36/{c}%d' % P, '#,##0', True),
+              (386, 'Net Sales per Associate (MXN k)', '{c}7/{c}%d*1000' % A, '#,##0', False),
+              (387, 'Adj. EBITDA per Associate (MXN k)', '{c}36/{c}%d*1000' % A, '#,##0', False),
+              (388, 'Routes per Sales Center', '{c}%d/{c}%d' % (R, SC), '#,##0.0', False)]
+    for rr, name, expr, fmt, bold in ratios:
+        wc.Cells(rr, 2).Value2 = name; wc.Cells(rr, 2).IndentLevel = ind
+        if bold: wc.Range(f'B{rr}:L{rr}').Font.Bold = True
+        for c in COLS:
+            wc.Cells(rr, c).Formula = '=IFERROR(' + expr.format(c=L(c)) + ',"")'
+        wc.Range(wc.Cells(rr, 3), wc.Cells(rr, 12)).NumberFormat = fmt
+        wc.Range(wc.Cells(rr, 3), wc.Cells(rr, 12)).Font.Color = BLACK
+
+    note(wc.Range('B374'), 'Sources: plants, routes and associates at 31 Dec per BMV annual reports 2021, 2022, 2024 and 2025. 2023 and all sales center counts per the About Grupo Bimbo paragraph of each 4Q results release (matches the BMV year-end figures in 2021, 2024 and 2025). Counts are reported as "more than" and are rounded. 2016-2020 not available in the folder.')
+    note(wc.Range('H374'), '2021 counts include Ricolino while 2021 revenue in this model is restated excluding it, so 2021 per-unit ratios are slightly understated.')
+    note(wc.Range('B381'), 'Distribution costs from the income statement (row 19) divided by routes. Covers the full DSD network cost, not only route drivers.')
+
+    xl.Calculation = -4105; xl.CalculateFull()
+    errs = {}
+    for ws in (wc, wr):
+        try: errs[ws.Name] = ws.UsedRange.SpecialCells(-4123, 16).Address
+        except Exception: errs[ws.Name] = None
+    print('errors:', errs)
+    print('REGIONAL')
+    for rr in list(range(63, 70)) + list(range(71, 77)) + list(range(78, 84)):
+        print(rr, lab(wr, rr)[:32].ljust(32), [wr.Cells(rr, c).Text for c in range(8, 13)])
+    print('check EBITDA source rows:', lab(wr, eb_rows[0]), eb_rows, eb_tot)
+    print('CONSOLIDATED')
+    for rr in range(371, 392):
+        print(rr, lab(wc, rr)[:36].ljust(36), [wc.Cells(rr, c).Text for c in range(8, 13)])
+    wb.Save()
+finally:
+    xl.Calculation = prev if prev in (-4105, -4135) else -4105
+    xl.ScreenUpdating = True

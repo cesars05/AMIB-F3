@@ -1,0 +1,81 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+$cm=$wb.Worksheets.Item("Consolidated Model")
+$sm=$wb.Worksheets.Item("Segment Model")
+$L=@{12="L";13="M";14="N";15="O";16="P";17="Q"}
+
+Write-Output "### A) Valores DUROS distintos de cero en la proyeccion (L..Q) ###"
+foreach($pair in @(@($cm,"CM",10,380),@($sm,"SM",10,235))){
+  $sh=$pair[0]; $nm=[string]$pair[1]; $r1=[int]$pair[2]; $r2=[int]$pair[3]
+  for($r=$r1;$r -le $r2;$r++){
+    $hard=@()
+    foreach($c in 12,13,14,15,16,17){
+      $f=""
+      try{ $f=[string]$sh.Cells.Item($r,$c).Formula }catch{}
+      if($f -eq "" -or $f.StartsWith("=")){ continue }
+      $v=$null; try{ $v=$sh.Cells.Item($r,$c).Value2 }catch{}
+      if($v -ne $null -and $v -is [double] -and $v -ne 0){ $hard+=([string]$L[$c]+"="+[string]$v) }
+    }
+    if($hard.Count -gt 0){
+      $lab=""
+      foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$sh.Cells.Item($r,$cc).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+      if($lab.Length -gt 38){ $lab=$lab.Substring(0,38) }
+      Write-Output ("  "+$nm+" r"+([string]$r).PadRight(4)+$lab.PadRight(39)+" "+($hard -join "  "))
+    }
+  }
+}
+Write-Output ""
+Write-Output "### B) Trayectorias del CASO BASE (K=FY2026 real, L..Q proyeccion) ###"
+$h="  "+"".PadRight(30)
+for($c=11;$c -le 17;$c++){ $h+=([string]$cm.Cells.Item(9,$c).Text).PadLeft(10) }
+Write-Output $h
+$tr=@()
+$tr+=,@(13,"Revenue")
+$tr+=,@(53,"Adj. EBITDA")
+$tr+=,@(54,"  (+) Depreciation")
+$tr+=,@(55,"  (+) Amortisation")
+$tr+=,@(56,"Adj. Operating Profit")
+$tr+=,@(81,"  Adj. EBITDA margin")
+$tr+=,@(62,"  Tax expense")
+$tr+=,@(63,"  Tax on non-underlying")
+$tr+=,@(64,"Adj. Net Income")
+$tr+=,@(70,"Adj. EPS (p)")
+$tr+=,@(183,"Pension contributions")
+$tr+=,@(168,"CHECK balance")
+$tr+=,@(215,"CHECK caja")
+foreach($x in $tr){
+  $r=[int]$x[0]
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(10) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+([string]$x[1]).PadRight(25)+$v)
+}
+Write-Output ""
+Write-Output "### C) D&A por segmento en el Segment Model ###"
+$h2="  "+"".PadRight(30)
+for($c=11;$c -le 17;$c++){ $h2+=([string]$sm.Cells.Item(9,$c).Text).PadLeft(10) }
+Write-Output $h2
+foreach($r in 30,31,32,33,34){
+  $lab=""
+  foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$sm.Cells.Item($r,$cc).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  if($lab.Length -gt 28){ $lab=$lab.Substring(0,28) }
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$sm.Cells.Item($r,$c).Text).PadLeft(10) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(29)+$v)
+}
+Write-Output ""
+$d=$wb.Worksheets.Item("DCF")
+Write-Output ("  DCF = "+[string]$d.Range("E41").Text+" ("+[string]$d.Range("E42").Text+")   SOTP = "+[string]$wb.Worksheets.Item("SOTP").Range("D112").Text+"   EPV = "+[string]$wb.Worksheets.Item("EPV").Range("E61").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=$wb.Worksheets.Item($nm)
+  $e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

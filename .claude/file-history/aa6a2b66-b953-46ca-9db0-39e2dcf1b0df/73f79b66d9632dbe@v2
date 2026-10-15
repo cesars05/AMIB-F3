@@ -1,0 +1,63 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t = $null; foreach ($w in $xl.Workbooks) { if ($w.Name -eq '20260922_SETSA Transportes.xlsx') { $t = $w } }
+if (-not $t) { throw 'libro no encontrado' }
+$tx = $t.Worksheets.Item('Transacciones Precedentes')
+$t.SaveCopyAs("$PSScriptRoot\backup_antes_tx_pasajeros.xlsx")
+
+# validar layout esperado
+if ([string]$tx.Range('C11').Value2 -ne 'Comprador' -or [string]$tx.Range('M11').Value2 -ne 'TEV / EBITDA') { throw 'encabezados inesperados' }
+if ([string]$tx.Range('D17').Value2 -ne 'Estafeta Mexicana') { throw 'fila 17 inesperada' }
+if ([string]$tx.Range('G20').Value2 -ne 'Mediana') { throw 'fila 20 no es Mediana' }
+
+function D([int]$y, [int]$mo, [int]$d) { return ([datetime]::new($y, $mo, $d)).ToOADate() }
+function Put($r, $comp, $emp, $desc, $fecha, $pct, $tev, $rev, $ebitda) {
+    $tx.Range("C$r").Value2 = $comp; $tx.Range("D$r").Value2 = $emp; $tx.Range("E$r").Value2 = $desc
+    $tx.Range("G$r").Value2 = $fecha; $tx.Range("H$r").Value2 = $pct
+    foreach ($p in @(@('I', $tev), @('J', $rev), @('K', $ebitda))) {
+        $v = $p[1]; if ($v -is [string] -and $v.StartsWith('=')) { $tx.Range("$($p[0])$r").Formula = $v } else { $tx.Range("$($p[0])$r").Value2 = $v }
+    }
+    $tx.Range("L$r").Formula = "=IFERROR(I$r/J$r,`"N/A`")"
+    $tx.Range("M$r").Formula = "=IFERROR(I$r/K$r,`"N/A`")"
+}
+
+# ---------- 1) comparables de transporte de personas (filas 13-15) ----------
+# fila 13 (Traxión OPA) se queda igual
+Put 14 'Kelsian Group Limited' 'All Aboard America! Holdings, Inc.' 'Chárter y transporte de personal con contrato (AZ, NM, TX, CA)' (D 2023 3 14) 1 '=325+26' 208 51
+Put 15 'I Squared Capital' 'Mobico – North America School Bus' 'Transporte escolar con contrato (EE.UU. y Canadá)' (D 2025 4 25) 1 608 '=792.6*1.28' 122
+$tx.Range('E13').Value2 = 'Carga, logística y transporte de personal (Lipu ~33% de ingresos)'
+
+# formato de cierre de tabla (borde inferior) de la fila 17 a la 15, luego borrar 16:17
+$tx.Rows.Item(17).Copy() | Out-Null; $tx.Rows.Item(15).PasteSpecial(-4122) | Out-Null; $xl.CutCopyMode = $false
+$tx.Range('16:17').EntireRow.Delete() | Out-Null
+"estadisticas: " + $tx.Range('M18').Formula + ' | ' + $tx.Range('M20').Formula
+
+# ---------- 2) bloque de referencia (fuera de estadísticas) ----------
+$rMin = 0; for ($r = 15; $r -le 30; $r++) { if ([string]$tx.Cells.Item($r, 7).Value2 -eq 'Mínimo') { $rMin = $r } }
+if ($rMin -eq 0) { throw 'no encontre Minimo' }
+$r0 = $rMin + 2
+$tx.Range("$($r0):$($r0 + 3)").EntireRow.Insert() | Out-Null
+$tx.Rows.Item(13).Copy() | Out-Null; $tx.Range("$($r0 + 1):$($r0 + 3)").PasteSpecial(-4122) | Out-Null; $xl.CutCopyMode = $false
+$tx.Range("C$r0").Value2 = 'Referencia: transporte de carga y logística (no entra a las estadísticas)'
+$tx.Range("C$r0").Font.Bold = $true; $tx.Range("C$r0").Font.Italic = $true; $tx.Range("C$r0").HorizontalAlignment = -4131
+Put ($r0 + 1) 'Grupo Traxión' 'Solística México (Grupo FEMSA)' 'Logística integral asset-light (EBITDA = guía 2025)' (D 2024 10 10) 1 '=1650/19.5' '=8000/19.5' '=360/19.5'
+Put ($r0 + 2) 'Grupo Traxión' 'BBA Logistics' 'Brokerage de carga México–EE.UU. (asset-light)' (D 2023 6 19) 1 10 22 '=22*0.1'
+Put ($r0 + 3) 'Grupo México' 'GMéxico Transportes (OPA de desliste)' 'Ferrocarril de carga (prensa: 7.25x)' (D 2025 9 23) 0.0895 11168 3493 '=3493*0.419'
+$tx.Rows.Item($r0 + 3).Borders.Item(9).LineStyle = 1
+
+# ---------- 3) encabezado y centro de la sensibilidad ----------
+$tx.Range('C5').Value2 = 'Transporte de personas: México y EE.UU. (estados fronterizos)'
+$rMed = 0; for ($r = 15; $r -le 30; $r++) { if ([string]$tx.Cells.Item($r, 7).Value2 -eq 'Mediana') { $rMed = $r } }
+$rAxis = 0; for ($r = 25; $r -le 60; $r++) { if ([string]$tx.Cells.Item($r, 13).Value2 -eq 'Múltiplo TEV / EBITDA') { $rAxis = $r + 1 } }
+if ($rAxis -gt 0) {
+    $v = $tx.Cells.Item($rAxis, 13).Value2
+    if ($v -is [double]) { $tx.Cells.Item($rAxis, 13).Formula = "=M$rMed"; "centro sensibilidad M$rAxis -> =M$rMed" }
+}
+
+$xl.CalculateFull()
+$err = 0; foreach ($ws in $t.Worksheets) { foreach ($c in $ws.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $err++; "ERR " + $ws.Name + "!" + $c.Address($false,$false) } } }
+"errores=$err"
+for ($r = 11; $r -le $r0 + 4; $r++) { "$r | " + (('C','D','G','H','I','J','K','L','M' | ForEach-Object { ([string]$tx.Range("$_$r").Text) }) -join ' | ') }
+$rVal = 0; for ($r = 25; $r -le 70; $r++) { if (([string]$tx.Cells.Item($r, 3).Value2) -like 'Valor del Capital (100%)*') { $rVal = $r; break } }
+"Multiplo usado: " + $tx.Range("F$($rVal - 6)").Text + " | TEV: " + $tx.Range("F$($rVal - 5)").Text + " | Capital: " + $tx.Range("F$rVal").Text
+$t.Save(); "guardado=" + $t.Saved

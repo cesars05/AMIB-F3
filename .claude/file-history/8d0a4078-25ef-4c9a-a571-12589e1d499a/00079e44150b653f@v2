@@ -1,0 +1,7 @@
+# _NOTES: Backup/
+
+| File | What it is |
+|---|---|
+| `20261007_Fuso.xlsx` | Old model (pre-segment build). Ignore |
+| `20261009_Fuso Chemicals_BACKUP_20261009_132004.xlsx` | `SaveCopyAs` snapshot taken before the segment-analysis edits of 9-Oct-2026. Use it to roll back; 1.6 MB because it still carries the LSEG sheets |
+| `Workspace Segment Financials.xlsx` | LSEG Workspace export: tab "Business Line By Stat" (reported segments to FY03/2025) and "Statement App" (consensus mean FY03/2027-31 plus a Guidance row). Workspace stops one year before the latest filing; its "Guidance" row is the last revised figure and may be newer than the May-2026 deck |

@@ -1,0 +1,204 @@
+# 11 — Financial Analysis: qué pide la rúbrica y qué hicieron los reportes pasados
+
+**Fecha:** 19 septiembre 2026
+**Fuentes leídas directamente:** `rc-equity-research-report-essentials.pdf` (sección FINANCIAL ANALYSIS, texto verbatim), y las secciones de Financial Analysis de los 4 reportes relevantes: Waterloo '24 (Cargojet), Waterloo '26 (Lightspeed), Fibra MTY Tec (Campus Monterrey) y UDLAP — **estos dos últimos cubren la misma empresa, Fibra Mty**, en el reto local México 2024. Se incluye La Comer (ganador local '25) como contraste porque es el reporte mexicano más reciente y el único de los tres mexicanos que construye la sección completa.
+
+> Complementa `07` §3.6 (checklist) y `06` §3.2 (asignación de páginas). Lo que agrega: qué análisis concreto hace cada equipo, con qué metodología, y dónde están los huecos contra el estándar.
+
+---
+
+## 1. Lo que dice el estándar — texto verbatim
+
+El Apéndice D solo dice **"Financial Analysis — 20 puntos"** y deja la columna de comentarios en blanco (`07` §1). El único contenido publicado está en el `Essentials`:
+
+> *"This section should include a detailed analysis of the company's historical financial performance and a forecast of future performance. **Financial results are commonly manipulated to portray firms in the most favorable light. It is the responsibility of the analyst to understand the underlying financial reality.** Accordingly, a careful reading of the footnotes of a company's financial disclosures is an essential part of any examination of **earnings quality**. Nonrecurring events, the use of off-balance-sheet financing, income and reserve recognition, and depreciation policies are all examples of items that can distort a firm's financial results.*
+>
+> *Financial modeling of future financial results helps to measure the effects of changes in certain inputs on the various financial statements. Analysts should be especially careful, however, about **extrapolating past trends into the future**. This is especially important in the case of cyclical firms. **Projecting forward from the top or bottom of a business cycle is a common mistake.***
+>
+> *Finally, it can be informative to use **industry-specific financial ratios** as part of the financial analysis. Examples include proven reserves/share for oil companies, revenue/subscriber for cable or wireless companies, and revenue/available rooms for the hotel industry."*
+
+Son **cinco obligaciones**, no una:
+
+| # | Obligación | Verbo del texto |
+|---|---|---|
+| 1 | Desempeño histórico detallado | "detailed analysis of ... historical financial performance" |
+| 2 | Pronóstico del desempeño futuro | "a forecast of future performance" |
+| 3 | **Calidad de utilidades leyendo las notas** | "careful reading of the footnotes ... essential part" |
+| 4 | Modelo que mida el efecto de cambios en inputs sobre **los estados financieros** (plural) | "measure the effects of changes in certain inputs on the various financial statements" |
+| 5 | **Ratios específicos de la industria** | "it can be informative to use industry-specific financial ratios" |
+
+Y dos advertencias: no extrapolar tendencias (crítico en cíclicas), y el recordatorio de que las cifras reportadas están construidas para favorecer a la empresa.
+
+**Lectura clave:** la obligación #3 es la única que el `Essentials` describe con lenguaje moral ("responsibility of the analyst", "essential"). Es el corazón de los 20 puntos y es exactamente lo que casi nadie hace.
+
+---
+
+## 2. Matriz comparativa — qué cubre cada reporte
+
+| Dimensión | Waterloo '24 (Cargojet) | Waterloo '26 (Lightspeed) | Fibra MTY Tec | UDLAP (Fibra Mty) | La Comer |
+|---|---|---|---|---|---|
+| Sección con el nombre exacto de la rúbrica | Sí ("Financial Analysis") | Sí ("Financial analysis") | Sí ("FINANCIAL ANALYSIS") | **No existe la sección** | Sí |
+| Ubicación en el reporte | Después de Valuation | Después de Valuation | **Después de ESG**, antes de Valuation | disperso | Después de las tesis, antes de Valuation |
+| Espacio | ~1.5 pág (p. 8–9) | ~1.5 pág (p. 8–9) | ~1.5 pág (p. 7–9) | ~1.0 pág equivalente | ~1.5 pág |
+| **Tabla de ratios tipo DuPont** | **Sí** — 4 años A + 6 años E | **Sí** — 5 años A + 5 años P | **No** | **No** | **Sí** — 3 años A + 10 años F |
+| Ventana histórica | 2019–2022A | 2021–2025A | ~2018–2023 (solo en gráficas) | 2019–2023 | 2022–2024A (+ referencias a 2016) |
+| Horizonte de pronóstico | 2023E–2028E (6a) | 2026P–2030P (5a) | 2024E (+5a en prosa) | 2024E–2030E (7a) | 2025F–2034F (10a) |
+| Liquidez (current/quick) | Sí | Sí | No | No | Sí |
+| Apalancamiento (cobertura, Deuda/EBITDA) | Sí | Sí | Sí, pero en prosa/gráficas | Parcial | Sí (+ neto de IFRS 16) |
+| Capital de trabajo / ciclo de conversión | No | No | No | **Sí** (metodología de días, en Valuation) | **Sí** (CCC de –2 días) |
+| **Calidad de utilidades explícita** | Parcial (EBITDA vs. Adj. EBITDA en la tabla) | **Sí, fuerte** (ver §3.2) | **No** | Parcial (ver §3.4) | Parcial (ajuste por IFRS 16) |
+| Ratios específicos de industria | Costo directo por block hour, payload; margen vs. peers | ARPU, GTV, conversión GPV→ingreso, costo de adquiring | Renta US$/m², ocupación, NOI/UAFIDA %, FFO/AFFO, LTV, DSCR | ABR × ocupación × renta, FFO/AFFO, payout | Ventas mismas tiendas, % online, ventas/tienda |
+| Estados financieros completos en apéndice | Proyección de FCF + soporte de valuación | Proyección de FCF + revenue build | **Solo balance general** | **Los tres estados** | **Los tres estados** (Anexos 21–23) |
+| Escenarios bear/base/bull ligados a la sección | Sí (ROIC forecast) | Sí (ROIC forecast) | No | No | No |
+| Revisión de opinión del auditor / material weakness | No | No | No | No | No |
+
+---
+
+## 3. Qué hace cada uno, con detalle
+
+### 3.1 Waterloo '24 (Cargojet) — el molde
+
+**Estructura:** una tabla de ratios arriba, y debajo seis subtítulos que son **afirmaciones**, no etiquetas:
+
+1. *Stronger than anticipated post-COVID growth*
+2. *Margins stabilize above pre-COVID levels*
+3. *Increasing returns for investors*
+4. *Strong sustainable cash flows*
+5. *Improving credit profile*
+6. *Superior EBITDA margins against peers*
+
+Ningún subtítulo dice "Rentabilidad" o "Liquidez". Cada uno es una conclusión que el párrafo defiende. Eso es lo más copiable del reporte.
+
+**La tabla (Figura 28)** cubre 2019A–2028E en tres bloques: *DuPont Analysis* (gross margin, EBITDA margin, **Adjusted EBITDA margin como renglón aparte**, net profit margin, asset turnover, ROA, financial leverage A/E, ROE, ROIC), *Liquidity* (current, quick) y *Debt Ratios* (interest coverage, Debt/Adj. EBITDA).
+
+**Cómo tratan las dos advertencias del `Essentials`:**
+- **No extrapolar el ciclo:** es literalmente el argumento de la sección. Dicen que COVID fue "a perfect storm" y que *"COVID growth rates are not sustainable"*, y proyectan márgenes estabilizándose **arriba** de pre-pandemia por una razón operativa concreta (vendieron aviones chicos, consolidaron volumen, dejaron rutas subóptimas). Contestan la advertencia de CFA de frente.
+- **Ratio de industria construido por ellos:** **costo directo por block hour excluyendo combustible y D&A** (Apéndice 10), más análisis de payload total de la flota (Apéndice 9). Ninguno de los dos existe en los estados financieros — los construyeron.
+
+**El puente a ROIC** (Apéndice 8) es la pieza técnica: descomponen ROIC en margen NOPAT × rotación de capital invertido, muestran que Net PP&E es ~90% del capital invertido y que el capex de crecimiento venía destruyendo la rotación. Conclusión: con la base de PP&E estable, las mejoras de margen caen directo a ROIC. Eso convierte un ratio en una tesis.
+
+### 3.2 Waterloo '26 (Lightspeed) — el ejemplo de calidad de utilidades
+
+Misma arquitectura (tabla DuPont 2021A–2030P + subtítulos-afirmación), cuatro bloques:
+
+1. *Short-term top-line growth with new initiative*
+2. *Margins stabilize, except for transaction-related segment*
+3. *Continued cash flow challenges*
+4. *Capital history and recent share buybacks*
+
+**Lo que lo distingue y es directamente aplicable a Bimbo:**
+
+- **Descomponen el crecimiento en orgánico vs. inorgánico.** 147% FY21–FY22 vs. 18.4% FY24–FY25, y atribuyen el crecimiento alto a adquisiciones y a la imposición obligatoria de Lightspeed Payments, no a demanda subyacente. Apéndice 13 completo sobre crecimiento orgánico.
+- **Análisis de márgenes por segmento, no consolidado.** Suscripción (estabiliza), hardware (estructuralmente en pérdida por descuentos, ~–60% margen bruto), transaccional (se deteriora por mezcla hacia comercios de mayor GTV). El consolidado escondía tres historias opuestas.
+- **Manipulación de métricas señalada explícitamente.** *"LSPD has concealed missed targets by stopping or altering the reporting of key metrics"* — ARPU redefinido antes del evento de 2025, y % de ingreso sobre GTV y crecimiento de suscripción simplemente omitidos. Esto es la obligación #3 del `Essentials` ejecutada literalmente.
+- **Deterioros cuantificados contra el múltiplo de compra:** adquisiciones a 12.5x EV/Revenue promedio ponderado, hoy implícitas en 5.4x, US$1.3bn de impairments reconocidos, y calculan que a 1.05x actual habría ~US$800M adicionales.
+- **Juicio sobre asignación de capital.** Los buybacks: levantaron US$332M + US$824M para invertir en el negocio y años después recompran acciones sin haber creado valor — *"an undisciplined use of capital"*. Es opinión del analista sobre management, dentro de Financial Analysis.
+- **Ratios de industria construidos:** ARPU implícito por región, conversión implícita de GPV a ingreso, y el costo de adquiring de terceros (Stripe) que escala proporcional al volumen.
+
+### 3.3 Fibra MTY Tec (Campus Monterrey) — el más flojo de los cuatro
+
+**Lo que sí tiene:** una sección bien organizada en bloques con subtítulos en mayúsculas (*INDUSTRIAL PORTFOLIO DRIVES GROWTH*, *ECONOMIES OF SCALE DRIVES PROFITABILITY*, *CAPITAL STRUCTURE*, *Capital Strategy and CBFI Buybacks*, *Effective Debt Management*, *Credit and Growth Financing Facilities*), con métricas correctas para un FIBRA:
+
+- Ingresos +15.9% (2Q23–3Q24), industrial +20.3%, Bajío +41.9% vs. 3Q23 y +80.9% vs. año previo, con la causa atribuida (fase 2 de Zeus, Aerotech, expansiones en Aguascalientes y Querétaro, +156,563 m² de ABR)
+- Rentas promedio por m² por clase de activo: US$5.8 industrial, US$19.5 oficinas corporativas, US$16.0 oficinas operativas, US$7.9 comercial
+- Márgenes NOI 90.4% y UAFIDA 83.5%, contra objetivo, con la desviación en puntos base
+- FFO +55.1% y AFFO +55.9% en 3Q24 vs. 3Q23
+- Estructura de capital: apalancamiento objetivo 25%–35%, deuda/activos 25.8% (desde 26.2%), madurez promedio 3.8 años, DSCR 2.59x vs. mínimo de 1.0x, líneas de crédito por banco con tasa (BBVA 4.79%, Banorte 5.69%, Scotiabank variable)
+- Perfil de vencimientos de deuda y tasa promedio ponderada
+- Recompras de CBFIs: 14.4 millones (0.6% de los CBFIs en circulación)
+
+**Lo que le falta, medido contra las cinco obligaciones:**
+
+| Obligación | Estado |
+|---|---|
+| 1. Histórico detallado | **Parcial** — mucho es año-contra-año de 3Q24; las series largas viven solo en gráficas |
+| 2. Pronóstico | **Débil** — hay una lista numerada de tres drivers cualitativos ("portfolio growth", "occupancy ~96%", "nearshoring"), sin cifras proyectadas en la sección |
+| 3. Calidad de utilidades | **Ausente** — no aparece ninguna mención de notas, partidas no recurrentes o políticas contables en el texto extraíble del PDF |
+| 4. Modelo sobre los estados financieros | **Ausente del apéndice.** El Apéndice K se titula "Financial Statements" pero **solo contiene el balance general** (2019–2030F). No hay estado de resultados ni flujo de efectivo |
+| 5. Ratios de industria | **Sí** — es su punto más fuerte (renta/m², NOI%, FFO/AFFO, LTV, DSCR, ocupación) |
+
+**Sin tabla de ratios.** No hay DuPont, ni ROE, ni ROIC, ni razón circulante, ni cobertura de intereses en ningún lado del texto extraíble del documento. (Caveat de método: parte del apéndice de este reporte está incrustada como imagen — el Apéndice J "Valuation" devuelve 2 caracteres de texto —, así que la búsqueda cubre el texto, no lo que pueda vivir dentro de una figura.)
+
+**Además: colocan ESG entre Competitive Positioning y Financial Analysis**, y titulan la sección de negocio "BUSINESS OVERVIEW" en vez de "Business Description". Ver `07` §1(c) sobre por qué eso le cuesta trabajo al grader.
+
+**Un detalle de forma que sí conviene copiar:** cada bloque tiene su gráfica pareada a la derecha (Figura 24 Revenue Analysis, 25 NOI & EBITDA, 26 NAV, 27 Distribución y yield, 28 Apalancamiento, 29 Perfil de vencimientos). Seis figuras en 1.5 páginas — la densidad que `06` §3.4 identifica como estándar.
+
+### 3.4 UDLAP (misma empresa, Fibra Mty) — no tiene la sección, pero tiene la mejor metodología
+
+**UDLAP no incluye una sección llamada "Financial Analysis".** Su índice es: Investment Summary → Company Overview → Industry Overview → Competitive Positioning → **Investment Risk** → Valuation → Governance. El contenido financiero está partido en dos lugares:
+
+- **"Financial Highlights"**, un bloque corto dentro de Company Overview: nivel de deuda 25.8%, madurez 3.8 años, tasa promedio 4.9%, US$150mm en líneas revolventes, recompra de 1.1% de CBFIs.
+- **"Projections"**, dentro de Valuation — y aquí está lo bueno.
+
+> **Discrepancia con `06`:** la tabla de `06` §3.2 le asigna 1.0 página a UDLAP en el renglón de Financial Analysis. No existe una sección con ese nombre en el documento; lo que esa cifra cuenta debe ser la suma de "Financial Highlights" + "Projections". Vale la pena corregirlo en `06` para que no se lea como que UDLAP sí construyó la sección.
+
+**La metodología de "Projections" es la mejor de los cuatro reportes**, aunque esté en el lugar equivocado:
+
+- **Revenue build-up real:** ABR por portafolio por zona × tasa de ocupación × renta ponderada, **separada en USD y MXN** porque la mayoría de la renta es en dólares, cada una crecida con la inflación de su país. CAGR resultante 10.3% (2024E–2030E). Esto es exactamente lo que Waterloo '24 confesó **no** poder hacer en Cargojet por falta de disclosure (*"challenging to have conviction over an implied level of volume and average rate charged by segment"*).
+- **Capital de trabajo por metodología de días.**
+- **Capex en plan de dos etapas** amarrado a la meta declarada de la empresa (US$700mm, 58% ya invertido), con capex de expansión, de mantenimiento y desinversión de activos de bajo desempeño tratados por separado. El capex de mantenimiento crece 20% anual para cumplir requisitos de sostenibilidad.
+- **Una decisión contable explicada y defendida:** bajo IFRS, Fibra Mty no reporta depreciación normal sino cambios en valor razonable, que son volátiles y dependen de tasas y tipo de cambio. En vez de proyectar eso, deprecian sobre 20 años de vida útil asumiendo que 10% del valor razonable del portafolio es depreciable (excluyendo terreno), = 0.5% anual. **Declarar el supuesto y el porqué es el comportamiento que el `Essentials` premia.**
+- **Un hallazgo de calidad de utilidades genuino:** la empresa dice que distribuye 100% del AFFO, pero el AFFO del 4T se distribuye hasta el año siguiente, así que **históricamente distribuye ~96% sobre base anual estricta**. UDLAP lo detecta, lo dice, y proyecta con 96%. Es pequeño, pero es exactamente el tipo de lectura fina que pide la obligación #3.
+- **Apéndice con los tres estados completos** (income statement, balance sheet, cash flow), a diferencia de Fibra MTY Tec.
+
+**Conclusión del contraste:** entre los dos reportes sobre Fibra Mty, **UDLAP tiene el trabajo financiero y Fibra MTY Tec tiene la sección.** El reporte ideal es la sección de Tec con la metodología de UDLAP adentro.
+
+### 3.5 La Comer (ganador local '25) — el estándar mexicano actual
+
+Es el reporte mexicano que sí construye la sección completa, y es el punto de comparación más justo para Bimbo (consumo, empresa mexicana, graders mexicanos).
+
+- **Tabla DuPont de 13 columnas** (2022A–2034F) con los mismos bloques que Waterloo: DuPont, Liquidity, Debt Ratios.
+- **Cinco subtítulos-afirmación:** *PREMIUM STRATEGY, PRIME RETURNS* · *PROFITABLE BY DESIGN* · *EFFICIENT CAPITAL, SUPERIOR RETURNS* · *LEASE-LIGHT AND CAPITAL-STRONG* · *CAPITAL ALLOCATION & SHAREHOLDER RETURNS*.
+- **Descomponen el ROE por origen:** ROA de 2.2% (2016) a 5.8% (2024) a 8.6% (2034E); ROE de 2.6% a 7.7% a 10.7%; ROIC de 7.7% a 17.3%. Y la frase que hace el trabajo: el apalancamiento financiero se mantiene estable en ~1.30x, entonces **la expansión de retornos es puramente operativa**, no financiera. Eso es usar DuPont como argumento y no como tabla decorativa.
+- **Ciclo de conversión de efectivo de –2 días** como evidencia de que el crecimiento se autofinancia.
+- **Ajuste contable explícito:** los pasivos reportados son casi todos arrendamientos bajo IFRS 16, no deuda corporativa. Ajustando, la empresa está libre de deuda con Deuda Neta/EBITDA de –0.2x. Proyectan deuda/activos subiendo de 5.4% a 8.3% *"entirely due to lease recognition"*. **Ese es el ejemplo mexicano de calidad de utilidades**, y es el análogo directo del EBITDA Ajustado de Bimbo.
+- **Metodología de capex declarada:** cinco tiendas nuevas al año, promedios históricos de apertura, ajustados por inflación (Anexo 16).
+
+---
+
+## 4. Los cinco patrones que se repiten en los reportes buenos
+
+1. **Tabla de ratios arriba, prosa abajo.** Waterloo '24, Waterloo '26 y La Comer abren con una tabla de ~20 renglones que cubre histórico + proyección en la misma cuadrícula. Los dos reportes de Fibra Mty no tienen esa tabla, y es la diferencia visible más grande.
+
+2. **Subtítulos que son conclusiones, no categorías.** "Margins stabilize above pre-COVID levels" en vez de "Análisis de márgenes". El grader puede leer solo los subtítulos y quedarse con la tesis financiera completa.
+
+3. **El análisis es por segmento, no consolidado.** Waterloo '26 muestra tres segmentos con trayectorias de margen opuestas. Fibra MTY separa industrial/oficinas/comercial por región. El consolidado esconde.
+
+4. **Cada equipo construye al menos un ratio que no existe en los estados financieros.** Costo por block hour, ARPU implícito, conversión GPV→ingreso, renta por m² por clase de activo. Es la obligación #5 y es donde se demuestra que se entendió el negocio.
+
+5. **La sección emite juicio sobre la administración.** Waterloo '26 llama a los buybacks "undisciplined use of capital". Waterloo '24 dice que el giro de estrategia va a mover ROIC y que eso será el catalizador. La sección no es descriptiva.
+
+**Y lo que nadie hizo, en ninguno de los cinco reportes:** revisar y reportar la **opinión del auditor** o la existencia de **material weakness in internal control**. El `Essentials` los llama "automatic red flags".
+
+> **Es una jugada que cruza dos secciones y por eso se pierde.** La lectura ocurre en Financial Analysis (hay que abrir el Informe del Auditor Independiente del `Annual Report 2024` para hacer el trabajo de calidad de utilidades de todos modos), pero **la frase se escribe en Investment Risks**, que es donde el `Essentials` la nombra y donde `07` §3.7 ya la tiene asignada. Si quien escribe Financial Analysis y quien escribe Investment Risks son personas distintas, esto se cae en el traspaso. Asignarlo explícitamente a una sola persona. Es la única casilla donde los cinco reportes pasados fallaron y cuesta una frase.
+
+---
+
+## 5. Traducción a Bimbo
+
+**Los ratios de industria que hay que construir** (casi ninguno viene servido en el comunicado trimestral — ver `07` §3.6):
+
+| Ratio | Estado del dato |
+|---|---|
+| Volumen vendido y precio por kg | Hay que construirlo |
+| **Descomposición price/mix vs. volumen** | **Solo en prosa** en el comunicado ("driven by favorable price/mix and positive volume growth"), sin desglose numérico. Hay que buscarlo en el reporte anual o en el Q&A de las llamadas trimestrales, o estimarlo declarando el método |
+| Margen por región (NA, México, EAA, Latam) | **Sí, cuantificado** por segmento en el comunicado |
+| Ingreso por punto de venta o por ruta | Hay que construirlo |
+| Trigo y energía como % del COGS | Hay que buscarlo en las notas |
+
+**El trabajo de calidad de utilidades, en orden de valor:**
+
+1. **Puente de EBITDA Ajustado contra EBITDA reportado.** Es el análogo exacto del ajuste de IFRS 16 de La Comer y de la redefinición de ARPU de Lightspeed. Bimbo reporta ambas cifras; hay que explicar qué se excluye y por qué.
+2. **Crecimiento "excluding FX" contra crecimiento reportado.** Mismo principio: es un ajuste legítimo y es exactamente donde hay que preguntar.
+3. **Ciclo de conversión de efectivo** (días de inventario, cobrar, pagar). `09` ya identificó esto como el ángulo menos obvio: el capex recortado a US$1.0–1.2bn se presentó como historia de flujo libre, pero si el capital de trabajo se estira, el flujo libre "mejorado" es menos real. Ninguno de los cinco reportes pasados hizo este análisis, y La Comer lo usó como evidencia central de su tesis.
+4. **La divergencia de múltiplos.** `09` ya tiene el dato: Bimbo a 6.5x EV/EBITDA (prima de 8% sobre la mediana) pero 20.8x P/E (prima de 37%). Esa brecha es apalancamiento y carga financiera, y cuadra con la utilidad neta 14.4% abajo de consenso en el 2T26. Alimenta Financial Analysis y Valuation al mismo tiempo.
+5. **Opinión del auditor.** El `grupo-bimbo-Annual-Report-2024` contiene el Informe del Auditor Independiente (`06` §5.2 lo verifica). Decir explícitamente si fue limpia o con salvedades.
+
+**La advertencia del ciclo aplica.** Bimbo no es cíclica como una aerolínea de carga, pero sí tiene el ciclo de costos de trigo y energía y el ciclo de tipo de cambio. Proyectar desde el punto actual de esos ciclos sin decirlo es precisamente el "common mistake" que nombra CFA.
+
+**Lo que hay que replicar estructuralmente:**
+- Tabla DuPont + Liquidez + Deuda, 3–5 años A y 5 años E, con **EBITDA Ajustado como renglón separado del EBITDA** (como Waterloo '24)
+- Cuatro o cinco subtítulos-afirmación
+- Análisis por los cuatro segmentos geográficos, no consolidado
+- Los tres estados completos en el apéndice (Fibra MTY Tec solo puso el balance — no repetir ese error)
+- Escenarios bear/base/bull sobre ROIC o margen, ligados a las tesis

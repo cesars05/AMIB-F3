@@ -1,0 +1,18 @@
+---
+name: project-financial-analysis-section
+description: Where the Bimbo Financial Analysis report section blueprint lives and how it relates to benchmark docs 11 and 12
+metadata:
+  node_type: memory
+  type: project
+  originSessionId: 9dc52414-00e7-4433-802c-c72518d2d651
+  modified: 2026-10-08T04:34:46.711Z
+---
+
+The Financial Analysis section of the CFA report (20 pts, tie-breaker #1) has a Bimbo-specific blueprint at `Reporte & Presentacion/Secciones/Financial Analysis/estructura-financial-analysis-bimbo.md` (created 2026-10-07). It covers page budget, ratio table rows mapped to Consolidated Model rows, five claim-style subtitles, appendix list, and open dependencies.
+
+Benchmark of past teams already exists in root docs `11-FINANCIAL-ANALYSIS-BENCHMARK.md` and `12-FINANCIAL-ANALYSIS-METODOLOGIAS.md` (recipes R1 to R10). Do not write a third benchmark. When the user says "Financial Analysis de los equipos del CFA", the missing piece was the Bimbo skeleton, not more benchmarking.
+
+**Why:** user said they had asked several times; the benchmark docs were done but nothing turned them into their own section structure.
+**How to apply:** build on the blueprint, update it rather than creating new files. Key findings so far: Adj. EBITDA keeps restructuring inside (conservative but recurring, Ps14.8bn 2022 to 2025), the EBITDA to net income gap sits in interest (16.5% to 24.3% of Adj. EBITDA), payable days fell 140 to 118 so working capital absorbed cash. Risks section (Eduardo) cross-references the bridge, auditor sentence stays in Risks. Report text rules: English, no em dashes, no colons.
+
+Related: [[project-bimbo-market-growth-tab]], [[user-role]]

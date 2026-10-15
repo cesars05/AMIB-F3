@@ -1,0 +1,108 @@
+"""Generate 00_HANDOFF/00_INDEX.md (sources table, rename map, folder map, tools). Run from project root."""
+import os, re, glob
+os.chdir(r"C:\Users\cesar\Downloads\USD x ITESM")
+DESC = {
+ "Propuesta_Proyecto_Final_Integrado_USD_ITESM": ("Project proposal (USD x ITESM): Track A/B split, calendar, scoring, $1M portfolio, SDG", "P0", "Defines scope; see sections 1-10, 12"),
+ "FINA405_Project_v3": ("**Assignment document** (FINA 405 Group Project: Debt Issuance in Global Markets, Sections 1-8 + assigned companies)", "P0", "Defines requirements; FACT_BASE section F"),
+ "Actividad_Clase2_Bloomberg_Activos_Alternativos": ("Class-2 activity brief (Drive folder link only)", "P3", "-"),
+ "HAL_Q2-2026_Earnings-Release": ("HAL Q2-2026 earnings press release (21-Jul-2026): segments, regions, BS, CF", "P0", "Primary for H05-H09"),
+ "HAL_Q2-2026_10-Q": ("HAL Q2-2026 Form 10-Q (30-Jun-2026): financial statements", "P0", "Primary balance sheet (H09)"),
+ "HAL_Q1-2026_Earnings-Release": ("HAL Q1-2026 earnings press release (21-Apr-2026)", "P1", "-"),
+ "HAL_Q1-2026_10-Q": ("HAL Q1-2026 Form 10-Q (33 pp)", "P2", "-"),
+ "HAL_Q2-2026_IR-Presentation": ("HAL Q2-2026 investor presentation (photos, ROCE, debt maturity, revenue mix)", "P0", "Photos + charts (H14-H15, H25-H27)"),
+ "HAL_Q4-2025_Conference-Call-Deck": ("HAL Q4-2025 conference-call deck (same visual set as Q2-26 deck)", "P1", "FY2025 baseline"),
+ "HAL_Q2-2026_Earnings-Call-Transcript": ("Q2-2026 call transcript (Quartr)", "P1", "Quotes (H28)"),
+ "HAL_Q1-2026_Earnings-Call-Transcript": ("Q1-2026 call transcript (Quartr)", "P1", "Kuwait/Iraq land impact quote"),
+ "HAL_Q1-2026_Segment-Geography-Table": ("Quarterly segment and geographic revenue / operating income Q1'24-Q1'26", "P0", "H05b (ME/Asia quarterly)"),
+ "HAL_Proxy-Filing": ("HAL proxy statement (governance, compensation); 173 KB text, 36 MB figures", "P3", "Governance context; figures not reviewed"),
+ "BI_HAL_Equity-Outlook_Shale-Vicissitudes": ("Bloomberg Intelligence equity outlook on HAL (17-Aug-2026)", "P0", "H20, H24; peers/multiples"),
+ "UBS_Global-Oil-Gas_Hormuz-Tracker-Day139_2026-07-17": ("UBS Evidence Lab Hormuz tracker day 139 (Kpler data)", "P0", "Conflict timeline, oil-on-water, strikes on Kuwait"),
+ "MUFG_Middle-East-Daily_Kuwait": ("MUFG Middle East Daily (23-Jul-2026): Kuwait USD 6bn bond, GCC issuance, market tables", "P0", "K06, K08, X05-X07"),
+ "Goldman_NBK-Kuwait_Mortgage-Law_2026-09-23": ("Goldman Sachs: NBK / Kuwait mortgage draft law (23-Sep-2026)", "P1", "Track B real estate (K12)"),
+ "HAL-US-Equity_Executive-Summary": ("Bloomberg HAL US Equity executive summary (ES)", "P1", "Estimates and market data"),
+ "Act3Report_Halliburton_Kuwait_KWD": ("Team Act-3 report (ITESM): HAL x KWD exposure, forward hedge (21-Sep-2026)", "P1", "Content reference; contains errors E3-E5"),
+ "HAL_Financials_2018-2027": ("Bloomberg HAL financials 2018-2027E (annual, consensus); PDF text scrambled but values usable", "P0", "H01-H04"),
+ "Halliburton Awarded Developmen": ("Dow Jones 22-Jul-2026: KOC awards HAL multi-year Ahmadi Innovation Valley agreement (text only inside the figure)", "P0", "H21"),
+ "Stablecoin Retreat Tests Besse": ("Bloomberg 4-Sep-2026: stablecoin supply shrinking", "P1", "Track B (B01)"),
+ "A  Billion Quant ETF Pivots to Oil": ("Bloomberg 4-Sep-2026: Simplify CTA ETF 42% Brent / 33% diesel", "P2", "Track B (B02)"),
+ "Hedge Funds Bet on Oil": ("Bloomberg 4-Sep-2026: hedge funds net-long Brent 261k", "P1", "X07 / B02"),
+ "Excel clase 3 KWD y HALLIBURTON": ("Bloomberg Excel (16 sheets): Kuwait GDP, CPI, trade, labor + HAL financials template", "P0", "K01-K04; fix nominal-GDP formula (E3)"),
+ "Fina405_Halliburton-Kuwait_Team9": ("Existing Team-9 deck, slide by slide with notes", "P1", "Content reference ONLY (format rejected)"),
+ "Deuda FEMSA": ("User's FEMSA debt deck (PDF only)", "P2", "Format reference for debt slides"),
+ "20260713_Gaztransport et Technigaz": ("Aztlan GTT deck (md = text only)", "P2", "Style reference"),
+ "202608024_KLA Corporation": ("Aztlan KLA deck (md = text only)", "P2", "Style reference"),
+}
+SKIP = ("ASSET_CATALOG_auto.md", "IMAGE_ANALYSIS.md", "CHART_ANALYSIS.md", "STYLE_GUIDE.md", "LAYOUT_LIBRARY.md", "FACT_BASE.md", "STORYLINE.md", "MASTER_PROMPT.md", "OPEN_QUESTIONS.md", "00_INDEX.md", "WORKFLOW.md")
+
+def meta(md):
+    t = open(md, encoding="utf-8", errors="replace").read(1500)
+    m = re.search(r"paginas:\s*(\d+)", t); f = re.search(r"figuras:\s*(\d+)", t)
+    return (m.group(1) if m else "-"), (f.group(1) if f else "0")
+
+L = ["# 00_INDEX - every source, where it lives, how to use it", "",
+ "Generated 2026-10-02 after reorganizing the folder. **Priority:** P0 = core evidence for the deck, P1 = supporting, P2 = style/background, P3 = low value. Each converted document = `X.md` (+ `X.pdf` original + `X_figuras.pdf` figures; inside the md `[FIG-NNN]` = page NNN of the figures PDF). PNG renders of figure pages: `08_Assets/charts_extracted/X/FIG-NNN.png`.", "",
+ "## Folder map", "```",
+ "00_HANDOFF/            MASTER_PROMPT.md, STORYLINE.md, FACT_BASE.md, OPEN_QUESTIONS.md, WORKFLOW.md, 00_INDEX.md, tools/",
+ "01_Brief/              proposal + class activity (docx -> md)",
+ "02_Company_Filings/    Halliburton filings, decks, transcripts (renamed HAL_<period>_<type>)",
+ "03_SellSide_Research/  BI / UBS / MUFG / Goldman research + CHART_ANALYSIS.md",
+ "04_Bloomberg_Data/     Class2 (profile, ESG, risk, debt) | Class3 (KWD/FX, financials, Excel) | News_and_Forecast | IMAGE_ANALYSIS.md",
+ "05_Team9_Reference_Deck/  existing Team-9 deck (content reference only) + md",
+ "06_Templates/          user's templates (Aztlan decks, FEMSA M&A, Think-cell) + md/pdf of three",
+ "07_Template_Analysis/  STYLE_GUIDE.md, LAYOUT_LIBRARY.md, tokens.json, specs/ (slide-by-slide), renders/ (PNG + JSONL), masters/, contact/",
+ "08_Assets/             cover/, logos/, selected/ (curated), company_images/, charts_extracted/, data/, ASSET_CATALOG.md",
+ "09_Deck_Build/         EMPTY by design (qa_check.py only) - the deck is built here",
+ "10_Dashboard/          PROF_DASHBOARD_ANALYSIS.md + OUR_DASHBOARD_SPEC.md (our interactive dashboard / live-scenario engine; not built yet)",
+ "99_Archive/            duplicates, superseded files, move_log.csv, reorg script (old -> new names)",
+ "```", "", "## Rename map (old name -> new name)", "| Old | New | Note |", "|---|---|---|",
+ "| `Company Data/Halliburton - Q1 2026.pdf` | `HAL_Q1-2026_10-Q` | was ambiguous; it is the 10-Q (33 pp) |",
+ "| `...Q1 2026 (1).pdf` | `HAL_Q1-2026_Earnings-Release` | press release (13 pp) |",
+ "| `...Q2 2026.pdf` | `HAL_Q2-2026_Earnings-Release` | press release (18 pp) |",
+ "| `...Q2 2026 (1).pdf` | `HAL_Q2-2026_10-Q` | 10-Q (39 pp) |",
+ "| `Halliburton 2Q26 IR Presentation` | `HAL_Q2-2026_IR-Presentation` | |",
+ "| `Halliburton - Q4 2025 - Conference Call Deck` | `HAL_Q4-2025_Conference-Call-Deck` | |",
+ "| `Halliburton - Q1/Q2 2026 - Transcript - Quartr` | `HAL_Q1-2026_...`, `HAL_Q2-2026_Earnings-Call-Transcript` | |",
+ "| `Q1'26 Seg & Geo Website Table` | `HAL_Q1-2026_Segment-Geography-Table` | |",
+ "| `Halliburton - Proxy filing` | `HAL_Proxy-Filing` | |",
+ "| `Global Oil & Gas Kuwait` | `UBS_Global-Oil-Gas_Hormuz-Tracker-Day139_2026-07-17` | UBS Evidence Lab |",
+ "| `Middle Esast Kuwait` | `MUFG_Middle-East-Daily_Kuwait` | typo fixed |",
+ "| `Kuwait Goldman` | `Goldman_NBK-Kuwait_Mortgage-Law_2026-09-23` | |",
+ "| `Halliburton Vulnerable to Shale Vicissitudes Equity Outlook` | `BI_HAL_Equity-Outlook_Shale-Vicissitudes` | Bloomberg Intelligence |",
+ "| `Fina 405_ Halliburton (Kuwait).pptx` | `05_Team9_Reference_Deck/Fina405_Halliburton-Kuwait_Team9.pptx` | |",
+ "| `Propuesta_...docx 1` | `01_Brief/Propuesta_Proyecto_Final_Integrado_USD_ITESM.docx` | |",
+ "| root `Act3Report_..._figuras_figuras_figuras...` (9 files) | `99_Archive/root_act3_duplicates/` | **Root cause:** Cueva's saved config listed the whole project folder as input, so it re-converted its own `_figuras.pdf` outputs recursively. Run Cueva per file and never on a folder that already holds outputs. |",
+ "| `Halliburton.pdf` (0 bytes) | `99_Archive/empty_files/` | |",
+ "| `Portada.jpg` + `image_76b2ef-...-cover-2.jpg` (identical) | `08_Assets/cover/cover_original.jpg` (+ duplicate in `99_Archive/`) | user's cover image |", "",
+ "## Sources", "| Priority | Document | What it is | Pages / figs | Markdown | Figures PDF | Use |", "|---|---|---|---|---|---|---|"]
+rows = []
+for md in sorted(glob.glob("0[1-6]_*/**/*.md", recursive=True)):
+    b = os.path.basename(md)
+    if b in SKIP or "specs" in md.split(os.sep): continue
+    stem = b[:-3]
+    d, pr, use = DESC.get(stem, ("(see file)", "P2", "-"))
+    pages, figs = meta(md)
+    base = os.path.dirname(md); fig = os.path.join(base, stem + "_figuras.pdf")
+    if os.path.exists(fig): fig = os.path.basename(fig)
+    else:
+        c = sorted(glob.glob(os.path.join(base, stem + "_figuras_*.pdf")))
+        fig = ", ".join(os.path.basename(x) for x in c) if c else "-"
+    rows.append((pr, d, f"| {pr} | **{stem}** | {d} | {pages} pp / {figs} figs | `{md.replace(chr(92), '/')}` | {fig} | {use} |"))
+for r in sorted(rows, key=lambda x: (x[0], x[1])): L.append(r[2])
+L += ["", "## Non-text sources", "| Asset | Analysis |", "|---|---|",
+ "| ~56 Bloomberg/Yahoo PNG + GIF in `04_Bloomberg_Data/**` | `04_Bloomberg_Data/IMAGE_ANALYSIS.md` (each opened and read) |",
+ "| `Excel clase 3 KWD y HALLIBURTON.xlsx` | its `.md` (all 16 sheets, formulas shown); 4 embedded images in `08_Assets/excel_class3_media/` |",
+ "| 7 template decks | `07_Template_Analysis/specs/*.md`, `renders/`, `STYLE_GUIDE.md`, `LAYOUT_LIBRARY.md`, `tokens.json` |",
+ "| Team-9 deck | `05_Team9_Reference_Deck/Fina405_Halliburton-Kuwait_Team9.md` (slide by slide incl. speaker notes) |",
+ "| Cover image (user) | `08_Assets/cover/` (original, 4K, QHD, before/after) |", "",
+ "## Tools (reproducible)", "| Script | Purpose |", "|---|---|",
+ "| `00_HANDOFF/tools/ppt_forensics.ps1` | PowerPoint COM: PNG per slide + effective font/size/color/position JSONL |",
+ "| `00_HANDOFF/tools/ppt_master_dump.ps1` | master/layout shapes (logo, rules, footers) |",
+ "| `00_HANDOFF/tools/chart_forensics.py` | chart XML: type, colors, labels, axes |",
+ "| `00_HANDOFF/tools/gen_slide_specs.py` | slide-by-slide spec tables |",
+ "| `00_HANDOFF/tools/convert_office.py` | docx / xlsx / pptx -> md |",
+ "| `00_HANDOFF/tools/gen_index.py` | regenerates this index |",
+ "| `00_HANDOFF/tools/extract_dashboard.py` | extracts a firm object (data + charts) from the professor's dashboard HTML |",
+ "| `09_Deck_Build/qa_check.py` | static QA of the built deck vs tokens.json |",
+ "| `C:\\Users\\cesar\\Downloads\\Cueva.exe pdf-a-markdown <file.pdf> [--figures ninguna]` | PDF -> md (+ figures PDF). Run per file. |"]
+open(r"00_HANDOFF\00_INDEX.md", "w", encoding="utf-8", newline="\n").write("\n".join(L))
+print(len(rows), "sources")

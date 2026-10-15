@@ -1,0 +1,115 @@
+$ErrorActionPreference="Stop"
+$xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb=$null
+foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc.*v3"){ $wb=$w } }
+if($wb -eq $null){ throw "ABORTO: no encuentro el libro v3" }
+$pw=$wb.Worksheets.Item("Payment Waterfall")
+if([string]$pw.Range("C34").Text -ne "Net Distributable to Partners"){ throw "ABORTO: C34 cambio" }
+$NAVY=5384228; $WHITE=16777215; $BLUE=16711680; $GREY=8421504
+$CENTER=-4108
+$FN='#,##0;(#,##0);"-"'
+$FP='0.0%;(0.0%);"-"'
+$FX='0.00"x"'
+$xl.ScreenUpdating=$false
+function Hdr($rng,$txt){
+  $pw.Range($rng).Interior.Color=$NAVY
+  $pw.Range($rng).Font.Color=$WHITE
+  $pw.Range($rng).Font.Bold=$true
+  $pw.Range($rng.Split(':')[0]).Value2=$txt
+}
+$COLS=@("E","F","G","H","I","J")
+
+# ================= C) ACUMULACION DEL PREFERENTE =================
+Hdr "C37:J37" "Preferred Return Accrual (GBP 000s)"
+$pw.Range("C38").Value2="Unreturned Capital + Accrued Preferred, Opening"
+$pw.Range("C39").Value2="(+) Preferred Return @ 8%, compounded"
+$pw.Range("C40").Value2="(-) Distributions Applied to Tiers 1 and 2"
+$pw.Range("C41").Value2="Unreturned Capital + Accrued Preferred, Closing"
+$pw.Range("E38").Formula='=+$D$10'
+$pw.Range("E39").Formula='=+E38*$D$17'
+$pw.Range("E40").Formula='=-MIN(E34,E38+E39)'
+$pw.Range("E41").Formula='=+E38+E39+E40'
+foreach($i in 1,2,3,4,5){
+  $x=$COLS[$i]; $p=$COLS[$i-1]
+  $pw.Range($x+"38").Formula="=+"+$p+"41"
+  $pw.Range($x+"39").Formula='=+'+$x+'38*$D$17'
+  $pw.Range($x+"40").Formula="=-MIN("+$x+"34,"+$x+"38+"+$x+"39)"
+  $pw.Range($x+"41").Formula="=+"+$x+"38+"+$x+"39+"+$x+"40"
+}
+$pw.Range("K39").Formula="=+SUM(E39:J39)"
+$pw.Range("K40").Formula="=+SUM(E40:J40)"
+$pw.Range("E38:K41").NumberFormat=$FN
+$pw.Range("E38:K41").HorizontalAlignment=$CENTER
+
+# ================= D) LA CASCADA =================
+Hdr "C44:J44" "Distribution Waterfall (GBP 000s)"
+$pw.Range("C45").Value2="Net Distributable over the Term"
+$pw.Range("D45").Formula="=+K34"
+$pw.Range("C46").Value2="Tier 1  -  Return of Contributed Capital"
+$pw.Range("D46").Formula="=+MIN(-K40,D10)"
+$pw.Range("C47").Value2="Tier 2  -  Preferred Return @ 8%"
+$pw.Range("D47").Formula="=+MAX(-K40-D46,0)"
+$pw.Range("C48").Value2="Tier 3  -  GP Catch-up (to 20% of profit)"
+$pw.Range("D48").Formula="=+MIN(D47*D16/(1-D16),MAX(D45+K40,0))"
+$pw.Range("C49").Value2="Tier 4  -  Residual, split 80 / 20"
+$pw.Range("D49").Formula="=+MAX(D45+K40-D48,0)"
+$pw.Range("C50").Value2="Check  -  total allocated"
+$pw.Range("D50").Formula="=+D46+D47+D48+D49-D45"
+$pw.Range("D45:D50").NumberFormat=$FN
+$pw.Range("D45:D50").HorizontalAlignment=$CENTER
+$pw.Range("C45").Font.Bold=$true
+$pw.Range("D45").Font.Bold=$true
+$pw.Range("C50").Font.Color=$GREY
+$pw.Range("D50").Font.Color=$GREY
+
+# ================= E) REPARTO =================
+Hdr "C53:J53" "Allocation"
+$pw.Range("D54").Value2="LP (90%)"
+$pw.Range("E54").Value2="GP (10%)"
+$pw.Range("F54").Value2="Total"
+$pw.Range("D54:F54").Font.Bold=$true
+$pw.Range("D54:F54").HorizontalAlignment=$CENTER
+$pw.Range("C55").Value2="Tier 1  -  Return of Capital"
+$pw.Range("D55").Formula='=+$D$46*$D$12'
+$pw.Range("E55").Formula='=+$D$46*$D$11'
+$pw.Range("C56").Value2="Tier 2  -  Preferred Return"
+$pw.Range("D56").Formula='=+$D$47*$D$12'
+$pw.Range("E56").Formula='=+$D$47*$D$11'
+$pw.Range("C57").Value2="Tier 3  -  GP Catch-up"
+$pw.Range("D57").Value2=[double]0
+$pw.Range("E57").Formula='=+$D$48'
+$pw.Range("C58").Value2="Tier 4  -  Residual Split"
+$pw.Range("D58").Formula='=+$D$49*(1-$D$16)'
+$pw.Range("E58").Formula='=+$D$49*$D$16'
+$pw.Range("C59").Value2="Total Distributions"
+$pw.Range("D59").Formula="=+SUM(D55:D58)"
+$pw.Range("E59").Formula="=+SUM(E55:E58)"
+foreach($r in 55,56,57,58,59){ $pw.Range("F"+[string]$r).Formula="=+D"+[string]$r+"+E"+[string]$r }
+$pw.Range("C61").Value2="   of which, GP carried interest"
+$pw.Range("E61").Formula="=+E57+E58"
+$pw.Range("C62").Value2="   carried interest as % of profit"
+$pw.Range("E62").Formula="=+IFERROR(E61/(D45-D46),0)"
+$pw.Range("D55:F59").NumberFormat=$FN
+$pw.Range("E61").NumberFormat=$FN
+$pw.Range("E62").NumberFormat=$FP
+$pw.Range("D55:F62").HorizontalAlignment=$CENTER
+$pw.Range("C59").Font.Bold=$true
+$pw.Range("D59:F59").Font.Bold=$true
+$pw.Range("D59:F59").Borders.Item(8).LineStyle=1
+$pw.Range("C61:C62").Font.Color=$GREY
+$pw.Range("E61:E62").Font.Color=$GREY
+
+$xl.ScreenUpdating=$true
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output "secciones C, D y E creadas"
+Write-Output ""
+for($r=37;$r -le 62;$r++){
+  $lab=[string]$pw.Cells.Item($r,3).Text
+  $v=""
+  foreach($c in 4,5,6,7,8,9,10,11){ $v+=([string]$pw.Cells.Item($r,$c).Text).PadLeft(11) }
+  if(($lab+$v).Trim() -ne ""){
+    if($lab.Length -gt 48){ $lab=$lab.Substring(0,48) }
+    Write-Output ("r"+([string]$r).PadRight(4)+$lab.PadRight(49)+$v)
+  }
+}

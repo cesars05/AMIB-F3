@@ -1,0 +1,76 @@
+> **Instrucciones / notas de navegación**
+> - **Qué es:** Coordenadas, columnas, tamaños de letra y el orden de lectura dentro del slide (qué va después de las boxes).
+> - **Cuándo leerlo:** Al posicionar elementos y elegir tamaños; para verificar que todo cae dentro del área de contenido.
+> - **Siguiente:** Al terminar, `rotation-qc.md`.
+> - Flujo: SKILL.md → style-systems → adaptation → slide-catalog → (structural-diagrams | charts | thinkcell-library | shapes-components | images) → grid-typography → rotation-qc
+
+# Grid, tipografía y orden de lectura dentro del slide
+
+Medidas en pulgadas sobre 13.333 × 7.5 (16:9). Para 10 × 7.5 (4:3, bancos/Jazz) multiplica x por 0.75; y igual.
+
+## 1. Grid (sistema A Aztlan — medido; B FEMSA entre paréntesis)
+```
+x  0.575 ──────────── contenido ──────────── 12.877   (B: 0.667 → 12.667)
+y  0.313  regla superior (A)            | B: regla bajo título y0.936
+   0.533  TÍTULO h0.454 w9.827 (A)      | B: y0.375 h0.572
+   0.989  SUBTÍTULO h0.286 (A)          | B: y0.947 h0.337
+   1.446  inicio de contenido (1.30 si no hay subtítulo)
+   6.78   fin de contenido
+   6.951  SOURCE + nº de página
+```
+Columnas estándar:
+| Esquema | Zonas x (w) | Uso |
+|---|---|---|
+| 1 columna | 0.575 (12.30) | tabla ancha, gráfica full, texto ejecutivo |
+| 2 iguales | 0.569 (5.972) · 6.903 (5.972), gutter 0.36 — o 0.575 (5.842) · 7.035 (5.842), gutter 0.62 | 2 gráficas, gráfica + tabla |
+| 60 / 40 | 0.575 (7.10) · 8.085 (4.79) | texto + 2 gráficas apiladas a la derecha |
+| 65 / 35 | 0.575 (7.5) · 8.2 (4.7) | gráfica + "Key takeaways" |
+| 3 iguales | 0.575 / 4.72 / 8.86 (3.95 c/u, gutter 0.2) | 3 paneles, 3 segmentos, 3 opciones |
+| 4 iguales | 0.575 + n·3.12 (2.95 c/u) | KPI tiles, 4 pilares, años |
+| 5 iguales | 0.516 + n·2.48 (2.38 c/u) | timeline de años con chevrons (FEMSA s5) |
+
+Bloque de gráfica (medido AZTD/KLA): header 16 bold #404040 h0.347 en y1.472 → regla negra 1 pt en y1.861 → línea de unidad 12 *itálica* en y1.903 h0.25 → gráfica en y2.194 (h4.583 full, h2.2 si va tabla debajo; segundo bloque apilado: header y4.198).
+Espaciado mínimo entre bloques 0.15–0.25 in. Nada entre y6.78 y la línea de source.
+
+## 2. Escala tipográfica
+| Rol | A Aztlan | B FEMSA | Bancos (aprox.) |
+|---|---|---|---|
+| Portada | 40 / 24 | 40 bold / 24 itálica | 28–40 |
+| Título | 28 regular negro | 28 bold marca | 20–24 (GS 28 bold) |
+| Subtítulo / so-what | 16 navy | 14 itálica | banner 11–12 bold itálica |
+| Header de bloque | 16 bold #404040 + regla | 12–14 bold + regla gris | 10–12 bold blanco en barra de color |
+| Cuerpo (slide de texto) | 14 | 12–14 | 11–12 |
+| Cuerpo junto a gráfica | 12 | 12 | 10–11 |
+| Denso | 11 (10) | 10–11 | 9–10 |
+| Tabla | 11 (9–10 si ≥ 10 cols; 8–9 apéndice) | 10–12 | 8–9 |
+| Data labels | 9–10 (totales bold) | 9–11 | 8–9 |
+| Ejes / categorías | 9–10 | 9–10 | 8–9 |
+| Unidad de gráfica | 12 itálica | 10 itálica | 8–9 itálica |
+| Source / notas | 10 itálica centrado | 8 itálica gris | 7–8 |
+Máx. 3 tamaños en el cuerpo de un slide. Nunca < 9 pt salvo notas (8). Justificado solo en columnas ≥ 4 in (Aztlan lo usa en slides de texto).
+
+## 3. Orden de lectura dentro del slide ("qué va después de las boxes")
+Todas las casas siguen la misma secuencia vertical; lo que cambia es la forma de cada capa:
+
+```
+1. TÍTULO ........ qué es (banco: tema) / qué pasa (Aztlan: claim)
+2. SO-WHAT ....... subtítulo (A/B) · banner taupe (BofA) · banner celeste (GS) · tag junto al título (Jefferies)
+3. ENCABEZADO ... barra de color (bancos) · texto 16 bold + regla (Aztlan) · roundRect gris (FEMSA)
+4. EXHIBIT ....... gráfica / tabla / diagrama / boxes
+5. ANOTACIÓN ..... sobre el exhibit: cajas punteadas, óvalos, flechas CAGR, callouts, marcadores A-B-C
+6. EVIDENCIA ..... debajo o a la derecha: tabla de métricas alineada a las barras, bullets 2–4, "Commentary"
+7. CONCLUSIÓN .... barra full-width (FEMSA roundRect marca / BofA taupe / Barclays "Key takeaways") — opcional, máx. 1
+8. SOURCE/NOTAS .. siempre, aunque sea "Team estimates"
+```
+Reglas derivadas:
+* Si hay boxes de encabezado (3–5 columnas de color), **debajo de cada una va una caja blanca con borde fino y 2–4 bullets de 10–11 pt**, y debajo del conjunto una **conclusión o una gráfica**, nunca otra fila de boxes iguales.
+* Si una gráfica tiene métricas por categoría, van **alineadas a las barras** (fila de pills/óvalos arriba — BofA/GS — o tabla debajo — FEMSA s9, GS p26).
+* Las anotaciones explican *una* cosa: máx. 3 callouts por gráfica.
+* Lo que está a la derecha de una gráfica es interpretación (takeaways), lo que está debajo es evidencia (tabla, métricas).
+
+## 4. Alineación y posiciones típicas
+* Texto: alineado a la izquierda al margen x0.575; números en tablas a la derecha; headers de columnas numéricas centrados.
+* Logos de la empresa perfilada: arriba-derecha del área de contenido (KLA s3, x≈10.3–12.5, y≈1.3–2.3), alto 0.5–0.9 in.
+* KPI grande: centrado en su tile; número 24–40 bold color primario + label 10–12 debajo.
+* Callouts: en el blanco de la gráfica, nunca sobre datos; línea guía fina al punto.
+* Leyenda: abajo, centrada, 9 pt, sin borde; serie única → sin leyenda; o etiqueta directa al final de cada línea.

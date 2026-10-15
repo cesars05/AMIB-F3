@@ -1,0 +1,29 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t = $null; foreach ($w in $xl.Workbooks) { if ($w.Name -eq '20260922_SETSA Transportes.xlsx') { $t = $w } }
+$m  = $t.Worksheets.Item('Modelo SETSA')
+$tx = $t.Worksheets.Item('Transacciones Precedentes')
+$last = $m.Cells.Item($m.Rows.Count, 3).End(-4162).Row
+for ($r = 13; $r -le $last; $r++) {
+    $c = $m.Cells.Item($r, 3); $v = [string]$c.Value2
+    if ($v.Contains('Y/o')) { $c.Value2 = $v.Replace('Y/o', 'y/o'); "fix M$r y/o" }
+    if ($v.StartsWith('Deuda de Largo Plazo ') -and $v.Length -gt 21 -and -not $v.EndsWith('Promedio')) {
+        $w2 = $v.Substring(21); $c.Value2 = 'Deuda de Largo Plazo ' + $w2.Substring(0,1).ToUpper() + $w2.Substring(1); "fix M$r " + $c.Value2
+    }
+    if ($v -ceq 'Check: Activo - (pasivo + capital)') { $c.Value2 = 'Check: Activo - (Pasivo + Capital)'; "fix M$r check activo" }
+}
+$xl.CalculateFull()
+# errores
+foreach ($ws in $t.Worksheets) { $n = 0; foreach ($c in $ws.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $n++ } }; $ws.Name + " errores=" + $n }
+# checks
+$cols = 'D','E','F','G','H','I'
+for ($r = 13; $r -le $last; $r++) { $l = [string]$m.Cells.Item($r,3).Value2; if ($l.StartsWith('Check') -or $l.StartsWith('Diferencia')) { $l.PadRight(58) + (($cols | ForEach-Object { $m.Range("$_$r").Text.PadLeft(12) }) -join '') } }
+# valores clave
+foreach ($lab in 'EBITDA Ajustado', 'Resultado Neto', 'Deuda Neta', 'TOTAL ACTIVO') {
+    for ($r = 13; $r -le $last; $r++) { if ([string]$m.Cells.Item($r,3).Value2 -ceq $lab) { $lab.PadRight(20) + (($cols | ForEach-Object { $m.Range("$_$r").Text.PadLeft(14) }) -join ''); break } }
+}
+$rv = 0; for ($q = 1; $q -le 80; $q++) { if (([string]$tx.Cells.Item($q,2).Value2) -ceq 'Valor del Capital (100%)') { $rv = $q; break } }
+"Valuacion: TEV=" + $tx.Range("E$($rv - 5)").Text + " | Capital=" + $tx.Range("E$rv").Text
+# comentarios restantes
+$k = 0; foreach ($c in $m.Range("K12:K$last").Cells) { if ([string]$c.Value2 -ne '') { $k++ } }; "comentarios restantes en K: $k"
+$t.Save(); "guardado=" + $t.Saved

@@ -1,0 +1,27 @@
+$ErrorActionPreference="Stop"
+function Try1($__sb){ for($__k=0;$__k -lt 15;$__k++){ try{ return & $__sb }catch{ if($_.Exception.Message -match "0x80010001|RPC_E_CALL|Call was rejected|0x800AC472"){ Start-Sleep -Milliseconds 700 } else { throw } } }; throw "exhausted" }
+$wb=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); if([int]$xl.Workbooks.Count -gt 0){ foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } } } }catch{}; if($wb -ne $null){break}; Start-Sleep -Milliseconds 800 }
+function GetWs($n){ for($i=0;$i -lt 30;$i++){ try{ $x=$wb.Worksheets.Item($n); if($x -ne $null){ return $x } }catch{}; Start-Sleep -Milliseconds 700 }; throw ("no hoja "+$n) }
+$cm=GetWs "Consolidated Model"
+Write-Output ("Libro: "+$wb.Name)
+Write-Output ""
+Write-Output "=== mapeo de columnas: fila 9 (modelo) vs fila 277 (bloque) ==="
+$hdr=""
+for($c=4;$c -le 18;$c++){
+  $L=[char](64+$c)
+  $r9=[string](Try1 { $cm.Cells.Item(9,$c).Text })
+  $r277=[string](Try1 { $cm.Cells.Item(277,$c).Text })
+  Write-Output ("  col "+$L+" ("+$c+")   r9=["+$r9.PadRight(8)+"]   r277=["+$r277+"]")
+}
+Write-Output ""
+Write-Output "=== contenido actual del bloque, celda por celda ==="
+for($r=277;$r -le 298;$r++){
+  $lab=[string](Try1 { $cm.Cells.Item($r,3).Text })
+  $line=""
+  for($c=4;$c -le 18;$c++){
+    $t=[string](Try1 { $cm.Cells.Item($r,$c).Text })
+    if($t.Trim() -ne ""){ $line+=("["+[char](64+$c)+"="+$t+"] ") }
+  }
+  if(($lab+$line).Trim() -ne ""){ Write-Output ("r"+$r+"  "+$lab.PadRight(46)+$line) }
+}

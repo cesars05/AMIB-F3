@@ -1,0 +1,61 @@
+﻿# Steel Analysis
+
+## Propósito
+
+Carpeta de **materia prima de investigación** sobre el sector acero (Estados Unidos y Norteamérica, con contexto global). Aquí viven informes de terceros (sell-side, Bloomberg Intelligence, IEA, worldsteel/SRO), datos del Departamento de Comercio de EE.UU. (SIMA) y estadísticas de producción (WBMS).
+
+**Estado:** esta carpeta todavía no contiene análisis propio. Lo que hay es la documentación de las fuentes, con resúmenes y notas de lectura. Cualquier conclusión de inversión o de mercado debe escribirse aparte.
+
+## Árbol de carpetas
+
+```
+Steel Analysis/
+├── README.md                     <- este archivo
+├── desktop.ini                   <- archivo de sistema de Drive (no tocar)
+└── Reports/
+    ├── README.md                 <- inventario de fuentes por tipo
+    ├── .MD/                      <- versiones en Markdown de 5 PDF
+    │   ├── README.md             <- tabla de los 5 .md y guía de lectura
+    │   ├── notas/                <- una nota de lectura por documento
+    │   │   ├── nota_Steel.md
+    │   │   ├── nota_NA-Steel-2026-Outlook.md
+    │   │   ├── nota_Metals-GS.md
+    │   │   ├── nota_IEA-Breakthrough-2026.md
+    │   │   └── nota_SRO-Oct-2026.md
+    │   ├── *.md (5)              <- convertidos con Cueva / pdf-a-markdown (2026-10-13)
+    │   └── *_figuras.pdf (4)     <- imágenes de figuras, una por página
+    ├── *.pdf (sin convertir)     <- informes, factsheets y perfiles de AISI/SIMA
+    ├── Steel_figuras.pdf         <- figuras de Steel.md (ubicado en Reports/, no en .MD/)
+    ├── *.csv / *.xlsx            <- datos del Departamento de Comercio (SIMA) y WBMS
+    └── (20 archivos en total dentro de Reports/, sin contar desktop.ini)
+```
+
+## Mapa rápido por bloque
+
+| Bloque | Qué contiene | Dónde empezar |
+|---|---|---|
+| **Sell-side** | BofA (Steel, 09-oct-2026), Goldman Sachs (Metals, 13-oct-2026) | `Reports/.MD/notas/nota_Steel.md`, `nota_Metals-GS.md` |
+| **Datos globales** | IEA Breakthrough Agenda 2026; SRO octubre 2026 (worldsteel, inferido); WBMS (acero bruto, mineral de hierro, inoxidable, sep-2026) | `nota_IEA-Breakthrough-2026.md`, `nota_SRO-Oct-2026.md`, XLSX de WBMS |
+| **Comercio EE.UU.** | Datos SIMA / Departamento de Comercio en CSV (importaciones por país, producto y año); dashboard y resumen ejecutivo de SIMA | CSV `data*.csv`, `Quantity in Metric Tons ... Belgium.csv` |
+| **Política y descarbonización** | Aranceles Sección 232 (Bloomberg Intelligence); IEA sobre acero bajo en emisiones | `nota_NA-Steel-2026-Outlook.md`, `nota_IEA-Breakthrough-2026.md` |
+| **Referencia** | AISI Profile Book (2023), Steel Monthly Factsheet | PDF sin convertir en `Reports/` |
+
+## Convenciones
+
+- **CSV con coma decimal.** Los números usan coma como separador decimal (`"922377,24"` = 922.377,24 toneladas métricas), y el separador de columnas también es coma, por lo que los campos numéricos van entre comillas. Los archivos están en UTF-8 con BOM. Lectura recomendada en Python:
+  `pd.read_csv(f, encoding="utf-8-sig", decimal=",")`
+- **Unidades:** toneladas métricas en los CSV de SIMA; precios de HRC en dólares por tonelada corta ($/st) en BofA y Bloomberg.
+- **Estado de los datos:** en los CSV de SIMA, las filas con `Source Name = License Data` son preliminares (p. ej. oct-2026); las de `Census Data` son cifras oficiales.
+- **Nombres de archivo:** los originales se conservan tal cual. Las notas nuevas usan el prefijo `nota_` para no confundirse con las fuentes.
+- **Licencias:** el informe de Bloomberg Intelligence tiene licencia de uso exclusivo de KIS Research. No redistribuir fuera de esa licencia.
+- **Fechas:** en los documentos convertidos, el front-matter indica páginas y figuras; la guía está en `Reports/.MD/README.md`.
+
+## Pendientes y sugerencias
+
+Ninguno de estos puntos se ha ejecutado. Son sugerencias, y **requieren OK explícito del usuario** porque es una carpeta compartida en Drive.
+
+1. ~~Renombrar los CSV `data*.csv`~~ — **hecho** (prefijo `ITA_imports_…`): `data.csv`→`ITA_imports_monthly_by_product_2025-2026.csv`, `data (1).csv`→`ITA_imports_by_country_product.csv`, `data (2).csv`→`ITA_imports_annual_by_category_2015-2026.csv`, `data (3).csv`→`ITA_imports_by_country_category_year_2015-2026.csv`.
+2. **Sacar los `_figuras.pdf` de la vista principal.** Los cuatro en `.MD/` y `Steel_figuras.pdf` en `Reports/` son imágenes de apoyo. Propuesta: moverlos a una subcarpeta `figuras/`. Esto no debe hacerse sin confirmación, porque las notas y el front-matter los referencian por nombre.
+3. **Verificar los XLSX sin abrir.** `data.xlsx`, `Source United States Department of Commerce, Enforcement and Compliance.xlsx` y los tres WBMS no se han inspeccionado.
+4. **Aclarar el periodo de `ITA_imports_by_country_product.csv`.** No tiene columna de fecha ni de año, así que no se puede saber a qué periodo corresponde.
+5. **Revisar la antigüedad del Bloomberg (nov-2025).** Sirve como línea base histórica; contrastarlo con BofA de oct-2026 antes de usarlo como argumento actual.

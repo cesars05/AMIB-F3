@@ -1,0 +1,150 @@
+import win32com.client as w, json
+from openpyxl.utils import get_column_letter as L
+x=w.GetActiveObject('Excel.Application'); wb=x.Workbooks('Bimbo Financial Model_v2.xlsx'); ws=wb.Sheets('Market Growth & Inflation')
+D=json.load(open('data.json'))
+x.ScreenUpdating=False; x.Calculation=-4135
+BLUE=16711680; BLACK=0; GRAY=5855577
+NUM='#,##0;(#,##0);"-"'; PCT='0.0%'; PP='0.00%'
+H=154
+def fmt_from(t,r):
+    ws.Range('B%d:P%d'%(t,t)).Copy(); ws.Range('B%d:P%d'%(r,r)).PasteSpecial(-4122); x.CutCopyMode=False
+def setf(r,c1,c2,fn,nf=None,color=None):
+    rng=ws.Range(ws.Cells(r,c1),ws.Cells(r,c2))
+    rng.Formula=tuple([tuple(fn(L(c),c) for c in range(c1,c2+1))])
+    if nf: rng.NumberFormat=nf
+    if color is not None: rng.Font.Color=color
+def lab(r,t,color=None,bold=None):
+    ws.Cells(r,2).Value=t
+    if color is not None: ws.Cells(r,2).Font.Color=color
+    if bold is not None: ws.Cells(r,2).Font.Bold=bold
+def idx(r,c): return "INDEX($C$%d:$P$%d,MATCH(%s$5,$C$%d:$P$%d,0))"%(r,r,c,H,H)
+def idxp(r,c): return "INDEX($C$%d:$P$%d,MATCH(%s$5-1,$C$%d:$P$%d,0))"%(r,r,c,H,H)
+def cagr(r,nf=PCT):
+    ws.Cells(r,16).Formula='=IFERROR((O%d/J%d)^(1/5)-1,"")'%(r,r); ws.Cells(r,16).NumberFormat=nf
+    ws.Cells(r,16).Font.Color=ws.Cells(r,10).Font.Color; ws.Cells(r,16).Font.Name='Arial'; ws.Cells(r,16).Font.Size=11
+def hdr(r,title):
+    fmt_from(33,r); ws.Cells(r,2).Value=title
+    setf(r,3,15,lambda c,i:'=%s$5'%c); ws.Cells(r,16).Value='CAGR 25-30'
+    ws.Range('K%d:O%d'%(r,r)).NumberFormat='0"E"'; ws.Range('C%d:J%d'%(r,r)).NumberFormat='0"A"'
+    ws.Cells(r,16).Font.Color=16777215; ws.Cells(r,16).Interior.Color=4285184; ws.Cells(r,16).HorizontalAlignment=-4152; ws.Cells(r,16).Font.Bold=True
+
+# ---------- 1. SOURCE BLOCK ----------
+for c in range(12,17): ws.Cells(H,c).Formula='=%s%d+1'%(L(c-1),H)
+ws.Range('K%d'%H).Copy(); ws.Range('L%d:P%d'%(H,H)).PasteSpecial(-4122); x.CutCopyMode=False
+ws.Range('L%d:P%d'%(H,H)).NumberFormat='0"E"'
+def put(r,series,nf=NUM,years=range(2017,2031),color=BLUE):
+    for y in years:
+        v=series.get(str(y))
+        if v is not None:
+            c=ws.Cells(r,3+y-2017); c.Value=v; c.Font.Color=color; c.NumberFormat=nf; c.Font.Name='Arial'; c.Font.Size=11
+for r,(k,n) in {157:('MX_baked','cur'),158:('MX_baked','con'),159:('MX_baked','vol'),166:('US_baked','cur'),167:('US_baked','con'),168:('US_baked','vol')}.items():
+    put(r,D[k][n],years=range(2026,2031))
+SP=212
+setf(174,12,16,lambda c,i:'=$C$%d'%SP,nf='0.0000',color=BLACK)
+srcs=[(176,'MX_snack','Euromonitor, Mexico, Savoury Snacks, Retail (Snacks 2027 ed.)','MXN','2026','Grupo Bimbo'),
+      (183,'US_snack','Euromonitor, USA, Savoury Snacks, Retail (Snacks 2027 ed.)','USD','2026','Barcel USA'),
+      (190,'CA_baked','Euromonitor, Canada, Baked Goods, Retail (Staple Foods 2026 ed.)','CAD','2025','Canada Bread Co (Bimbo Canada)'),
+      (197,'BR_baked','Euromonitor, Brazil, Baked Goods, Retail (Staple Foods 2026 ed.)','BRL','2025','Bimbo Brasil Ltda'),
+      (204,'ES_baked','Euromonitor, Spain, Baked Goods, Retail (Staple Foods 2026 ed.)','EUR','2025','Bimbo SA')]
+for r0,k,title,cur,cb,co in srcs:
+    fmt_from(156,r0); lab(r0,title)
+    names=['Retail Value RSP, Current Prices (%s mm)'%cur,'Retail Value RSP, Constant %s Prices (%s mm)'%(cb,cur),"Retail Volume ('000 tonnes)",'Bimbo Retail Value, NBO (%s mm), %s'%(cur,co),'Bimbo Market Share, NBO (%)']
+    for j,t in enumerate(names,start=1):
+        fmt_from([157,158,159,160,161][j-1],r0+j); lab(r0+j,t)
+    put(r0+1,D[k]['cur']); put(r0+2,D[k]['con']); put(r0+3,D[k]['vol'],nf='#,##0.0'); put(r0+4,D[k]['bval']); put(r0+5,D[k]['bsh'],nf='0.000')
+fmt_from(156,211); lab(211,'Spot Exchange Rates (inputs, 2-Oct-2026 close)')
+for r,t,v,note in [(212,'USD/MXN (MXN per USD), Banxico FIX',18.1903,'Banxico FIX 2-Oct-2026 (web, verify vs LSEG)'),(213,'USD/CAD (CAD per USD)',1.4251,'Spot 2-Oct-2026 (web, verify vs LSEG)')]:
+    fmt_from(174,r); lab(r,t); ws.Range('C%d:P%d'%(r,r)).ClearContents(); ws.Cells(r,3).Value=v; ws.Cells(r,3).Font.Color=BLUE; ws.Cells(r,3).NumberFormat='0.0000'
+    ws.Cells(r,5).Value=note; ws.Cells(r,5).Font.Color=GRAY; ws.Cells(r,5).NumberFormat='General'
+fmt_from(174,214); lab(214,'CAD/MXN (MXN per CAD), derived'); ws.Range('C214:P214').ClearContents(); ws.Cells(214,3).Formula='=C212/C213'; ws.Cells(214,3).Font.Color=BLACK; ws.Cells(214,3).NumberFormat='0.0000'
+for r in (212,213,214): ws.Range('B%d'%r).Font.Bold=False
+SR={'MXs':dict(cur=177,vol=179,bval=180,sh=181),'USs':dict(cur=184,vol=186,bval=187,sh=188),'CA':dict(cur=191,vol=193,bval=194,sh=195),'BR':dict(cur=198,vol=200,bval=201,sh=202),'ES':dict(cur=205,vol=207,bval=208,sh=209)}
+
+# ---------- 2. Extend source ranges to 2030 ----------
+ws.UsedRange.Replace(What=':$K$',Replacement=':$P$',LookAt=2,MatchCase=False)
+
+# ---------- 3. MEXICO baked ----------
+for r in range(36,45): ws.Range('J%d:O%d'%(r,r)).FillRight()
+setf(47,11,15,lambda c,i:'=%s47+%s48'%(L(i-1),c),nf=PCT,color=BLACK)
+setf(48,11,15,lambda c,i:'=%s$8'%c,nf=PP,color=GRAY)
+setf(49,11,15,lambda c,i:'=%s36*%s47'%(c,c),nf=NUM,color=BLACK)
+for r in (36,40,41,43,49): cagr(r)
+hdr(33,'Market Data (Baked Goods, Retail)')
+# ---------- 4. MEXICO snacks + blended ----------
+hdr(53,'Market Data (Savoury Snacks, Retail)')
+s=SR['MXs']
+for r,t,t_row in [(54,'Mexico Savoury Snacks (MXN mm), Market Size, Retail Value RSP (Current Prices)',36),(55,'Market Growth (Nominal)',37),(56,'Grupo Bimbo Market Share (Savoury Snacks)',47),(57,'Change in Market Share (pp)',48),(58,'Grupo Bimbo Retail Value, Savoury Snacks (NBO)',49),(59,'Bimbo Retail Value, Baked + Snacks (MXN mm)',49),(60,'Bimbo Retail Value Growth, Mexico (Baked + Snacks)',37),(61,'Snacks as % of Bimbo Retail Value',38)]:
+    fmt_from(t_row,r); lab(r,t)
+setf(54,3,15,lambda c,i:'='+idx(s['cur'],c),nf=NUM,color=BLACK)
+setf(55,3,15,lambda c,i:'='+idx(s['cur'],c)+'/'+idxp(s['cur'],c)+'-1',nf=PCT,color=BLACK)
+setf(56,3,10,lambda c,i:'='+idx(s['sh'],c)+'/100',nf=PCT,color=BLACK); setf(56,11,15,lambda c,i:'=%s56+%s57'%(L(i-1),c),nf=PCT,color=BLACK)
+setf(57,3,10,lambda c,i:'=('+idx(s['sh'],c)+'-'+idxp(s['sh'],c)+')/100',nf=PP,color=GRAY); setf(57,11,15,lambda c,i:'=%s$8'%c,nf=PP,color=GRAY)
+setf(58,3,10,lambda c,i:'='+idx(s['bval'],c),nf=NUM,color=BLACK); setf(58,11,15,lambda c,i:'=%s54*%s56'%(c,c),nf=NUM,color=BLACK)
+setf(59,3,15,lambda c,i:'=%s49+%s58'%(c,c),nf=NUM,color=BLACK)
+setf(60,4,15,lambda c,i:'=%s59/%s59-1'%(c,L(i-1)),nf=PCT,color=BLACK); ws.Range('B60:P60').Font.Bold=True
+setf(61,3,15,lambda c,i:'=%s58/%s59'%(c,c),nf=PCT,color=GRAY)
+for r in (54,58,59): cagr(r)
+# ---------- 5. US baked ----------
+for r in range(72,81): ws.Range('J%d:O%d'%(r,r)).FillRight()
+setf(83,11,15,lambda c,i:'=%s83+%s84'%(L(i-1),c),nf=PCT,color=BLACK)
+setf(84,11,15,lambda c,i:'=%s$9'%c,nf=PP,color=GRAY)
+setf(85,11,15,lambda c,i:'=%s72*%s83'%(c,c),nf=NUM,color=BLACK)
+for r in (72,76,77,79,85): cagr(r)
+# ---------- 6. New blocks ----------
+def block_market(h,title,inrow,srcname,mkt_lab,share_lab,val_lab):
+    hdr(h,title)
+    s=SR[srcname]
+    for r,t,tr in [(h+1,mkt_lab,36),(h+2,'Market Growth (Nominal)',37),(h+3,share_lab,47),(h+4,'Change in Market Share (pp)',48),(h+5,val_lab,49)]:
+        fmt_from(tr,r); lab(r,t)
+    setf(h+1,3,15,lambda c,i:'='+idx(s['cur'],c),nf=NUM,color=BLACK)
+    setf(h+2,3,15,lambda c,i:'='+idx(s['cur'],c)+'/'+idxp(s['cur'],c)+'-1',nf=PCT,color=BLACK)
+    setf(h+3,3,10,lambda c,i:'='+idx(s['sh'],c)+'/100',nf=PCT,color=BLACK); setf(h+3,11,15,lambda c,i:'=%s%d+%s%d'%(L(i-1),h+3,c,h+4),nf=PCT,color=BLACK)
+    setf(h+4,3,10,lambda c,i:'=('+idx(s['sh'],c)+'-'+idxp(s['sh'],c)+')/100',nf=PP,color=GRAY); setf(h+4,11,15,lambda c,i:'=%s$%d'%(c,inrow),nf=PP,color=GRAY)
+    setf(h+5,3,10,lambda c,i:'='+idx(s['bval'],c),nf=NUM,color=BLACK); setf(h+5,11,15,lambda c,i:'=%s%d*%s%d'%(c,h+1,c,h+3),nf=NUM,color=BLACK)
+    cagr(h+1); cagr(h+5)
+block_market(88,'Market Data (Savoury Snacks, Retail), United States',9,'USs','Market Size, Retail Value RSP (Current Prices, USD mm)','Barcel USA Market Share','Barcel USA Retail Value (NBO, USD mm)')
+block_market(95,'Market Data (Baked Goods, Retail), Canada',9,'CA','Market Size, Retail Value RSP (Current Prices, CAD mm)','Canada Bread Co (Bimbo Canada) Market Share','Canada Bread Co Retail Value (NBO, CAD mm)')
+hdr(102,'North America, Bimbo Retail Value at Spot FX (MXN mm)')
+for r,t,tr in [(103,'US Baked Goods (Bimbo Bakeries USA), MXN mm',49),(104,'US Savoury Snacks (Barcel USA), MXN mm',49),(105,'Canada Baked Goods (Canada Bread Co), MXN mm',49),(106,'Bimbo North America Retail Value (MXN mm, constant spot FX)',49),(107,'Growth at Constant Spot FX',37),(108,'FX Step 2026 (spot vs 2025 avg), applied only if switch = 1',38),(109,'Include FX Step Switch (1 = yes, 0 = no)',38),(110,'Bimbo Retail Value Growth, North America (MXN)',37)]:
+    fmt_from(tr,r); lab(r,t)
+setf(103,3,15,lambda c,i:'=%s85*$C$%d'%(c,SP),nf=NUM,color=BLACK)
+setf(104,3,15,lambda c,i:'=%s93*$C$%d'%(c,SP),nf=NUM,color=BLACK)
+setf(105,3,15,lambda c,i:'=%s100*$C$214'%c,nf=NUM,color=BLACK)
+setf(106,3,15,lambda c,i:'=SUM(%s103:%s105)'%(c,c),nf=NUM,color=BLACK)
+setf(107,4,15,lambda c,i:'=%s106/%s106-1'%(c,L(i-1)),nf=PCT,color=BLACK)
+setf(108,11,15,lambda c,i:'=IF(AND($C$109=1,%s$5=2026),$C$%d/INDEX($C$174:$P$174,MATCH(2025,$C$%d:$P$%d,0))-1,0)'%(c,SP,H,H),nf=PCT,color=GRAY)
+ws.Range('C109:P109').ClearContents(); ws.Cells(109,3).Value=0; ws.Cells(109,3).Font.Color=BLUE; ws.Cells(109,3).NumberFormat='0'
+setf(110,11,15,lambda c,i:'=(1+%s107)*(1+%s108)-1'%(c,c),nf=PCT,color=BLACK); setf(110,4,10,lambda c,i:'=%s107'%c,nf=PCT,color=BLACK); ws.Range('B110:P110').Font.Bold=True
+for r in (103,104,105,106): cagr(r)
+for b,t in [(112,'EAA (proxy: Spain Baked Goods)'),(121,'Latin America (proxy: Brazil Baked Goods)')]:
+    fmt_from(63,b); lab(b,t)
+block_market(113,'Market Data (Baked Goods, Retail), Spain',10,'ES','Market Size, Retail Value RSP (Current Prices, EUR mm)','Bimbo SA Market Share','Bimbo SA Retail Value (NBO, EUR mm)')
+fmt_from(37,119); lab(119,'Bimbo Retail Value Growth, EAA (Spain proxy, constant spot FX)')
+setf(119,4,15,lambda c,i:'=%s118/%s118-1'%(c,L(i-1)),nf=PCT,color=BLACK); ws.Range('B119:P119').Font.Bold=True
+block_market(122,'Market Data (Baked Goods, Retail), Brazil',11,'BR','Market Size, Retail Value RSP (Current Prices, BRL mm)','Bimbo Brasil Market Share','Bimbo Brasil Retail Value (NBO, BRL mm)')
+fmt_from(37,128); lab(128,'Bimbo Retail Value Growth, Latin America (Brazil proxy, constant spot FX)')
+setf(128,4,15,lambda c,i:'=%s127/%s127-1'%(c,L(i-1)),nf=PCT,color=BLACK); ws.Range('B128:P128').Font.Bold=True
+
+# ---------- 7. TOP BLOCK ----------
+for r,t,src in [(8,'Mexico',48),(9,'North America',84),(10,'EAA',117),(11,'Latin America',126)]:
+    ws.Range('B%d:P%d'%(r,r)).Font.Name='Arial'; ws.Range('B%d:P%d'%(r,r)).Font.Size=11; lab(r,t); ws.Cells(r,2).Font.Color=BLACK
+    setf(r,3,10,lambda c,i,src=src:'=%s%d'%(c,src),nf=PP,color=BLACK)
+    rng=ws.Range('K%d:O%d'%(r,r)); rng.Value=0; rng.Font.Color=BLUE; rng.NumberFormat=PP
+fmt_from(14,18); lab(18,'Consolidated Net Sales'); ws.Range('B18:P18').Font.Bold=True
+for r,g in {14:60,15:110,16:119,17:128}.items():
+    setf(r,11,15,lambda c,i,r=r,g=g:'=%s%d*(1+%s%d)'%(L(i-1),r,c,g),nf=NUM,color=BLACK)
+    cagr(r,PCT); ws.Cells(r,16).Font.Color=BLACK
+setf(18,4,15,lambda c,i:'=SUM(%s14:%s17)'%(c,c),nf=NUM,color=BLACK); cagr(18)
+for r,t,src in [(19,'Mexico, YoY Growth',14),(20,'North America, YoY Growth',15),(21,'EAA, YoY Growth',16),(22,'Latin America, YoY Growth',17),(23,'Consolidated, YoY Growth',18)]:
+    ws.Range('B%d:P%d'%(r,r)).Font.Name='Arial'; ws.Range('B%d:P%d'%(r,r)).Font.Size=11; lab(r,t); ws.Cells(r,2).Font.Color=GRAY
+    setf(r,5,15,lambda c,i,src=src:'=%s%d/%s%d-1'%(c,src,L(i-1),src),nf=PCT,color=GRAY)
+ws.Range('B23:O23').Font.Bold=True
+lab(24,'Sanity Threshold, Max YoY Growth (flag if exceeded)'); ws.Cells(24,2).Font.Color=GRAY
+ws.Cells(24,3).Value=0.05; ws.Cells(24,3).Font.Color=BLUE; ws.Cells(24,3).NumberFormat=PCT
+fc=ws.Range('K19:O23').FormatConditions; fc.Delete()
+cf=fc.Add(Type=1,Operator=5,Formula1='=$C$24'); cf.Font.Color=255; cf.Interior.Color=13551615
+ws.Cells(25,2).Value='Method: Bimbo retail value = Euromonitor market (local currency, current prices) x Bimbo share (prior year + pp input in rows 8-11); FX held at 2-Oct-2026 spot; net sales assumed to grow in line with retail value.'
+ws.Cells(25,2).Font.Color=GRAY; ws.Cells(25,2).Font.Italic=True; ws.Cells(25,2).Font.Name='Arial'; ws.Cells(25,2).Font.Size=11
+x.Calculation=-4105; x.ScreenUpdating=True; x.CutCopyMode=False
+x.Calculate()
+print('done')

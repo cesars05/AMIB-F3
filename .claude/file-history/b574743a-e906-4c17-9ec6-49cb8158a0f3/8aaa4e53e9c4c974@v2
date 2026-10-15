@@ -1,0 +1,129 @@
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
+p = r'C:\Users\cesar\Downloads\PE\08_Proyecto_Final\modelo_financiero\_builder\build_deck_v2.py'
+t = open(p, encoding='utf-8').read()
+n_ok = 0
+
+
+def rep(old, new, cnt=1):
+    global t, n_ok
+    c = t.count(old)
+    if c != cnt:
+        print("COUNT", c, "for", old[:80].replace("\n", " "))
+        return
+    t = t.replace(old, new); n_ok += 1
+
+
+# ---- slide 2 resumen
+rep('y0 = 1.55 + i * 1.26\n    d.label_block(s, 0.575, y0, 1.6, 1.12, t, fill=GRAD[i], size=12)\n    d.text(s, 2.3, y0 - 0.02, 5.6, 1.18,',
+    'y0 = 1.55 + i * 1.15\n    d.label_block(s, 0.575, y0, 1.6, 1.03, t, fill=GRAD[i], size=12)\n    d.text(s, 2.3, y0 - 0.02, 5.6, 1.1,')
+rep('d.line(s, 0.575, y0 + 1.19, 7.9, y0 + 1.19, color=GR, width=0.75, dash="dash")', 'd.line(s, 0.575, y0 + 1.09, 7.9, y0 + 1.09, color=GR, width=0.75, dash="dash")')
+rep('(xx(base["moic"]), "MOIC neto del LP"), (pct(base["irr"]), "TIR neta del LP"), (f"US${base[\'carry\']:.0f}M", "carry del GP")]',
+    '(xx(base["moic"]), "MOIC neto"), (pct(base["irr"]), "TIR neta"), (f"US${base[\'carry\']:.0f}M", "carry del GP")]')
+rep('"- Con 5 de 8 empresas fallando el LP aún recupera **{}**.".format(xx(CASE[\'Estrés: fallan 5\'][\'moic\']))], size=10.5)',
+    '"- Con 5 de 8 empresas fallando el LP aún recupera **{}**.".format(xx(CASE[\'Estrés: fallan 5\'][\'moic\'])), "- Las 3 empresas que fallan: Uriel/BRM 0.0x, FAZT 0.5x y S2G 0.3x.", "- Distribuciones desde el año 6; DPI de {} al año 9.".format(xx(dpi[8]))], size=10.5)')
+
+# ---- slide 3/4 oportunidad
+rep('"Los proyectos públicos son de decenas a cientos de MW; el hueco de Aurex está aguas abajo, en la industria y el comercio"', '"Proyectos de cientos de MW; Aurex entra aguas abajo, en industria y comercio"')
+rep('("MXN 1.168 billones", "inversión sexenal en electricidad y gasoductos (7-oct-2026)"), ("32,475 MW", "capacidad nueva del Plan 2025-2030; 6,750 MW privados"),\n         ("5,551 MW", "baterías en el SEN 2025-2030 (PLADESE)"), ("5,190 MW", "generación distribuida instalada, cierre 2025 (CNE)"), ("7,411 MW", "esquemas mixtos CFE adjudicados en 37 proyectos (jun-2026)")]',
+    '("MXN 1.168 bill.", "inversión sexenal en electricidad (7-oct-2026)"), ("32,475 MW", "capacidad nueva del plan 2025-2030"),\n         ("5,551 MW", "baterías en el SEN, 2025-2030"), ("5,190 MW", "generación distribuida, cierre 2025"), ("7,411 MW", "mixtos CFE adjudicados (jun-2026)")]')
+rep('d.kpi_tile(s, 0.575 + i * 2.48, 1.5, 2.36, 0.98, n_, l_, fill=(DK if i == 0 else T1), num_size=17,', 'd.kpi_tile(s, 0.575 + i * 2.48, 1.5, 2.36, 1.0, n_, l_, fill=(DK if i == 0 else T1), num_size=17,')
+rep('y = d.block_header(s, 0.575, 2.6, 4.1, "Adiciones por región, 2025-2030", "MW; regiones de control (PLADESE)")\nd.bar_chart(s, 0.575, y, 4.1, 2.9,',
+    'y = d.block_header(s, 0.575, 2.62, 4.1, "Adiciones por región, 2025-2030", "MW; regiones de control (PLADESE)")\nd.bar_chart(s, 0.575, y, 4.1, 2.3,')
+rep('y = d.block_header(s, 4.85, 2.6, 3.9, "Generación distribuida instalada", "MW por estado, cierre 2025 (CNE)")\nd.bar_chart(s, 4.85, y, 3.9, 2.9,',
+    'y = d.block_header(s, 4.85, 2.62, 3.9, "Generación distribuida instalada", "MW por estado, cierre 2025 (CNE)")\nd.bar_chart(s, 4.85, y, 3.9, 2.3,')
+rep('d.block_header(s, 8.95, 2.6, 3.93, "Qué significa para Aurex")\nd.text(s, 8.95, 3.1, 3.93, 2.5,', 'd.block_header(s, 8.95, 2.62, 3.93, "Qué significa para Aurex")\nd.text(s, 8.95, 3.12, 3.93, 2.7,')
+rep('"- **Deducción del 100%** del equipo renovable (LISR art. 34 fr. XIII)."], size=10.5)\nd.conclusion_bar(s, "Validan la tesis: hay demanda de energía en sitio, pero el capital institucional fluye a escala utility; Aurex entra donde nadie financia.", y=5.9, h=0.62, size=11)',
+    '"- **Deducción del 100%** del equipo renovable (LISR art. 34 fr. XIII)."], size=10)\nd.conclusion_bar(s, "Validan la tesis: hay demanda de energía en sitio, pero el capital institucional fluye a escala utility; Aurex entra donde nadie financia.", y=6.0, h=0.55, size=10.5)')
+
+# ---- slide 5 tesis
+rep('"Los fondos visibles escriben cheques unas 10 veces mayores; los del tamaño de Aurex son pequeños o no públicos"', '"Los fondos visibles escriben cheques unas 10 veces mayores que el nuestro"')
+rep('d.card(s, 0.575 + i * 2.55, 2.45, 2.45, 3.0, t, bl, size=10, fill=T1)', 'd.card(s, 0.575 + i * 2.45, 2.45, 2.35, 3.0, t, bl, size=10, fill=T1)')
+rep('d.table(s, 8.0, 2.45, 4.88, rows, col_w=[1.3, 1.45, 1.2, 0.93], row_h=0.5, size=9,', 'd.table(s, 8.0, 2.45, 4.88, rows, col_w=[1.3, 1.45, 1.2, 0.93], row_h=0.47, size=9,')
+rep('d.text(s, 0.575, 5.55, 12.3, 0.6, "Lectura: con US$2 a 10M', 'd.text(s, 0.575, 5.55, 7.3, 0.6, "Lectura: con US$2 a 10M')
+
+# ---- slide 6 razones
+rep('"Primer fondo sin historial: lo compensamos con pipeline verificado, gobierno estricto y alineación económica"', '"Primer fondo sin historial: lo compensamos con gobierno estricto y alineación"')
+rep('"Verdigris se excluyó (California, sin operación en México) y se sustituyó por BioEsol."]),', '"Verdigris se excluyó (California, sin operación en México) y se sustituyó por BioEsol.", "Criterios: cliente ≤30%, directivos con experiencia, sin utility mayorista, sin subsidios y valuación ≤US$100M."]),')
+rep('"Carry solo después de 8% compuesto sobre todo lo comprometido."]),', '"Carry solo después de 8% compuesto sobre todo lo comprometido.", "La comisión baja a 1.5% sobre lo invertido desde el año 6."]),')
+rep('"Un integrante con acceso al sector; el vínculo se declara y se abstiene."])]', '"Un integrante con acceso al sector; el vínculo se declara y se abstiene.", "Política de valuación escrita y reportes trimestrales."])]')
+rep('d.rect(s, x, 1.55, 3.95, 3.35, fill=T1, line=PR, line_w=1.0)', 'd.rect(s, x, 1.55, 3.95, 3.1, fill=T1, line=PR, line_w=1.0)')
+rep('d.text(s, x + 0.12, 2.9, 3.7, 2.0, [f"- {b}" for b in bl], size=10.5)', 'd.text(s, x + 0.12, 2.9, 3.7, 1.75, [f"- {b}" for b in bl], size=9.5)')
+rep('d.table(s, 0.575, 5.05, 12.3, rows, col_w=[5.6, 6.7], row_h=0.36, size=10, text_cols=(0, 1))\nd.conclusion_bar(s, "Lo que pedimos al comité es confiar en el diseño del fondo, no en una trayectoria que todavía no existe.", y=6.52, h=0.35, size=10.5)',
+    'd.table(s, 0.575, 4.8, 12.3, rows, col_w=[5.6, 6.7], row_h=0.34, size=10, text_cols=(0, 1))\nd.conclusion_bar(s, "Lo que pedimos al comité es confiar en el diseño del fondo, no en una trayectoria que todavía no existe.", y=6.3, h=0.42, size=10.5)')
+
+# ---- slide 7 equipo
+rep('"Cinco roles; cada integrante defiende una decisión propia y puede responder las preguntas de su área"', '"Cinco roles; cada integrante defiende una decisión propia"')
+
+# ---- slide 9 llamadas
+rep('f"El 69% del capital se llama en los años 1 a 3, cuando entran las 8 empresas; después solo follow-on, comisiones y gastos"', 'f"El {t13_pct:.0f}% del capital se llama en los años 1 a 3, cuando entran las 8 empresas"')
+rep('t13 = sum(calls[:3]); t45 = sum(calls[3:5]); t610 = sum(calls[5:])\n', '')
+rep('# =============== 8 LLAMADAS DE CAPITAL ===============\n', '# =============== 8 LLAMADAS DE CAPITAL ===============\nt13 = sum(calls[:3]); t45 = sum(calls[3:5]); t610 = sum(calls[5:]); t13_pct = t13\n')
+rep('col_w=[2.5, 1.5, 2.03], row_h=0.33, size=9.5, text_cols=(0, 1, 2), num_align="left")\ny = d.block_header(s, 6.85, 4.35, 6.03, "Calendario de llamadas, años 1 a 10", "USD millones")\nd.stacked_columns(s, 6.85, y, 6.03, 1.5,',
+    'col_w=[2.5, 1.5, 2.03], row_h=0.3, size=9.5, text_cols=(0, 1, 2), num_align="left")\ny = d.block_header(s, 6.85, 4.1, 6.03, "Calendario de llamadas, años 1 a 10", "USD millones")\nd.stacked_columns(s, 6.85, y, 6.03, 1.95,')
+rep('d.dashed_box(s, 9.9, y + 0.1, 2.95, 1.3, color=GR)', 'd.dashed_box(s, 9.9, y + 0.1, 2.95, 1.45, color=GR)')
+
+# ---- slide 10 roadmap
+rep('texts = {0: ["Año 0 a 1", "Primer cierre desde US$40M; entran Pireos, Quartux y Niko (US$24M)"],\n         1: ["Años 2 y 3", "Entran XC, BioEsol y FAZT en el año 2 y S2G y Uriel en el año 3 (US$32M)"],\n         2: ["Años 4 y 5", "Follow-on en empresas con hitos (US$26M); fin del periodo de inversión"],\n         3: ["Años 6 a 10", "Salidas de las 8 empresas, distribuciones a LPs y liquidación en el año 10"]}',
+    'texts = {0: ["Años 0 y 1", "Primer cierre y 3 empresas"],\n         1: ["Años 2 y 3", "Entran 5 empresas más"],\n         2: ["Años 4 y 5", "Follow-on y fin de inversión"],\n         3: ["Años 6 a 10", "Salidas y liquidación"]}')
+rep('d.import_elements(s, "tc:18", box=(0.575, 1.45, 12.3, 3.45), texts=texts)', 'd.import_elements(s, "tc:18", box=(0.575, 1.45, 12.3, 3.5), texts=texts)')
+rep('y = 5.0\nrows = [["Año"] + [str(i) for i in range(1, 11)],', 'y = 5.1\nrows = [["Año"] + [str(i) for i in range(1, 11)],')
+rep('row_h=0.285, size=9, text_cols=(0,), num_align="center", highlight_cols=(), bold_rows=(5,))', 'row_h=0.27, size=9, text_cols=(0,), num_align="center", highlight_cols=(), bold_rows=(5,))')
+
+# ---- slide 11 dolar
+rep('f"Comisiones de US${FEE:.2f}M y gastos de US${GAS:.2f}M en diez años; 13 centavos por dólar para operar el fondo y 82 para invertir"', 'f"Comisiones de US${FEE:.2f}M y gastos de US${GAS:.2f}M: 18 de cada 100 dólares"')
+rep('("Comisión\\naños 1 a 5", -10.0, "delta"), ("Comisión\\naños 6 a 10", -(FEE - 10.0), "delta")', '("Fee 1-5", -10.0, "delta"), ("Fee 6-10", -(FEE - 10.0), "delta")')
+
+# ---- slide 12 a quien
+rep('f"US${INV:.0f}M invertidos: de US$2M a US$15M por empresa; las tres de menor puntaje son las que fallan en el caso base"', 'f"US${INV:.0f}M invertidos, de US$2M a US$15M por empresa; tres fallan en el caso base"')
+rep('f"US${p[\'val\']}M" if str(p[\'val\']).startswith("≈") else str(p[\'val\'])', 'f"{p[\'val\']}M".replace("≈", "≈US$")')
+rep('d.text(s, 3.42, 2.12 + i * 0.34, 1.5, 0.3, f"{k}: {v:.0f}", size=8.5)', 'd.text(s, 3.42, 2.12 + i * 0.34, 1.5, 0.3, f"{k}: {v:.0f}", size=8.5)\nfor i, (k_, pth_) in enumerate(list(logo_tiles.items())[:5]):\n    s.shapes.add_picture(pth_, int((0.575 + i * 0.84) * 914400), int(4.62 * 914400), width=int(0.8 * 914400))')
+
+# ---- slide 13 pireos
+rep('d.rect(s, 0.575 + i * 1.62, 1.5, 1.55, 0.95, fill=DK, text=f"{a_}\\n{b_}", size=10, bold=True, color="#FFFFFF")', 'd.rect(s, 0.575 + i * 1.4, 1.5, 1.33, 0.95, fill=DK, text=f"{a_}\\n{b_}", size=9, bold=True, color="#FFFFFF")')
+rep('d.rect(s, 0.575, 2.6, 2.2, 0.8, fill=T1, line=DK, text="Hoy\\n0%", size=12, bold=True)', 'd.rect(s, 0.575, 2.6, 1.9, 0.8, fill=T1, line=DK, text="Hoy\\n0%", size=12, bold=True)')
+rep('d.line(s, 2.8, 3.0, 3.25, 3.0, color=DK, width=2.5, arrow=True)\nd.rect(s, 3.3, 2.6, 1.55, 0.8, fill=DK,', 'd.line(s, 2.5, 3.0, 2.95, 3.0, color=DK, width=2.5, arrow=True)\nd.rect(s, 3.0, 2.6, 1.85, 0.8, fill=DK,')
+rep('"**Riesgo:** el grupo Walmart podría superar 30% de ventas."], size=9.5, fill="#FFFFFF")', f'"**Riesgo:** el grupo Walmart podría superar 30% de ventas.", "**Retorno modelado:** múltiplo de salida de {{pi[\'mult\']:.2f}}x en {{pi[\'sal\'] - pi[\'ent\']}} años (crecimiento de EBITDA de 26.5% anual)."], size=9.5, fill="#FFFFFF")'.replace('{{', '{').replace('}}', '}') if False else '"**Riesgo:** el grupo Walmart podría superar 30% de ventas."], size=9.5, fill="#FFFFFF")')
+rep('d.bullet_box(s, 9.85, 1.82, 3.03, 2.75, ["**Preferencia 1x** no participativa.", "Asiento en el consejo y vetos sobre deuda, venta y presupuesto.", "Drag-along, tag-along y vesting de fundadores.", "Ningún cliente >30% en el data room antes de firmar."], size=9.5, fill="#FFFFFF")',
+    'd.bullet_box(s, 9.85, 1.82, 3.03, 2.15, ["**Preferencia 1x** no participativa.", "Asiento en el consejo y vetos sobre deuda, venta y presupuesto.", "Drag-along, tag-along y vesting de fundadores.", "Ningún cliente >30% en el data room antes de firmar."], size=9, fill="#FFFFFF")')
+rep('d.table(s, 9.85, 4.7, 3.03, [["Cap table (US$M)", ""],', 'd.table(s, 9.85, 4.1, 3.03, [["Cap table (US$M)", ""],')
+rep('d.conclusion_bar(s, "Si el due diligence muestra concentración mayor a 30%, no invertimos o reducimos el ticket: la regla (i) del fondo manda.", y=6.22, h=0.5, size=10.5)',
+    'd.text(s, 9.85, 5.6, 3.03, 0.55, f"Follow-on de US${pi[\'fo\']:.0f}M en el año {pi[\'foy\']} solo si la empresa cumple sus hitos.", size=9, italic=True)\nd.conclusion_bar(s, "Si el due diligence muestra concentración mayor a 30%, no invertimos o reducimos el ticket: la regla (i) del fondo manda.", y=6.22, h=0.5, size=10.5)')
+
+# ---- slide 14 retorno
+rep('ref_lines=[(0.1615, "Mediana MX 16.2%", GR), (0.08, "Hurdle 8%", RED)]', 'ref_lines=[(0.1615, "Mediana MX", GR), (0.08, "Hurdle", RED)]')
+rep('d.tornado(s, 8.2, y, 4.68, 3.0, tor, base_value=bi * 100, fmt="{:+.1f} pts", label_size=8)', 'd.tornado(s, 8.2, y, 4.68, 3.0, tor, base_value=bi * 100, fmt="{:.1f} pts", label_size=8)')
+rep('"Con 3 de 8 empresas sin retorno suficiente; el rango va de 5% a 20% de TIR según el escenario"', '"Con 3 de 8 empresas sin retorno suficiente; rango de TIR de 5% a 20% por escenario"')
+
+# ---- slide 15 salida
+rep('"Ninguna salida mexicana comparable es de nuestro tamaño: la salida es el riesgo principal del fondo"', '"Ninguna salida mexicana comparable es de nuestro tamaño: es el riesgo principal"')
+rep('col_w=[1.45, 0.45, 0.65, 3.35], row_h=0.4, size=8.8,', 'col_w=[1.45, 0.45, 0.65, 3.35], row_h=0.36, size=8.8,')
+rep('d.bar_chart(s, 6.7, y, 6.18, 2.35, [str(i)', 'd.bar_chart(s, 6.7, y, 6.18, 2.05, [str(i)')
+rep('d.text(s, 0.575, 5.0, 5.9, 1.15, ["Si no hay comprador', 'd.text(s, 0.575, 4.95, 5.9, 1.2, ["Si no hay comprador')
+
+# ---- slide 16 riesgos: escalera de 7 controles propia
+a = t.index('try:\n    d.import_elements(s, "tc:4"')
+b = t.index('d.text(s, 8.0, 5.55, 4.88, 0.6, "Además:')
+ladder = '''ctrl = [("LPAC", "Reunión sin el GP; conflictos y valuaciones"), ("Key man", "Se suspenden inversiones si salen 2 personas clave"),
+        ("Tope de 15%", "Máximo US$15M por empresa y reserva de follow-on"), ("Cascada europea", "Hurdle 8% sobre todo lo comprometido"),
+        ("Clawback", "El GP devuelve cualquier carry en exceso"), ("GP con 2%", "Aportación en efectivo y renuncia parcial de comisión"),
+        ("Informes", "Trimestrales, con valuador independiente")]
+for i_, (a_, b_) in enumerate(ctrl):
+    y0 = 1.95 + i_ * 0.51
+    d.rect(s, 8.0, y0, 0.45, 0.45, fill=GRAD[min(i_, 4)], text=str(i_ + 1), size=12, bold=True, color="#FFFFFF" if i_ < 4 else "#000000")
+    d.rect(s, 8.5, y0, 1.55, 0.45, fill=T1, text=a_, size=10, bold=True, color=DK)
+    d.text(s, 10.12, y0, 2.76, 0.45, b_, size=9, anchor="middle")
+'''
+t = t[:a] + ladder + t[b:]
+rep('d.text(s, 8.0, 5.55, 4.88, 0.6, "Además: informes trimestrales, valuador independiente y remoción del GP con y sin causa.", size=9.5, italic=True)', 'd.text(s, 8.0, 5.58, 4.88, 0.6, "Además: remoción del GP con y sin causa por mayoría calificada de LPs.", size=9.5, italic=True)')
+
+# ---- anexos
+rep('"Cada cifra con su plan, periodo y fuente; los tres 54% y los dos planes de baterías no son intercambiables"', '"Cada cifra con su plan y periodo; los tres 54% y los dos planes de baterías difieren"')
+rep('d.text(s, 9.0, 1.6, 3.85, 4.5, ["**Cómo leerlo**"', 'd.text(s, 9.0, 1.6, 3.85, 2.4, ["**Cómo leerlo**"')
+rep('f"- En el escenario Bajo el GP no cobra carry y el LP recupera {xx(bajo[\'moic\'])}."], size=11)',
+    'f"- En el escenario Bajo el GP no cobra carry y el LP recupera {xx(bajo[\'moic\'])}."], size=10)\nd.stacked_columns(s, 9.0, 3.95, 3.85, 2.7, ["Bajo", "Base", "Alto"], {"Capital": [h2(21, c) for c in "EDF"], "Preferente": [h2(23, c) for c in "EDF"], "Catch-up": [h2(26, c) for c in "EDF"], "Resto LP": [h2(28, c) for c in "EDF"], "Resto GP": [h2(29, c) for c in "EDF"]}, colors=[DK, PR, LIM, "#A6A6A6", AMB], totals=True, total_fmt="{:,.0f}", legend=True, label_size=8, inside_labels=False)')
+rep('d.line_chart(s, 0.575, y, 6.1, 3.2, [str(i)', 'd.line_chart(s, 0.575, y, 6.1, 3.5, [str(i)')
+rep('d.text(s, 0.575, 5.0, 6.1, 1.2, [f"- TVPI de', 'd.text(s, 0.575, 5.85, 6.1, 0.8, [f"- TVPI de')
+
+open(p, 'w', encoding='utf-8').write(t)
+print("ok replaced", n_ok)

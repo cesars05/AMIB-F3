@@ -1,0 +1,128 @@
+# Diagnóstico del Bimbo Financial Model (base v6, 11-oct-2026)
+
+Fase 1 del handoff. Documento de solo lectura: no se modificó ninguna celda. Verificado contra el libro abierto (v6 guardada el 11-oct 10:14 AM, idéntica a la v7 al momento de crearla). Respaldo de la base: `Excel Backup\Bimbo Financial Model_v6_BACKUP_base-pre-v7.xlsx`.
+
+## 1. Valores base de hoy (reemplazan la sección 5 del handoff)
+
+| Concepto | Handoff (10-oct) | **Base de hoy (11-oct)** |
+|---|---|---|
+| EV (DCF) | Ps455,661m | **Ps453,895m** |
+| Capital | Ps290,978m | **Ps289,213m** |
+| Valor intrínseco por acción | Ps67.73 | **Ps67.32** |
+| Precio / upside / recomendación | Ps55.92 / 21.12% / BUY | **Ps55.92 / 20.38% / BUY** |
+| WACC | 10.32% | **10.345%** |
+| g terminal | 3.52% | 3.515% |
+| Ingresos 2026E / 2030E | Ps447,583m / Ps535,368m | igual |
+| Adj. EBITDA 2026E / 2030E | Ps65,468m / Ps82,160m | igual |
+| EBIT 2026E / 2030E | Ps39,684m / n.d. | Ps39,684m / Ps52,501m |
+| Interés 2026E / 2030E | Ps15,163m / Ps18,137m | igual |
+| Utilidad neta controladora 2026E / 2030E | Ps15,264m / Ps21,391m | 2026E Ps15,264m (igual) |
+| Dividendos 2026E / 2030E | Ps7,820m / n.d. | Ps7,820m / Ps10,960m |
+| Efectivo final 2026E / 2030E | Ps15,147m / Ps39,722m | igual |
+
+Todo lo operativo coincide con el handoff. **La única diferencia es el WACC**, que mueve el valor por acción de Ps67.73 a Ps67.32. El puente parte de **Ps67.32**.
+
+## 2. Qué cambió en el WACC
+
+El WACC depende de datos que se actualizan, no de supuestos fijos del equipo. Comparación del caché de la v4 (10-oct 16:09) contra la v6 de hoy:
+
+| Insumo | v4 (10-oct) | v6 (11-oct) |
+|---|---|---|
+| Beta ponderada | 0.824 | 0.833 |
+| Prima de riesgo ponderada (ERP) | 6.07% | 5.76% |
+| Costo del capital (Ke) | 14.30% | 14.10% |
+| Capitalización de mercado (`WACC!D34`) | Ps236,079m | Ps239,593m |
+| Peso de capital E/(D+E) | 57.05% | 57.42% |
+| Costo de la deuda antes de impuestos | 7.551% | 7.551% (sin cambio) |
+| Deuda a mercado y arrendamientos | 144,338 y 33,361 | igual |
+| **WACC** | **10.428%** | **10.345%** |
+| Valor por acción en DCF | Ps66.10 | Ps67.32 |
+
+Causas identificadas:
+
+1. **ERP (`Cost of Equity!C14:C18` desde `ERP!Y14:Z17`):** bajó de 6.07% a 5.76%. Es el cambio de mayor efecto.
+2. **Beta (`Beta!M23:M25`):** subió de 0.824 a 0.833 (regresión, pares relevered y casas de análisis).
+3. **Capitalización (`Peers Data!D15`):** es una fórmula `TR(...)` de LSEG con datos en vivo (Workspace en línea), por lo que se mueve con el precio. Solo cambia el peso de capital, no el costo.
+4. El costo de la deuda no se movió: sus rendimientos usan una fecha de liquidación fija (`Cost of Debt!C11` = 24-sep-2026) y precios guardados.
+
+El estado exacto del WACC de 10.32% del handoff no se puede reconstruir porque no hay un respaldo entre la v4 y la v6 de hoy. La causa está acotada a ERP, beta y capitalización.
+
+Riesgos que hay que conocer:
+
+- Como `Peers Data!D15` es en vivo, el WACC puede cambiar entre un paso y otro del puente. Para medir cada cambio de forma aislada conviene **congelar el WACC** (anotar su valor y comprobarlo en cada paso, o pegar la capitalización como valor durante el puente). Es decisión del usuario.
+- El precio del DCF (`DCF!C79`, Ps55.92) viene de `Deck Charts` y no se mueve, pero la capitalización del WACC sí. Hay una incoherencia menor entre ambos.
+- La fecha de liquidación de la deuda (24-sep-2026) difiere de la fecha de valuación del DCF (2-oct-2026).
+
+## 3. Mapa de flujo
+
+`Market Growth & Inflation` (mercado y participación) → `Regional Assumptions` (crecimiento, participación, márgenes, D&A, capex por región) → `Regional Model` (ingresos, EBITDA, D&A, capex y verificaciones contra el consolidado) → `Assumptions` (selectores y drivers) → `Consolidated Model` (estados, deuda, ratios) → `DCF` (FCFF, puente a capital, valor por acción, recomendación ±15%).
+
+Selectores actuales: escenario `Assumptions!C4` = 2 (base); construcción `Assumptions!C7` = 2 (regional); participación `Regional Assumptions!D42` = 3 (Gain).
+
+## 4. Tabla por hoja
+
+| Hoja | Función | Entradas | Salidas | Problemas |
+|---|---|---|---|---|
+| `Assumptions` | Selectores y drivers 2026 a 2030 | Escenario, forma de construcción, spreads | Crecimiento, márgenes, interés, impuestos, capex, payout, recompras, refinanciamiento | Interés % de ventas, impuesto 30%, payout total mal definido (hallazgos 1, 4, 5) |
+| `Regional Assumptions` | Crecimiento, participación, márgenes, D&A, capex por región | `Market Growth & Inflation` | Supuestos por región | Escenarios de participación; margen Norteamérica 10.5% (tope), Colombia +0.03 |
+| `Regional Model` | Ingresos y EBITDA por región, vínculo al consolidado | `Regional Assumptions` | Ingresos, EBITDA, SG&A implícito (fila 219) | SG&A es residuo (hallazgos 6, 7, 8) |
+| `Consolidated Model` | Estados, flujo, deuda, ratios | `Assumptions`, `Regional Model` | Utilidad neta, caja, deuda, ratios | Intereses, deuda neteada, sin adquisiciones (hallazgos 1 a 4) |
+| `Market Growth & Inflation` | Mercado Euromonitor y participación | Datos | Crecimiento usado por `Assumptions` | Salto de Colombia en 2023 |
+| `DCF` | FCFF, EV, puente a capital, valor por acción | `Consolidated Model`, `WACC` | Valor, upside, recomendación | FCFF sin línea de adquisiciones |
+| `WACC`, `Cost of Equity`, `Cost of Debt` | Costo de capital | ERP, beta, bonos, capitalización TR | WACC | Insumos en vivo; tasa de impuestos 27% en deuda (hallazgo 12) |
+| `Multiples`, `Peers Data`, `Peers` | Múltiplos y pares con LSEG | Fórmulas TR | Referencias | Doble conteo de arrendamientos (hallazgo 13); no sobrescribir TR |
+| `Report Graphs`, `Terminal g` | Figuras del slide 7; g terminal | `Consolidated Model` (por etiqueta) | Tabla y gráficas | No renombrar etiquetas ni insertar filas en esos rangos |
+
+## 5. Hallazgos verificados contra las fórmulas
+
+| # | Hallazgo | Evidencia en el libro | Severidad |
+|---|---|---|---|
+| 1 | Intereses = ventas × % fijo | `Consolidated Model!M41` = `-M8*Assumptions!C41`; `Assumptions!C43:G43` = `'Consolidated Model'!$L$307` (3.39%). Las filas 42 y 43 (arrendamientos y resto) quedan vacías en el pronóstico. No hay ingreso por intereses. | Alto |
+| 2 | Proceeds y repayments se netean | `M123` = `-$L$452`; `M122` = `-M123*Assumptions!C100` (100%). Deuda plana en Ps153,663m (`M269`, `M278`) y arrendamientos planos (`M283`). | Alto |
+| 3 | Sin adquisiciones | `M101` = suma de `M102:M106`, todas en 0. Histórico 2025: Ps12,778m (Ps11,294m para control más Ps1,468m por minoritario). | Alto |
+| 4 | Payout mal definido | `M126` = `-M61*Assumptions!C85`; `C85:G85` = 51.24%, tomado de `'Consolidated Model'!$L$401` (payout total). Se aplica a la utilidad del **mismo** año. Recompras `M127` = `-MAX(M137,0)*Assumptions!C91` (9.71%). Dividendos 2026E Ps7,820m contra Ps4,451m en 2025. | Alto |
+| 5 | Tasa de impuestos 30% fija | `Assumptions!C50:G50` = 0.3; `M51` = `-MAX(M49,0)*Assumptions!C48`. Bajista 31%, alcista 29% (spread 1 pp). | Alto |
+| 6 | Escenarios de margen bruto y SG&A inertes en modo regional | `Regional Model!M219` = `Assumptions!C20-M56/M34`: SG&A es el residuo, así que el margen bruto no altera el EBIT. | Medio |
+| 7 | Reestructura escondida en el residuo de SG&A | Misma fila 219 (43.13% en 2026E, 42.54% en 2030E). | Alto |
+| 8 | Modo 1 y modo 2 dan EBIT distinto | Modo 2 implica ~43.1% de SG&A en 2026E contra 44.35% del modo 1 (dato del handoff, no reverificado). | Medio |
+| 9 | Líneas de detalle de costo sin pronóstico | Líneas de cuadre en el histórico (dato del handoff). | Medio-bajo |
+| 10 | Minoritarios por promedio de 3 años | `M60` = `M59*AVERAGE($J$60/$J$59,$K$60/$K$59,$L$60/$L$59)`. | Medio |
+| 11 | Signos de FX | `L46` = -384 (ganancia) y `L47` = -50 (pérdida); pronóstico `M45` = 0. | Bajo |
+| 12 | Tasa de impuestos 27% en `Cost of Debt` | `Cost of Debt!C64` = 27.021% (30% MX y 25% US ponderado); `WACC!D25` usa `Cost of Debt!C62` = 30%. | Bajo |
+| 13 | `Multiples` doble conteo de arrendamientos | Puente a capital resta `DCF!C70` y `C71` (dato del handoff). Fuera de alcance. | Medio |
+| 14 | Dos definiciones de ciclo de conversión | Dato del handoff, no reverificado. | Bajo |
+| 15 (nuevo) | **WACC con insumos en vivo** | Ver sección 2. | Medio |
+| 16 (nuevo) | Fecha de liquidación de bonos (24-sep-2026) distinta de la fecha de valuación (2-oct-2026) | `Cost of Debt!C11` y `DCF!C6`. | Bajo |
+
+## 6. Estado de los inputs que el usuario pidió cambiar
+
+| Input | Hoy en el libro | Cambio pedido |
+|---|---|---|
+| México pan, participación (Gain) | +0.05 | 0 |
+| Canadá pan (Gain) | +0.03 | 0 |
+| EE.UU. pan (Hold y Gain) | 0.00 y 0.00 | Sin cambio (ya cumple) |
+| Colombia (Gain) | +0.03 | +0.10 |
+| Margen Norteamérica base 2026 a 2030 | 9.8%, 10.0%, 10.3%, 10.5%, 10.5% | Llegar a 11.0% en 2030 (trayectoria por confirmar) |
+| Tasa de impuestos base | 30% | 33% (bajista 34%, alcista 32%) |
+| Deuda refinanciada | Refinanciamiento 100% de vencimientos; el interés no depende de la deuda | 9% para deuda nueva, la existente a su tasa actual |
+
+Nota: el bajista y el alcista de impuestos hoy son +1 pp y −1 pp respecto del base. Con 33% fijo quedan 34% y 32%, que coincide con el spread vigente (`Assumptions!C47` = 1.00%).
+
+## 7. Preguntas abiertas (sección 12 del handoff, sin cambio) y una nueva
+
+1. Trayectoria del margen de Norteamérica hasta 11%.
+2. Persistencia de la reestructura como costo extra.
+3. Recompras: monto fijo o porcentaje.
+4. Política de deuda: efectivo mínimo Ps10bn, ingreso por intereses 5%.
+5. Asignación regional de adquisiciones y tratamiento en el año terminal del DCF.
+6. Si se corrige `Multiples`.
+7. Si se añade una hoja de registro de cambios.
+8. **Nueva:** cómo tratar el WACC durante el puente (congelar capitalización o dejarla en vivo).
+
+## 8. Alcance y límites de este diagnóstico (agregado el 11-oct)
+
+Verificado celda por celda en el libro: pronóstico del estado de resultados y del flujo (`Consolidated Model` filas 8 a 65 y 99 a 132, columna M), calendario de deuda (268 a 283), los drivers de `Assumptions`, la cadena `Regional Assumptions` → `Regional Model` → `Consolidated Model` (incluida la fila 219 de SG&A residual y la línea de Corporate & eliminations, fila 124), el FCFF del `DCF` (filas 18 a 48), la cadena del `WACC` y el puente de `Multiples`.
+
+No verificado a fondo: el pronóstico del balance (filas 148 a 244, cómo se arman efectivo, deuda, activo fijo y crédito mercantil), capital de trabajo (248 a 265), ratios, el interior de `Market Growth & Inflation`, `Terminal g`, `Report Graphs`, `DDM`, `EPV`, `Excess Return Model` y `Quarterly Model`. Los hallazgos 8, 9 y 14 vienen del handoff sin reverificar. El balance se trazará antes de construir la Fase 2, porque ahí depende el cuadre de efectivo y deuda.
+
+Hallazgo aprendido después de escribir el diagnóstico: en el pronóstico, `Operating Expenses, Net` (fila 19) es una sola línea agregada (ingresos × SG&A %); las líneas de detalle (20 a 31, incluida "Restructuring Expenses") quedan vacías. En modo regional el EBIT lo fija `Regional Model` y el SG&A es el residuo.

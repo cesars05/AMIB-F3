@@ -1,0 +1,171 @@
+"""Whitelist de fuentes basada en el catalogo real del feed."""
+import io
+
+P = r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs\noticias.py"
+s = io.open(P, encoding="utf-8").read()
+
+ini = s.index("# --- clasificacion de fuentes ---")
+fin = s.index("def clasificar(codigo):")
+
+nuevo = '''# ---------------------------------------------------------------------------
+# CLASIFICACION DE FUENTES
+#
+# Catalogo levantado el 2026-09-17 sobre 1,407 titulares de 17 consultas
+# (Fed, tasas, BCE, inflacion, empleo, mercados, petroleo, 4 mega caps, semis,
+# data centers, Mexico, Banxico). Aparecieron 240 fuentes distintas.
+#
+# NO ESTAN EN ESTA LICENCIA, por mas que uno las espere:
+#   Wall Street Journal, Bloomberg, Dow Jones, Barron's  -> cero apariciones
+#   Financial Times, CNBC  -> 1 aparicion cada uno en 1,407. Inservibles.
+# Son suscripciones de editor tercero. Reuters viene incluido porque es de la
+# casa de LSEG.
+#
+# El filtro es WHITELIST: lo que no esta listado no entra. Con 240 fuentes de
+# las que la mayoria son robots, un blacklist se queda corto siempre.
+# ---------------------------------------------------------------------------
+
+# Citable como hecho, sin atribuir a nadie.
+PRIMARIA = {
+    "NS:RTRS":   "Reuters",
+    "NS:ASSOPR": "AP",
+    "NS:PUBT":   "Official release",
+    "NS:USOFFI": "US government",
+    "NS:INDBAN": "Central bank",
+    "NS:EURUNI": "EU official",
+    "NS:FINLAW": "Regulatory filing",
+    "NS:GLFILE": "SEC filing",
+    "NS:EDG":    "SEC EDGAR",
+    "NS:GNW":    "Globe Newswire",
+    "NS:CNW":    "Canada Newswire",
+    "NS:CMNW":   "Newswire",
+    "NS:WPRPRO": "Press release",
+}
+
+# Prensa especializada con reporteo propio. Es donde vive la informacion de
+# cadena de suministro que no llega a los wires generalistas.
+ESPECIALIZADA = {
+    "NS:DIGITI": "DIGITIMES",
+    "NS:TAITIM": "Taipei Times",
+    "NS:CRF":    "Commodity report",
+    "NS:BBY":    "Bond market report",
+    "NS:TECHCR": "TechCrunch",
+    "NS:POLITI": "Politico",
+    "NS:AXIOSB": "Axios",
+}
+
+# Prensa general reconocida. Sirve para contexto, se atribuye siempre.
+PRENSA = {
+    "NS:WASHPO": "Washington Post",
+    "NS:NBCNEW": "NBC News",
+    "NS:CNNNWS": "CNN",
+    "NS:FOXNEW": "Fox News",
+    "NS:ALJAZE": "Al Jazeera",
+    "NS:FT":     "Financial Times",
+    "NS:CNBC":   "CNBC",
+    "NS:BARCHA": "Barchart",
+    "NS:KIPLIN": "Kiplinger",
+}
+
+# Opinion de casas de research. Nunca como hecho, siempre atribuido.
+ANALISIS = {
+    "NS:ZACKSC": "Zacks",
+    "NS:BENZIN": "Benzinga",
+    "NS:MOTFOO": "Motley Fool",
+    "NS:TIPRAN": "TipRanks",
+    "NS:GURCOM": "GuruFocus",
+    "NS:CRNUSA": "CRN",
+    "NS:BUSCOM": "Trade press",
+    "NS:SEEKAL": "Seeking Alpha",
+    "NS:INVCOM": "Investing.com",
+}
+
+# Documentado para que nadie los vuelva a agregar por descuido.
+# Volumen observado en la muestra de 1,407:
+#   NS:GLORDP 239  robot de precio    "AAON logs 0.6% gain in today's session"
+#   NS:X      193  Twitter/X
+#   NS:NOTENG 111  agregador traducido automaticamente, calidad erratica
+#   NS:NEWBTS 109  robot: "Recent News and Research Digest", "Wednesday's Preview"
+#   NS:YAHNEX  50  Yahoo agregando contenido de terceros
+# Mas los feeds de patentes (JOUIND, TECDAI, ELEBUS, NETBUS, CHIBUT) que
+# publican "Patent Issued for..." y no son noticia de mercado.
+NIVELES = {}
+for _d, _n in ((PRIMARIA, "primaria"), (ESPECIALIZADA, "especializada"),
+               (PRENSA, "prensa"), (ANALISIS, "analisis")):
+    for _c, _f in _d.items():
+        NIVELES[_c] = (_n, _f)
+
+# Orden de confianza, de mas a menos
+ORDEN = ["primaria", "especializada", "prensa", "analisis"]
+
+# Titulares que son narracion automatica aunque vengan de fuente aceptable
+RUIDO = re.compile(
+    r"(logs? [\\d.]+% (gain|loss)|ticks? (up|down)|lifts? [\\d.]+%|"
+    r"trading session|on (weak|average|heavy) volume|"
+    r"trades? [\\d.]+ percent|shares? (up|down) [\\d.]+%|"
+    r"(Grows|Trims|Takes|Boosts|Sells|Buys|Acquires|Purchases) .{0,45}"
+    r"(Holdings|Position|Stake|Shares) (in|of)|"
+    r"Stake (Trimmed|Boosted|Raised|Lowered) by|"
+    r"(Receives|Sets) Average Recommendation|Price Target at|"
+    r"rises? for a .{0,20}consecutive day|"
+    r"(Wednesday|Monday|Tuesday|Thursday|Friday)'s Preview|"
+    r"^Update: |rebound after|days' volume|weeks' volume|"
+    r"among top (gainers|losers)|Is It Too Late to Buy|"
+    r"Here is What You Need to Know|Investors Heavily Search|"
+    r"Patent (Issued|Application Titled)|Research and Markets|"
+    r"Recent News and Research Digest)", re.IGNORECASE)
+
+
+'''
+
+s = s[:ini] + nuevo + s[fin:]
+
+s = s.replace('''def clasificar(codigo):
+    if codigo in PRIMARIA:
+        return "primaria", PRIMARIA[codigo]
+    if codigo in ANALISIS:
+        return "analisis", ANALISIS[codigo]
+    return "excluida", codigo''',
+'''def clasificar(codigo):
+    """Whitelist: lo que no esta en NIVELES queda fuera."""
+    return NIVELES.get(codigo, ("excluida", codigo))''')
+
+# el filtro --solo-primarias ahora acepta tambien especializada
+s = s.replace('''        if not incluir_analisis and nivel != "primaria":''',
+              '''        if not incluir_analisis and nivel not in ("primaria", "especializada"):''')
+
+# el asterisco marca primaria; ahora se marca el nivel
+s = s.replace('''            marca = "*" if r["nivel"] == "primaria" else " "
+            print(f" {marca} {str(r['fecha'])[:16]}  [{r['fuente']}]")''',
+              '''            marca = {"primaria": "*", "especializada": "+"}.get(r["nivel"], " ")
+            print(f" {marca} {str(r['fecha'])[:16]}  [{r['fuente']}]")''')
+
+s = s.replace('''            if args.cuerpo and r["nivel"] == "primaria":''',
+              '''            if args.cuerpo and r["nivel"] in ("primaria", "especializada"):''')
+
+s = s.replace('''    print(f"\\n(*) fuente primaria: citable como hecho")''',
+              '''    print("\\n(*) primaria: citable como hecho   "
+          "(+) especializada: reporteo propio, se atribuye")''')
+
+# actualizar el docstring
+s = s.replace('''NIVELES
+-------
+  primaria   Reuters, comunicados de la propia empresa y filings. Es lo que
+             puede citarse como hecho.
+  analisis   Casas de research y prensa financiera reconocida. Sirve como
+             opinion atribuida, nunca como hecho.
+  excluida   Robots de precio, agregadores y redes sociales.
+
+Por defecto solo salen primaria y analisis. El resto ni se cuenta.''',
+'''NIVELES
+-------
+  primaria       Reuters, AP, comunicados oficiales, filings y bancos
+                 centrales. Citable como hecho.
+  especializada  DIGITIMES, Taipei Times, reportes de commodities y del
+                 mercado de bonos. Reporteo propio sobre un nicho; se
+                 atribuye pero vale mas que un wire generalista en su tema.
+  prensa         Washington Post, NBC, CNN, Politico, Axios. Contexto.
+  analisis       Zacks, Benzinga, Motley Fool. Opinion, nunca hecho.
+  excluida       Todo lo demas. Es whitelist, no blacklist.''')
+
+io.open(P, "w", encoding="utf-8").write(s)
+print("whitelist actualizada con el catalogo real")

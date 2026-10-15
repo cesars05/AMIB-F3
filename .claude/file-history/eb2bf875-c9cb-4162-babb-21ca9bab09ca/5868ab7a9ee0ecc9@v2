@@ -1,0 +1,43 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+Write-Output ("LIBRO: "+[string]$wb.Name)
+$sm=$wb.Worksheets.Item("Segment Model")
+$cm=$wb.Worksheets.Item("Consolidated Model")
+$as=$wb.Worksheets.Item("Assumptions")
+Write-Output ""
+Write-Output "### Segment Model: etiquetas de las filas que necesito ###"
+foreach($r in 13,14,15,35,36,37,82,83,84,91,92,93){
+  Write-Output ("  C"+([string]$r).PadRight(4)+"= '"+[string]$sm.Cells.Item($r,3).Text+"'    N(FY2029)="+([string]$sm.Cells.Item($r,14).Text).PadLeft(9))
+}
+Write-Output ""
+Write-Output "### Consolidated Model: filas de cableado ###"
+foreach($r in 9,20,21,22,28,29,133,134,176,186,194,195,198,199,248,268,270,294,295,296,297,298){
+  $lab=""
+  foreach($c in 2,3,4){ $t=""; try{ $t=[string]$cm.Cells.Item($r,$c).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  if($lab.Length -gt 42){ $lab=$lab.Substring(0,42) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(43)+" L="+([string]$cm.Cells.Item($r,12).Text).PadLeft(10)+"  frm= "+[string]$cm.Cells.Item($r,12).Formula)
+}
+Write-Output ""
+Write-Output ("  ultima fila usada: "+[string]($cm.UsedRange.Row+$cm.UsedRange.Rows.Count-1))
+Write-Output ""
+Write-Output "### Assumptions: modulo y espacio libre debajo ###"
+for($r=73;$r -le 82;$r++){
+  $h=""; $j=""
+  try{ $h=[string]$as.Cells.Item($r,8).Text }catch{}
+  try{ $j=[string]$as.Cells.Item($r,10).Text }catch{}
+  Write-Output ("  r"+([string]$r).PadRight(4)+" H='"+$h+"'   J='"+$j+"'")
+}
+Write-Output ""
+Write-Output "### filas 360-380 del Consolidated Model (espacio para el bloque) ###"
+for($r=358;$r -le 380;$r++){
+  $any=""
+  for($c=2;$c -le 12;$c++){ $t=""; try{ $t=[string]$cm.Cells.Item($r,$c).Text }catch{}; if($t.Trim() -ne ""){ $any+="["+$t+"] " } }
+  if($any.Trim() -ne ""){ Write-Output ("  r"+([string]$r).PadRight(4)+$any) }
+}

@@ -1,0 +1,85 @@
+$ErrorActionPreference="Stop"
+$wb=$null; $xl=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $er=$wb.Worksheets.Item("Expected Returns")
+$cm=$wb.Worksheets.Item("Consolidated Model"); $d=$wb.Worksheets.Item("DCF")
+if([string]$er.Range("C15").Text -ne "Entry Stock Price (p)"){ throw "ABORTO: C15 cambio" }
+if([string]$er.Range("C17").Text -ne "% of the Company Acquired"){ throw "ABORTO: C17 cambio" }
+$oldPx=[double]$er.Range("D15").Value2; $oldPct=[double]$er.Range("D17").Value2
+
+# parametros del deck nuevo
+$er.Range("D15").Value2=[double]240.0
+$er.Range("D17").Value2=[double]0.20
+$xl.CalculateFullRebuild()
+$sh=[double]$er.Range("D12").Value2
+$acc=[double]$er.Range("D17").Value2
+Write-Output ("entrada "+[string]$er.Range("D15").Text+"p   mercado "+[string]$er.Range("D11").Text+"p   premio "+[string]$er.Range("D16").Text+"   participacion "+[string]$er.Range("D17").Text+"   costo "+[string]$er.Range("D18").Text)
+Write-Output ("multiplo de entrada sobre Adj. EBITDA 15,725 = "+[string]$er.Range("D27").Text)
+$evEnt=[double]$er.Range("D25").Value2
+Write-Output ("multiplo de entrada sobre EBITDA segmental 16,148 = "+[string][math]::Round($evEnt/16148,2)+"x   <- la base que usa el deck")
+Write-Output ""
+
+function Caso($id,$desc,$esc,$venta,$anoSalida,$multSalida){
+  $as.Range("F10").Value2=$esc
+  if($venta){
+    $as.Range("J74").Value2="Water Management"
+    $as.Range("J75").Value2=[double]2027
+    $as.Range("J76").Value2=[double]7.9
+  } else { $as.Range("J74").ClearContents() }
+  $er.Range("D21").Value2=[double]$anoSalida
+  $er.Range("D32").Value2=[double]$multSalida
+  $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+  $esp=0.0
+  if($venta){ for($c=12;$c -le 17;$c++){ $esp+=[double]$cm.Cells.Item(378,$c).Value2 } }
+  $espPS=$esp/$sh*100
+  $divPS=([double]$er.Range("D52").Value2)/$acc/$sh*100
+  $exPS =([double]$er.Range("D53").Value2)/$acc/$sh*100
+  Write-Output ("  "+$id+"  "+$desc.PadRight(30)+([string]$er.Range("D54").Text).PadLeft(7)+([string]$er.Range("D55").Text).PadLeft(9)+"   especial "+([string][math]::Round($espPS,0)+"p").PadLeft(6)+"   total "+([string][math]::Round($divPS+$exPS,0)+"p").PadLeft(6)+"   px salida "+([string]$er.Range("D36").Text).PadLeft(8))
+}
+
+Write-Output "=================== LOS CUATRO CASOS DEL DECK, EN NUESTRO MODELO ==================="
+Write-Output "  id  narrativa                        MOIC      IRR"
+Caso "A" "Downside, 5.25x, 3 anos"      "Downside"        $false 2029 5.25
+Caso "C" "Partial success, 7.5x, 3 anos" "Partial Success" $false 2029 7.50
+Caso "D" "Venta + stub 8.5x, 6 anos"     "Partial Success" $true  2032 8.50
+Caso "E" "Venta + stub 10.0x, 6 anos"    "Partial Success" $true  2032 10.00
+
+Write-Output ""
+Write-Output "=================== EL IMPUESTO DE LA VENTA ==================="
+$as.Range("F10").Value2="Partial Success"
+$as.Range("J74").Value2="Water Management"; $as.Range("J75").Value2=[double]2027; $as.Range("J76").Value2=[double]7.9
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$neto=0.0; $gan=0.0
+for($c=12;$c -le 17;$c++){ $neto+=[double]$cm.Cells.Item(370,$c).Value2; $gan+=[double]$cm.Cells.Item(372,$c).Value2 }
+$imp=$gan*0.25
+Write-Output ("  ingreso neto de la venta      "+([string][math]::Round($neto,0)).PadLeft(9)+"   = "+[string][math]::Round($neto/$sh*100,1)+"p")
+Write-Output ("  ganancia pre-impuesto         "+([string][math]::Round($gan,0)).PadLeft(9))
+Write-Output ("  impuesto al 25% (venta activos)"+([string][math]::Round(-$imp,0)).PadLeft(8)+"   = "+[string][math]::Round(-$imp/$sh*100,1)+"p")
+Write-Output ("  -> nuestro dividendo especial          "+[string][math]::Round(($neto-$imp)/$sh*100,1)+"p")
+Write-Output ("  -> si fuera venta de acciones (SSE, sin impuesto)  "+[string][math]::Round($neto/$sh*100,1)+"p")
+Write-Output ("  -> el deck dice                        162.1p")
+
+# restaurar
+$as.Range("J74").ClearContents()
+$er.Range("D15").Value2=$oldPx
+$er.Range("D17").Value2=$oldPct
+$er.Range("D21").Value2=[double]2032
+$er.Range("D32").Value2=[double]8.0
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ""
+Write-Output ("RESTAURADO: entrada "+[string]$er.Range("D15").Text+"p  participacion "+[string]$er.Range("D17").Text+"  escenario "+[string]$as.Range("F10").Text+"  venta='"+[string]$as.Range("J74").Text+"'")
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary","Expected Returns"){
+  $s=$wb.Worksheets.Item($nm); $e=0
+  try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

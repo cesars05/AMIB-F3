@@ -1,0 +1,22 @@
+# 06 · Ejemplos (referencias de formato)
+
+**Qué es:** dos piezas hechas por otros equipos/personas que el equipo quiere usar como **modelo de presentación y de formato**. No son contenido de Aurex.
+
+| Archivo | Qué es | Qué copiar | Qué NO copiar |
+|---|---|---|---|
+| `Bold Ventures_compressed EJEMPLO.pdf` (+ `.md`, `_figuras.pdf`) | Pitch deck (31 láminas) de un equipo anterior: fondo VC de EdTech LATAM de USD $70M (*Bold Ventures*, verde oscuro + lima). Autoría: Arantza Carvajal Guzmán. | Ver secciones abajo. | Sus datos son ilustrativos (la propia lámina 19 dice "Datos financieros y de valuación no son reales"); equipo y track record son ficticios. Tiene 31 láminas — la guía pide **10–12**. |
+| `Icarus Returns Tracker - Aug 31, 2026_v1.xlsx` | Tracker de retornos de 4 BDCs (MSDL, CGBD, FSK, NCDL) para 5 inversionistas, con hoja `Summary` + una hoja por persona. Flujos fechados → **XIRR**, **MOIC**, "Whole Dollar Profit". | **El formato** (ver abajo): es el estándar de banca de inversión que quieren aplicar al modelo de Aurex, en tonos verdes. | Su contenido (BDCs). |
+
+## Anatomía de Bold Ventures (qué hicieron y cómo lo justificaron)
+Estructura (portada → divisores de sección con título grande → contenido): Executive Summary (¿Por qué? / ¿Cómo?) · Tesis de inversión · Equipo (foto circular + cargo + años de experiencia + MBA + logos de universidades) · Comité de inversiones · Análisis de mercado (gráfica apilada + 5 datos duros en cajas) · EdTech LATAM 2018–2030 (tabla: ingresos 2024 USD $10,152.9M → 2030 $22,472.5M, CAGR 14%) · Fondos Bold I–IV (tabla de estatus/empresas/exits/write-offs + línea del tiempo) · Estrategia (proceso: origen → análisis → due diligence → cierre + criterios de inversión) · Pipeline (3 targets con múltiplo de entrada, MoIC y TIR esperados) · Track record (por fondo, con ficha de una empresa: Mattilda — logo, participación, KPIs, Q3 2025) · Estructura del fondo (diagrama LPs → GP → administrador/custodio → verticales → empresas) · Vehículo/jurisdicción (RAIF Luxemburgo + fideicomiso espejo) · Economics (fees, carry, uso del capital en donas) · Riesgos y mitigantes (dos columnas) · Capital Account Statement · Ficha de términos (tabla resumen del PPM: vehículo, objetivo, geografía, tamaño, fee, performance fee, TIR neta ~15%, sede).
+**Por qué funciona:** (1) una idea por lámina con título corto en mayúsculas; (2) **personas con foto circular y credencial verificable**; (3) logos reales de universidades/empresas = credibilidad visual; (4) diagramas de estructura con formas en vez de texto; (5) cada lámina con número duro; (6) cierra con una **ficha de términos** que el comité puede fotografiar; (7) paleta única (verde bosque, lima, verde azulado, un acento azul claro) y logo fijo en el pie.
+**Debilidades que Aurex debe superar:** demasiadas láminas (31), tablas con letra diminuta, datos no reales, "Target A/B/C" anónimos (Aurex tiene empresas con nombre), sin riesgo de salida concreto.
+
+## Anatomía del formato Excel (Icarus) — medido en el archivo
+- **Calibri 10** en todo; **cuadrícula oculta**; columna A angosta (ancho ≈4.8) como margen, contenido desde la **B2**; título en B2 (negrita) y nombre de hoja/persona en B3.
+- **Encabezados de tabla:** negrita, centrados, relleno claro (azul `#DAE9F8` en el original) y **borde inferior fino**; filas de datos sin relleno ni bordes; **fila Total en negrita con borde superior fino**; bloques de resultado (Whole Dollar Profit / IRR / MOIC) enmarcados con borde.
+- **Color coding de banca de inversión:** **azul `#0000FF`** = supuestos/hardcodes · **negro** = fórmulas · **verde `#00B050`** = vínculos a otras hojas · nota en cursiva azul para fechas de corte.
+- **Formatos numéricos:** `#,##0.00_);\(#,##0.00\);\-_)` (negativos entre paréntesis, ceros como "-"), `0.0%`, `0.00\x` para múltiplos, `"$"#,##0.00` para precios, fechas `d-mmm-yy`.
+- **Estructura:** hoja `Summary` (flujos consolidados por fecha, XIRR, MOIC) + hojas por inversionista con mismo layout (Inversión → Compra → Valor de mercado) y todo enlazado con fórmulas `=+` (vínculos entre hojas).
+- Pestaña `Summary` en azul marino `#002060`.
+- **Adaptación pedida para Aurex:** mismo layout y reglas, pero cambiar el azul de los rellenos/pestañas por **verdes de energía** (ver paleta en `../00_LEEME_WORKFLOW.md`). El texto de entradas sigue en azul `#0000FF` (convención IB, no se cambia) y los vínculos en verde `#00B050` — nunca verde sobre verde.

@@ -1,0 +1,42 @@
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t  = $xl.Workbooks.Item('20260922_SETSA Transportes.xlsx')
+$m  = $t.Worksheets.Item('Modelo SETSA')
+$tx = $t.Worksheets.Item('Transacciones Precedentes')
+$cols = @('D','E','F','G','H','I')
+$prev = @{ 'E'='D'; 'F'='E'; 'G'='F'; 'H'='G'; 'I'='H' }
+
+# 1) #REF! -> activo fijo bruto / neto con SUM
+foreach ($c in @('E','F','G','H','I')) {
+    $p = $prev[$c]
+    $m.Range("${c}65").Formula = "=-(SUM(${c}96:${c}102)-SUM(${p}96:${p}102)+${c}47)"
+}
+foreach ($c in $cols) {
+    $m.Range("${c}261").Formula = "=${c}97/SUM(${c}96:${c}101)"
+    $m.Range("${c}262").Formula = "=-${c}102/SUM(${c}96:${c}101)"
+    $m.Range("${c}269").Formula = "=SUM(${c}96:${c}102)/${c}138"
+}
+foreach ($c in @('E','F','G')) {
+    $tx.Range("${c}52").Formula = "=${c}44/SUM('Modelo SETSA'!I96:I102)"
+}
+# 2) márgenes pegados como valor -> fórmula
+foreach ($c in $cols) {
+    $m.Range("${c}146").Formula = "=${c}42/${c}14"
+    $m.Range("${c}147").Formula = "=${c}35/${c}14"
+    $m.Range("${c}148").Formula = "=${c}38/${c}14"
+}
+# 3) encabezados de sección con el formato y fórmula de la fila 13
+$hdr = [ordered]@{
+    45  = 'Flujo de Efectivo (derivado del balance, método indirecto)'
+    85  = 'Balance General'
+    140 = 'Márgenes y Rentabilidad'
+    154 = 'Cartera de Clientes (saldo por cliente, incluye IVA)'
+    224 = 'Deuda e Intereses'
+    260 = 'Activo Fijo y Flotilla'
+    273 = 'Indicadores Clave'
+}
+foreach ($r in $hdr.Keys) {
+    $m.Range('C13:K13').Copy($m.Range("C$r")) | Out-Null
+    $m.Range("C$r").Value2 = $hdr[$r]
+}
+$xl.CutCopyMode = $false
+"ok: " + $m.Range('E65').Formula + " | " + $m.Range('D261').Formula + " | " + $tx.Range('E52').Formula + " | " + $m.Range('E45').Formula + " | " + $m.Range('C140').Value2

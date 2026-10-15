@@ -1,0 +1,471 @@
+# Fuso Chemical (4368): capex, segmentos, HBM y CMP, finanzas y benceno
+
+Documento de aprendizaje, no es una recomendación. Preparado el 12-oct-2026 con los archivos de esta carpeta. Prompt que lo originó: `Company/Fase0_descargas_IR/Prompt_Fuso_DeepDive_v0.1.md`. Notas por carpeta: `_NOTES.md` en cada subcarpeta.
+
+**Convenciones.** FY03/2026 = abril-2025 a marzo-2026 (la empresa lo llama "2025年度"). FY03/2027 = abr-2026 a mar-2027. Plan a mediano plazo (MTP) 飛躍2030 = FY03/2027 a FY03/2031. 億円 (oku) = 100 millones de yenes (100 oku = 10.000 millones = ¥10 bn). Cifras en oku salvo que se diga otra cosa. Etiquetas: **[D]** dato publicado por la empresa (fuente y página), **[I]** inferencia o cálculo mío (con base), **[ND]** no divulgado en ningún archivo. Cuando algo es conocimiento general de la industria y no viene de los documentos, lo marco **[I-general]**.
+
+Abreviaturas de fuente: **Yuho26** = informe anual FY03/2026 (`34f9a5a7`), **Yuho25** = informe anual FY03/2025 (`cc1030a6`), **Deck26** = presentación de resultados FY03/2026 del 15-may-2026 (deck en inglés de la raíz, gemelo japonés `3825ea4a`; leí las imágenes de las láminas), **MTP** = deck del plan 飛躍2030, **Q2deck** = presentación Q2 de nov-2025, **Q1tan** = resumen en inglés del Q1 FY03/2027 (7-ago-2026), **Dial** = resumen de diálogo con inversionistas, **Corp** = presentación de costo de capital del 30-jun-2026, **IR25** = informe integrado, **Deck bilingüe** = PDF bilingüe JP-EN de la presentación de resultados (carpeta Fase0), **Modelo** = hoja `Fuso Financials` del Excel.
+
+---
+
+## 0. Lo esencial en doce puntos
+
+1. **La premisa "el capex bajó" es cierta solo a medias.** El capex bajó de 208.3 oku en FY03/2023 (pico) a 107.8 oku en FY03/2026 porque terminaron tres plantas. Pero el plan de FY03/2027 es el más alto de la serie publicada (desde FY03/2021), 299.0 oku, y el primer trimestre ya lo confirma: la obra en curso pasó de 4.2 a 17.3 miles de millones de yenes en tres meses [D: Deck26 P41; Q1tan P3]. El valle fue una pausa entre olas, no un cambio de estrategia.
+2. **El dinero va sobre todo a un solo producto en un solo segmento:** sílice coloidal de ultra alta pureza (el abrasivo de las suspensiones de pulido CMP) de Electronic Materials. En FY03/2026, 79.3 de 107.8 oku de capex (73%) fueron a ese segmento [D: Yuho26 P38 y Deck26 P12; división por segmento en Modelo].
+3. **El próximo proyecto grande es ¥40 bn en Kyoto, para +20% de capacidad, con terminación en feb-2029** [D: Yuho26 P39]. Solo se había pagado ¥0.4 bn al cierre de marzo-2026. La dirección esperó a que los clientes aceptaran compartir el costo antes de comprometerse: subida de precios de 5 a 10% desde FY03/2027 [D: Dial P5; Yuho26 P33].
+4. **El mecanismo que hay que entender es el desfase entre depreciación e ingresos.** Cuando una planta se termina, la depreciación empieza de inmediato, pero el cliente debe certificar el producto antes de comprar. Kashima I tardó unos 23 meses desde la terminación hasta operar a plena capacidad; la línea nueva de Kyoto, unos 17 meses [I: fechas de Yuho25 P14, Yuho26 P33 y Deck26 P32]. Ese desfase, junto con un ajuste de inventarios de clientes en 2023, ayuda a explicar por qué el margen operativo cayó a 19% en FY03/2024.
+5. **Electronic Materials ya es más de la mitad de las ventas (54%) y 75% de la utilidad operativa de segmentos, y es el único segmento con plan de crecimiento fuerte:** ventas de 415.1 a 770 oku en FY03/2031 (CAGR 13.2%), contra 354.1 a 430 en Life Science (4.0%) [D: MTP P6].
+6. **El segmento tiene un margen de caja enorme, pero la depreciación se come más de un tercio.** Antes de depreciación, la utilidad de Electronic Materials fue 60% de sus ventas en FY03/2026; después de depreciación, 38%. La depreciación (90.9) equivale a 36% de la utilidad antes de depreciación (250.2) [I: sobre 415.1; Yuho26 P99].
+7. **Un solo cliente concentra 13.9% de las ventas del grupo y cerca de 26% de las del segmento:** FUJIFILM Electronic Materials Taiwan, ¥10.7 bn [D: Yuho26 P30; el 26% es mi cálculo, I].
+8. **La empresa no publica cuánto de sus ventas es IA ni HBM.** Lo que sí publica: demanda de IA fuerte, PC y smartphone débiles, adopción en el nodo N2 de TSMC, y que sus clientes proyectan crecimiento de 8 a 10% anual hasta FY03/2031 con un enfriamiento del crecimiento de la IA en los años fiscales 2027-28 de la empresa (FY03/2028-29) [D: Deck26 P28, P30; Yuho26 P33; Q2deck P32]. Todo lo demás sobre HBM es inferencia de la industria.
+9. **La utilidad operativa de FY03/2026 superó en 34.6% la guía inicial** (188.5 contra 140.0) [D: Deck26 P4]. La guía de FY03/2027 (243.0, +28.9%) es mucho menos conservadora: parte de costos de caja sin cambio y de un tipo de cambio de ¥150 [D/I: Deck26 P39, P43].
+10. **El benceno (materia prima del anhídrido maleico, y de ahí del ácido málico y el ácido fumárico) subió 52% frente al promedio del año anterior** (de 745 a 1,130 USD por tonelada entre FY03/2026 y abr-may 2026), y **la guía de FY03/2027 explícitamente no incluye la situación de Medio Oriente** [D: Deck26 P25, P39].
+11. **La utilidad neta de Q1 FY03/2027 (+115%) está inflada por un subsidio de ¥3.7 bn.** La utilidad operativa creció 31.5% [D: Q1tan P5]. El subsidio reembolsa la línea de Kyoto de 2024; no financia el proyecto nuevo [D: Yuho26 P104].
+12. **Hay un conflicto abierto de guía de utilidad neta (16,600 contra 19,200 millones de yenes).** La diferencia, ¥2.6 bn, coincide con el subsidio después de impuestos, así que 19,200 incluye el subsidio [I]. Falta el aviso intermedio para confirmarlo (sección 10).
+
+---
+
+## 1. Mapa para quien parte de cero: qué hace Fuso y cómo gana dinero
+
+Fuso fabrica dos familias de productos químicos que casi no tienen clientes en común.
+
+| | **Electronic Materials (電子材料)** | **Life Science (ライフサイエンス)** |
+|---|---|---|
+| Qué vende | Sílice coloidal de ultra alta pureza (marca Quartron®, pureza 99.9999% y tamaño de partícula de decenas a unos 200 nm), sílice hueca (Miralica), sílice nanopolvo, alquilsilicato [D: IR25 P20-21; Deck26 P15] | Ácidos de fruta: málico, cítrico, glucónico, fumárico; anhídrido maleico; vitamina C; formulaciones de aditivos alimentarios (FFA); ácidos orgánicos de alta pureza [D: Deck26 P15] |
+| Para qué lo usa el cliente | Abrasivo dentro de la suspensión que pule obleas de silicio y capas de chips (CMP) | Acidulante y conservador en alimentos y bebidas; también detergentes, metales, concreto, farmacia, alimentación animal |
+| Ventas FY03/2026 | 415.1 (54.0%) | 354.1 (46.0%) |
+| Utilidad operativa FY03/2026 | 159.2 (margen 38.4%) | 53.0 (margen 15.0%) |
+| Antes de depreciación | 250.2 (60% de ventas) | 69 (20%) |
+| Depreciación FY03/2026 | 90.9 (21.9% de ventas) | 16.3 (4.6%) |
+| Activos del segmento (mar-2026) | 727 (1.75 veces las ventas) | 404 (1.14 veces las ventas) |
+| Capex FY03/2026 | 79.3 | 27.3 |
+| Cliente grande conocido | FUJIFILM Electronic Materials Taiwan: 13.9% del grupo [D] | Ninguno >10%; nombres ND |
+| Fase | Crecimiento con capacidad restringida | Maduro, competencia de precio y de importaciones |
+
+Fuentes: Deck26 P5-7, P12, P41; Yuho26 P98-99; márgenes por segmento en Deck bilingüe P8; activos y capex por segmento en Yuho26 P99.
+
+**¿Son dos empresas bajo un mismo techo?** En clientes, tecnología de proceso y ciclo de demanda, sí. Lo que comparten es el sitio de Kashima (Ibaraki), donde conviven plantas de anhídrido maleico, ácido fumárico, ácido málico y sílice coloidal [D: IR25 P44, tabla de huella de carbono; MTP P17 lo llama "sitio de producción combinado"], la plataforma financiera y la cultura de pureza: la empresa construyó en Kashima una planta de ácidos orgánicos de alta pureza (marca アプリシャス) para clientes de electrónica, terminada en oct-2024 [D: Yuho25 P14, P26; Yuho26 P32]. No hay evidencia en los archivos de sinergias comerciales entre las dos mitades [ND]. Historia útil: Fuso nació en 1957 como la planta de Osaka de Teikoku Pharmaceutical; en 2014 recibió el negocio de ácidos orgánicos de Mitsui Chemicals (anhídrido maleico y fumárico), que explica su exposición al benceno [D: Yuho26 P7]; abrió Kashima en 2017 y su primera planta de sílice de ultra pureza allí (Fase I) en abril de 2023 [D: Yuho26 P7].
+
+---
+
+## 2. Capex: qué se construye, dónde, cuánto, para qué y qué esperan
+
+### 2.1 Tabla de proyectos
+
+| Proyecto | Seg. | Sitio | Monto | Fechas | Estado y expectativa | Fuente |
+|---|---|---|---|---|---|---|
+| **Kashima Fase I**, sílice de ultra pureza | EM | Kashima (Kamisu, Ibaraki, este de Japón) | ND por proyecto. Las tres líneas de sílice del plan anterior suman unos ¥50 bn [D] | Terminada abr-2023 | Certificada y a plena capacidad desde fines de FY03/2025; "la mayor utilización contribuyó al aumento de utilidad de FY03/2026" [D] | MTP P7, P19; Yuho26 P33 |
+| **Línea nueva Kyoto** (Planta 2, Fukuchiyama, oeste de Japón) | EM | Kyoto | ND | Terminada oct-2024 | Certificación terminada "antes de lo esperado"; operación plena desde fines de FY03/2026 (el plan de nov-2025 apuntaba a plena operación en el 1S de FY03/2027). Subsidio de ¥3.69 bn por esta línea [D] | Yuho26 P33, P104; Q2deck P33 |
+| **Kashima Fase II** | EM | Kashima | **¥20.0 bn**, todo financiado con deuda bancaria (¥12.5 bn pagados a mar-2025) [D] | Inicio sep-2023, terminada ago-2025 (el plan decía jul-2025), depreciación desde dic-2025 | **Certificación en curso al 15-may-2026**. La dirección había planeado prototipos en el 3T de FY03/2026 y "certificación temprana"; no declara fecha de plena operación [ND] | Yuho25 P32, P29; Deck26 P32, P41; Q2deck P33 |
+| **Nueva planta de sílice ultra pura, Kyoto** (el proyecto de ¥40 bn) | EM | Kyoto | **¥40.0 bn**, pagados ¥0.4 bn a mar-2026; fondos propios [D] | Inicio mar-2026, fin feb-2029 | +20% de capacidad respecto de FY03/2026. Clientes aceptaron compartir parte del costo vía alza de precios 5-10% desde FY03/2027 [D] | Yuho26 P14, P33, P39; MTP P7 |
+| Edificio de control de calidad, Kashima | EM y común | Kashima | ND | Hasta sep-2027; depreciación desde 2S 2027 | Soporta análisis de ambos negocios [D] | Deck26 P52, P41 |
+| **Fermentación de gluconato, PMP** (EE.UU.) | LS | Peoria, Illinois | ND | Cristalizadores listos jul-2027; fermentador principal ya ampliado dic-2023 | Atender la demanda estadounidense de gluconatos, único fabricante norteamericano [D] | Yuho26 P28; Deck26 P20 |
+| Planta Osaka: refuerzo sísmico (hecho dic-2025), oficinas y mejoras hasta 2028 | LS | Osaka (Sakai) | ND (el refuerzo sísmico es el principal componente del capex LS de FY03/2026, 27.3 [D: Yuho26 P38]) | 2025-2028 | Seguridad y continuidad de la planta de ácido málico [D] | Yuho26 P38; MTP P7 |
+| Centro de I+D Higashi-Osaka | I+D | Higashi-Osaka | Dentro de ¥10 bn de I+D (incluye construcción) [D] | Terminación 2028 | Consolidar I+D de ambos negocios [D] | MTP P5, P21; Yuho26 P37 |
+| Ampliación laboratorio Tokio; traslado sede Tokio | Común | Tokio | ND | Lab hecho feb-2026; sede planeada 2027 | | Yuho26 P14; MTP P18 |
+
+### 2.2 Qué fabrica cada planta y por qué se construye "en olas"
+Sílice coloidal significa partículas de sílice (óxido de silicio) esféricas de decenas de nanómetros suspendidas en agua. Fuso las sintetiza por un método de sol-gel y las vende como abrasivo del CMP [D: IR25 P20]. La materia prima principal es silicio metálico [D: Yuho26 P34]. Cada línea nueva es un bloque grande de capacidad (reactores, tanques, purificación) que se llena de golpe, no unidad por unidad. Por eso el capex tiene forma de escalón: se compromete un bloque cuando la demanda de los clientes lo respalda, se construye en unos 23 meses (Kashima II: sep-2023 a ago-2025) y se llena en otros 17 a 23 meses mientras los clientes certifican el producto de esa línea [I, con las fechas de la sección 4].
+
+### 2.3 El sobre de cinco años (FY03/2027 a FY03/2031)
+Flujo operativo esperado ¥164.0 bn; usos [D: MTP P7 y Deck26 P56]:
+
+| Uso | ¥ bn | Qué incluye |
+|---|---|---|
+| Inversión de crecimiento "adicional" | 50.0 | Capacidad adicional, fábrica inteligente, fondos para M&A, digitalización con IA [D]. **No está asignada a proyectos concretos** [ND] |
+| Kyoto, planta nueva | 40.0 | Ver 2.1 |
+| I+D | 10.0 | Incluye centro Higashi-Osaka |
+| Refuerzo y renovación de negocios existentes | 27.0 | Osaka, Kashima (control de calidad), mantenimiento |
+| Repago de deuda | 17.0 | Todo el saldo bancario (16.9 bn a mar-2026) |
+| Retornos a accionistas | 20.0 | Dividendo progresivo; el plan anterior distribuyó unos ¥12 bn |
+| **Total** | **164.0** | |
+
+Lectura: el capex "comprometido" en el plan es Kyoto más renovación, ¥67 bn (la empresa dice "670 oku o más" [D]); los otros ¥50 bn son una opción por ejercer. El capex planificado de FY03/2027 (¥29.9 bn) equivale a 45% de esos ¥67 bn comprometidos para cinco años [I].
+
+### 2.4 Qué ha dicho la dirección
+- Sobre la demanda: "los clientes proyectan crecimiento de 8 a 10% anual de FY03/2025 a FY03/2031" y por eso se decidió la planta de ¥40 bn [D: Yuho26 P33 y Q2deck P32].
+- Sobre el riesgo de quedar cortos de capacidad: la pregunta de un inversionista fue "¿no se agotará la capacidad antes de que termine la próxima inversión?" La respuesta fue certificar las líneas nuevas apenas terminen, producir más sílice de alta concentración (1.5 veces más partículas por volumen) y planificar la oferta [D: Dial P5; Deck26 P33-34].
+- Sobre el costo de la próxima inversión: la dirección pidió a los clientes absorber parte de ella y para aliviar el aumento de depreciación aplicó alzas de precios de 5-10% [D: Deck26 P36; Dial P5].
+- Sobre el desempeño por la métrica: un inversionista pidió que el KPI deje de ser solo utilidad antes de depreciación y pase a utilidad operativa; el nuevo plan fija ROIC de 13% [D: Dial P5; MTP P5]. El bono ejecutivo de FY03/2027 (se paga en 2027) solo se activa si la utilidad antes de impuestos más depreciación supera ¥29.7 bn, el nivel real de FY03/2026 [D: Yuho26 P60]; la guía de ese indicador es 37.0 bn. Eso muestra por qué la empresa destaca el EBITDA.
+
+### 2.5 Intensidad de capital: el costo por unidad de capacidad subió [I]
+Con la información de la empresa se puede estimar cuánto cuesta cada punto de capacidad:
+- Plan anterior: ¥50 bn para pasar la capacidad de 1.0 a unas 1.5 veces la de FY03/2023 [D: MTP P7; Yuho25 P14]: cerca de ¥100 bn por cada 1.0 de capacidad.
+- Proyecto de Kyoto: ¥40 bn para +20% sobre una base de 1.5: es +0.3 de la base original, es decir, unos ¥133 bn por cada 1.0.
+- Conclusión: cada unidad de capacidad nueva cuesta alrededor de un tercio más [I, con dos supuestos: que "capacidad actual" equivale a 1.5 veces y que los ¥50 bn corresponden solo a esas tres líneas; la empresa no entrega el costo por línea]. Es una de las razones por las que la empresa pidió a los clientes cubrir parte del costo.
+
+### 2.6 Cómo se financia
+Kashima II se pagó con un préstamo de ¥20 bn contratado en abr-mayo de 2023 con cinco bancos; se han amortizado ¥3.1 bn y el saldo es ¥16.9 bn [D: Yuho25 P32; Yuho26 P35]. El proyecto de Kyoto se financiará con fondos propios [D: Yuho26 P39]. El subsidio de ¥3.69 bn (aprobado el 15-jun-2026) reembolsa el costo de la línea de Kyoto de 2024, bajo un programa de apoyo a inversión doméstica en cadenas de suministro [D: Yuho26 P104].
+
+---
+
+## 3. ¿Por qué ha bajado el capex?
+
+| FY03/ | 2021 | 2022 | 2023 | 2024 | 2025 | 2026 | 2027 plan |
+|---|---|---|---|---|---|---|---|
+| Capex total (oku) | 18.9 | 124.9 | 208.3 | 142.9 | 174.9 | 107.8 | **299.0** |
+| Electronic Materials | 6.1 | 99.6 | 195.3 | 115.8 | 145.7 | 79.3 | ND |
+| Life Science | 9.1 | 22.3 | 12.2 | 24.3 | 13.7 | 27.3 | ND |
+| Depreciación (con plusvalía) | 50.2 | 44.5 | 43.3 | 71.6 | 83.0 | 109.3 | 127.0 |
+| Capex / depreciación | 0.4 | 2.8 | 4.8 | 2.0 | 2.1 | 1.0 | 2.4 |
+| I+D | 6.8 | 6.8 | 8.4 | 8.5 | 9.2 | 10.9 | ND |
+
+Fuentes: Deck26 P12, P41; por segmento, Yuho25 y Yuho26 (segmento) con confirmación en el Modelo. El capex por definición de la empresa incluye intangibles y gastos pagados por adelantado a largo plazo [D: Yuho26 P38]; el capex de caja de FY03/2026 fue 100 oku (73 en activos fijos más 27 en intangibles) [D: Deck26 P11].
+
+Cuatro lecturas:
+1. **La caída de FY03/2026 es el efecto de haber terminado obras.** La línea de Kyoto se terminó en oct-2024 y Kashima II en ago-2025. En el balance, la obra en curso bajó 153 oku en el año [D: Deck26 P10]. No se aprobó ninguna obra nueva de sílice hasta marzo de 2026.
+2. **El valle de FY03/2021 (18.9) fue un mínimo aislado.** Los archivos no explican por qué [ND]; la primera ola de plantas de sílice empezó a gastarse en FY03/2022 (124.9).
+3. **La empresa condicionó la ola siguiente a que los clientes aceptaran cubrir parte del costo.** Esto es disciplina de asignación de capital: la decisión de ¥40 bn llegó en marzo de 2026, después de negociar precios [D: Yuho26 P33].
+4. **El capex de FY03/2027 sería el más alto de la serie y lo muestra el primer trimestre:** obra en curso de 4.2 a 17.3 bn y cuentas por pagar de equipo de 5.4 a 14.0 bn [D: Q1tan P3-4], lo que implica un capex devengado de unos ¥13.6 bn en el trimestre (5.0 bn de caja más 8.6 bn de aumento en cuentas por pagar), 45% del plan anual [I].
+
+El consenso externo del Modelo ve capex de 29.9, 23.6, 12.0, 13.0 y 30.0 miles de millones de yenes para FY03/2027 a FY03/2031 [Modelo, "Capex (consensus)"]: un pico que dura dos años y luego un valle hasta la próxima ola, en FY03/2031.
+
+---
+
+## 4. ¿Cuándo se verá reflejado en la operación?
+
+### 4.1 Los tiempos reales de las olas anteriores
+
+| Línea | Terminada | Certificación | Plena operación | Meses terminación a plena operación | Depreciación empieza |
+|---|---|---|---|---|---|
+| Kashima I | abr-2023 | Certificación a prototipo en 2023 | Fines de FY03/2025 (mar-2025) | unos 23 [I] | Desde FY03/2024 |
+| Kyoto, línea nueva | oct-2024 | Terminada antes de lo esperado, a fines de FY03/2026 [D, japonés: 2025年度末; el deck en inglés dice mal "mar-2025"] | Desde fines de FY03/2026 (mar-2026) | unos 17 [I] | FY03/2025 (segundo semestre) |
+| Kashima II | ago-2025 (plan jul) | **En curso al 15-may-2026**; prototipos planeados en el 3T-4T de FY03/2026 | No declarada | Más de 9 y contando [I] | dic-2025 (método decreciente) |
+| Kyoto, ¥40 bn | feb-2029 (plan) | Después de esa fecha | Después | ND; si repite 17-23 meses: FY03/2031 [I] | Desde FY03/2029-FY03/2030 [I] |
+
+Fuentes: Yuho25 P14; Yuho26 P33; Deck26 P32, P41; Q2deck P33.
+
+Hay un nuevo método para acortar el arranque: la limpieza de las líneas nuevas, que antes tomaba "varios meses desde la terminación", se redujo 75% con un método mejorado, lo que acorta la certificación del cliente [D: Deck26 P34]. Esto es un intento deliberado de achicar el desfase.
+
+### 4.2 Por qué importa: el efecto de depreciación antes de ingresos
+La empresa usa depreciación decreciente (定率法) y vida útil de la maquinaria de 4 a 8 años [D: Yuho26 P75]. Con ese método el cargo del primer año es una fracción grande del costo y luego baja [I-general]. El resultado se vio dos veces:
+- **FY03/2024:** Kashima I empezó a depreciarse (la depreciación de Electronic Materials subió de 27.5 a 53.4) justo cuando la demanda de semiconductores se ajustó por inventarios. Las ventas del segmento cayeron 19% (306.6 a 248.3) y la utilidad operativa cayó 44% (133.9 a 75.3); el margen del segmento pasó de 43.7% a 30.3% [D: Deck bilingüe P8; Modelo].
+- **FY03/2026:** la utilidad operativa de EM subió 20.9% con ventas +25.0%, de modo que el margen cayó de 39.7% a 38.4%: la depreciación subió 25.7 oku y consumió casi la mitad (48%) del aumento de utilidad antes de depreciación (+53.3) [D: Yuho26 P99; I: resta].
+
+### 4.3 Calendario esperado de efectos [I, apoyado en los datos anteriores]
+
+| Cuándo | Qué debería verse | Evidencia |
+|---|---|---|
+| **Abril 2026 en adelante** | Aumento de precios de 5-10% en sílice, que cae casi todo a utilidad. 5% a 10% sobre ventas EM de FY03/2026 son 21 a 42 oku de los 79 oku de aumento de ventas planificado [I] | Dial P5; Deck26 P36 |
+| **FY03/2027 (abr-26 a mar-27)** | Kashima II debería certificarse y llenarse. Guía: ventas EM +19% (494.0), utilidad operativa EM +36% (217.0), margen 43.9%. La depreciación de EM sube a 107.0 (+16). **Es el año donde Kashima II debe pasar de costo a contribución** | Deck26 P40-41 |
+| **FY03/2028** | Depreciación estable en 127.0 (la empresa la llama "estimación aproximada"; consistente con que el método decreciente reduce el cargo de las líneas viejas mientras entran las nuevas [I]); capex de Kyoto en ejecución (consenso 23.6 bn); edificio de control de calidad (2S 2027) | Deck26 P41; consenso capex |
+| **FY03/2029 (fin feb-2029)** | Termina la planta de Kyoto; comienza depreciación; sin ingresos todavía | Yuho26 P39 |
+| **FY03/2030-FY03/2031** | Certificación y llenado. La meta del plan para FY03/2031 (EM: ventas 770, utilidad operativa 320, margen 41.6%) implica depreciación de EM de unos 185 oku (505 menos 320), contra 107 en FY03/2027: +78 oku de depreciación en tres años, en su mayoría de Kyoto [I: MTP P6] | MTP P6 |
+
+Dos hechos incómodos que salen de esta tabla:
+1. **El plan de FY03/2027 ya contiene un margen de EM (43.9%) superior al margen objetivo de FY03/2031 (41.6%).** Los años intermedios no están publicados [ND], pero el plan implica un margen de EM en FY03/2031 por debajo de la guía de FY03/2027, consistente con que la depreciación de Kyoto entra antes que sus ingresos [I: 217.0/494.0 contra 320/770].
+2. **Más de un tercio del aumento total de utilidad de EM del plan (de 159 a 320, es decir +161) sucede en FY03/2027 (+58)** [I]. Después, la utilidad crece a ritmo de 10% anual (217 a 320 en cuatro años) mientras no llegue la nueva planta.
+
+---
+
+## 5. Segmentos
+
+### 5.1 Electronic Materials
+**Resultado FY03/2026:** ventas 415.1 (+25.0%), utilidad operativa 159.2 (+20.9%), margen 38.4%. La empresa lo explica así [D: Deck26 P28]: más volumen de sílice coloidal, demanda fuerte de semiconductores de IA, más volumen a China; menor demanda de PC y smartphones. Sobre la utilidad: mayor utilización, alta operación de las plantas nuevas y eficiencia, frente a más depreciación, más costo de personal y reparaciones por las líneas adicionales y más costo de materiales.
+
+**Serie del segmento (oku):**
+
+| FY03/ | 2021 | 2022 | 2023 | 2024 | 2025 | 2026 | 2027 guía | 2031 plan |
+|---|---|---|---|---|---|---|---|---|
+| Ventas | 187.9 | 243.3 | 306.6 | 248.3 | 332.1 | 415.1 | 494.0 | 770 |
+| Utilidad operativa | 76.5 | 116.1 | 133.9 | 75.3 | 131.7 | 159.3 | 217.0 | 320 |
+| Margen | 40.7% | 47.7% | 43.7% | 30.3% | 39.7% | 38.4% | 43.9% | 41.6% |
+| Depreciación | 33.5 | 28.8 | 27.5 | 53.4 | 65.2 | 90.9 | 107.0 | ~185 [I] |
+| Activos del segmento | 226 | 342 | 541 | 632 | 726 | 727 | ND | ND |
+
+Fuentes: Deck bilingüe P7-8; Modelo; Deck26 P40-41; MTP P6.
+
+Tres hechos de fondo:
+- **Los activos del segmento se triplicaron (3.2 veces entre FY03/2021 y FY03/2026) mientras las ventas se multiplicaron por 2.2.** El rendimiento sobre activos del segmento fue 21.9% en FY03/2026 (159.3 sobre el promedio de 726 y 727) [I]. Ese es el costo de la intensidad de capital.
+- **Las ventas de FY03/2026 se hicieron sin Kashima II.** Esa fase aún no estaba certificada, de modo que la capacidad útil de FY03/2026 estaba por debajo de las 1.5 veces (respecto de FY03/2023) que la empresa cita para las tres líneas completas [D: Yuho25 P14; I]. El aumento de ventas que viene en FY03/2027 depende de poner a producir esa fase.
+- **China es alrededor de 10% de las ventas del segmento** y se espera que supere 10% en FY03/2026-27, con ventas a fabricantes de slurry CMP "de calidad" en China [D: Deck26 P30; Q2deck P31].
+
+**Estrategia declarada para FY03/2027 [D: Deck26 P29-37]:** certificar Kashima II rápido; ampliar productos de alta concentración y alta productividad (1.5 veces las partículas por volumen); multi-certificación y optimización; desarrollar productos para nodos de vanguardia (A16, A14; A10 en desarrollo) y para empaquetado avanzado; trasladar costos a precios; diversificar silicio metálico; lanzar Miralica (sílice hueca para materiales de baja constante dieléctrica) con la línea de producción en construcción; aditivos para tóner y cosméticos en etapa de muestras.
+
+**Concentración y negociación:** FUJIFILM Electronic Materials Taiwan, ¥10.7 bn (13.9% del grupo, 12.9% el año anterior). A nivel de segmento, ese cliente es cerca de 26% de las ventas [I]. Taiwán compra ¥13.7 bn (17.8% del grupo) [D: Yuho26 P100]. La empresa asegura que tiene poder de fijación de precios en lo que "otros no pueden seguir" [D: IR25 P24] y en FY03/2026 los precios se mantuvieron casi planos ("sin grandes cambios de precio" [D: Yuho26 P34]), mientras que en FY03/2025 hubo revisiones por factor de costo [D: Yuho25 P24]; en FY03/2027 hay un aumento explícito de 5-10%.
+
+### 5.2 Life Science
+**Resultado FY03/2026:** ventas 354.1 (−2.4%), utilidad operativa 53.0 (+0.4%), margen 15.0%. Ventas bajan por menos vitamina C para fármacos, precios más bajos para mantener participación en ácido fumárico y pérdida de formulaciones en China ante productos baratos; suben por glucónico a EE.UU., málico al extranjero y formulaciones en Tailandia. La utilidad se sostiene por mayor utilización en Kashima, corrección de precio de málico doméstico y mejora de costos de productos de origen petroquímico, contrarrestadas por mayor costo de compra y menores precios de cítrico y vitamina C por competencia [D: Deck bilingüe P17].
+
+| Producto | Volumen FY03/2026 | Precio medio FY03/2026 (FY03/2024 = 1.0) | Precio plan FY03/2027 | Comentario |
+|---|---|---|---|---|
+| Ácido málico (exterior) | 12,400 t (+20%; 9,000 en FY03/2024) | 1.08 | 1.11 | Gana participación en Asia y nuevos clientes; ajuste de precio doméstico |
+| Ácido glucónico (PMP, EE.UU.) | +7% a +10% | | | Ventas de PMP ¥8.2 bn (récord), utilidad ¥1.2 bn, plan ¥8.7 bn |
+| Ácido cítrico | 1.07 | 0.87 | 0.92 | Precio −13% acumulado desde FY03/2024 por competencia; volumen gana con licitaciones |
+| Ácido fumárico | 1.07 | 0.91 | 0.99 | Descuentos para sostener participación (clientes grandes) |
+| Vitamina C | 0.94 | 1.08 | 1.08 | Baja el volumen farmacéutico (−10% doméstico) |
+
+Fuentes: Deck26 P17, P20-22; Modelo (índices leídos de gráficos, aproximados).
+
+**Guía FY03/2027 de LS:** ventas 364.0 (+2.8%), utilidad operativa 55.0 (+3.6%), depreciación 18.0; la guía **no incluye Medio Oriente** [D: Deck26 P40-41, P39]. **Plan a FY03/2031:** ventas 430 (CAGR 4.0%), utilidad operativa 75 (CAGR 7.2%) [D: MTP P6].
+
+**Estructura del segmento y lo que importa:**
+- Producción propia: en FY03/2026 49% de las ventas salió de plantas propias en Japón, 22% de filiales en el exterior y **29% de proveedores externos**; la meta es 75% propia (internalizar sales de ácidos y formulaciones en Osaka y Qingdao) [D: Deck26 P24].
+- Las dos fuerzas que mueven el margen son competidores de bajo costo (China) y el costo de la materia prima (benceno para málico, fumárico y maleico; ácido sulfúrico para cítrico). Ver sección 8.
+- Nueva ruta de crecimiento: FFA (formulaciones de aditivos con ácidos de fruta, recubiertos, conservantes de frescura), con filiales en China y Tailandia (nuevos proyectos +30% y +20% en FY03/2026) [D: Deck26 P17].
+
+### 5.3 Por qué se comportan tan distinto
+| Dimensión | Electronic Materials | Life Science |
+|---|---|---|
+| Cómo se vende | Certificación por cliente y línea, uso a largo plazo, precios negociados por costo | Licitaciones y relación comercial, competencia con importaciones y con China [D: Deck26 P21-22] |
+| Qué determina el volumen | Fabricación de chips avanzados y ciclo de inventarios del cliente | Consumo de alimentos y bebidas, industria, farmacia |
+| Qué determina el costo | Silicio metálico, energía, depreciación de plantas nuevas | Benceno, ácido sulfúrico, energía; materias de fermentación [ND] |
+| Márgenes | 38% operativo, 60% antes de depreciación | 15% operativo, 20% antes de depreciación |
+| Uso del capital | Pesado: ¥1.75 de activos por ¥1 de ventas | Medio: ¥1.14 |
+| Riesgo dominante | Ciclo de semiconductores y concentración de clientes | Precio y materia prima |
+
+---
+
+## 6. HBM, CMP y por qué Fuso necesita producir más sílice
+
+### 6.1 Curso corto, desde cero
+- **Oblea (wafer):** disco de silicio sobre el que se construyen los chips. Un chip se arma como un edificio: abajo los transistores y arriba capas alternadas de cableado metálico (cobre) y aislante.
+- **CMP (chemical mechanical planarization, planarización químico-mecánica):** cada vez que se agrega una capa, la superficie queda irregular y hay que dejarla plana a escala de nanómetros antes de seguir. La oblea se presiona contra una almohadilla giratoria con una **suspensión de pulido (slurry)**: líquido con partículas abrasivas más químicos. El efecto es mitad químico, mitad mecánico [D: IR25 P21].
+- **Sílice coloidal:** el abrasivo más usado en esas suspensiones; esferas de sílice ultra puras. "Ultra alta pureza" importa porque una impureza metálica o una partícula demasiado grande raya o contamina el chip. Fuso fija su ventaja en pureza, control de tamaño de partícula y calidad estable [D: IR25 P20-21, P24].
+- **Nodo (node):** generación de fabricación (3 nm, 2 nm, 1.4 nm, "A16", "A14" en la nomenclatura de angstroms). Los nodos avanzados exigen más pasos de CMP y más pureza [D: MTP P14].
+- **HBM (high-bandwidth memory):** memoria DRAM apilada en vertical (varios chips encima de otro) que se conecta con otro chip lógico de IA por un interposer. Es la memoria de los aceleradores de IA [D: Deck26 P35 muestra el diagrama].
+- **TSV (through-silicon via, vía a través del silicio):** perforaciones llenas de cobre que conectan los chips apilados; **hybrid bonding (unión híbrida):** pegar los chips cara a cara sin soldaduras intermedias, lo que exige superficies planas a escala sub-nanométrica [D: Deck26 P35 lo describe como el "cambio de arquitectura HBM"].
+- **BSPDN (backside power delivery network):** alimentar el chip por la cara posterior de la oblea; requiere adelgazar y pulir la parte trasera [D: MTP P14].
+
+### 6.2 Dónde está Fuso en la cadena
+
+| Etapa | Quién | Qué pasa | Posición de Fuso | Quién captura el margen |
+|---|---|---|---|---|
+| Materia prima | Proveedores de silicio metálico; gran peso de China; pruebas en Malasia y Brasil [D: Yuho26 P24-25; Deck26 P36] | Suministro y precio del silicio. El silicio importado cayó de ~¥900/kg (2022) a ~¥260 (mar-2026) [D: Deck26 P36] | Compra | ND |
+| Proceso | Fuso | Convierte silicio en partículas de sílice por sol-gel; purifica a 99.9999% [D: IR25 P20] | **Aquí** | Fuso: margen operativo 38%, de caja 60% |
+| Producto | Fuso | Sílice coloidal Quartron®, hueca Miralica, nanopolvo | Aquí | Idem |
+| Formulador | Fabricantes de slurry. FUJIFILM Electronic Materials Taiwan es cliente (13.9% de ventas) [D]. Fujimi tenía una relación comercial con Fuso en 2013 [D: yuho FY03/2013 de Fujimi]; otros nombres ND | Mezclan abrasivo con químicos, filtran y empacan | Cliente | ND |
+| Usuario final | Fabricantes de chips: lógica/fundición (TSMC N2 divulgado [D: Deck26 P30]), DRAM/HBM, NAND [ND por cliente] | Usan el slurry en muchos pasos del proceso | Cliente del cliente | |
+| Demanda final | Aceleradores de IA, centros de datos; PC y teléfonos (débiles) [D: Deck26 P28] | | | |
+
+Lo que no sabemos: qué fracción del costo de la suspensión o del chip representa la sílice [ND].
+
+### 6.3 Por qué más HBM y más IA significan más sílice
+La cadena de razonamiento tiene cinco eslabones. Los dos primeros vienen de los documentos; los siguientes son lógica de la industria.
+
+1. **Más obleas de chips avanzados.** Los clientes de Fuso reportan mayor producción de semiconductores de vanguardia por IA y la empresa dice haber vendido más de lo que esperaba [D: Yuho26 P33; Rev].
+2. **Más pasos de CMP por oblea.** La empresa nombra tres causas: cableado de más capas, entrega de energía por el reverso (BSPDN) y más empaquetado avanzado; "el número de procesos CMP aumenta" [D: MTP P14; IR25 P23].
+3. **Procesos nuevos de HBM [D con diagrama, mecanismo I-general].** Cada pila HBM contiene varios chips DRAM. Cada chip necesita formar las perforaciones TSV y pulir el cobre, adelgazar la oblea (pulido de la cara trasera) y, con unión híbrida, dejar la superficie de contacto casi perfecta. Fuso lo resume en dos exigencias: películas más gruesas que pulir (mayor velocidad de remoción, para lo cual desarrolla sílice densa de ultra pureza) y superficies de unión más planas (menos partículas grandes y finas) [D: Deck26 P35]. Posibles usos nuevos: pulido de cobre y TSV, pulido trasero, nuevos conductores como rutenio y molibdeno, y capas de resina.
+4. **Mayor exigencia por unidad.** Cuanto más avanzado el nodo, más alta la pureza y más control de tamaño, lo que sube el precio medio y reduce el riesgo de sustitución [D: MTP P14; I: Nissan Chemical dice lo mismo, "el precio cae menos en el extremo"].
+5. **Inventarios de clientes.** Parte del aumento de volumen de FY03/2026 fue clientes que acumulan inventario: la empresa dice que "el uso y el inventario de los clientes aumentaron" [D: Q2deck P32]. Esto no es demanda final recurrente.
+
+**Cuánta sílice más.** [ND] la empresa no cuantifica toneladas por pila HBM ni por oblea. En la industria se dice que HBM consume bastante más superficie de oblea por bit que la DRAM convencional [I-general, sin cifra en la carpeta].
+
+### 6.4 Proyecciones disponibles y qué incluyen
+| Proyección | Quién | Qué incluye | Fuente |
+|---|---|---|---|
+| Mercado total de semiconductores: +19.7% (2024), +22.5% (2025), +26.3% (2026) | WSTS, otoño 2025 | Ventas globales de chips | Deck26 P31 |
+| Mercado relacionado con semiconductores 2025-2030: +14.7% anual | Fuji Chimera, procesado por Fuso | | MTP P14 |
+| **Mercado de slurry CMP: volumen +5-6% anual; valor +6.5% anual (2025-2030)** | Fuji Chimera y Fuji Keizai, procesado por Fuso | Se revisó al alza: en enero de 2025 la proyección era 3%; en octubre de 2025, 6% | Deck26 P31; MTP P14; Q2deck P30 |
+| **Fuso: CAGR de ventas EM de 13.2% (FY03/2026 a FY03/2031)**, "10% o más" en el gráfico de Deck26 | Fuso | Más del doble del mercado de slurry; la brecha se explica por mezcla de vanguardia, número de procesos y nuevos usos [D] | MTP P5, P14 |
+| Demanda proyectada por los clientes de Fuso: 8-10% anual (FY03/2025 a FY03/2031) | Clientes de Fuso | Base de la decisión de ¥40 bn. Los clientes esperan que el crecimiento de IA se modere en FY03/2028-29 | Yuho26 P33; Q2deck P32 |
+| Capacidad de Fuso: +50% respecto de FY03/2023 con las tres líneas terminadas (Kashima II aún en certificación); +20% más en feb-2029 | Fuso | Índice 2018 = 100: ~200 hoy a ~250 en 2030 (lectura de gráfico, aproximada) | Deck26 P32; Yuho25 P14 |
+
+Dos números tensionan la narrativa. Primero, el plan de ventas de EM crece 13.2% al año, mientras los clientes de Fuso proyectan 8-10% de volumen. Entre FY03/2025 (332.1) y FY03/2031 (770) las ventas se multiplican por 2.3, y 8-10% de volumen anual en seis años da 1.6 a 1.8 veces: queda un factor de 1.3 a 1.5 que debe venir de precio, mezcla (más de 1.5 veces los productos de alta concentración para 2030 [D: Q2deck P34]) y participación [I]. Segundo, los propios clientes anticipan que el crecimiento de IA se modere en los años fiscales 2027-28, cuando las plantas nuevas entran en servicio [D: Q2deck P32].
+
+Referencia de pares (no son cifras de Fuso): ventas de productos CMP de Fujimi +17.9% en FY03/2026 y guía de +14.3% en FY03/2027 [D: Fujimi 01]; "inorganic colloid" de Nissan Chemical +6% y guía de +8% [D: Nissan 02], aunque ese rubro incluye otros usos.
+
+### 6.5 Afirmación contra evidencia
+| Afirmación de la empresa | Evidencia en los archivos | Valoración |
+|---|---|---|
+| "AI semiconductors drive our sales" | EM +25% con PC y teléfonos débiles; revisión al alza de oct-2025 cita sílice para IA [D: Rev] | **Respaldada de forma indirecta.** Falta el desglose por aplicación [ND] |
+| "Growth above the CMP slurry market" | 13.2% contra 6.5% de valor del mercado | Respaldada por la proyección propia, no verificable de forma independiente [I] |
+| "Adopted for TSMC N2" | Lámina de resultados [D] | Respaldada como hecho; sin volumen ni precio [ND] |
+| "HBM architecture change favors us" | Un diagrama; ninguna cifra [D] | **Narrativa no cuantificada** |
+| "Customers will bear part of the next capex" | Acuerdo de precio 5-10% desde FY03/2027 ("2026年度" en la nomenclatura de la empresa) [D: Dial P5] | Respaldada; falta ver el efecto en Q2 y Q3 |
+
+### 6.6 Qué tendría que pasar para que la tesis falle
+1. **Enfriamiento de la IA en FY03/2028-29,** que los propios clientes ya anticipan, justo cuando entran las plantas nuevas.
+2. **Sobrecapacidad,** si los pares (Fujimi construye una planta en Japón y ampliaciones en EE.UU. y Taiwán) y Fuso suman capacidad a la vez [D: Fujimi 01].
+3. **Concentración:** un cliente de 26% del segmento que cambie de proveedor o de formulación.
+4. **Cambios técnicos** que reduzcan los pasos de CMP o sustituyan el abrasivo [I-general].
+5. **China:** autosuficiencia local o restricciones a la exportación (Fuso dice que el impacto de aranceles y controles ha sido nulo hasta ahora [D: Yuho26 P34]).
+6. **Retrasos de certificación** en Kashima II o en la nueva planta de Kyoto.
+7. **Controles de exportación de chips de IA.** Una lámina de Fujimi cita a Samsung Electronics: las ventas de HBM cayeron por las restricciones de exportación de chips de IA y por menores precios [D: Fujimi 03, FY03/2025], señal de sensibilidad a la política.
+
+---
+
+## 7. Qué ha cambiado a nivel financiero
+
+### 7.1 Tabla de siete años (consolidado, oku salvo indicación)
+
+| FY03/ | 2021 | 2022 | 2023 | 2024 | 2025 | 2026 | 2027 guía |
+|---|---|---|---|---|---|---|---|
+| Ventas | 422 | 557.6 | 684.5 | 589.7 | 695.0 | 769.2 | 858.0 |
+| Utilidad operativa | 96.3 | 150.3 | 189.3 | 110.8 | 162.3 | 188.5 | 243.0 |
+| Margen operativo | 23% | 27% | 28% | 19% | 23% | 25% | 28.3% |
+| Antes de depreciación (EBITDA) | 146.5 | 194.8 | 232.6 | 182.4 | 245.3 | 297.8 | 370.0 |
+| Margen antes de depreciación | 35% | 35% | 34% | 31% | 35% | 39% | 43.1% |
+| Depreciación / ventas | 11.9% | 8.0% | 6.3% | 12.1% | 11.9% | 14.2% | 14.8% |
+| Utilidad neta | ND | 108.9 | 141.2 | 83.4 | 116.2 | 143.1 | 166.0 |
+| ROE / ROIC | ND | 15.4% / 15.4% | 17.4% / 17.4% | 9.1% / 8.2% | 11.7% / 9.7% | 12.9% / 11.1% | meta ROIC 13% (FY03/2031) |
+| Flujo operativo | ND | ND | 139 | 70 | 227 | 247 | ND |
+| Flujo de inversión | ND | ND | −134 | −185 | −205 | −110 | ND |
+| Capex / depreciación | 0.4 | 2.8 | 4.8 | 2.0 | 2.1 | 1.0 | 2.4 |
+| Ventas al exterior | 43.6% | 47.0% | 50.3% | 47.0% | 50.6% | 55.1% | ND |
+
+ROE y ROIC vienen de Corp P3. Costo de capital estimado 6.3% hasta FY03/2024, 7.5-8.5% en FY03/2025 y 8.0-9.0% en FY03/2026 (CAPM de 6.5% para Life Science y 9.1% para Electronic Materials) [D: Corp P3].
+
+Fuentes: Deck26 P4, P12-13, P39-43; Deck bilingüe P7-14; Yuho26 P4; Corp P3.
+
+### 7.2 Cinco cambios estructurales
+1. **Mezcla:** Electronic Materials pasó de 44% de las ventas (FY03/2021) a 54% (FY03/2026), 58% en la guía y 64% en la meta de FY03/2031 [I: 187/422; 415.1/769.2; 494/858; 770/1200].
+2. **Intensidad de capital:** la depreciación pasó de 6.3% de las ventas (FY03/2023) a 14.2% (FY03/2026) y 14.8% en la guía. La empresa mide el éxito con utilidad antes de depreciación, que llegó a un récord de 297.8 oku (39% de ventas) [D: Deck26 P13].
+3. **Capex y financiamiento:** entre FY03/2022 y FY03/2026 el capex acumulado fue 758.8 oku (¥75.9 bn), 636 de ellos en Electronic Materials [Modelo; Deck26 P12]; la empresa tomó deuda por ¥20 bn en 2023 (el flujo de financiamiento de FY03/2024 fue +176 oku) y ahora la repaga [D: Deck26 P11].
+4. **Flujo libre:** el flujo operativo más el de inversión fue 5, −115, 22 y 137 oku en FY03/2023 a FY03/2026 [I: aproximación con Deck26 P11; el flujo de inversión incluye movimientos de depósitos a plazo]. El valle fue FY03/2024 (la mayor obra con demanda débil); FY03/2026 es el primer año de caja holgada.
+5. **Mercados:** las ventas al exterior pasaron de 43.6% a 55.1%; Asia es 38%, Norteamérica 16% [D: Deck bilingüe P10]. El yen débil ayuda: cada ¥1 de variación mueve 2.1 oku de ventas y 0.9 oku de utilidad operativa [D: Deck26 P39].
+
+### 7.3 Puente FY03/2025 a FY03/2026 y plan FY03/2027 (utilidad neta, oku)
+| Concepto | FY26 vs FY25 | FY27 plan vs FY26 |
+|---|---|---|
+| Utilidad neta inicial | 116.2 | 143.1 |
+| Ventas | +74.2 | +88.7 |
+| Costo de ventas sin depreciación | −14.5 | **+2.7** |
+| Depreciación en costo de ventas | −26.2 | −17.6 |
+| Gastos de venta y administración | −7.2 | −19.3 |
+| Resultado no operativo | +3.9 | −5.2 |
+| Resultado extraordinario | +2.4 | −1.5 |
+| Impuestos | −5.7 | −24.8 |
+| **Utilidad neta final** | **143.1** | **166.0** |
+
+Fuente: Deck26 P8 y P43 (láminas leídas como imagen). Lecturas:
+- **En FY03/2026, por cada 100 de ventas adicionales, el costo de caja subió solo 20** (14.5 sobre 74.2): operación con apalancamiento fijo. El costo se sitúa sobre todo en depreciación (26.2) [I].
+- **El plan de FY03/2027 supone que el costo de ventas sin depreciación baja 2.7 pese a ventas +88.7.** Eso solo cabe si el aumento de precios de 5-10% cae casi todo a margen, si Kashima II se llena sin costos fijos nuevos y si el yen y la materia prima no cambian. Es un supuesto exigente y excluye Medio Oriente [I].
+- **El aumento incremental de EBITDA que implica la guía es 81%** (+72.2 sobre +88.8 de ventas), contra 71% en FY03/2026, 60% en FY03/2025 y 30-36% en FY03/2022-23 [I].
+- **La tasa efectiva de impuestos sube de 26.7% a unos 31.7%** (impuestos de 77.0 sobre utilidad antes de impuestos de unos 243 en el plan, contra 52.2 sobre 195.3 en FY03/2026) [I: Deck26 P8, P43; Yuho26 P35]. FY03/2026 se beneficiaba de filiales con menor tasa (lo dice la empresa en la revisión de oct-2025 [D: Rev]). Eso resta unos 12 oku a la utilidad neta frente a mantener la tasa de FY03/2026.
+
+### 7.4 Q1 FY03/2027 (abr-jun 2026) normalizado
+
+| | Q1 FY03/2026 | Q1 FY03/2027 | Cambio |
+|---|---|---|---|
+| Ventas (millones de yenes) | 18,658 | 22,819 | +22.3% |
+| Utilidad operativa | 4,694 | 6,172 | +31.5% |
+| Margen operativo | 25.2% | 27.0% | +1.8 pt |
+| Depreciación | 2,203 | 3,025 | +37.3% |
+| Utilidad antes de depreciación | 6,897 | 9,197 | +33.3% |
+| Utilidad antes de impuestos | 4,535 | 9,972 | +119.9% |
+| Utilidad neta | 3,105 | 6,689 | **+115.4%** |
+
+Fuente: Q1tan P1, P5, P7. Reportó **ingresos extraordinarios de subsidio por 3,704 millones**. Sin ese subsidio, la utilidad neta del trimestre habría sido de unos 4,090 millones (+32%) [I: 6,689 menos 2,600 después de impuestos], en línea con la utilidad operativa.
+
+Lectura de la trayectoria trimestral [I]: el margen operativo venía cayendo durante FY03/2026 (25.2%, 26.5%, 23.8%, 22.6% de Q1 a Q4) por la depreciación de Kashima II y ventas planas en Q4 (19.0 bn); en Q1 FY03/2027 las ventas subieron 20% frente a Q4 y el margen volvió a 27.0%. Q1 representó 52.9% de la guía de ventas del primer semestre y 53.2% de la utilidad operativa: para que la guía semestral se cumpla, el Q2 tendría que caer 11% en ventas y 12% en utilidad frente al Q1. O la guía es conservadora o el Q1 incluyó volumen no recurrente.
+
+El balance de junio-2026 muestra el inicio del gasto de Kyoto: activos 166.8 bn (+14.6 bn), razón de patrimonio 73.7% (77.0% a mar-2026), obra en curso 17.3 bn, cuentas por pagar de equipo 14.0 bn [D: Q1tan P1, P3-4]. El efectivo bajó de 41.0 a 38.3 bn y todavía faltan ¥14.0 bn de pagos de equipo.
+
+### 7.5 Credibilidad de la guía
+- **FY03/2026:** la guía inicial de utilidad operativa fue 140.0 (−14% interanual); la revisión de oct-2025 la llevó a 175.0; el resultado fue 188.5 (+34.6% sobre la inicial) [D: Deck26 P4; Rev]. La empresa subestimó la demanda de IA y el tipo de cambio.
+- **Plan anterior (FUSO VISION 2025):** objetivos de mayo-2023: ventas 850, utilidad operativa 190, EBITDA 300. Resultado: ventas 769 (−9.5%), utilidad operativa 188.5 (−1%), EBITDA 297.8 (−1%), exterior 55.1% contra meta 50% [D: Deck26 P48]. Se cumplió la rentabilidad con menos ventas que lo previsto.
+- **FY03/2027:** la guía de utilidad operativa es +28.9% desde el inicio; el consenso del Modelo está por encima de la guía: ventas 91.3 bn contra 85.8 bn y utilidad operativa 26.1 contra 24.3 (FY03/2031: 42.3 contra la meta de 36.0) [Modelo]. El mercado ya descuenta que la empresa supera sus metas.
+
+### 7.6 Balance y caja
+Efectivo y depósitos ¥41.0 bn contra deuda ¥16.9 bn a mar-2026, caja neta de unos ¥24 bn [I]; patrimonio ¥117.2 bn, razón de patrimonio 77.0%; pago de dividendos ¥2.9 bn con razón de pago de 20.2% (FY03/2026) y 17.8% en la guía FY03/2027 [D: Tan26]. Acciones: split 3 por 1 el 1-abr-2026 (dividendo guía de FY03/2027 ¥28 posterior al split) [D]. El precio de mar-2026 (¥2,726 posterior al split) implica P/B 2.5 y P/E 20.1 [D: Corp P3].
+
+---
+
+## 8. Benceno: qué es, por qué le afecta a Fuso y qué hizo
+
+### 8.1 La cadena, explicada desde cero
+- **Petróleo, nafta y benceno [I-general].** La nafta es una fracción del petróleo que las petroquímicas craquean para obtener productos básicos; uno de ellos es el **benceno**, un hidrocarburo aromático. En Asia su precio se referencia con el "ACP" (Asia Contract Price) de ENEOS, en dólares por tonelada [D: Deck26 P39].
+- **Benceno a anhídrido maleico [I-general].** El benceno se oxida para producir **anhídrido maleico (maleic anhydride)**, un intermedio químico [I-general; D: diagrama de Deck26 P25].
+- **Anhídrido maleico a ácidos de fruta sintéticos.** De él se obtienen **ácido málico** y **ácido fumárico** [D: Deck26 P25]. El ácido málico se usa como acidulante en bebidas, caramelos y también en galvanoplastia y limpieza; el fumárico, en alimentos, resinas, papel y pinturas [I-general; el yuho cita galvanoplastia y detergentes para el málico, y papel y pinturas para el fumárico: Yuho25 P25-26].
+- **Quién hace qué.** Fuso fabrica anhídrido maleico, fumárico y málico en Kashima y tiene el negocio desde 2014, cuando lo heredó de Mitsui Chemicals [D: Yuho26 P7; IR25 P44]. Es decir, Fuso es un "fabricante de ácidos de fruta" pero una parte importante de su línea es **petroquímica**; la empresa lo reconoce con "productos de origen petroquímico" [D: Deck bilingüe P17].
+- **Qué no depende del benceno:** ácido glucónico y vitamina C ("sin impacto directo actualmente") [D: Deck26 P25]; el ácido cítrico depende del ácido sulfúrico, una materia prima secundaria [D].
+
+### 8.2 Por qué le afecta: cuatro canales
+1. **Costo.** El benceno es la materia prima principal del anhídrido maleico. El precio subió de 745 USD por tonelada (promedio FY03/2026) a 1,130 en abril-mayo de 2026 (+52%); el promedio de FY03/2025 había sido 996 y el mínimo, hacia el final de FY03/2026, fue unos 675 [D: Deck26 P25]. Como se cotiza en dólares, el yen débil lo amplifica.
+2. **Suministro.** El cierre de la distribución de nafta por la inestabilidad de Medio Oriente volvió incierto el suministro de benceno. La planta de anhídrido maleico seguía operando hasta el mantenimiento programado (principios de mayo) con materia prima asegurada; después del mantenimiento (fines de junio), **su arranque dependía de poder comprar benceno "hasta el último momento"** [D: Deck26 P25]. Si esa planta se detiene, también se detienen el ácido málico y el fumárico.
+3. **Precio de venta.** La empresa dice que **si el benceno se mantiene alto, corregir los precios de venta es "imprescindible"** [D: Deck26 P25, texto japonés 販売価格是正が必須]. El traspaso es por contratos y con rezago; la empresa describe que revisa contratos para trasladar el costo y mantener el margen [D: Yuho26 P26, "原料価格を販売価格へ転嫁"]. En FY03/2026, cuando el benceno bajó, los precios también bajaron: "menor precio de venta por menor precio de materias primas" aparece entre los factores de la caída de ventas de LS, y el menor costo de materias primas figura entre los factores que sostuvieron la utilidad [D: Yuho26 P29, P32]. El riesgo no es el nivel del benceno sino el **desfase y el margen entre costo y precio**, y que en fumárico los clientes presionan (índice de precio 0.91).
+4. **Valuación de inventarios.** Con método de costo y reducción por menor rentabilidad, un alza o baja brusca de materia prima o tipo de cambio puede forzar rebajas de inventario [D: Yuho26 P26, riesgo 11].
+
+Canales adicionales: azufre y ácido sulfúrico para cítrico; materiales de embalaje y logística para todos los productos [D: Deck26 P25].
+
+### 8.3 Magnitud
+La empresa **no publica toneladas de benceno ni la parte de ventas o costos de LS que depende de él** [ND]. Con lo disponible se puede acotar:
+- Cada tonelada adicional de benceno cuesta unos ¥57,750 más al precio de abr-may 2026 (385 USD × ¥150) [I: aritmética de Deck26 P25 y P39].
+- **Umbral útil:** el sobrecosto bruto de un precio 52% mayor equivale a 10% de la utilidad operativa de LS (¥0.53 bn) con solo unas 9,200 toneladas de benceno al año (530 millones sobre ¥57,750 por tonelada) [I: aritmética].
+- Orden de magnitud [I-general, no es dato de la empresa]: producir una tonelada de ácido málico requiere cerca de una tonelada de benceno (unas 0.7 t de anhídrido maleico, a razón de 1.1 a 1.2 t de benceno por tonelada de anhídrido). Solo las 12,400 t de ácido málico vendidas al exterior en FY03/2026 [D] implicarían unas 11,000 t de benceno, es decir un sobrecosto bruto de unos ¥0.65 bn al año antes de traspaso. Con el ácido fumárico, el málico doméstico y el anhídrido vendido directamente, la cifra total sería mayor [ND]. Es consistente con que el benceno pese más de 10% de la utilidad de LS antes de traspaso.
+- **La guía de FY03/2027 supone benceno igual al de FY03/2026 (745 USD/t) y excluye Medio Oriente.** Es decir, el riesgo de benceno está fuera de la cifra de LS (utilidad operativa 55.0) [D: Deck26 P39].
+
+### 8.4 Qué hizo Fuso
+
+| Medida | Qué es | Evidencia | Límite |
+|---|---|---|---|
+| Aumento de precios | Corrección de precios de venta si el benceno sigue alto; revisión periódica de precios con materias primas en málico y cítrico | Deck26 P25, P21; Yuho26 P28 | Rezago; presión de competidores chinos y de importaciones en fumárico y cítrico |
+| Asegurar materia prima antes del mantenimiento | La planta de anhídrido maleico siguió operando con benceno asegurado hasta el paro de principios de mayo | Deck26 P25 | No resuelve el arranque posterior (fines de junio) |
+| **Compra externa de anhídrido maleico** | Mantener plantas de málico y fumárico con anhídrido comprado a terceros si no hay benceno | Deck26 P25 ("en consideración") | Más caro; depende de proveedor; sin decisión confirmada |
+| Más producción propia | Subir la parte producida internamente de 71% (49% Japón + 22% exterior) a 75% y consolidar productos de bajo margen | Deck26 P24 | No ataca al benceno directamente; baja el costo de lo que hoy se subcontrata (29%) |
+| Eficiencia y utilización | Mayor producción por hora, mayor tasa de operación en Kashima (producción de málico y fumárico +40%) | Deck26 P17; Yuho26 P28 | Diluye costos fijos, no el costo de la materia prima |
+| Fuentes alternativas de materia prima en EM | Diversificar silicio metálico (Malasia, Brasil); meta >50% de origen no tradicional en 2030 | Deck26 P36 | No es benceno, pero es el mismo tipo de riesgo en el otro negocio |
+| Coordinación con gobierno y reducción de consumibles | Compartir información con autoridades, evaluar reciclaje | Deck26 P36 | |
+
+### 8.5 Qué queda por vigilar
+- Resultado del Q2 FY03/2027 (se publica el 30-oct-2026 según Workspace [ND en documentos de la empresa]): si LS cumple los 27.0 oku de utilidad operativa del primer semestre y qué dice de la planta de anhídrido maleico después de junio.
+- Evolución del precio ACP del benceno contra el supuesto de 745 USD/t.
+- Comentarios de la empresa sobre aumentos de precios en málico/fumárico y sobre la proporción de anhídrido comprado a terceros.
+
+### 8.6 Paralelo en Electronic Materials
+La materia prima principal de la sílice es silicio metálico, con gran peso de China en las compras [D: Yuho26 P25] y una filial china que procesa (tritura) silicio [D: IR25 P44]. El silicio importado cayó de ~¥900/kg (2022) a ~¥260 (mar-2026); la empresa traslada costos a precios y está diversificando orígenes [D: Deck26 P36]. En FY03/2026 el segmento tuvo mayores costos de materiales, pero los absorbió con eficiencia [D: Deck26 P28].
+
+---
+
+## 9. Qué vigilar (6 indicadores sacables de un resultado trimestral)
+
+| # | Indicador | Umbral | Qué señala |
+|---|---|---|---|
+| 1 | **Margen operativo de EM** (requiere el resultado por segmento) | Guía 43.9% (217/494) para el año, 42.1% en 1S (104/247). Debajo de 40% | Por debajo: Kashima II se retrasa o la depreciación pesa más; por encima: certificación rápida y precios |
+| 2 | **Depreciación trimestral** | Q1: 3,025 millones; la guía anual (12,700) exige unos 3,200 por trimestre en el resto del año | Por encima de 3,200 en Q2: la guía se cumple y entra Kashima II; muy por debajo: arranque demorado |
+| 3 | **Obra en curso, cuentas por pagar de equipo y efectivo** | CIP 17.3 bn y cuentas por pagar de equipo 14.0 bn al cierre de Q1; efectivo 38.3 bn contra deuda 15.9 bn | Si el efectivo cae por debajo de la deuda o la razón de patrimonio por debajo de 70%, el plan de ¥29.9 bn está presionando la caja (umbrales de criterio mío, I) |
+| 4 | **Ventas del trimestre frente a la guía semestral** | 1S guía 43,100; Q1 22,819, así que el Q2 implícito es 20,281 | Un Q2 por encima de 21,500 indica que la guía es conservadora; por debajo de 20,000, que el Q1 incluyó volumen puntual |
+| 5 | **Margen operativo de LS y comentario sobre benceno** | Guía 15.1% (55.0/364.0); 1S 27.0 de utilidad operativa | Por debajo de 14%: el benceno o la competencia pesan más de lo que la guía supone |
+| 6 | **Tasa efectiva de impuestos y subsidio** | Plan ~31.7%; Q1 32.9% | Si baja a 27-28%, hay una mejora de utilidad neta no operativa; el subsidio de ¥3.7 bn es una sola vez |
+
+Además, para el trimestre del 30-oct-2026 [ND]: aviso de cuándo se terminó la certificación de Kashima II, y cualquier cambio en la guía de FY03/2027 por Medio Oriente.
+
+---
+
+## 10. Conflictos, vacíos y documentos que faltan
+
+**Conflictos abiertos**
+1. **Guía de utilidad neta FY03/2027: 16,600 contra 19,200 millones de yenes.** El deck del 15-may-2026 y la tanshin del 11-may-2026 dicen 16,600 (UPA 156.90). La tanshin de Q1 del 7-ago-2026 dice 19,200 (UPA 181.48), marcada "sin revisión". La diferencia de 2,600 coincide con ¥3,694 millones de subsidio después de impuestos (tasa implícita 29.6%), y la guía del primer semestre sube lo mismo (7,850 a 10,450). Las ventas y la utilidad operativa no cambian. Lectura: **19,200 incluye el subsidio** [I]. Esto matiza la nota del prompt de segmentos, que decía que el dato de Workspace estaba "mal": parece más reciente, no incorrecto. Falta el aviso de TDnet (revisión de jun-ago 2026) para cerrarlo.
+2. **La línea de Kyoto: "mar-2025" (deck en inglés) contra "2025年度末" (japonés).** Prevalece el japonés (fines de FY03/2026), confirmado por el Yuho26 P33.
+3. **El Modelo** etiqueta el ingreso extraordinario de Q1 como "ganancia por venta de activos fijos"; es el subsidio (Q1tan P5).
+
+**Vacíos**
+- Capex por proyecto: Kashima I, línea de Kyoto, PMP, Osaka, control de calidad, I+D: [ND]. Solo Kashima II (¥20 bn) y Kyoto nuevo (¥40 bn) tienen monto.
+- Reparto del capex de FY03/2027 (299.0 oku) por segmento y proyecto: [ND].
+- Ventas por cliente y por aplicación (IA, HBM, lógica, memoria, PC/teléfono): [ND].
+- Toneladas de sílice y de benceno; contrato de suministro y fórmula de traspaso: [ND].
+- Q1 FY03/2027 por segmento y comentarios: [ND]. No hay original japonés ni resumen de la empresa.
+- Notas de la sesión de preguntas del 15-may-2026: no están en la carpeta.
+- Causas de FY03/2024 más allá de los ajustes de inventario: solo existe el yuho FY03/2025 como comparativo; faltan los de FY03/2024 y anteriores.
+- Los gráficos de mercado de CMP de la empresa usan unidades distintas entre láminas (MTP en 億円, Deck26 en "100 millones de USD"/miles de toneladas); los valores que cito son lecturas aproximadas.
+
+**Documentos que cerrarían los vacíos:** aviso de TDnet jun-ago 2026; tanshin Q1 FY03/2027 en japonés; resultados de Q2 (30-oct-2026); yuho FY03/2024 y FY03/2023; notas de la sesión de Q&A de mayo-2026.
+
+---
+
+## 11. Mapa de fuentes usadas (archivo y página)
+
+| Tema | Archivo | Páginas |
+|---|---|---|
+| Capex, proyectos, plan de caja | `01_MTP_Next-Growth-2030_plan`; Deck26 (inglés, raíz) | MTP P5-7, P14, P18-19; Deck26 P12, P41, P52, P56 |
+| Capex por segmento y monto | Yuho26 `34f9a5a7`; Yuho25 `cc1030a6` | Yuho26 P38-39, P98-99; Yuho25 P32 |
+| Cronograma de certificación | Deck26; Q2deck; Yuho26 | Deck26 P32-34; Q2deck P33; Yuho26 P33 |
+| Subsidio | Yuho26 | P104 |
+| Segmentos | Deck26; Deck bilingüe (Fase0) | Deck26 P5-7, P15-37; bilingüe P8, P17 |
+| HBM y CMP | Deck26; MTP; IR25; Q2deck; Fujimi y Nissan Chemical | Deck26 P31, P35; MTP P14; IR25 P20-24; Q2deck P30-34 |
+| Financiero | Deck26; Tan26 `03_`; Q1tan; Corp; Yuho26 | Deck26 P4-13, P39-43; Q1tan P1-7; Corp P3; Yuho26 P4 |
+| Benceno | Deck26 (JP `3825ea4a` láminas 25 y 36); Yuho26 | Deck26 P24-25, P36, P39; Yuho26 P26, P29, P32 |
+| Cliente grande | Yuho26 | P30, P100 |
+| Depreciación | Yuho26 | P75 |
+
+---
+
+## 12. Cómo usar esto en el `/company_overview` (siguiente paso)
+
+- **Fase 0 (inventario y fuentes):** ya está resuelta en los `_NOTES.md`. Falta bajar de TDnet el aviso de jun-ago 2026 y el Q1 FY03/2027 en japonés.
+- **Fases 1-2 (historia, qué hace, cadena de valor, productos):** las secciones 1, 5 y 6.2 de este documento son el borrador. Lo que no está en los archivos: clientes por producto de Life Science, volúmenes y la fórmula de traspaso de precios.
+- **Fase 3 (IA, PC, smartphone):** la sección 6 deja claro qué es dato y qué es inferencia; el vacío central es el desglose de ventas por aplicación.
+- **Fase 4 (segmentos, economía unitaria, finanzas):** las secciones 4, 5 y 7 ya tienen las series; el siguiente paso útil es llevar la sección 4.3 (calendario depreciación contra ingresos) al bloque de gestión del Excel.
+- **Fase 5 (pares):** de los tres archivos de la carpeta Competidores, Nissan Chemical (sílice coloidal) es el único competidor directo documentado; Fujimi es cliente histórico. Hay que buscar los competidores reales de Life Science (ácidos de fruta de China y otros), que la empresa no nombra.
+- **Reglas de trabajo para ahorrar tiempo:** (1) leer la lámina como imagen cuando haya gráficos, (2) citar siempre el yuho para capex, depreciación y clientes, (3) revisar el período real de cada archivo de pares, (4) separar guía de la empresa de consenso del Modelo.

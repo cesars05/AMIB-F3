@@ -1,0 +1,102 @@
+$ErrorActionPreference="Stop"
+$wb=$null; $xl=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $er=$wb.Worksheets.Item("Expected Returns")
+$cm=$wb.Worksheets.Item("Consolidated Model"); $ns=$wb.Worksheets.Item("Scenarios Summary")
+if([string]$er.Range("C21").Text -ne "Exit Year (FY)"){ throw "ABORTO: ER C21 cambio" }
+if([string]$er.Range("C54").Text -ne "Gross Money Multiple (MoIC)"){ throw "ABORTO: ER C54 cambio" }
+$shares=[double]$er.Range("D12").Value2
+$pct=[double]$er.Range("D17").Value2
+$entry=[double]$er.Range("D15").Value2
+Write-Output ("acciones "+[string][math]::Round($shares,0)+"   participacion "+[string][math]::Round($pct*100,1)+"%   entrada "+[string]$entry+"p")
+$xl.ScreenUpdating=$false
+
+function Correr($esc,$venta,$anoSalida,$multSalida){
+  $as.Range("F10").Value2=$esc
+  if($venta){
+    $as.Range("J74").Value2="Water Management"
+    $as.Range("J75").Value2=[double]2029
+    $as.Range("J76").Value2=[double]8.0
+  } else { $as.Range("J74").ClearContents() }
+  $er.Range("D21").Value2=[double]$anoSalida
+  $er.Range("D32").Value2=[double]$multSalida
+  $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+  $esp=0.0
+  foreach($a in "E46","F46","G46","H46","I46","J46"){ $esp+=[double]$er.Range($a).Value2 }
+  $divTot=[double]$er.Range("D52").Value2
+  $ord=($divTot-$esp)/$pct/$shares*100
+  $espPS=$esp/$pct/$shares*100
+  $exPS=[double]$er.Range("D53").Value2/$pct/$shares*100
+  $moic=[double]$er.Range("D54").Value2
+  $irr=[double]$er.Range("D55").Value2
+  return @($moic,$irr,$ord,$espPS,$exPS)
+}
+
+$rA=Correr "Downside"        $false 2029 5.25
+$rB=Correr "Stagnation"      $false 2029 6.10
+$rC=Correr "Partial Success" $false 2029 7.50
+$rD=Correr "Partial Success" $true  2032 8.50
+$rE=Correr "Partial Success" $true  2032 10.00
+
+# ---- escribir con direcciones literales ----
+$ns.Range("H14").Value2=[double]$rA[0]; $ns.Range("I14").Value2=[double]$rA[1]
+$ns.Range("H15").Value2=[double]$rB[0]; $ns.Range("I15").Value2=[double]$rB[1]
+$ns.Range("H16").Value2=[double]$rC[0]; $ns.Range("I16").Value2=[double]$rC[1]
+$ns.Range("H17").Value2=[double]$rD[0]; $ns.Range("I17").Value2=[double]$rD[1]
+$ns.Range("H18").Value2=[double]$rE[0]; $ns.Range("I18").Value2=[double]$rE[1]
+
+$ns.Range("D28").Value2=[double](-$entry); $ns.Range("E28").Value2=[double]$rA[2]; $ns.Range("F28").Value2=[double]$rA[3]; $ns.Range("G28").Value2=[double]$rA[4]
+$ns.Range("D29").Value2=[double](-$entry); $ns.Range("E29").Value2=[double]$rB[2]; $ns.Range("F29").Value2=[double]$rB[3]; $ns.Range("G29").Value2=[double]$rB[4]
+$ns.Range("D30").Value2=[double](-$entry); $ns.Range("E30").Value2=[double]$rC[2]; $ns.Range("F30").Value2=[double]$rC[3]; $ns.Range("G30").Value2=[double]$rC[4]
+$ns.Range("D31").Value2=[double](-$entry); $ns.Range("E31").Value2=[double]$rD[2]; $ns.Range("F31").Value2=[double]$rD[3]; $ns.Range("G31").Value2=[double]$rD[4]
+$ns.Range("D32").Value2=[double](-$entry); $ns.Range("E32").Value2=[double]$rE[2]; $ns.Range("F32").Value2=[double]$rE[3]; $ns.Range("G32").Value2=[double]$rE[4]
+$ns.Range("H28").Formula="=+SUM(E28:G28)"
+$ns.Range("H29").Formula="=+SUM(E29:G29)"
+$ns.Range("H30").Formula="=+SUM(E30:G30)"
+$ns.Range("H31").Formula="=+SUM(E31:G31)"
+$ns.Range("H32").Formula="=+SUM(E32:G32)"
+$ns.Range("I28").Formula="=+H28+D28"
+$ns.Range("I29").Formula="=+H29+D29"
+$ns.Range("I30").Formula="=+H30+D30"
+$ns.Range("I31").Formula="=+H31+D31"
+$ns.Range("I32").Formula="=+H32+D32"
+$ns.Range("H28:H32").Font.Bold=$true
+
+# ---- restaurar: Partial Success sin venta ----
+$as.Range("F10").Value2="Partial Success"
+$as.Range("J74").ClearContents()
+$as.Range("J75").Value2=[double]2029
+$as.Range("J76").Value2=[double]8.0
+$er.Range("D21").Value2=[double]2032
+$er.Range("D32").Value2=[double]8.5
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$xl.ScreenUpdating=$true
+$wb.Save()
+
+Write-Output ""
+Write-Output "################ SCENARIOS SUMMARY ################"
+Write-Output ("  "+"".PadRight(24)+"Hold".PadLeft(10)+"Exit".PadLeft(9)+"MOIC".PadLeft(9)+"IRR".PadLeft(9))
+for($i=14;$i -le 18;$i++){
+  Write-Output ("  "+([string]$ns.Cells.Item($i,3).Text).PadRight(24)+([string]$ns.Cells.Item($i,6).Text).PadLeft(10)+([string]$ns.Cells.Item($i,7).Text).PadLeft(9)+([string]$ns.Cells.Item($i,8).Text).PadLeft(9)+([string]$ns.Cells.Item($i,9).Text).PadLeft(9))
+}
+Write-Output ""
+Write-Output ("  "+"".PadRight(24)+"Entrada".PadLeft(10)+"Ordinarios".PadLeft(12)+"Especial".PadLeft(11)+"Salida".PadLeft(10)+"Total".PadLeft(10)+"Neto".PadLeft(10))
+for($i=28;$i -le 32;$i++){
+  Write-Output ("  "+([string]$ns.Cells.Item($i,3).Text).PadRight(24)+([string]$ns.Cells.Item($i,4).Text).PadLeft(10)+([string]$ns.Cells.Item($i,5).Text).PadLeft(12)+([string]$ns.Cells.Item($i,6).Text).PadLeft(11)+([string]$ns.Cells.Item($i,7).Text).PadLeft(10)+([string]$ns.Cells.Item($i,8).Text).PadLeft(10)+([string]$ns.Cells.Item($i,9).Text).PadLeft(10))
+}
+Write-Output ""
+Write-Output ("  restaurado: escenario "+[string]$as.Range("F10").Text+"   venta='"+[string]$as.Range("J74").Text+"'   ER salida "+[string]$er.Range("D21").Text+" a "+[string]$er.Range("D32").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Valuation Summary","Expected Returns","Scenarios Summary"){
+  $s=$wb.Worksheets.Item($nm); $e=0
+  try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

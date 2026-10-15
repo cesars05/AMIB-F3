@@ -1,0 +1,119 @@
+"""Naranja oscuro, azul claro IB, y el helper de matriz."""
+import io
+
+P = r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs\grafico_banquero.py"
+s = io.open(P, encoding="utf-8").read()
+
+# --- 1. naranja oscuro + azul claro IB -------------------------------------
+s = s.replace('    "acento":      "#FFC000",',
+              '    "acento":      "#D97A29",\n    "azul_claro":  "#8FAADC",')
+s = s.replace('    "naranja":       "#FFC000",', '    "naranja":       "#D97A29",')
+
+s = s.replace('''  acento          #FFC000    Segunda serie, SIEMPRE acompanada del''',
+              '''  acento          #D97A29    Segunda serie, SIEMPRE acompanada del''')
+
+# --- 2. documentar los dos pares canonicos ---------------------------------
+viejo = """  claro           #A0AEC0    Tercera serie. Tambien series de contexto que
+                             deben verse sin competir."""
+nuevo = """  azul_claro      #8FAADC    El acompanante del primario. Navy + azul
+                             claro es EL par de investment banking: barras
+                             apiladas (real yield / breakeven), serie vs su
+                             media movil, LHS vs RHS. Misma familia de color,
+                             asi que se leen como partes de una cosa.
+  claro           #A0AEC0    Tercera serie. Tambien series de contexto que
+                             deben verse sin competir."""
+assert viejo in s
+s = s.replace(viejo, nuevo)
+
+viejo_reglas = """3. ORDEN DE SERIES: usar CICLO_COLORES en orden."""
+nuevo_reglas = """3. DOS PARES CANONICOS, SEGUN LO QUE COMPARAS.
+
+   navy + azul_claro  -> partes de un mismo todo. Descomposiciones (real
+                         yield + breakeven = nominal), un dato y su promedio
+                         movil, barras apiladas. Misma familia: el ojo las
+                         suma.
+   navy + acento      -> dos cosas distintas que compiten. Un sector contra
+                         su indice, dos activos, actual vs consenso. Familias
+                         opuestas: el ojo las separa.
+
+   Elegir mal el par hace que el grafico diga lo contrario de lo que quieres.
+
+4. ORDEN DE SERIES: usar CICLO_COLORES en orden."""
+assert viejo_reglas in s
+s = s.replace(viejo_reglas, nuevo_reglas)
+s = s.replace("""4. UN GRAFICO, UN MENSAJE.""", """5. UN GRAFICO, UN MENSAJE.""")
+
+# CICLO: meter azul_claro en segundo lugar tras primario para multi-serie
+s = s.replace('CICLO_COLORES = ["primario", "acento", "claro", "medio", "verde", "carbon"]',
+              'CICLO_COLORES = ["primario", "acento", "azul_claro", "medio", "verde", "carbon"]')
+
+# --- 3. helper de matriz ----------------------------------------------------
+matriz = '''
+
+def matriz_calor(ax, df, fmt="{:+.1f}%", divergente=True, intensidad=0.85,
+                 fontsize=7, fontsize_encabezado=7):
+    """Matriz tipo "Style Performance": celdas sombreadas por valor.
+
+    df: DataFrame numerico. El indice son las filas, las columnas los encabezados.
+
+    divergente=True sombrea en navy los positivos y en gris los negativos, con
+    intensidad proporcional al valor absoluto (escalada al maximo de la tabla).
+    divergente=False usa una sola rampa navy de menor a mayor.
+
+    El texto pasa a blanco cuando la celda es lo bastante oscura, que es lo que
+    hace legible el sombreado fuerte.
+
+    Es el formato correcto cuando el lector necesita COMPARAR muchas celdas
+    entre si (indice x periodo, tamano x estilo). Para una sola dimension, una
+    barra ordenada se lee mejor.
+    """
+    import matplotlib.colors as mcolors
+
+    vals = df.values.astype(float)
+    n_f, n_c = vals.shape
+    tope = max(abs(vals[~_nan(vals)]).max(), 1e-9)
+
+    rgb_pos = mcolors.to_rgb(PALETA["primario"])
+    rgb_neg = mcolors.to_rgb(PALETA["carbon"])
+
+    ax.set_xlim(0, n_c)
+    ax.set_ylim(0, n_f)
+    ax.invert_yaxis()
+    ax.axis("off")
+
+    for i in range(n_f):
+        for j in range(n_c):
+            v = vals[i, j]
+            if v != v:                       # NaN
+                continue
+            if divergente:
+                base = rgb_pos if v >= 0 else rgb_neg
+                peso = min(abs(v) / tope, 1.0) * intensidad
+            else:
+                base = rgb_pos
+                peso = min(max(v / tope, 0), 1.0) * intensidad
+            # Mezcla contra blanco: peso 0 -> blanco, peso 1 -> color pleno
+            color = tuple(1 - peso * (1 - c) for c in base)
+            ax.add_patch(plt.Rectangle((j, i), 1, 1, facecolor=color,
+                                       edgecolor="white", linewidth=1.2, zorder=1))
+            ax.text(j + 0.5, i + 0.5, fmt.format(v), ha="center", va="center",
+                    fontsize=fontsize, zorder=2,
+                    color="white" if peso > 0.55 else PALETA["texto"],
+                    fontweight="bold" if peso > 0.55 else "normal")
+
+    for j, c in enumerate(df.columns):
+        ax.text(j + 0.5, -0.12, str(c), ha="center", va="bottom",
+                fontsize=fontsize_encabezado, fontweight="bold",
+                color=PALETA["texto"])
+    for i, r in enumerate(df.index):
+        ax.text(-0.12, i + 0.5, str(r), ha="right", va="center",
+                fontsize=fontsize_encabezado, fontweight="bold",
+                color=PALETA["texto"])
+
+
+def _nan(a):
+    return a != a
+'''
+s = s.rstrip() + "\n" + matriz
+io.open(P, "w", encoding="utf-8").write(s)
+print("framework actualizado: #D97A29, #8FAADC, matriz_calor()")

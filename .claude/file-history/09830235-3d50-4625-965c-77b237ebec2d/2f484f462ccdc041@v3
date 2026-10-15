@@ -1,0 +1,25 @@
+# Empresas – documentos oficiales de los productores de EE. UU.
+
+Descargados el 2026-10-14 de fuentes oficiales (SEC EDGAR y sitios de relación con inversionistas, IR). Último trimestre disponible: **2T26** (NUE, STLD, CLF) y **3T fiscal 26, cierre may-26** (CMC). El 3T calendario aún no se reporta.
+
+| Archivo | Qué es | Origen |
+|---|---|---|
+| `NUE/NUE_2Q26_earnings_release.pdf` | Comunicado 2T26 (precios, utilización, segmentos) | Nucor IR |
+| `NUE/NUE_2Q26_investor_presentation_8K_ex99-2.htm` | Presentación de la call 28-jul (**solo texto**; sin gráficos) | SEC 8-K, Ex. 99.2 |
+| `STLD/STLD_2Q26_earnings_release_8K_ex99-1.htm` | Comunicado 2T26 (20-jul) | SEC 8-K |
+| `STLD/STLD_2Q26_investor_presentation.pdf` | Presentación 2T26 (26 pp., **con gráficos**: utilización industria vs STLD, importaciones/consumo aparente) | ir.steeldynamics.com |
+| `STLD/STLD_1Q26_investor_presentation.pdf` | Presentación 1T26 (29 pp.) | ir.steeldynamics.com |
+| `CLF/CLF_2Q26_earnings_release.pdf` | Comunicado 2T26 (23-jul) | Cleveland-Cliffs IR |
+| `CMC/CMC_3QFY26_earnings_release_8K.htm` | Comunicado 3T fiscal (25-jun) | SEC 8-K |
+| `CMC/CMC_3QFY26_earnings_presentation.pdf` | Presentación 3T fiscal (22 pp.) | ir.cmc.com |
+| `CMC/CMC_3QFY26_earnings_transcript.htm` | Transcripción de la call 3T fiscal | ir.cmc.com |
+| `CMC/CMC_2QFY26_earnings_presentation.pdf` | Presentación 2T fiscal (29 pp.) | ir.cmc.com |
+| `CMC/CMC_2QFY26_earnings_transcript.pdf` | Transcripción 2T fiscal (15 pp.) | ir.cmc.com |
+
+## Pendiente
+- **Cleveland-Cliffs:** su página de presentaciones solo lista la de la adquisición de Stelco; no publica un deck trimestral. Solo hay comunicado.
+- **Nucor:** el deck con gráficos no estaba como PDF en su IR a la vista; está el texto en el 8-K.
+- **Transcripciones de STLD, NUE y CLF:** no están en sus IR (solo webcast). Existen resúmenes de terceros.
+- **3T calendario:** STLD reporta 19-oct, NUE 26-oct; CMC y CLF por confirmar.
+- U.S. Steel no reporta por separado (pertenece a Nippon Steel).
+- Resumen cualitativo de las calls: `../.MD/notas/nota_Earnings-calls-productores-US.md`.

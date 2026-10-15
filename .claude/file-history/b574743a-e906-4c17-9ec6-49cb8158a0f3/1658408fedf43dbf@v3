@@ -1,0 +1,246 @@
+import sys, re, os, csv
+sys.path.insert(0, ".")
+import openpyxl
+from docx_kit import *
+from docx.shared import Pt, Cm
+
+XL = sys.argv[1] if len(sys.argv) > 1 else r"C:\Users\cesar\Downloads\PE\08_Proyecto_Final\entregables\PF_Modelo_AurexCapital.xlsx"
+OUT = sys.argv[2] if len(sys.argv) > 2 else r"C:\Users\cesar\Downloads\PE\08_Proyecto_Final\entregables\PF_Memorandum_AurexCapital.docx"
+wb = openpyxl.load_workbook(XL, data_only=True)
+H1, H2, LC, FF, SU = wb["Hoja1_Portafolio"], wb["Hoja2_Distribucion"], wb["Llamadas_Capital"], wb["Football_Field"], wb["Summary"]
+
+
+def f1(x): return f"{x:,.1f}"
+def fx(x): return f"{x:.2f}x"
+def fp(x): return f"{x*100:.1f}%".replace("-", "−")
+
+
+# ---- cifras del Excel (origen único) ----
+sc = {k: dict(proc=H2[f"{c}19"].value, gross_inv=H2[f"{c}41"].value, lp=H2[f"{c}32"].value, carry=H2[f"{c}33"].value,
+              moic=H2[f"{c}38"].value, irr=H2[f"{c}42"].value, irr_s=H2[f"{c}39"].value,
+              e1=H2[f"{c}21"].value, e2=H2[f"{c}23"].value, e3=H2[f"{c}26"].value, e4l=H2[f"{c}28"].value, e4g=H2[f"{c}29"].value)
+      for k, c in (("bajo", "E"), ("base", "D"), ("alto", "F"))}
+B, BJ, AL = sc["base"], sc["bajo"], sc["alto"]
+INV = H1["C12"].value; FEE = H1["C13"].value; GAS = H1["C14"].value
+INI = H1["E26"].value; FO = H1["G26"].value
+hdr = {FF.cell(row=27, column=c).value: c for c in range(3, 17)}
+def ffv(name, row):
+    return FF.cell(row=row, column=hdr[name]).value
+CONS_M, CONS_I = ffv("Conservador", 31), ffv("Conservador", 32)
+SF_M, SF_I = ffv("Sin fallas", 31), ffv("Sin fallas", 32)
+V1_M, V1_I = ffv("Equipo v1", 31), ffv("Equipo v1", 32)
+MC_M, MC_I = ffv("Monte Carlo P50", 31), ffv("Monte Carlo P50", 32)
+ES_M, ES_I = ffv("Estrés: fallan 5", 31), ffv("Estrés: fallan 5", 32)
+SAL_M, SAL_I = ffv("Salida +1 año", 31), ffv("Salida +1 año", 32)
+calls = [LC.cell(row=28, column=4 + k).value for k in range(10)]
+dpi = [SU.cell(row=27, column=4 + k).value for k in range(10)]
+tvpi = [SU.cell(row=29, column=4 + k).value for k in range(10)]
+PORT = []
+for r in range(18, 26):
+    PORT.append(dict(n=H1[f"B{r}"].value, v=H1[f"C{r}"].value, ini=H1[f"E{r}"].value, ent=H1[f"F{r}"].value, fo=H1[f"G{r}"].value, foy=H1[f"H{r}"].value,
+                     inv=H1[f"I{r}"].value, sal=H1[f"K{r}"].value, m=H1[f"L{r}"].value, rec=H1[f"M{r}"].value))
+PM = {p["n"]: p for p in PORT}
+
+d = new_doc(margins_cm=2.0, base_pt=10)
+header_text(d, "AUREX CAPITAL · Memorándum de Colocación Privada (versión resumida) · 11-oct-2026")
+footer_pagenum(d, "Documento académico del curso Capital Privado y Capital Emprendedor, Tec de Monterrey · No constituye oferta de valores")
+
+p = d.add_paragraph(); p.paragraph_format.space_after = Pt(0)
+r = p.add_run("AUREX CAPITAL"); r.bold = True; r.font.size = Pt(22); r.font.color.rgb = VERDE
+p = d.add_paragraph(); p.paragraph_format.space_after = Pt(2)
+r = p.add_run("Memorándum de Colocación Privada · Fideicomiso de capital de riesgo · USD $100 millones"); r.font.size = Pt(11.5); r.font.color.rgb = VERDE2; r.bold = True
+para(d, "Equipo #5 · Gpo. 602 · Prof. Francisco Román Rincón Núñez · Monterrey, 11 de octubre de 2026. Cifras en dólares estadounidenses (USD) salvo indicación; las cifras del fondo provienen del archivo PF_Modelo_AurexCapital.xlsx (hojas Summary, Hoja1_Portafolio, Hoja2_Distribucion y Football_Field). Las empresas del portafolio son candidatas de estudio: las estimaciones de valor y de retorno son del equipo, no de las empresas.", align="l", size=8.5, italic=True, color=GRIS)
+
+# 1
+h1(d, "1 · La idea de inversión")
+para(d, "**Tesis (193 caracteres):** Invertimos US$2-10M en empresas mexicanas de energía distribuida y eficiencia con ingresos recurrentes, para escalar solar, baterías y gestión de energía en clientes industriales y comerciales.")
+para(d, "**Qué compramos.** Participaciones minoritarias en 8 empresas mexicanas privadas, en etapa de crecimiento, que ya venden y operan sistemas de energía en sitio (solar, almacenamiento con baterías, microrredes, gestión de energía y carga de vehículos eléctricos) con contratos de arrendamiento, PPA, suscripción o mantenimiento. Tickets iniciales de US$2 a 10M y follow-on de hasta US$5M, con un tope de 15% del fondo por empresa. Las 8 empresas **entran de forma escalonada en los años 1 a 3** (3 en el año 1, 3 en el año 2 y 2 en el año 3).")
+GOV_PARA = "**Por qué hay hueco.** Según AMEXCAP (1S-2026), las operaciones de Infraestructura y Energía promediaron ≈US$262M (US$7.6 mil millones en 29 transacciones, 2021 a 1S2026) y las de Growth & LBO ≈US$43M (US$8.2 mil millones en 192). Un cheque de US$2 a 10M en energía distribuida cae por debajo de ambos. Al mismo tiempo, el sistema eléctrico exige capacidad privada: el PLADESE 2025-2039 (DOF, 17-oct-2025) prevé 5,551 MW de baterías en 2025-2030 y 7,405 MW de renovables privadas; la demanda máxima registró un récord de 54,300 MW el 23-jul-2026."
+gp = os.path.join(os.path.dirname(os.path.abspath(__file__)), "memo_gobierno.txt")
+if os.path.exists(gp): GOV_PARA = open(gp, encoding="utf-8").read().strip()
+para(d, GOV_PARA)
+para(d, "**Por qué no lo hace otro.** Aurex no compra activos de generación a escala (eso lo hacen MIP, Macquarie o AINDA con cheques de cientos de millones); compra el negocio operador y su equipo directivo, con asiento en el consejo, en el tramo donde el institucional no llega. **Lo que dejamos fuera** (sección 5) incluye empresas con un cliente mayor a 30% de ventas, dependientes de subsidios, de generación mayorista o con valuación superior a US$100M.")
+
+# 2-3
+h1(d, "2 · Capital que buscan y 3 · Duración")
+table(d, [
+    ["Concepto", "Término propuesto"],
+    ["Capital comprometido objetivo", "**US$100M**; primer cierre a partir de US$40M y cierre final dentro de los 12 meses siguientes"],
+    ["Inversionistas objetivo", "Family offices, personas de alto patrimonio y corporativos mexicanos, **solo inversionistas calificados o institucionales** (LMV art. 8). Compromiso por LP: mínimo US$1M y máximo 20% del fondo (US$20M)"],
+    ["Compromiso del GP", "2% del fondo (US$2M), aportación en efectivo y renuncia parcial de comisión"],
+    ["Duración", "**10 años**: periodo de inversión años 1 a 5; desinversión años 6 a 10; extensiones 1+1 (la primera con aprobación del LPAC, la segunda por mayoría de LPs)"],
+    ["Uso del capital", f"US${f1(INV)}M invertidos en empresas (US${f1(INI)}M iniciales + US${f1(FO)}M follow-on); US${FEE:.2f}M de comisión de administración; US${GAS:.2f}M de gastos"],
+], [4.6, 12.8], align_num_from=9, first_col_bold=True)
+
+# 4
+h1(d, "4 · Qué rendimiento prometen")
+para(d, "El retorno es neto de comisiones, gastos y carry. La **TIR neta en USD con calendario real de flujos** es la única tasa que comunicamos; la fórmula simplificada de clase ({} en el caso Base) subestima el rendimiento y se conserva solo en el Excel como piso.".format(fp(B["irr_s"])))
+table(d, [
+    ["Escenario (múltiplos por empresa × factor)", "Bajo ×0.5", "**Base**", "Alto ×1.10"],
+    ["Recupera el portafolio (US$M)", f1(BJ["proc"]), f"**{f1(B['proc'])}**", f1(AL["proc"])],
+    [f"Múltiplo bruto sobre lo invertido (US${f1(INV)}M)", fx(BJ["gross_inv"]), f"**{fx(B['gross_inv'])}**", fx(AL["gross_inv"])],
+    ["Total a los LPs (US$M)", f1(BJ["lp"]), f"**{f1(B['lp'])}**", f1(AL["lp"])],
+    ["Carry del GP (US$M)", f1(BJ["carry"]), f"**{f1(B['carry'])}**", f1(AL["carry"])],
+    ["Múltiplo neto del LP (MOIC)", fx(BJ["moic"]), f"**{fx(B['moic'])}**", fx(AL["moic"])],
+    ["TIR neta del LP", fp(BJ["irr"]), f"**{fp(B['irr'])}**", fp(AL["irr"])],
+], [8.2, 3.0, 3.0, 3.2])
+para(d, f"**Cómo se construyó el caso base.** El caso base supone que **3 de las 8 empresas fallan**: Uriel/BRM no recupera nada (0.0x), FAZT recupera 0.5x vía la preferencia de liquidación y S2G Energy 0.3x. Para las otras cinco, el múltiplo sale de una regla: (1 + crecimiento anual del EBITDA)^años × (1 − dilución por rondas futuras) × (múltiplo de salida ÷ de entrada, nunca mayor a 1.0x), sin expansión de múltiplo. Sus parámetros (crecimiento de 24.5% a 32.5% anual, dilución de 5% a 12%) son **supuestos del fondo calibrados para que la TIR neta con fechas sea de ≈18%**; exigen que las cinco empresas que funcionan multipliquen su capital entre 3.3x y 4.4x. El portafolio resulta en {fx(B['gross_inv'])} bruto sobre lo invertido.")
+table(d, [
+    ["Caso (sensibilidad)", "Proceeds (US$M)", "MOIC neto del LP", "TIR neta del LP"],
+    ["Base: 3 empresas fallan, TIR objetivo ≈18%", f1(B["proc"]), fx(B["moic"]), fp(B["irr"])],
+    ["Salida tardía: todas las salidas un año después", f1(ffv("Salida +1 año", 28)), fx(SAL_M), fp(SAL_I)],
+    ["Conservador: múltiplos moderados (2.2x a 3.1x) con las mismas 3 fallas", f1(ffv("Conservador", 28)), fx(CONS_M), fp(CONS_I)],
+    ["Sin fallas: las 8 empresas siguen la regla", f1(ffv("Sin fallas", 28)), fx(SF_M), fp(SF_I)],
+    ["Supuestos iniciales del equipo (v1)", f1(ffv("Equipo v1", 28)), fx(V1_M), fp(V1_I)],
+    ["Simulación Monte Carlo (mediana, comparables bursátiles)", f1(ffv("Monte Carlo P50", 28)), fx(MC_M), fp(MC_I)],
+    ["Estrés: además fallan Pireos y XC (5 de 8)", f1(ffv("Estrés: fallan 5", 28)), fx(ES_M), fp(ES_I)],
+], [8.2, 3.0, 3.2, 3.0], align_num_from=1, size=8.5)
+para(d, f"**Referencias.** TIR mediana de los fondos con actividad en México: 16.15% (AMEXCAP, 1S-2026, vintages 1998-2020); TIR neta estimada del Fondo I de AINDA: 15.5% (Techla, sep-2025). Nuestro caso base ({fp(B['irr'])}) queda por encima de ambas porque asume empresas que crecen entre 24% y 33% anual; el caso Conservador ({fp(CONS_I)}) y el escenario Bajo ({fp(BJ['irr'])}) quedan por debajo y se muestran con el mismo peso. Frente a CETES a 28 días (6.09%) y la tasa de Banxico (6.50%), ambas en pesos con inflación de 3.45% (sep-2026), la comparación exige ajustar por moneda: nuestras cifras son en dólares. **Lo que no prometemos:** en el escenario Bajo los LPs recuperan {fx(BJ['moic'])} y en el estrés de 5 fallas {fx(ES_M)}.")
+
+# 5
+h1(d, "5 · Qué reglas sigue el fondo (y qué no haría)")
+table(d, [
+    ["Regla de exclusión", "Razón"],
+    ["(i) Ningún cliente con más de 30% de las ventas", "El riesgo de concentración no se compensa con crecimiento"],
+    ["(ii) Directivos con experiencia operando en energía", "Sector técnico y regulado: sin ese conocimiento el riesgo de ejecución es demasiado alto"],
+    ["(iii) Sin generación a escala utility que vende al mercado mayorista", "Requiere tickets muy superiores a los del fondo y depende de regulación federal"],
+    ["(iv) Sin dependencia de subsidios o incentivos vigentes", "Un cambio de política puede eliminarlos de un día a otro; buscamos ahorro real de costos"],
+    ["(v) Valuación de entrada no mayor a US$100M", "Con tickets de US$2 a 10M, una valuación mayor impide influencia real"],
+], [7.4, 10.0], align_num_from=9)
+para(d, "**Reglas adicionales:** máximo 15% del fondo por empresa (≤US$15M); sin apalancamiento a nivel fondo ni compra de control con deuda; al menos 80% del patrimonio en empresas mexicanas no listadas con asiento en consejo; tenencia mínima de 2 años por ticket; efectivo ocioso solo en valores gubernamentales o fondos de deuda (art. 192 LISR). **Aplicación a nuestro pipeline:** la hoja Criterios del modelo califica a cada empresa como Cumple, Condición o No cumple. Verdigris Technologies (California, sin operación en México) se excluyó y fue sustituida por BioEsol. **Suponemos que 3 de las 8 no funcionan y asignamos la falla a las de menor puntaje, para ser conservadores; no sabemos cuáles serán, y por eso existen el tope de 15% y el follow-on condicionado a hitos.** Las de menor puntaje son Uriel/BRM (un solo comprador de energía y un solo anfitrión), FAZT (31 de 31 estaciones en un solo anfitrión y utilización de vehículos eléctricos aún baja) y S2G Energy (la más pequeña, cuya razón social y concentración se revisan en el due diligence). Las condiciones de las demás son requisito para cerrar la inversión, no formalidades.")
+
+# 6
+h1(d, "6 · Cómo está organizado")
+para(d, "**Vehículo: fideicomiso privado mexicano de capital de riesgo (LISR arts. 192-193; en la práctica, FICAP).** Fiduciario: banco o casa de bolsa. Comité técnico por contrato, con un Comité de Inversión del GP y un LPAC consultivo. Colocación privada, sin oferta pública ni inscripción en el RNV (LMV art. 8, solo calificados). El GP administra mediante una sociedad gestora mexicana.")
+bullet(d, "**Por qué fideicomiso privado y no CKD, CERPI o Fibra E:** nuestros LPs son privados mexicanos, el control del GP es mayor, no hay revelación pública y se constituye en semanas, no en 6 a 12 meses. **Costo:** las AFOREs (≈59% del capital comprometido a vehículos levantados en 2021-2025, según AMEXCAP) no pueden comprar un fideicomiso no listado; renunciamos a ese canal y apuntamos a family offices y corporativos, la base que AMEXCAP reconoce como menos desarrollada. Una versión listada es una opción para un Fondo II.")
+bullet(d, "**Requisitos del régimen y riesgo de perderlo:** 80% del patrimonio en sociedades mexicanas no listadas; no vender antes de 2 años; distribuir al menos 80% de los ingresos recibidos dentro de 2 meses del cierre del año; si se incumple, el fideicomiso tributa al 30% como fideicomiso empresarial desde el año siguiente. La distribución anual limita el reciclaje de productos de salida (hasta 10% del fondo, solo en el periodo de inversión) y se concilia con la cascada europea.")
+bullet(d, "**Sin responsabilidad limitada estatutaria:** el fideicomiso no la otorga; se protege con límites de compromiso, indemnización al GP y al fiduciario (con excepciones de dolo y fraude) y la regla de concentración. Las comisiones se cotizan **más IVA**; el modelo no incluye IVA.")
+
+# 7
+h1(d, "7 · Quién lo dirige")
+table(d, [
+    ["Rol", "Integrante", "Responsabilidad y decisión que lidera"],
+    ["Managing Partner", "Julio César Silva De la Rosa", "Dirige el fondo, integra los documentos y conduce el comité de inversión"],
+    ["Socio de inversión", "Roberto Flores Valadez", "Origen, due diligence, selección del portafolio y caso de inversión"],
+    ["Socio de operaciones", "Mariana González", "Vehículo, reglas, gobierno, cumplimiento y llamadas de capital"],
+    ["Socio de relación con inversionistas", "Tomás Salgado Tapia", "Fundraising, relación con LPs y reportes trimestrales"],
+    ["Analistas (números)", "Pablo Belmonte y Miguel Montalvo Villarreal", "Modelo financiero, simulación, mercado y seguimiento del portafolio"],
+], [4.0, 5.2, 8.2], align_num_from=9, size=8.5)
+para(d, "Por ser un primer fondo, la credibilidad del equipo descansa en el gobierno y no en un historial: **aportación del GP de al menos 2% en efectivo**, comité de LPs (LPAC) con revisión de conflictos y valuaciones, cláusula de persona clave y tope de concentración de 15%. **Key man:** si dos o más personas clave (Managing Partner y Socio de inversión) dejan el fondo, el periodo de inversión se suspende automáticamente hasta que los LPs decidan si continúan. **Conflictos de interés:** un familiar directo de un integrante es dueño de una empresa del sector de infraestructura energética; ese vínculo se declara a los LPs, la empresa no formará parte del portafolio sin aprobación del LPAC y el integrante se abstiene en cualquier decisión relacionada. **Terminación:** con causa (fraude, dolo, incumplimiento grave) y sin causa por mayoría calificada de LPs.")
+
+# 8
+h1(d, "8 · Cómo se reparten las ganancias")
+para(d, "Cascada **europea** (todo el fondo): el GP cobra carry hasta que el fondo completo devolvió el capital y el retorno preferente. Los cuatro escalones:")
+table(d, [
+    ["Escalón", "Regla", "Caso Base (US$M)", "Caso Alto (US$M)"],
+    ["1 · Devolución de capital", "100% a los LPs hasta recuperar todo lo aportado (US$100M, incluye comisiones y gastos)", f1(B["e1"]), f1(AL["e1"])],
+    ["2 · Retorno preferente", "8% anual compuesto sobre lo comprometido por 10 años (US$115.9M a pagar completo)", f1(B["e2"]), f1(AL["e2"])],
+    ["3 · Catch-up del GP", "100% al GP hasta llegar a 20% de la ganancia acumulada", f1(B["e3"]), f1(AL["e3"])],
+    ["4 · Resto 80/20", "80% a los LPs y 20% al GP", f"{f1(B['e4l'])} / {f1(B['e4g'])}", f"{f1(AL['e4l'])} / {f1(AL['e4g'])}"],
+    ["Total a los LPs / carry del GP", "", f"{f1(B['lp'])} / {f1(B['carry'])}", f"{f1(AL['lp'])} / {f1(AL['carry'])}"],
+], [4.0, 7.8, 2.8, 2.8], align_num_from=2, bold_last=True)
+para(d, f"**Comisión de administración:** 2% anual sobre capital comprometido en los años 1 a 5 y 1.5% sobre capital invertido en los años 6 a 10 (total US${FEE:.2f}M en el modelo; más IVA). **Carry:** 20% con catch-up de 100%. **Clawback:** el GP devuelve al final del fondo cualquier carry recibido en exceso; con cascada europea es una verificación final, pero se pacta con garantía de la sociedad gestora y de los socios. **Lo que esto significa:** con hurdle sobre todo el capital comprometido, el GP necesita ≈2.16x bruto sobre lo comprometido para cobrar el primer peso de carry y ≈2.45x para completar el catch-up. En el caso Base el GP cobra US${f1(B['carry'])}M de carry y el LP conserva {fx(B['moic'])}; en el caso Conservador el GP no cobra carry. El GP solo gana por desempeño si los LPs ganan más de 8% compuesto, y esa es la alineación que ofrecemos.")
+
+# 9
+h1(d, "9 · Cómo se pide el dinero")
+para(d, "Los LPs comprometen su capital y lo aportan por **llamadas de capital** conforme el fondo invierte o paga gastos; no lo entregan de golpe. **Mínimos y máximos:** cada llamada es de entre 1% (US$1M) y 25% (US$25M) del compromiso de cada LP, con aviso de al menos 10 días hábiles y un máximo de 4 llamadas por año; el total llamado nunca excede el 100% del compromiso. Un LP que no fondea una llamada paga interés de mora (TIIE + 5 puntos), pierde derechos de voto y de distribución a los 30 días, y el faltante se reparte entre los demás LPs hasta el tope de su compromiso. El calendario del modelo (caso Base) es:")
+table(d, [
+    ["Año", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+    ["Llamadas (US$M)"] + [f1(x) for x in calls],
+], [3.2] + [1.42] * 10, size=8.5)
+tot13 = sum(calls[:3]); tot45 = sum(calls[3:5]); tot610 = sum(calls[5:])
+para(d, f"Los años 1 a 3 concentran {f1(tot13)} (≈{tot13:.0f}% del compromiso), los años 4 y 5 {f1(tot45)} (follow-on y comisiones) y los años 6 a 10 {f1(tot610)} (comisiones y gastos). Primeras distribuciones en el año 6; DPI de {fx(dpi[5])} en el año 6, {fx(dpi[7])} en el año 8 y {fx(dpi[8])} en el año 9; TVPI de {fx(tvpi[0])} en el año 1 (curva J). Cada trimestre el GP reporta a los LPs y al LPAC la valuación de cada empresa con una política escrita y, cuando sea posible, un valuador independiente; los reportes siguen el Estándar AMEXCAP de gobierno corporativo (jul-2026) como referencia.")
+
+# Anexo A
+h1(d, "Anexo A · Portafolio objetivo")
+qh = {"Pireos Power": "Microrredes, solar y BESS C&I", "XC Generation": "Solar C&I, EPC y PPA", "BioEsol": "EaaS: solar + BESS + software", "Quartux": "BESS C&I con software",
+      "Niko Energy": "Solar y baterías pyme/residencial", "FAZT": "Carga ultrarrápida de VE", "S2G Energy": "Gestión de energía (IoT)", "Uriel Renovables (BRM)": "Biogás de relleno, 2 plantas de 1 MW"}
+cond = {"Pireos Power": "Concentración Walmart <30%", "XC Generation": "Data room completo", "BioEsol": "Métricas operativas; sociedad mexicana", "Quartux": "Solo negocio C&I; cupo junto a AINDA",
+        "Niko Energy": "Experiencia energética del equipo", "FAZT": "Supuesto de falla (0.5x)", "S2G Energy": "Supuesto de falla (0.3x)", "Uriel Renovables (BRM)": "Supuesto de falla (0.0x)"}
+rows = [["Empresa", "Qué hace", "Invertido (US$M)", "Entra / sale (año)", "Múltiplo base", "Condición principal"]]
+for p_ in sorted(PORT, key=lambda x: -x["inv"]):
+    rows.append([p_["n"].replace(" Renovables (BRM)", " (BRM)"), qh[p_["n"]], f"{p_['inv']:.0f}", f"{p_['ent']} / {p_['sal']}", fx(p_["m"]), cond[p_["n"]]])
+rows.append(["Total", "", f"{INV:.0f}", "", fx(B["gross_inv"]), ""])
+table(d, rows, [2.9, 4.5, 1.9, 1.9, 1.7, 4.5], align_num_from=2, size=8.2, bold_last=True)
+para(d, "Hechos verificados que ajustaron el diseño (dossiers con fuentes en el proyecto): la valuación de ninguna empresa es pública, por lo que las del modelo son estimaciones del fondo; Niko levantó US$8M de capital más US$15M de deuda (2025) y su última valuación pública es US$16M post-money (mar-2024); en Quartux AINDA comprometió más de US$50M (cierre 18-mar-2026); Pireos se financió con capital propio; las 31 estaciones de FAZT están en tiendas Soriana.", size=8.5)
+
+h1(d, "Anexo B · Cómo recuperan el dinero")
+para(d, "Las salidas observables en México son: (1) venta estratégica a energéticas o corporativos (p. ej. la venta de Iberdrola México a COX, 2026); (2) venta a fondos de infraestructura (MIP, Macquarie); (3) compra por una Fibra E (Xinfra-Huinalá, 2025); (4) oferta pública (Esentia Energy, nov-2025, a MXN 45 por acción, bajo el rango de precio). **Ninguna de estas operaciones corresponde a empresas de US$2 a 10M de ticket**, y AMEXCAP reporta apenas ≈US$900M en 111 desinversiones de 2025 a 1S-2026: la salida es el riesgo principal del fondo. Por eso el modelo asume ventas a compradores identificados por empresa (hoja Escenarios), escalona las salidas entre los años 6 y 9, mantiene un hurdle estricto y muestra un caso Bajo que apenas devuelve el capital más la preferencia parcial. Alternativas si no hay comprador: venta a otro fondo, venta parcial o vehículo de continuación con valuador independiente, siempre con aprobación del LPAC.")
+
+h1(d, "Anexo C · Riesgos principales y mitigantes")
+table(d, [
+    ["Riesgo", "Mitigante"],
+    ["Sin salidas para empresas pequeñas de energía", "Compradores nombrados por empresa; participación en el consejo; vehículo de continuación; extensiones 1+1"],
+    ["Fallan 3 de 8 empresas (Uriel/BRM, FAZT, S2G) o más", f"El caso base ya las supone: MOIC neto {fx(B['moic'])}; con 5 fallas el LP aún recupera {fx(ES_M)}; tope de 15% por empresa y reserva de follow-on solo para empresas que cumplen hitos"],
+    ["Regulatorio: LSE 2025, prevalencia estatal ≥54%, permisos CNE, cambios tarifarios CFE", "Solo C&I distribuido; sin dependencia de subsidios; diversificación en 5 verticales; seguimiento regulatorio trimestral"],
+    ["Concentración de clientes o de anfitrión (Walmart, Soriana)", "Regla de 30% verificada en data room antes de invertir; condiciones contractuales"],
+    ["Pérdida del régimen fiscal FICAP", "Cumplimiento calendarizado (2 años, 80% de patrimonio, distribución a 2 meses); revisión fiscal anual"],
+    ["Persona clave y conflicto de interés", "Cláusula key man; declaración y abstención; LPAC con reunión sin el GP"],
+    ["Reforma a la Ley de Inversión Extranjera (filtro >49% en energía) y control de concentraciones (CNA)", "Análisis de umbrales antes de firmar una salida; compradores mexicanos como alternativa"],
+], [7.4, 10.0], align_num_from=9, size=8.5)
+
+h1(d, "Anexo D · Llamadas de capital: términos y calendario")
+rows = [["Concepto", "Mínimo", "Máximo"]]
+for r in range(8, 20):
+    lab = LC[f"B{r}"].value; mn = LC[f"C{r}"].value; mx = LC[f"D{r}"].value
+    if lab is None: continue
+    def fm(v, lab=lab):
+        if v is None: return ""
+        if isinstance(v, str): return v
+        if lab.startswith("Compromiso por LP"): return f"US${v:,.0f}M" if v >= 1 else f"{v*100:.0f}% del fondo"
+        if "%" in lab and v <= 1.0: return f"{v*100:.0f}%"
+        if lab.startswith("Compromiso por LP"): return f"US${v:,.0f}M" if v >= 1 else f"{v*100:.0f}% del fondo"
+        if "Concentración" in lab: return f"{v*100:.0f}% del fondo"
+        if "Reciclaje" in lab: return f"{v*100:.0f}% del fondo"
+        if "Total llamado" in lab: return f"{v*100:.0f}%"
+        if "Aviso" in lab: return f"{v:.0f} días hábiles"
+        if "Plazo" in lab: return f"{v:.0f} días"
+        if "Número" in lab: return f"{v:.0f} por año"
+        if "mora" in lab: return f"TIIE + {v:.0f} puntos"
+        return f"US${v:,.0f}M"
+    rows.append([lab, fm(mn), fm(mx)])
+table(d, rows, [9.4, 3.6, 4.4], align_num_from=9, size=8.5)
+para(d, f"Calendario (US$M): año 1 {f1(calls[0])}, año 2 {f1(calls[1])}, año 3 {f1(calls[2])}, año 4 {f1(calls[3])}, año 5 {f1(calls[4])}, años 6 a 10 {f1(calls[5])} por año. Cada llamada respeta el mínimo de 1% y el máximo de 25% del compromiso y no más de 4 llamadas por año (hoja Llamadas_Capital).", size=8.5)
+
+PRJ = os.path.join(r"C:\Users\cesar\Downloads\PE\08_Proyecto_Final\fuentes_investigacion", "proyectos_por_region.csv")
+if os.path.exists(PRJ):
+    d.add_page_break()
+    h1(d, "Anexo E · Dónde operan las empresas (por estado)")
+    with open(PRJ, encoding="utf-8-sig", newline="") as fh:
+        rr = list(csv.reader(fh))
+    head = rr[0]; ix = {h: i for i, h in enumerate(head)}
+    agg = {}
+    for row_ in rr[1:]:
+        if len(row_) <= max(ix.get("estado", 0), ix.get("empresa", 0)): continue
+        est = row_[ix["estado"]].strip(); emp_ = row_[ix["empresa"]].strip()
+        if not est: continue
+        agg.setdefault(est, {}); agg[est][emp_] = agg[est].get(emp_, 0) + 1
+    rows = [["Estado", "Empresas con presencia (registros públicos)", "Total"]]
+    for est, dd in sorted(agg.items(), key=lambda kv: -sum(kv[1].values())):
+        rows.append([est, ", ".join(f"{k} ({v})" for k, v in sorted(dd.items(), key=lambda kv: -kv[1])), str(sum(dd.values()))])
+    table(d, rows[:16], [3.4, 12.0, 2.0], align_num_from=2, size=8.2)
+    para(d, "Fuente: sitios y comunicados de cada empresa y prensa; detalle de proyecto, ciudad y fecha en la hoja Proyectos_Region del modelo y en fuentes_investigacion/proyectos_por_region.md. Cuando una empresa no publica ubicación de proyectos, se registra su sede o sus clientes públicos.", size=8.5, italic=True, color=GRIS)
+
+para(d, "Este documento es un ejercicio académico y no constituye asesoría legal ni fiscal. La formalización del fideicomiso, el régimen de los arts. 192-193 LISR, el tratamiento del carry, la renuncia de comisión y el IVA, y la calificación de cada inversionista requieren a los asesores correspondientes antes de cualquier uso comercial; el gasto de US$1.85M es un supuesto del modelo.", size=8.5, italic=True, color=GRIS)
+
+d.save(OUT)
+
+# ---- limpieza: sin guiones largos (— / –) ----
+from docx import Document
+dd = Document(OUT)
+def clean(s):
+    s = re.sub(r"(?<=\d)\s*–\s*(?=\d|[A-Za-z])", " a ", s)
+    s = s.replace(" — ", ", ").replace("—", ", ").replace(" – ", ", ").replace("–", "-")
+    return s
+def walk(paras):
+    for p_ in paras:
+        for r_ in p_.runs:
+            if r_.text and ("—" in r_.text or "–" in r_.text): r_.text = clean(r_.text)
+walk(dd.paragraphs)
+for t_ in dd.tables:
+    for row_ in t_.rows:
+        for c_ in row_.cells: walk(c_.paragraphs)
+for sec in dd.sections:
+    walk(sec.header.paragraphs); walk(sec.footer.paragraphs)
+dd.save(OUT)
+print("saved", OUT)

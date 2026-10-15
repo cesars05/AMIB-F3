@@ -1,0 +1,114 @@
+# Catálogo de gráficos (Fase 2)
+
+Revisé visualmente todas las páginas con gráficos de los reportes en `02_Reportes/`. Para cada uno se indica qué muestra, qué nos dice y dónde sirve en el deck.
+- **Uso:** **S** = screenshot · **N** = gráfico nativo (datos al Excel) · **D** = solo dato o tabla de respaldo.
+- **Prioridad:** ★★★ va al deck · ★★ alternativa o respaldo · ★ no usar.
+- Los gráficos de oro, cobre, uranio, energía china y valuaciones de mineras (BofA) no aplican y no se listan.
+
+## A. OECD Steel Outlook 2026 (may-2026; licencia CC BY 4.0, se puede reutilizar citando)
+| ID | Pág. PDF | Figura | Qué nos dice | Sección / lámina | Uso | Prior. |
+|---|---|---|---|---|---|---|
+| O-1.1 | 13 | Exceso de capacidad global llegaría a 745 Mt en 2028 (capacidad vs demanda 2019–2028) | La capacidad sube y la demanda no; la brecha se amplía | Global: sobrecapacidad | S | ★★★ |
+| O-3.1 | 40 | Capacidad vs demanda 2000–2025 (OCDE vs resto) | La divergencia es estructural, de 20 años, y está fuera de la OCDE | Global (alternativa a 1.1, visión larga) | S | ★★ |
+| O-3.2 | 40 | Utilización global 2019–2028E (76% → 74%) | La industria mundial opera muy por debajo del nivel sano (~80%) | Global: sobrecapacidad (lámina con 1.1) | S | ★★★ |
+| O-1.2 | 14 | Exportaciones por región 2019–2025; China 131 Mt (récord) | China exporta su excedente; el resto de regiones cae | Global: China exporta | S | ★★★ |
+| O-2.5 | 34 | Exportaciones chinas en volumen vs valor (índice 2019=100) | China exporta más toneladas a precios más bajos | Global: China (respaldo) | S | ★★ |
+| O-1.3 | 16 | Subsidios por activo: China vs OCDE 2006–2024 | El origen del exceso son los subsidios | Global (opcional) | S | ★ |
+| O-1.4 | 18 | Infografía: canales de transmisión del exceso de capacidad | Cómo llega el excedente a otros mercados (directo, embebido, terceros países) | Global: comercio y elusión | S | ★★ |
+| O-2.1 | 26 | **Precio HRC 2020–ene-2026: EE. UU., N. Europa, China, Japón, Turquía, India** | EE. UU. cotiza a más del doble que China; los precios se desacoplaron | Global: precios divergen (**pedida por el usuario**) | S | ★★★ |
+| O-2.2 | 27 | Varilla 2020–2026 por región | Mismo desacople en productos largos | Global: precios (opcional) | S | ★ |
+| O-2.3 | 28 | Mineral de hierro, carbón coquizable y chatarra 2024–2026 | Los insumos suben más que el acero, así que el margen se aprieta | Global: márgenes | S | ★★ |
+| O-2.4 | 32 | Margen EBITDA de acereras OCDE vs resto 2006–2024 | La rentabilidad fuera de EE. UU. está en mínimos (~9%) | Global: márgenes | S | ★★ |
+| O-2.6 | 34 | Heatmap: cambio de importaciones por origen y mercado 2019–2025 | Desvío de comercio hacia ASEAN y desde China | Respaldo | S | ★ |
+| O-3.3 | 43 | Adiciones de capacidad 2026–28 por región (BOF/EAF) | Asia concentra ~80 Mt de 139 Mt; Norteamérica ~10 Mt | Global: capacidad / EE. UU.: oferta | S | ★★ |
+| O-5.1 | 67 | Medidas AD/CVD activas por país que impone y por país acusado | EE. UU. lidera con 77 medidas; China es el principal acusado | Global: defensas comerciales | S | ★★★ |
+| O-T5.1 | 67+ | Tabla de medidas comerciales 2025–26 (incl. Section 232 abr-2026) | Detalle del 232 | Fuente para el diagrama del 232 | D | ★★ |
+
+## B. worldsteel – World Steel in Figures 2026 (cifras 2025)
+| ID | Pág. | Contenido | Qué nos dice | Sección | Uso | Prior. |
+|---|---|---|---|---|---|---|
+| W-4 | 4 | Highlights: producción 2000–2025, uso per cápita, BOF 69.4% / EAF 30.3% (infografía) | Producción mundial 1,849 Mt; dos rutas tecnológicas | Intro "cómo se hace el acero" | S (recorte) o N | ★★ |
+| W-5 | 5 | Tablas: top 50 empresas y principales países productores 2025 | China 960.8 Mt; India 164.9; **EE. UU. 81.9 (3.er lugar)** | Global: quién produce | N (barras top 10) | ★★★ |
+| W-6 | 6 | Producción por proceso por país | EE. UU. 71% EAF vs mundo 30% | Intro / EE. UU. | D → N | ★★ |
+| W-8 | 8 | Donas: distribución de producción y uso 2015 vs 2025 | China pasa de 49.6% a 52.4% de la producción | Global: concentración | S | ★★ |
+| W-9 | 9 | Uso aparente 2021–2025 por país | Datos de demanda por país | Respaldo de SRO | D | ★ |
+| W-13 | 13 | Comercio mundial 1975–2025 (exportaciones vs producción) | ~25% de la producción se comercia | Global: comercio | S | ★ |
+| W-14 | 14 | Principales exportadores e importadores 2025 | China exporta 133.6 Mt; **EE. UU. es el 2.º importador (23.9 Mt)** | Global → EE. UU. | N (barras) | ★★★ |
+| W-16 | 16 | **Uso de acero por sector** (rueda: 52% construcción e infraestructura, 16% equipo mecánico, 12% automotriz…) | Qué mueve la demanda | Intro o demanda EE. UU. | S | ★★★ |
+
+## C. worldsteel – SRO octubre 2026 (tablas)
+| ID | Contenido | Qué nos dice | Sección | Uso | Prior. |
+|---|---|---|---|---|---|
+| R-T1 | Demanda por región 2025–2027F | Mundo -0.1% en 2026 / +1.7% en 2027; China -2%; India +7.9%; USMCA +2.2% | Global: demanda | **N** (barras de crecimiento 2026F y 2027F) | ★★★ |
+| R-T2 | Top 10 países consumidores | EE. UU. 92.7 Mt (+2%) | Global → EE. UU. | N / D | ★★ |
+
+## D. SIMA – Steel Industry Executive Summary abr–jun 2026 (Departamento de Comercio; público y reciente)
+| ID | Pág. | Figura | Qué nos dice | Sección | Uso | Prior. |
+|---|---|---|---|---|---|---|
+| S-1 | 2 | Importaciones mensuales por categoría ago-24 → ago-26 | Caída tras el arancel de 50% y repunte en 2026 | EE. UU.: importaciones | N (con nuestros CSV) o S | ★★★ |
+| S-2 | 2 | Importaciones por socio, YTD jun-26 (cascada) | Corea 17.6%, Canadá 13.9%, Brasil 13.3%, México 9.9% | EE. UU.: de dónde vienen | S | ★★★ |
+| S-3 | 3 | Importaciones por categoría (cascada) | Planos 27.7%, semiterminados 26.7% | EE. UU.: importaciones | S | ★★ |
+| S-4 | 3 | Importaciones vs exportaciones 2020–2026 | Déficit comercial de 1.3 Mt/mes, el menor en años | Respaldo | S | ★ |
+| S-5 | 4 | **HRC: Mundo, EE. UU., Europa, China 2020–jun-2026 + diferenciales** | EE. UU. $1,208/t vs China $429 (dato más reciente que el de la OECD) | Global/EE. UU.: precios (alternativa a O-2.1) | S | ★★★ |
+| S-7 | 5 | Producción mensual mayores productores | India sube; el resto plano | Respaldo | S | ★ |
+| S-8 | 5 | Participación en producción mundial (dona): China 54%, India 9%, EE. UU. 5% | Concentración | Global | S | ★★ |
+| S-9 | 6 | **Utilización de capacidad en EE. UU. 2020–jun-2026 (80.5%)** | Las acereras corren cerca del 80%, que es el umbral de poder de precio | EE. UU.: oferta | S | ★★★ |
+| S-10 | 6 | Consumo aparente EE. UU. 2020–2026 | Demanda estable ~8.5 Mt/mes | EE. UU.: demanda | S | ★★ |
+| S-11 | 7 | **Penetración de importaciones (15.7%, mínimo de la serie)** | Los aranceles devolvieron mercado a las acereras locales | EE. UU.: importaciones | S | ★★★ |
+| S-12 | 7 | Utilidad neta trimestral de la industria 2020–2T26 | Las utilidades se recuperan a $2 mil M en el 2T26 | Exposure: resultados | S | ★★★ |
+| S-13 | 8 | Precio promedio trimestral de acciones de acero vs S&P 500 | Referencia; mejor hacerlo nativo con Workspace | Exposure | ★ (respaldo) |
+
+## E. Monthly Steel FactSheet ago-2026 (Comercio)
+| ID | Contenido | Qué nos dice | Uso | Prior. |
+|---|---|---|---|---|
+| F-1 | Tabla de importaciones ago-26 por producto, vs mes previo y año previo | Total +3.4% m/m y **+25.2% a/a** (2.13 Mt) | D (dato para la lámina de rebote) | ★★ |
+
+## F. BofA Global Research (9-oct-2026) – solo las figuras de acero
+| ID | Pág. orig. | Exhibit | Qué nos dice | Sección | Uso | Prior. |
+|---|---|---|---|---|---|---|
+| B-023 | 21 | Ex. 43: HRC EE. UU. vs paridad de importación (Alemania, SE Asia) | El HRC local está >$400/t sobre la paridad asiática; importar vuelve a ser rentable | EE. UU.: precios / riesgo | S | ★★★ |
+| B-024 | 21 | Ex. 42: plazos de entrega (~9.3 semanas) vs precio HRC | Plazos largos = mercado apretado; adelantan al precio | EE. UU.: demanda/oferta | S | ★★★ |
+| B-025 | 22 | Ex. 44: importaciones de planos por año 2021–2026 | Planos YTD -28%, pero los permisos de septiembre +27% | EE. UU.: importaciones | S | ★★ |
+| B-026 | 22 | Ex. 45: construcción no residencial (Dodge) hasta 2030 | Gasto no residencial robusto hasta fin de década | EE. UU.: demanda | S | ★★ |
+| B-027 | 24 | Ex. 46: modelo de oferta y demanda de acero EE. UU. 2018–2028E (producción, utilización, importaciones, demanda, HRC) | Tabla completa para el Excel | D → N | ★★★ (datos) |
+| B-028 | 24 | Ex. 47: pronósticos de precios BofA (incl. acero NE, NA, China) | HRC NA $1,089/st en 2026E y $937 en 2027E (st = short ton, tonelada corta) | EE. UU.: precio | D | ★★ |
+| B-022 | 20 | Ex. 41: valuación de acereras (EV/EBITDA, P/E, FCF) | NA cotiza a 8.2x vs promedio histórico de 7.1x | Exposure | D / S | ★★ |
+| B-034 | 31 | Ex. 63/64: demanda europea en tiempo real | Contexto Europa | — | ★ |
+
+## G. Bloomberg Intelligence NA Steel 2026 Outlook (nov-2025)
+Son gráficos de terminal con fondo negro y datos de hace 11 meses. **No usar como screenshot**: la skill desaconseja capturas oscuras y quedarían viejos. Solo se usan como idea de qué graficar.
+| ID | Idea útil | Reemplazo |
+|---|---|---|
+| G-002 | Acciones NUE/STLD/CLF/CMC vs S&P 500 (base 100) | **N** con Workspace (lámina de exposure) |
+| G-004 | EBITDA por empresa vs HRC | N con comunicados |
+| G-009 | Utilidad por tonelada: BOF vs EAF | Texto |
+| G-013/014 | Spreads HRC–chatarra y varilla–chatarra | CMC p12 / STLD p6 |
+
+## H. Steel Dynamics – presentación 2T26 (21-jul-2026)
+| ID | Pág. | Contenido | Qué nos dice | Uso | Prior. |
+|---|---|---|---|---|---|
+| SD-7 | 7 | **Utilización: industria (~77–81%) vs STLD (~90%) + importaciones como % del consumo (24% → 17%)** | Los mini-mills corren más; las importaciones pierden participación | S | ★★★ |
+| SD-6 | 6 | Precio externo $1,298/t (+14% a/a), envíos récord 3.7 Mt | Precio y volumen al alza a la vez | D | ★★ |
+| SD-15 | 15 | Capacidad por planta (15.97 Mt) | Mapa de capacidad | D | ★ |
+| SD-12 | 12 | Aluminio Columbus (650 kt) | Diversificación | — | ★ |
+
+## I. CMC – presentación 3T FY26 (25-jun-2026)
+| ID | Pág. | Contenido | Qué nos dice | Uso | Prior. |
+|---|---|---|---|---|---|
+| C-5 | 5 | Panorama de construcción 2026: infraestructura, no residencial, residencial | Infraestructura y no residencial crecen poco; residencial débil | S | ★★ |
+| C-6 | 6 | **Consumo de varilla vs importaciones + precio de varilla (Fastmarkets)** | Varilla +6% de consumo, importaciones -13%, precio +$236/t | S | ★★★ |
+| C-10 | 10 | **Oferta de varilla: 89% doméstica; aranceles y casos AD/CVD** | El mercado de varilla quedó cerrado a importaciones desleales | S | ★★★ |
+| C-12 | 12 | Margen sobre chatarra Norteamérica (~$900/t) | Márgenes en niveles altos | S | ★★ |
+| C-14 | 14 | Europa (CBAM) | Fuera de alcance (EE. UU.) | — | ★ |
+
+## J. Datos propios para gráficos nativos (van al Excel)
+| ID | Serie | Archivo | Lámina |
+|---|---|---|---|
+| N-1 | HRC CME `HRCc1` diario 2008–14-oct-2026 ($1,285/st) | `01_Datos/Precios/HRC_CME_Midwest_HRCc1_diario_2008-2026.xlsx` | Precio histórico (con hitos del 232) |
+| N-2 | Importaciones EE. UU. anuales 2015–2026 | `01_Datos/Importaciones_US/ITA_imports_annual_by_category_2015-2026.csv` | Importaciones de 10 años |
+| N-3 | Importaciones mensuales ene-25 → sep-26 | `ITA_imports_monthly_by_product_2025-2026.csv` | Rebote 2026 |
+| N-4 | Demanda SRO por región | SRO tabla 1 | Demanda global |
+| N-5 | Top productores 2025 / importadores | WSIF p5, p14 | Quién produce y quién importa |
+| N-6 | Acciones NUE, STLD, CLF, CMC vs S&P 500 (base 100) | **Workspace** (fórmulas `RDP.Data`) | Exposure |
+| N-7 | EBITDA 1T/2T26 por empresa | Comunicados | Exposure |
+| N-8 | Rendimientos 1Y/3Y/5Y/10Y (HRC, SLX, empresas) | Workspace (`TR.TotalReturn…`) | Exposure |

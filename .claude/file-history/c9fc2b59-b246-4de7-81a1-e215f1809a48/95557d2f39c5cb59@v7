@@ -1,0 +1,160 @@
+import pandas as pd
+import numpy as np
+import yfinance as yf
+import os
+import matplotlib.pyplot as plt
+
+# 1. Cargar el modelo cuantitativo desde el archivo CSV
+script_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(script_dir, "data_2026-09-30 (2).csv")
+
+try:
+    df_csv = pd.read_csv(file_path)
+except FileNotFoundError:
+    print(f"Error: No se encontró el archivo {file_path}. Asegúrate de que el CSV esté en la carpeta {script_dir}")
+    exit()
+
+df_csv['ticker_base'] = df_csv['RIC'].apply(lambda x: str(x).split('.')[0] if pd.notna(x) else '')
+
+# 2. Tickers
+tickers_mx_yf = [
+    "AC.MX", "ACTINVRB.MX", "ALFAA.MX", "ALPEKA.MX", "ALSEA.MX", "AMXB.MX",
+    "ASURB.MX", "BIMBOA.MX", "BOLSAA.MX", "CEMEXCPO.MX", "CHDRAUIB.MX",
+    "CUERVO.MX", "ELEKTRA.MX", "FEMSAUBD.MX", "GAPB.MX", "GCARSOT1.MX",
+    "GCC.MX", "GENTERA.MX", "GFINBURO.MX", "GFNORTEO.MX", "GMEXICOB.MX",
+    "GRUMAB.MX", "KIMBERA.MX", "KOFUBL.MX", "LABB.MX", "LASITEB.MX",
+    "LIVEPOLC1.MX", "MEGACPO.MX", "MFRISCOA1.MX", "OMAB.MX", "ORBIA.MX",
+    "PE&OLES.MX", "PINFRA.MX", "Q.MX", "RA.MX", "SITESB1.MX", "VESTA.MX",
+    "VOLARA.MX", "WALMEX.MX", "BBAJIOO.MX"
+]
+
+tickers_global_yf = [
+    "AAPL", "ABBV", "ABNB", "AMAT", "AMD", "AMZN", "AVGO", "BA", "BABA",
+    "COST", "CRM", "CVX", "DIS", "GOOGL", "INTC", "JPM", "LLY", "MA",
+    "MCD", "MELI", "META", "MSFT", "NVDA", "ORCL", "PEP", "PG", "PLTR",
+    "PYPL", "QCOM", "TSLA", "UBER", "V", "WMT", "XOM", "QQQ", "SPY", "PSQ"
+]
+
+all_tickers_yf = tickers_mx_yf + tickers_global_yf
+
+print("Descargando precios históricos...")
+data = yf.download(all_tickers_yf, period="1y", auto_adjust=True) # 1y for YTD/SMA30
+
+if data.empty:
+    print("Error: No data found.")
+    exit()
+
+if isinstance(data.columns, pd.MultiIndex):
+    df_prices = data['Close']
+else:
+    df_prices = data[['Close']] if 'Close' in data.columns else data
+
+if isinstance(df_prices, pd.Series):
+    df_prices = df_prices.to_frame(name="Ticker_Unknown")
+
+def calcular_rsi(data, window=14):
+    delta = data.diff()
+    gain = (delta.where(delta > 0, 0)).rolling(window=window).mean()
+    loss = (-delta.where(delta < 0, 0)).rolling(window=window).mean()
+    rs = gain / loss
+    return 100 - (100 / (1 + rs))
+
+resultados_tecnicos = []
+for ticker_yf in df_prices.columns:
+    series = df_prices[ticker_yf].dropna()
+    if len(series) < 20: continue
+    try:
+        precio_actual = series.iloc[-1]
+        sma_30 = series.rolling(window=30).mean().iloc[-1] if len(series) >= 30 else series.mean()
+        pct_vs_sma30 = ((precio_actual - sma_30) / sma_30) * 100
+
+        # YTD Return
+        start_of_year = series.asof(pd.Timestamp(year=series.index[-1].year, month=1, day=1))
+        ret_ytd = ((precio_actual / start_of_year) - 1) * 100 if pd.notna(start_of_year) else np.nan
+
+        ret_1m = ((precio_actual / series.iloc[-21]) - 1) * 100 if len(series) >= 21 else np.nan
+        rsi_actual = calcular_rsi(series).iloc[-1]
+
+        resultados_tecnicos.append({
+            'Ticker_YF': ticker_yf,
+            'ticker_base': ticker_yf.replace('.MX', ''),
+            'Mercado': 'MÉXICO' if '.MX' in ticker_yf else 'GLOBAL',
+            'Precio_Actual': round(precio_actual, 2),
+            'SMA_30': round(sma_30, 2),
+            '%_vs_SMA30': round(pct_vs_sma30, 2),
+            'RSI_14': round(rsi_actual, 1),
+            'Ret_YTD_%': round(ret_ytd, 2),
+            'Ret_1M_%': round(ret_1m, 2)
+        })
+    except: continue
+
+df_tec = pd.DataFrame(resultados_tecnicos)
+columnas_modelo_existentes = [col for col in ['ticker_base', 'EARNREV', 'EPS_SUE', 'Model1.1 Slope'] if col in df_csv.columns]
+df_merged = pd.merge(df_tec, df_csv[columnas_modelo_existentes], on='ticker_base', how='left')
+
+if 'EARNREV' in df_merged.columns:
+    df_merged['Momentum_Score'] = (df_merged['%_vs_SMA30'].fillna(0)*0.3) + (df_merged['Ret_1M_%'].fillna(0)*0.3) + (df_merged['EARNREV'].fillna(0.5)*100*0.4)
+else:
+    df_merged['Momentum_Score'] = (df_merged['%_vs_SMA30'].fillna(0)*0.5) + (df_merged['Ret_1M_%'].fillna(0)*0.5)
+
+df_ranking = df_merged.sort_values(by='Momentum_Score', ascending=False)
+
+# --- ADVANCED CHARTING ---
+def plot_tradingview_style(ticker):
+    if ticker not in df_prices.columns: return
+    series = df_prices[ticker].dropna()
+    if len(series) < 20: return
+
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8), gridspec_kw={'height_ratios': [3, 1]})
+
+    # Main Chart: Price + SMA + Bollinger
+    ax1.plot(series.index, series, label='Price', color='black', linewidth=1.5)
+
+    # SMA 30
+    sma30 = series.rolling(window=30).mean()
+    ax1.plot(series.index, sma30, label='SMA 30', color='blue', linestyle='--')
+
+    # Bollinger Bands
+    std = series.rolling(window=20).std()
+    ma20 = series.rolling(window=20).mean()
+    ax1.plot(series.index, ma20 + (std*2), color='gray', alpha=0.3, label='Upper BB')
+    ax1.plot(series.index, ma20 - (std*2), color='gray', alpha=0.3, label='Lower BB')
+    ax1.fill_between(series.index, ma20 - (std*2), ma20 + (std*2), color='gray', alpha=0.1)
+
+    ax1.set_title(f"TradingView Style Analysis: {ticker}")
+    ax1.legend(loc='best')
+    ax1.grid(True, alpha=0.3)
+
+    # RSI Chart
+    rsi = calcular_rsi(series)
+    ax2.plot(series.index, rsi, color='purple', linewidth=1)
+    ax2.axhline(70, color='red', linestyle='--', alpha=0.5)
+    ax2.axhline(30, color='green', linestyle='--', alpha=0.5)
+    ax2.set_ylim(0, 100)
+    ax2.set_ylabel('RSI')
+    ax2.grid(True, alpha=0.3)
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(script_dir, f"analysis_{ticker}.png"))
+
+# Plot Top 5 from each market
+top_mex = df_ranking[df_ranking['Mercado'] == 'MÉXICO'].head(5)['Ticker_YF'].tolist()
+top_glb = df_ranking[df_ranking['Mercado'] == 'GLOBAL'].head(5)['Ticker_YF'].tolist()
+
+for t in top_mex + top_glb:
+    plot_tradingview_style(t)
+
+# YTD Comparison Chart
+plt.figure(figsize=(12, 6))
+ytd_data = df_ranking.head(10)[['Ticker_YF', 'Ret_YTD_%']]
+plt.bar(ytd_data['Ticker_YF'], ytd_data['Ret_YTD_%'], color='forestgreen')
+plt.title('YTD Returns - Global Top 10 Momentum')
+plt.xticks(rotation=45)
+plt.ylabel('Return %')
+plt.tight_layout()
+plt.savefig(os.path.join(script_dir, "ytd_returns_top10.png"))
+
+# Export Clean Excel-style CSV
+output_cols = ['Mercado', 'Ticker_YF', 'Precio_Actual', 'Ret_YTD_%', 'Ret_1M_%', 'RSI_14', '%_vs_SMA30', 'Momentum_Score']
+df_ranking[output_cols].to_csv(os.path.join(script_dir, "v1_reporte_final.csv"), index=False)
+print("\nProceso completado. Revisar carpeta para imágenes y v1_reporte_final.csv")

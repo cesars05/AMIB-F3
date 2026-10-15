@@ -1,0 +1,77 @@
+import win32com.client, sys, time, re
+sys.path.insert(0, r"C:/Users/cesar/AppData/Local/Temp/claude/C--Users-cesar-OneDrive-Desktop-AZTD-Peers/6d71aadf-07bf-46a0-830c-f0c403523bdf/scratchpad")
+from content import CO
+PATH = r"C:\Users\cesar\OneDrive\Documentos\AZTD_Universe-Julio_v3.xlsx"
+N_NEW = len(CO)          # 14
+ADD = N_NEW - 9          # 5
+
+import pywintypes
+def R(fn, *a, **k):
+    for t in range(60):
+        try:
+            return fn(*a, **k)
+        except pywintypes.com_error as e:
+            if e.args[0] == -2147418111 or e.args[0] == -2147417846:
+                time.sleep(2); continue
+            raise
+    raise RuntimeError("busy")
+xl = win32com.client.DispatchEx("Excel.Application")
+xl.Visible = False
+xl.DisplayAlerts = False
+xl.EnableEvents = False
+xl.ScreenUpdating = False
+wb = R(xl.Workbooks.Open, PATH, 0)
+time.sleep(5)
+try:
+    xl.Calculation = -4135
+except Exception as e:
+    print("calc mode fail", e)
+print("opened", [s.Name for s in wb.Sheets], flush=True)
+d = wb.Worksheets("Data")
+a = wb.Worksheets("Analysis")
+
+# ---- Data: expand each of the 15 blocks from 9 to 14 rows, top to bottom ----
+for i in range(15):
+    cur = 25 + (9 + 3) * i + ADD * i
+    ins0 = cur + 8
+    R(lambda: d.Rows(f"{ins0}:{ins0 + ADD - 1}").Insert())
+    R(lambda: d.Range(f"C{cur + 7}:Q{cur + 7}").Copy(d.Range(f"C{ins0}:Q{ins0 + ADD - 1}")))
+    print("block", i, "start", cur, flush=True)
+xl.CutCopyMode = False
+
+# block 2 (Revenue) holds the typed RIC list
+rev0 = 25 + 12 + ADD  # 42: first RIC row of Revenue block after block-1 expansion
+print("rev0 cell", d.Range(f"B{rev0}").Value, d.Range(f"B{rev0 - 1}").Value, flush=True)
+for k, co in enumerate(CO):
+    d.Range(f"B{rev0 + k}").Value = co["ric"]
+
+# ---- Analysis: 5 more rows, texts, opinions ----
+a.Rows(f"12:{11 + ADD}").Insert()
+a.Range(f"E11:X11").Copy(a.Range(f"E12:X{11 + ADD}"))
+a.Range("B11").Copy(a.Range(f"B12:B{11 + ADD}"))
+xl.CutCopyMode = False
+# forward revenue CAGR column Q points at a fixed cell of Data block 3
+fwd0 = None
+for r in range(1, 400):
+    if d.Cells(r, 2).Value == "Forwad Revenue":
+        fwd0 = r + 2
+        break
+print("fwd header row+2", fwd0, flush=True)
+for k in range(N_NEW):
+    r = 4 + k
+    a.Range(f"Q{r}").Formula = f"=Data!Q{fwd0 + k}"
+    a.Range(f"E{r}").Value = CO[k]["desc"]
+    a.Range(f"F{r}").Value = CO[k]["ctx"]
+    a.Range(f"Y{r}").Value = CO[k]["opinion"]
+    a.Rows(r).RowHeight = 118
+# banding: odd rows blue as before
+for r in range(4, 4 + N_NEW):
+    src = a.Range(f"C5:X5") if r % 2 == 1 else a.Range("C6:X6")
+    if r not in (5, 6):
+        src.Copy()
+        a.Range(f"C{r}:X{r}").PasteSpecial(-4122)  # formats
+xl.CutCopyMode = False
+print("analysis done", flush=True)
+wb.Save()
+print("saved step1", flush=True)
+xl.Quit()

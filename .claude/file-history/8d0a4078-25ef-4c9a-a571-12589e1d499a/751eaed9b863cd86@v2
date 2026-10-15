@@ -1,0 +1,430 @@
+# FUSO Notes (Fuso Chemical Co., Ltd., TSE 4368): living company file
+
+**Purpose.** One place for what we know about Fuso, organized like the `Prompt_Company_Overview_v0.2` sections (1 to 16) so each phase of `/company_overview` can start from here. It is more detailed than the folder `_NOTES.md` files (those say what each file is; this says what the company is) and than the Spanish learning memo `Fuso_DeepDive_2026-10-12.md` (same facts, narrative form).
+
+**Created:** 12-Oct-2026. **Last updated:** 13-Oct-2026. **Next scheduled event:** Q2 FY03/2027 results, 30-Oct-2026 (per Workspace, not confirmed by the company).
+
+## How to use and maintain this file
+- Update the section, add one line to the **Changelog** (end of file), and move closed items out of **Open items**. Never delete a conflict; mark it resolved with the source.
+- Tags: **[D]** disclosed (file, page), **[I]** inferred (basis stated), **[ND]** not disclosed. **[I-general]** = general industry knowledge not found in the folder; treat as a hypothesis to verify.
+- FY labels: FY03/2026 = Apr-2025 to Mar-2026 = company "2025年度". The company's "2026年度" = FY03/2027. "2022年度比" = vs FY03/2023. Units: **oku** = 100 million yen (億円); bn = billion yen.
+- Source abbreviations: **Yuho26** = annual securities report FY03/2026 (`34f9a5a7`), **Yuho25** = FY03/2025 (`cc1030a6`), **Deck26** = FY03/2026 results deck, 15-May-2026 (English in root; JP twin `3825ea4a`; **Bilingual** = `Fuso_FY03-2026_Results_Presentation_BILINGUAL_JP-EN.pdf`), **MTP** = 飛躍2030 deck, **Q2deck** = Q2 FY03/2026 deck (Nov-2025), **Q1tan** = Q1 FY03/2027 English release, **Dial** = investor dialogue summary, **Corp** = cost-of-capital deck 30-Jun-2026, **IR25** = integrated report, **Rev** = forecast revision 31-Oct-2025, **Tan26** = FY03/2026 tanshin, **Model** = Excel sheet `Fuso Financials`. P = PDF page. Slide-deck md files scramble chart values: read the page image or the Bilingual PDF.
+
+## Status board
+
+| Overview phase | Sections | Status | Where the detail is |
+|---|---|---|---|
+| 0 Sources | | Done (see `_NOTES.md` files); TDnet notices and Japanese Q1 FY03/2027 still missing | Fase0 `_NOTES.md` |
+| 1 Company, history, what they do | 1-3 | Draft below | Sections 1-3 |
+| 2 Value chain, products | 4-5 | Draft; customers by product ND | Sections 4-5 |
+| 3 AI/PC/phone, industry | 6-7 | Draft; no AI/HBM revenue split exists | Sections 6-7 |
+| 4 Segments, unit economics, financials | 8-10 | Draft with 7-year series | Sections 8-10 |
+| 5 Peers | 11 | Partial: only Nissan Chemical is a documented direct competitor | Section 11 |
+| 6 Strategy, questions, risks, watch list | 12-16 | Draft | Sections 12-16 |
+
+---
+
+## 1. Company in one line
+Fuso makes ultra-high-purity colloidal silica (abrasive particles for polishing chips, brand Quartron®) sold mainly to CMP slurry formulators, plus fruit acids (malic, citric, gluconic, fumaric), vitamin C and food-additive formulations for food, beverage, industrial and pharma users. Electronic Materials is 54% of FY03/2026 sales and 75% of segment operating profit; the business is a "global niche top" player with 55.1% overseas sales [D: Deck26 P5-7; Yuho26 P99; Corp P4].
+
+*Fuso fabrica sílice coloidal de ultra pureza (partículas abrasivas para pulir chips) y ácidos de fruta para alimentos e industria; el negocio de semiconductores ya es más de la mitad de las ventas.*
+
+**Snapshot (FY03/2026, oku unless noted)**
+
+| Item | Value | Source |
+|---|---|---|
+| Net sales | 769.2 (+10.7%) | Deck26 P4 |
+| Operating profit | 188.5 (+16.1%), margin 24.5% | Deck26 P4 |
+| Operating profit before depreciation (EBITDA-type, the company's key KPI) | 297.8 (+21.4%), 39% of sales, record | Deck26 P4, P13 |
+| Net income | 143.1 (+23.1%); EPS 405.86 yen pre-split, 135.28 yen post-split | Deck26 P4; Yuho26 P4 |
+| Segments | Electronic Materials 415.1 sales / 159.2 OP; Life Science 354.1 / 53.0; corporate -23.8 | Deck26 P5 |
+| Overseas sales ratio | 55.1% (Asia 38%, North America 16%, Japan 45%) | Deck26 P9 |
+| Capex (additions basis) / depreciation / R&D | 107.8 / 109.3 / 10.9 | Deck26 P12 |
+| Operating cash flow / investing cash flow | 24.8 bn / -11.1 bn | Yuho26 P4 |
+| Cash and deposits / borrowings (Mar-2026) | 41.0 bn / 16.9 bn | Yuho26 P35; Q1tan P3-4 |
+| Equity ratio, ROE, ROIC | 77.0%, 12.9%, 11.1% | Tan26; Corp P3 |
+| Employees | 956 consolidated, 623 parent | Yuho26 P4 |
+| Shares, price | 106.5 m shares post 3-for-1 split (1-Apr-2026); 2,726 yen at 31-Mar-2026, P/B 2.5x, P/E 20.1x | Yuho26 P40; Corp P3 |
+| FY03/2027 guidance | Sales 858, OP 243, EBITDA-type 370, NI 166 (or 192, see Open conflicts) | Deck26 P40 |
+| Medium-term plan FY03/2031 | Sales 1,200, OP 360, EBITDA-type 567, ROIC 13%+ | MTP P5-6 |
+
+---
+
+## 2. History and why this portfolio exists
+
+**Timeline [D: Yuho26 P7 history table unless noted]**
+- 1957: founded in Osaka as the independent Osaka factory of Teikoku Pharmaceutical (Teikoku Seiyaku, 帝國製薬). Early products: malic acid (food additive), later citric acid, gluconates.
+- Electronics business start: the history table lists "電子材料「コロイダルシリカ」の試験生産開始" (trial production of colloidal silica), but the year is not reliably mapped from the converted table [ND].
+- 1990s to 2000s: Chinese subsidiary Qingdao Fuso (founded 1994, 30th anniversary in 2024 [D: 07_FUSO-TOPICS]); purchase of the domestic fine-chemicals business and the US subsidiary PMP Fermentation Products from Fujisawa Pharmaceutical (gluconates); Thai subsidiary FUSO (THAILAND).
+- Oct-2014: took over Mitsui Chemicals' organic-acid business and began selling maleic anhydride and fumaric acid. This is where the petrochemical (benzene) exposure comes from.
+- Nov-2017: opened the Kashima site (Kamisu, Ibaraki, eastern Japan). Jul-2019: malic acid plant completed at Kashima.
+- Apr-2022: Prime Market. Apr-2023: Kashima Phase I ultra-high-purity colloidal silica plant completed. Sep-2023: head office moved to Osaka. Oct-2024: Kyoto new silica line. Aug-2025: Kashima Phase II. Mar-2026: decision on the ¥40 bn Kyoto plant. 1-Apr-2026: 3-for-1 split.
+- Previous medium-term plan FUSO VISION 2025 (FY03/2022 to FY03/2026): updated May-2023 to sales 850, OP 190, EBITDA-type 300. Outcome: sales 769 (-9.5%), OP 188.5, EBITDA-type 297.8, overseas 55.1% vs 50% target [D: Deck26 P49; Yuho25 P12].
+
+**Why does a fruit-acid company also make semiconductor materials?** The honest answer from the files: a shared site, balance sheet and purification culture, not shared customers or process technology.
+- Shared: Kashima hosts maleic anhydride, fumaric, malic and silica plants ("combined production site") [D: MTP P17; IR25 P44]; high-purity organic acids built at Kashima for electronics customers (Oct-2024) bridge both [D: Yuho25 P14, P26]; both segments are "global niche top" businesses managed on pre-depreciation profit.
+- Not shared: customers (food/beverage/industrial vs chip-materials formulators), process (fermentation and petrochemical synthesis vs sol-gel silicon chemistry), demand cycle, capital intensity.
+- No evidence of commercial cross-selling [ND]. Treat as two businesses under one balance sheet. The listing history also matters: the founding family circle still holds large stakes (section 11).
+
+**Timeline of the electronics and AI-related business**
+- Material to profit from FY03/2021 (EM OP 76.5 of 109.6 segment OP, 70%).
+- Capex and R&D choices that made it happen: ~¥50 bn in three silica lines over FY03/2022 to FY03/2026 [D: MTP P7]; EM capex FY03/2022 to FY03/2026 = 63.6 bn [Model]; R&D 10.9 oku in FY03/2026 (EM 7.2 oku, LS 3.7 oku) [D: Yuho26 P37].
+- Management itself dates the AI lift to FY03/2025 to FY03/2026: "recovery of semiconductor market centered on AI" [D: Yuho25 P14; Rev].
+
+---
+
+## 3. What they actually do (company level)
+
+**Products.** Electronic Materials: ultra-high-purity colloidal silica (CMP abrasive and silicon-wafer polishing), hollow submicron silica Miralica™ (low-dielectric fillers; production line under construction for FY03/2027), silica nanopowder (toner external additive), high-purity organosilica sol, alkyl silicate [D: Deck26 P15, P37]. Life Science: malic, citric, gluconic and fumaric acids and salts, maleic anhydride, vitamin C, other fruit acids (succinic, lactic, tartaric), FFA (functional fruit-acid formulations: coated acids, shelf-life improvers, antioxidant and anti-browning agents), high-purity organic acids [D: Deck26 P15; Yuho26 P29-32].
+
+**Customers and sales model.**
+- B2B, make-to-forecast: "we produce on expected demand, so order backlog is not tracked" [D: Yuho26 P30].
+- EM: sold to slurry formulators and chipmakers after customer qualification (認定) of each production line; one named >10% customer, FUJIFILM Electronic Materials Taiwan: 10,675m yen, 13.9% of group sales (12.9% in FY03/2025) [D: Yuho26 P30, P100]. Taiwan overall 13.7 bn (17.8%), USA 11.7 bn (15.2%) [D: Yuho26 P100]. TSMC N2-generation adoption disclosed [D: Deck26 P30]. Other customers ND. China about 10% of EM sales, guided above 10% for FY03/2026-27 [D: Deck26 P30; Q2deck P31].
+- LS: food and beverage makers, detergent and industrial users, pharma/supplement makers; many sales by tender [D: Deck26 P21-22]. Customers ND. Related-party sales to Teikoku Pharmaceutical (65m yen) [D: Yuho26 P103].
+- Channel: direct plus overseas subsidiaries (Qingdao, Thailand, PMP); trading houses ND.
+
+**Why customers buy.** EM: purity (99.9999%+), tight particle-size control and lot consistency; "design, supply and quality assurance as one service" [D: MTP P13; IR25 P20-24]. LS: stable supply, domestic fruit-acid capability (rare in Japan), formulation know-how; competition from Chinese low-cost makers is intense [D: MTP P10; Yuho26 P14].
+
+---
+
+## 4. Value chain map
+
+**Electronic Materials**
+
+| Stage | Who | What happens | Fuso position | Who captures the margin |
+|---|---|---|---|---|
+| Raw material | Metallic silicon suppliers; China heavy in purchases; test purchases from Malaysia and Brazil; target >50% non-traditional origin by 2030 [D: Yuho26 P25, P34; Deck26 P36] | Silicon metal price ~¥900/kg (2022) vs ~¥260 (Mar-2026) [D: Deck26 P36, approximate chart] | Buyer | ND |
+| Process | Fuso | Sol-gel synthesis of silica nanoparticles in water, purification to 99.9999% [D: IR25 P20; process detail I-general] | Here | Fuso: segment OP margin 38.4%, pre-depreciation 60% |
+| Product | Fuso | Quartron®: particle size tens to ~200 nm, shape control, low aggregation [D: IR25 P20] | Here | Same |
+| Formulator | CMP slurry makers: FUJIFILM Electronic Materials Taiwan [D]; Fujimi was a customer in FY03/2013 [D: Fujimi old yuho]; others ND | Add chemistry, filter, package | Customer | ND |
+| End user | Chipmakers: logic/foundry (TSMC N2 [D]), DRAM/HBM, NAND [customer split ND] | Slurry used at many CMP steps | Customer's customer | |
+| End demand | AI accelerators and data centers; PCs and phones (weak) [D: Deck26 P28] | | | |
+
+Inputs: pass-through is by negotiated price revisions with a lag; FY03/2026 prices "almost maintained", 5-10% revisions from company-"2026年度" (FY03/2027) tied to the next capex [D: Yuho26 P34; Dial P5]. Share of the customer's cost represented by Fuso silica: ND.
+
+**Life Science (benzene branch)**
+
+| Stage | Who | What happens | Fuso position | Margin |
+|---|---|---|---|---|
+| Raw material | Crude oil, naphtha, benzene (price quoted as ENEOS ACP, USD/t) [D: Deck26 P25, P39] | Naphtha cracking gives benzene | Buyer | Petrochemical suppliers |
+| Intermediate | Fuso Kashima plant (from Mitsui Chemicals, 2014) | Benzene to maleic anhydride [D diagram; chemistry I-general] | In-house | Fuso |
+| Product | Fuso | Malic acid and fumaric acid from maleic anhydride [D: Deck26 P25] | In-house | Fuso (margin ND) |
+| Customers | Beverage, candy, detergent, plating, paper, paint, bath products [D: Yuho25 P25-26] | | | |
+
+Not benzene-linked: gluconic acid and vitamin C ("no direct impact currently"); citric acid depends on sulfuric acid [D: Deck26 P25]. Fermentation raw materials (sugar or starch) ND.
+
+---
+
+## 5. Product-level detail
+
+| Product | What it does | End application | Customer type | Site | Disclosed trend | Tag |
+|---|---|---|---|---|---|---|
+| Quartron® ultra-high-purity colloidal silica | Abrasive in CMP slurry; silicon-wafer polishing | Leading-edge logic, DRAM/HBM, advanced packaging | Slurry makers, chipmakers | Kashima I/II, Kyoto No.1/No.2 | EM sales +25.0% FY03/2026; capacity ~1.5x FY03/2023 after Kashima II | [D] Deck26 P28, P32 |
+| High-concentration, high-productivity grades | ~1.5x particles per volume; more batches per tank, less transport | Same | Same | Same | Share of production rising; target >1.5x by FY2030 | [D] Deck26 P33; Q2deck P34 |
+| Miralica™ hollow submicron silica | Low-dielectric filler | High-frequency, next-gen devices | Sample work with several companies | Line under construction (Tokyo R&D origin) | Mid-scale production planned FY03/2027 | [D] Deck26 P37 |
+| Silica nanopowder | Toner external additive | Printers | Sample work | ND | Adoption targeted from FY03/2027 | [D] Deck26 P37 |
+| Malic acid | Acidulant, plating and detergents, feed/agri | Food, beverage, industrial | Many | Kashima, Osaka | Overseas volume 9,000 t (FY03/2024), 10,700, 12,400 (FY03/2026), plan 12,900 | [D] Deck26 P20 |
+| Fumaric acid / maleic anhydride | Food, resins, paper, paint | | Large customers | Kashima | Volume index 1.07, price 0.91 (FY03/2024 = 1.0) | [D] Deck26 P22 (chart reading) |
+| Citric acid | Beverage, detergents | | Tenders | Partly outsourced (Thai maker, Qingdao) | Volume 1.07, price 0.87 | [D] Deck26 P21 |
+| Gluconic acid and salts | Concrete admixture, fertilizer, food | North America | | PMP (Peoria, Illinois) | PMP sales 6.8 / 7.9 / 8.2 oku (FY03/2024-26), plan 8.7; OP ~1.2 oku | [D] Deck26 P20 |
+| Vitamin C | Pharma, supplements, beverages | | Large pharma customers | Outsourced partly | Volume 0.94, price 1.08 | [D] Deck26 P21 |
+| FFA formulations | Shelf-life, antioxidant, anti-browning, rice-processing agents | Food makers in Japan, China, Thailand | | Osaka, Qingdao, Thailand | China new cases +30%, Thailand +20% | [D] Deck26 P17 |
+
+**Why EM is hard to make (conceptual).** Particles must be uniform in size and shape, with almost no oversize or very fine particles and metal impurities at trace level; a "small variation can become a serious defect" and every new line needs the customer's qualification [D: IR25 P24]. Fuso's cleaning method for new lines cut the cleaning period by 75%, shortening start-up and qualification [D: Deck26 P34].
+
+---
+
+## 6. AI, PC and smartphone exposure: claim vs evidence
+
+**What Fuso says.** AI semiconductors strong, PC and smartphone weak; AI-driven shipments exceeded plan; adoption for TSMC N2; requirements confirmed for A16/A14, A10 development started; CMP step count rises with multilayer wiring, backside power delivery (BSPDN) and advanced packaging [D: Deck26 P28, P30, P37; MTP P14; Rev].
+
+**Mechanism (why more AI means more silica).**
+1. More leading-edge wafers (company and customers) [D: Yuho26 P33].
+2. More CMP steps per wafer: multilayer wiring, BSPDN (wafer backside polishing), advanced packaging [D: MTP P14].
+3. HBM and hybrid bonding: thicker films to polish (higher removal rate, dense ultra-pure silica) and flatter bonding surfaces (fewer coarse and fine particles); possible new uses: Cu/TSV polishing, Ru and Mo conductors, backside Si, resin layers [D: Deck26 P35]. HBM = stacked DRAM chips linked by through-silicon vias; the extra wafer area and CMP per bit versus conventional DRAM is [I-general], no figure in the folder.
+4. Higher spec per tonne: purer, tighter size control, so price erodes less at the leading edge [D: MTP P14; peer analog: Nissan Chemical Q&A].
+5. Customer inventory building inflated FY03/2026 volume: "customer usage and inventory increased" [D: Q2deck P32]. Not recurring demand.
+
+**Quantified evidence.** EM sales 415.1 (+25.0%); CMP slurry market volume CAGR 5-6%, value CAGR 6.5% (2025-2030); Fuso EM CAGR 13.2% to FY03/2031; customers' own forecast 8-10% volume CAGR FY03/2025 to FY03/2031; slurry market forecast raised from 3% (Jan-2025) to 6% (Oct-2025) [D: Deck26 P31; MTP P5, P14; Q2deck P30, P32; Yuho26 P33]. WSTS semiconductor market +19.7% (2024), +22.5% (2025), +26.3% (2026F) [D: Deck26 P31].
+
+**What is NOT disclosed [ND]:** share of EM sales that is AI, HBM, logic, DRAM, NAND; volumes in tonnes; price per tonne; customer-by-customer sales other than Fujifilm Taiwan; Fuso's share of the slurry abrasive market.
+
+**Cycle evidence.** FY03/2024: EM sales -19%, OP -44%, margin 30.3% in the 2023 inventory adjustment while Kashima I depreciation started [D: Bilingual P8; Model]. Customers expect AI growth to slow in company-years 2027-28 (FY03/2028-29) [D: Q2deck P32].
+
+**What would make the narrative fail.** AI capex digestion in FY03/2028-29 as new plants arrive; overcapacity at Fuso and peers (Fujimi is also adding CMP capacity [D: Fujimi 01]); customer multi-sourcing, standardization or in-sourcing (the company rates this risk "low" [D: IR25 P24]); abrasive substitution [I-general]; China self-sufficiency; export controls (a Fujimi slide quotes Samsung: HBM sales fell on AI-chip export controls [D: Fujimi 03]); qualification delays at Kashima II or the new Kyoto plant.
+
+---
+
+## 7. Industry context (per segment)
+
+**CMP slurry and colloidal silica (EM).**
+- Market size: CMP slurry about ¥300 bn in 2025 rising to about ¥420 bn in 2030 (chart reading of MTP P15, axis in oku; approximate), value CAGR 6.5%; volume CAGR 5-6%; source Fuji Chimera / Fuji Keizai as processed by Fuso. Fuso EM sales are therefore roughly 13% of the slurry market value [I: 415/3,100; EM includes non-CMP items].
+- Concentration: ND. Slurry formulators are customers; abrasive suppliers named in the folder: Fuso and Nissan Chemical (Snowtex). Other abrasive makers and substitutes [I-general, to research].
+- Commercial model: line-by-line customer qualification, then long-term supply; annual-type price negotiation, with cost-sharing for new capacity from FY03/2027 [D: Dial P5].
+- Growth phase: demand-led, capacity constrained until the Kyoto plant (Feb-2029); the integrated report lists "capacity constraint versus demand" as an internal risk [D: IR25 P24].
+- Margin structure: EM OP margin 30-48% over FY03/2021-26; depreciation 6-22% of EM sales.
+
+**Fruit acids and food additives (LS).**
+- Market size and concentration: ND in the folder. Facts: Fuso is a rare domestic fruit-acid maker; overseas share above 50% of LS sales; competition from overseas makers, especially Chinese low-cost products, is intensifying [D: MTP P11; Yuho26 P14].
+- Commercial model: tenders and price lists; raw-material-linked price revisions; share-vs-price trade-offs (fumaric price index 0.91) [D: Deck26 P21-22].
+- Growth: mature; plan CAGR 4.0% sales, 7.2% OP to FY03/2031.
+
+**Why the segments behave differently.** EM: qualification, capital intensity, chip cycle, concentration. LS: tenders, commodity-linked inputs, consumer and industrial demand, foreign competition (see Deep-dive section 5.3).
+
+---
+
+## 8. Business segments
+
+### 8.1 Electronic Materials (largest)
+
+| FY03/ | 2021 | 2022 | 2023 | 2024 | 2025 | 2026 | 2027 guide | 2031 plan |
+|---|---|---|---|---|---|---|---|---|
+| Sales (oku) | 187.9 | 243.3 | 306.6 | 248.3 | 332.1 | 415.1 | 494.0 | 770 |
+| OP | 76.5 | 116.1 | 133.9 | 75.3 | 131.7 | 159.3 | 217.0 | 320 |
+| OP margin | 40.7% | 47.7% | 43.7% | 30.3% | 39.7% | 38.4% | 43.9% | 41.6% |
+| Depreciation | 33.5 | 28.8 | 27.5 | 53.4 | 65.2 | 90.9 | 107.0 | ~185 [I] |
+| OP before depreciation | 110.0 | 145.0 | 161.5 | 128.7 | 196.9 | 250.2 | 324.0 | 505 |
+| Capex (additions) | 6.1 | 99.6 | 195.3 | 115.8 | 145.7 | 79.3 | ND | ND |
+| Segment assets | 226 | 342 | 541 | 632 | 726 | 727 | ND | ND |
+
+Sources: Bilingual P7-8; Yuho25 and Yuho26 segment notes; Deck26 P40-41; MTP P6; Model. Share of company: 54% of sales, 75% of segment OP (FY03/2026). Customers: Section 3. Margin vs company average: well above (38% vs 24.5%) because silica is high value-add and plants are highly utilized; below its own FY03/2022 peak because of depreciation. Latest growth commentary: FY03/2027 guide EM sales +19.0%, OP +36.2% "from full-scale operation of expanded facilities" [D: Deck26 P39-40]. Structure: growing, capacity-constrained, concentrated, cyclical (FY03/2024).
+
+### 8.2 Life Science
+
+| FY03/ | 2021 | 2022 | 2023 | 2024 | 2025 | 2026 | 2027 guide | 2031 plan |
+|---|---|---|---|---|---|---|---|---|
+| Sales (oku) | 234.2 | 314.3 | 378.0 | 341.4 | 362.9 | 354.1 | 364.0 | 430 |
+| OP | 33.1 | 49.4 | 74.0 | 56.4 | 52.9 | 53.1 | 55.0 | 75 |
+| OP margin | 14.1% | 15.7% | 19.6% | 16.5% | 14.6% | 15.0% | 15.1% | 17.4% |
+| Depreciation | 16.5 | 14.9 | 14.4 | 16.2 | 15.7 | 16.4 | 18.0 | ~20 [I] |
+| Capex | 9.1 | 22.3 | 12.2 | 24.3 | 13.7 | 27.3 | ND | ND |
+
+Sources as above. FY03/2026 drivers: [+] gluconic to US, overseas malic, Thai formulations, Kashima utilization, malic price correction, petrochemical cost improvement; [-] pharma vitamin C volume, fumaric price concessions, Chinese low-price formulations, higher purchase prices, citric and vitamin C price pressure [D: Bilingual P17]. Guide excludes the Middle East [D: Deck26 P39]. Structure: mature; margin hostage to price competition and input costs.
+
+---
+
+## 9. Unit economics
+
+- **Revenue model.** Volume times price per grade; EM price set by negotiation and cost pass-through; LS by tender and list price. FX: yen per USD 150 assumed; sensitivity per 1 yen = 2.1 oku sales, 0.9 oku OP [D: Deck26 P39].
+- **Cost drivers.** EM: metallic silicon, energy (LNG shown on the silicon/LNG slide), depreciation, labor and maintenance of added lines, R&D. LS: benzene (malic, fumaric, maleic), sulfuric acid (citric), fermentation inputs [ND], energy, logistics materials, outsourced products (29% of LS sales) [D: Deck26 P24-25, P28, P36].
+- **Gross margin and SG&A.** FY03/2026: gross margin 38.1%, SG&A 13.6% of sales (COGS 47.6 bn, SG&A 10.5 bn); FY03/2025: 37.4% and 14.0% [D: Yuho26 consolidated income statement; I: ratios]. Almost all depreciation sits in cost of sales (+26.2 of +26.3 oku in FY03/2026) [D: Deck26 P8].
+- **Operating leverage.** Incremental cash cost per extra sale in FY03/2026 was 20% (CoGS ex-depreciation +14.5 on sales +74.2). Incremental EBITDA-type margin: FY03/2022 36%, FY03/2023 30%, FY03/2025 60%, FY03/2026 71%, FY03/2027 guide 81% [I]. The FY03/2027 bridge shows CoGS ex-depreciation falling 2.7 on sales +88.7 [D: Deck26 P43], which requires price increases to drop through and Kashima II to fill without new fixed cost.
+- **Depreciation.** Declining balance (定率法) for Japanese entities, machinery life 4-8 years, buildings 10-50 [D: Yuho26 P75]: front-loaded charges. Kashima II depreciated from Dec-2025. Plan: 109.3 (FY03/2026), 127.0 (FY03/2027), 127.0 (FY03/2028 rough). Implied by the MTP: total D&A ~207 oku in FY03/2031 (567 minus 360) vs 127.0 in FY03/2027 [I].
+- **Capital intensity.** EM segment assets 1.75x sales; LS 1.14x; EM segment ROA about 21.9% (FY03/2026) [I]. Cost per unit of silica capacity is about one third higher in the Kyoto project than in the three previous lines (¥133 bn vs ¥100 bn per 1.0x of FY03/2023 capacity) [I, assumptions in Deep-dive 2.5].
+- **Working capital.** Mar-2026: receivables 16.6 bn (~79 days of sales), inventories 18.4 bn (finished 14.2, WIP 0.7, raw 3.5; ~141 days of cost of sales) [I: Q1tan P3 comparatives; Tan26]. Q1 FY03/2027: receivables 19.6 bn, inventories 18.3 bn.
+- **What capex funds.** About three quarters of capex goes to EM silica lines; LS capex is seismic reinforcement at Osaka, Kashima maintenance and PMP expansions.
+
+---
+
+## 10. Financial context
+
+**Seven-year series (consolidated, oku)**
+
+| FY03/ | 2021 | 2022 | 2023 | 2024 | 2025 | 2026 | 2027 guide |
+|---|---|---|---|---|---|---|---|
+| Sales | 422 | 557.6 | 684.5 | 589.7 | 695.0 | 769.2 | 858.0 |
+| Operating profit | 96.3 | 150.3 | 189.3 | 110.8 | 162.3 | 188.5 | 243.0 |
+| OP margin | 23% | 27% | 28% | 19% | 23% | 25% | 28.3% |
+| EBITDA-type | 146.5 | 194.8 | 232.6 | 182.4 | 245.3 | 297.8 | 370.0 |
+| Net income | ND | 108.9 | 141.2 | 83.4 | 116.2 | 143.1 | 166.0 |
+| Capex | 18.9 | 124.9 | 208.3 | 142.9 | 174.9 | 107.8 | 299.0 |
+| Depreciation | 50.2 | 44.5 | 43.3 | 71.6 | 83.0 | 109.3 | 127.0 |
+| Operating CF | ND | ND | 139 | 70 | 227 | 247 | ND |
+| Investing CF | ND | ND | -134 | -185 | -205 | -110 | ND |
+| ROE / ROIC | ND | 15.4 / 15.4 | 17.4 / 17.4 | 9.1 / 8.2 | 11.7 / 9.7 | 12.9 / 11.1 | target ROIC 13% by FY03/2031 |
+| Overseas sales | 43.6% | 47.0% | 50.3% | 47.0% | 50.6% | 55.1% | ND |
+
+Sources: Deck26 P4, P11-13, P39-43; Bilingual P7-14; Corp P3; Yuho26 P4. Cost of capital: 6.3% to FY03/2024, 7.5-8.5% FY03/2025, 8.0-9.0% FY03/2026 (CAPM LS 6.5%, EM 9.1%) [D: Corp P3].
+
+**Quarterly profile (million yen) [I from Tan26, Q3 tanshin P1, Q2 results, Q1tan]**
+
+| | Q1 FY26 | Q2 | Q3 | Q4 | Q1 FY27 |
+|---|---|---|---|---|---|
+| Sales | 18,658 | 19,047 | 20,223 | 18,998 | 22,819 |
+| Operating profit | 4,694 | 5,052 | 4,817 | 4,288 | 6,172 |
+| OP margin | 25.2% | 26.5% | 23.8% | 22.6% | 27.0% |
+
+**Latest quarter (Q1 FY03/2027, Apr-Jun 2026) [D: Q1tan P1-7].** Sales +22.3%, OP +31.5%, depreciation +37.3%, EBITDA-type 9,197 (+33.3%), pre-tax 9,972 (+119.9%), net income 6,689 (+115.4%). Extraordinary subsidy income 3,704m. Net income ex-subsidy about 4,090m (+32%) [I]. Q1 = 52.9% of the H1 sales plan and 53.2% of the H1 OP plan; the H1 plan implies Q2 sales down 11% and OP down 12% quarter on quarter [I]. No segment split or commentary in the English release [ND]. Balance sheet at 30-Jun-2026: assets 166.8 bn, equity ratio 73.7%, construction in progress 17.3 bn (4.2 bn at Mar-2026), facility payables 14.0 bn (5.4 bn), cash 38.3 bn, borrowings 15.9 bn. Estimated accrued capex in Q1 about 13.6 bn, 45% of the FY plan [I].
+
+**Normalization flags.**
+- Capex cycle and depreciation step-up: EM OP margin FY03/2027 guide (43.9%) exceeds the FY03/2031 plan margin (41.6%), implying compression as Kyoto depreciation arrives [I].
+- Cycle: FY03/2024 shows the downside (EM OP -44% on sales -19%).
+- FX: guide at 150 yen; weaker yen helped FY03/2026 [D: Rev]. Non-operating gains (FX) are assumed to fade: -5.2 oku in the FY03/2027 bridge.
+- Tax rate: FY03/2026 effective 26.7%; plan implies about 31.7% (subsidiaries with lower rates helped FY03/2026) [I; D: Rev]. Costs about 12 oku of net income vs the old rate.
+- Subsidy: one-time 3,694m in FY03/2027, reimburses the 2024 Kyoto line [D: Yuho26 P104].
+- Normalized margin: MTP target is OP 30% and EBITDA-type 47% in FY03/2031; EM at 41.6%.
+
+**Balance sheet and capital allocation.** Net cash about 24 bn (Mar-2026) [I]; loan of 20 bn taken Apr-May 2023 for Kashima II, 16.9 bn left, all to be repaid inside the MTP [D]. MTP cash: operating CF 164 bn; growth investment 100 bn (Kyoto 40, R&D 10, additional 50); existing-business renewal 27; debt repayment 17; shareholder returns 20 [D: MTP P7; Deck26 P56]. Dividend payout about 20% (FY03/2026), 17.8% planned; 28 yen post-split planned for FY03/2027 [D: Tan26]. Cross-held listed shares cut from 25 to 1 issue [D: Deck26 P45, P55].
+
+---
+
+## 11. Peers and competitive position
+
+**Peers named by Fuso itself:** none by name in the MTP, yuho or decks; competition described generically ("overseas manufacturers", "Chinese low-cost products", "low-price formulations in China") [D: Yuho26 P14; Deck26 P16]. ROIC and cost-of-capital benchmarks name no peers [D: Corp].
+
+**Peers identified from the folder (relationship from each peer's own documents)**
+
+| Peer | Relationship | Size and state | Source and confidence |
+|---|---|---|---|
+| Nissan Chemical (4021) | Direct competitor in colloidal silica (Snowtex: wafer polishing, compound semiconductors, CMP); also semiconductor materials (ARC, EUV, 3D-packaging) | Inorganic colloid sales +6% FY03/2026, +8% guided FY03/2027 (includes non-CMP uses); semiconductor materials +27% and 2024-2030 CAGR target 20%+; HBM4/4E/5 add layers for its packaging materials | Nissan 02, 07 (Q&A); high |
+| Fujimi (5384) | Slurry and polishing-material maker; was a Fuso customer and held 18,000 Fuso shares and owed Fuso 715m yen in FY03/2013 | CMP sales 36.1 bn (+17.9%) FY03/2026, 41.3 bn guided; new Kakamigahara plant, depreciation limits OP growth to +4.9% | Fujimi 01, old yuho; high for 2013, ND for today |
+| Mitsubishi Chemical Group (4188) | No product overlap found in files | Semiconductor activity is precision cleaning, parts, quartz | Low relevance |
+| Peers to research [ND] | Other colloidal-silica and slurry abrasive makers; Chinese fruit-acid makers (malic, citric, fumaric, vitamin C); PMP's US gluconate competitors | | Needs outside sources |
+
+**Moat (as stated and as evidenced).**
+- Qualification and switching cost: each line and grade must be qualified by the customer; Fuso took ~17 to 23 months from completion to full operation [I]. Requalification time for a customer changing supplier: ND.
+- Purity and particle control: 99.9999% purity, coarse/fine particle reduction; adoption for TSMC N2 [D].
+- Scale and capacity: ~1.5x FY03/2023 capacity with three new lines; +20% more by Feb-2029 [D].
+- Thin spots: concentration in one customer (~26% of EM); one product family; high capital intensity; LS lacks a moat against low-cost imports (price concessions in fumaric and citric).
+- Customer concentration: only Fujifilm Taiwan >10% (13.9%) [D].
+
+**Ownership and governance (context).** Top ten holders hold 64.3% (pre-split counts): Jusedo (壽世堂) 15.9%, Teikoku Pharmaceutical 9.4% (also a related-party customer and a company in which officers' relatives hold a majority), master trust 9.2%, Kunpusha 7.4%, custody bank 6.5%, Osaka SME investment 4.2%, Teisan 3.9% [D: Yuho26 P41, P103]. Shareholders by type: domestic corporations 45%, foreign 25%, financial institutions 19%, individuals 9%. Executive bonus: 17% performance-linked (pays only if pre-tax profit plus depreciation before bonus exceeds ¥29.7 bn) and 8% linked to the MTP; a new Corporate Value Enhancement Committee oversees the MTP [D: Yuho26 P60; MTP P22].
+
+---
+
+## 12. Strategy and mid-term plan (飛躍2030 Next Growth 2030, FY03/2027-FY03/2031)
+
+**Targets FY03/2031 (USD/JPY 150) [D: MTP P5-6]**
+
+| | FY03/2026 | FY03/2031 target | CAGR |
+|---|---|---|---|
+| Sales | 769 | 1,200 | 9.3% |
+| Operating profit | 188 | 360 (30% margin) | 13.8% |
+| EBITDA-type | 297 | 567 | 13.7% |
+| EM sales / OP / EBITDA-type | 415 / 159 / 250 | 770 / 320 / 505 | 13.2 / 15.0 / 15.1% |
+| LS sales / OP / EBITDA-type | 354 / 53 / 69 | 430 / 75 / 95 | 4.0 / 7.2 / 6.5% |
+| ROIC | 11.1% | 13%+ | |
+| Shareholder returns | | 20 bn+ cumulative, progressive dividend | |
+| Other KPIs | | Average pay +30%, engagement +10%, SBT certification by FY03/2029, growth investment ¥100 bn | |
+
+**Capex program [D: MTP P7, P18-19; Deck26 P52, P56]:** Kyoto 40 bn (complete Feb-2029, +20% capacity); Kashima QC building (to Sep-2027); Osaka plant offices and upgrades (to 2028); Higashi-Osaka R&D center (2028); Tokyo head-office relocation; additional growth investment of 50 bn not allocated (extra capex, smart factory, M&A, AI/DX); renewal 27 bn; FY03/2027 capex plan 299.0 oku.
+
+**Progress vs earlier statements.** Previous plan: OP and EBITDA-type targets met with 9.5% less sales; FY03/2026 initial guidance beaten by 34.6% on OP. New plan is five years (investors asked for 3 or 5) and adds ROIC, cash allocation and a returns guide in answer to Dial requests [D: Dial P5]. Market vs plan: consensus (Model) FY03/2027 sales 91.3 bn vs guide 85.8; FY03/2031 OP 42.3 bn vs target 36.0 bn.
+
+**Back-end loading check [I].** EM OP rises 159 to 217 in FY03/2027 (+36%), a third of the total five-year increase; after that 217 to 320 is about 10% a year until the Kyoto plant.
+
+**Pricing strategy.** 5-10% price revision effective in company-"2026年度" (FY03/2027) with customers sharing the next capex; target price pass-through of cost increases continues [D: Deck26 P36; Dial P5].
+
+---
+
+## 13. Questions the market is asking
+
+No Fuso Q&A transcript exists in the folder. The investor-dialogue summary lists topics (Dial P3, P5): credibility of the plan and the "third pillar" (new business); competitive advantage and entry barriers; semiconductor and CMP market and Fuso's 5-10 year outlook; progress of "strategic price increases" to cover new investment; current capacity and ramp of the new lines; Life Science profitability and fruit-acid share, price and demand; Middle East impact and main-raw-material procurement; capex and depreciation burden; growth investment vs shareholder returns, M&A, R&D; ROIC/ROE; succession planning. Fuso's answers: five-year plan to show growth through cycles; cash-allocation disclosure; customers sharing capex via 5-10% price revisions; shorter qualification to adoption; higher-concentration grades to stretch capacity [D: Dial P5].
+
+Questions an informed outsider would ask [I]: the AI/HBM share of EM sales; the price/volume split of the +19% EM guide; why FY03/2027 cash costs are flat; timing of Kashima II full operation; benzene sensitivity and what price increases are agreed in malic and fumaric; what the 50 bn "additional growth" is for; customer concentration; plans after Feb-2029.
+
+---
+
+## 14. Tailwinds and headwinds
+
+**Tailwinds**
+1. **Leading-edge and AI demand for CMP.** More CMP steps (multilayer wiring, BSPDN, advanced packaging); customers forecast 8-10% volume CAGR; TSMC N2 adoption. Affects EM, whose sales grew 25% in FY03/2026 [D].
+2. **Capacity and utilization.** Three new lines (~1.5x FY03/2023 capacity); Kashima I and the Kyoto line at full operation; Kashima II to fill in FY03/2027 [D].
+3. **Pricing power.** 5-10% increases agreed with customers from FY03/2027; potential 21-42 oku of the 79 oku EM sales increase [I].
+4. **Mix and new products.** High-concentration grades (1.5x), Miralica, toner additives; A16/A14/A10 sampling [D].
+5. **Weak yen and overseas growth.** Overseas 55.1%; ¥1 = 0.9 oku OP; China EM above 10% of segment sales [D].
+6. **Life Science volumes abroad.** Malic acid overseas +20%, gluconic +10%, FFA cases +30% (China), +20% (Thailand) [D].
+
+**Headwinds**
+1. **Depreciation before revenue.** Depreciation 109.3 to 127.0 oku; Kashima II not yet certified (May-2026); Kyoto plant depreciating from 2029 [D/I].
+2. **Customer concentration and cycle.** Fujifilm Taiwan about 26% of EM; FY03/2024 showed -44% OP in a destocking year; AI growth expected to slow in FY03/2028-29 [D].
+3. **Benzene and Middle East.** Benzene +52% vs FY03/2026 average; maleic anhydride plant restart uncertain in late June 2026; guide excludes it [D].
+4. **Competition in Life Science.** Chinese low-cost products; price concessions in fumaric and citric; vitamin C volume -6% index [D].
+5. **Tax and non-operating normalization.** Effective tax ~31.7% planned vs 26.7%; FX gains fading [I].
+6. **Capital intensity and execution.** Cost per unit of capacity ~33% higher in Kyoto; 299 oku capex in FY03/2027; labor shortage (smart-factory program, pay +30% target) [I; D: Deck26 P34; MTP P5].
+
+---
+
+## 15. What to watch (quarterly release)
+
+| # | Metric | Threshold | Signal |
+|---|---|---|---|
+| 1 | EM operating margin (needs segment table) | FY guide 43.9%, H1 plan 42.1%; below 40% | Below: Kashima II delay or depreciation drag; above: fast qualification and price |
+| 2 | Quarterly depreciation | Q1 3,025m; guide 12,700m for the year, so ~3,200m per quarter afterwards | At or above 3,200m: plan on track; far below: late start |
+| 3 | Construction in progress, facility payables, cash vs debt | 17.3 bn, 14.0 bn, 38.3 bn vs 15.9 bn at Jun-2026; equity ratio 73.7% | Cash below debt or equity ratio below 70% means capex is pressing liquidity (my thresholds [I]) |
+| 4 | Quarterly sales vs H1 plan | Implied Q2 sales 20,281m | Above 21,500m: conservative guide; below 20,000m: Q1 held one-off volume |
+| 5 | LS margin and benzene commentary | Guide 15.1%; H1 LS OP 27.0 oku | Below 14%: input costs or competition larger than assumed |
+| 6 | Tax rate and subsidy | Plan ~31.7%, Q1 32.9% | Lower rate lifts net income without operating improvement |
+
+---
+
+## 16. Open items, conflicts and data gaps
+
+**Open conflicts**
+1. **FY03/2027 net income guide: 16,600 vs 19,200.** Deck and tanshin of 11/15-May-2026: 16,600 (EPS 156.90); Q1 tanshin 7-Aug-2026: 19,200 (EPS 181.48), marked "no revision". The 2,600m gap equals 3,694m x (1 - 29.6%), and the H1 net income guide moves by the same amount (7,850 to 10,450), with sales and OP unchanged: consistent with 19,200 including the subsidy [I]. Needs the TDnet notice (not in folder). The segment prompt v0.2 note that Workspace is "wrong" is being treated as unproven.
+2. **Kyoto line certification date:** English deck says "end of Mar.2025"; Japanese says 2025年度末 = Mar-2026; Yuho26 P33 confirms full operation from end FY03/2026. Japanese prevails.
+3. **Model row 93** labels the Q1 FY03/2027 extraordinary income as "gain on sale of fixed assets"; it is subsidy income (Q1tan P5). Excel not edited (file open; never save with openpyxl).
+
+**Data gaps [ND]**
+- Capex per project (only Kashima II 20 bn and Kyoto 40 bn); FY03/2027 capex split by segment and project; PMP expansion amount.
+- AI/HBM/logic/memory split; tonnes; prices; other customers; share of slurry abrasive market.
+- Benzene tonnage, contract terms, pass-through formula; fermentation raw materials.
+- Q1 FY03/2027 by segment; Q&A of the 15-May-2026 briefing; Japanese Q1 release; any TDnet notice Jun-Aug 2026.
+- Yuho FY03/2024 and earlier (FY03/2024 trough causes beyond inventory adjustment).
+- Fruit-acid market size, share and competitors; true peer set for LS.
+
+**Documents that would close them:** TDnet notices Jun-Aug 2026; Japanese Q1 FY03/2027 tanshin; Q2 FY03/2027 results (30-Oct-2026) and deck; yuho FY03/2023-24; Fuji Chimera or Fuji Keizai slurry-market excerpts; slurry-maker filings (beyond Fujimi) for abrasive sourcing.
+
+---
+
+## Appendix A. Capex and capacity timeline
+
+| Project | Segment | Site | Amount | Start | Complete | Qualification | Full operation | Depreciation starts |
+|---|---|---|---|---|---|---|---|---|
+| Kashima Phase I | EM | Kashima | ND | n/a | Apr-2023 | Prototype stage 2023 | End FY03/2025 (~23 months) | FY03/2024 |
+| Kyoto new line | EM | Kyoto No.2 (Fukuchiyama) | ND; subsidy 3.694 bn | n/a | Oct-2024 | Completed by end FY03/2026 | End FY03/2026 (~17 months); company aimed at full operation in H1 FY03/2027 | H2 FY03/2025 |
+| Kashima Phase II | EM | Kashima | 20.0 bn (bank loan; 12.5 bn paid by Mar-2025) | Sep-2023 | Aug-2025 (plan Jul) | In progress at 15-May-2026 | ND | Dec-2025 (declining balance) |
+| Kyoto new plant | EM | Kyoto | 40.0 bn (0.4 bn paid Mar-2026), own funds | Mar-2026 | Feb-2029 | After completion | ND | FY03/2029-30 [I] |
+| Kashima QC building | EM/common | Kashima | ND | | Sep-2027 | n/a | n/a | H2 2027 |
+| PMP gluconate crystallizers | LS | Peoria, US | ND | | Jul-2027 | n/a | n/a | ND |
+| Osaka plant seismic work, offices | LS | Sakai | ND | | Dec-2025 (seismic), offices to 2028 | n/a | n/a | FY03/2027-28 |
+| Higashi-Osaka R&D center | R&D | Higashi-Osaka | within 10 bn R&D | | 2028 | n/a | n/a | |
+
+Capacity index (2018 = 100): ~125 in 2019-2022, ~200 after Kashima II, ~250 by 2030 (chart reading, approximate) [D: Deck26 P32].
+
+## Appendix B. Benzene and raw materials
+
+- Benzene ACP (USD/t): FY03/2025 average 996; FY03/2026 average 745 (low ~675); Apr-May 2026 1,130 [D: Deck26 P25]. Plan assumes 745 [D: Deck26 P39].
+- Disruption (company wording): naphtha distribution cut by Middle East instability; maleic anhydride plant ran on secured raw material until early-May maintenance; restart after late-June maintenance uncertain; external purchase of maleic anhydride under consideration; price correction "a must" if benzene stays high; sulfur disruption lifted sulfuric acid cost (citric acid); packaging and logistics materials short and expensive [D: Deck26 P25].
+- Arithmetic (not company data): +385 USD/t x 150 yen = about 57,750 yen per tonne. About 9,200 tonnes a year of benzene would equal 10% of LS operating profit (0.53 bn). Malic acid sold overseas (12,400 t) alone implies roughly 11,000 t of benzene [I-general stoichiometry] and about 0.65 bn gross extra cost before pass-through.
+- Mitigations: price revisions, secured raw material, external maleic anhydride, higher in-house share (71% to 75% target: 49% domestic plus 22% overseas in-house, 29% outsourced), higher utilization, government and supplier coordination [D: Deck26 P24-25, P36].
+- EM analog: metallic silicon from China-heavy sources; Qingdao subsidiary processes silicon; diversification to Malaysia and Brazil [D: Yuho26 P25; IR25 P44; Deck26 P36].
+
+## Appendix C. Glossary (Japanese-English-Spanish)
+
+| Term | Meaning |
+|---|---|
+| 有価証券報告書 (yuho) | Annual securities report (EDINET); informe anual |
+| 決算短信 (tanshin) | Earnings release (TDnet); resumen de resultados |
+| 償却前営業利益 | Operating profit before depreciation, the company's key KPI (EBITDA-type); utilidad antes de depreciación |
+| 定率法 | Declining-balance depreciation; depreciación decreciente |
+| 認定 / 認証 | Customer qualification or certification of a line; certificación del cliente |
+| CMP | Chemical mechanical planarization; planarización químico-mecánica |
+| スラリー (slurry) | Polishing liquid with abrasive particles; suspensión de pulido |
+| コロイダルシリカ | Colloidal silica; sílice coloidal |
+| 果実酸 / FFA | Fruit acids / functional fruit-acid formulations; ácidos de fruta |
+| 無水マレイン酸 | Maleic anhydride; anhídrido maleico |
+| 億円 (oku) | 100 million yen |
+| BSPDN | Backside power delivery network |
+| HBM, TSV | High-bandwidth memory; through-silicon via |
+
+## Appendix D. Source index (where to look first)
+
+| Need | File | Page |
+|---|---|---|
+| Capex by segment, planned projects | Yuho26 | P38-39 |
+| Customers >10%, geography | Yuho26 | P30, P100 |
+| Depreciation policy | Yuho26 | P75 |
+| Risks | Yuho26 | P24-27 |
+| Segment note | Yuho26 | P98-99 |
+| Subsidy | Yuho26 | P104 |
+| Qualification timeline, Q2 view | Q2deck | P32-33 |
+| Results deck charts | Deck26 / Bilingual | P8, P12-13, P25, P31-32, P35-36, P39-43, P52, P56 |
+| MTP cash allocation, CMP chart, capex timeline | MTP | P6-7, P15, P18-19 |
+| Dialogue topics and answers | Dial | P3, P5 |
+| ROIC, cost of capital | Corp | P3 |
+| Q1 FY03/2027 | Q1tan | P1-7 |
+| Peers | `Company/Competidores/*/_NOTES.md` | |
+
+## Changelog
+- 13-Oct-2026: file created from the 12-Oct deep-dive (`Fuso_DeepDive_2026-10-12.md`) and the folder notes; sections 1-16 drafted; appendices A-D added.

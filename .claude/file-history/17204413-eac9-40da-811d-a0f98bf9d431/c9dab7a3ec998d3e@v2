@@ -1,0 +1,86 @@
+"""Colores distinguibles y etiquetas sin encimarse en el bubble."""
+import io
+
+P = r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs\generar_ai.py"
+s = io.open(P, encoding="utf-8").read()
+
+# --- 1. colores: 'medio' choca con 'primario' (la paleta lo documenta) ------
+s = s.replace('"Networking": dict(color="medio", miembros={',
+              '"Networking": dict(color="carbon", miembros={')
+s = s.replace('"Power & Facility": dict(color="carbon", miembros={',
+              '"Power & Facility": dict(color="gris", miembros={')
+s = s.replace('"On-site Power": dict(color="gris", miembros={',
+              '"On-site Power": dict(color="verde_claro", miembros={')
+
+# On-site Power se pinta junto a Power & Facility en el bubble: siete grupos
+# exceden lo que la paleta distingue (regla 5 de paleta.md).
+s = s.replace('''def grafico_bubble(fdf):
+    """Valuacion vs crecimiento, tamano = market cap, color = eslabon.
+
+    Los hyperscalers quedan fuera: son la demanda, no la cadena. Meterlos
+    compara cosas que no compiten entre si.
+    """
+    d = fdf[(fdf["tier"] != "Hyperscalers") & fdf["fpe"].notna()
+            & fdf["cagr"].notna() & fdf["mcap"].notna()].copy()''',
+'''# En el bubble, On-site Power se dibuja dentro de Power & Facility: siete
+# grupos exceden lo que la paleta distingue (regla 5 de paleta.md), y son el
+# mismo eslabon economico -- energia para el datacenter.
+FUSION_BUBBLE = {"On-site Power": "Power & Facility"}
+
+
+def grafico_bubble(fdf):
+    """Valuacion vs crecimiento, tamano = market cap, color = eslabon.
+
+    Los hyperscalers quedan fuera: son la demanda, no la cadena. Meterlos
+    compara cosas que no compiten entre si.
+    """
+    d = fdf[(fdf["tier"] != "Hyperscalers") & fdf["fpe"].notna()
+            & fdf["cagr"].notna() & fdf["mcap"].notna()].copy()
+    d["tier"] = d["tier"].replace(FUSION_BUBBLE)''')
+
+# --- 2. etiquetas: anti-colision por prioridad de tamano --------------------
+viejo = '''    # Etiquetar solo lo grande o lo extremo: etiquetar todo lo vuelve ilegible
+    umbral = d["mcap"].quantile(0.55)
+    for _, r in d.iterrows():
+        if (r["mcap"] >= umbral or r["fpe"] >= d["fpe"].quantile(0.92)
+                or r["cagr"] >= d["cagr"].quantile(0.92)):
+            ax.annotate(f"{r['nombre']}\\n${r['mcap'] / 1e9:,.0f}B",
+                        xy=(r["cagr"], r["fpe"]), xytext=(0, -7),
+                        textcoords="offset points", ha="center", va="top",
+                        fontsize=7, color=PALETA["texto"], zorder=5)'''
+
+nuevo = '''    # Etiquetas por prioridad de tamano, saltando las que chocarian.
+    # Etiquetar todo amontona el centro del grafico (KLA/ASML/Lam/AMAT caen
+    # casi encima); etiquetar por umbral no evita el choque. Se recorre de
+    # mayor a menor market cap y se descarta la etiqueta que se traslape con
+    # una ya puesta: gana la empresa mas grande, que es la que el lector busca.
+    rx = (d["cagr"].max() - d["cagr"].min()) or 1
+    ry = (d["fpe"].max() - d["fpe"].min()) or 1
+    ancho_et, alto_et = rx * 0.055, ry * 0.105     # caja aproximada de 2 lineas
+    puestas = []
+    for _, r in d.sort_values("mcap", ascending=False).iterrows():
+        x, y = float(r["cagr"]), float(r["fpe"])
+        # La etiqueta cuelga debajo de la burbuja
+        cx, cy = x, y - alto_et * 0.75
+        if any(abs(cx - px) < ancho_et and abs(cy - py) < alto_et
+               for px, py in puestas):
+            continue
+        puestas.append((cx, cy))
+        ax.annotate(f"{r['nombre']}\\n${r['mcap'] / 1e9:,.0f}B",
+                    xy=(x, y), xytext=(0, -7), textcoords="offset points",
+                    ha="center", va="top", fontsize=6.8,
+                    color=PALETA["texto"], zorder=5)'''
+
+assert viejo in s
+s = s.replace(viejo, nuevo)
+io.open(P, "w", encoding="utf-8").write(s)
+
+# --- 3. verde_claro a la paleta -------------------------------------------
+G = r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs\grafico_banquero.py"
+g = io.open(G, encoding="utf-8").read()
+if "verde_claro" not in g:
+    g = g.replace('    "gris":        "#A6A6A6",',
+                  '    "gris":        "#A6A6A6",\n'
+                  '    "verde_claro": "#8FC4AF",   # solo para un 7o grupo en scatter')
+    io.open(G, "w", encoding="utf-8").write(g)
+print("colores y anti-colision aplicados")

@@ -1,0 +1,96 @@
+import copy, os
+from pptx import Presentation
+from pptx.oxml.ns import qn
+from lxml import etree
+S=os.path.dirname(os.path.abspath(__file__))
+SRC=os.path.join(S,"user_pv2.pptx")
+OUT=r"C:\Users\cesar\OneDrive\Desktop\AZTD Peers\AZTD vs Peers Performance_v2b.pptx"
+prs=Presentation(SRC)
+A="http://schemas.openxmlformats.org/drawingml/2006/main"
+def sz(v): return str(int(v*100))
+
+# ---------------- content (all figures are Jan-24 to Sep-26, annualized, from the workbook / deck)
+DISCLAIMER=[("Disclaimer: ",True),
+ ("Even though the peer selection (AVDV, ISCF, DISV and DFIS) ",False),("is not entirely comparable to AZTD",True),
+ (" (diversified international small-cap funds with 1,100 to 3,400 holdings and almost no US exposure, vs. 50 positions and ~42% in the US for AZTD), we believe the analysis is a useful reference. "
+  "The period covers Jan-24 to Sep-26 (33 months) and could be extended if needed. Sector, region and stock figures are holdings-based, before trading costs and fees.",False)]
+BLOCKS=[
+ ("Performance",[
+   [("AZTD returned 14.2% a year vs 21.7% for the peer average (-7.4pp). ",True),
+    ("It led in 2024 (+1.1pp) but lagged in 2025 (-16.5pp) and in 2026 YTD (-6.7pp), so 2025 is where most of the gap sits.",False)]]),
+ ("Sector and Regional Weights",[
+   [("Too little Materials, too much Health Care (sector allocation -1.4pp a year). ",True),
+    ("AZTD averaged 6.8% in Materials vs 15.8% for the peers, whose stocks returned 30% a year (-0.7pp); it held 7.9% in Health Care vs 3.6% in a sector that returned only 6% a year (-0.7pp).",False)],
+   [("We were light in Europe and Japan. ",True),
+    ("Europe (29% vs 49%) and Japan (19% vs 26%) cost -5.0pp and -3.5pp a year; the US (42% vs 0.4%), a market the peers barely own, added +9.5pp.",False)]]),
+ ("Stock Selection (-2.2pp a year)",[
+   [("Financials (-3.9pp): we missed the European banks. ",True),
+    ("AZTD's Financials returned 16% a year vs 38% for the peers, which held banks AZTD never owned (Sabadell +358%, Lion Finance +328%, Sydbank +208%, cumulative).",False)],
+   [("Materials (-2.3pp): the winners came too small. ",True),
+    ("Metals & Mining added +0.5pp for AZTD vs +3.9pp for the peers, and Chemicals cost -0.6pp; gold-miner winners such as OceanaGold (+391%) were held at small weights.",False)],
+   [("Industrials (+3.7pp) was the exception. ",True),
+    ("AZTD's industrial stocks returned 43% a year vs 23% for the peers, partly offsetting the gaps above.",False)]]),
+ ("Top Holdings",[
+   [("Model 1.1 is higher, returns were not. ",True),
+    ("In Materials, Financials and Utilities AZTD's top-5 names trail the peers' YTD (median -9% vs 19%, 10% vs 30%, -11% vs 4%) despite a higher Model 1.1 in Materials and Financials (0.91 vs 0.58; 0.74 vs 0.58).",False)]]),
+]
+SUBTITLE="AZTD trails the peers by 7.4pp a year: light key-sector and regional weights, weak picks"
+SOURCE="LSEG Workspace; SEC N-PORT; Aztlan Equity Management"
+assert len(SUBTITLE)<=92, len(SUBTITLE)
+nb=sum(len(b[1]) for b in BLOCKS); assert nb<=7, nb
+
+def run(parent,text,size,bold=False,color=None,italic=False):
+    r=etree.SubElement(parent,qn("a:r")); rp=etree.SubElement(r,qn("a:rPr")); rp.set("lang","en-US"); rp.set("sz",sz(size))
+    if bold: rp.set("b","1")
+    if italic: rp.set("i","1")
+    rp.set("dirty","0")
+    if color:
+        sf=etree.SubElement(rp,qn("a:solidFill")); c=etree.SubElement(sf,qn("a:srgbClr")); c.set("val",color)
+    lt=etree.SubElement(rp,qn("a:latin")); lt.set("typeface","Arial"); cs=etree.SubElement(rp,qn("a:cs")); cs.set("typeface","Arial")
+    t=etree.SubElement(r,qn("a:t")); t.text=text
+def para(tb,algn="just",bullet=False,lnspc=14.5,before=3,after=0):
+    p=etree.SubElement(tb,qn("a:p")); pPr=etree.SubElement(p,qn("a:pPr")); pPr.set("algn",algn)
+    if bullet: pPr.set("marL","228600"); pPr.set("indent","-228600")
+    ls=etree.SubElement(pPr,qn("a:lnSpc")); sp=etree.SubElement(ls,qn("a:spcPts")); sp.set("val",str(int(lnspc*100)))
+    sb=etree.SubElement(pPr,qn("a:spcBef")); sp=etree.SubElement(sb,qn("a:spcPts")); sp.set("val",str(int(before*100)))
+    if after:
+        sa=etree.SubElement(pPr,qn("a:spcAft")); sp=etree.SubElement(sa,qn("a:spcPts")); sp.set("val",str(int(after*100)))
+    if bullet:
+        bf=etree.SubElement(pPr,qn("a:buFont")); bf.set("typeface","Arial"); bc=etree.SubElement(pPr,qn("a:buChar")); bc.set("char","•")
+    else:
+        etree.SubElement(pPr,qn("a:buNone"))
+    return p
+
+# ---------------- slide 3: executive summary
+s3=prs.slides[2]
+ph={p.placeholder_format.idx:p for p in s3.placeholders}
+body=ph[13]; tb=body._element.txBody
+for p in tb.findall(qn("a:p")): tb.remove(p)
+BODY=11; HEAD=15
+p=para(tb,before=0)
+for t,b in DISCLAIMER: run(p,t,BODY,b,italic=False)
+for title,bullets in BLOCKS:
+    para(tb,algn="l",lnspc=8,before=0)                       # small spacer
+    ph_=para(tb,algn="l",lnspc=18,before=4)
+    run(ph_,title,HEAD,True,"002060")
+    for bl in bullets:
+        pb=para(tb,bullet=True,lnspc=14,before=3)
+        for t,b in bl: run(pb,t,BODY,b)
+def set_text(shape,text):
+    p=shape.text_frame.paragraphs[0]
+    for r in p.runs[1:]: r._r.getparent().remove(r._r)
+    if p.runs: p.runs[0].text=text
+    else: p.add_run().text=text
+set_text(ph[1],SUBTITLE); set_text(ph[14],SOURCE)
+
+# ---------------- separators
+SEP={3:("Performance and Attribution","Jan-2024 to Sep-2026, annualized"),
+     11:("Weak Sectors","Largest contributors and top holdings by ETF"),
+     20:("Regional Analysis","Europe and Japan")}
+for idx,(t,sub) in SEP.items():
+    sl=prs.slides[idx]
+    assert sl.slide_layout.name=="Title", (idx,sl.slide_layout.name)
+    for ph_ in sl.placeholders:
+        if ph_.placeholder_format.idx==11: set_text(ph_,t)
+        if ph_.placeholder_format.idx==12: set_text(ph_,sub)
+prs.save(OUT); print("saved",OUT)

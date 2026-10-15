@@ -1,0 +1,11 @@
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$m  = $xl.Workbooks.Item('20260922_SETSA Transportes.xlsx').Worksheets.Item('Modelo SETSA')
+$u = { param($s) [regex]::Unescape($s) }
+$m.Cells.Item(45, 3).Value2  = & $u 'Flujo de Efectivo (derivado del balance, método indirecto)'
+$m.Cells.Item(85, 3).Value2  = 'Balance General'
+$m.Cells.Item(140, 3).Value2 = & $u 'Márgenes y Rentabilidad'
+$m.Cells.Item(154, 3).Value2 = 'Cartera de Clientes (saldo por cliente, incluye IVA)'
+$m.Cells.Item(224, 3).Value2 = 'Deuda e Intereses'
+$m.Cells.Item(260, 3).Value2 = 'Activo Fijo y Flotilla'
+$m.Cells.Item(273, 3).Value2 = 'Indicadores Clave'
+foreach ($r in 45,85,140,154,224,260,273) { "$r : " + $m.Cells.Item($r,3).Value2 }

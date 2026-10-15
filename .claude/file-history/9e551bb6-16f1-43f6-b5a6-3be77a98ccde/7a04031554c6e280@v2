@@ -1,0 +1,108 @@
+import win32com.client as w, time
+x = w.GetActiveObject('Excel.Application')
+wb = [b for b in x.Workbooks if b.Name == '20261007_Ingevity Corp.xlsx'][0]
+am = wb.Worksheets('Annual Model')
+INBLUE = 16719360
+NUM = '#,##0.0;(#,##0.0);"-"'
+
+
+def lab(r):
+    return str(am.Range(f'E{r}').Value or '')
+
+
+def find(text, start=1, end=420, exact=False):
+    for r in range(start, end):
+        v = lab(r)
+        if (v == text) if exact else v.startswith(text):
+            return r
+    raise AssertionError('not found: ' + text)
+
+
+x.Calculation = -4135
+x.ScreenUpdating = False
+try:
+    r_lit = find('Litigio BASF: cargo devengado', 280, 400)
+    r_note = r_lit
+    assert lab(r_lit + 1) == '', lab(r_lit + 1)
+    r_aimp = find('APT: (-) Q2-26 impairment', 280, 400)
+    r_isgn = find('IS/CTO + Road Markings: gains', 280, 400)
+    r_h1 = find('H1-26 special items net', 280, 400)
+    r_sp = find('Total special items 2026', 280, 400)
+    r_apt_gla = find('APT: gain / (loss) after-tax', 280, 400)
+    r_olc = find('Other Operating Cash Flows', 150, 200, exact=True)
+    r_cfo = find('Net Cash Flow from Operating Activities', 150, 200, exact=True)
+    r_capex = find('Capital Expenditures - Total', 150, 200, exact=True)
+    r_fcf = find('Free Cash Flow - Actual', 150, 220)
+    print('rows', dict(lit=r_lit, note=r_note, aimp=r_aimp, isgn=r_isgn, h1=r_h1, sp=r_sp, olc=r_olc, cfo=r_cfo, capex=r_capex, fcf=r_fcf))
+    print('FCF Q formula before:', am.Range(f'Q{r_fcf}').Formula)
+
+    n = 14
+    ins = r_note + 1
+    am.Rows(f'{ins}:{ins + n - 1}').Insert()
+    rows = [
+        ('pay', 'Litigio BASF: PAGO en caja 2026 (Q2-26; operating, no es gasto de 2026)', 113.2, True),
+        ('hdr', 'Composicion de partidas especiales 2026 (pre-tax, H1 reportado)', None, False),
+        ('c_lit', '  Litigio BASF: cargo (reembolso honorarios, Q1)', -16.2, True),
+        ('c_aimp', '  Impairment APT (Q2)', f'=-L{r_aimp}', False),
+        ('c_lic', '  Impairment licencia PM (Q1)', -2.8, True),
+        ('c_rm', '  Ganancia venta Road Markings (Q2)', 8.6, True),
+        ('c_is', '  Ganancia venta IS/CTO (disc. ops, Q1)', 54.2, True),
+        ('c_rs', '  Reestructura + portafolio (cont. 2.2 + 6.1; disc. 12.6)', -20.9, True),
+        ('c_tot', '  Total H1 pre-tax', None, False),
+        ('c_tax', '  Efecto fiscal y otros (hasta GAAP-adj. -7.8)', None, False),
+        ('c_h1', '  H1-26 special items after-tax', None, False),
+        ('c_apt', '  + Resultado venta APT al cierre (after-tax)', f'=+L{r_apt_gla}', False),
+        ('c_all', '  = Total partidas especiales 2026 (after-tax) -> fila 45 del IS', None, False),
+        ('c_oth', 'Otros costos en caja de especiales H1 (restructura, portafolio, impuestos): derivado', None, False),
+    ]
+    R = {k: ins + i for i, (k, *_r) in enumerate(rows)}
+    for k, text, v, is_in in rows:
+        r = R[k]
+        c = am.Range(f'E{r}')
+        c.Value = text
+        c.Font.Name = 'Arial'; c.Font.Size = 11; c.Font.Bold = k in ('hdr', 'c_all'); c.Font.Italic = False; c.Font.Color = 0
+        cell = am.Range(f'L{r}')
+        cell.NumberFormat = NUM
+        cell.Font.Name = 'Arial'; cell.Font.Size = 11; cell.Font.Bold = k == 'c_all'
+        if v is None:
+            continue
+        if isinstance(v, str):
+            cell.Formula = v
+            cell.Font.Color = 0
+        else:
+            cell.Value = v
+            cell.Font.Color = INBLUE if is_in else 0
+    am.Range(f'L{R["c_tot"]}').Formula = f'=SUM(L{R["c_lit"]}:L{R["c_rs"]})'
+    am.Range(f'L{R["c_h1"]}').Formula = f'=+L{r_h1}'
+    am.Range(f'L{R["c_tax"]}').Formula = f'=+L{R["c_h1"]}-L{R["c_tot"]}'
+    am.Range(f'L{R["c_all"]}').Formula = f'=+L{R["c_h1"]}+L{R["c_apt"]}'
+    # derived other cash specials = H1 after-tax specials - (IS/RM gains - APT impairment) + litigation accrual
+    am.Range(f'L{R["c_oth"]}').Formula = f'=+L{r_h1}-(L{r_isgn}-L{r_aimp})+L{r_lit}'
+    for k in ('c_tot', 'c_tax', 'c_h1', 'c_apt', 'c_all', 'c_oth'):
+        am.Range(f'L{R[k]}').Font.Color = 0
+    chk = am.Range(f'M{R["c_all"]}')
+    chk.Formula = f'=IF(ABS(L{R["c_all"]}-L{r_sp})<0.05,"ok = L{r_sp}","revisar")'
+    chk.Font.Name = 'Arial'; chk.Font.Size = 9; chk.Font.Italic = True; chk.Font.Color = 0x595959
+
+    # ---- operating CF 2026: litigation payment + other cash special costs ----
+    c = am.Range(f'Q{r_olc}')
+    c.Formula = f'=-$L${R["pay"]}+$L${R["c_oth"]}'
+    c.Font.Color = 0
+    # FCF excludes ONLY the litigation payment (mgmt definition); restructuring cash stays in FCF
+    am.Range(f'Q{r_fcf}').Formula = f'=+Q{r_cfo}+Q{r_capex}+$L${R["pay"]}'
+    for col in 'RS':
+        am.Range(f'{col}{r_fcf}').Formula = f'=+{col}{r_cfo}+{col}{r_capex}-{col}{r_olc}'
+    try:
+        am.Range(f'Q{r_olc}').AddComment('2026: -pago litigio BASF (113.2) + otros costos en caja de especiales H1 (derivado en bloque APT Divesture). FCF (fila Free Cash Flow) excluye solo el litigio.')
+    except Exception as e:
+        print('cmt', e)
+    try:
+        am.Range('Q45').AddComment('Composicion pre-tax en el bloque APT Divesture (litigio -16.2, impairment APT -32.1, ganancias IS/RM, etc.) + perdida de APT al cierre.')
+    except Exception as e:
+        print('cmt', e)
+finally:
+    x.Calculation = -4105
+    x.ScreenUpdating = True
+    x.CutCopyMode = False
+print('R', R)
+print('done')

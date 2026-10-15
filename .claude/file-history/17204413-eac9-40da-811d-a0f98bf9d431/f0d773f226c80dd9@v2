@@ -1,0 +1,24 @@
+import glob, io, os, re
+
+os.chdir(r"C:\Users\cesar\Projects\market-terminal\engine")
+APPEND = re.compile(r'^sys\.path\.append\(r"C:\\Users\\cesar\\OneDrive\\Desktop\\News\\Templates(\\Graphs)?"\)\n', re.M)
+LIT = r'r"C:\Users\cesar\Downloads\U18244610_20250915_20260914.csv"'
+
+for f in sorted(glob.glob("*.py")):
+    s = io.open(f, encoding="utf-8").read()
+    o = s
+    # python pone la carpeta del script en sys.path; el append era redundante
+    s, k = APPEND.subn("", s)
+    if LIT in s:
+        s = s.replace(LIT, "ultimo_estado()")
+        s = s.replace("import os\n", "import os\nfrom config import ultimo_estado\n", 1)
+        assert "from config import ultimo_estado" in s, f
+        assert LIT not in s, f
+    if s != o:
+        io.open(f, "w", encoding="utf-8").write(s)
+        print(f"parcheado {f}  appends={k}")
+
+resto = [f for f in glob.glob("*.py") if f != "config.py"
+         and re.search(r"OneDrive|Downloads\\U18", io.open(f, encoding="utf-8").read())]
+assert not resto, resto
+print("sin rutas absolutas fuera de config.py")

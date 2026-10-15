@@ -1,0 +1,228 @@
+"""Capa de noticias: titulares de Workspace con filtro de fuente.
+
+    python noticias.py AVGO.OQ ADI.OQ CLS.N
+    python noticias.py --cartera              # los nombres del estado de cuenta
+    python noticias.py --tema "Federal Reserve"
+    python noticias.py AVGO.OQ --cuerpo       # trae el texto de las notas
+
+POR QUE EL FILTRO NO ES OPCIONAL
+--------------------------------
+Sobre 240 titulares de seis empresas, 154 (64%) eran ruido autogenerado:
+
+    NS:GLORDP  109  "Broadcom Inc. logs 0.6% gain in today's trading session"
+    NS:GLOSTK   21  "Weekly: Broadcom ticks up 1.2% on average volume"
+    NS:GLOTRA   12  "Broadcom lifts 1.1% in today's session"
+
+Son robots que narran el movimiento del precio, que ya tenemos calculado y
+mejor. Tambien entran tweets (NS:X) y titulares de agregadores con datos
+absurdos. Sin whitelist, un reporte automatico publica eso con apariencia de
+Reuters.
+
+NIVELES
+-------
+  primaria   Reuters, comunicados de la propia empresa y filings. Es lo que
+             puede citarse como hecho.
+  analisis   Casas de research y prensa financiera reconocida. Sirve como
+             opinion atribuida, nunca como hecho.
+  excluida   Robots de precio, agregadores y redes sociales.
+
+Por defecto solo salen primaria y analisis. El resto ni se cuenta.
+"""
+import sys
+sys.path.append(r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs")
+
+import argparse
+import csv
+import json
+import os
+import re
+import warnings
+import lseg.data as ld
+from lseg.data import news
+import pandas as pd
+from datetime import datetime
+
+warnings.filterwarnings("ignore")
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except (AttributeError, OSError):
+    pass
+
+# --- clasificacion de fuentes ----------------------------------------------
+PRIMARIA = {
+    "NS:RTRS":   "Reuters",
+    "NS:PUBT":   "Company release",
+    "NS:FINLAW": "SEC filing",
+    "NS:GLFILE": "SEC filing",
+    "NS:BSW":    "Business Wire",
+    "NS:PRN":    "PR Newswire",
+    "NS:GNW":    "Globe Newswire",
+    "NS:DJN":    "Dow Jones",
+    "NS:WSJ":    "Wall Street Journal",
+    "NS:FT":     "Financial Times",
+    "NS:BLM":    "Bloomberg",
+    "NS:CNBC":   "CNBC",
+}
+ANALISIS = {
+    "NS:ZACKSC": "Zacks",
+    "NS:BENZIN": "Benzinga",
+    "NS:MOTFOO": "Motley Fool",
+    "NS:TIPRAN": "TipRanks",
+    "NS:BARRON": "Barron's",
+    "NS:INVCOM": "Investing.com",
+    "NS:SEEKAL": "Seeking Alpha",
+    "NS:GURCOM": "GuruFocus",
+    "NS:CRNUSA": "CRN",
+    "NS:BUSCOM": "Trade press",
+    "NS:YAHUKI": "Yahoo Finance",
+}
+# Robots de precio, agregadores y redes. No entran nunca.
+EXCLUIDA = {
+    "NS:GLORDP", "NS:GLOSTK", "NS:GLOTRA", "NS:CNBSTR", "NS:STOCKP",
+    "NS:X", "NS:GLOMAI", "NS:YAHNEX", "NS:MARBEA", "NS:TICREP",
+    "NS:DAILYQ", "NS:ZOLCOM", "NS:AMEBAN", "NS:FINGEV", "NS:NEWBTS",
+}
+
+# Titulares que son narracion de precio aunque vengan de fuente aceptable
+RUIDO = re.compile(
+    r"(logs? [\d.]+% (gain|loss)|ticks? (up|down)|lifts? [\d.]+%|"
+    r"trading session|on (weak|average|heavy) volume|"
+    r"trades? [\d.]+ percent|shares? (up|down) [\d.]+%|"
+    r"(Grows|Trims|Takes|Boosts|Sells|Buys) .{0,40}(Holdings|Position|Stake) in|"
+    r"Stake (Trimmed|Boosted|Raised|Lowered) by|"
+    r"(Receives|Sets) Average Recommendation|Price Target at|"
+    r"rises? for a .{0,20}consecutive day|(Wednesday|Monday|Tuesday|Thursday|Friday)'s Preview|"
+    r"^Update: |rebound after|days' volume|weeks' volume|"
+    r"among top (gainers|losers)|Is It Too Late to Buy|"
+    r"Here is What You Need to Know|Investors Heavily Search)", re.IGNORECASE)
+
+
+def clasificar(codigo):
+    if codigo in PRIMARIA:
+        return "primaria", PRIMARIA[codigo]
+    if codigo in ANALISIS:
+        return "analisis", ANALISIS[codigo]
+    return "excluida", codigo
+
+
+def normalizar(t):
+    """Para deduplicar: la misma nota llega por varias fuentes."""
+    return re.sub(r"[^a-z0-9 ]", "", str(t).lower())[:80]
+
+
+def traer(consulta, count=60, incluir_analisis=True):
+    """Titulares filtrados, mas recientes primero, sin duplicados."""
+    try:
+        h = news.get_headlines(consulta, count=count)
+    except Exception as e:
+        print(f"    fallo la consulta: {str(e)[:110]}")
+        return pd.DataFrame()
+    if h is None or not len(h):
+        return pd.DataFrame()
+
+    filas, vistos, descartados = [], set(), 0
+    for fecha, r in h.iterrows():
+        codigo = str(r.get("sourceCode", ""))
+        titular = str(r.get("headline", "")).strip()
+        nivel, fuente = clasificar(codigo)
+        if nivel == "excluida" or RUIDO.search(titular):
+            descartados += 1
+            continue
+        if not incluir_analisis and nivel != "primaria":
+            descartados += 1
+            continue
+        clave = normalizar(titular)
+        if clave in vistos:
+            continue
+        vistos.add(clave)
+        filas.append(dict(fecha=fecha, titular=titular, fuente=fuente,
+                          nivel=nivel, codigo=codigo,
+                          storyId=r.get("storyId", "")))
+    df = pd.DataFrame(filas)
+    if len(df):
+        df = df.sort_values("fecha", ascending=False)
+    return df, descartados
+
+
+def cuerpo(story_id, max_chars=1400):
+    """Texto de la nota, sin el HTML."""
+    try:
+        s = news.get_story(story_id)
+    except Exception as e:
+        return f"(no se pudo traer: {str(e)[:80]})"
+    t = re.sub(r"<[^>]+>", " ", str(s))
+    t = re.sub(r"\s+", " ", t).strip()
+    return t[:max_chars]
+
+
+def rics_de_cartera(estado):
+    """Lee los RICs del Activity Statement de IBKR."""
+    sufijo = {"NASDAQ": ".OQ", "NYSE": ".N", "ARCA": ".P", "AMEX": ".A"}
+    simbolos, bolsas = [], {}
+    bloque = None
+    with open(estado, encoding="utf-8-sig") as f:
+        for fila in csv.reader(f):
+            if len(fila) < 3:
+                continue
+            if fila[0] == "Open Positions" and fila[1] == "Data" and fila[2] == "Summary":
+                simbolos.append(fila[5])
+            if fila[0] == "Financial Instrument Information" and fila[1] == "Header":
+                bloque = fila[2:]
+            elif fila[0] == "Financial Instrument Information" and fila[1] == "Data" and bloque:
+                d = dict(zip(bloque, fila[2:]))
+                bolsas[d.get("Symbol", "")] = d.get("Listing Exch", "")
+    return {s: s + sufijo.get(bolsas.get(s, ""), ".OQ") for s in simbolos}
+
+
+def main():
+    ap = argparse.ArgumentParser(description="Noticias filtradas por fuente")
+    ap.add_argument("rics", nargs="*", help="RICs a consultar")
+    ap.add_argument("--cartera", action="store_true", help="usar el estado de IBKR")
+    ap.add_argument("--estado", default=r"C:\Users\cesar\Downloads\U18244610_20250915_20260914.csv")
+    ap.add_argument("--tema", help="consulta de texto libre")
+    ap.add_argument("--cuerpo", action="store_true", help="traer el texto")
+    ap.add_argument("--top", type=int, default=6)
+    ap.add_argument("--solo-primarias", action="store_true")
+    args = ap.parse_args()
+
+    objetivos = {}
+    if args.cartera:
+        objetivos = {v: k for k, v in rics_de_cartera(args.estado).items()}
+    for r in args.rics:
+        objetivos[r] = r
+
+    ld.open_session()
+    salida = {"generado": datetime.now().isoformat(timespec="seconds"), "items": {}}
+
+    if args.tema:
+        objetivos[f"__tema__{args.tema}"] = args.tema
+
+    for clave, etiqueta in objetivos.items():
+        consulta = (f'"{args.tema}" AND Language:LEN' if clave.startswith("__tema__")
+                    else f"R:{clave} AND Language:LEN")
+        df, descartados = traer(consulta, incluir_analisis=not args.solo_primarias)
+        print(f"\n{'=' * 76}\n{etiqueta}   ({len(df)} utiles, {descartados} descartados)\n{'=' * 76}")
+        if not len(df):
+            continue
+        items = []
+        for _, r in df.head(args.top).iterrows():
+            marca = "*" if r["nivel"] == "primaria" else " "
+            print(f" {marca} {str(r['fecha'])[:16]}  [{r['fuente']}]")
+            print(f"    {r['titular']}")
+            item = dict(fecha=str(r["fecha"]), titular=r["titular"],
+                        fuente=r["fuente"], nivel=r["nivel"])
+            if args.cuerpo and r["nivel"] == "primaria":
+                item["cuerpo"] = cuerpo(r["storyId"])
+                print(f"    > {item['cuerpo'][:240]}...")
+            items.append(item)
+        salida["items"][etiqueta] = items
+
+    with open("datos_noticias.json", "w", encoding="utf-8") as f:
+        json.dump(salida, f, indent=2, ensure_ascii=False)
+    print(f"\n(*) fuente primaria: citable como hecho")
+    print(f"Listo: datos_noticias.json")
+    ld.close_session()
+
+
+if __name__ == "__main__":
+    main()

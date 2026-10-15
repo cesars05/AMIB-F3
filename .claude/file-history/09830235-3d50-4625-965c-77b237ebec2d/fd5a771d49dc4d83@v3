@@ -1,0 +1,116 @@
+# Plan v3 – US Steel Outlook (para aprobar antes de ejecutar)
+
+Orden de trabajo: 1) recopilar info (hecho) → 2) este plan → 3) Excel → 4) deck v3 → 5) render + QC.
+
+## 1. Lo que se recopiló
+| Fuente | Qué aporta a la v3 |
+|---|---|
+| **OECD Steel Outlook 2026** (leído completo, `02_Reportes/Conversiones_MD/OECD_Steel_Outlook_2026.md`) | **Tablas con datos para gráficos nativos:** 2.1 demanda por región 2025/26/30; 2.2 producción; **2.3 exportaciones por región 2019–2025**; **3.1 capacidad por región 2021–25**; 3.2 adiciones 2026–28 (en marcha vs planeadas); **5.2 exportadores de chatarra (EE. UU. es el 2.º, 21.4 Mt)**. **Narrativa clave:** demanda mundial -2.6% en 2025 (4.º año de caída); utilización 76% → 74%; China 54% del exceso, subsidio 15x, 59 programas provinciales nuevos, licencias de exportación desde ene-26; elusión vía ASEAN (88 casos y 51 reexportaciones; semis +300%); 21% de la inversión futura es transfronteriza, la mitad china y 86% en altos hornos; energía = 20–40% del costo; importaciones de Norteamérica -15.8% en 2025; exportaciones europeas -53% vs 2019; Table 5.1 con medidas de cada país (UE, Canadá, México 35%, Reino Unido, India, Brasil y Section 232 abr-26) |
+| SIMA Executive Summary (md) | Importaciones abr–jun +10.3% (1.7 → 1.9 Mt), jun -6.6% a/a; HRB EE. UU. $1,208/t vs Europa $780 / mundo $490 / China $429; penetración 15.7% (2025: 18.2%); China 53.9% de la producción mundial, EE. UU. 4.6% (3.º); utilidad de la industria $2.0 mil M en 2T26 (5 trimestres al alza) |
+| Datos de gobierno ya en `01_Datos` | Commerce: importaciones por país × año 2015–2026, por categoría, mensual 2025–26; FRED: PPI laminado en frío 2000–2026; WBMS: producción y consumo por país |
+| **Tus cambios en el Excel** | `15_HRC_Price`: serie de **commodity** (DSGRID con datatype vacío = settlement, semanal desde 2008 + bloque diario de 2 años en K:L). `33_Stocks_vs_SPX`: precios NUE/STLD/CLF/CMC desde oct-25; **el S&P marca `$$ER: E100`**: `.SPX` no es código válido en Datastream (el de Datastream es `S&PCOMP`) |
+| **Tus cambios en el deck** | Exec Summary: encabezado por región con su color; viñetas ➢; negativos en **rojo puro** (#FF0000); bullets más largos. Lámina 6: **caja roja punteada sobre las filas clave** de la tabla de la OECD |
+| Deck de referencia **Data Centers Capex v5** | Las imágenes de reportes **no llevan su título original**: se recortan y arriba va el **header Aztlan** (título 16 bold + línea negra + subtítulo 12 itálica) escrito por nosotros, con 1–2 bullets de lectura debajo de cada imagen (lámina 5 "Funded by Balance Sheet Reserves", layout `2ChartsSubtitles`). Bullets de 2–4 líneas con lead-in en negrita y cifra en navy |
+
+## 2. Reglas de construcción v3 (skill + tus correcciones)
+1. **Screenshot = solo el exhibit.** Se recorta el título de la figura del reporte. Encima va el block header Aztlan (título propio + regla + subtítulo itálico con unidad/periodo) y debajo o al lado, la lectura. La fuente va en el pie (10 pt itálica + hipervínculo).
+2. **Resaltar lo clave en la imagen:** caja roja punteada (`dashed_box`) sobre la fila/serie/periodo que prueba el título; máximo 1–2 por lámina.
+3. **Texto:**
+   - 3–4 bullets por lámina de 2–3 líneas cada uno (2–3x lo actual).
+   - Estructura: **lead-in en negrita** (el hecho) + cifra + **mecanismo** (por qué pasa / qué implica).
+   - 14 pt en láminas de texto y 12 pt junto a gráficas.
+   - Negativo/riesgo en rojo; dato positivo clave en navy.
+4. **Rotación** (`rotation-qc.md`): máximo 2 láminas seguidas de la misma familia. Cada sección sigue: divisor → contexto (D/T) → 1–3 cuantitativas (C/K) → **implicación con barra de conclusión o `tail_bar`**.
+5. **Más gráficos nativos con datos de gobierno y de tablas OECD** (rotan con los screenshots).
+6. **Unidades:** precio en **US$/short ton** para EE. UU. (CME, BofA, empresas) y **US$/metric tonne** en comparaciones globales (OECD, SIMA), con la unidad siempre en el subtítulo del header. Cada cifra repetida usa la misma fuente y fecha en todo el deck.
+7. **Executive Summary** con tu formato: encabezados de color por región y viñetas ➢. Remate "Key Risks to Monitor" con lead-ins en rojo (KLA s6).
+
+### Ejemplo de redacción (lámina "China Exports What It Cannot Use")
+Antes:
+- "Exports now equal ~14% of Chinese output, while exports from Europe, the rest of Asia and North America decline."
+
+Después:
+- **China's property slump turned its mills into exporters.** Domestic demand fell 6.9% in 2025 to 831 Mt while output only fell 4.3%, leaving a ~130 Mt surplus that mills pushed abroad. Exports hit a record 131 Mt (+13.8%), now 41% of world steel trade vs. 19% in 2019.
+- **Volume is rising faster than value**, a sign of discounting: export prices fell while tonnage doubled. Every major importing region now has a trade case against China (27 new cases in 2025, 113 measures in force).
+
+## 3. Excel (cambios)
+| Hoja | Cambio |
+|---|---|
+| `15_HRC_Price` | Respetar tu versión (commodity, DSGRID sin datatype de precio de acción). El deck usa la serie semanal B:C. Solo se agrega la tabla de eventos 232 corregida (fechas de anuncio y vigencia) |
+| `33_Stocks_vs_SPX` → **`Stocks_vs_SPX`** (formato Bimbo "Deck Charts") | Ticker/Benchmark en celdas amarillas; `Start Date` **fija 31-dic-2024**; DSGRID con **`"RI"` (total return index)** para las acciones y para **`S&PCOMP`**, igual que la hoja Peers Data de Bimbo; si `RI` no devuelve datos se prueba `"P"` (precio) / `"PI"` (índice). **Rendimiento acumulado** `=+(RI_t/RI$inicio)-1` en %, no base 100. Tabla de eventos (**verificadas**): 10-feb-25 proclamación Section 232 (25% a todos, sin exenciones, vigente 12-mar-25); 2-abr-25 "Liberation Day" (aranceles recíprocos, caída general del mercado: evento de contexto para el S&P); 30-may-25 Trump anuncia el 50% en la planta Irvin de U.S. Steel, PA (proclamación 3-jun, vigente 4-jun-25); abr-26 reajuste a valor total |
+| Nuevas hojas de datos de gobierno | `Imports_by_Country` (top 8 de 2024 / 2025 / 2026 YTD anualizado), `PPI_ColdRolled` (FRED 2010–2026), `WBMS_Prod_Cons` (producción vs consumo por región, ene–jun) |
+| Nuevas hojas OECD (tablas → datos) | `OECD_Exports_by_Region` (T2.3), `OECD_Capacity_by_Region` (T3.1 + T3.2), `OECD_Scrap_Exporters` (T5.2) |
+| Todas | Mismo formato (Arial, B2/B3/B4, fila 6, zoom 85%), renumeradas a la lámina v3 |
+
+## 4. Storyline v3 (~40 láminas)
+Familias: T texto · C gráfica nativa · K tabla · D diagrama · E evidencia (screenshot) · F marco.
+
+| # | Lámina (título) | Familia | Contenido / exhibit |
+|---|---|---|---|
+| 1–3 | Portada · Disclaimer · **Agenda** (01 Global, 02 US, 03 Europe, 04 Asia, 05 Exposure) | F | — |
+| 4 | Executive Summary | T | Tu formato por región + Key Risks |
+| 5 | Two Routes to Make Steel | D | Rutas BF-BOF vs EAF + barra EAF % |
+| **01 Global** | | | |
+| 6 | Divisor | F | |
+| 7 | Steel Follows the Construction Cycle | E | Uso por sector (worldsteel) + bullets de mecanismo |
+| 8 | Global Demand Falls for a Fourth Year | C | **Nativo:** demanda 2025/26/30 por región (T2.1), China resaltada |
+| 9 | Capacity Outruns Demand | E+E | OECD Fig 1.1 + 3.2 **sin títulos, con header Aztlan**, caja punteada en 2026–28 |
+| 10 | How Excess Capacity Spreads | **D** | **Diagrama nativo** de transmisión: China (exceso 54%) → exportación directa / acero embebido / trasbordo ASEAN / FDI → mercados OCDE → respuesta (AD/CVD, 232, TRQ UE) → desvío |
+| 11 | China Is Now 41% of World Steel Exports | C | **Nativo:** exportaciones por región 2019–2025 (T2.3) |
+| 12 | Prices Split Between Protected and Open Markets | E+K | Fig 2.1 recortada + mini tabla SIMA jun-26 ($1,208 / $780 / $490 / $429) |
+| 13 | Margins Squeezed by Raw Materials | E+E | Fig 2.3 + 2.4 con header propio |
+| 14 | Trade Defenses Go Broad | K | **Tabla nativa** por país (OECD T5.1: tipo de medida, arancel, fecha) + Fig 5.1 pequeña |
+| 15 | What It Means: Global | D | Barra de conclusión + 3 columnas (oferta, precios, política) |
+| **02 US** | | | |
+| 16 | Divisor | F | |
+| 17 | US Steel Prices Hold a Tariff-Driven Premium | C | **HRC semanal 2010–2026** (receta §8: eventos con fecha y precio, bandas 232, caja Market Statistics, tira de resumen) |
+| 18 | Mill Prices Confirm the Move | C | **Nativo:** PPI laminado en frío (FRED) |
+| 19 | Construction, Energy and Data Centers Drive Demand | D | **Boxes por sector** (non-res / infra / energía / auto / residencial: señal + dato) |
+| 20 | Orders Stay Strong as Lead Times Stretch | E+E | BofA Ex 42 + 45, header propio |
+| 21 | Domestic Mills Capture the Growth | K | Balance BofA (screenshot con caja punteada en 2026E) |
+| 22 | Section 232 Reshapes the Market | D | Línea de tiempo (ya existe), con el anuncio del 30-may-25 |
+| 23 | Imports Fall Under the 50% Tariff | C | **Nativo:** importaciones anuales por categoría 2015–2025 |
+| 24 | Who Still Ships Steel to the US | C | **Nativo:** top países 2024 / 2025 / 2026 YTD anualizado (Commerce) |
+| 25 | Imports Rebound in 2026 | C+E | Nativo mensual + SIMA Fig 11 de penetración |
+| 26 | Domestic Mills Run Harder | E | STLD p7 (utilización vs penetración) |
+| 27 | The Premium Invites Imports Back | E | BofA Ex 43 con caja en la brecha >$400 |
+| 28 | What It Means: US | D | Barra de conclusión |
+| **03 Europe** | | | |
+| 29 | Divisor | F | |
+| 30 | European Demand Struggles to Recover | E | BofA Ex 63, header propio |
+| 31 | Europe's Mills Shrink | C | Producción por país (ya nativo) |
+| 32 | Europe Loses Its Export Markets | C | **Nativo:** exportaciones UE+UK y Türkiye 2019–25 (T2.3) |
+| 33 | Europe Builds Its Own Trade Wall | D | Régimen comercial + precios regionales |
+| 34 | What It Means: Europe | T | Barra de conclusión |
+| **04 Asia** | | | |
+| 35 | Divisor | F | |
+| 36 | China Exports What It Cannot Use | E | Fig 1.2 sin título + texto largo |
+| 37 | India and ASEAN Lead Asia's Growth | C | Demanda vs producción CAGR (ya nativo) |
+| 38 | Capacity Moves to India and Southeast Asia | C | **Nativo:** capacidad 2021–25 y adiciones 2026–28 por país (T3.1/3.2) |
+| 39 | Chinese Capital Builds Blast Furnaces Abroad | E | Fig 3.4 + 3.6, header propio |
+| 40 | What It Means: Asia | T | Barra de conclusión |
+| **05 Exposure** | | | |
+| 41 | Divisor | F | |
+| 42 | US Steelmakers vs. the S&P 500 Since 2025 | C | **Rendimiento acumulado** desde 31-dic-24, con marcas en 10-feb-25 y 30-may-25 (Trump) y etiquetas finales + mini tabla YTD/1Y |
+| 43 | Producers Report Strong Demand | D | Cajas con logo (ya existe), con texto más largo |
+| 44 | Earnings Inflect With Prices | C | **Logos como categorías + filas de métricas alineadas** (EBITDA, precio/t, envíos, utilización) |
+| 45 | Common Signals Across Producers | K | Matriz |
+| 46 | Cierre | F | |
+
+Rotación revisada: no hay más de 2 E seguidas; cada región cierra con implicación.
+
+## 5. Qué entra del OECD (solo lo crucial para la dinámica actual)
+1. **Exceso estructural:** capacidad récord de 2,445 Mt vs demanda que cae por 4.º año (-2.6% en 2025); exceso de 640 → 745 Mt a 2028; utilización 76% → 74%.
+2. **China es la fuente:** 54% del exceso, demanda -6.9% por el sector inmobiliario, exportaciones récord de 131 Mt (41% del comercio mundial), subsidio 15x por activos, vuelve a expandir capacidad (+38.6 Mt).
+3. **El excedente se filtra:** trasbordo vía ASEAN (semis +300%), acero embebido en productos, inversión china en altos hornos fuera de China (86% BOF, 93% en Asia).
+4. **Precios divididos:** EE. UU. más del doble que China; los futuros esperan que la brecha persista.
+5. **Respuesta de política:** del caso por caso (395 AD/CVD) a medidas amplias: Section 232, nuevas cuotas UE/UK con 50%, México 35%, Canadá TRQ.
+6. **Regiones:** India (+5.1%/año) y ASEAN crecen; Europa se debilita (Alemania -8.8% de producción); Norteamérica protegida (importaciones -15.8% en 2025).
+
+**Se deja fuera:** subsidios por provincia, cromo/níquel, metodología de capacidad e hidrógeno/DRI. No mueven la tesis de corto plazo.
+
+## 6. Screenshots: dónde resaltar
+La caja roja punteada solo va donde una parte de la imagen prueba el título. Ejemplos: filas World/China en la Tabla 2.1, años 2026–28 en la Fig. 1.1, la brecha EE. UU.–Asia en BofA Ex 43, la columna 2026E en el balance de BofA. Las imágenes que ya muestran una sola idea van sin caja.
+
+## 7. Pendientes que dependen de ti
+1. Refrescar `Stocks_vs_SPX` en Workspace (cambio a `S&PCOMP` + `RI` + inicio 31-dic-2024).

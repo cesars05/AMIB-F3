@@ -1,0 +1,22 @@
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t  = $xl.Workbooks.Item('20260922_SETSA Transportes.xlsx')
+$xl.CalculateFull()
+foreach ($ws in $t.Worksheets) {
+    $errs = @()
+    foreach ($c in $ws.UsedRange.Cells) {
+        if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $errs += $c.Address($false,$false) }
+    }
+    $ws.Name + " -> errores: " + $errs.Count + " " + (($errs | Select-Object -First 10) -join ',')
+}
+$m = $t.Worksheets.Item('Modelo SETSA')
+$last = $m.Cells.Item($m.Rows.Count, 3).End(-4162).Row
+$out = @()
+for ($r = 12; $r -le $last; $r++) {
+    $lab = [string]$m.Cells.Item($r,3).Value2
+    if ($lab -eq '') { $out += "$r"; continue }
+    $hdr = if ($m.Cells.Item($r,3).Interior.Color -eq 5384228) { '[H]' } else { '   ' }
+    $out += "$r $hdr $lab | E=" + $m.Cells.Item($r,5).Text + " | H=" + $m.Cells.Item($r,8).Text + " | I=" + $m.Cells.Item($r,9).Text
+}
+$out -join "`n" | Out-File -Encoding utf8 "$PSScriptRoot\struct.txt"
+$tx = $t.Worksheets.Item('Transacciones Precedentes')
+"TX: EBITDA=" + $tx.Range('F31').Text + " EV=" + $tx.Range('F44').Text + " Deuda=" + $tx.Range('F45').Text + " Capital=" + $tx.Range('F47').Text + " | " + $tx.Range('F31').Formula + " " + $tx.Range('F45').Formula

@@ -1,0 +1,19 @@
+---
+name: project_aurex-pf-deadline-and-state
+description: "Aurex Capital final project (Tec PE course) — deadlines, folder layout, and the open decision on which model version (v1/v2) is canonical"
+metadata:
+  node_type: memory
+  type: project
+  originSessionId: b574743a-e906-4c17-9ec6-49cb8158a0f3
+  modified: 2026-10-10T05:47:48.778Z
+---
+
+Proyecto final "Comité de LPs" del curso Capital Privado y Capital Emprendedor (Tec de Monterrey, Prof. Francisco Román Rincón, frincon@tec.mx). Fondo ficticio AUREX CAPITAL (Equipo #5, Gpo. 602, 6 personas): $100M USD, México, energía/eficiencia, 8 empresas.
+
+**Deadlines:** Memorándum (4–6 págs) + Modelo Excel → domingo 11-oct-2026 11:59 pm. Deck (10–12 láminas) + defensa: la guía repite el 11-oct, pero D5/clase hablan de 14–15 oct (sin confirmar).
+
+**Folder:** `C:\Users\cesar\Downloads\PE` reorganizada el 9-oct-2026 en 00_LEEME_WORKFLOW.md + carpetas 01–08 y 99_Archivo, cada una con `_LEEME.md`. Entregables finales van en `08_Proyecto_Final/entregables/`.
+
+**Why:** rúbrica pondera Coherencia interna 25%: Excel, PPM y lámina 10 deben tener las mismas cifras.
+
+**How to apply:** Antes de escribir cualquier cifra de retorno, revisar `00_LEEME_WORKFLOW.md` §3. Modelo v1 (múltiplos del equipo: LPs $220.8M, carry $30.2M, 2.21x) vs v2 (Monte Carlo P50: $176.36M, carry $0, 1.76x) — canónico aún NO decidido por el usuario. Trabajar siempre sobre copia (v3), nunca sobreescribir v1/v2. Formato Excel pedido: layout Icarus con verdes de energía, conservando color coding IB (azul entradas, negro fórmulas, verde vínculos). Datos: fuentes oficiales mexicanas 2026, etiquetar año/fuente de lo anterior.

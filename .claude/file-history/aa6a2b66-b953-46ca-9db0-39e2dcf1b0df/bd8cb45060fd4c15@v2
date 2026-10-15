@@ -1,0 +1,22 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t = $null; foreach ($w in $xl.Workbooks) { if ($w.Name -eq '20260922_SETSA Transportes.xlsx') { $t = $w } }
+if (-not $t) { throw 'libro no encontrado' }
+$m = $t.Worksheets.Item('Modelo SETSA')
+$rY = 0; $rEC = 0
+for ($r = 140; $r -le 190; $r++) {
+    $v = [string]$m.Cells.Item($r, 3).Value2
+    if ($v.Contains('os para Pagar Deuda')) { $rY = $r }
+    if ($v -ceq 'EBITDA Ajustado - Capex') { $rEC = $r }
+}
+"filas: anos=$rY ebitda-capex=$rEC"
+if ($rY -eq 0 -or $rEC -eq 0) { throw 'no encontre filas' }
+foreach ($c in 'E','F','G','H','I') {
+    $f = [string]$m.Range("$c$rY").Formula
+    if (-not $f.StartsWith('=IF(' + $c + $rEC + '<=0')) { $m.Range("$c$rY").Formula = '=IF(' + $c + $rEC + '<=0,"",' + $f.Substring(1) + ')' }
+}
+$xl.Calculate()
+"formula H: " + $m.Range("H$rY").Formula
+"valores E..J: " + (('E','F','G','H','I','J' | ForEach-Object { $m.Range("$_$rY").Text }) -join ' | ')
+$err = 0; foreach ($c in $m.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $err++ } }; "errores modelo=$err"
+$t.Save(); "guardado=" + $t.Saved

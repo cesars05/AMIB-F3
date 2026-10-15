@@ -1,0 +1,185 @@
+import json, shutil, os, sys
+import win32com.client as win32
+
+BASE = r'C:\Users\cesar\OneDrive - Instituto Tecnologico y de Estudios Superiores de Monterrey\CFA\Reporte & Presentacion'
+SRC = os.path.join(BASE, 'Bimbo Financial Model_v2.xlsx')
+DST = os.path.join(BASE, 'Bimbo Financial Model_v3.xlsx')
+HERE = os.path.dirname(os.path.abspath(__file__))
+MC = {int(k): v for k, v in json.load(open(os.path.join(HERE, 'map_cons.json'))).items()}
+MR = {int(k): v for k, v in json.load(open(os.path.join(HERE, 'map_reg.json'))).items()}
+
+if os.path.exists(DST):
+    sys.exit('v3 already exists, refusing to overwrite')
+shutil.copy2(SRC, DST)
+
+xlToRight, xlPasteFormats, xlManual, xlAuto = -4161, -4122, -4135, -4105
+xl = win32.DispatchEx('Excel.Application')
+xl.Visible = False; xl.DisplayAlerts = False; xl.ScreenUpdating = False; xl.AskToUpdateLinks = False
+wb = xl.Workbooks.Open(DST, UpdateLinks=0)
+try:
+    xl.Calculation = xlManual
+    log = []
+
+    def note(ws, addr, text):
+        c = ws.Range(addr)
+        if c.Comment is not None:
+            c.Comment.Delete()
+        c.AddComment(text)
+
+    # ======================= CONSOLIDATED MODEL =======================
+    ws = wb.Worksheets('Consolidated Model')
+    ws.Columns('C:E').Insert(Shift=xlToRight)
+    ws.Columns('F').Copy()
+    ws.Columns('C:E').PasteSpecial(Paste=xlPasteFormats)
+    xl.CutCopyMode = False
+    for col in ('C', 'D', 'E'):
+        ws.Columns(col).ColumnWidth = ws.Columns('G').ColumnWidth
+
+    BLANK = set(range(278, 314)) | {318, 319, 320, 321, 322, 323, 325, 326}
+    PRIOR_DF = {272, 273, 274, 275, 276, 277, 335, 348}      # need prior year: C blank, D:F from 2020 pattern
+    FULL_CF = {345, 346, 347}                                 # no prior year needed: C:F from 2020 pattern
+    GROWTH = set(range(264, 270))
+    COST = set(range(258, 262))
+    unmapped = []
+    for r in range(1, 398):
+        F = ws.Cells(r, 6); G = ws.Cells(r, 7)
+        if r == 5:
+            ws.Range('C5').Value2 = 2016
+            ws.Range('D5').Formula = '=C5+1'; ws.Range('E5').Formula = '=D5+1'; ws.Range('F5').Formula = '=E5+1'
+            continue
+        if r in BLANK:
+            continue
+        if r in GROWTH:
+            ws.Cells(r, 3).Value2 = 0
+            for c in (4, 5, 6):
+                ws.Cells(r, c).FormulaR1C1 = G.FormulaR1C1
+            ws.Range(ws.Cells(r, 3), ws.Cells(r, 6)).NumberFormat = G.NumberFormat
+            continue
+        if r in COST:
+            for c in (3, 4, 5):
+                ws.Cells(r, c).Value2 = 0
+            continue
+        if r in PRIOR_DF:
+            for c in (4, 5, 6):
+                ws.Cells(r, c).FormulaR1C1 = G.FormulaR1C1
+            ws.Range(ws.Cells(r, 4), ws.Cells(r, 6)).NumberFormat = G.NumberFormat
+            continue
+        if r in FULL_CF:
+            for c in (3, 4, 5, 6):
+                ws.Cells(r, c).FormulaR1C1 = G.FormulaR1C1
+            ws.Range(ws.Cells(r, 3), ws.Cells(r, 6)).NumberFormat = G.NumberFormat
+            continue
+        if r in MC:
+            for i, c in enumerate((3, 4, 5)):
+                v = MC[r][i]
+                if v is not None:
+                    ws.Cells(r, c).Value2 = round(v, 4)
+            continue
+        if F.HasFormula:
+            for c in (3, 4, 5):
+                ws.Cells(r, c).FormulaR1C1 = F.FormulaR1C1
+            continue
+        if F.Value is not None and ws.Cells(r, 2).Value is not None:
+            unmapped.append((r, ws.Cells(r, 2).Value, F.Value))
+    log.append(('Consolidated unmapped constant rows', unmapped))
+
+    CN = {
+     'C5': '2016-2018 added from LSEG Company Fundamentals export dated 27 Sep 2026. These years are pre-IFRS 16 (no lease liabilities or right-of-use assets) and on the original reporting basis including Ricolino, like 2019 and 2020. 2021 onward is restated excluding Ricolino, so 2021 growth is not like-for-like.',
+     'C30': '2016-2018 LSEG Other Unusuals (same mapping as 2019).',
+     'C42': '2016-2018 total interest expense. Lease interest split not applicable before IFRS 16.',
+     'C94': '2016 and 2018 include the LSEG Employee Benefits line.',
+     'D106': 'Includes LSEG Sale of fixed asset, negative (-1,281).',
+     'E119': 'Includes LSEG Debt issued (8,986).',
+     'C124': '2016 and 2018 LSEG Payments for acquiring or rescuing the entity shares.',
+     'C129': '2016-2018 include the LSEG Derivatives line.',
+     'D130': 'Includes deposits in guarantee accounts of derivative financial instruments (392).',
+     'D148': 'Includes LSEG Remaining Accounts Receivable (430) and a 417 balancing value so current assets equal the reported 42,490 (LSEG line items do not sum to its total).',
+     'C157': '2016 and 2018 LSEG Other current inventories (includes goods in process and raw materials in transit).',
+     'C158': '2016 and 2018 LSEG Total current prepayments.',
+     'C166': '2016 and 2018 LSEG reports only net book value by asset class. Net values entered in the gross lines, accumulated depreciation not available. Net PP&E ties to the reported total. Office Equipment includes fixtures and fittings.',
+     'C183': '2016 and 2018 LSEG reports net intangibles only. Net values entered in the gross lines, accumulated amortization not available.',
+     'E185': '2018 LSEG combines customer relationships and other intangibles in Rights, net.',
+     'C197': '2016 LSEG intangible balancing value, not attributable to a specific class.',
+     'C204': '2016-2018 balancing value so total assets equal total liabilities and equity (same method as 2019). Includes investments in associates and trade and other non-current receivables.',
+     'C210': 'Includes LSEG Other short-term financial liabilities (2016 372, 2018 879).',
+     'E211': '2018 LSEG Trade and other current payables (includes related party and other trade payables).',
+     'C212': '2016 and 2018 LSEG Other current provisions plus other current non-financial liabilities.',
+     'C216': '2016 and 2018 LSEG Short-term taxes payable, not split between income and other taxes.',
+     'C222': 'Total non-current financial debt (stock market loans, bank loans and other long-term financial liabilities), same convention as 2019-2023.',
+     'C224': '2016 and 2018 LSEG Other non-current provisions.',
+     'C237': 'Includes other reserves, forward elements reserve, investment reserve and treasury shares.',
+     'C238': '2016 minority interest derived as total equity less equity attributable to owners (LSEG line not available).',
+     'C258': 'Cost breakdown not comparable before 2020. Salaries are included in Materials Purchased (same treatment as 2019).',
+     'C278': 'ROIC and invested capital start in 2020. Averages spanning 2018-2019 would mix pre and post IFRS 16 balance sheets.',
+     'E321': 'Leverage ratios blank for 2016-2018. Pre-IFRS 16 debt base has no lease liabilities and is not comparable with 2019 onward. Company-reported Net Debt/Adj. EBITDA 2.8x at YE2018 and Total Debt/Adj. EBITDA 3.4x at YE2017 (Grupo Bimbo 2018 results release).',
+     'C369': '2016-2018 derived so Adj. EBITDA equals company-reported Adjusted EBITDA. 2016 Ps 29,298m (2016 Integrated Annual Report), 2018 Ps 31,705m (2018 results release), 2017 Ps 27,289m (LSEG segment data, consistent with the 16.2% growth reported for 2018).',
+     'C378': 'Debt maturity profile available in LSEG only for 2017.',
+     'C385': 'OCI detail not available in LSEG for 2016.',
+    }
+    for a, t in CN.items():
+        note(ws, a, t)
+
+    # ======================= REGIONAL MODEL =======================
+    wr = wb.Worksheets('Regional Model')
+    wr.Range('C1:E160').Insert(Shift=xlToRight)
+    wr.Range('F1:F160').Copy()
+    wr.Range('C1:E160').PasteSpecial(Paste=xlPasteFormats)
+    xl.CutCopyMode = False
+    RBLANK = {39, 42, 43, 44, 45, 156, 157, 158, 159}
+    runav = []
+    for r in range(1, 161):
+        F = wr.Cells(r, 6)
+        if F.Value == 2019 and not F.HasFormula:
+            for i, c in enumerate((3, 4, 5)):
+                wr.Cells(r, c).Value2 = 2016 + i
+            continue
+        if r in RBLANK:
+            continue
+        if r in MR:
+            for i, c in enumerate((3, 4, 5)):
+                wr.Cells(r, c).Value2 = round(MR[r][i], 4)
+            continue
+        if F.HasFormula:
+            for c in (3, 4, 5):
+                wr.Cells(r, c).FormulaR1C1 = F.FormulaR1C1
+            continue
+        if F.Value is not None and wr.Cells(r, 2).Value is not None:
+            runav.append(r)
+    log.append(('Regional rows left blank (not available by segment 2016-2018)', runav))
+    RN = {
+     'C5': '2016-2017 from LSEG Geographic segment export (segments identified by magnitude and continuity with 2018), 2018 from LSEG Business Line export. Original basis including Ricolino and pre-IFRS 16. Gross profit, intersegment sales, D&A, impairment, other non-cash items, taxes and capex are not available by segment for 2016-2018, consolidated totals shown where available.',
+     'C87': 'Segment Adjusted EBITDA per LSEG. Consolidated ties to company-reported 29,298 (2016), 27,289 (2017) and 31,705 (2018).',
+     'C146': '2016 LSEG segment liabilities sum to 170,059 vs consolidated 170,089 (source difference).',
+    }
+    for a, t in RN.items():
+        note(wr, a, t)
+
+    # ======================= RECALC AND CHECKS =======================
+    xl.Calculation = xlAuto
+    xl.CalculateFull()
+    def val(sh, a): return sh.Range(a).Value
+    checks = {}
+    for col in 'CDEFGHIJKL':
+        checks[col] = dict(year=val(ws, col + '5'), rev=val(ws, col + '7'), gp=val(ws, col + '16'), ebit=val(ws, col + '31'),
+                           adj=val(ws, col + '36'), pbt=val(ws, col + '48'), cf_start=val(ws, col + '67'), ocf=val(ws, col + '96'),
+                           endcash=val(ws, col + '141'), bscash=val(ws, col + '145'), check=val(ws, col + '242'),
+                           gm=val(ws, col + '247'), ebitdam=val(ws, col + '251'), growth=val(ws, col + '264'), ndebitda=val(ws, col + '321'))
+    errs = {}
+    for sh in (ws, wr):
+        try:
+            rng = sh.UsedRange.SpecialCells(-4123, 16)   # formulas returning errors
+            errs[sh.Name] = rng.Address
+        except Exception:
+            errs[sh.Name] = None
+    rchk = {col: dict(year=val(wr, col + '5'), ns=val(wr, col + '11'), oi=val(wr, col + '54'), ebitda=val(wr, col + '92'),
+                      m_na=val(wr, col + '94'), m_mx=val(wr, col + '95')) for col in 'CDEFGHIJ'}
+    wb.Save()
+    json.dump({'log': log, 'checks': checks, 'errors': errs, 'regional': rchk}, open(os.path.join(HERE, 'v3_result.json'), 'w'), default=str, indent=1)
+    print('done')
+
+finally:
+    try:
+        wb.Close(SaveChanges=False)
+    except Exception:
+        pass
+    xl.Quit()

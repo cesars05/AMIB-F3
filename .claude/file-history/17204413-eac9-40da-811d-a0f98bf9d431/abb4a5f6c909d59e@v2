@@ -1,0 +1,156 @@
+"""Descomposicion del movimiento del precio: estimados vs multiplo.
+
+    python generar_descomposicion.py [meses]
+
+Salida: portafolio/Descomposicion.png
+
+LA IDENTIDAD
+------------
+    precio = EPS x multiplo
+
+La descomposicion es MULTIPLICATIVA, no aditiva:
+
+    (1 + r_precio) = (1 + r_eps) x (1 + r_multiplo)
+    r_multiplo = (1 + r_precio) / (1 + r_eps) - 1
+
+Restar los porcentajes parece equivalente y no lo es. Alphabet subio 45.6% de
+estimados y cayo 8.0% de precio: restando da -53.6pp, cuando el multiplo en
+realidad cayo 36.8%. Con movimientos chicos la diferencia es despreciable;
+con revisiones de este tamano, no.
+
+Separar las dos partes responde la pregunta que la columna de P&L no puede:
+una accion que cayo 13% porque le recortaron los estimados es un negocio que
+empeoro; una que cayo 13% mientras le SUBIAN los estimados 13% es el mismo
+negocio al que el mercado le aplica un multiplo 26 puntos menor. Se ven igual
+en la cuenta y no son lo mismo.
+
+Ojo con el percentil de valuacion: dice donde esta el multiplo dentro de su
+rango de dos anios, no que paso ultimamente. Un nombre con rango historico
+ancho puede estar de-rateando fuerte y aun asi caer a media tabla. Las dos
+medidas responden preguntas distintas y no se sustituyen.
+"""
+import sys
+sys.path.append(r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs")
+
+import csv
+import json
+import os
+import warnings
+import lseg.data as ld
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+from datetime import datetime, timedelta
+from grafico_banquero import configurar_estilo_banquero, PALETA
+
+warnings.filterwarnings("ignore")
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except (AttributeError, OSError):
+    pass
+
+configurar_estilo_banquero()
+SALIDA = "portafolio"
+os.makedirs(SALIDA, exist_ok=True)
+
+MESES = int(sys.argv[1]) if len(sys.argv) > 1 else 3
+ESTADO = r"C:\Users\cesar\Downloads\U18244610_20250915_20260914.csv"
+SUFIJO = {"NASDAQ": ".OQ", "NYSE": ".N", "ARCA": ".P", "AMEX": ".A"}
+
+
+def cartera(estado):
+    simbolos, bolsas, bloque = [], {}, None
+    with open(estado, encoding="utf-8-sig") as f:
+        for fila in csv.reader(f):
+            if len(fila) < 3:
+                continue
+            if fila[0] == "Open Positions" and fila[1] == "Data" and fila[2] == "Summary":
+                simbolos.append(fila[5])
+            if fila[0] == "Financial Instrument Information" and fila[1] == "Header":
+                bloque = fila[2:]
+            elif fila[0] == "Financial Instrument Information" and fila[1] == "Data" and bloque:
+                d = dict(zip(bloque, fila[2:]))
+                bolsas[d.get("Symbol", "")] = d.get("Listing Exch", "")
+    return {s: s + SUFIJO.get(bolsas.get(s, ""), ".OQ") for s in simbolos}
+
+
+rics = cartera(ESTADO)
+ld.open_session()
+hoy = datetime.now()
+# Se bajan mas semanas de las necesarias: el consenso no se actualiza cada
+# semana para todos los nombres y hay huecos
+inicio = (hoy - timedelta(days=MESES * 31 + 90)).strftime("%Y-%m-%d")
+
+print(f"Consenso de EPS y precio, ventana de {MESES} meses...")
+d = ld.get_data(universe=list(rics.values()), fields=["TR.EPSMean", "TR.PriceClose"],
+                parameters={"SDate": inicio, "EDate": hoy.strftime("%Y-%m-%d"),
+                            "Frq": "W"})
+d.columns = ["ric", "eps", "px"]
+
+n_atras = MESES * 4 + 1          # semanas
+filas = []
+for simbolo, ric in rics.items():
+    s = d[d["ric"] == ric]
+    e = pd.to_numeric(s["eps"], errors="coerce").dropna().reset_index(drop=True)
+    p = pd.to_numeric(s["px"], errors="coerce").dropna().reset_index(drop=True)
+    if len(e) <= n_atras or len(p) <= n_atras:
+        print(f"  -- {simbolo} sin serie suficiente")
+        continue
+    e0, e1 = float(e.iloc[-1]), float(e.iloc[-n_atras])
+    p0, p1 = float(p.iloc[-1]), float(p.iloc[-n_atras])
+    if e1 <= 0 or p1 <= 0:
+        continue
+    rev = e0 / e1 - 1
+    pre = p0 / p1 - 1
+    mult = (1 + pre) / (1 + rev) - 1      # multiplicativa, no pre - rev
+    filas.append(dict(simbolo=simbolo, revision=rev * 100,
+                      precio=pre * 100, multiplo=mult * 100))
+
+df = pd.DataFrame(filas).set_index("simbolo").sort_values("multiplo")
+
+# ---------------------------------------------------------------------------
+fig, ax = plt.subplots(figsize=(6.20, 3.30), dpi=300)
+y = np.arange(len(df))
+alto = 0.38
+
+ax.barh(y + alto / 2, df["revision"], height=alto, color=PALETA["primario"],
+        zorder=3, label="Consensus EPS revision")
+ax.barh(y - alto / 2, df["multiplo"], height=alto, color=PALETA["acento"],
+        zorder=3, label="Multiple re-rating")
+# El precio es la suma de las dos: se marca como referencia
+# El precio NO es la suma de las barras: la relacion es multiplicativa. Va
+# como marcador aparte, no como total apilado.
+ax.scatter(df["precio"], y, marker="D", s=26, color=PALETA["texto"],
+           zorder=5, edgecolors="white", linewidths=0.7, label="Price change")
+
+ax.axvline(0, color=PALETA["eje"], linewidth=0.9, zorder=4)
+for lado in ("top", "right", "left"):
+    ax.spines[lado].set_visible(False)
+ax.spines["bottom"].set_color(PALETA["eje"])
+ax.set_yticks(y)
+ax.set_yticklabels(df.index, fontsize=7.5)
+ax.tick_params(axis="y", length=0, labelcolor=PALETA["texto"])
+ax.tick_params(axis="x", length=3, color=PALETA["eje"], labelsize=7,
+               labelcolor=PALETA["texto"])
+ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:+.0f}%"))
+# Arriba del area de trazo: adentro se encimaba con la ultima fila
+ax.legend(loc="lower left", bbox_to_anchor=(0, 1.01), frameon=False,
+          fontsize=6.5, ncol=3, handlelength=1.2, borderpad=0.2,
+          columnspacing=1.2)
+ax.margins(y=0.04)
+fig.savefig(f"{SALIDA}/Descomposicion.png", dpi=300, bbox_inches="tight",
+            pad_inches=0.03)
+plt.close(fig)
+
+resumen = {"ventana_meses": MESES, "fecha": hoy.strftime("%Y-%m-%d"),
+           "posiciones": {s: {k: round(float(v), 1) for k, v in r.items()}
+                          for s, r in df.iterrows()}}
+with open("datos_descomposicion.json", "w", encoding="utf-8") as f:
+    json.dump(resumen, f, indent=2, ensure_ascii=False)
+
+print(f"\n{'Simbolo':16s} {'Revision':>10s} {'Multiplo':>10s} {'Precio':>10s}")
+for s, r in df.sort_values("multiplo").iterrows():
+    print(f"{s:16s} {r['revision']:+9.1f}% {r['multiplo']:+9.1f}pp {r['precio']:+9.1f}%")
+print(f"\nListo: {SALIDA}/Descomposicion.png")
+ld.close_session()

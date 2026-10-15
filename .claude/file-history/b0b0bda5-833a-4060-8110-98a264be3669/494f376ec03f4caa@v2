@@ -1,0 +1,68 @@
+import os, re
+root = r"C:\Users\cesar\OneDrive\Documentos\Slide Construction\skill\slide-construction"
+
+
+def patch(rel, pairs):
+    p = os.path.join(root, rel)
+    s = open(p, encoding="utf-8").read()
+    for old, new in pairs:
+        assert old in s, (rel, old[:60])
+        s = s.replace(old, new)
+    open(p, "w", encoding="utf-8").write(s)
+
+
+patch("references/slide-catalog.md", [
+("| **KPIs titulares** | MS p3 | 3 tiles grises cuadrados, número 40 bold azul + label | abrir con 3 números; una sola idea |\n", ""),
+("| 1 idea muy clara | KPI tiles (MS p3) | banner + 1 gráfica grande con 1 callout | statement slide: título + 3 bullets 14 pt |",
+ "| 1 idea muy clara | 1 gráfica grande con 1 callout + barra con cola (`tail_bar`) y conclusión | diagrama estructural (`structural-diagrams.md`) | think-cell tc:13 / tc:24 con la fase clave resaltada |"),
+("| Proceso / pasos | chevrons (D2) | pentágonos verticales (BOFA) | timeline/Gantt |",
+ "| Proceso / pasos | cadena con foco (KLA s7, `process_chain`) | pentágonos verticales (BOFA) / think-cell tc:13, tc:24 | road map tc:18 / timeline tc:20 |"),
+("| Estructura / quién es dueño | organigrama con colores por categoría (ALLOC s3) | círculos anidados (ALLOC s4) | antes/después |",
+ "| Estructura / quién es dueño | árbol con colores por categoría (ALLOC s3, `struct_box`) | círculos anidados (ALLOC s4, `nested_circles`) | antes/después |\n"
+ "| Ciclo / pilares alrededor de una idea | think-cell tc:15 (4 segmentos) | tc:14 (6 segmentos) | tc:12 / tc:11 |\n"
+ "| Embudo / selección | think-cell tc:2 | tc:3 horizontal | funnel de targets (FEM s8) |\n"
+ "| Capas / moat / prioridades | think-cell tc:4 (pirámide) | árbol de riesgos (D3) | matriz tc:10 |"),
+])
+patch("references/grid-typography.md", [])
+patch("references/shapes-components.md", [
+("| **KPI tile** | `RECTANGLE` gris claro o primario | 2.4–3.8 cuadrado o 2.9×1.0 | número 24–40 bold + label 10–12 | MS p3/p13, ING, ALLOC s11 | `kpi_tile()` |",
+ "| **KPI tile** (solo como apoyo de una gráfica o diagrama, nunca un slide de solo tiles — el usuario lo rechazó) | `RECTANGLE` gris claro o primario | 1.8×1.1 junto a donut / tabla | número 20–24 bold + label 10–12 | ING, ALLOC s11 | `kpi_tile()` |"),
+])
+p = os.path.join(root, "SKILL.md")
+s = open(p, encoding="utf-8").read()
+s = s.replace("| `references/shapes-components.md` |",
+              "| `references/structural-diagrams.md` | **explicar una estructura/concepto con formas** (cadena KLA, árbol accionario, círculos anidados, rango, cilindros, barra con cola) — recetas adaptables |\n"
+              "| `references/thinkcell-library.md` | formas de think-cell del deck `Thinkcell.pptx` (keys tc:N) importables y recoloreadas; ppttc para gráficas think-cell |\n"
+              "| `references/shapes-components.md` |")
+s = s.replace("Gráficas: `stacked_columns, bar_chart, paired_bars, diverging_bars, line_chart, waterfall, football_field, tornado, donut`.",
+              "Gráficas: `stacked_columns, bar_chart, paired_bars, diverging_bars, line_chart, waterfall, football_field, tornado, donut`.\n"
+              "Estructurales: `process_chain, detail_card, struct_box, connect, nested_circles, price_range, cylinder_bridge, tail_bar, boxed_columns, bullet_columns, progression`.\n"
+              "think-cell: `tc_slots(key)`, `import_elements(slide, key, box, texts)` — p. ej. `d.import_elements(s, \"tc:13\", box=(0.575,1.5,12.3,5.1), texts={0: [\"Diligence\", \"Weeks 1-4\", \"...\"]})`.\n"
+              "`scripts/gallery_structural.py <system> out.pptx [template] [layout]` = galería de diagramas estructurales + think-cell.")
+s = s.replace("- Cuando el usuario pida \"más claro\": menos texto, KPI tiles o una sola gráfica grande con un callout (MS / opción 1 de §14).",
+              "- Preferencia del usuario: **explicar estructuras con formas** (KLA s7, ALLOC s3/s4/s8/s16) en vez de bullets; las recetas son conceptos adaptables, no plantillas rígidas. Slides de solo KPI tiles = rechazado (demasiado simple).\n"
+              "- Cuando el usuario pida \"más claro\": menos texto, una gráfica grande con un callout, o un diagrama estructural con barra de conclusión.")
+s = s.replace("- Sin receta aún: línea de precio con eventos anotados (BARC-N p8 / JEF p4 / ALLOC s6) — constrúyela con `line_chart` + `callout(to=...)` + `dashed_box`; cilindros 3-D de ALLOC s8 (usa `waterfall`); gantt/calendario; mapas.",
+              "- Sin receta aún: línea de precio con eventos anotados (BARC-N p8 / JEF p4 / ALLOC s6) — constrúyela con `line_chart` + `callout(to=...)` + `dashed_box`; gantt/calendario (usa tc:20 / tc:17 si sirve).\n"
+              "- `import_elements` descarta gráficas y objetos think-cell (tc:19); los textos no se escalan con el grupo.")
+open(p, "w", encoding="utf-8").write(s)
+
+g = os.path.join(root, "scripts", "gallery.py")
+t = open(g, encoding="utf-8").read()
+i = t.index("# 15 KPI tiles (MS p3)")
+j = t.index("# 16 Theme frame module")
+t = t[:i] + '''# 15 Process chain with focus (KLA s7) -----------------------------------------------
+s = d.content_slide("The Company Sits Inside Every Step of the Chain",
+                    "Metrology and inspection intercept the process after nearly every layer", SRC)
+d.process_chain(s, X0, 2.2, W, [("Wafers", "input"), ("Wafer Quality", "neutral"), ("Deposition", "focus"),
+                                ("Lithography", "focus"), ("Etch", "focus"), ("CMP", "focus"),
+                                ("Repeat Process", "neutral"), ("Packaging", "end")],
+                focus=(2, 6), focus_label="Process Control", feedback=[(6, 2)])
+yb = d.tail_bar(s, X0, 4.0, W, "What it means for the thesis", h=0.42)
+d.bullet_columns(s, X0, yb + 0.15, W, ["**Every new layer adds inspection steps**: demand scales with chip complexity",
+                                       "**Tools are qualified per process**: switching is slow and risky",
+                                       "**Feedback loops create data lock-in** across the fab"], h=1.4)
+
+''' + t[j:]
+open(g, "w", encoding="utf-8").write(t)
+print("ok")

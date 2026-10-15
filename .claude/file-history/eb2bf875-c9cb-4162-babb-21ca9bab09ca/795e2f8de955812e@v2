@@ -1,0 +1,80 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 40;$k++){ try{ & $sb; return }catch{ $m=$_.Exception.Message; if($m -match "0x800AC472|0x80010001|RPC_E_CALL|rejected|0x800A03EC"){ Start-Sleep -Milliseconds 1500 } else { throw } } }; throw "Excel ocupado" }
+$xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb=$null
+foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc.*v3"){ $wb=$w } }
+if($wb -eq $null){ throw "ABORTO: no encuentro v3" }
+$pw=$wb.Worksheets.Item("Payment Waterfall")
+if([string]$pw.Range("C25").Text -ne "Vehicle Cash Flows (GBP 000s)"){ throw ("ABORTO: C25 dice '"+[string]$pw.Range("C25").Text+"'") }
+if([string]$pw.Range("C45").Text -ne "Net Distributable over the Term"){ throw "ABORTO: C45 cambio" }
+Write-Output "guardas OK"
+$GREY=8421504
+$COLS=@("E","F","G","H","I","J")
+$xl.ScreenUpdating=$false
+
+# ---------- encabezados a USD ----------
+T { $pw.Range("C25").Value2="Vehicle Cash Flows (USD 000s)" }
+T { $pw.Range("C37").Value2="Preferred Return Accrual (USD 000s)" }
+T { $pw.Range("C44").Value2="Distribution Waterfall (USD 000s)" }
+T { $pw.Range("C65").Value2="Annual Allocation (USD 000s)" }
+T { $pw.Range("C74").Value2="Returns to the Limited Partner (USD 000s)" }
+
+# ---------- la unica conversion, en el origen ----------
+T { $pw.Range("C10").Value2="Total Investment  (USD)" }
+T { $pw.Range("D10").Formula="=+'Expected Returns'!D18*D20" }
+T { $pw.Range("C23").Value2="Memo:  Total Investment in GBP 000s" }
+T { $pw.Range("D23").Formula="=+'Expected Returns'!D18" }
+T { $pw.Range("D23").NumberFormat='#,##0;(#,##0);"-"' }
+T { $pw.Range("C23").Font.Color=$GREY }
+T { $pw.Range("D23").Font.Color=$GREY }
+T { $pw.Range("D23").HorizontalAlignment=-4108 }
+
+foreach($i in 0,1,2,3,4,5){
+  $x=$COLS[$i]
+  T { $pw.Range($x+"29").Formula="=(+'Expected Returns'!"+$x+"44+'Expected Returns'!"+$x+"45+'Expected Returns'!"+$x+"46)*`$D`$20" }
+  T { $pw.Range($x+"30").Formula="=+'Expected Returns'!"+$x+"47*`$D`$20" }
+  T { $pw.Range($x+"33").Formula="=-IF("+$x+"`$27<=`$D`$19+VALUE(RIGHT('Expected Returns'!`$E`$42,4))-1,`$D`$21/1000,0)" }
+}
+
+# ---------- economia a Aztlan: ya esta todo en USD ----------
+T { $pw.Range("D85").Formula="=-K32*1000" }
+T { $pw.Range("D86").Formula="=+K33*1000" }
+T { $pw.Range("D90").Formula="=+E61*1000" }
+T { $pw.Range("D93").Formula="=-D13*1000" }
+T { $pw.Range("D94").Formula="=+E59*1000" }
+
+# ---------- comparacion de convenciones del preferente ----------
+T { $pw.Range("C99").Value2="Preferred Return  -  convention check" }
+T { $pw.Range("C99").Font.Bold=$true }
+T { $pw.Range("C100").Value2="A)  Accrued on unreturned capital, dividends reduce the base   (modelled)" }
+T { $pw.Range("D100").Formula="=+K39" }
+T { $pw.Range("C101").Value2="B)  Accrued on full capital for the whole term, nothing returned until exit" }
+T { $pw.Range("D101").Formula="=+D10*(1+D17)^D19-D10" }
+T { $pw.Range("C102").Value2="Difference" }
+T { $pw.Range("D102").Formula="=+D101-D100" }
+T { $pw.Range("D100:D102").NumberFormat='#,##0;(#,##0);"-"' }
+T { $pw.Range("D100:D102").HorizontalAlignment=-4108 }
+T { $pw.Range("C99:D102").Font.Size=10 }
+T { $pw.Range("C103").Value2="The Terms pass dividends through as a return of capital, so the base declines and (A) applies. (B) is the bullet structure, where nothing is distributed before exit." }
+T { $pw.Range("C103").Font.Size=9 }
+T { $pw.Range("C103").Font.Italic=$true }
+T { $pw.Range("C103").Font.Color=$GREY }
+T { $pw.Range("C97").Value2="Waterfall runs live off Expected Returns - it shows whichever case is loaded there. Figures in USD 000s at the rate in D20. Management fee charged on invested capital; the Terms specify market value, which would be higher." }
+
+$xl.ScreenUpdating=$true
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output "convertido a USD"
+Write-Output ""
+foreach($blk in @(@(9,23),@(25,34),@(37,41),@(44,50),@(53,62),@(74,81),@(84,95),@(99,102))){
+  for($r=[int]$blk[0];$r -le [int]$blk[1];$r++){
+    $lab=[string]$pw.Cells.Item($r,3).Text
+    $v=""
+    foreach($c in 4,5,6,7,8,9,10,11){ $v+=([string]$pw.Cells.Item($r,$c).Text).PadLeft(12) }
+    if(($lab+$v).Trim() -ne ""){
+      if($lab.Length -gt 48){ $lab=$lab.Substring(0,48) }
+      Write-Output ("r"+([string]$r).PadRight(4)+$lab.PadRight(49)+$v)
+    }
+  }
+  Write-Output ""
+}

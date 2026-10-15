@@ -1,0 +1,239 @@
+# Requirements: Market Terminal
+
+**Defined:** 2026-09-24
+**Core Value:** Every number César sees is correct and traceable to its source. A surface that shows fewer things but reconciles is worth more than one that shows everything with a silent error.
+
+Sources: `BRIEF.md`, `CLAUDE.md`, `.planning/research/SUMMARY.md` (and the four dimension files), decisions recorded in `PROJECT.md`.
+
+## v1 Requirements
+
+### Foundations
+
+- [ ] **FND-01**: A `constraints.txt` pins `pandas<3`, `httpx<0.28`, `numpy` and `lseg-data` to the working versions, and every install in the project uses it
+- [ ] **FND-02**: `pytest` runs from the repo root with a committed config, and `engine/test_compacto_sp500.py` / `engine/test_volumen_sp500.py` are renamed so pytest never collects live-LSEG scripts
+- [ ] **FND-03**: IBKR statements are read from one drop folder declared in `engine/config.py`, used by both backend and engine; partial downloads (`.crdownload`) are ignored and filenames with the account number are never logged
+- [ ] **FND-04**: The portfolio database lives at `data/portfolio.db`, and schema migrations in `backend/db.py` fail loudly on anything except "column already exists"
+
+### Portfolio correctness
+
+- [ ] **PFIX-01**: Cumulative cash matches each IBKR statement's Summary `Starting Cash` and `Ending Cash`; the residual per statement is computed, shown, and must be zero to pass (checkpoint, never a silent reset)
+- [ ] **PFIX-02**: `_parse_statement_period` raises on an unrecognized period format instead of returning `(None, None)`
+- [ ] **PFIX-03**: Regression tests on synthetic IBKR CSV fixtures cover: multiple Header rows per section (Stocks + Forex in Trades), overlapping statements with different FX translation amounts, a withholding correction dated in a prior period, an unparseable period line, and the Starting/Ending cash chain
+- [ ] **PFIX-04**: A one-off rebuild of the price cache in a copy of the DB compares TWR against the current cache; if they differ, the cache stores closes on a single adjustment basis, tagged with split factor, refetched when a new split appears, and never stores an intraday bar as a close
+- [ ] **PFIX-05**: `backend/exportar.py` exports holdings and closing valuation to JSON without a running HTTP server; it is the only way portfolio data reaches the engine
+
+### Daily pipeline
+
+- [ ] **PIPE-01**: All engine output goes under `data/` through one paths module; no script writes relative to its working directory
+- [ ] **PIPE-02**: A field registry declares, per logical series, the RIC, field or TR code, parameters (`Curn=USD`), scale, unit, source and the matching Workspace formula; the engine pulls through it
+- [ ] **PIPE-03**: The daily job opens one LSEG session per run, checks Workspace is up first (reads `.portInUse`, calls `/api/status`), and pulls a few known RICs as a preflight
+- [ ] **PIPE-04**: Each run writes to `data/daily/<as_of>/<run_id>/` atomically and moves `LATEST.json` only on success; a failed or partial run writes a status file with the reason and coverage, and never an empty or partial data file
+- [ ] **PIPE-05**: `as_of` comes from the data (last common bar of the core universe), not the wall clock; a day with no new session is reported as `no_session`
+- [ ] **PIPE-06**: All close times and holidays come from `zoneinfo` plus an exchange calendar; the 14:00/15:00 CDMX shift and early closes are handled without constants
+- [ ] **PIPE-07**: The daily JSON carries prices, tile data with sparkline points, raw chart series, detector findings and news, in one versioned schema designed for both the dashboard and the daily deck
+- [ ] **PIPE-08**: The detector separates market findings from portfolio findings, takes holdings from the portfolio export (no hardcoded list), fails the run on a missing series instead of silently skipping it, and masks cross-market pairs when one leg was closed
+- [ ] **PIPE-09**: The history cache pulls incrementally and revalidates an overlap window so a split never appears as a price move
+- [ ] **PIPE-10**: Single stocks for the dashboard are chosen from the S&P 500 by the day's top gainers, top losers and volume vs own 20-day average, deduplicated, with splits, spin-offs and index events filtered out
+- [ ] **PIPE-11**: A committed Task Scheduler definition runs the job at 16:00 CDMX as the logged-on user, on battery, with an explicit working directory and start-when-available; the 4 existing desktop scheduled tasks are inventoried and do not collide with it
+
+### News
+
+- [ ] **NEWS-01**: Each news item shows headline as published, source and tier, timestamp in CDMX, type (article, PDF, paper, filing, speech), link, and why it is here (holding, rival, theme, macro, Mexico, 13F fund)
+- [ ] **NEWS-02**: Items pass only if the source is on the whitelist, the headline is not `RUIDO`, and it matches an entity or theme; duplicates of one event collapse into one item with related stories
+- [ ] **NEWS-03**: Ranking is deterministic: source tier, then link to a detector finding on screen, then recency, with a hard cap per block
+- [ ] **NEWS-04**: Free document feeds verified in `BRIEF.md` (Fed press and speeches, ECB, Liberty Street, NBER, SEC) are ingested alongside LSEG headlines
+- [ ] **NEWS-05**: LSEG stories are prefetched to a local cache and open in a local story page, so they work when Workspace is closed
+
+### Text layer
+
+- [ ] **TEXT-01**: Prose comes from `claude -p --model haiku` on the Pro subscription (`--safe-mode --tools "" --no-session-persistence --output-format json`), run from a neutral directory; a result with `is_error` is never used as prose
+- [ ] **TEXT-02**: Numbers in prose come only from named slots filled by code; a validator rejects any other digit (except a whitelist such as "S&P 500", "10-year"), em-dashes and excess colons
+- [ ] **TEXT-03**: Every surface renders with numbers and charts only when the text step fails, and gains prose when it succeeds
+
+### Daily deck
+
+- [ ] **DDECK-01**: After the 16:00 run, César gets a 1-2 slide PPTX (market + portfolio) built from the daily JSON and the portfolio export, in English, Arial, no em-dashes
+- [ ] **DDECK-02**: The daily deck is saved locally, copied to `SALIDA_DECKS`, and listed for download in the dashboard
+
+### Dashboard
+
+- [ ] **DASH-01**: César opens a Bloomberg-style market page with a main chart panel chosen by the detector, "what it implies" insight below it, news block, and right-hand ticker column
+- [ ] **DASH-02**: Ticker tiles show last, change, % and sparkline for major indices, market-chosen single stocks, FX (EURUSD, USDMXN, ...), rates, commodities and VIX, using only verified RICs
+- [ ] **DASH-03**: Tiles show the LSEG close from the daily run and, during the session, an intraday yfinance layer labeled separately from the LSEG close
+- [ ] **DASH-04**: Every tile, table and chart shows its as-of time and source; a stale or failed run shows a banner instead of rendering old data as today
+- [ ] **DASH-05**: A dark/light switch changes theme without flash, and every chart reads in both (design system from `engine/paleta.md`: Arial, red only for dashed reference lines, green/red never encode sign, max 6 series)
+- [ ] **DASH-06**: The market dashboard shows no portfolio data; holdings live only in the portfolio section
+- [ ] **DASH-07**: The dashboard links to the deck library, Ideas Screener, 13F tracker and Portfolio
+- [ ] **DASH-08**: Each single-stock tile links to the news item that explains the move when one passes the relevance filter
+
+### Excel export
+
+- [ ] **XLS-01**: Every table and chart has a download button that saves an `.xlsx` locally for César
+- [ ] **XLS-02**: The Values sheet holds the numbers exactly as the system used them, with pull time in CDMX, source per column, and "Source: LSEG Workspace"
+- [ ] **XLS-03**: The Live sheet has the same layout with `_xll.TR(...)` Workspace formulas generated from the field registry (no literal `@`), RIC in its own column; free-source data carries series id or URL instead
+- [ ] **XLS-04**: Derived columns (peer average ex the name, harmonic multiples, contributions in pp) are Excel formulas over the table cells
+- [ ] **XLS-05**: César confirms once, in Excel with Workspace loaded, that a generated Live sheet calculates
+
+### Weekly deck
+
+- [ ] **WDECK-01**: On the last US trading session of each week, the system builds the deck on `templates/News September.pptx`, removes the sample slides, fills placeholders by index, asserts Arial, and sizes each chart to its placeholder without cropping
+- [ ] **WDECK-02**: Slide 1 cover with period; slide 2 main indices and why they moved
+- [ ] **WDECK-03**: Slide 3 S&P 500 by sector with deltas and sector contribution in pp from start-of-week weights
+- [ ] **WDECK-04**: Slide 4 sector multiples, aggregated harmonically from constituents
+- [ ] **WDECK-05**: Slide 5 macro and economic calendar with the fed funds implied path (EFFR base, day-weighted meeting months, `FFc1..FFc6` mapped to calendar months, framed as hike, hold or cut)
+- [ ] **WDECK-06**: Slide 6 Mexico (IPC, Banxico, local M&A such as tender offers)
+- [ ] **WDECK-07**: Slide 7 AI thematic (WFE forward P/E vs 2-year group average, memory, hyperscalers, buildout and power)
+- [ ] **WDECK-08**: Slides 8-9 portfolio moves with name contribution to return, and forward P/E per name plus harmonic blend
+- [ ] **WDECK-09**: The deck is built in a temp folder, copied to `SALIDA_DECKS`, listed in the dashboard; in 13F filing months it includes 13F highlights
+- [ ] **WDECK-10**: Engine chart generators no longer open an LSEG session at import time or parse IBKR files; harmonic and decomposition math lives in one shared module
+
+### Portfolio
+
+- [ ] **PORT-01**: Portfolio performance refreshes every 15 minutes from an intraday price path kept separate from the closing prices TWR is built on
+- [ ] **PORT-02**: César sees TWR, return vs cost per position, and market return by period as three labeled figures that never mix
+- [ ] **PORT-03**: César sees a TWR in MXN, labeled separately from the USD TWR, with deposit FX taken from the IBKR Forex rows
+- [ ] **PORT-04**: César sees a constant-FX view, labeled separately
+- [ ] **PORT-05**: A discreet, collapsed commissions panel shows total paid, % of traded value and per trade, in base currency from the statement
+- [ ] **PORT-06**: Name contribution to portfolio return in pp sums to TWR with a stated residual
+- [ ] **PORT-07**: Portfolio insights show what moved it and why (news per holding) and estimate revisions vs multiple change
+- [ ] **PORT-08**: Each holding shows 3 GICS peers with their moves and news
+- [ ] **PORT-09**: A lot whose trade date falls between the yfinance and LSEG split ex-dates is flagged
+- [ ] **PORT-10**: The Markowitz page shows where the portfolio sits against the frontier, with no target weights
+- [ ] **PORT-11**: The portfolio page follows the same Bloomberg-style layout grammar as the market dashboard
+
+### Ideas Screener
+
+- [ ] **SCRN-01**: Every ~15 days the screener refreshes a universe of US, Europe and Japan primary listings, deduplicated by issuer, in checkpointed batches that do not starve the daily job
+- [ ] **SCRN-02**: Names are bundled Small < US$10B, Mid < US$50B, Large >= US$50B by market cap in USD, with a hysteresis band at the bundle lines
+- [ ] **SCRN-03**: Filters: limited EM revenue/customer exposure (missing data shows "n/a", never passes), net debt / EBITDA < 3x with positive EBITDA (hard ceiling 4x), revenue CAGR positive and rising, margins above GICS peers or an improving turnaround; banks and insurers use their own rule set
+- [ ] **SCRN-04**: Output columns per `BRIEF.md` (company, sector, currency, market cap USD, YTD, 3M, ROE, net margin LTM, net debt/EBITDA, fwd P/E, and the AZTD_Universe peer columns) using the proven `TR.F.*` codes
+- [ ] **SCRN-05**: Each bundle has a peer average row excluding the name, harmonic for multiples, heat-colored against peers, hidden with fewer than 3 peers
+- [ ] **SCRN-06**: César opens a deep dive per name (forward P/E vs 2Y range, EPS revisions vs multiple, peers)
+
+### 13F tracker
+
+- [ ] **F13-01**: A seed list approved by César of AI and infrastructure funds with 13F holdings value above US$30B, each with filer CIK
+- [ ] **F13-02**: New filings are pulled from each fund's EDGAR XML after the 45-day deadline; history and the >US$30B screen come from the SEC quarterly Form 13F data sets; parsed with pandas and lxml
+- [ ] **F13-03**: Filings are keyed on filer, report period and accession; RESTATEMENT amendments replace, NEW HOLDINGS amendments merge; values normalized at the 2023-01-03 thousands-to-dollars boundary
+- [ ] **F13-04**: QoQ changes (new, exited, increased, trimmed) by split-adjusted share count; weight change shown separately; PUT/CALL rows excluded from allocation totals
+- [ ] **F13-05**: CUSIPs map to issuers (SEC 13(f) list plus OpenFIGI), and overlaps with the portfolio and screener are flagged
+- [ ] **F13-06**: The 13F tracker has its own dashboard section
+
+## v2 Requirements
+
+- **NEWS-V2-01**: Bank and asset manager research PDFs (Goldman, Morgan Stanley, BofA, JPM Eye on the Market, BlackRock, Apollo, PIMCO, Oaktree), each after its own page check
+- **NEWS-V2-02**: BIS, IMF, Banxico and BlackRock feeds once a working endpoint is found
+- **DASH-V2-01**: Crypto tiles once a verified source exists
+- **DASH-V2-02**: Economic-calendar consensus figures once a licensed source exists
+- **DASH-V2-03**: "Show your work" drill-through from any number to its registry entry and raw pull
+- **SCRN-V2-01**: Funnel counts and screen-to-screen diffs
+- **F13-V2-01**: Cross-fund view within the seed list
+
+## Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| Position sizing, target weights, buy/sell recommendations | César forms his own views |
+| Politicians' trading disclosures | Excluded by César |
+| Portfolio data on the market dashboard | Dashboard is market only |
+| Cloud-hosted LSEG jobs | Cloud cannot reach Workspace on `localhost` |
+| Login, multi-user, remote or mobile access | Excel downloads are César only, local |
+| Streaming real-time prices | Daily LSEG close plus a labeled intraday yfinance layer is enough; streaming adds cost and a second truth |
+| LLM-written numbers, rewritten headlines, LLM ranking | Numbers from an LLM have cost wrong results before |
+| `edgartools` for 13F numbers | Open silent 1000x units bug; can break the lseg-data pin |
+| `claude --bare` with API key | César chose the Pro subscription |
+| Universe-wide 13F heat maps, "follow this fund" signals | Scope is the seed list; no trading signals |
+| In-browser deck editing, native PowerPoint charts | Decks are generated; PNG charts from the design system |
+| Unlicensed LSEG content (WSJ, Bloomberg, Dow Jones, Barron's, `.DJI`, `.N225`, `.VXN`, `.SKEW`, SOFR futures, `ECON_RLDT`) | Verified not in the license |
+
+## Traceability
+
+Filled by the roadmap (2026-09-24). Phase numbers refer to `.planning/ROADMAP.md`.
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| FND-01 | Phase 1 | Pending |
+| FND-02 | Phase 1 | Pending |
+| FND-03 | Phase 1 | Pending |
+| FND-04 | Phase 1 | Pending |
+| PFIX-01 | Phase 1 | Pending |
+| PFIX-02 | Phase 1 | Pending |
+| PFIX-03 | Phase 1 | Pending |
+| PFIX-04 | Phase 1 | Pending |
+| PFIX-05 | Phase 1 | Pending |
+| PIPE-01 | Phase 2 | Pending |
+| PIPE-02 | Phase 2 | Pending |
+| PIPE-03 | Phase 2 | Pending |
+| PIPE-04 | Phase 2 | Pending |
+| PIPE-05 | Phase 2 | Pending |
+| PIPE-06 | Phase 2 | Pending |
+| PIPE-07 | Phase 3 | Pending |
+| PIPE-08 | Phase 3 | Pending |
+| PIPE-09 | Phase 2 | Pending |
+| PIPE-10 | Phase 3 | Pending |
+| PIPE-11 | Phase 4 | Pending |
+| NEWS-01 | Phase 3 | Pending |
+| NEWS-02 | Phase 3 | Pending |
+| NEWS-03 | Phase 3 | Pending |
+| NEWS-04 | Phase 3 | Pending |
+| NEWS-05 | Phase 3 | Pending |
+| TEXT-01 | Phase 4 | Pending |
+| TEXT-02 | Phase 4 | Pending |
+| TEXT-03 | Phase 4 | Pending |
+| DDECK-01 | Phase 4 | Pending |
+| DDECK-02 | Phase 4 | Pending |
+| DASH-01 | Phase 5 | Pending |
+| DASH-02 | Phase 5 | Pending |
+| DASH-03 | Phase 5 | Pending |
+| DASH-04 | Phase 5 | Pending |
+| DASH-05 | Phase 5 | Pending |
+| DASH-06 | Phase 5 | Pending |
+| DASH-07 | Phase 5 | Pending |
+| DASH-08 | Phase 5 | Pending |
+| XLS-01 | Phase 6 | Pending |
+| XLS-02 | Phase 6 | Pending |
+| XLS-03 | Phase 6 | Pending |
+| XLS-04 | Phase 6 | Pending |
+| XLS-05 | Phase 6 | Pending |
+| WDECK-01 | Phase 7 | Pending |
+| WDECK-02 | Phase 7 | Pending |
+| WDECK-03 | Phase 8 | Pending |
+| WDECK-04 | Phase 8 | Pending |
+| WDECK-05 | Phase 8 | Pending |
+| WDECK-06 | Phase 8 | Pending |
+| WDECK-07 | Phase 8 | Pending |
+| WDECK-08 | Phase 8 | Pending |
+| WDECK-09 | Phase 7 | Pending |
+| WDECK-10 | Phase 7 | Pending |
+| PORT-01 | Phase 9 | Pending |
+| PORT-02 | Phase 9 | Pending |
+| PORT-03 | Phase 9 | Pending |
+| PORT-04 | Phase 9 | Pending |
+| PORT-05 | Phase 9 | Pending |
+| PORT-06 | Phase 9 | Pending |
+| PORT-07 | Phase 10 | Pending |
+| PORT-08 | Phase 10 | Pending |
+| PORT-09 | Phase 9 | Pending |
+| PORT-10 | Phase 10 | Pending |
+| PORT-11 | Phase 9 | Pending |
+| SCRN-01 | Phase 11 | Pending |
+| SCRN-02 | Phase 11 | Pending |
+| SCRN-03 | Phase 11 | Pending |
+| SCRN-04 | Phase 11 | Pending |
+| SCRN-05 | Phase 11 | Pending |
+| SCRN-06 | Phase 11 | Pending |
+| F13-01 | Phase 12 | Pending |
+| F13-02 | Phase 12 | Pending |
+| F13-03 | Phase 12 | Pending |
+| F13-04 | Phase 12 | Pending |
+| F13-05 | Phase 12 | Pending |
+| F13-06 | Phase 12 | Pending |
+
+**Coverage:**
+- v1 requirements: 76 total
+- Mapped to phases: 76
+- Unmapped: 0
+
+---
+*Requirements defined: 2026-09-24*
+*Last updated: 2026-09-24 after roadmap creation (traceability filled)*

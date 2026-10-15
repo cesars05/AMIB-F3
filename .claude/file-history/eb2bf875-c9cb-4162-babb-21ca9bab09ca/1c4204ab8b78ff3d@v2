@@ -1,0 +1,46 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$cm=$wb.Worksheets.Item("Consolidated Model")
+Write-Output ("LIBRO: "+[string]$wb.Name)
+Write-Output ("O62 = "+[string]$cm.Range("O62").Text+"    etiqueta: '"+[string]$cm.Range("C62").Text+"'    frm= "+[string]$cm.Range("O62").Formula)
+Write-Output ""
+Write-Output "### Estado de resultados AJUSTADO (r46-r73), FY2029 / FY2030 / FY2031 ###"
+for($r=46;$r -le 73;$r++){
+  $lab=""
+  foreach($c in 2,3,4){ $t=""; try{ $t=[string]$cm.Cells.Item($r,$c).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  if($lab.Trim() -eq ""){ continue }
+  if($lab.Length -gt 44){ $lab=$lab.Substring(0,44) }
+  $v=""
+  for($c=14;$c -le 16;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(11) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(45)+$v+"   frm(O)= "+[string]$cm.Cells.Item($r,15).Formula)
+}
+Write-Output ""
+Write-Output "### Estado de resultados ESTATUTARIO (r13-r43) ###"
+for($r=13;$r -le 43;$r++){
+  $lab=""
+  foreach($c in 2,3,4){ $t=""; try{ $t=[string]$cm.Cells.Item($r,$c).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  if($lab.Trim() -eq ""){ continue }
+  if($lab.Length -gt 44){ $lab=$lab.Substring(0,44) }
+  $v=""
+  for($c=14;$c -le 16;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(11) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(45)+$v)
+}
+Write-Output ""
+Write-Output "### Ratios (r77-r122) ###"
+for($r=77;$r -le 122;$r++){
+  $lab=""
+  foreach($c in 2,3,4){ $t=""; try{ $t=[string]$cm.Cells.Item($r,$c).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  if($lab.Trim() -eq ""){ continue }
+  if($lab.Length -gt 40){ $lab=$lab.Substring(0,40) }
+  $v=""
+  for($c=14;$c -le 16;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(11) }
+  if($v.Trim() -eq ""){ continue }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(41)+$v)
+}

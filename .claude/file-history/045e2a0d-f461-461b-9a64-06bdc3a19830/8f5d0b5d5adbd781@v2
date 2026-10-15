@@ -1,0 +1,99 @@
+$excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb = $excel.Workbooks.Item("AZTD_Universe.xlsx")
+$ws = $wb.Sheets.Item("Analysis")
+
+function Set-CellWithBold {
+    param($cell, [string]$text, [string[]]$boldPhrases)
+    $cell.Value2 = $text
+    $cell.Font.Bold = $false
+    foreach ($phrase in $boldPhrases) {
+        $idx = $text.IndexOf($phrase)
+        if ($idx -ge 0) {
+            $start = $idx + 1
+            $len = $phrase.Length
+            $cell.Characters($start, $len).Font.Bold = $true
+        } else {
+            Write-Output "WARNING: phrase not found -> '$phrase'"
+        }
+    }
+}
+
+$rows = @(
+    @{
+        Row = 3
+        Desc = "One of the world's two largest distributors of electronic components and enterprise IT products, connecting semiconductor manufacturers with industrial customers through its Global Components and Global ECS segments."
+        DescBold = @("two largest distributors")
+        Ctx = "Riding a sharp semiconductor upcycle, with Q2 2026 revenue up 32% year over year and non-GAAP operating income up 87%. The CEO seat has been vacant for over a year, and roughly a third of recent growth reflects price inflation rather than unit volume, a sign the cycle may be maturing faster than management suggests."
+        CtxBold = @("Q2 2026 revenue up 32%", "CEO seat has been vacant for over a year")
+    },
+    @{
+        Row = 4
+        Desc = "Largest US specialty retailer of women's intimate apparel, sleepwear and beauty products under the Victoria's Secret and PINK brands, sold through about 1,420 stores, digital channels and international franchises."
+        DescBold = @("Largest US specialty retailer")
+        Ctx = "A real turnaround under CEO Hillary Super, with five consecutive quarters of positive comparable sales. Q2 FY27's headline 15.9% operating margin was inflated by a one-off `$148 million tariff refund; the adjusted gross margin of 38.8% is the better gauge. Much of the recovery already appears priced into the stock, and the company just fended off an activist proxy fight."
+        CtxBold = @("five consecutive quarters of positive comparable sales", "one-off `$148 million tariff refund")
+    },
+    @{
+        Row = 5
+        Desc = "Israeli maker of optical inspection and metrology systems that detect defects and measure dimensions in advanced chip packaging, primarily for AI accelerators and high-bandwidth memory."
+        DescBold = @("AI accelerators and high-bandwidth memory")
+        Ctx = "AI-driven demand is strong, with Q3 guidance pointing to roughly 20% sequential growth and over `$600 million in orders year to date. However, China accounted for about 49% of 2025 revenue, well above standard emerging-market exposure limits, adding geopolitical risk on top of Israel-based operations."
+        CtxBold = @("China accounted for about 49% of 2025 revenue")
+    },
+    @{
+        Row = 6
+        Desc = "US oilfield services company supplying downhole tools, well completion products and subsea and drilling technology to oil and gas operators worldwide."
+        DescBold = @("downhole tools, well completion products")
+        Ctx = "Margins are inflecting as pricing recovers, with FY2026 adjusted EBITDA guidance raised twice, most recently to `$115 to 125 million. Net leverage is a healthy 1.1x, but the stock is up roughly 268% over the past year, and at under `$1 billion in market cap it already appears to price in much of the recovery."
+        CtxBold = @("FY2026 adjusted EBITDA guidance raised twice", "up roughly 268% over the past year")
+    },
+    @{
+        Row = 7
+        Desc = "Asset-light B2B marketplace connecting mostly Asian manufacturers of large-parcel goods, such as furniture and appliances, with resellers in the US and Europe, handling payment, logistics and freight."
+        DescBold = @("Asset-light B2B marketplace")
+        Ctx = "Q2 2026 results beat sharply, with EPS 77% above consensus and revenue up nearly 28%, plus a new `$120 million buyback. Growth is increasingly supported by the New Classic acquisition and by Europe, where GMV rose 66%. The founder controls about 65% of voting power, and integration execution is worth watching."
+        CtxBold = @("EPS 77% above consensus", "founder controls about 65% of voting power")
+    },
+    @{
+        Row = 8
+        Desc = "Japanese maker of clean-room wafer-handling robots and front-end modules used inside semiconductor and flat-panel-display fabs, sold mainly through equipment makers such as Applied Materials."
+        DescBold = @("Applied Materials")
+        Ctx = "Orders surged 190% year over year in Q1 FY27 on the AI capex cycle, but operating margin compressed to about 9.5% in FY26 from higher R&D spend, a new Vietnam plant and a JPY 7.4 billion litigation provision tied to a Kawasaki Heavy Industries patent suit. The balance sheet remains net cash, with an estimated 28% ROIC."
+        CtxBold = @("Orders surged 190% year over year", "JPY 7.4 billion litigation provision")
+    },
+    @{
+        Row = 9
+        Desc = "US land drilling and hydraulic fracturing services provider, renting drilling rigs and pressure pumping fleets to oil and gas exploration and production companies, mainly in shale basins."
+        DescBold = @("land drilling and hydraulic fracturing")
+        Ctx = "Emerging from a severe 2024-2025 downcycle, Q2 2026 marked the first positive revenue quarter in two years, with completion pricing up 10 to 15%. Leverage stays conservative near 1.1 to 1.3x net debt to EBITDA, though the business remains highly exposed to swings in oil and gas prices."
+        CtxBold = @("first positive revenue quarter in two years")
+    },
+    @{
+        Row = 10
+        Desc = "Japanese operator of online B2B auctions for used goods, mainly smartphones and PCs, pre-owned luxury items, and used cars and motorcycles, selling to dealers who resell domestically and overseas."
+        DescBold = @("online B2B auctions for used goods")
+        Ctx = "H1 2026 revenue rose 16.8% and full-year guidance was raised, but a meaningful share of growth rests on one-off or reversible tailwinds, including replacement of devices from Japan's GIGA School program, a weak yen boosting foreign buyers, and a strong Nikkei lifting demand for luxury goods. Average daily trading volume is thin, near `$1.5 to 3 million."
+        CtxBold = @("H1 2026 revenue rose 16.8%", "reversible tailwinds")
+    },
+    @{
+        Row = 11
+        Desc = "Israeli provider of vehicle location, telematics and stolen-vehicle recovery services, with its main operations concentrated in Israel and Brazil."
+        DescBold = @("vehicle location, telematics and stolen-vehicle recovery")
+        Ctx = "Fundamentals are strong, with record Q2 2026 revenue of `$104.8 million, up 21% year over year. The name is excluded from this screen on geography, since Israel and Brazil together represent about 78% of revenue, both above standard emerging-market thresholds."
+        CtxBold = @("excluded from this screen on geography", "78% of revenue")
+    }
+)
+
+foreach ($item in $rows) {
+    $descCell = $ws.Cells.Item($item.Row, 5)
+    $ctxCell = $ws.Cells.Item($item.Row, 6)
+    $descCell.WrapText = $true
+    $ctxCell.WrapText = $true
+    Set-CellWithBold -cell $descCell -text $item.Desc -boldPhrases $item.DescBold
+    Set-CellWithBold -cell $ctxCell -text $item.Ctx -boldPhrases $item.CtxBold
+    Write-Output "Row $($item.Row) done."
+}
+
+$ws.Rows("3:11").AutoFit() | Out-Null
+$wb.Save()
+Write-Output "Saved."

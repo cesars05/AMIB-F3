@@ -1,0 +1,747 @@
+<title>Quiz Bienes Raíces</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Libre+Franklin:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#F7F5F0;
+    --surface:#FFFFFF;
+    --surface-2:#F0ECE3;
+    --ink:#1C2321;
+    --muted:#5B6663;
+    --border:#DEDACE;
+    --primary:#1F5C4F;
+    --primary-ink:#FFFFFF;
+    --accent:#C4863A;
+    --correct:#2E7D46;
+    --correct-bg:#E4F2E7;
+    --incorrect:#B23A34;
+    --incorrect-bg:#F7E5E3;
+    --pending:#D8D2C4;
+    --shadow: 0 1px 2px rgba(28,35,33,0.06), 0 8px 24px rgba(28,35,33,0.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#11161A;
+      --surface:#1A2024;
+      --surface-2:#212A2E;
+      --ink:#ECEDE8;
+      --muted:#9AA6A2;
+      --border:#2B3438;
+      --primary:#6FBFA8;
+      --primary-ink:#0E1B17;
+      --accent:#E3A85B;
+      --correct:#6FCB86;
+      --correct-bg:#1C3325;
+      --incorrect:#E58179;
+      --incorrect-bg:#3A2220;
+      --pending:#33403F;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#11161A;
+    --surface:#1A2024;
+    --surface-2:#212A2E;
+    --ink:#ECEDE8;
+    --muted:#9AA6A2;
+    --border:#2B3438;
+    --primary:#6FBFA8;
+    --primary-ink:#0E1B17;
+    --accent:#E3A85B;
+    --correct:#6FCB86;
+    --correct-bg:#1C3325;
+    --incorrect:#E58179;
+    --incorrect-bg:#3A2220;
+    --pending:#33403F;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Libre Franklin", system-ui, sans-serif;
+    padding:24px 16px 48px;
+    min-height:100%;
+  }
+  .wrap{
+    max-width:640px;
+    margin:0 auto;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+
+  header.top{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  header.top h1{
+    font-family:"Fraunces", serif;
+    font-weight:600;
+    font-size:1.5rem;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  .score-chip{
+    font-family:"JetBrains Mono", monospace;
+    font-variant-numeric: tabular-nums;
+    font-size:0.85rem;
+    color:var(--muted);
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:999px;
+    padding:4px 12px;
+    white-space:nowrap;
+  }
+
+  .progress{
+    display:flex;
+    gap:4px;
+    flex-wrap:wrap;
+  }
+  .seg{
+    flex:1 1 auto;
+    min-width:6px;
+    height:6px;
+    border-radius:3px;
+    background:var(--pending);
+    transition:background .25s ease;
+  }
+  .seg.correct{background:var(--correct);}
+  .seg.incorrect{background:var(--incorrect);}
+  .seg.current{background:var(--accent);}
+  @media (prefers-reduced-motion: reduce){ .seg{transition:none;} }
+
+  main{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:var(--shadow);
+    padding:28px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+  }
+  @media (max-width:480px){ main{padding:20px;} }
+
+  .intro h2{
+    font-family:"Fraunces", serif;
+    font-size:1.9rem;
+    line-height:1.15;
+    margin:0 0 6px;
+    text-wrap:balance;
+  }
+  .intro p{
+    color:var(--muted);
+    line-height:1.55;
+    margin:0 0 10px;
+  }
+  .intro ul{
+    margin:0 0 18px;
+    padding-left:1.1em;
+    color:var(--muted);
+    line-height:1.6;
+    font-size:0.95rem;
+  }
+  .intro li{margin-bottom:4px;}
+
+  .btn{
+    font-family:"Libre Franklin", sans-serif;
+    font-weight:600;
+    font-size:1rem;
+    border:none;
+    border-radius:10px;
+    padding:13px 20px;
+    cursor:pointer;
+    background:var(--primary);
+    color:var(--primary-ink);
+    transition:filter .15s ease, transform .1s ease;
+  }
+  .btn:hover{filter:brightness(1.08);}
+  .btn:active{transform:scale(0.98);}
+  .btn.secondary{
+    background:transparent;
+    color:var(--primary);
+    border:1.5px solid var(--primary);
+  }
+  .btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  @media (prefers-reduced-motion: reduce){ .btn{transition:none;} }
+
+  .eyebrow{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:0.78rem;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--muted);
+    font-weight:600;
+  }
+  .tag-caso{
+    background:var(--accent);
+    color:var(--primary-ink);
+    border-radius:5px;
+    padding:1px 7px;
+    font-size:0.68rem;
+    letter-spacing:0.04em;
+  }
+
+  .q-text{
+    font-family:"Fraunces", serif;
+    font-weight:500;
+    font-size:1.3rem;
+    line-height:1.35;
+    margin:0;
+    text-wrap:balance;
+  }
+  .q-text code, .explain code{
+    font-family:"JetBrains Mono", monospace;
+    font-size:0.92em;
+    background:var(--surface-2);
+    padding:1px 5px;
+    border-radius:4px;
+  }
+
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .option{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-align:left;
+    padding:13px 16px;
+    border:1.5px solid var(--border);
+    border-radius:11px;
+    background:var(--surface);
+    color:var(--ink);
+    font-family:"Libre Franklin", sans-serif;
+    font-size:0.98rem;
+    line-height:1.4;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .option:hover:not(:disabled){border-color:var(--primary);}
+  .option:disabled{cursor:default;}
+  .option .letter{
+    flex:none;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    border:1.5px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:0.8rem;
+    font-weight:700;
+    color:var(--muted);
+  }
+  .option.is-correct{background:var(--correct-bg); border-color:var(--correct);}
+  .option.is-correct .letter{border-color:var(--correct); color:var(--correct); background:var(--correct-bg);}
+  .option.is-incorrect{background:var(--incorrect-bg); border-color:var(--incorrect);}
+  .option.is-incorrect .letter{border-color:var(--incorrect); color:var(--incorrect); background:var(--incorrect-bg);}
+  @media (prefers-reduced-motion: reduce){ .option{transition:none;} }
+
+  .explain{
+    border-left:3px solid var(--primary);
+    background:var(--surface-2);
+    border-radius:0 8px 8px 0;
+    padding:12px 14px;
+    font-size:0.92rem;
+    color:var(--ink);
+    line-height:1.5;
+  }
+  .explain strong{color:var(--primary);}
+
+  .footer-row{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+  }
+
+  /* results */
+  .result-hero{
+    text-align:center;
+    padding:8px 0 4px;
+  }
+  .result-hero .big{
+    font-family:"Fraunces", serif;
+    font-weight:700;
+    font-size:3.4rem;
+    line-height:1;
+    font-variant-numeric: tabular-nums;
+    color:var(--primary);
+  }
+  .result-hero .of{
+    color:var(--muted);
+    font-size:1rem;
+    margin-top:4px;
+  }
+  .result-hero .msg{
+    font-family:"Fraunces", serif;
+    font-size:1.2rem;
+    margin-top:10px;
+  }
+
+  .section-bars{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .sbar-row{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    gap:6px 10px;
+    align-items:center;
+    font-size:0.88rem;
+  }
+  .sbar-label{color:var(--ink);}
+  .sbar-frac{font-family:"JetBrains Mono", monospace; color:var(--muted); font-variant-numeric: tabular-nums; text-align:right;}
+  .sbar-track{
+    grid-column:1 / -1;
+    height:8px;
+    background:var(--surface-2);
+    border-radius:5px;
+    overflow:hidden;
+  }
+  .sbar-fill{height:100%; background:var(--primary); border-radius:5px;}
+
+  .review{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .review-item{
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:12px 14px;
+    background:var(--surface-2);
+  }
+  .review-item .rq{font-weight:600; font-size:0.95rem; margin-bottom:6px;}
+  .review-item .ryour{color:var(--incorrect); font-size:0.88rem; margin-bottom:2px;}
+  .review-item .rcorrect{color:var(--correct); font-size:0.88rem; margin-bottom:6px;}
+  .review-item .rexplain{color:var(--muted); font-size:0.85rem; line-height:1.5;}
+
+  [hidden]{display:none !important;}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Quiz · Bienes Raíces</h1>
+    <span class="score-chip" id="scoreChip">0 / 35</span>
+  </header>
+
+  <div class="progress" id="progress"></div>
+
+  <main id="app"></main>
+</div>
+
+<script>
+(function(){
+
+  var QUESTIONS = [
+    {section:"Sistema Inmobiliario", type:"concepto",
+     q:"¿Cuáles son los tres mercados que componen el \"Real Estate System\"?",
+     options:["Espacio, Capitales, Gobierno","Espacio, Activos, Desarrolladores","Renta, Venta, Financiamiento","Oferta, Demanda, Precio"],
+     correct:1,
+     explain:"El sistema inmobiliario surge de la interacción entre el Mercado del Espacio, el Mercado de Activos y la Industria Desarrolladora."},
+
+    {section:"Sistema Inmobiliario", type:"concepto",
+     q:"En el Mercado del Espacio, ¿quién determina la oferta?",
+     options:["Los inquilinos que buscan rentar","Los arrendadores que buscan rentar espacio","Los bancos que financian obra","El gobierno municipal"],
+     correct:1,
+     explain:"La demanda la determinan quienes buscan rentar; la oferta, los arrendadores; y las adiciones (nueva construcción), los desarrolladores."},
+
+    {section:"Sistema Inmobiliario", type:"concepto",
+     q:"La frase \"money chasing properties\" describe mejor a:",
+     options:["El Mercado del Espacio","El Mercado de Activos","La Industria Desarrolladora","El Cost Approach"],
+     correct:1,
+     explain:"En el Mercado de Activos, el capital \"persigue\" propiedades como inversión — de ahí la frase."},
+
+    {section:"Sistema Inmobiliario", type:"caso",
+     q:"Caso: un submercado industrial tiene 2,000,000 m² de inventario. Al inicio de año había 1,850,000 m² ocupados y al cierre, 1,930,000 m². ¿Cuál es la <code>absorción neta</code> del año?",
+     options:["+80,000 m²","−80,000 m²","1,930,000 m²","3.5%"],
+     correct:0,
+     explain:"Absorción neta = ocupación final − ocupación inicial = 1,930,000 − 1,850,000 = <strong>+80,000 m²</strong>."},
+
+    {section:"Sistema Inmobiliario", type:"caso",
+     q:"Con los datos del caso anterior, ¿cuál es la <code>tasa de desocupación</code> al cierre de año?",
+     options:["7.5%","3.5%","96.5%","4.3%"],
+     correct:1,
+     explain:"Vacantes = 2,000,000 − 1,930,000 = 70,000 m². Tasa de desocupación = 70,000 / 2,000,000 = <strong>3.5%</strong>."},
+
+    {section:"Sistema Inmobiliario", type:"concepto",
+     q:"¿Por qué la oferta en el mercado del espacio es \"fija en el corto plazo\"?",
+     options:["Porque el gobierno regula el precio de la renta","Porque no puedes mover edificios de un lugar a otro y el desarrollo toma tiempo","Porque los bancos no prestan para construcción","Porque la demanda siempre supera a la oferta"],
+     correct:1,
+     explain:"El material lo dice literal: \"no puedes mover edificios alrededor\", y construir toma tiempo (permisos, obra)."},
+
+    {section:"Sistema Inmobiliario", type:"concepto",
+     q:"En el ciclo del Mercado de Activos, el punto óptimo de \"BUY\" ocurre cuando:",
+     options:["La vacancia está en su punto más alto y sigue subiendo","La vacancia toca su techo y la nueva oferta aún no presiona las rentas","Hay sobreconstrucción activa en el submercado","Las rentas están en su máximo histórico"],
+     correct:1,
+     explain:"Ese es justo el punto de inflexión: la vacancia deja de subir, pero la nueva oferta todavía no le pega a las rentas."},
+
+    {section:"Tipos de Activos", type:"concepto",
+     q:"¿Cuál es la unidad de medición estándar para valuar Hoteles?",
+     options:["USD/m²","GIM","RevPAR / llaves (habitaciones)","Cap Rate"],
+     correct:2,
+     explain:"Los hoteles se miden en RevPAR (ingreso por habitación disponible) y número de llaves."},
+
+    {section:"Tipos de Activos", type:"caso",
+     q:"Un edificio de oficinas Clase A, construido hace 12 años sin renovaciones, ahora compite contra una torre nueva justo enfrente. ¿Qué probablemente le pasó a su clasificación?",
+     options:["Sigue siendo Clase A; la edad no importa","Probablemente migró a Clase B por perder competitividad","Pasó automáticamente a Clase C","Se volvió un activo \"non-core\""],
+     correct:1,
+     explain:"El material da justo este ejemplo: un edificio A que no se renueva mientras construyen algo nuevo enfrente tiende a caer a Clase B."},
+
+    {section:"Tipos de Activos", type:"concepto",
+     q:"La tierra \"Brownfield\" se caracteriza por:",
+     options:["Ser tierra agrícola sin desarrollar","Estar dentro de la ciudad, con servicios ya disponibles","Tener pasivos o temas ambientales pendientes","Tener el uso de suelo más denso permitido"],
+     correct:2,
+     explain:"Brownfield = tierra desarrollada con temas ambientales pendientes (ejemplos clásicos: antiguas zonas industriales)."},
+
+    {section:"Tipos de Activos", type:"concepto",
+     q:"Catastro y Registro Público de la Propiedad (RPP) se diferencian en que:",
+     options:["Son exactamente lo mismo, solo cambia el nombre por estado","El catastro es legal y el RPP es fiscal","El catastro identifica físicamente/fiscalmente el inmueble; el RPP da certeza legal de titularidad y gravámenes","El RPP solo aplica a terrenos, nunca a edificios"],
+     correct:2,
+     explain:"Catastro = lado físico/fiscal (medidas, valor para predial). RPP = lado legal (dueño, hipotecas, historial de transmisiones)."},
+
+    {section:"Tipos de Activos", type:"caso",
+     q:"En retail, un mall \"B\" es difícil de clasificar porque:",
+     options:["Nunca tiene inquilinos ancla","Oficialmente no existe la categoría B","Está entre \"A\" y \"C\", y depende de entender el objetivo demográfico y el radio de influencia","Siempre tiene la vacancia más alta del mercado"],
+     correct:2,
+     explain:"El material dice: los mall \"A\" y \"C\" son fáciles de entender; el \"B\" se resuelve pensando en demográficos e ingresos del radio de la propiedad."},
+
+    {section:"Tipos de Activos", type:"concepto",
+     q:"¿Cuál de las siguientes es una de las tres fuerzas que están redefiniendo el retail según el material?",
+     options:["Naves altas (40 ft) para e-commerce/fulfillment","Aumento generalizado de tasas de interés","Digitalización del catastro municipal","Reducción de horarios comerciales"],
+     correct:0,
+     explain:"Las tres fuerzas mencionadas son: almacenes altos para e-commerce, centros de entretenimiento, y distribución de última milla."},
+
+    {section:"Metodologías de Valuación", type:"concepto",
+     q:"En el proceso general de avalúo, ¿cuál de los siguientes pasos va primero?",
+     options:["Aplicar la metodología de valuación","Identificación física y legal del inmueble","Recopilar información de mercado","Especificar el día de avalúo"],
+     correct:1,
+     explain:"El orden es: identificación física/legal → derechos de propiedad → propósito → fecha → info de mercado → metodología."},
+
+    {section:"Metodologías de Valuación", type:"concepto",
+     q:"En el Sales/Comparables Approach, ¿por qué se excluyen las ventas de remates?",
+     options:["Porque son ilegales","Porque no reflejan una transacción normal entre comprador y vendedor informados","Porque siempre son más caras que el mercado","Porque no tienen fecha de cierre registrada"],
+     correct:1,
+     explain:"Se buscan operaciones normales; un remate distorsiona el precio real que pagaría un comprador informado."},
+
+    {section:"Metodologías de Valuación", type:"caso",
+     q:"Caso: una propiedad se vende en $4,500,000 con un Ingreso Bruto Potencial (PGI) de $600,000/año y vacancia de 8%. ¿Cuál es el <code>GIM</code> usando el EGI?",
+     options:["7.5x","8.15x","10.8x","0.92x"],
+     correct:1,
+     explain:"EGI = 600,000 × (1−0.08) = $552,000. GIM = 4,500,000 / 552,000 ≈ <strong>8.15x</strong>."},
+
+    {section:"Metodologías de Valuación", type:"concepto",
+     q:"El Cost Approach se basa en la premisa de que:",
+     options:["Un inversionista informado no pagará más de lo que cuesta el terreno + construir desde cero","El valor siempre es igual al de la última venta comparable","El NOI siempre determina el valor final","La depreciación no afecta el valor de un inmueble"],
+     correct:0,
+     explain:"Esa es la lógica exacta del Cost Approach: valor de reemplazo, ajustado por deterioro/obsolescencia."},
+
+    {section:"Metodologías de Valuación", type:"concepto",
+     q:"¿Cuál de las siguientes NO es una de las tres obsolescencias/deterioros del Cost Approach?",
+     options:["Deterioro físico","Obsolescencia funcional","Obsolescencia externa","Obsolescencia fiscal"],
+     correct:3,
+     explain:"Las tres reales son: deterioro físico, obsolescencia funcional y obsolescencia externa. \"Obsolescencia fiscal\" no existe como categoría del Cost Approach."},
+
+    {section:"NOI y Cap Rate", type:"concepto",
+     q:"NOI se define como:",
+     options:["Ingresos brutos menos impuestos","Ingresos (rentas) menos gastos operativos","Precio de venta menos comisión de broker","Utilidad neta después de intereses y depreciación"],
+     correct:1,
+     explain:"NOI = Ingresos (rentas) − Gastos Operativos. Es la primera medida de flujo de efectivo de la propiedad."},
+
+    {section:"NOI y Cap Rate", type:"concepto",
+     q:"¿Por qué se compara el NOI con el EBITDA corporativo?",
+     options:["Porque ambos incluyen depreciación","Porque ambos son medidas de flujo antes de la estructura de capital","Porque ambos se calculan después de impuestos","Porque ambos incluyen el pago de deuda"],
+     correct:1,
+     explain:"Ambos miden el desempeño del activo/negocio antes de cómo se financió — antes de intereses de deuda."},
+
+    {section:"NOI y Cap Rate", type:"caso",
+     q:"Caso: una propiedad genera NOI de $28,000 usd/mes. El mercado cotiza comparables a un Cap Rate de 7.0%. ¿Cuál es el valor estimado?",
+     options:["$2,352,000","$4,800,000","$3,360,000","$6,720,000"],
+     correct:1,
+     explain:"NOI anual = 28,000 × 12 = $336,000. Valor = 336,000 / 0.07 = <strong>$4,800,000</strong>."},
+
+    {section:"NOI y Cap Rate", type:"concepto",
+     q:"La fórmula del Cap Rate derivada del modelo de perpetuidad creciente es:",
+     options:["Cap Rate = r + g","Cap Rate = r − g","Cap Rate = g − r","Cap Rate = r / g"],
+     correct:1,
+     explain:"De Precio = NOI/(r−g) y Precio = NOI/CapRate, se obtiene Cap Rate = r − g (retorno menos crecimiento)."},
+
+    {section:"NOI y Cap Rate", type:"caso",
+     q:"Caso: el Cap Rate de una propiedad es 6.5% y el NOI crece 2% anual de forma constante. ¿Cuál es el retorno total esperado?",
+     options:["4.5%","6.5%","8.5%","13.0%"],
+     correct:2,
+     explain:"Retorno total = Cap Rate + crecimiento = 6.5% + 2% = <strong>8.5%</strong>."},
+
+    {section:"NOI y Cap Rate", type:"concepto",
+     q:"¿Cuál es un supuesto fuerte al usar el Cap Rate como \"métrica de retorno\" vía la perpetuidad creciente?",
+     options:["Que la inflación siempre es cero","Que compras y vendes al mismo Cap Rate, con crecimiento de NOI constante y sin Capex ni problemas de cobranza","Que el inmueble nunca se deprecia","Que no existen impuestos en bienes raíces"],
+     correct:1,
+     explain:"El modelo asume Cap Rate constante y NOI creciendo de forma perfectamente estable — algo raro en la vida real."},
+
+    {section:"NOI y Cap Rate", type:"concepto",
+     q:"¿Por qué promediar Cap Rates entre ciudades por \"spread\" (tipo Costar) puede ser peligroso?",
+     options:["Porque genera Cap Rates artificiales en vez de basarse en fundamentales locales reales","Porque Costar nunca actualiza su información","Porque los Cap Rates de EE. UU. no aplican en México","Porque el Cap Rate debe ser igual en todo el país"],
+     correct:0,
+     explain:"El material lo marca explícito: pensar en spreads teóricos entre mercados \"genera\" Cap Rates donde no existen realmente."},
+
+    {section:"NOI y Cap Rate", type:"concepto",
+     q:"Cash on Cash se calcula como:",
+     options:["NOI / Precio de compra","Cash Flow to Equity / Equity Investment","Utilidad neta / Ventas totales","Valor de venta / Valor de compra"],
+     correct:1,
+     explain:"CoC mide el retorno al inversionista: lo que le queda después de la deuda, sobre lo que puso de capital propio."},
+
+    {section:"NOI y Cap Rate", type:"concepto",
+     q:"¿En qué tipo de propiedad tiene sentido usar Cash on Cash?",
+     options:["En cualquier propiedad, sin excepción","Solo en propiedades ya estabilizadas","Solo en terrenos sin construir","Solo en propiedades con NOI negativo"],
+     correct:1,
+     explain:"El material lo aclara: CoC solo tiene sentido en propiedades estabilizadas — no captura toda la historia en activos en transición."},
+
+    {section:"BOE, TIR y DCF", type:"concepto",
+     q:"\"Highest and Best Use\" se relaciona principalmente con:",
+     options:["El valor residual del terreno: vale lo que puedes construir arriba","El costo histórico de adquisición","El Cap Rate promedio del mercado","La tasa de interés hipotecaria vigente"],
+     correct:0,
+     explain:"El valor de la tierra es residual: depende del mejor uso posible que se le pueda dar, no del uso actual."},
+
+    {section:"BOE, TIR y DCF", type:"concepto",
+     q:"En la técnica BOE, el escenario \"In Place\" se caracteriza por:",
+     options:["Usar rentas y vacancia de mercado, siendo agresivo","Usar los números reales actuales (aunque la vacancia sea alta), siendo conservador","Ignorar por completo los gastos operativos","Aplicar siempre un Cap Rate de salida menor al de entrada"],
+     correct:1,
+     explain:"\"In Place\" = números tal como están hoy (TTM); es el escenario conservador, frente al \"Stabilized\" que es agresivo."},
+
+    {section:"BOE, TIR y DCF", type:"concepto",
+     q:"La TIR (IRR) se define como:",
+     options:["La tasa de crecimiento del NOI","La tasa de descuento que hace el Valor Presente Neto igual a cero","El Cap Rate menos la tasa de crecimiento","El retorno garantizado contractualmente al inversionista"],
+     correct:1,
+     explain:"Es, por definición, la tasa que hace que el VPN de todos los flujos (inversión, operación, venta) sea cero."},
+
+    {section:"BOE, TIR y DCF", type:"concepto",
+     q:"Según el material, ¿qué métrica se usa más en bienes raíces para tomar decisiones de inversión?",
+     options:["El VPN en términos absolutos","La TIR","El GIM exclusivamente","El valor catastral"],
+     correct:1,
+     explain:"Frase textual del material: \"casi nunca utilizamos el VPN en bienes raíces, utilizamos la TIR\"."},
+
+    {section:"BOE, TIR y DCF", type:"caso",
+     q:"Caso Pizza Hut: NOI anual = $240,000, Going-In Cap = 7.5%. ¿Cuánto se pagó por la propiedad?",
+     options:["$1,800,000","$3,200,000","$4,000,000","$18,000"],
+     correct:1,
+     explain:"Valor = NOI / Cap Rate = 240,000 / 0.075 = <strong>$3,200,000</strong>."},
+
+    {section:"BOE, TIR y DCF", type:"caso",
+     q:"Mismo caso: se vende con un Exit Cap de 6.0% sobre ese mismo NOI (sin crecimiento). ¿Cuál es la plusvalía implícita aproximada?",
+     options:["10%","15%","25%","60%"],
+     correct:2,
+     explain:"Valor de venta = 240,000/0.06 = $4,000,000. Plusvalía = (4,000,000−3,200,000)/3,200,000 = <strong>25%</strong>."},
+
+    {section:"BOE, TIR y DCF", type:"concepto",
+     q:"La regla \"conservadora\" de Exit Cap Rate establece que:",
+     options:["El Exit Cap siempre debe ser menor al Going-In","El Exit Cap debe ser igual al Going-In (Going-In = Exit)","El Exit Cap no tiene relación con el Going-In","El Exit Cap debe ser el doble del Going-In"],
+     correct:1,
+     explain:"Regla base: Going-In = Exit. Con flujos crecientes, la propiedad ya se aprecia solo por el ajuste inflacionario de las rentas."},
+
+    {section:"BOE, TIR y DCF", type:"caso",
+     q:"Caso de razonamiento: un fondo compra un activo a un Going-In Cap de 6.0% y modela vender a un Exit Cap de 6.5% (sin cambio en el NOI). ¿Qué está asumiendo el fondo?",
+     options:["Que el mercado mejorará (compresión de Cap Rate)","Que el futuro será menos favorable que hoy — postura conservadora","Que no hay ningún riesgo en la operación","Que el NOI se va a duplicar"],
+     correct:1,
+     explain:"Exit > Going-In implica expansión de Cap Rate (el activo \"vale menos\" por cada dólar de NOI al salir) — es la postura conservadora, similar al \"premio\" de 50 pb que mencionan algunos fondos."}
+  ];
+
+  var TOTAL = QUESTIONS.length;
+  var current = 0;
+  var score = 0;
+  var answered = []; // {selected, isCorrect}
+
+  var app = document.getElementById('app');
+  var progressEl = document.getElementById('progress');
+  var scoreChip = document.getElementById('scoreChip');
+
+  function buildProgress(){
+    progressEl.innerHTML = '';
+    for (var i=0;i<TOTAL;i++){
+      var seg = document.createElement('div');
+      seg.className = 'seg';
+      seg.id = 'seg-'+i;
+      progressEl.appendChild(seg);
+    }
+  }
+
+  function updateProgress(){
+    for (var i=0;i<TOTAL;i++){
+      var seg = document.getElementById('seg-'+i);
+      seg.className = 'seg';
+      if (answered[i]){
+        seg.classList.add(answered[i].isCorrect ? 'correct' : 'incorrect');
+      } else if (i === current){
+        seg.classList.add('current');
+      }
+    }
+  }
+
+  function updateScoreChip(){
+    scoreChip.textContent = score + ' / ' + TOTAL;
+  }
+
+  function renderIntro(){
+    app.innerHTML =
+      '<div class="intro">' +
+        '<h2>Repaso: Inversión y Valuación en Bienes Raíces</h2>' +
+        '<p>35 preguntas de opción múltiple sobre el sistema inmobiliario, tipos de activos y las metodologías de valuación (Comparables, Costo e Ingresos), incluyendo NOI, Cap Rate, BOE, TIR y DCF.</p>' +
+        '<ul>' +
+          '<li>Recibirás retroalimentación inmediata después de cada respuesta.</li>' +
+          '<li>Las preguntas marcadas <span class="tag-caso">CASO</span> requieren un cálculo o razonamiento con datos.</li>' +
+          '<li>Al final verás tu puntaje por sección y un repaso de lo que fallaste.</li>' +
+        '</ul>' +
+        '<button class="btn" id="startBtn">Comenzar quiz</button>' +
+      '</div>';
+    document.getElementById('startBtn').addEventListener('click', function(){
+      current = 0; score = 0; answered = [];
+      updateScoreChip();
+      renderQuestion();
+    });
+  }
+
+  function renderQuestion(){
+    updateProgress();
+    var item = QUESTIONS[current];
+    var html = '';
+    html += '<div class="eyebrow"><span>Pregunta ' + (current+1) + ' de ' + TOTAL + ' · ' + item.section + '</span>';
+    if (item.type === 'caso') html += '<span class="tag-caso">CASO</span>';
+    html += '</div>';
+    html += '<p class="q-text">' + item.q + '</p>';
+    html += '<div class="options" id="optionsWrap">';
+    var letters = ['A','B','C','D'];
+    for (var i=0;i<item.options.length;i++){
+      html += '<button class="option" data-idx="'+i+'"><span class="letter">'+letters[i]+'</span><span>'+item.options[i]+'</span></button>';
+    }
+    html += '</div>';
+    html += '<div class="explain" id="explainBox" hidden></div>';
+    html += '<div class="footer-row"><button class="btn" id="nextBtn" hidden>' + (current === TOTAL-1 ? 'Ver resultados' : 'Siguiente') + '</button></div>';
+    app.innerHTML = html;
+
+    var buttons = app.querySelectorAll('.option');
+    buttons.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        onAnswer(parseInt(this.getAttribute('data-idx'),10));
+      });
+    });
+  }
+
+  function onAnswer(idx){
+    var item = QUESTIONS[current];
+    var isCorrect = idx === item.correct;
+    answered[current] = {selected: idx, isCorrect: isCorrect};
+    if (isCorrect) score++;
+    updateScoreChip();
+
+    var buttons = app.querySelectorAll('.option');
+    buttons.forEach(function(btn){
+      btn.disabled = true;
+      var bIdx = parseInt(btn.getAttribute('data-idx'),10);
+      if (bIdx === item.correct) btn.classList.add('is-correct');
+      else if (bIdx === idx) btn.classList.add('is-incorrect');
+    });
+
+    var explainBox = document.getElementById('explainBox');
+    explainBox.innerHTML = (isCorrect ? '<strong>Correcto.</strong> ' : '<strong>No es esa.</strong> ') + item.explain;
+    explainBox.hidden = false;
+
+    var nextBtn = document.getElementById('nextBtn');
+    nextBtn.hidden = false;
+    nextBtn.addEventListener('click', function(){
+      current++;
+      updateProgress();
+      if (current >= TOTAL){
+        renderResults();
+      } else {
+        renderQuestion();
+      }
+    }, {once:true});
+
+    updateProgress();
+  }
+
+  function renderResults(){
+    var pct = Math.round((score/TOTAL)*100);
+    var msg;
+    if (pct >= 90) msg = 'Dominado. Estás listo para el examen.';
+    else if (pct >= 75) msg = 'Muy bien — repasa los temas que fallaste.';
+    else if (pct >= 60) msg = 'Vas bien, pero conviene reforzar varios temas.';
+    else msg = 'Toca repasar las fases con calma antes del examen.';
+
+    var sections = [];
+    var sectionMap = {};
+    QUESTIONS.forEach(function(q, i){
+      if (!sectionMap[q.section]){
+        sectionMap[q.section] = {correct:0, total:0};
+        sections.push(q.section);
+      }
+      sectionMap[q.section].total++;
+      if (answered[i] && answered[i].isCorrect) sectionMap[q.section].correct++;
+    });
+
+    var html = '';
+    html += '<div class="result-hero">';
+    html += '<div class="big">' + score + '<span style="font-size:1.6rem;color:var(--muted);">/' + TOTAL + '</span></div>';
+    html += '<div class="of">' + pct + '% de aciertos</div>';
+    html += '<div class="msg">' + msg + '</div>';
+    html += '</div>';
+
+    html += '<div class="section-bars">';
+    sections.forEach(function(s){
+      var d = sectionMap[s];
+      var p = Math.round((d.correct/d.total)*100);
+      html += '<div class="sbar-row">';
+      html += '<span class="sbar-label">' + s + '</span>';
+      html += '<span class="sbar-frac">' + d.correct + '/' + d.total + '</span>';
+      html += '<div class="sbar-track"><div class="sbar-fill" style="width:' + p + '%;"></div></div>';
+      html += '</div>';
+    });
+    html += '</div>';
+
+    var missed = [];
+    QUESTIONS.forEach(function(q, i){
+      if (!answered[i] || !answered[i].isCorrect) missed.push(i);
+    });
+
+    if (missed.length){
+      html += '<div><p style="font-weight:600;margin:4px 0 0;">Para repasar (' + missed.length + ')</p></div>';
+      html += '<div class="review">';
+      missed.forEach(function(i){
+        var q = QUESTIONS[i];
+        var a = answered[i];
+        html += '<div class="review-item">';
+        html += '<div class="rq">' + (i+1) + '. ' + q.q + '</div>';
+        if (a) html += '<div class="ryour">Tu respuesta: ' + q.options[a.selected] + '</div>';
+        html += '<div class="rcorrect">Correcta: ' + q.options[q.correct] + '</div>';
+        html += '<div class="rexplain">' + q.explain + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+
+    html += '<div class="footer-row"><button class="btn secondary" id="restartBtn">Reintentar quiz</button></div>';
+
+    app.innerHTML = html;
+    document.getElementById('restartBtn').addEventListener('click', function(){
+      current = 0; score = 0; answered = [];
+      updateScoreChip();
+      updateProgress();
+      renderQuestion();
+    });
+  }
+
+  buildProgress();
+  updateScoreChip();
+  renderIntro();
+})();
+</script>

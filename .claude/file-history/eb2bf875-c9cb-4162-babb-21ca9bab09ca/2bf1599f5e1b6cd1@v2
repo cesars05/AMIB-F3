@@ -1,0 +1,101 @@
+$ErrorActionPreference="Stop"
+$wb=$null; $xl=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$vs=$wb.Worksheets.Item("Valuation Summary"); $ns=$wb.Worksheets.Item("Scenarios Summary")
+if([string]$ns.Range("C12").Text -ne "Scenario Returns"){ throw "ABORTO: C12 cambio" }
+if([string]$vs.Range("C14").Font.Name -ne "Arial"){ throw "ABORTO: VS no esta en Arial, no puedo usarla de referencia" }
+$NAVY=5384228; $WHITE=16777215; $GREY=8421504
+$CENTER=-4108; $LEFT=-4131
+$xl.ScreenUpdating=$false
+
+# ---------- 1) restaurar la tipografia base ----------
+$ns.Range("C10:N100").Font.Name="Arial"
+$ns.Range("C10:N100").Font.Size=10
+$ns.Range("C10:N100").Font.Bold=$false
+$ns.Range("C10:N100").Font.Italic=$false
+$ns.Range("C10:N100").Font.Color=0
+
+# ---------- 2) filas de contenido a Arial 11, como VS ----------
+$ns.Range("C12:J34").Font.Size=11
+
+# ---------- 3) encabezados ----------
+$ns.Range("C12:I12").Font.Bold=$true
+$ns.Range("D12:I12").HorizontalAlignment=$CENTER
+$ns.Range("C20").Font.Bold=$true
+$ns.Range("C26:J26").Interior.Color=$NAVY
+$ns.Range("C26:J26").Font.Color=$WHITE
+$ns.Range("C26:J26").Font.Bold=$true
+$ns.Range("D27:J27").Font.Bold=$true
+$ns.Range("D27:J27").HorizontalAlignment=$CENTER
+
+# ---------- 4) alineacion de datos, centrada como VS ----------
+$ns.Range("D14:I18").HorizontalAlignment=$CENTER
+$ns.Range("D21:D23").HorizontalAlignment=$CENTER
+$ns.Range("D28:J32").HorizontalAlignment=$CENTER
+$ns.Range("C14:C18").HorizontalAlignment=$LEFT
+$ns.Range("C28:C32").HorizontalAlignment=$LEFT
+
+# ---------- 5) formatos numericos (Clear los habia borrado) ----------
+$ns.Range("G14:G18").NumberFormat='0.00"x"'
+$ns.Range("H14:H18").NumberFormat='0.00"x"'
+$ns.Range("I14:I18").NumberFormat='0.0%;(0.0%);"-"'
+$ns.Range("D21").NumberFormat='0.0"p"'
+$ns.Range("D22").NumberFormat='0.0%'
+$ns.Range("D28:J32").NumberFormat='0.0"p"'
+$ns.Range("D39:D43").NumberFormat='0.00"x"'
+$ns.Range("H28:H32").Font.Bold=$true
+
+# ---------- 6) la nota y el bloque auxiliar del grafico ----------
+$ns.Range("C34").Font.Size=9
+$ns.Range("C34").Font.Italic=$true
+$ns.Range("C34").Font.Color=$GREY
+$ns.Range("C37:G43").Font.Size=9
+$ns.Range("C37:G43").Font.Color=$GREY
+$ns.Range("C37").Font.Bold=$true
+$ns.Range("C38:G38").Font.Bold=$true
+
+# ---------- 7) el grafico, igual que el de VS ----------
+$ch=$ns.ChartObjects().Item(1).Chart
+$ch.ChartArea.Font.Name="Calibri"
+$ch.ChartArea.Font.Size=10
+$ch.Axes(1).TickLabels.Font.Name="Arial"
+$ch.Axes(1).TickLabels.Font.Size=9
+$ch.Axes(2).TickLabels.Font.Name="Arial"
+$ch.Axes(2).TickLabels.Font.Size=9
+$ch.SeriesCollection().Item(1).DataLabels().Font.Name="Arial"
+$ch.SeriesCollection().Item(1).DataLabels().Font.Size=9
+$ch.SeriesCollection().Item(1).DataLabels().Font.Bold=$true
+
+$xl.ScreenUpdating=$true
+$wb.Save()
+Write-Output "formato restaurado"
+Write-Output ""
+Write-Output "### verificacion: VS vs NS ###"
+function Cmp($a){
+  $x=$vs.Range($a); $y=$ns.Range($a)
+  $ok="OK"
+  if([string]$x.Font.Name -ne [string]$y.Font.Name){ $ok="<<< DIFIERE" }
+  Write-Output ("  "+$a.PadRight(5)+" VS "+([string]$x.Font.Name).PadRight(9)+([string]$x.Font.Size).PadRight(4)+"  |  NS "+([string]$y.Font.Name).PadRight(9)+([string]$y.Font.Size).PadRight(4)+"  "+$ok)
+}
+foreach($a in "C2","C8","C12","D12","C14","D14","C20","C26","D27","C34","C50"){ Cmp $a }
+Write-Output ""
+$ch2=$ns.ChartObjects().Item(1).Chart
+$chv=$vs.ChartObjects().Item(1).Chart
+Write-Output ("  grafico VS: area "+[string]$chv.ChartArea.Font.Name+" "+[string]$chv.ChartArea.Font.Size+"   ejes "+[string]$chv.Axes(1).TickLabels.Font.Name+" "+[string]$chv.Axes(1).TickLabels.Font.Size)
+Write-Output ("  grafico NS: area "+[string]$ch2.ChartArea.Font.Name+" "+[string]$ch2.ChartArea.Font.Size+"   ejes "+[string]$ch2.Axes(1).TickLabels.Font.Name+" "+[string]$ch2.Axes(1).TickLabels.Font.Size)
+Write-Output ""
+for($i=12;$i -le 34;$i++){
+  $lab=[string]$ns.Cells.Item($i,3).Text
+  $v=""
+  foreach($c in 4,5,6,7,8,9,10){ $v+=([string]$ns.Cells.Item($i,$c).Text).PadLeft(13) }
+  if(($lab+$v).Trim() -ne ""){
+    if($lab.Length -gt 38){ $lab=$lab.Substring(0,38) }
+    Write-Output ("r"+([string]$i).PadRight(4)+$lab.PadRight(39)+$v)
+  }
+}

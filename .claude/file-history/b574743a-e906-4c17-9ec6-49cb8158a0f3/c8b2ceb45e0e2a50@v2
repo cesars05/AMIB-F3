@@ -1,0 +1,47 @@
+# 01 · Guía del Proyecto Final
+
+**Qué es esta carpeta:** el documento oficial del profesor que define QUÉ se entrega, CÓMO se evalúa y CUÁNDO. Es la fuente de verdad del proyecto: todo lo demás se subordina a esto.
+
+| Archivo | Qué es | Para qué lo uso |
+|---|---|---|
+| `Guia_Proyecto_Final.pdf` | Original (10 págs.). Prof. Francisco Román Rincón Núñez (frincon@tec.mx). | Referencia oficial. |
+| `Guia_Proyecto_Final.md` | Texto convertido del PDF. Las tablas importantes están como imágenes (`[FIG-00N]`) → ver `_figuras.pdf`. | Leer rápido. |
+| `Guia_Proyecto_Final_figuras.pdf` | 6 figuras en orden: FIG-001 tabla de entregables · FIG-002 bloques de la presentación (con tiempos) · FIG-003/004 las 12 láminas sugeridas · FIG-005 los 9 puntos del memorándum · FIG-006 rúbrica del bloque técnico. | Las tablas que el `.md` no trae como texto (transcritas abajo). |
+
+## Resumen operativo (transcrito de la guía y sus figuras)
+
+**Idea central:** es una simulación — el equipo diseña un fondo desde cero y lo defiende ante un comité como si buscara que le confíen dinero. NO es un trabajo de investigación. Un fondo cuyo plan es "invertir en empresas prometedoras" y cuya salida es "esperar a que alguien las compre" **está penalizado** en Coherencia interna y Calidad del análisis.
+
+**Tres entregables** (un solo correo por equipo, enviado por el líder a frincon@tec.mx, nombre exacto):
+
+| # | Documento | Formato | Nombre de archivo |
+|---|---|---|---|
+| 1 | Pitch Deck | PowerPoint, **10–12 láminas** | `PF Deck NombreDelFondo.pptx` |
+| 2 | Memorándum de Colocación Privada (PPM resumido) | Word o PDF, **4–6 cuartillas** | `PF Memorandum NombreDelFondo.docx` (o .pdf) |
+| 3 | Modelo Financiero | Excel, **1–2 hojas** | `PF Modelo NombreDelFondo.xlsx` |
+
+> Los nombres de la guía llevan guion bajo/espacio entre palabras (`PF Deck NombreDelFondo`). Nuestra convención de trabajo: `PF_Deck_AurexCapital.pptx`, `PF_Memorandum_AurexCapital.docx`, `PF_Modelo_AurexCapital.xlsx` — **confirmar con el profesor el nombre exacto antes de enviar.**
+
+**Fechas (sección 9):** Memorándum + Modelo → **domingo 11 de octubre, 11:59 pm.** La tabla de la guía repite esa misma fecha para "Pitch Deck + presentación en vivo", pero D5 y la clase del 7-oct hablan de defensas el **14 y 15 de octubre** → *confirmar con el profesor la fecha del deck y la defensa.*
+
+**Defensa:** 10 minutos, los 5 integrantes hablan (si alguien no habla, se califica), preguntas directas sin guion, el comité comenta al final.
+
+**Bloques de la presentación oral (FIG-002):** 1 La idea (90 s) · 2 Cómo funciona el fondo (90 s) · 3 A quién le invertirían, 2–3 ejemplos concretos (2 min) · 4 Un caso de inversión (2–3 min) · 5 Qué tan bien les podría ir (1–2 min) · 6 Cómo recuperan el dinero (1 min).
+
+**Láminas sugeridas (FIG-003/004):** 1 Portada (nombre, frase, integrantes con rol) · 2 Resumen ejecutivo · 3 La idea de inversión · 4 Por qué este equipo (2–3 razones verificables, no adjetivos) · 5 Cómo funciona el fondo · 6 El mercado y la diferencia · 7 A quién le invertirían · 8 Un caso de inversión · 9 Equipo (5 roles, credencial verificable por persona) · 10 Qué tan bien les podría ir (**debe coincidir con la Hoja 2 del Excel**) · 11 Cómo recuperan el dinero (ejemplo con nombre) · 12 Riesgos.
+
+**Memorándum (FIG-005), 9 puntos:** 1 Idea de inversión · 2 Capital que buscan · 3 Duración · 4 Rendimiento prometido · 5 Reglas (qué NO haría y por qué) · 6 Figura legal y por qué · 7 Quién lo dirige · 8 Cómo se reparten las ganancias (devolver capital → hurdle → ganancia extra repartida) · 9 Cómo se pide el dinero (llamadas de capital). Criterio: si cambiando el nombre del fondo por el de otro equipo nada suena fuera de lugar, no está listo.
+
+**Modelo (sección 6):** Hoja 1 = portafolio (una fila por empresa: invertido, estimado a regresar, múltiplo por empresa y del fondo; **no todas deben salir bien**). Hoja 2 = cascada de distribución con números concretos en ≥1 escenario; **debe coincidir con la lámina 10**. Si hay deuda (PE de control): basta explicar la idea general en el pitch.
+
+**Rúbrica (100 pts) — FIG-006 + sección 7:**
+- Bloque técnico 80%: Entendimiento del tema **30%** · Coherencia interna **25%** · Calidad del análisis **20%** · Presentación y manejo de preguntas **15%** · Calidad del documento **10%**.
+- Bloque equipo 20%: autoevaluación 50% + coevaluación anónima 50%.
+
+**Preguntas que puede hacer el comité (sección 8):** 1 ¿Por qué invertiría yo en su fondo en vez de algo mucho más seguro? · 2 ¿Cuántas apuestas tienen que salir bien para que el fondo sea éxito? · 3 ¿Cómo y a quién le venden? Ejemplo concreto · 4 ¿Qué pasa si quien lidera se va a la mitad? · 5 ¿Qué protege a sus inversionistas si salen mal las cosas? · 6 ¿Por qué ustedes y no un fondo con experiencia comprobada?
+
+**Revisión final (sección 10) — deben contestarse "no":** ¿La idea podría ser de cualquier otro equipo con solo cambiar el nombre? · ¿El memorándum contradice un número del modelo? · ¿El retorno dicho en voz alta difiere del Excel? · ¿La salida es "alguien las va a comprar" sin ejemplo concreto? · ¿Todas las empresas salen bien? · ¿Algún integrante no tiene parte propia que defender?
+
+## Notas / alertas
+- La guía asume **equipos de 5** (líder, inversiones, operación del fondo, relación con inversionistas, números). Nuestro equipo es de **6** (ver `../08_Proyecto_Final/`): hay un pendiente "confirmar con el profesor que un equipo de 6 es válido".
+- La guía pide Modelo de **1–2 hojas**; el modelo v2 del equipo tiene 6 hojas (las 4 extra son anexo Monte Carlo). Decidir qué se entrega como hojas principales vs. anexo.

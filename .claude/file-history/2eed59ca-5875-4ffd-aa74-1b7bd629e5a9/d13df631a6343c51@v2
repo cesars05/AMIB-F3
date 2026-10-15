@@ -1,0 +1,253 @@
+import win32com.client as w, time
+x = w.GetActiveObject('Excel.Application')
+wb = [b for b in x.Workbooks if b.Name == '20261007_Ingevity Corp.xlsx'][0]
+ws = wb.Worksheets('DCF')
+AM = "'Annual Model'!"
+GREEN = 5287936
+INBLUE = 16719360
+x.Calculation = -4135
+x.ScreenUpdating = False
+USD = '$#,##0;-$#,##0; "-"'
+PCT = '0.0%;-0.0%; "-"'
+MULT = '0.0"x"'
+
+
+def R(a):
+    return ws.Range(a)
+
+
+def fmt_copy(src, dst):
+    R(src).Copy()
+    R(dst).PasteSpecial(-4122)
+
+
+def setv(a, v, nf=None, color=None, bold=None, italic=None):
+    c = R(a)
+    if isinstance(v, str) and v.startswith('='):
+        c.Formula = v
+    else:
+        c.Value = v
+    if nf:
+        c.NumberFormat = nf
+    if color is not None:
+        c.Font.Color = color
+    if bold is not None:
+        c.Font.Bold = bold
+    if italic is not None:
+        c.Font.Italic = italic
+    return c
+
+
+try:
+    assert R('B55').Formula == '' and R('B56').Formula == '', 'rows 55-56 not empty'
+    fmt_copy('B2:T2', 'B56:T56')
+    ws.Rows(56).RowHeight = 43.5
+    setv('B56', '=+Cover!B10 & " - DCF: New Ingevity (ex-APT) por segmento"')
+    fmt_copy('B8:H8', 'B58:H58')
+    fmt_copy('B9:H9', 'B59:H59')
+    setv('B58', '=+B6 & " Estimates - New Ingevity (PM + Pavement Tech.)"')
+    for col in 'CDEFG':
+        setv(f'{col}58', f'=+{col}8')
+        setv(f'{col}59', f'=+{col}9')
+    setv('H58', 'Terminal Value')
+    fmt_copy('B11:H11', 'B60:H72')
+    for r in range(60, 73):
+        for col in 'BCDEFGH':
+            c = R(f'{col}{r}')
+            c.Font.Bold = False
+            c.Font.Color = 0
+    lines = {
+        60: ('Segment build (consenso por segmento, Annual Model)', None),
+        61: ('Sales - Performance Materials', 223),
+        62: ('Sales - Performance Chemicals (consenso)', 224),
+        63: ('(-) Road Markings incluido en consenso PC (estimado)', None),
+        64: ('Sales - New Ingevity', None),
+        65: ('Growth (%) - 2026 vs PF 2025 (PM + Pavement Tech. product line)', None),
+        66: ('EBITDA - Performance Materials', 231),
+        67: ('EBITDA - Performance Chemicals (consenso)', 232),
+        68: ('(+) Road Markings EBITDA removido (estimado)', None),
+        69: ('Corporate & other (implicito consenso: EBITDA - segmentos)', 235),
+        70: ('EBITDA - New Ingevity', None),
+        71: ('Margin (%)', None),
+        72: ('Memo: EBITDA APT (consenso, fuera del perimetro)', 233),
+    }
+    for r, (lab, arow) in lines.items():
+        setv(f'B{r}', lab)
+        if arow:
+            for col, ac in zip('CDEFG', 'QRSTU'):
+                setv(f'{col}{r}', f"=+{AM}{ac}{arow}", USD, GREEN)
+    for col in 'CDEFG':
+        setv(f'{col}64', f'=SUM({col}61:{col}63)', USD, 0, True)
+        setv(f'{col}70', f'=SUM({col}66:{col}69)', USD, 0, True)
+        setv(f'{col}71', f'=IFERROR({col}70/{col}64,0)', PCT, 0)
+    setv('C63', -27.0, USD, INBLUE)
+    setv('C68', 2.0, USD, INBLUE)
+    for col in 'DEFG':
+        for r in (63, 68):
+            setv(f'{col}{r}', 0, USD, INBLUE)
+    setv('C65', f"=IFERROR(C64/({AM}P223+{AM}P226)-1,0)", PCT, 0)
+    for col, prev in zip('DEFG', 'CDEF'):
+        setv(f'{col}65', f'=IFERROR(IF({col}64/{prev}64-1=-1,0,{col}64/{prev}64-1),0)', PCT, 0)
+    for a in ('B60', 'B64', 'B70'):
+        R(a).Font.Bold = True
+    R('B72').Font.Italic = True
+    for col in 'CDEFG':
+        R(f'{col}72').Font.Italic = True
+
+    fmt_copy('B11:H26', 'B75:H90')
+    labels = {75: 'Sales', 76: 'Growth (%)', 77: 'EBITDA', 78: 'Margin (%)', 79: 'EBIT', 80: 'Margin (%)',
+              81: 'Taxes', 82: 'Tax Rate (%)', 83: 'NOPAT', 84: '(+) D&A', 85: '(-) CapEx',
+              86: '(+) / (-) Working Capital Needs', 87: 'FCFF', 88: 'Present Value FCFF',
+              89: 'Present Value Factor', 90: 'Factor'}
+    for r, t in labels.items():
+        setv(f'B{r}', t)
+    for col in 'CDEFG':
+        prev = chr(ord(col) - 1)
+        setv(f'{col}75', f'=+{col}64', USD, 0)
+        setv(f'{col}76', f'=+{col}65', PCT, 0)
+        setv(f'{col}77', f'=+IF({col}75<>0,{col}70,0)', USD, 0)
+        setv(f'{col}78', f'=+IFERROR({col}77/{col}75,0)', PCT, 0)
+        setv(f'{col}79', f'=+{col}77-{col}84', USD, 0)
+        setv(f'{col}80', f'=+IFERROR({col}79/{col}75,0)', PCT, 0)
+        setv(f'{col}81', f'=+{col}79*{col}82', USD, 0)
+        setv(f'{col}82', f'=+IF({col}75<>0,$K$13,0)', PCT, 0)
+        setv(f'{col}83', f'=+{col}79*(1-{col}82)', USD, 0)
+        setv(f'{col}84', f'=+{col}75*$K$78', USD, 0)
+        setv(f'{col}85', f'=-{col}75*$K$79', USD, 0)
+        if col == 'C':
+            setv('C86', f"=-$K$80*(C75-({AM}P223+{AM}P226))", USD, 0)
+        else:
+            setv(f'{col}86', f'=IF({col}75<>0,-$K$80*({col}75-{prev}75),0)', USD, 0)
+        setv(f'{col}87', f'=+IF({col}75<>0,SUM({col}83:{col}86),0)', USD, 0)
+        setv(f'{col}88', f'=+({col}87*{col}89)', USD, 0)
+        setv(f'{col}89', f'=IF({col}75<>0,1/(1+$K$16)^{col}90,0)', '0.00', 0)
+        setv(f'{col}90', f'=+{col}26', '0.00', 0)
+    last = lambda r: f'=LOOKUP(2,1/(C{r}:G{r}<>0)*(C{r}:G{r}<>""),C{r}:G{r})'
+    setv('H75', last(75), USD, 0)
+    setv('H76', 0, PCT, 0)
+    setv('H77', '=+H75*H78', USD, 0)
+    setv('H78', 0.375, PCT, INBLUE)
+    R('H78').Interior.Color = R('H14').Interior.Color
+    setv('H79', '=+H77-H84', USD, 0)
+    setv('H80', '=+IFERROR(H79/H75,0)', PCT, 0)
+    setv('H81', '=+H79*H82', USD, 0)
+    setv('H82', '=+$K$13', PCT, 0)
+    setv('H83', '=+H79*(1-H82)', USD, 0)
+    setv('H84', last(84), USD, 0)
+    setv('H85', last(85), USD, 0)
+    setv('H86', last(86), USD, 0)
+    setv('H87', '=+IF(H75<>0,SUM(H83:H86),0)', USD, 0)
+    setv('H88', '=+(H87*H89)', USD, 0)
+    setv('H89', last(89), '0.00', 0)
+    setv('H90', last(90), '0.00', 0)
+    for r in (75, 77, 87):
+        R(f'B{r}').Font.Bold = True
+
+    fmt_copy('J8:K8', 'J74:K74')
+    setv('J74', 'Assumptions - New Ingevity')
+    for r, (lab, v, nf, col) in {
+        78: ('D&A % sales (PM+PT, run-rate H1-26)', 0.062, PCT, INBLUE),
+        79: ('CapEx % sales (~US$52M = capex consenso)', 0.055, PCT, INBLUE),
+        80: ('NWC % sales (Annual Model)', f"=+{AM}Q78", PCT, GREEN),
+        81: ('APT: EV/EBITDA de venta', 7.5, MULT, INBLUE),
+        82: ('APT: EBITDA normalizado (prom. 2024-26E)', f"=AVERAGE({AM}O233:Q233)", '$#,##0.0', GREEN),
+        83: ('APT: fuga (impuestos + costos) %', 0.12, PCT, INBLUE),
+    }.items():
+        setv(f'J{r}', lab, None, 0, False)
+        R(f'J{r}').Font.Name = 'Arial'
+        R(f'J{r}').Font.Size = 11
+        setv(f'K{r}', v, nf, col)
+        R(f'K{r}').Font.Name = 'Arial'
+        R(f'K{r}').Font.Size = 11
+    setv('J75', 'Terminal EBITDA margin = H78 (mgmt 2027E: 36-39%)', None, 0, False, True)
+    R('J75').Font.Name = 'Arial'
+
+    fmt_copy('B28:E41', 'B93:E106')
+    fmt_copy('B33:E41', 'B99:E107')
+    V = {93: 'DCF Valuation: GGM - New Ingevity', 94: 'Enterprise Value (New Ingevity)', 95: '1) Cash Flow Present Values',
+         96: '2) Terminal Value Present Value', 97: 'Terminal Value', 98: '(+) APT: proceeds netos de la venta',
+         99: 'Equity Value', 100: 'Debt', 101: 'Cash & Equivalents', 102: 'Net Debt', 103: 'Price & Shares',
+         104: 'Share Count', 105: 'Current Stock Price', 106: 'Implied Stock Price', 107: 'Upside/Downside'}
+    for r, t in V.items():
+        setv(f'B{r}', t)
+    setv('E94', '=+E95+E96', None, 0)
+    setv('E95', '=+SUM(C88:G88)', None, 0)
+    setv('D95', '=+E95/E94', '0.0%', 0)
+    setv('E96', '=+E97*H89', None, 0)
+    setv('D96', '=+E96/E94', '0.0%', 0)
+    setv('E97', '=+H87*(1+K12)/(K16-K12)', None, 0)
+    setv('E98', '=+K81*K82*(1-K83)', '$#,##0.0;($#,##0.0);"--"', 0)
+    R('B98').Font.Bold = False
+    R('E98').Font.Bold = False
+    setv('E99', '=+E94+E98-E102', None, 0)
+    setv('E100', '=+E34', None, 0)
+    setv('E101', '=+E35', None, 0)
+    setv('E102', '=+E100-E101', None, 0)
+    setv('E104', '=+E38', None, 0)
+    setv('E105', '=+E39', None, 0)
+    setv('E106', '=+E99/E104', None, 0)
+    setv('E107', '=+E106/E105-1', '0.0%', 0)
+    memo = {109: ('Memo: Implied Stock Price del DCF consolidado (consenso, incl. APT)', '=+E40', '$#,##0.0'),
+            110: ('Memo: EV consolidado (E29) - EV New Ingevity = valor que el DCF consolidado asigna a APT + RM', '=+E29-E94', '$#,##0.0;($#,##0.0);"--"'),
+            111: ('Memo: proceeds netos de venta APT (E98) menos ese valor implicito', '=+E98-E110', '$#,##0.0;($#,##0.0);"--"')}
+    for r, (t, f, nf) in memo.items():
+        setv(f'B{r}', t, None, 0, False, True)
+        setv(f'E{r}', f, nf, 0, False, True)
+        R(f'B{r}').Font.Size = 10
+        R(f'B{r}').Font.Name = 'Arial'
+    setv('B112', 'Memo: EBITDA y margen 2027E New Ingevity (mgmt: 350-370 / 36-39%)', None, 0, False, True)
+    setv('D112', '=+D70', USD, 0, False, True)
+    setv('E112', '=+D71', PCT, 0, False, True)
+    R('B112').Font.Size = 10
+
+    fmt_copy('G28:M35', 'G93:M100')
+    fmt_copy('G37:M44', 'G102:M109')
+    wacc = ws.Range('K16').Value
+    setv('G93', 'Upside / Downside Sensitivity - New Ingevity')
+    setv('K94', 'WACC')
+    setv('H95', '=+E107', '0.0%', 0)
+    setv('K95', wacc, '0.0%', INBLUE)
+    setv('J95', '=+K95-1%')
+    setv('I95', '=+J95-1%')
+    setv('L95', '=+K95+1%')
+    setv('M95', '=+L95+1%')
+    setv('G96', 'Growth Rate')
+    setv('H98', 0.02, '0.0%', INBLUE)
+    setv('H97', '=+H98-0.5%')
+    setv('H96', '=+H97-0.5%')
+    setv('H99', '=+H98+0.5%')
+    setv('H100', '=+H99+0.5%')
+    R('H95:M100').Table(R('K16'), R('K12'))
+    setv('G102', 'Terminal Value EBITDA Margin Sensitivity - New Ingevity')
+    setv('K103', 'Terminal Value EBITDA Margin')
+    setv('H104', '=+E107', '0.0%', 0)
+    setv('K104', 0.375, '0.0%', INBLUE)
+    setv('J104', '=+K104-1%')
+    setv('I104', '=+J104-1%')
+    setv('L104', '=+K104+1%')
+    setv('M104', '=+L104+1%')
+    setv('G105', 'WACC')
+    setv('H107', wacc, '0.0%', INBLUE)
+    setv('H106', '=+H107-1%')
+    setv('H105', '=+H106-1%')
+    setv('H108', '=+H107+1%')
+    setv('H109', '=+H108+1%')
+    R('H104:M109').Table(R('H78'), R('K16'))
+    notes = [
+        "Nota 1: perimetro New Ingevity = Performance Materials + Pavement Technologies (consenso LSEG por segmento del Annual Model), sin APT. D&A, capex y NWC por % de ventas (el consenso no trae D&A/capex por segmento).",
+        "Nota 2: el corporativo implicito (EBITDA consolidado - segmentos) ya arrastra los costos varados que APT deja; no se agrega ajuste adicional. Road Markings (vendido 15-abr-26): ajuste estimado en C63/C68.",
+        "Nota 3: el consenso por segmento es inconsistente con mgmt: PM 2027E EBITDA 364 vs target 325-340 y PC ventas 2027E 283 vs target PT 330-345. El margen resultante (~40%) queda sobre el 36-39% de mgmt.",
+        "Nota 4: equity = EV New Ingevity + proceeds netos de APT - deuda neta consenso (E102). Deuda neta y acciones son las del DCF consolidado para aislar el efecto del perimetro; no incluyen recompras 2026.",
+    ]
+    for i, t in enumerate(notes):
+        c = R(f'B{114 + i}')
+        c.Value = t
+        c.Font.Name = 'Arial'
+        c.Font.Size = 9
+        c.Font.Italic = True
+        c.Font.Color = 0x595959
+finally:
+    x.CutCopyMode = False
+    x.ScreenUpdating = True
+    x.Calculation = -4105
+print('done')

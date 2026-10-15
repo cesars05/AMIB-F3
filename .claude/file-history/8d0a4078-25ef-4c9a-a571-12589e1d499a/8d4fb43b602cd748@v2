@@ -1,0 +1,21 @@
+---
+name: fuso-chemical-folder-lessons
+description: Traps and open items in the Fuso Chemical (4368) research folder found on 12-Oct-2026
+metadata:
+  node_type: memory
+  type: project
+  originSessionId: 8d0a4078-25ef-4c9a-a571-12589e1d499a
+  modified: 2026-10-12T17:21:18.421Z
+---
+
+Work product: `Fuso_DeepDive_2026-10-12.md`, `Prompt_Fuso_DeepDive_v0.1.md`, and `_NOTES.md` in every folder (all in the 2_Fuso Chemicals tree). Read the notes first.
+
+Traps found:
+- Slide-deck .md conversions scramble chart numbers; render PDF pages with pymupdf or use `Fuso_FY03-2026_Results_Presentation_BILINGUAL_JP-EN.pdf` (text-extractable).
+- The English Q4 deck says Kyoto certification "by end of Mar.2025"; the Japanese 2025年度末 means Mar-2026. Company year labels ("2025年度" = FY03/2026) mislead; "2022年度比" means vs FY03/2023.
+- `Competidores/Fujimi/05_Yuho_61st-term` is the FY03/2013 filing (stale).
+- Excel model `Fuso Financials` row 93 calls the Q1 FY03/2027 subsidy a "gain on sale of fixed assets". Do not save the workbook with openpyxl.
+
+**Open item:** FY03/2027 net income guidance 16,600 (May-2026) vs 19,200 (Aug-2026 tanshin). Gap equals the after-tax 3,694m subsidy [I]; confirm with the TDnet notice from Jun-Aug 2026 (not in folder). Also missing: Japanese Q1 FY03/2027 release, Q2 results due 30-Oct-2026 (per Workspace).
+
+**Why:** these cost time in the first session. **How to apply:** check them before re-reading; update this note once the TDnet notice or Q2 results are in the folder. Related: [[user-research-style]].

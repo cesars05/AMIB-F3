@@ -1,0 +1,32 @@
+$ErrorActionPreference="Stop"
+function Try1($__sb){ for($__k=0;$__k -lt 15;$__k++){ try{ return & $__sb }catch{ if($_.Exception.Message -match "0x80010001|RPC_E_CALL|Call was rejected|0x800AC472"){ Start-Sleep -Milliseconds 700 } else { throw } } }; throw "exhausted" }
+$wb=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); if([int]$xl.Workbooks.Count -gt 0){ foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } } } }catch{}; if($wb -ne $null){break}; Start-Sleep -Milliseconds 800 }
+function GetWs($n){ for($i=0;$i -lt 30;$i++){ try{ $x=$wb.Worksheets.Item($n); if($x -ne $null){ return $x } }catch{}; Start-Sleep -Milliseconds 700 }; throw ("no hoja "+$n) }
+$wa=GetWs "Assumptions"; $cm=GetWs "Consolidated Model"
+
+$scen=[string](Try1 { $wa.Range("F10").Text })
+Write-Output ("Escenario activo: "+$scen)
+Write-Output ""
+Write-Output ("  shock    mgn FY32   pico apalanc.   min cobertura   pico RCF   headroom   primer breach")
+foreach($s in 0,-1,-2,-3,-4,-5,-6,-8,-10){
+  Try1 { $wa.Range("F42").Value2=[double]($s/100.0) } | Out-Null
+  Try1 { $xl.CalculateFullRebuild() } | Out-Null
+  Try1 { $xl.CalculateFullRebuild() } | Out-Null
+  Try1 { $xl.CalculateFullRebuild() } | Out-Null
+  $lev=[string](Try1 { $cm.Range("G294").Text })
+  $icr=[string](Try1 { $cm.Range("G295").Text })
+  $rcf=[string](Try1 { $cm.Range("G296").Text })
+  $br =[string](Try1 { $cm.Range("G297").Text })
+  $hd =[double](Try1 { $cm.Range("G282").Value2 }) - [double](Try1 { $cm.Range("G296").Value2 })
+  $m32=[double](Try1 { $cm.Cells.Item(56,17).Value2 }) / [double](Try1 { $cm.Cells.Item(47,17).Value2 })
+  Write-Output (("  "+$s.ToString()+"pp").PadRight(9)+("{0:P1}" -f $m32).PadLeft(9)+$lev.PadLeft(15)+$icr.PadLeft(16)+$rcf.PadLeft(11)+("{0:N0}" -f $hd).PadLeft(11)+"   "+$br)
+}
+Try1 { $wa.Range("F42").Value2=[double]0 } | Out-Null
+Try1 { $xl.CalculateFullRebuild() } | Out-Null
+Try1 { $xl.CalculateFullRebuild() } | Out-Null
+Write-Output ""
+Write-Output ("  restaurado a 0: peak leverage "+[string](Try1 { $cm.Range("G294").Text })+"   breach "+[string](Try1 { $cm.Range("G297").Text }))
+Write-Output ("  Balance check: "+((11..17 | ForEach-Object { $i=$_; [string](Try1 { $cm.Cells.Item(164,$i).Text }) }) -join " | "))
+Try1 { $wb.Save() } | Out-Null
+Write-Output "guardado"

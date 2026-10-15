@@ -1,0 +1,64 @@
+import win32com.client as w, sys, json
+xl = w.GetActiveObject('Excel.Application')
+wb = [xl.Workbooks(i) for i in range(1, xl.Workbooks.Count + 1) if xl.Workbooks(i).Name == 'Bimbo Financial Model_v2.xlsx'][0]
+ws = wb.Worksheets('Consolidated Model')
+# guard layout
+exp = {5: 'Income Statement', 278: 'Return on Invested Capital', 280: 'ROIIC (1-Year)', 281: 'ROIIC (3-Year',
+       283: 'NOPAT', 284: 'Average Invested Capital', 313: 'Invested Capital (Operating)', 318: 'Total Debt',
+       321: 'Net Debt / Adj. EBITDA', 325: 'Weighted Avg. Cost of Debt', 326: 'Debt / Capital'}
+for r, lab in exp.items():
+    if not str(ws.Cells(r, 2).Value or '').strip().startswith(lab):
+        sys.exit(f'layout changed at B{r}: {ws.Cells(r, 2).Value!r}')
+if ws.Range('C5').Value != 2016 or ws.Range('L5').Value != 2025:
+    sys.exit('year columns not as expected')
+
+C, D, E, F, G, H, I, J, K = range(3, 12)
+plan = []   # (row, source_col, target_cols)
+for r in (318, 319, 320, 321, 322, 323, 326):
+    plan.append((r, F, (C, D, E)))
+plan.append((283, G, (C, D, E, F)))
+for r in [278, 279, 284, 325] + list(range(287, 314)):
+    if ws.Cells(r, G).HasFormula:
+        plan.append((r, G, (D, E, F)))
+plan.append((280, J, (F, G, H)))
+plan.append((281, K, (H, I, J)))
+
+prev = xl.Calculation
+xl.ScreenUpdating = False; xl.Calculation = -4135
+written, skipped = 0, []
+try:
+    for r, src, tgts in plan:
+        s = ws.Cells(r, src)
+        if not s.HasFormula:
+            skipped.append((r, 'source has no formula')); continue
+        for c in tgts:
+            t = ws.Cells(r, c)
+            if t.Formula not in ('', None):
+                skipped.append((r, c, 'not empty')); continue
+            t.FormulaR1C1 = s.FormulaR1C1
+            t.NumberFormat = s.NumberFormat
+            written += 1
+
+    def note(a, txt):
+        c = ws.Range(a)
+        if c.Comment is not None: c.Comment.Delete()
+        c.AddComment(txt)
+    note('C278', 'ROIC and invested capital from 2017 (averages need a prior year). 2016-2018 balance sheets are pre-IFRS 16 (no right-of-use assets or lease liabilities), so invested capital steps up in 2019 and the 2019 average mixes both bases. NOPAT is comparable across all years.')
+    note('E321', '2016-2018 debt is financial debt only (pre-IFRS 16, leases were off balance sheet). Comparable with the company-reported ratio (2.8x Net Debt/Adj. EBITDA at YE2018, 3.4x Total Debt/Adj. EBITDA at YE2017) but not with the model 2019+ values, which include lease liabilities.')
+
+    xl.Calculation = -4105; xl.CalculateFull()
+    try:
+        err = ws.UsedRange.SpecialCells(-4123, 16).Address
+    except Exception:
+        err = None
+    out = {}
+    for r in (278, 279, 280, 281, 283, 284, 318, 319, 320, 321, 322, 323, 324, 325, 326):
+        out[r] = [ws.Cells(r, c).Value2 for c in range(C, 13)]
+    wb.Save()
+finally:
+    xl.Calculation = prev if prev in (-4105, -4135) else -4105
+    xl.ScreenUpdating = True
+print(json.dumps({'written': written, 'skipped': skipped, 'errors': err}))
+for r, v in out.items():
+    lab = str(ws.Cells(r, 2).Value)[:28]
+    print(f'{r} {lab:28s}', ' '.join(('' if x is None or x == '' else (f'{x:,.0f}' if abs(x) >= 100 else f'{x:.3f}')).rjust(9) for x in v))

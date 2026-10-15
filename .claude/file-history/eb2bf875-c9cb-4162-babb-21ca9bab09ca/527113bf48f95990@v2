@@ -1,0 +1,43 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 40;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 1200 } }; return "??" }
+$xl=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); break }catch{ Start-Sleep -Milliseconds 900 } }
+$wb=$null; foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("Segment Beta") }
+T { $xl.CalculateFullRebuild() }
+Start-Sleep -Seconds 40
+T { $xl.Calculate() }
+Start-Sleep -Seconds 20
+
+# reparar cualquier celda que haya quedado hardcodeada tras el copiado
+$datos=@(12,15,16,17,18,19,20,21,22,23,27,28,29,30,31,35,36,37,38,39,40)
+$tpl=@{4='=+TR($C{R},D$10,"Null=BLANK")';5='=+TR($C{R},E$10,"Curn=#1 Scale=#2 Null=BLANK",,$D$5,$D$6)';6='=+TR($C{R},F$10,"Curn=#1 Scale=#2 Null=BLANK",,$D$5,$D$6)';7='=+TR($C{R},G$10,"Curn=#1 Scale=#2 Null=BLANK",,$D$5,$D$6)';8='=+TR($C{R},H$10,"Curn=#1 Scale=#2 Null=BLANK",,$D$5,$D$6)';10='=+TR($C{R},J$10,"Null=BLANK")';13='=IFERROR(TR($C{R},M$10," Null=BLANK",)*1%,"")'}
+$fix=0
+foreach($r in $datos){
+  foreach($c in 4,5,6,7,8,10,13){
+    $f=[string](T { $s.Cells.Item($r,$c).Formula })
+    if($f -notmatch "TR\("){ T { $s.Cells.Item($r,$c).Formula=($tpl[$c] -replace "\{R\}",[string]$r) }; $fix++ }
+  }
+}
+if($fix -gt 0){ Write-Output ("  celdas hardcodeadas reparadas: "+$fix); T { $xl.CalculateFullRebuild() }; Start-Sleep -Seconds 30; T { $xl.Calculate() }; Start-Sleep -Seconds 15 }
+
+Write-Output ("      "+"RIC".PadRight(10)+"Company / Section".PadRight(36)+"D/E".PadLeft(9)+"Beta".PadLeft(8)+"BetaU".PadLeft(8)+"BetaRe".PadLeft(9)+"Tax".PadLeft(9))
+for($r=12;$r -le 41;$r++){
+  $ric=[string](T { $s.Cells.Item($r,3).Text }); $nm=[string](T { $s.Cells.Item($r,4).Text })
+  if(($ric+$nm).Trim() -eq ""){ Write-Output ""; continue }
+  if($nm.Length -gt 35){ $nm=$nm.Substring(0,35) }
+  $line="   "+$ric.PadRight(10)+$nm.PadRight(36)
+  foreach($c in 9,10,11,12,13){ $v=[string](T { $s.Cells.Item($r,$c).Text }); if($v.Length -gt 9){ $v=$v.Substring(0,9) }; $line+=$v.PadLeft(9) }
+  Write-Output ("r"+([string]$r).PadRight(3)+$line)
+}
+Write-Output ""
+Write-Output "================ RESUMEN ================"
+for($r=44;$r -le 49;$r++){
+  $line=([string](T { $s.Cells.Item($r,4).Text })).PadRight(52)
+  foreach($c in 5,6,7){ $line+=([string](T { $s.Cells.Item($r,$c).Text })).PadLeft(14) }
+  Write-Output ("r"+([string]$r).PadRight(3)+" "+$line+"   "+[string](T { $s.Cells.Item($r,8).Text }))
+}
+$e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+Write-Output ("`n  errores en la hoja: "+$e+"   UsedRange: "+[string](T { $s.UsedRange.Address(0,0) }))
+T { $wb.Save() }
+Write-Output "guardado"

@@ -1,0 +1,84 @@
+"""Que capacidades de noticias, multiplos sectoriales y 13F hay en Workspace."""
+import lseg.data as ld
+import warnings; warnings.filterwarnings("ignore")
+import pandas as pd
+import sys
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+pd.set_option("display.width", 230, "display.max_colwidth", 95)
+ld.open_session()
+
+print("=" * 78)
+print("1. NOTICIAS")
+print("=" * 78)
+try:
+    from lseg.data import news
+    h = news.get_headlines("Topic:MCAT AND Language:LEN", count=8)
+    print(f"  OK headlines generales: {len(h)} filas, cols={list(h.columns)}")
+    print(h.head(6).to_string())
+except Exception as e:
+    print(f"  -- headlines generales: {str(e)[:170]}")
+
+for q, etq in (("R:MU.OQ AND Language:LEN", "por RIC (Micron)"),
+               ("Topic:SEMI AND Language:LEN", "por topico (semis)"),
+               ("\"Federal Reserve\" AND Language:LEN", "texto libre")):
+    try:
+        from lseg.data import news
+        h = news.get_headlines(q, count=5)
+        print(f"\n  OK {etq}: {len(h)} titulares")
+        for _, r in h.head(4).iterrows():
+            t = r.get("headline", r.iloc[-1] if len(r) else "")
+            print(f"      {str(r.name)[:16]}  {str(t)[:95]}")
+    except Exception as e:
+        print(f"\n  -- {etq}: {str(e)[:150]}")
+
+try:
+    from lseg.data import news
+    h = news.get_headlines("R:MU.OQ AND Language:LEN", count=1)
+    sid = h["storyId"].iloc[0] if "storyId" in h.columns else h.iloc[0, 0]
+    s = news.get_story(sid)
+    print(f"\n  OK cuerpo de nota: {len(str(s))} caracteres")
+    print("      " + str(s)[:260].replace("\n", " "))
+except Exception as e:
+    print(f"\n  -- cuerpo de nota: {str(e)[:150]}")
+
+print("\n" + "=" * 78)
+print("2. MULTIPLOS POR SECTOR (via constituyentes)")
+print("=" * 78)
+try:
+    d = ld.get_data(universe=["0#.SPX"], fields=["TR.GICSSector", "TR.FwdPE",
+                                                 "TR.CompanyMarketCap"],
+                    parameters={"Curn": "USD"})
+    d.columns = ["ric", "sector", "fpe", "mcap"]
+    d = d.dropna(subset=["sector"])
+    print(f"  {len(d)} constituyentes, {d['fpe'].notna().sum()} con FwdPE")
+    d = d.dropna(subset=["fpe", "mcap"])
+    d = d[(d["fpe"] > 0) & (d["fpe"] < 200)]
+    # P/E agregado = suma de precios / suma de utilidades -> armonico ponderado
+    g = d.groupby("sector").apply(
+        lambda x: pd.Series({
+            "n": len(x),
+            "pe_armonico": x["mcap"].sum() / (x["mcap"] / x["fpe"]).sum(),
+            "pe_promedio_simple": (x["fpe"] * x["mcap"]).sum() / x["mcap"].sum(),
+        }), include_groups=False).sort_values("pe_armonico", ascending=False)
+    print(g.round(1).to_string())
+    print("\n  Nota: el armonico es el correcto (agrega utilidades). El promedio")
+    print("  ponderado simple sobreestima; la diferencia se ve arriba.")
+except Exception as e:
+    print(f"  -- {str(e)[:200]}")
+
+print("\n" + "=" * 78)
+print("3. TENENCIAS INSTITUCIONALES / 13F")
+print("=" * 78)
+for campos, etq in ((["TR.InvestorFullName", "TR.SharesHeld", "TR.HoldingsDate"], "holders de un RIC"),
+                    (["TR.PctOfSharesOutHeld", "TR.InvestorType"], "tipo de inversionista"),
+                    (["TR.SharesHeldValue", "TR.SharesHeldChange"], "cambio en tenencia")):
+    try:
+        d = ld.get_data(universe=["MU.OQ"], fields=campos)
+        print(f"  OK {etq}: {len(d)} filas")
+        print(d.head(6).to_string(index=False))
+    except Exception as e:
+        print(f"  -- {etq}: {str(e)[:130]}")
+ld.close_session()

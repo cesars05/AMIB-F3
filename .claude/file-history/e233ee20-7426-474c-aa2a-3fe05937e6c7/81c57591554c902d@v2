@@ -1,0 +1,137 @@
+# Phase 1: Portfolio Fixes - Context
+
+**Gathered:** 2026-09-24
+**Status:** Ready for planning
+
+<domain>
+## Phase Boundary
+
+Every portfolio figure later surfaces show rests on a ledger whose cash reconciles to the IBKR statements, and it reaches the engine through one export (`backend/exportar.py`). In scope: pinned environment (`constraints.txt`), pytest on synthetic IBKR fixtures, per-statement cash residual with a visible check, `_parse_statement_period` raising, the conditional price-cache fix (PFIX-04), `portfolio.db` moved to `data/`, loud migrations, and one IBKR drop folder shared by backend and engine. Requirements: FND-01..04, PFIX-01..05.
+
+Not in scope: cutting the engine's duplicate IBKR readers over to the export (detector and news in Phase 3, `generar_*.py` in Phase 7), the full portfolio page (Phase 9), split-window flags (Phase 9).
+
+</domain>
+
+<decisions>
+## Implementation Decisions
+
+### Background found during discussion (drives D-01..D-08)
+- The drop folder holds three overlapping IBKR **Transaction History** exports plus one **Activity Statement**. Each Transaction History carries exactly one `FX Translations P&L` row, dated at its own period end and cumulative over its whole period, so it cannot be split by date.
+- The current rule in `portfolio_service.ingest_file` (`covered_by_other` plus the delete of overlapping rows) drops every FX-translation row whose date falls inside another statement's period. With today's files only the newest export's row survives, and it covers the current year only. The previous year's translation effect is missing from the ledger. This is the probable root cause of the known +0.24 cumulative-cash gap (2026 change reconciles, cumulative does not). The researcher should confirm it on a DB copy and report residuals only.
+- Transaction History `Summary` carries `Base Currency`, `Starting Cash`, `Change` and `Ending Cash` (base currency USD). The Activity Statement has no `Summary` cash. Its cash lives in the `Net Asset Value` section, row `Cash` (Prior Total / Current Total).
+- The earliest statement's Starting Cash is zero: the account opened inside the covered window, so the transaction cumsum legitimately starts at zero with no opening balance.
+- The Activity Statement's first line starts with a UTF-8 BOM (U+FEFF; it parses as a separate BOM-prefixed `Statement` section today). Include this in a fixture once PFIX-02 makes period parsing raise.
+
+### Cash statement chain (PFIX-01)
+- **D-01:** The code selects a **non-overlapping chain** of Transaction History statements. Only statements in the chain contribute their `FX Translations P&L` row. Ordinary transactions still come from every file, deduplicated by hash as today. An FX row from a statement outside the chain is never used.
+- **D-02:** A new statement with the **same start and a later end** (a fresh YTD) replaces the older one entirely: transactions and FX row. The ingest reports what it replaced, naming statements by type and period, never by filename.
+- **D-03:** When the chain does not reach the latest ingested date, the code reports the residual of the uncovered tail and **the exact period César must download** to close it. It never falls back to an overlapping FX row.
+- **D-04:** The residual is measured on the **base-currency (USD) total**, as the statement reports it. No per-currency residual.
+- **D-05:** Residual **must be zero at chain boundaries** (Starting and Ending Cash of every statement in the chain). Checkpoints that fall mid-chain (statements outside the chain, the Activity Statement) show their residual labeled `FX translation not yet booked` and do not count as failures.
+- **D-06:** The Activity Statement is a **checkpoint only**: its `Net Asset Value` / `Cash` Prior Total and Current Total. Its trades are NOT ingested into the ledger (their hash differs from Transaction History rows and would double count).
+- **D-07:** Cash stays the transaction cumsum. Checkpoints never reset or plug it (already decided in PROJECT.md, restated because D-01..D-06 build on it).
+- **Roadmap wording to amend:** Phase 1 success criterion 2 and PFIX-01 say "equals zero for every ingested statement". D-05 narrows that to chain boundaries, with labeled mid-chain residuals. Update ROADMAP.md / REQUIREMENTS.md wording when planning.
+
+### Non-zero residual behavior
+- **D-08:** If any chain-boundary residual has |residual| >= **USD 0.005**, `backend/exportar.py` **blocks**: it writes no new holdings or valuation, and writes a status file with state, residual per statement and reason.
+- **D-09:** When blocked, the **last good export is kept** with its `as_of` visible, so consumers see it is stale and why.
+- **D-10:** César sees the per-statement residual in a **panel on the existing frontend `data/` page** (`frontend/app/data/page.tsx`): statement (type + period), Starting/Ending checkpoint, residual, label (boundary / mid-chain / uncovered tail), pass or fail. The panel reads from a backend endpoint (endpoint shape is Claude's discretion).
+
+### IBKR drop folder (FND-03)
+- **D-11:** One dedicated, gitignored folder under `data/` (e.g. `data/ibkr/`), declared in `engine/config.py`, read by both backend and engine. `.crdownload` partials and non-CSV files are ignored.
+- **D-12:** Files **stay in place** after ingest. Ingest is idempotent, and the chain needs every file to re-evaluate and to rebuild the ledger from scratch.
+- **D-13:** The IBKR account number moves out of `engine/config.py` (a tracked file) into `.env`, read via `config.secreto()`. Logs and UI name statements by type and period, never by filename. Git history is left as is (no remote exists).
+- **D-14:** The 4 CSVs in `backend/IBRK Data/` move to the new folder. The PDF stays where it is. `backend/IBRK Data/` is no longer read.
+
+### Price-cache comparison (PFIX-04)
+- **D-15:** Finding: `backend/market_data.get_or_fetch_prices` caches yfinance closes with `auto_adjust=True` (split **and dividend** adjusted), while the ledger cash already includes received dividends. Valuing positions on dividend-adjusted prices plus booked dividends probably double counts dividends in TWR. A same-basis rebuild cannot detect this.
+- **D-16:** The comparison runs on a **copy of the DB** with **three variants**: (1) the current cache, (2) a fresh rebuild on the same basis (isolates mixed adjustment vintages), (3) a fresh rebuild with `auto_adjust=False` (split adjusted, not dividend adjusted; isolates the dividend double count). The fix triggers if variant 2 or 3 differs from 1.
+- **D-17:** "Differs" means **>= 1 bp on any daily return or >= 1 bp on since-inception cumulative TWR**.
+- **D-18:** The IBKR-reported TWR from the Activity Statement is recorded next to the variants for the same window **as reference only**, with no pass/fail (the methodology differs).
+- **D-19:** The record is a `.md` in `.planning/phases/01-portfolio-fixes/` with TWR and bp differences per variant, the dates of largest difference, and the decision. **Percentages and bp only, no amounts, no positions, no IBKR TWR digits beyond what the comparison needs.**
+- If the fix triggers, it follows PFIX-04: a single adjustment basis tagged with split factor, refetch on a new split, no intraday bar stored as a close.
+
+### Export contract (PFIX-05)
+- **D-20:** Closing valuation uses the **backend's yfinance close**, the same price the backend TWR uses, so the deck's portfolio slide matches the portfolio page. Every price carries source and date. The export needs no Workspace session.
+- **D-21:** Holdings are exported as **aggregated positions** per ticker (quantity, average cost, value, weight). FIFO lots stay in the backend.
+- **D-22:** The export carries the **RIC**. The backend derives it from the exchange yfinance reports, with a manual override table (extend the existing manual ticker-mapping pattern). A ticker without a RIC **blocks the export** with an error naming the ticker. The engine's own exchange-to-suffix map is removed later, when its readers are cut over.
+
+### Python environment (FND-01)
+- **D-23:** Keep the **system Python 3.14** shared by engine, backend and the future scheduled job. Every `pip install` goes through `-c constraints.txt`. No venv.
+- **D-24:** `constraints.txt` uses **exact pins** at today's working versions: `pandas==2.3.3`, `httpx==0.27.2`, `numpy==2.4.3`, `lseg-data==2.1.1` (verified installed 2026-09-24). An upgrade is a deliberate change. pytest is not installed yet.
+
+### Claude's Discretion
+- DB move to `data/portfolio.db`: copy the live DB, then verify it against a rebuild from the CSVs. Leave `data/portfolio_antes_ytd.db` untouched.
+- Test layout (`backend/tests/` vs co-located), pytest config location, fixture format (inline CSV strings are preferred).
+- New names for `engine/test_compacto_sp500.py` / `engine/test_volumen_sp500.py`.
+- Export JSON field names, output path (Phase 2 defines the output-location contract, so use a placeholder under `data/` that Phase 2 can adopt), status-file schema, residual endpoint shape.
+- Migration error matching in `backend/db.py` (match "duplicate column name" or a schema_version table).
+
+</decisions>
+
+<canonical_refs>
+## Canonical References
+
+**Downstream agents MUST read these before planning or implementing.**
+
+### Scope and requirements
+- `.planning/ROADMAP.md` §Phase 1: goal, success criteria, notes on data handling
+- `.planning/REQUIREMENTS.md`: FND-01..04, PFIX-01..05
+- `.planning/PROJECT.md` §Key Decisions: cash as checkpoint (never a reset), core value
+- `CLAUDE.md` §Data rules: IBKR multi-header blocks, cash reconciliation, splits from yfinance, `.replace()` asserts, three returns never mix
+
+### Known problems and research
+- `.planning/codebase/CONCERNS.md`: cash +0.24, `_parse_statement_period` silent `(None, None)`, `db.py` swallowed migrations, fragmented DB locations, zero test coverage
+- `.planning/codebase/TESTING.md`: no test framework; recommendations for synthetic fixtures
+- `.planning/research/SUMMARY.md` §Phase 1 and Critical Pitfalls 1-2: mixed-adjustment cache, anchor-as-plug
+- `.planning/research/PITFALLS.md`: detail on the pitfalls above
+- `.planning/research/STACK.md`: pytest 9.1.1, constraints versions
+
+### Frontend
+- `frontend/AGENTS.md`: this Next.js version has breaking changes; read it before the `data/` panel
+
+</canonical_refs>
+
+<code_context>
+## Existing Code Insights
+
+### Reusable Assets
+- `backend/ibkr_parser.py`: `read_sections` (per-block headers), `normalize_transaction_history`, `normalize_trades_section`, `_parse_statement_period` (to raise), `find_all_ingestable` / `_section_priority` / `_looks_ingestable` (drop-folder filtering)
+- `backend/portfolio_service.py`: `ingest_file` (FX-translation supersede logic to replace with the chain), `IBRK_DATA_DIR` (to repoint), `get_connection`, snapshot cache
+- `backend/db.py`: `DB_PATH` (to move), `upsert_source_statement` / `get_source_statements` (statement periods, extend with Starting/Ending Cash), migrations at ~line 141-153
+- `backend/metrics.py`: cash series `cumsum()` at ~line 301, the base for checkpoint residuals
+- `backend/market_data.py`: `get_or_fetch_prices` (`auto_adjust=True` at line 106), `resolve_yf_ticker` / `set_manual_ticker_mapping` (pattern for the RIC override table), `get_splits`
+- `engine/generar_portafolio.py:54-56`: `BOLSA_A_SUFIJO`, the exchange-to-RIC-suffix map to port into the backend
+- `engine/config.py`: `CARPETA_IBKR`, the account constant, `ultimo_estado` (regex built on the account number), `secreto()`
+
+### Established Patterns
+- Flat module per file in `backend/`; Spanish comments, English deliverables
+- `/api/health` `startup_messages` as runtime smoke signal
+- Real statements are gitignored and never read into output; probes print section names, periods and masked values only
+
+### Integration Points
+- `engine/generar_portafolio.py`, `generar_pe_cartera.py`, `generar_descomposicion.py`, `noticias.py` use `ultimo_estado` / `CARPETA_IBKR`. They must keep working when the folder moves (their cutover to the export is later)
+- `frontend/app/data/page.tsx`: residual panel
+- `backend/routers/`: new residual endpoint
+
+</code_context>
+
+<specifics>
+## Specific Ideas
+
+- The residual panel shows each statement by type and period with a label: chain boundary (must be zero), mid-chain (`FX translation not yet booked`), uncovered tail (with the period to download).
+- The chain gap message tells César the exact Transaction History period to download to close it.
+
+</specifics>
+
+<deferred>
+## Deferred Ideas
+
+None: discussion stayed within phase scope.
+
+</deferred>
+
+---
+
+*Phase: 01-portfolio-fixes*
+*Context gathered: 2026-09-24*

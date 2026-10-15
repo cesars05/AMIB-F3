@@ -1,0 +1,256 @@
+{
+  "_meta": {
+    "purpose": "Machine-readable design tokens for the HAL x Kuwait deck (see STYLE_GUIDE.md). Units: inches / points. Derived from COM measurements of the user's Aztlan templates + M&A FEMSA, recolored to Halliburton.",
+    "slide": {
+      "w": 13.333,
+      "h": 7.5,
+      "aspect": "16:9"
+    }
+  },
+  "font": {
+    "family": "Arial",
+    "fallback": "Helvetica"
+  },
+  "size_pt": {
+    "cover_title": 40,
+    "cover_subtitle": 24,
+    "kicker": 14,
+    "title": 28,
+    "subtitle": 16,
+    "block_header": 16,
+    "body_text_slide": 14,
+    "body_beside_chart": 12,
+    "body_dense": 11,
+    "sub_bullet": 12,
+    "chart_unit_label": 12,
+    "chart_category": 12,
+    "chart_data_label": 9,
+    "table_body": 11,
+    "table_header": 11,
+    "table_appendix": 9,
+    "source": 10,
+    "footnote": 9,
+    "page_number": 11,
+    "footer_left": 9,
+    "kpi_number": 28,
+    "kpi_label": 10
+  },
+  "color": {
+    "hal_red": "#CC0000",
+    "hal_slate": "#2C394D",
+    "hal_deep": "#8B1318",
+    "hal_dark": "#630E12",
+    "ink": "#000000",
+    "ink_secondary": "#404040",
+    "grey_700": "#595959",
+    "grey_500": "#7F7F7F",
+    "grey_300": "#A6A6A6",
+    "grey_200": "#D9D9D9",
+    "grey_100": "#F2F2F2",
+    "rose_500": "#B96A73",
+    "rose_100": "#EAD2D2",
+    "sand": "#FEF3DA",
+    "kuwait_green": "#007A3D",
+    "navy": "#242852",
+    "navy_deep": "#221D55",
+    "rule_navy": "#002060",
+    "gold": "#F5C400",
+    "positive": "#42825D",
+    "negative": "#C00000",
+    "footer_grey": "#B2BCCB",
+    "white": "#FFFFFF"
+  },
+  "chart_series_order": [
+    "#8B1318",
+    "#CC0000",
+    "#7F7F7F",
+    "#B96A73",
+    "#242852",
+    "#A6A6A6"
+  ],
+  "semantic": {
+    "track_a_usd": "#8B1318",
+    "track_b_itesm": "#242852",
+    "kuwait": "#007A3D",
+    "forecast_zone_fill": "#F2F2F2",
+    "table_header_fill": "#8B1318",
+    "table_subject_row_fill": "#EAD2D2",
+    "table_zebra_fill": "#F2F2F2"
+  },
+  "grid": {
+    "margin_left": 0.575,
+    "margin_right_edge": 12.877,
+    "content_top": 1.446,
+    "content_bottom": 6.78,
+    "top_rule": {
+      "y": 0.313,
+      "x0": 0.565,
+      "x1": 12.828,
+      "color": "#8B1318",
+      "weight_pt": 1.0
+    },
+    "title": {
+      "x": 0.575,
+      "y": 0.533,
+      "w": 9.827,
+      "h": 0.454
+    },
+    "subtitle": {
+      "x": 0.575,
+      "y": 0.989,
+      "w": 9.827,
+      "h": 0.286,
+      "color": "#8B1318"
+    },
+    "logo_top_right": {
+      "x": 10.43,
+      "y": 0.5,
+      "w": 2.4,
+      "h": 0.184,
+      "file": "08_Assets/selected/hal_logo_red_transparent.png"
+    },
+    "footer_left": {
+      "x": 0.565,
+      "y": 6.828,
+      "w": 4.74,
+      "h": 0.523,
+      "text": "FINA 405 · USD × ITESM · Team 9  |  Halliburton in Kuwait",
+      "color": "#B2BCCB",
+      "size_pt": 9
+    },
+    "source": {
+      "x": 0.575,
+      "y": 6.951,
+      "w": 12.302,
+      "h": 0.399,
+      "align": "center",
+      "italic": true,
+      "size_pt": 10
+    },
+    "page_number": {
+      "x": 12.416,
+      "y": 6.951,
+      "w": 0.461,
+      "h": 0.399,
+      "align": "right",
+      "color": "#8B1318",
+      "size_pt": 11
+    },
+    "col2_split": {
+      "left": {
+        "x": 0.575,
+        "w": 5.842
+      },
+      "right": {
+        "x": 7.035,
+        "w": 5.842
+      },
+      "gutter": 0.62
+    },
+    "text_plus_2charts": {
+      "text": {
+        "x": 0.575,
+        "w": 7.095
+      },
+      "charts": {
+        "x": 8.085,
+        "w": 4.79,
+        "block1_header_y": 1.446,
+        "block1_rule_y": 1.817,
+        "block1_chart_y": 2.107,
+        "block1_chart_h": 2.0,
+        "block2_header_y": 4.198,
+        "block2_rule_y": 4.569,
+        "block2_chart_y": 4.653,
+        "block2_chart_h": 2.01
+      }
+    }
+  },
+  "cover": {
+    "image": "08_Assets/cover/cover_4k.jpg",
+    "text_safe_x_max": 7.2,
+    "logo_white": {
+      "file": "08_Assets/selected/hal_logo_white_transparent.png",
+      "x": 0.62,
+      "y": 0.7,
+      "w": 5.2
+    },
+    "kicker": {
+      "x": 0.62,
+      "y": 2.55,
+      "size_pt": 14
+    },
+    "title": {
+      "x": 0.62,
+      "y": 2.95,
+      "w": 6.6,
+      "size_pt": 40
+    },
+    "team_block": {
+      "x": 0.62,
+      "y": 5.55,
+      "w": 6.6,
+      "h": 1.3,
+      "size_pt": 12
+    },
+    "date": {
+      "x": 0.62,
+      "y": 6.95,
+      "size_pt": 11
+    },
+    "usd_logo": {
+      "file": "08_Assets/selected/usd_logo_reversed_transparent.png",
+      "x": 0.62,
+      "y": 1.3,
+      "h": 0.4
+    },
+    "tec_logo": {
+      "file": "08_Assets/selected/tec_logo_white_disc.png",
+      "x": 2.92,
+      "y": 1.24,
+      "h": 0.52
+    },
+    "logo_separator": {
+      "x": 2.72,
+      "y": 1.3,
+      "h": 0.4,
+      "color": "#FFFFFF",
+      "alpha": 0.6,
+      "weight_pt": 0.5
+    }
+  },
+  "chart": {
+    "bar_gap_width": 80,
+    "stacked_overlap": 100,
+    "clustered_overlap": -27,
+    "line_weight_pt": 2.25,
+    "gridlines": false,
+    "value_axis_bar_charts": "deleted",
+    "legend": "bottom",
+    "data_label_pt": 9,
+    "forecast_label": "Consensus Forecast",
+    "min_dpi_for_images": 150
+  },
+  "table": {
+    "row_h_presentation": 0.34,
+    "row_h_appendix": 0.22,
+    "header_fill": "#8B1318",
+    "header_font_color": "#FFFFFF",
+    "body_pt": 11,
+    "zebra": "#F2F2F2",
+    "borders": "horizontal hairlines only"
+  },
+  "allowed_font_sizes_pt": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    14,
+    16,
+    18,
+    24,
+    28,
+    40
+  ]
+}

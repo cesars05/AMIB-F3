@@ -1,0 +1,80 @@
+"""Divergencias con z-score real del diferencial, no un proxy."""
+import io
+
+P = r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs\detector.py"
+s = io.open(P, encoding="utf-8").read()
+
+# 1. nombres correctos (los de tasas llevan espacio)
+s = s.replace('    ("US2Y", "US10Y", "corto vs largo plazo"),',
+              '    ("US 2Y", "US 10Y", "corto vs largo plazo"),')
+s = s.replace('    ("Alphabet", "Microsoft", "hyperscalers"),',
+              '    ("Alphabet", "Microsoft", "hyperscalers"),\n'
+              '    ("Micron", "SOX Index", "memoria vs semis"),\n'
+              '    ("Utilities", "S&P 500", "utilities como proxy de bonos"),')
+
+# 2. metodo correcto: z del diferencial contra su propia historia
+viejo = '''def divergencias(df):
+    """Pares que suelen ir juntos y esta semana no."""
+    idx = df.set_index("nombre")
+    out = []
+    for a, b, desc in PARES:
+        if a not in idx.index or b not in idx.index:
+            continue
+        ra, rb = idx.loc[a, "ret_1w"], idx.loc[b, "ret_1w"]
+        brecha = ra - rb
+        # Escala con la volatilidad tipica del par mas volatil
+        escala = max(abs(idx.loc[a, "ret_1w"] / (idx.loc[a, "z_1w"] or 1)),
+                     abs(idx.loc[b, "ret_1w"] / (idx.loc[b, "z_1w"] or 1)), 0.1)
+        if abs(brecha) / escala >= Z_DIVERG:
+            out.append(dict(par=f"{a} vs {b}", descripcion=desc,
+                            ret_a=round(float(ra), 2), ret_b=round(float(rb), 2),
+                            brecha_pp=round(float(brecha), 2)))
+    return sorted(out, key=lambda d: -abs(d["brecha_pp"]))'''
+
+nuevo = '''def divergencias(df, series):
+    """Pares que suelen ir juntos y esta semana no.
+
+    El diferencial de retornos semanales tiene su propia distribucion
+    historica: dos activos volatiles se separan 3pp cualquier semana, dos
+    estables no. Por eso se saca el z del diferencial contra esa distribucion,
+    en vez de comparar la brecha contra un umbral fijo.
+    """
+    por_nombre = {r["nombre"]: r["ric"] for _, r in df.iterrows()}
+    idx = df.set_index("nombre")
+    out = []
+    for a, b, desc in PARES:
+        if a not in por_nombre or b not in por_nombre:
+            print(f"  (par omitido, falta serie: {a} / {b})")
+            continue
+        sa, sb = series.get(por_nombre[a]), series.get(por_nombre[b])
+        if sa is None or sb is None:
+            continue
+        # Alinear antes de restar: calendarios distintos (KOSPI vs S&P) darian
+        # un diferencial falso si se restan sin reindexar
+        comun = sa.index.intersection(sb.index)
+        if len(comun) < 80:
+            continue
+        ra_s = sa.reindex(comun).pct_change(5).dropna() * 100
+        rb_s = sb.reindex(comun).pct_change(5).dropna() * 100
+        dif = (ra_s - rb_s).iloc[-VENTANA:]
+        if len(dif) < 60 or dif.std() == 0:
+            continue
+        z = float((dif.iloc[-1] - dif.mean()) / dif.std())
+        if abs(z) >= Z_DIVERG:
+            out.append(dict(par=f"{a} vs {b}", descripcion=desc,
+                            ret_a=round(float(ra_s.iloc[-1]), 2),
+                            ret_b=round(float(rb_s.iloc[-1]), 2),
+                            brecha_pp=round(float(dif.iloc[-1]), 2),
+                            z=round(z, 2)))
+    return sorted(out, key=lambda d: -abs(d["z"]))'''
+
+assert viejo in s
+s = s.replace(viejo, nuevo)
+s = s.replace("divs = divergencias(df)", "divs = divergencias(df, series)")
+s = s.replace('''            print(f"  {d['par']:34s} {d['ret_a']:+6.1f}% vs {d['ret_b']:+6.1f}%"
+                  f"   brecha {d['brecha_pp']:+.1f}pp")''',
+              '''            print(f"  {d['par']:34s} {d['ret_a']:+6.1f}% vs {d['ret_b']:+6.1f}%"
+                  f"   brecha {d['brecha_pp']:+.1f}pp ({abs(d['z']):.1f}σ)")''')
+
+io.open(P, "w", encoding="utf-8").write(s)
+print("divergencias con z real del diferencial")

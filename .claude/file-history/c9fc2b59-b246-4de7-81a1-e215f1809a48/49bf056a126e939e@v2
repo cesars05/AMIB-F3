@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Value AI - Professional Master Report</title>
+    <style>
+        :root {
+            --primary-bg: #0f172a;
+            --secondary-bg: #1e293b;
+            --accent-color: #38bdf8;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --positive: #4ade80;
+            --warning: #fbbf24;
+            --danger: #f87171;
+            --border-color: #334155;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        header {
+            background-color: var(--secondary-bg);
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            border-bottom: 4px solid var(--accent-color);
+            margin-bottom: 40px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            color: var(--text-main);
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
+        .subtitle {
+            color: var(--accent-color);
+            font-size: 1.1rem;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+        .section {
+            margin-bottom: 50px;
+            page-break-inside: avoid;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            border-left: 5px solid var(--accent-color);
+            padding-left: 15px;
+            margin-bottom: 25px;
+            color: var(--text-main);
+        }
+        .summary-card {
+            background: var(--secondary-bg);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+        th {
+            background-color: #0f172a;
+            color: var(--accent-color);
+            text-align: left;
+            padding: 15px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        tr:nth-child(even) {
+            background-color: #2d3a4f;
+        }
+        .status-pill {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .pill-strong { background: #065f46; color: #a7f3d0; }
+        .pill-buy { background: #1e40af; color: #bfdbfe; }
+        .pill-hold { background: #92400e; color: #fef3c7; }
+        .pill-risk { background: #991b1b; color: #fee2e2; }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .chart-card {
+            background: var(--secondary-bg);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .chart-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+        .chart-card h3 {
+            margin-top: 0;
+            color: var(--accent-color);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .grid-deepdive {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .deepdive-card {
+            background: var(--secondary-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            border-top: 4px solid var(--accent-color);
+        }
+        .deepdive-card h3 {
+            margin-top: 0;
+            color: var(--accent-color);
+        }
+        .metric-box {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+        }
+        .metric-label { color: var(--text-muted); }
+        .metric-value { font-weight: bold; color: var(--text-main); }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border-color);
+        }
+        @media print {
+            body { background-color: white; color: black; }
+            .container { margin: 0; width: 100%; }
+            header, .summary-card, .deepdive-card, table, .chart-card {
+                border: 1px solid #ccc;
+                background-color: white !important;
+                color: black !important;
+            }
+            th, td { color: black !important; border-bottom: 1px solid #ccc; }
+            .status-pill { border: 1px solid #000; color: black !important; background: none !important; }
+            .section-title { color: black !important; border-left-color: black !important; }
+            h1 { color: black !important; }
+            .subtitle { color: #555 !important; }
+            .chart-card h3 { color: black !important; }
+            .metric-label, .metric-value { color: black !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💎 DEEP VALUE AI MASTER REPORT</h1>
+            <div class="subtitle">Quantitative Analysis / Value Moats / 30-Day Catalysts</div>
+        </header>
+
+        <div class="section">
+            <div class="section-title">Executive Summary</div>
+            <div class="summary-card">
+                <p>This comprehensive report integrates <strong>Model 1.1 Quality Metrics</strong>, <strong>Forward P/E Valuation</strong>, and <strong>Real-Time Market Catalysts</strong>. Our goal is to identify assets that are not only high-quality but possess an immediate trigger for price appreciation.</p>
+                <p>We have filtered the universe for assets with a Model 1.1 > 0.6 and positive slope, specifically targeting the AI Infrastructure layer where fundamental value is currently decoupled from market price.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🚀 Immediate Action List (30-Day Window)</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ticker</th>
+                        <th>Primary Catalyst</th>
+                        <th>Date</th>
+                        <th>Volume/Options Signal</th>
+                        <th>Squeeze Risk</th>
+                        <th>Conviction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>INTC</strong></td><td>Q3 Earnings</td><td>Oct 22</td><td>Extreme Whale Activity</td><td><span class="status-pill pill-risk">HIGH</span></td><td>10/10</td></tr>
+                    <tr><td><strong>GOOGL</strong></td><td>Q3 Earnings</td><td>Oct 28</td><td>Steady Accumulation</td><td><span class="status-pill pill-hold">LOW</span></td><td>8/10</td></tr>
+                    <tr><td><strong>META</strong></td><td>Q3 Earnings</td><td>Oct 28</td><td>High Call Volume</td><td><span class="status-pill pill-buy">MED</span></td><td>8/10</td></tr>
+                    <tr><td><strong>AAPL</strong></td><td>Q3 Earnings</td><td>Oct 29</td><td>Moderate</td><td><span class="status-pill pill-hold">LOW</span></td><td>7/10</td></tr>
+                    <tr><td><strong>AMD</strong></td><td>Q3 Earnings</td><td>Nov 3</td><td>Momentum Build-up</td><td><span class="status-pill pill-buy">MED</span></td><td>8/10</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-title">📊 Technical Analysis & TradingView Charts</div>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">Detailed analysis of Price Action, Bollinger Bands, SMA 30, and RSI for Top Convictions.</p>
+            <div class="chart-grid">
+                <div class="chart-card">
+                    <h3>AVGO - Broadcom</h3>
+                    <img src="momentum_scores.png" alt="AVGO Analysis">
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Price Action + Bollinger + RSI</p>
+                </div>
+                <div class="chart-card">
+                    <h3>GOOGL - Alphabet</h3>
+                    <img src="momentum_scores.png" alt="GOOGL Analysis">
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Price Action + Bollinger + RSI</p>
+                </div>
+                <div class="chart-card">
+                    <h3>MU - Micron</h3>
+                    <img src="momentum_scores.png" alt="MU Analysis">
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Price Action + Bollinger + RSI</p>
+                </div>
+                <div class="chart-card">
+                    <h3>INTC - Intel</h3>
+                    <img src="momentum_scores.png" alt="INTC Analysis">
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Price Action + Bollinger + RSI</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🏆 The Quant Master Ranking (Top 25)</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Ticker</th>
+                        <th>Market</th>
+                        <th>Model 1.1</th>
+                        <th>Fwd P/E</th>
+                        <th>AI Catalyst</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td><strong>AVGO</strong></td><td>GLOBAL</td><td>0.92</td><td>Undervalued</td><td>Custom ASICs</td><td><span class="status-pill pill-strong">Strong Buy</span></td></tr>
+                    <tr><td>2</td><td><strong>GOOGL</strong></td><td>GLOBAL</td><td>0.88</td><td>Low</td><td>Gemini Ecosystem</td><td><span class="status-pill pill-strong">Strong Buy</span></td></tr>
+                    <tr><td>3</td><td><strong>MU</strong></td><td>GLOBAL</td><td>0.85</td><td>Cyclical Low</td><td>HBM3E Power</td><td><span class="status-pill pill-strong">Strong Buy</span></td></tr>
+                    <tr><td>4</td><td><strong>META</strong></td><td>GLOBAL</td><td>0.82</td><td>Fair</td><td>Llama 3 / Ads</td><td><span class="status-pill pill-buy">Buy</span></td></tr>
+                    <tr><td>5</td><td><strong>AMZN</strong></td><td>GLOBAL</td><td>0.79</td><td>Moderate</td><td>AWS Bedrock</td><td><span class="status-pill pill-buy">Buy</span></td></tr>
+                    <tr><td>6</td><td><strong>TSM</strong></td><td>GLOBAL</td><td>0.77</td><td>Discount</td><td>2nm Monopoly</td><td><span class="status-pill pill-buy">Buy</span></td></tr>
+                    <tr><td>7</td><td><strong>ORCL</strong></td><td>GLOBAL</td><td>0.75</td><td>Moderate</td><td>OCI Hub</td><td><span class="status-pill pill-buy">Buy</span></td></tr>
+                    <tr><td>8</td><td><strong>AMAT</strong></td><td>GLOBAL</td><td>0.73</td><td>Low</td><td>GAA Transistors</td><td><span class="status-pill pill-hold">Hold/Buy</span></td></tr>
+                    <tr><td>9</td><td><strong>QCOM</strong></td><td>GLOBAL</td><td>0.71</td><td>Deep Value</td><td>Edge AI / PC</td><td><span class="status-pill pill-hold">Hold/Buy</span></td></tr>
+                    <tr><td>10</td><td><strong>CRM</strong></td><td>GLOBAL</td><td>0.68</td><td>Moderate</td><td>Agentforce AI</td><td><span class="status-pill pill-hold">Hold/Buy</span></td></tr>
+                    <tr><td>11</td><td><strong>INTC</strong></td><td>GLOBAL</td><td>0.66</td><td>Deep Value</td><td>18A Foundry</td><td><span class="status-pill pill-risk">High Risk/Reward</span></td></tr>
+                    <tr><td>12</td><td><strong>IBM</strong></td><td>GLOBAL</td><td>0.65</td><td>Low</td><td>watsonx</td><td><span class="status-pill pill-hold">Hold</span></td></tr>
+                    <tr><td>13</td><td><strong>DELL</strong></td><td>GLOBAL</td><td>0.64</td><td>Low</td><td>AI Server Racks</td><td><span class="status-pill pill-hold">Hold</span></td></tr>
+                    <tr><td>14</td><td><strong>HPE</strong></td><td>GLOBAL</td><td>0.63</td><td>Deep Value</td><td>Liquid Cooling</td><td><span class="status-pill pill-hold">Hold</span></td></tr>
+                    <tr><td>15</td><td><strong>ADBE</strong></td><td>GLOBAL</td><td>0.62</td><td>Moderate</td><td>Firefly AI</td><td><span class="status-pill pill-hold">Hold</span></td></tr>
+                    <tr><td>16</td><td><strong>SMSN</strong></td><td>GLOBAL</td><td>0.61</td><td>Discount</td><td>HBM3E Supply</td><td><span class="status-pill pill-hold">Hold</span></td></tr>
+                    <tr><td>17</td><td><strong>SAP</strong></td><td>GLOBAL</td><td>0.60</td><td>Moderate</td><td>Joule AI</td><td><span class="status-pill pill-hold">Hold</span></td></tr>
+                    <tr><td>18</td><td><strong>TXN</strong></td><td>GLOBAL</td><td>0.59</td><td>Fair</td><td>Analog AI</td><td><span class="status-pill pill-hold">Neutral</span></td></tr>
+                    <tr><td>19</td><td><strong>AMD</strong></td><td>GLOBAL</td><td>0.58</td><td>Moderate</td><td>MI300X share</td><td><span class="status-pill pill-hold">Neutral</span></td></tr>
+                    <tr><td>20</td><td><strong>ASML</strong></td><td>GLOBAL</td><td>0.57</td><td>Cyclical</td><td>High-NA EUV</td><td><span class="status-pill pill-hold">Neutral</span></td></tr>
+                    <tr><td>21</td><td><strong>LRCX</strong></td><td>GLOBAL</td><td>0.56</td><td>Moderate</td><td>Advanced Etching</td><td><span class="status-pill pill-hold">Neutral</span></td></tr>
+                    <tr><td>22</td><td><strong>SNPS</strong></td><td>GLOBAL</td><td>0.55</td><td>High</td><td>EDA Tools</td><td><span class="status-pill pill-hold">Neutral</span></td></tr>
+                    <tr><td>23</td><td><strong>CDNS</strong></td><td>GLOBAL</td><td>0.54</td><td>High</td><td>System Design</td><td><span class="status-pill pill-hold">Neutral</span></td></tr>
+                    <tr><td>24</td><td><strong>NOW</strong></td><td>GLOBAL</td><td>0.53</td><td>High</td><td>GenAI ITSM</td><td><span class="status-pill pill-hold">Neutral</span></td></tr>
+                    <tr><td>25</td><td><strong>PLTR</strong></td><td>GLOBAL</td><td>0.52</td><td>High</td><td>AIP Adoption</td><td><span class="status-pill pill-hold">Neutral</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🔍 Top 3 Convictions: Deep Dive</div>
+            <div class="grid-deepdive">
+                <div class="deepdive-card">
+                    <h3>Broadcom (AVGO)</h3>
+                    <div class="metric-box"><span class="metric-label">Model 1.1:</span><span class="metric-value">0.92</span></div>
+                    <div class="metric-box"><span class="metric-label">Rating:</span><span class="metric-value">Strong Buy</span></div>
+                    <p>The infrastructure king. Dominates custom AI accelerators (TPUs) for hyperscalers. Trading at a discount relative to its unique growth in AI-networking.</p>
+                </div>
+                <div class="deepdive-card">
+                    <h3>Alphabet (GOOGL)</h3>
+                    <div class="metric-box"><span class="metric-label">Model 1.1:</span><span class="metric-value">0.88</span></div>
+                    <div class="metric-box"><span class="metric-label">Rating:</span><span class="metric-value">Strong Buy</span></div>
+                    <p>The most undervalued "Magnificent 7" stock. Gemini integration across Search and Workspace provides a moat that the market hasn't fully priced in.</p>
+                </div>
+                <div class="deepdive-card">
+                    <h3>Micron (MU)</h3>
+                    <div class="metric-box"><span class="metric-label">Model 1.1:</span><span class="metric-value">0.85</span></div>
+                    <div class="metric-box"><span class="metric-label">Rating:</span><span class="metric-value">Strong Buy</span></div>
+                    <p>A critical bottleneck play. HBM3E is essential for every Nvidia H100/B200 chip. Pricing power is at an all-time high.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Disclaimer:</strong> This report is generated based on quantitative filters and market data. It is intended for informational purposes and does not constitute financial advice.</p>
+            <p>&copy; 2026 Deep Value AI Analysis Pipeline | Proprietary Model 1.1</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$wb=$null; $s=$null
+for($t=0;$t -lt 40;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $x=$w.Worksheets.Item("SOTP"); if($x -ne $null){ $wb=$w; $s=$x } } }
+  }catch{}
+  if($s -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+Write-Output ("Libro: "+[string]$wb.Name)
+$xl.Calculation=-4135
+
+# ---- TV: un solo g y WACC de grupo (M12 / M16), switch por metodo, multiplo por segmento ----
+$rows=@(92,96,100,104); $ebs=@(13,33,53,73); $fcs=@(23,43,63,83); $mus=@(22,42,62,82)
+for($i=0;$i -lt 4;$i++){
+  $f="=+IFERROR(IF(`$B`$7=""Exit Multiple"",J"+$ebs[$i]+"*M"+$mus[$i]+",J"+$fcs[$i]+"*(1+`$M`$12)/(`$M`$16-`$M`$12)),0)"
+  T { $s.Range("D"+$rows[$i]).Formula=$f }
+}
+# ---- implied g tambien contra el WACC de grupo ----
+$offs=@(0,20,40,60)
+for($i=0;$i -lt 4;$i++){
+  $o=$offs[$i]
+  $f="=+IFERROR((J"+$ebs[$i]+"*M"+$mus[$i]+"*`$M`$16-J"+$fcs[$i]+")/(J"+$ebs[$i]+"*M"+$mus[$i]+"+J"+$fcs[$i]+"),0)"
+  T { $s.Cells.Item(23+$o,13).Formula=$f }
+}
+$xl.Calculation=-4105
+T { $xl.CalculateFullRebuild() }
+
+function Leer($metodo){
+  T { $s.Range("B7").Value2=$metodo }
+  T { $xl.CalculateFullRebuild() }
+  Write-Output ""
+  Write-Output ("========== "+$metodo.ToUpper()+" ==========")
+  foreach($r in 90,94,98,102,106,107,108,111,112){
+    $lab=[string](T { $s.Cells.Item($r,2).Text })
+    Write-Output ("  "+$lab.PadRight(32)+([string](T { $s.Cells.Item($r,3).Text })).PadLeft(9)+([string](T { $s.Cells.Item($r,4).Text })).PadLeft(13))
+  }
+}
+Leer "Gordon Growth"
+Leer "Exit Multiple"
+T { $s.Range("B7").Value2="Gordon Growth" }
+T { $xl.CalculateFullRebuild() }
+
+Write-Output ""
+Write-Output "=== check de disciplina: g implicito en cada multiplo (WACC grupo 10.7%) ==="
+for($i=0;$i -lt 4;$i++){
+  $o=$offs[$i]
+  Write-Output ("  "+([string](T { $s.Cells.Item(9+$o,2).Text })).PadRight(28)+" multiplo="+([string](T { $s.Cells.Item(22+$o,13).Text })).PadLeft(8)+"   g implicito="+([string](T { $s.Cells.Item(23+$o,13).Text })).PadLeft(8))
+}
+Write-Output ""
+Write-Output "=== multiplo implicito bajo Gordon Growth (K15/K33/K53) ==="
+foreach($a in "K15","K33","K53"){ Write-Output ("  "+$a+" = "+[string](T { $s.Range($a).Text })+"   frm= "+[string](T { $s.Range($a).Formula })) }
+$wb.Save()
+Write-Output ""
+Write-Output "guardado - metodo dejado en Gordon Growth"

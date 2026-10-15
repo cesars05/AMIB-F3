@@ -1,0 +1,62 @@
+$ErrorActionPreference="Stop"
+$wb=$null; $xl=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+Write-Output ("LIBRO: "+[string]$wb.Name)
+$as=$wb.Worksheets.Item("Assumptions"); $sm=$wb.Worksheets.Item("Segment Model")
+$cm=$wb.Worksheets.Item("Consolidated Model"); $d=$wb.Worksheets.Item("DCF")
+if([string]$as.Range("J74").Text -ne ""){ throw "ABORTO: modulo de venta encendido" }
+$orig=[string]$as.Range("F10").Text
+
+Write-Output ""
+Write-Output "=========== PUNTO DE PARTIDA: FY2026 real por segmento ==========="
+Write-Output ("  "+"".PadRight(26)+"ingresos".PadLeft(10)+"op margin".PadLeft(11)+"EBITDA".PadLeft(10)+"EBITDA mg".PadLeft(11)+"ROIC".PadLeft(8))
+foreach($x in @(@(13,57,35,69,75,"Water Management"),@(14,58,36,70,76,"Building Envelope"),@(15,59,37,71,77,"Housebuilding Products"))){
+  Write-Output ("  "+([string]$x[5]).PadRight(26)+([string]$sm.Cells.Item([int]$x[0],11).Text).PadLeft(10)+([string]$sm.Cells.Item([int]$x[1],11).Text).PadLeft(11)+([string]$sm.Cells.Item([int]$x[2],11).Text).PadLeft(10)+([string]$sm.Cells.Item([int]$x[3],11).Text).PadLeft(11)+([string]$sm.Cells.Item([int]$x[4],11).Text).PadLeft(8))
+}
+Write-Output ("  "+"GRUPO Adj. EBITDA".PadRight(26)+([string]$cm.Range("K53").Text).PadLeft(10)+"   ingresos "+[string]$cm.Range("K13").Text+"   deuda neta "+[string][math]::Round(([double]$cm.Range("K253").Value2-[double]$cm.Range("K126").Value2),0))
+
+Write-Output ""
+Write-Output "=========== QUE PRODUCE HOY CADA COLUMNA ==========="
+foreach($esc in "Stress Case","Bear Case","Base Case"){
+  $as.Range("F10").Value2=$esc
+  $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+  $e26=[double]$cm.Range("K53").Value2
+  $e32=[double]$cm.Range("Q53").Value2
+  $cagr=[math]::Pow($e32/$e26,1/6)-1
+  $r26=[double]$cm.Range("K13").Value2
+  $r32=[double]$cm.Range("Q13").Value2
+  $rc=[math]::Pow($r32/$r26,1/6)-1
+  Write-Output ("")
+  Write-Output ("  --- "+$esc+" ---")
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item(53,$c).Text).PadLeft(9) }
+  Write-Output ("   Adj. EBITDA      "+$v)
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item(13,$c).Text).PadLeft(9) }
+  Write-Output ("   Ingresos         "+$v)
+  $v=""
+  for($c=11;$c -le 17;$c++){
+    $m=[double]$cm.Cells.Item(53,$c).Value2/[double]$cm.Cells.Item(13,$c).Value2
+    $v+=([string][math]::Round($m*100,1)+"%").PadLeft(9)
+  }
+  Write-Output ("   Margen EBITDA    "+$v)
+  Write-Output ("   CAGR EBITDA FY26-32 = "+[string][math]::Round($cagr*100,1)+"%     CAGR ingresos = "+[string][math]::Round($rc*100,1)+"%")
+  Write-Output ("   DCF = "+[string]$d.Range("E41").Text+"    WM ROIC FY2032 = "+[string]$sm.Range("Q75").Text)
+}
+$as.Range("F10").Value2=$orig
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+Write-Output ""
+Write-Output ("restaurado a: "+[string]$as.Range("F10").Text)
+Write-Output ""
+Write-Output "=========== TARGETS DEL DECK ==========="
+$e26=[double]$cm.Range("K53").Value2
+foreach($g in -0.03,0.0,0.045){
+  $e32=$e26*[math]::Pow(1+$g,6)
+  Write-Output ("   EBITDA a "+([string][math]::Round($g*100,1)+"%/ano").PadLeft(7)+"  ->  FY2032 = "+[string][math]::Round($e32,0)+"   (desde "+[string][math]::Round($e26,0)+")")
+}

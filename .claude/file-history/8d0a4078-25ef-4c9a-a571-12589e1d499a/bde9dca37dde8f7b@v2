@@ -1,0 +1,3 @@
+# _NOTES: Company/
+
+Two subfolders: `Fase0_descargas_IR/` (Fuso's own documents and the working prompts; the main source) and `Competidores/` (peer files used only for market-level context). Read the `_NOTES.md` inside each. Order of work: Fase0 notes, then the prompt in use (`Prompt_Fuso_DeepDive_v0.1.md` for the pre-overview questions, `Prompt_Company_Overview_v0.2.md` for the phased overview, `Prompt_Segment_Analysis_Framework_v0.2.md` for the Excel block), then peers only if a question needs market context.

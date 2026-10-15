@@ -1,0 +1,39 @@
+# OPEN QUESTIONS & ASSUMPTIONS (resolve before / while building the deck)
+Nothing below blocked the analysis; each item says what was assumed so the build can proceed.
+
+## A. Blocking for numbers (needs a file or an answer)
+| # | Question | Why it matters | Assumption used meanwhile |
+|---|---|---|---|
+| Q1 | **Scenario-0 market data** (spot KWD/USD, KWD and USD yield curves) and the **Excel with the IRS contract** — the professor provides them "later" (project §Notes, §6). *(The FINA 405 project document itself was found in `Downloads` and is now `01_Brief/FINA405_Project_v3.pdf/.md`; it defines the bond (5-yr, USD 100M face, 4% semiannual), FRA 12×24 / 36×60, IRP formula, IRS, Section 8.)* | Without Scenario-0 data, Sections 3–5 cannot be quantified. | Slides 18, 19, 21, 22, 23, 25, 26, 34 stay formatted shells marked ◇INPUT with exact formulas (FACT_BASE §F); **no invented numbers**. If the Excel arrives, convert it with `convert_office.py`, add its values to FACT_BASE and fill the ◇ cells. |
+| Q2 | Are KOC offshore-drilling contracts **KWD-denominated** (H22)? | Only affects the *natural-hedge* argument: the hedgeable exposure in §4–5 exists by construction because the bond is issued in KWD against a USD functional currency (FACT_BASE P12). | Keep as footnote ("per case materials"); not used in any headline. |
+| Q3 | Still not in the folder: HAL 10-K full text (save PDF from ir.halliburton.com; EDGAR blocked scripted download), Fitch release PDF (rating/outlook verified via press reports), CBK page PDFs, **SLB / Baker Hughes / Weatherford FY2025 releases** (peer table), World Bank WGI, Atlantic Council. | Facts marked ❓ in FACT_BASE (no-swaps statement, $81M FX sensitivity, 668% GDP, peer ratios). | Keep ❓ facts out of titles/subtitles (storyline already complies); use only ✅ facts on headlines. |
+
+## B. Design / scope decisions (defaults chosen — change if wrong)
+*Interpretation note:* the user's "fases 1, 2, 3 y 4 y 5" was read as **USD Sections 1–5** of the project (Company, Country, FRA, Domestic bond, FX forward), the content of the 21-Oct video.
+
+| # | Question | Default |
+|---|---|---|
+| Q4 | **Language** of the deck | English (existing Team 9 deck and FINA 405 are English; speaker notes English; Spanish only if requested) |
+| Q5 | **Cover vs closing image** | The user's red-wave image is used for both (cover with names; closing with thank-you). Send a different file if the closing should differ. |
+| Q6 | USD / Tec de Monterrey **logos** on cover/footer | Not provided → text only ("TEAM 9 · USD / TEC de Monterrey"). Please drop both logos (PNG/SVG) into `08_Assets/logos/`. |
+| Q7 | **Team roster**: cover of Team-9 deck lists 4 USD + 3 TEC (7). Proposal §2 says 3+3 (table) / "3 USD and 4 ITESM" (§5). | Use the 7 names exactly as on the Team-9 cover; check spelling ("Katie von Gillern, Quinn Dutrey, Ana Myers, Eddie Medina; Diego Martínez Velázquez, Julio César Silva De la Rosa, Alejandro Villanueva del Río"). |
+| Q8 | **Branding**: Aztlan logo/disclaimer excluded (course deliverable, not a fund pitch). | Aztlan *layout & typography* kept; HAL red palette. |
+| Q9 | **Track B modules to feature** in the video (proposal: choose 2–3 of modules 2–7 by 30-Sep checkpoint) | Storyline features ESG debt (3), stablecoins (2), hedge-fund/oil overlay (6), real estate (5) with facts already in the folder; PE/VC (4) and structured products (7) have no sourced facts yet. |
+| Q10 | **Video timing**: 12 min cap vs 17 [V] slides + Track B | 42 s/slide; see STORYLINE tiering. Confirm who presents which phase. |
+| Q11 | Do the winner-presentation (30-Nov/2-Dec) and final live decks reuse this file? | Yes — [D] slides are the backup/expansion material; IRS (Section 6) slides to add later. |
+
+## C. Data caveats to disclose in the deck / notes
+* **Debt definitions** differ (borrowings 7,158 vs Bloomberg incl. leases 8,316/8,399; D/C 40.5% vs BBG 44.2% vs BBG D/E 74.2%) — FACT_BASE E1/E2.
+* **KWD/USD spot** differs by source/date (Yahoo 3.2541 on 18-Sep vs Google 3.2383 on 28-Sep) — pick one source and date; recommended: Bloomberg BFIX/FXFA on deck date (E6).
+* **PD models** (DRSK 0.0135% vs MIPD 2.14%) are not comparable — quote with model names (E10).
+* USD/KWD forward points (−152.33) come from a MUFG table without stated units → verify on Bloomberg before using in Section 5 (X05).
+* Several chart read-outs in `CHART_ANALYSIS.md` are visual estimates (≈); exact tables only where cited in FACT_BASE.
+* Bloomberg/BI material is licensed "exclusive use of DIEGO MARTINEZ… not for redistribution": cite, don't republish whole reports.
+
+## D. Things not done (so nobody assumes they were)
+* **No slides were built** (stop point requested). `09_Deck_Build/` is empty on purpose.
+* Proxy-filing figures (36 MB) were **not** reviewed; Q4-2025 deck figures only auto-cataloged (same images as Q2-26 deck).
+* Bloomberg-terminal screenshots were read visually (no OCR); numbers verified against filings only where a filing exists (H08–H10, H14).
+* `Excel clase 3` sheet *template financials* has labels but no values beyond column D in the export; financials taken from the Bloomberg PDF instead.
+* The Team-9 deck's embedded charts (slides 4, 9, 12) were not re-extracted (only cover images); rebuild from data instead.
+* Ingevity template: first COM pass failed (transient); re-run succeeded — all 40 slides (incl. hidden 11 and 15) rendered and measured. Old PDF-page renders archived in `99_Archive/template_analysis_superseded/`.

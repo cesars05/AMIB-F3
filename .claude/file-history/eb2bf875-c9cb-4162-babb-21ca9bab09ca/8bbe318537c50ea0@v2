@@ -1,0 +1,28 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+Write-Output ("LIBRO: "+[string]$wb.Name)
+Write-Output ("HOJAS:")
+foreach($s in $wb.Worksheets){ Write-Output ("   - "+[string]$s.Name+"   used="+[string]$s.UsedRange.Address()) }
+Write-Output ""
+
+$as=$wb.Worksheets.Item("Assumptions")
+Write-Output "=========== ASSUMPTIONS: columnas C..K, filas 1..110 ==========="
+for($r=1;$r -le 110;$r++){
+  $line=""
+  $any=$false
+  foreach($c in 2,3,4,5,6,7,8,9,10,11){
+    $t=""
+    try{ $t=[string]$as.Cells.Item($r,$c).Text }catch{}
+    if($t.Length -gt 22){ $t=$t.Substring(0,22) }
+    if($t.Trim() -ne ""){ $any=$true }
+    $line+=$t.PadRight(23)
+  }
+  if($any){ Write-Output ("r"+([string]$r).PadRight(4)+$line.TrimEnd()) }
+}

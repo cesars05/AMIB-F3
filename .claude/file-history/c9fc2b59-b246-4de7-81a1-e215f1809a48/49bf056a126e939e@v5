@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Value AI - Bloomberg Terminal Edition</title>
+    <style>
+        :root {
+            --bb-black: #000000;
+            --bb-dark-grey: #121212;
+            --bb-mid-grey: #252525;
+            --bb-orange: #FF9900;
+            --bb-blue: #0055FF;
+            --bb-green: #00FF00;
+            --bb-red: #FF0000;
+            --bb-white: #FFFFFF;
+            --bb-light-grey: #A0A0A0;
+            --border-color: #333333;
+        }
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Courier New', monospace;
+            background-color: var(--bb-black);
+            color: var(--bb-white);
+            margin: 0;
+            padding: 0;
+            line-height: 1.4;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        header {
+            border-bottom: 4px solid var(--bb-orange);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        .header-title h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            color: var(--bb-white);
+        }
+        .header-title .kicker {
+            color: var(--bb-orange);
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .header-meta {
+            text-align: right;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            color: var(--bb-light-grey);
+            line-height: 1.2;
+        }
+        .section {
+            margin-bottom: 60px;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .section-header h2 {
+            font-size: 1.5rem;
+            margin: 0;
+            text-transform: uppercase;
+            background: var(--bb-orange);
+            color: var(--bb-black);
+            padding: 5px 15px;
+            font-weight: 800;
+        }
+        .section-header .section-desc {
+            margin-left: 20px;
+            color: var(--bb-light-grey);
+            font-size: 1rem;
+            font-style: italic;
+        }
+        .bb-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Courier New', Courier, monospace;
+            border: 1px solid var(--border-color);
+            background-color: var(--bb-black);
+        }
+        .bb-table th {
+            background-color: var(--bb-mid-grey);
+            color: var(--bb-orange);
+            text-align: left;
+            padding: 12px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+            text-transform: uppercase;
+        }
+        .bb-table td {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+        .bb-table tr:hover {
+            background-color: #1a1a1a;
+        }
+        .val-pos { color: var(--bb-green); font-weight: bold; }
+        .val-neg { color: var(--bb-red); font-weight: bold; }
+        .val-accent { color: var(--bb-orange); font-weight: bold; }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 25px;
+        }
+        .chart-card {
+            background: var(--bb-dark-grey);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .chart-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.2rem;
+            color: var(--bb-orange);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .chart-card img {
+            width: 100%;
+            height: auto;
+            border: 1px solid #222;
+        }
+        .deep-dive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        .deep-dive-card {
+            background: var(--bb-dark-grey);
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            border-radius: 8px;
+            border-top: 5px solid var(--bb-orange);
+        }
+        .deep-dive-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.5rem;
+            color: var(--bb-white);
+        }
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+        .metric-label { color: var(--bb-light-grey); }
+        .metric-value { color: var(--bb-orange); font-weight: bold; }
+        footer {
+            margin-top: 80px;
+            padding: 30px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--bb-light-grey);
+            border-top: 1px solid var(--border-color);
+            font-family: 'Courier New', Courier, monospace;
+        }
+        @media print {
+            body { background: white; color: black; }
+            .container { width: 100%; margin: 0; }
+            header, .section, .chart-card, .deep-dive-card { background: white !important; color: black !important; border: 1px solid #ccc !important; }
+            .bb-table th { background: #eee !important; color: black !important; }
+            .bb-table td { color: black !important; border: 1px solid #ccc !important; }
+            .val-pos { color: green !important; }
+            .val-neg { color: red !important; }
+            .val-accent { color: #c00 !important; }
+            .section-header h2 { background: #eee !important; color: black !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-title">
+                <div class="kicker">Terminal Equity Analysis // Deep Value</div>
+                <h1>AI INFRASTRUCTURE TOP 25</h1>
+            </div>
+            <div class="header-meta">
+                DATE: 2026-10-04<br>
+                SECURITY: RESTRICTED<br>
+                MODEL: QUANT v2.0
+            </div>
+        </header>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Immediate Action</h2>
+                <div class="section-desc">High-probability triggers within 30-day window.</div>
+            </div>
+            <table class="bb-table">
+                <thead>
+                    <tr>
+                        <th>Ticker</th>
+                        <th>Catalyst</th>
+                        <th>Expected Date</th>
+                        <th>Signal Strength</th>
+                        <th>Squeeze Risk</th>
+                        <th>Conviction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong class="val-accent">INTC</strong></td><td>Q3 Earnings</td><td>Oct 22</td><td>Extreme Whale Activity</td><td><span class="val-neg">HIGH</span></td><td>10/10</td></tr>
+                    <tr><td><strong class="val-accent">GOOGL</strong></td><td>Q3 Earnings</td><td>Oct 28</td><td>Steady Accumulation</td><td>Low</td><td>8/10</td></tr>
+                    <tr><td><strong class="val-accent">META</strong></td><td>Q3 Earnings</td><td>Oct 28</td><td>High Call Volume</td><td>Med</td><td>8/10</td></tr>
+                    <tr><td><strong class="val-accent">AAPL</strong></td><td>Q3 Earnings</td><td>Oct 29</td><td>Moderate</td><td>Low</td><td>7/10</td></tr>
+                    <tr><td><strong class="val-accent">AMD</strong></td><td>Q3 Earnings</td><td>Nov 3</td><td>Momentum Build-up</td><td>Med</td><td>8/10</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Technical Analysis</h2>
+                <div class="section-desc">Price Action | Bollinger Bands | RSI (Bloomberg Style)</div>
+            </div>
+            <div class="chart-grid">
+                <div class="chart-card">
+                    <h3>AVGO - Broadcom</h3>
+                    <img src="analysis_AVGO.png" alt="AVGO Chart">
+                </div>
+                <div class="chart-card">
+                    <h3>GOOGL - Alphabet</h3>
+                    <img src="analysis_GOOGL.png" alt="GOOGL Chart">
+                </div>
+                <div class="chart-card">
+                    <h3>MU - Micron</h3>
+                    <img src="analysis_MU.png" alt="MU Chart">
+                </div>
+                <div class="chart-card">
+                    <h3>INTC - Intel</h3>
+                    <img src="analysis_INTC.png" alt="INTC Chart">
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Quant Master Ranking</h2>
+                <div class="section-desc">Filter: Model 1.1 &ge; 0.6 &amp; Positive Slope.</div>
+            </div>
+            <table class="bb-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Ticker</th>
+                        <th>Market</th>
+                        <th>Last Close</th>
+                        <th>Fwd P/E</th>
+                        <th>Target Price</th>
+                        <th>Upside %</th>
+                        <th>Dist. ATH %</th>
+                        <th>Mom. Index</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="ranking-body">
+                    <!-- Data will be populated from v1_reporte_final.csv after running ACTINVER_v2.py -->
+                    <tr><td colspan="10" style="text-align:center; color:var(--bb-orange);">RUN ACTINVER_v2.py TO POPULATE REAL-TIME QUANT DATA</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Deep-Dive Convictions</h2>
+                <div class="section-desc">Fundamental Thesis for Top Tier Assets.</div>
+            </div>
+            <div class="deep-dive-grid">
+                <div class="deep-dive-card">
+                    <h3>Broadcom (AVGO)</h3>
+                    <div class="metric-row"><span class="metric-label">Model 1.1</span><span class="metric-value">0.92</span></div>
+                    <div class="metric-row"><span class="metric-label">Rating</span><span class="metric-value">Strong Buy</span></div>
+                    <p>The infrastructure king. Dominates custom AI accelerators (TPUs) for hyperscalers. Trading at a discount relative to its unique growth in AI-networking.</p>
+                </div>
+                <div class="deep-dive-card">
+                    <h3>Alphabet (GOOGL)</h3>
+                    <div class="metric-row"><span class="metric-label">Model 1.1</span><span class="metric-value">0.88</span></div>
+                    <div class="metric-row"><span class="metric-label">Rating</span><span class="metric-value">Strong Buy</span></div>
+                    <p>The most undervalued "Magnificent 7" stock. Gemini integration across Search and Workspace provides a moat that the market hasn't fully priced in.</p>
+                </div>
+                <div class="deep-dive-card">
+                    <h3>Micron (MU)</h3>
+                    <div class="metric-row"><span class="metric-label">Model 1.1</span><span class="metric-value">0.85</span></div>
+                    <div class="metric-row"><span class="metric-label">Rating</span><span class="metric-value">Strong Buy</span></div>
+                    <p>A critical bottleneck play. HBM3E is essential for every Nvidia H100/B200 chip. Pricing power is at an all-time high.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>CONFIDENTIAL - QUANTITATIVE STRATEGY REPORT // NO REDISTRIBUTION</p>
+            <p>Generated by AI Investment Pipeline v2.0 | Sources: Bloomberg Terminal, yFinance, Proprietary Model 1.1</p>
+        </footer>
+    </div>
+</body>
+</html>

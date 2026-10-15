@@ -1,0 +1,65 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $cm=$wb.Worksheets.Item("Consolidated Model")
+$d=$wb.Worksheets.Item("DCF"); $er=$wb.Worksheets.Item("Expected Returns"); $so=$wb.Worksheets.Item("SOTP")
+$xl.Calculation=-4105
+Write-Output ("estado al entrar: J74='"+[string]$as.Range("J74").Text+"'  J75="+[string]$as.Range("J75").Text+"  J76="+[string]$as.Range("J76").Text)
+
+Write-Output ""
+Write-Output "### Ano de salida: vender WM a 7.9x, variando el ultimo ano completo ###"
+$xl.Calculation=-4135
+$as.Range("J74").Value2="Water Management"
+$as.Range("J76").Value2=[double]7.9
+foreach($y in 2027,2028,2029,2030,2031){
+  $as.Range("J75").Value2=[double]$y
+  $xl.Calculation=-4105; $xl.CalculateFullRebuild()
+  $div=""
+  foreach($c in 12,13,14,15,16,17){ $div+=([string]$cm.Cells.Item(378,$c).Text).PadLeft(9) }
+  Write-Output ("  FY"+[string]$y+"  DCF "+([string]$d.Range("E41").Text).PadLeft(8)+"  IRR "+([string]$er.Range("C54").Text).PadLeft(7)+"  MoIC "+([string]$er.Range("C53").Text).PadLeft(6)+"  | div especial:"+$div)
+  $xl.Calculation=-4135
+}
+
+# ---- nota en SOTP: la desinversion no entra aqui ----
+$xl.Calculation=-4105
+$rowNota=0
+for($r=113;$r -le 122;$r++){
+  $vacia=$true
+  foreach($c in 2..12){ $t=""; try{ $t=[string]$so.Cells.Item($r,$c).Text }catch{}; if($t.Trim() -ne ""){ $vacia=$false } }
+  if($vacia){ $rowNota=$r; break }
+}
+if($rowNota -eq 0){ throw "ABORTO: no encontre fila vacia para la nota en SOTP" }
+$so.Cells.Item($rowNota,3).Value2="Note: read this SOTP with the Divestiture Module switched off. It values the segments that remain and does not add back the sale proceeds."
+$so.Cells.Item($rowNota,3).Font.Italic=$true
+$so.Cells.Item($rowNota,3).Font.Size=9
+Write-Output ("nota agregada en SOTP fila "+$rowNota)
+
+# ---- restaurar: modulo apagado ----
+$xl.Calculation=-4135
+$as.Range("J75").Value2=[double]2029
+$as.Range("J76").Value2=[double]7.9
+$as.Range("J74").ClearContents()
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+
+Write-Output ""
+Write-Output "### ESTADO FINAL ###"
+Write-Output ("  Modulo: J74='"+[string]$as.Range("J74").Text+"' (vacio = apagado)  J75="+[string]$as.Range("J75").Text+"  J76="+[string]$as.Range("J76").Text+"  J77="+[string]$as.Range("J77").Text)
+Write-Output ("  DCF "+[string]$d.Range("E41").Text+" ("+[string]$d.Range("E42").Text+")   SOTP "+[string]$so.Range("D112").Text+"   EPV "+[string]$wb.Worksheets.Item("EPV").Range("E61").Text)
+Write-Output ("  Expected Returns: entrada "+[string]$er.Range("C18").Text+"  MoIC "+[string]$er.Range("C53").Text+"  IRR "+[string]$er.Range("C54").Text)
+Write-Output ("  Checks: balance FY2032 "+[string]$cm.Range("Q168").Text+"   caja FY2032 "+[string]$cm.Range("Q215").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary","Expected Returns"){
+  $s=$wb.Worksheets.Item($nm); $e=0
+  try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot+"    libro: "+[string]$wb.Name)

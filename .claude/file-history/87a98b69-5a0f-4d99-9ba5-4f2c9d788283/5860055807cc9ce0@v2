@@ -1,0 +1,88 @@
+T = {}
+T[27] = """Title: Business content (same as slide 15)
+Life Science business: malic acids; citric acids; gluconic acids; fumaric acids; vitamin C; food additive formulations; other fruit acids (succinic, lactic, tartaric acids); maleic anhydrides; high-purity organic acids.
+Electronic Materials business:
+  Electronic materials: ultra-high-purity colloidal silica.
+  Functional materials: silica nano powder; high-purity organosilica sol; alkyl silicate."""
+T[28] = """Title: Electronic Materials business, FY2025 overview (FY ended March 2026)
+Unit: 100 million yen. Net sales 415.1 (prior 332.1): +83.0, +25.0%. Operating profit 159.2 (prior 131.7): +27.5, +20.9%.
+Net sales, drivers:
+ (+) Higher colloidal silica sales volume
+ (+) Strong demand for AI semiconductors
+ (+) Higher sales volume to China
+ (-) Weak demand for PC and smartphone applications
+Operating profit, drivers:
+ (+) Higher utilization from higher sales
+ (+) High utilization of new production facilities
+ (+) Production efficiency gains
+ (-) Higher depreciation
+ (-) Higher personnel and repair costs from added production lines
+ (-) Higher material costs"""
+T[29] = """Title: Electronic Materials business, FY2025 overview (measures and results)
+FY2025 measure -> FY2025 result
+Kashima Phases I and II, new Kyoto line: start-up and customer qualification -> Kashima Phase I: full operation; Kyoto: qualification completed; Kashima Phase II: construction completed in August
+Respond to leading-edge technology -> Adopted for the N2 generation for TSMC; requirements for the A16/A14 generations confirmed
+Pass cost increases on to prices -> Agreement reached on price increases tied to the next capital investment
+Capture new demand -> Expansion in China: 10% of divisional sales
+Expand high-concentration and high-productivity products -> Higher share of total production volume
+Respond to supply chain risk -> Multiple suppliers of metallic silicon secured
+Launch next-generation products -> Construction started on the mass-production line for Mirarica (TM) hollow silica"""
+T[30] = """Title: Priority measures (Electronic Materials)
+I. Respond to the rapidly expanding semiconductor market
+ 1. Raise production capacity
+  - Early qualification of the new line (Kashima Phase II)
+  - Expand high-concentration and high-productivity products; achieve planned production
+  - Multiple qualification / optimize use of existing equipment / improve maintenance / shorten start-up
+ 2. Initiatives for the next generation
+  - Develop products for leading-edge semiconductors and advanced packaging
+  - Gather information and build a pricing strategy for the next capital investment
+II. Respond quickly and flexibly to changes in the external environment
+  - Pass cost increases on to prices
+  - Respond to supply chain risk and the Middle East situation
+III. Transform the portfolio with new functional materials
+  - Secure adoption of Mirarica (TM) (hollow submicron silica)"""
+T[31] = """Title: I. Responding to the rapidly expanding semiconductor market
+Left chart, semiconductor market (WSTS autumn 2025 forecast): sales (million dollars) and year-on-year growth. Growth: 2022 +3.3%; 2023 -8.2%; 2024 +19.7%; 2025 +22.5%; 2026 forecast +26.3%. Sales roughly 570,000 (2022), 525,000 (2023), 630,000 (2024), 770,000 (2025), 975,000 (2026 forecast).
+Right chart, CMP slurry market and sales target (source: Fuji Chimera Research Institute data, processed by the company): CMP slurry market (thousand tons) vs Fuso net sales (100 million yen), 2022 to 2030.
+Callout: CMP slurry volume CAGR 5 to 6%. Fuso net sales: CAGR 10% or more expected.
+Overlaid line: technology roadmap in nanometers (source: imec): 3 nm (2023), 2 nm (2025), 1.4 nm (2027), 1 nm (2029)."""
+T[32] = """Title: I. Responding to the rapidly expanding semiconductor market (production capacity)
+Chart: production capacity index (2018 and earlier = 100). Capacity stepped up to about 125 in 2019, was flat to 2022, then rose with new plants to about 250 by 2030.
+Photos mark the Kashima Phase I, new Kyoto line and Kashima Phase II facilities.
+Callout: next capacity increase, completion scheduled February 2029, 1.2 times current capacity.
+Qualification timeline for existing additions (2023 to 2027, by half year; star = start):
+ - Kashima Phase I: qualification to prototype in 2023; mass production system afterwards. Status: FY2025 full operation.
+ - Kyoto new line: star in 2H 2024. Status: early qualification completed at the end of FY2025.
+ - Kashima Phase II: star in 2H 2025. Status: completed August 2025; qualification under evaluation."""
+T[33] = """Title: I-1. Expansion of high-concentration and high-productivity products
+(1) Securing production capacity
+ - By raising silica particle output per unit time and the number of silica particles per unit volume (about 1.5 times the conventional product), the number of lots that can be charged can be increased.
+Diagram: schematic from production to shipment of conventional vs high-concentration products. Higher silica concentration means more silica transported per shipment and about 1.5 times the product made per batch (customer adds dilution/adjustment). Effect on Fuso: more lots can be charged, and capacity is freed for other products.
+Benefits: higher production capacity, better transport efficiency, lower environmental burden."""
+T[34] = """Title: I-1. Expansion of high-concentration and high-productivity products (cont.)
+(2) High utilization of new production equipment (shorter start-up)
+ - Conventional line cleaning: several months after equipment completion.
+ - Improved cleaning methods allow a much shorter cleaning period (chart shows metal impurity levels reaching mass-production level faster; cleaning period down 75%).
+ - This shortens customer qualification activities and enables earlier mass production.
+(3) Production efficiency through automation (countermeasure to future labor shortage)
+ - Smart-factory conversion of silica facilities over the next five years.
+ - Relieve the burden on people through mechanization so that one person can manage twice as much equipment as today.
+ - Promote the introduction of the three A's: automated analysis, automated sampling and artificial intelligence.
+Diagram: today, people take samples, analyze and make all judgments under DCS control; after five years, machines sample and analyze and AI assists human judgment."""
+T[35] = """Title: I-2. Initiatives for the next generation. Development of new products for leading-edge semiconductors
+[Advanced packaging]: leading-edge packaging technology in which several semiconductor chips are arranged in three dimensions to shorten wiring between chips and reduce signal delay. Diagram: logic chip and HBM stacks on an interposer and substrate. Note on HBM structure change: with hybrid bonding, chips are joined directly to speed up signals.
+Rising demands on CMP:
+ 1. The film to be polished is thicker, so a higher polishing rate is needed -> developing dense ultra-high-purity colloidal silica
+ 2. Higher flatness accuracy at the bonding surface -> expanding the product line-up with fewer coarse and fine particles
+Possible CMP applications: wafer backside polishing (Si substrate); metal layers (Cu film) and TSV (through-silicon vias); polishing of new conductors such as Ru and Mo; resin layers.
+Chart: particle size distribution, conventional product vs improved product, with small-particle and large-particle tails reduced."""
+T[36] = """Title: II. Responding quickly and flexibly to changes in the external environment
+1. Price pass-through
+ (1) Burden of future investment: reduce the increase in depreciation by asking customers to bear part of the next capital investment; price increases of 5 to 10% implemented.
+ (2) Continue passing cost increases on to prices: respond to cost increases in energy and raw materials by passing them to selling prices; higher bargaining power from production efficiency and larger purchase volumes.
+2. Supply chain risk
+ - Diversify countries of metallic silicon purchases (increase the share of Malaysia, Brazil and other origins; target of 50% or more by 2030).
+ - Respond to raw material price-rise risk: multiple sourcing, usage reduction.
+3. Middle East situation
+ - Respond to higher fuel and logistics costs; re-examine supply chain risk; reduce consumption of consumables and consider recycling; coordinate information with relevant ministries.
+Charts (made by Fuso from Ministry of Finance trade statistics): Silicon metal import price (yen/kg), 2018 to March 2026: peaked near 900 around 2022 and fell back to roughly 260 by March 2026. LNG import price (yen/ton): peaked near 165,000 around 2022 and is about 85,000 in March 2026."""

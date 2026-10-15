@@ -1,0 +1,65 @@
+﻿$excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+function Retry([scriptblock]$b) { for ($k=0; $k -lt 40; $k++) { try { & $b; return } catch { Start-Sleep -Milliseconds 500 } }; throw "gave up" }
+Retry { $excel.Calculation = -4135 }
+$wb = $excel.Workbooks.Item(1)
+
+$ws = $null
+foreach ($s in $wb.Sheets) { if ($s.Name -eq "Peers") { $ws = $s } }
+if ($ws -eq $null) {
+    $ws = $wb.Sheets.Add([Type]::Missing, $wb.Sheets.Item($wb.Sheets.Count))
+    $ws.Name = "Peers"
+} else { $ws.Cells.Clear() | Out-Null }
+
+$groups = [ordered]@{
+    "ARW.N"   = @("ARW.N","AVT.OQ","SNX.N","3702.TW")
+    "VSXY.N"  = @("VSXY.N","AEO.N","ANF.N","GAP.N")
+    "CAMT.OQ" = @("CAMT.OQ","KLAC.OQ","ONTO.N","NVMI.OQ")
+    "FET.N"   = @("FET.N","NOV.N","OIS.N","TS.N","WHD.N")
+    "GCT.OQ"  = @("GCT.OQ","W.N","AMZN.OQ")
+    "6323.T"  = @("6323.T","6506.T","6383.T","6258.T","AMAT.OQ")
+    "PTEN.OQ" = @("PTEN.OQ","HP.N","NBR.N","LBRT.N","PUMP.N","HAL.N")
+    "3964.T"  = @("3964.T","4732.T","2780.T","9270.T")
+}
+
+$hdr = @("Group","RIC","Name","Rev FY0","Rev FY-1","Rev FQ0","Rev FQ-4","Gross FY0","EBIT FY0","EBITDA FY0","NI FY0","Rev FY1e","Rev FY3e","Rev growth FY0","Rev growth last Q","Gross margin","EBIT margin","EBITDA margin","Net margin","Fwd Rev CAGR FY1-FY3")
+for ($c = 0; $c -lt $hdr.Count; $c++) { Retry { $ws.Cells.Item(1, $c + 1).Value2 = $hdr[$c] } }
+
+$p = "Scale=6 Curn=USD"
+$row = 2
+foreach ($g in $groups.Keys) {
+    foreach ($ric in $groups[$g]) {
+        Retry { $ws.Cells.Item($row, 1).Value2 = $g }
+        Retry { $ws.Cells.Item($row, 2).Value2 = $ric }
+        Retry { $ws.Cells.Item($row, 3).Formula  = "=TR(`$B$row,""TR.CommonName"")" }
+        Retry { $ws.Cells.Item($row, 4).Formula  = "=TR(`$B$row,""TR.F.TotRevBizActiv"",""Period=FY0 $p"")" }
+        Retry { $ws.Cells.Item($row, 5).Formula  = "=TR(`$B$row,""TR.F.TotRevBizActiv"",""Period=FY-1 $p"")" }
+        Retry { $ws.Cells.Item($row, 6).Formula  = "=TR(`$B$row,""TR.F.TotRevBizActiv"",""Period=FQ0 $p"")" }
+        Retry { $ws.Cells.Item($row, 7).Formula  = "=TR(`$B$row,""TR.F.TotRevBizActiv"",""Period=FQ-4 $p"")" }
+        Retry { $ws.Cells.Item($row, 8).Formula  = "=TR(`$B$row,""TR.F.GROSSPROFINDPROPTOT"",""Period=FY0 $p"")" }
+        Retry { $ws.Cells.Item($row, 9).Formula  = "=TR(`$B$row,""TR.F.OPPROFBEFNONRECURINCEXPN"",""Period=FY0 $p"")" }
+        Retry { $ws.Cells.Item($row, 10).Formula = "=TR(`$B$row,""TR.F.EBITDA"",""Period=FY0 $p"")" }
+        Retry { $ws.Cells.Item($row, 11).Formula = "=TR(`$B$row,""TR.F.NETINCAFTERMININTR"",""Period=FY0 $p"")" }
+        Retry { $ws.Cells.Item($row, 12).Formula = "=TR(`$B$row,""TR.RevenueMeanEstimate"",""Period=FY1 $p"")" }
+        Retry { $ws.Cells.Item($row, 13).Formula = "=TR(`$B$row,""TR.RevenueMeanEstimate"",""Period=FY3 $p"")" }
+        Retry { $ws.Cells.Item($row, 14).Formula = "=IFERROR(D$row/E$row-1,""n.a."")" }
+        Retry { $ws.Cells.Item($row, 15).Formula = "=IFERROR(F$row/G$row-1,""n.a."")" }
+        Retry { $ws.Cells.Item($row, 16).Formula = "=IFERROR(H$row/D$row,""n.a."")" }
+        Retry { $ws.Cells.Item($row, 17).Formula = "=IFERROR(I$row/D$row,""n.a."")" }
+        Retry { $ws.Cells.Item($row, 18).Formula = "=IFERROR(J$row/D$row,""n.a."")" }
+        Retry { $ws.Cells.Item($row, 19).Formula = "=IFERROR(K$row/D$row,""n.a."")" }
+        Retry { $ws.Cells.Item($row, 20).Formula = "=IFERROR((M$row/L$row)^(1/2)-1,""n.a."")" }
+        if ($ric -eq $g) { Retry { $ws.Range("A${row}:T${row}").Font.Bold = $true } }
+        $row++
+    }
+    $row++
+}
+$last = $row
+$ws.Range("D2:M$last").NumberFormat = "#,##0"
+$ws.Range("N2:T$last").NumberFormat = "0.0%"
+$ws.Range("A1:T1").Font.Bold = $true
+$ws.Columns.Item(3).ColumnWidth = 34
+Write-Output "Rows written up to $last"
+
+Retry { $excel.Calculation = -4105 }
+Write-Output 'Calc automatic'
+

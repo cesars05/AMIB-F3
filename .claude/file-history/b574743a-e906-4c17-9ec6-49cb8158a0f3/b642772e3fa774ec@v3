@@ -1,0 +1,21 @@
+---
+name: project_aurex-pf-deadline-and-state
+description: "Aurex Capital final project (Tec PE course) — deadlines, folder layout, autonomy mandate, and the verified-pipeline findings that change the portfolio"
+metadata:
+  node_type: memory
+  type: project
+  originSessionId: b574743a-e906-4c17-9ec6-49cb8158a0f3
+  modified: 2026-10-10T06:09:01.665Z
+---
+
+Proyecto final "Comité de LPs" del curso Capital Privado y Capital Emprendedor (Tec de Monterrey, Prof. Francisco Román Rincón, frincon@tec.mx). Fondo ficticio AUREX CAPITAL (Equipo #5, Gpo. 602, 6 personas): $100M USD, México, energía/eficiencia, crecimiento, tickets $2–10M.
+
+**Deadlines:** Memorándum (4–6 págs) + Modelo Excel → domingo 11-oct-2026 11:59 pm. Deck (10–12 láminas) + defensa: guía repite 11-oct; D5/clase hablan de 14–15 oct (sin confirmar).
+
+**Mandato del usuario (9-oct noche):** dejó trabajando en autonomía hasta la mañana; orden: investigación → memorándum → Excel → PPT; modelo canónico "búscalo tú" (no tomar v1/v2 como válidos); parámetros $100M/México/crecimiento/$2–10M confirmados; datos 2026 oficiales, etiquetar ≤2025. Pendientes que NO puedo hacer yo: credenciales reales y foto del equipo, posible conflicto de interés familiar (D2), confirmar fechas/equipo de 6/nombre de archivos con el profesor, enviar correo.
+
+**Folder:** `C:\Users\cesar\Downloads\PE` en 00_LEEME_WORKFLOW.md + carpetas 01–08 y 99_Archivo con `_LEEME.md`. Entregables finales en `08_Proyecto_Final/entregables/`. Dossiers en `08_Proyecto_Final/fuentes_investigacion/`, assets con `.fuente.txt` en `assets/`.
+
+**Hallazgos de verificación (10-oct):** Niko = solar financiado para hogares/pyme (seed $3.3M mar-2024 post $16M; $8M equity QED + $15M deuda ene-2025; sin valuación posterior). Quartux = AINDA >$50M (cierre 18-mar-2026), cupo institucional ocupado. Pireos = autofinanciada, mejor encaje, riesgo grupo Walmart >30%. FAZT: 31 estaciones todas en Soriana, sin valuación pública. Verdigris = californiana sin operación en MX → excluir. Uriel = matriz española; BRM tiene 2 plantas de 1 MW (€4M) → débil. XC y S2G sin financiamiento/valuación públicos; las valuaciones de D3 no tienen sustento. AMEXCAP 1S-2026: I&E ticket promedio ~$262M (7.6B/29 deals), Growth&LBO $8.2B/192 deals; mediana TIR 16.15%.
+
+**Modelo:** builder en scratchpad (build_v3.py + xlkit.py), v3 con Summary/Escenarios/Curva_J/Fuentes, formato Icarus en verdes; Excel COM disponible para recalcular. Siempre copia v3, nunca sobreescribir v1/v2.

@@ -1,0 +1,59 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+$sm=T { $wb.Worksheets.Item("Segment Model") }
+function V($r,$c){ $v=$null; try{ $v=$sm.Cells.Item($r,$c).Value2 }catch{}; if($v -eq $null -or -not ($v -is [double])){ return 0.0 }; return [double]$v }
+# columnas: D=4 FY2019 ... K=11 FY2026
+$rev=@{13="Water Management";14="Building Envelope";15="Housebuilding Products"}
+$cpx=@{13=133;14=134;15=135}
+$dna=@{13=30;14=31;15=32}
+Write-Output "### Ingresos por segmento ###"
+$h="  "+"".PadRight(24)
+for($c=4;$c -le 11;$c++){ $h+=([string](T { $sm.Cells.Item(9,$c).Text })).PadLeft(9) }
+Write-Output $h
+foreach($r in 13,14,15){
+  $v=""
+  for($c=4;$c -le 11;$c++){ $v+=("{0:N0}" -f (V $r $c)).PadLeft(9) }
+  Write-Output ("  "+$rev[$r].PadRight(24)+$v)
+}
+Write-Output ""
+Write-Output "### Capex total por segmento ###"
+foreach($r in 13,14,15){
+  $v=""
+  for($c=4;$c -le 11;$c++){ $v+=("{0:N0}" -f (V $cpx[$r] $c)).PadLeft(9) }
+  Write-Output ("  "+$rev[$r].PadRight(24)+$v)
+}
+Write-Output ""
+Write-Output "### D&A por segmento ###"
+foreach($r in 13,14,15){
+  $v=""
+  for($c=4;$c -le 11;$c++){ $v+=("{0:N0}" -f (V $dna[$r] $c)).PadLeft(9) }
+  Write-Output ("  "+$rev[$r].PadRight(24)+$v)
+}
+Write-Output ""
+Write-Output "### INTENSIDAD bajo distintas bases (capex desde base+1 hasta FY2026) ###"
+$bases=@{}
+$bases["FY2019"]=4
+$bases["FY2020"]=5
+$bases["FY2021"]=6
+$bases["FY2022"]=7
+Write-Output ("  "+"base".PadRight(8)+"anios".PadLeft(7)+"segmento".PadLeft(26)+"capex ac.".PadLeft(11)+"D&A ac.".PadLeft(11)+"cap.neto".PadLeft(11)+"D ingr.".PadLeft(11)+"intens.".PadLeft(11))
+foreach($b in @("FY2019","FY2020","FY2021","FY2022")){
+  $cb=[int]$bases[$b]
+  $n=11-$cb
+  foreach($r in 13,14,15){
+    $cap=0.0; $da=0.0
+    for($c=$cb+1;$c -le 11;$c++){ $cap+=(V $cpx[$r] $c); $da+=(V $dna[$r] $c) }
+    $net=$cap-$da
+    $dr=(V $r 11)-(V $r $cb)
+    $it=$(if([math]::Abs($dr) -lt 1){"n/a"}else{("{0:N1}%" -f ($net/$dr*100))})
+    Write-Output ("  "+$b.PadRight(8)+([string]$n).PadLeft(7)+$rev[$r].PadRight(26)+("{0:N0}" -f $cap).PadLeft(11)+("{0:N0}" -f $da).PadLeft(11)+("{0:N0}" -f $net).PadLeft(11)+("{0:N0}" -f $dr).PadLeft(11)+$it.PadLeft(11))
+  }
+  Write-Output ""
+}

@@ -1,0 +1,32 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$wb=$null; $su=$null
+for($t=0;$t -lt 40;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $x=$w.Worksheets.Item("Summary"); if($x -ne $null){ $wb=$w; $su=$x } } }
+  }catch{}
+  if($su -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+$so=T { $wb.Worksheets.Item("SOTP") }
+if([string](T { $so.Cells.Item(107,2).Text }) -ne "Total Enterprise Value"){ throw "SOTP r107 no es Total Enterprise Value" }
+$xl.Calculation=-4135
+foreach($c in "D","E","F"){
+  $f="=+IFERROR((SOTP!`$D`$107*DCF!`$P`$16/"+$c+"`$24-DCF!`$E`$37)/DCF!`$E`$39*100,0)"
+  T { $su.Range($c+"18").Formula=$f }
+}
+T { $su.Range("H18").Value2="WACC 12/11/10%  -  aproximado, escalando el EV del SOTP.  Su rango propio saldría del múltiplo de salida" }
+$xl.Calculation=-4105
+T { $xl.CalculateFullRebuild() }; T { $xl.CalculateFullRebuild() }
+$wb.Save()
+Write-Output ("        "+"".PadRight(30)+"Low".PadLeft(10)+"Target".PadLeft(10)+"High".PadLeft(10)+"vs 235p".PadLeft(10))
+foreach($r in 14,15,16,17,18,20,21){
+  $lab=[string](T { $su.Cells.Item($r,3).Text }); if($lab.Trim() -eq ""){ continue }
+  $line="  r"+([string]$r).PadRight(4)+$lab.PadRight(30)
+  foreach($c in 4,5,6,7){ $line+=([string](T { $su.Cells.Item($r,$c).Text })).PadLeft(10) }
+  Write-Output $line
+}
+Write-Output ""
+Write-Output ("  CHECK  formula="+[string](T { $su.Range("D28").Text })+"   DCF!E41="+[string](T { $su.Range("E28").Text })+"   dif="+[string](T { $su.Range("F28").Text }))
+Write-Output ("  SOTP metodo="+[string](T { $so.Range("B7").Text })+"   EV="+[string](T { $so.Range("D107").Text })+"   implied="+[string](T { $so.Range("D112").Text }))
+$e=0; try{ $e=[int]$su.UsedRange.SpecialCells(-4123,16).Count }catch{}
+Write-Output ("  errores en Summary: "+$e)

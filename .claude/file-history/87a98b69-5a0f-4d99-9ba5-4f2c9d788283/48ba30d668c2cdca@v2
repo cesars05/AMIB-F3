@@ -1,0 +1,121 @@
+T = {}
+T[1] = """Title: FY March 2026 (FY03/2026) Financial Results Briefing
+Date: May 15, 2026. Tokyo Stock Exchange Prime Market (4368)
+Company: FUSO CHEMICAL CO., LTD."""
+T[2] = """Title: Contents
+I. FY03/2026 results overview ... Director Hiroyuki Ito (伊藤 裕之)
+II. Business overview
+   - Life Science business ... Senior Managing Director Haruo Masauji (政氏 晴生; reading of given name approximate)
+   - Electronic Materials business ... Director Genki Sugimoto (椙本 源樹; reading approximate)
+III. FY03/2027 earnings forecast ... President and Representative Director Shinichi Sugita (杉田 真一)
+IV. New Medium-Term Management Plan (FY2026 to FY2030) ... Managing Director Atsushi Fujioka (藤岡 篤)
+V. Q&A"""
+T[3] = """Section divider: I. FY03/2026 Results Overview"""
+T[4] = """Title: FY03/2026 results overview
+Banner: Net sales and operating profit before depreciation reached record highs.
+Table (unit: 100 million yen). Columns: Actual | vs prior year (prior year, change, % change) | vs initial plan (plan, change, %) | vs revised plan (plan, change, %)
+Net sales: 769.2 | 695.0, +74.2, +10.7% | 727.0, +42.2, +5.8% | 755.0, +14.2, +1.9%
+Operating profit: 188.5 | 162.3, +26.2, +16.1% | 140.0, +48.5, +34.6% | 175.0, +13.5, +7.7%
+Ordinary profit: 195.7 | 165.6, +30.1, +18.2% | 138.0, +57.7, +41.8% | 176.0, +19.7, +11.2%
+Net income: 143.1 | 116.2, +26.8, +23.1% | 94.0, +49.1, +52.3% | 122.0, +21.1, +17.3%
+Operating profit before depreciation (EBITDA-type): 297.8 | 245.3, +52.4, +21.4% | 255.0, +42.8, +16.8% | 284.0, +13.8, +4.9%
+EPS: 405.86 yen | 329.68 yen, +76.17, +23.1% | 266.61 yen, +139.24, +52.2% | 346.04 yen, +59.81, +17.3%
+Note: EPS is before the stock split."""
+T[5] = """Title: Segment net sales and operating profit (vs prior year)
+Unit: 100 million yen. Columns: Actual | prior year | change | % change
+Life Science: Net sales 354.1 | 362.8 | -8.7 | -2.4%
+Life Science: Operating profit 53.0 | 52.8 | +0.1 | +0.4%
+Electronic Materials: Net sales 415.1 | 332.1 | +83.0 | +25.0%
+Electronic Materials: Operating profit 159.2 | 131.7 | +27.5 | +20.9%
+Adjustments (corporate): -23.8 | -22.3 | -1.5 | n/a
+Operating profit (consolidated): 188.5 | 162.3 | +26.2 | +16.1%"""
+T[6] = """Title: Net sales by segment
+Unit: 100 million yen. Fiscal years ending March.
+FY03/2021 | FY03/2022 | FY03/2023 | FY03/2024 | FY03/2025 | FY03/2026
+Total net sales: 422 | 557 | 684 | 589 | 695 | 769
+Life Science: 234 | 314 | 378 | 341 | 362 | 354
+Electronic Materials: 187 | 243 | 306 | 248 | 332 | 415
+Chart: stacked bars, Life Science (blue) and Electronic Materials (green). Electronic Materials overtakes Life Science in FY03/2026."""
+T[7] = """Title: Operating profit by segment
+Unit: 100 million yen.
+FY03/2021 | FY03/2022 | FY03/2023 | FY03/2024 | FY03/2025 | FY03/2026
+Operating profit (total): 96 | 150 | 189 | 110 | 162 | 188
+Life Science: 33 | 49 | 74 | 56 | 52 | 53
+Electronic Materials: 76 | 116 | 133 | 75 | 131 | 159
+Adjustments (corporate): -13 | -15 | -18 | -20 | -22 | -23
+Right chart, operating margin:
+Electronic Materials: 40.7% | 47.7% | 43.7% | 30.3% | 39.7% | 38.4%
+Life Science: 14.1% | 15.7% | 19.6% | 16.5% | 14.6% | 15.0%"""
+T[8] = """Title: Factors in the change in net income, FY03/2026
+Unit: 100 million yen (waterfall chart).
+Net income FY03/2025: 116.2
+Net sales: +74.2
+Cost of sales, excluding depreciation: -14.5
+Cost of sales, depreciation: -26.2
+SG&A: -7.2
+Non-operating income and expenses: +3.9
+Extraordinary income and losses: +2.4
+Income taxes, etc.: -5.7
+Net income FY03/2026: 143.1"""
+T[9] = """Title: Overseas sales
+Left chart (unit: 100 million yen), by region, FY03/2021 | 22 | 23 | 24 | 25 | 26:
+Japan: 238 | 295 | 340 | 312 | 343 | 345
+Asia: 111 | 149 | 213 | 170 | 235 | 295
+North America: 69 | 101 | 114 | 99 | 108 | 121
+Other: 3 | 11 | 16 | 6 | 8 | 7
+Overseas sales ratio: 43.6% | 47.0% | 50.3% | 47.0% | 50.6% | 55.1% (highlighted)
+Right donut charts, share of sales:
+FY03/2026: Japan 45%, Asia 38%, North America 16%, Other 1%
+FY03/2021: Japan 57%, Asia 26%, North America 16%, Other 1%"""
+T[10] = """Title: Assets, liabilities and net assets
+Unit: 100 million yen. Comparison FY03/2025 vs FY03/2026.
+Assets: current assets 670.5 -> 784.7; fixed assets 744.4 -> 737.8.
+Liabilities and net assets: current liabilities 184.8 -> 198.4; fixed liabilities 189.6 -> 151.9; net assets 1,040.4 -> 1,172.1.
+Current assets (+114 vs prior year-end): cash and deposits +97; notes and accounts receivable +5; consumption tax receivable +5.
+Fixed assets (-7): buildings and structures +60; machinery and vehicles +69; intangible assets +14; construction in progress -153.
+Current liabilities (+14): accounts payable -2; current portion of long-term debt +9; accrued equipment payables -7; income taxes payable +12.
+Fixed liabilities (-37): long-term borrowings -40.
+Net assets (+131): retained earnings +115; foreign currency translation adjustment +16."""
+T[11] = """Title: Cash flow
+Unit: 100 million yen. FY03/2023 | 24 | 25 | 26
+Operating cash flow: 139 | 70 | 227 | 247
+Investing cash flow: -134 | -185 | -205 | -110
+Financing cash flow: -21 | +176 | -24 | -59
+Cash and cash equivalents, year-end balance: 223 | 294 | 292 | 378
+Main components (FY03/2026):
+Operating: income before taxes +195; depreciation +109; income taxes paid -41.
+Investing: purchase of tangible fixed assets -73; purchase of intangible fixed assets -27.
+Financing: repayment of long-term borrowings -31; dividends paid -27."""
+T[12] = """Title: Capital expenditure, depreciation and R&D expenses
+Unit: 100 million yen. FY03/2021 | 22 | 23 | 24 | 25 | 26
+Capital expenditure: 18.9 | 124.9 | 208.3 | 142.9 | 174.9 | 107.8
+Depreciation (including goodwill amortization): 50.2 | 44.5 | 43.3 | 71.6 | 83.0 | 109.3
+R&D expenses: 6.8 | 6.8 | 8.4 | 8.5 | 9.2 | 10.9"""
+T[13] = """Title: Operating profit before depreciation
+Unit: 100 million yen. FY03/2021 | 22 | 23 | 24 | 25 | 26
+Operating profit: 96.3 | 150.3 | 189.3 | 110.8 | 162.3 | 188.5
+Operating profit before depreciation: 146.5 | 194.8 | 232.6 | 182.4 | 245.3 | 297.8
+Operating margin: 23% | 27% | 28% | 19% | 23% | 25%
+Margin before depreciation: 35% | 35% | 34% | 31% | 35% | 39%"""
+T[14] = """Section divider: II. Business overview. Life Science Division"""
+T[15] = """Title: Business content
+Life Science business: malic acids; citric acids; gluconic acids; fumaric acids; vitamin C; food additive formulations; other fruit acids (succinic, lactic and tartaric acids); maleic anhydrides; high-purity organic acids.
+Electronic Materials business:
+  Electronic materials: ultra-high-purity colloidal silica.
+  Functional materials: high-purity organosilica sol; silica nano powder; alkyl silicate.
+Photos show end uses: noodles, toothpaste, ice pops, cod roe (Life Science); AI, data-center servers, laptops and smartphones, hard disk drive (Electronic Materials)."""
+T[16] = """Title: Life Science business, FY2025 overview (FY ended March 2026)
+Unit: 100 million yen. Net sales 354.1 (prior 362.8): -8.7, -2.4%. Operating profit 53.0 (prior 52.8): +0.1, +0.4%.
+Net sales, drivers:
+ (+) Higher volume of gluconic acids to the US
+ (+) Higher overseas sales of malic acid
+ (+) Growth of formulations at Fuso Thailand
+ (-) Lower volume of vitamin C for pharmaceuticals
+ (-) Price concessions to maintain fumaric acid share
+ (-) Loss of formulations business to low-priced products in China
+Operating profit, drivers:
+ (+) Higher utilization at the Kashima site
+ (+) Price correction for domestic malic acid
+ (+) Cost improvement in petrochemical-derived products
+ (-) Higher purchase prices
+ (-) Lower selling prices of citric acid, vitamin C and others due to intensified competition"""

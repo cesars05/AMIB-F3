@@ -1,0 +1,492 @@
+# ---- continuation of build.py (exec'd in same namespace) ----
+
+# =====================================================================
+# 15  KPIs
+s = S[14]
+set_text_keep(ph(s, 1), 'Double-digit EBITDA growth and a 610 bps margin gain despite lower reported sales')
+set_text_keep(ph(s, 14), 'Ingevity, Q2 2026 Earnings Release (Form 8-K)')
+t = [x for x in s.shapes if x.has_table][0].table
+delete_col(t, 1)
+kpi = [('$ in millions', 'Q2 25', 'Q2 26', 'YoY Change'),
+       ('Net Sales', '331.5', '314.1', '-5.2%'),
+       ('Adj. EBITDA', '101.0', '115.0', '+13.9%'),
+       ('Adj. EBITDA Margin', '30.5%', '36.6%', '+610 bps'),
+       ('Adj. Diluted EPS', '$1.22', '$1.74', '+42.6%'),
+       ('Perf. Materials Margin', '52.6%', '53.6%', '+100 bps'),
+       ('Free Cash Flow¹', '66.8', '89.1', '+33.4%'),
+       ('Net Leverage', '3.0x', '2.5x', '-0.5x')]
+for r, row in enumerate(kpi):
+    for c, v in enumerate(row):
+        cell_text(t.cell(r, c), v)
+fill_tf(by_name(s, 'TextBox 14'), [
+    P('**Sales decline is perimeter, not demand:** Road Markings left the portfolio on April 15; ##excluding it, net sales grew +5%##, with Performance Materials +4% and APT +14%.', size=12, bullet=True, algn='just'),
+    P('**Mix and pricing lift margins:** a richer hybrid mix and annual pricing in Performance Materials, plus !!surcharges and competitor outages in APT!!, drove a 610 bps adj. EBITDA margin gain; part of the APT upside may not repeat.', size=12, bullet=True, algn='just', spcBef=10),
+    P('**Cash conversion stays strong:** excluding the !!$113.2M BASF settlement!!, FCF rose to $89.1M, funding ~$35M of buybacks while leverage fell to 2.5x.', size=12, bullet=True, algn='just', spcBef=10),
+    P('¹ Q2 26 free cash flow excludes the $113.2M litigation settlement payment.', size=9, italic=True, spcBef=14),
+])
+
+# =====================================================================
+# 17  Stock performance -> blank
+s = S[16]
+for sh in list(s.shapes):
+    if sh.shape_type == 13: remove_shape(sh)
+set_text_keep(ph(s, 1), ' ')
+
+# =====================================================================
+# 18  Divider
+set_text_keep(ph(S[17], 11), 'Ingevity Corporation')
+
+# =====================================================================
+# 19-23  Financial statements from live model
+fill_statement(S[18], 30, 46, [21, 22], ['CAGR 2021-2025', 'CAGR 2025-2028'])
+fill_statement(S[19], 53, 81, [22], ['Average 2026-2028'])
+fill_statement(S[20], 85, 117, [22], ['Average 2026-2028'])
+fill_statement(S[21], 145, 167, [], [])
+fill_statement(S[22], 120, 140, [], [])
+for i in range(18, 23):
+    if ph(S[i], 14) is not None and not ph(S[i], 14).text_frame.text.strip():
+        ph(S[i], 14).text_frame.text = 'LSEG Workspace, Aztlan Industrials Model'
+
+# 24 WACC
+t = [x for x in S[23].shapes if x.has_table][0].table
+w = {'g (Growth)': dcf('K12'), 'Tax rate': dcf('K13'), 'WACC': dcf('K16'), 'Target Debt/Capital': dcf('K17'),
+     'Cost of Equity': dcf('K18'), 'Cost of Debt': dcf('K19')}
+w2 = {'Ke': dcf('M12'), 'ERP': dcf('M14'), 'Kd': dcf('M20'), 'Rf': dcf('M21'), 'Default Spread': dcf('M22')}
+for r in range(len(t.rows)):
+    l0 = t.cell(r, 0).text.strip(); l2 = t.cell(r, 2).text.strip()
+    if l0 in w and t.cell(r, 1).text.replace('\xa0', '').strip():
+        cell_text(t.cell(r, 1), f'{w[l0] * 100:.1f}%')
+    if l2 in w2:
+        cell_text(t.cell(r, 3), f'{w2[l2] * 100:.1f}%')
+    if l2.startswith('Rf ('):
+        cell_text(t.cell(r, 2), 'Rf (5 year bond)'); cell_text(t.cell(r, 3), f"{dcf('M13') * 100:.1f}%")
+    if l2 == 'Relevered Beta':
+        cell_text(t.cell(r, 2), 'Levered Beta'); cell_text(t.cell(r, 3), f"{dcf('M17'):.2f}")
+tbox(S[23], 3.75, 6.25, 5.83, 0.4, [P('Tax rate set to the 2026-2028 consensus average (20.5%); the FY2025 effective rate (-5.8%) was distorted by impairments.', size=9, italic=True)])
+
+# 25 DCF projections (consensus FY1-FY3 + TV)
+t = [x for x in S[24].shapes if x.has_table][0].table
+delete_col(t, 5); delete_col(t, 4)
+def dcol(c):
+    return dict(sales=dcf(c + '11'), gr=(dcf(c + '12') or None), ebitda=dcf(c + '13'), m=dcf(c + '14'), ebit=dcf(c + '15'),
+                em=dcf(c + '16'), taxes=dcf(c + '17'), tax=dcf(c + '18'), nopat=dcf(c + '19'), da=dcf(c + '20'),
+                capex=dcf(c + '21'), wc=dcf(c + '22'), fcff=dcf(c + '23'), pv=dcf(c + '24'), pvf=dcf(c + '25'), t=dcf(c + '26'))
+cols = [dcol('C'), dcol('D'), dcol('E'), dcol('H')]
+cols[0]['gr'] = None; cols[3]['gr'] = None
+fill_dcf_proj(S[24], cols, ['Dec 2026', 'Dec 2027', 'Dec 2028', 'Terminal Value'], ['FY1', 'FY2', 'FY3', ''])
+
+# 26 DCF valuation
+base = dict(ev=dcf('E29'), pvcf=dcf('E30'), pvtv=dcf('E31'), TV=dcf('E32'), eq=dcf('E33'), debt=dcf('E34'), cash=dcf('E35'),
+            nd=dcf('E36'), sh=dcf('E38'), px=dcf('E39'), ip=dcf('E40'), up=dcf('E41'))
+fill_dcf_val(S[25], base)
+
+# 27 Sensitivities (from model data tables)
+tabs = [x.table for x in S[26].shapes if x.has_table]
+tg = [x for x in tabs if x.cell(0, 0).text.startswith('Upside')][0]
+tm = [x for x in tabs if x.cell(0, 0).text.startswith('Terminal')][0]
+wacc_h = [dcf(c + '30') for c in 'IJKLM']
+g_h = [dcf('H%d' % r) for r in range(31, 36)]
+grid_g = [[dcf(c + str(r)) for c in 'IJKLM'] for r in range(31, 36)]
+fill_sens(tg, f"{base['up']:.1f}", wacc_h, g_h, grid_g)
+mh = [dcf(c + '39') for c in 'IJKLM']
+w_h = [dcf('H%d' % r) for r in range(40, 45)]
+grid_m = [[dcf(c + str(r)) for c in 'IJKLM'] for r in range(40, 45)]
+fill_sens(tm, f"{base['up']:.1f}", mh, w_h, grid_m)
+
+# 28-30 Implied DCF
+Ri = IM.R
+rows_i = [dict(r) for r in Ri['rows']]
+tv = dict(Ri['tv']); tv['gr'] = None
+rows_i[0]['gr'] = None
+fill_dcf_proj(S[27], rows_i + [tv], ['Dec %d' % y for y in range(2026, 2036)] + ['Terminal Value'],
+              ['FY%d' % i for i in range(1, 11)] + [''])
+imp = dict(ev=Ri['ev'], pvcf=Ri['pvcf'], pvtv=Ri['pvtv'], TV=Ri['TV'], eq=Ri['eq'], debt=IM.debt, cash=IM.cash, nd=IM.nd,
+           sh=IM.sh, px=IM.px, ip=Ri['ip'], up=0.0)
+fill_dcf_val(S[28], imp)
+tabs = [x.table for x in S[29].shapes if x.has_table]
+tg = [x for x in tabs if x.cell(0, 0).text.startswith('Upside')][0]
+tm = [x for x in tabs if x.cell(0, 0).text.startswith('Terminal')][0]
+tr = [x for x in tabs if x.cell(0, 0).text.startswith('Reven')][0]
+W5 = [IM.wacc + d for d in (-0.02, -0.01, 0, 0.01, 0.02)]
+G5 = [IM.g + d for d in (-0.01, -0.005, 0, 0.005, 0.01)]
+fill_sens(tg, '0.0', W5, G5, [[IM.model(IM.gi, wacc=w_, g=g_)['up'] for w_ in W5] for g_ in G5])
+M5 = [IM.tvm + d for d in (-0.02, -0.01, 0, 0.01, 0.02)]
+fill_sens(tm, '0.0', M5, W5, [[IM.model(IM.gi, wacc=w_, tvm=m_)['up'] for m_ in M5] for w_ in W5])
+RG = [IM.gi + d for d in (-0.02, -0.01, 0, 0.01, 0.02)]
+fill_sens(tr, '0.0', RG, W5, [[IM.model(rg, wacc=w_)['up'] for rg in RG] for w_ in W5])
+cell_text(tr.cell(0, 0), 'Revenue Growth Sensitivity')
+tbox(S[28], 2.38, 6.05, 8.57, 0.5, [P(f'At ${IM.px:.0f}, the market implies revenue declining ~{abs(IM.gi) * 100:.1f}% per year from FY2 to FY10 at consensus margins, a {IM.wacc * 100:.1f}% WACC and {IM.g * 100:.1f}% terminal growth.', size=11, italic=True, color=NAVY, bold=True)])
+
+# 31-32 forward multiples -> blank charts
+for q_ in (S[30], S[31]):
+    for sh in list(q_.shapes):
+        if sh.shape_type == 13: remove_shape(sh)
+
+tbox(S[18], 0.74, 6.62, 11.5, 0.3, [P('Note: 2021-2024 figures include businesses since divested (Industrial Specialties); 2025 onward reflects continuing operations.', size=9, italic=True)])
+for i in range(23, 30):
+    for sh in list(S[i].shapes):
+        if sh.shape_type == 13 and Emu(sh.left).inches < 13.3 and Emu(sh.width).inches < 0.3:
+            remove_shape(sh)
+
+# =====================================================================
+# NEW SLIDES
+# =====================================================================
+NEW = {}
+
+# ---- Divider: Strategic Transformation
+NEW['div'] = divider('Strategic Transformation', 'Building the New Ingevity')
+
+# ---- Business transformation
+s = new_slide("Ingevity's Business Transformation",
+              'From a cyclical, diversified chemicals provider to a focused specialty materials leader',
+              'Ingevity, Strategic Portfolio Update (December 2025)')
+NEW['transform'] = s
+stages = [
+    ('Ingevity Pre-2023', 'Diversified chemicals & materials', GREY,
+     ['Cyclical, CTO-linked end markets', 'Complex portfolio with a larger revenue base'],
+     [('Perf. Chemicals', 0.52, DGREEN), ('Perf. Materials', 0.33, PURPLE), ('APT', 0.15, STEEL)], '~25%'),
+    ('Ingevity Today (2025)', 'Specialty materials & chemicals', STEEL,
+     ['Repositioning out of Industrial Specialties', 'Shifting to simpler, more stable end markets'],
+     [('Perf. Chemicals', 0.40, DGREEN), ('Perf. Materials', 0.47, PURPLE), ('APT', 0.13, STEEL)], '~30%'),
+    ('New Ingevity 2026+', 'Differentiated specialty materials leader', DGREEN,
+     ['Two focused segments with clear core competencies', 'Strong FCF, excess cash returned to shareholders'],
+     [('Perf. Materials', 0.67, PURPLE), ('Pavement Tech.', 0.33, DGREEN)], '36-39%'),
+]
+x0, wcol, gap = 0.58, 3.95, 0.23
+for k, (hd, sub, col, bl, mix, mg) in enumerate(stages):
+    x = x0 + k * (wcol + gap)
+    shp = MSO_SHAPE.PENTAGON if k < 2 else MSO_SHAPE.PENTAGON
+    hb = box(s, x, 1.5, wcol + (0.15 if k < 2 else 0), 0.62, fill=col, shape=shp)
+    text_in(hb, [P(hd, size=14, bold=True, color='FFFFFF'), P(sub, size=10, italic=True, color='FFFFFF')], anchor='ctr')
+    tbox(s, x + 0.05, 2.25, wcol - 0.2, 0.75, [P(b_, size=11, bullet=True, spcBef=2) for b_ in bl])
+    tbox(s, x + 0.05, 3.1, wcol, 0.3, [P('Revenue Mix', size=11, italic=True, bold=True, color=NAVY)])
+    bx = x + 0.05; bw = wcol - 0.2
+    for nm, pct, c in mix:
+        seg = box(s, bx, 3.42, bw * pct, 0.5, fill=c)
+        text_in(seg, [P(f'{pct * 100:.0f}%', size=12, bold=True, color='FFFFFF', algn='ctr')], anchor='ctr')
+        tbox(s, bx, 3.95, bw * pct, 0.45, [P(nm, size=9, algn='ctr')])
+        bx += bw * pct
+    tbox(s, x + 0.05, 4.5, wcol, 0.3, [P('Adj. EBITDA Margin', size=11, italic=True, bold=True, color=NAVY)])
+    mb = box(s, x + 0.05, 4.82, bw, 0.72, fill=LGREEN if k == 2 else LGREY)
+    text_in(mb, [P(mg, size=28, bold=True, color=(DGREEN if k == 2 else CHAR), algn='ctr')], anchor='ctr')
+rb = box(s, 0.58, 5.8, 12.3, 0.95, line='FFFFFF')
+text_in(rb, [
+    P('**Mix shift is the margin story:** Performance Materials rises from 33% to ~67% of revenue while keeping 50%+ segment margins, lifting group EBITDA margin by >10 pts without relying on volume growth.', size=11, bullet=True, algn='just', color='000000'),
+    P('**Exiting crude tall oil (CTO) exposure:** Industrial Specialties drove the 2023-2024 volatility, including a $100M CTO supply contract termination and a $306.6M goodwill impairment in Performance Chemicals.', size=11, bullet=True, algn='just', color='000000', spcBef=3),
+])
+
+# ---- Portfolio simplification (Mitsubishi capital recycling layout)
+s = new_slide('Portfolio Simplification Through Divestitures',
+              'Exits leave the two highest-return businesses; cash goes to debt reduction and buybacks',
+              'Ingevity, Strategic Portfolio Update; Q2 2026 Earnings Release; Water Tower Research Insights Conference (Sep-2026)')
+NEW['divest'] = s
+hl = box(s, 0.58, 1.5, 4.9, 0.45, fill='595959', shape=MSO_SHAPE.PENTAGON)
+text_in(hl, [P('Divestitures & Exits', size=14, bold=True, color='FFFFFF', algn='ctr')], anchor='ctr')
+hr = box(s, 7.98, 1.5, 4.9, 0.45, fill=DGREEN, shape=MSO_SHAPE.PENTAGON)
+hr.rotation = 180
+text_in(hr, [P('Capital Reallocation', size=14, bold=True, color='FFFFFF', algn='ctr')], anchor='ctr')
+# rotated shape flips text; fix by overlaying a text box instead
+text_in(hr, [])
+tbox(s, 7.98, 1.5, 4.9, 0.45, [P('Capital Reallocation', size=14, bold=True, color='FFFFFF', algn='ctr')], anchor='ctr')
+left = [
+    ('Closed Jan-2026', DGREEN, '**Industrial Specialties & North Charleston CTO refinery** sold to Mainstream Pine Products, exiting the crude tall oil-based products that drove the 2023-2024 repositioning charges.'),
+    ('Closed Apr-2026', DGREEN, '**Road Markings (Ozark Materials)** sold to PPG for ##~$63M net proceeds##, after a $109.3M asset impairment in 2025 and a 10% sales decline in Q1 2026 on competitive pressure.'),
+    ('In process', 'C55A11', '**Advanced Polymer Technologies (Capa®)** is in ##advanced stages of the sale process##; FY25 sales of $160.2M at a 20% margin, after a $183.8M goodwill impairment on tariff-hit demand and Chinese competition.'),
+]
+y = 2.1
+for tag, tc, txt in left:
+    b_ = box(s, 0.58, y, 4.9, 1.38, line='595959', lw=0.75)
+    text_in(b_, [P(txt, size=10.5, algn='just', color='000000')], anchor='ctr')
+    b_.text_frame.margin_top = Inches(0.25)
+    tg_ = box(s, 0.68, y - 0.12, 1.35, 0.26, fill=tc)
+    text_in(tg_, [P(tag, size=9, bold=True, color='FFFFFF', algn='ctr')], anchor='ctr')
+    y += 1.55
+picture_fit(s, AS + 'logo_ingevity.png', 5.75, 3.2, 1.95, 0.9)
+line(s, 5.6, 4.35, 7.85, 4.35, 'A6A6A6', 0.75)
+tbox(s, 5.6, 4.42, 2.25, 0.9, [P('**~$1B**', size=20, algn='ctr', color=DGREEN), P('deployable cash through 2027', size=10, italic=True, algn='ctr')])
+right = [
+    '**Debt reduction first:** net leverage down to ##2.5x in Q2 2026 from 4.0x in Q3 2024##, inside the 2.0-2.5x target; the $550M bond matures in November 2028.',
+    '**~$300M of buybacks through 2027:** ##$86.8M repurchased in H1 2026##, with ~$211M of authorization remaining, amplifying per-share growth on a smaller base.',
+    '**Organic growth over M&A:** ~$60M of annual capex; investments in PFAS filtration and energy-storage carbons, with ##acquisitions not a near-term priority##.',
+]
+y = 2.1
+for txt in right:
+    b_ = box(s, 7.98, y, 4.9, 1.38, line=DGREEN, lw=1.0)
+    text_in(b_, [P(txt, size=10.5, algn='just', color='000000')], anchor='ctr')
+    y += 1.55
+
+# ---- New Ingevity 2027 framework
+s = new_slide('New Ingevity: 2027 Financial Framework',
+              'Buybacks turn low-single-digit EBITDA growth into a ~10% EPS CAGR on a smaller base',
+              'Ingevity, Strategic Portfolio Update; Q1-Q2 2026 Earnings Releases; LSEG Workspace consensus')
+NEW['frame'] = s
+panel_header(s, 0.58, 1.4, 6.3, 'Pro Forma 2025E vs. 2027E Targets', 'Excludes Industrial Specialties, APT and Road Markings')
+rows_f = [('$ in millions', 'PF 2025E', '2027E Target', 'Mid CAGR', 'Cons. 2027E*'),
+          ('Revenue', '~900', '940-980', '+3.3%', '1,130'),
+          ('  Performance Materials', '~600', '610-635', '+1.9%', '-'),
+          ('  Pavement Technologies', '~300', '330-345', '+6.1%', '-'),
+          ('Adj. EBITDA', '~335', '350-370', '+3.7%', '413'),
+          ('Adj. EBITDA Margin', '~37%', '36-39%', '-', '36.6%'),
+          ('Adj. EPS', '~$5.25', '$6.25-6.55', '+10.4%', '$6.05'),
+          ('FCF per Share', '~$5.35', '$5.85-6.15', '+5.9%', '-')]
+gf = s.shapes.add_table(len(rows_f), 5, Inches(0.58), Inches(2.2), Inches(6.3), Inches(3.4))
+tt = gf.table
+tblPr = tt._tbl.tblPr
+for k_ in ('firstRow', 'bandRow'): tblPr.set(k_, '0')
+sid = tblPr.find(A + 'tableStyleId')
+if sid is not None: sid.text = '{5940675A-B579-460E-94D1-54222C63F5DA}'  # No Style, Table Grid
+widths = [2.1, 1.0, 1.15, 0.95, 1.1]
+for i, w_ in enumerate(widths): tt.columns[i].width = Inches(w_)
+for r, row in enumerate(rows_f):
+    for c, v in enumerate(row):
+        cell = tt.cell(r, c)
+        bold = r == 0 or row[0] in ('Revenue', 'Adj. EBITDA', 'Adj. EPS')
+        col_ = 'FFFFFF' if r == 0 else ('000000' if c != 2 else NAVY)
+        fill_tf(cell, [P(v, size=11, bold=bold or c == 2, color=col_, algn='l' if c == 0 else 'ctr')])
+        cell.vertical_anchor = MSO_ANCHOR.MIDDLE
+        cell.margin_left = cell.margin_right = Inches(0.05)
+        if r == 0: cell_fill(cell, '221D55')
+        elif r % 2 == 0: cell_fill(cell, LGREY)
+        else: cell_fill(cell, 'FFFFFF')
+tbox(s, 0.58, 5.7, 6.3, 0.35, [P('*LSEG consensus appears to still include APT (implied by the ~$170M revenue gap), so it is not comparable to the New Ingevity perimeter.', size=9, italic=True)])
+panel_header(s, 7.3, 1.4, 5.58, 'Net Debt / Adj. EBITDA', 'Deleveraged by ~1.5 turns in seven quarters')
+cdl = CategoryChartData()
+cdl.categories = ['Q3 24', 'Q4 24', 'Q1 25', 'Q2 25', 'Q3 25', 'Q4 25', 'Q1 26', 'Q2 26']
+cdl.add_series('Net leverage', [4.0, 3.5, 3.3, 3.0, 2.7, 2.6, 2.6, 2.5])
+gch = s.shapes.add_chart(XL_CHART_TYPE.COLUMN_CLUSTERED, Inches(7.3), Inches(2.15), Inches(5.58), Inches(2.9), cdl).chart
+gch.has_legend = False; gch.has_title = False
+pl = gch.plots[0]; pl.gap_width = 60; pl.has_data_labels = True
+pl.data_labels.number_format = '0.0"x"'; pl.data_labels.number_format_is_linked = False
+pl.data_labels.font.size = Pt(10); pl.data_labels.font.bold = True; pl.data_labels.position = XL_LABEL_POSITION.OUTSIDE_END
+ser = pl.series[0]; ser.format.fill.solid(); ser.format.fill.fore_color.rgb = RGBColor.from_string(PURPLE)
+pt = ser.points[7]; pt.format.fill.solid(); pt.format.fill.fore_color.rgb = RGBColor.from_string(LIME)
+va = gch.value_axis; va.visible = False; va.has_major_gridlines = False; va.maximum_scale = 4.8; va.minimum_scale = 0
+ca = gch.category_axis; ca.tick_labels.font.size = Pt(10); ca.format.line.color.rgb = RGBColor.from_string('A6A6A6')
+tgt = box(s, 7.3, 5.15, 5.58, 0.3, fill=LGREEN)
+text_in(tgt, [P('Target range: 2.0x - 2.5x', size=10, bold=True, color=DGREEN, algn='ctr')], anchor='ctr')
+rb = box(s, 7.3, 5.55, 5.58, 1.2, line='FFFFFF')
+text_in(rb, [P('**Per-share compounding:** EBITDA grows only ~4% a year to 2027, but ##~$300M of buybacks (~12% of market cap)## and lower interest expense lift the EPS CAGR to ~10%+.', size=11, bullet=True, algn='just', color='000000')])
+
+# ---- Performance Materials: EVAP mechanism
+s = new_slide('Performance Materials: Carbon Inside the Fuel System',
+              'Evaporative emission canisters capture fuel vapors, and tighter standards raise content per vehicle',
+              'Ingevity, 2025 Investor Overview')
+NEW['evap'] = s
+tbox(s, 0.58, 1.45, 12.3, 0.62, [P('**Ingevity’s hardwood-based activated carbon has a large, flexible pore structure** that captures gasoline vapors while the car is idle and releases them to be burned when the engine restarts, **saving an estimated 8M+ gallons of gasoline per day.** Most competitors’ micro-pore carbons trap vapors instead, wasting fuel.', size=12, bullet=True, algn='just')])
+flow = [('Fuel Tank', '7F7F7F'), ('Gasoline Vapors', '7F7F7F'), ('Carbon Canister', PURPLE), ('Purge Valve', '7F7F7F'), ('Engine', '7F7F7F')]
+x = 0.58
+for k, (nm, c) in enumerate(flow):
+    wdt = 2.35 if k == 2 else 2.2
+    b_ = box(s, x, 2.3, wdt, 0.7, fill=c, shape=MSO_SHAPE.PENTAGON if k == 0 else MSO_SHAPE.CHEVRON)
+    text_in(b_, [P(nm, size=13, bold=True, color='FFFFFF', algn='ctr')], anchor='ctr')
+    x += wdt + 0.08
+tbox(s, 4.9, 3.05, 2.6, 0.3, [P('Ingevity content', size=11, bold=True, italic=True, color=PURPLE, algn='ctr')])
+picture_fit(s, AS + 'canister.png', 0.7, 3.45, 2.5, 1.8)
+picture_fit(s, AS + 'pellets.png', 3.35, 3.5, 1.6, 1.3)
+tbox(s, 3.2, 4.8, 1.9, 0.3, [P('Pelletized carbon', size=9, italic=True, algn='ctr')])
+picture_fit(s, AS + 'honeycomb.png', 5.15, 3.45, 1.7, 1.35)
+tbox(s, 5.05, 4.8, 1.9, 0.3, [P('Honeycomb scrubber', size=9, italic=True, algn='ctr')])
+tiers = [('Tier 1', '0.5-1.3L canister', '<$5', 'B3A2C7'),
+         ('Tier 2 / LEV II', '2.0-3.0L canister', '$8-15', '8A7BA3'),
+         ('Tier 3 / LEV III', '2.0-3.0L + honeycombs', '$15-40', PURPLE)]
+x = 7.25
+for nm, sz_, dol, c in tiers:
+    hb = box(s, x, 3.45, 1.8, 0.42, fill=c)
+    text_in(hb, [P(nm, size=12, bold=True, color='FFFFFF', algn='ctr')], anchor='ctr')
+    bb = box(s, x, 3.87, 1.8, 1.4, line=c, lw=1.0)
+    text_in(bb, [P(sz_, size=10, algn='ctr', color='000000'), P(dol, size=22, bold=True, algn='ctr', color=PURPLE, spcBef=4),
+                 P('NGVT content / vehicle', size=9, italic=True, algn='ctr', color='000000')], anchor='ctr')
+    x += 1.9
+arrow = box(s, 7.25, 5.35, 5.6, 0.32, fill=LGREEN, shape=MSO_SHAPE.RIGHT_ARROW)
+text_in(arrow, [P('Stricter emission standards = larger canisters and higher content', size=10, bold=True, color=DGREEN, algn='ctr')], anchor='ctr')
+rb = box(s, 0.58, 5.85, 12.3, 0.9, line='FFFFFF')
+text_in(rb, [P('**Content grows with regulation, not vehicle count:** moving from Tier 1 to Tier 3 multiplies Ingevity’s dollar content per vehicle ~3-8x, which is why emerging-market standards in ##China, India, Mexico and LATAM## matter more than global auto production growth, which management expects to be flattish.', size=11, bullet=True, algn='just', color='000000')])
+
+# ---- Hybrids & non-auto
+s = new_slide('Hybrids Extend the Carbon Runway',
+              'Slower BEV adoption keeps ICE and hybrids on the road, while filtration adds upside',
+              'Ingevity, Strategic Portfolio Update (IHS data); Q2 2026 Earnings Release; Water Tower Research Conference (Sep-2026)')
+NEW['hybrid'] = s
+panel_header(s, 0.58, 1.4, 6.0, 'Auto Production Outlook', 'Changes vs. 2023 assumptions, 2025-2030')
+cards = [('+6M', 'more auto builds needed to reach peak production, now delayed two years to 2030'),
+         ('+3.2M', 'more ICE vehicles by 2030, as BEV adoption is projected 4% lower than in 2023')]
+y = 2.25
+for big, txt in cards:
+    cb = box(s, 0.58, y, 1.9, 1.25, fill=PURPLE)
+    text_in(cb, [P(big, size=28, bold=True, color='FFFFFF', algn='ctr')], anchor='ctr')
+    tx = box(s, 2.48, y, 4.1, 1.25, fill=LGREY)
+    text_in(tx, [P(txt, size=12, color='000000')], anchor='ctr')
+    tx.text_frame.margin_left = Inches(0.15)
+    y += 1.42
+panel_header(s, 7.0, 1.4, 5.88, 'Non-Auto Filtration Upside', 'Performance Materials revenue and EBITDA mix, auto vs. non-auto')
+cdm = CategoryChartData()
+cdm.categories = ['Revenue 2024', 'Revenue Target', 'EBITDA 2024', 'EBITDA Target']
+cdm.add_series('Auto', [0.93, 0.92, 0.99, 0.97]); cdm.add_series('Non-Auto', [0.07, 0.08, 0.01, 0.03])
+gm = s.shapes.add_chart(XL_CHART_TYPE.BAR_STACKED_100, Inches(7.0), Inches(2.2), Inches(5.88), Inches(2.55), cdm).chart
+gm.has_legend = True; gm.legend.position = XL_LEGEND_POSITION.BOTTOM; gm.legend.include_in_layout = False; gm.legend.font.size = Pt(10)
+pl = gm.plots[0]; pl.gap_width = 45; pl.has_data_labels = True
+pl.data_labels.number_format = '0%'; pl.data_labels.number_format_is_linked = False; pl.data_labels.font.size = Pt(10); pl.data_labels.font.bold = True
+pl.data_labels.font.color.rgb = RGBColor.from_string('FFFFFF')
+for i_, c in enumerate([PURPLE, LIME]):
+    pl.series[i_].format.fill.solid(); pl.series[i_].format.fill.fore_color.rgb = RGBColor.from_string(c)
+gm.value_axis.visible = False; gm.value_axis.has_major_gridlines = False
+gm.category_axis.tick_labels.font.size = Pt(10); gm.category_axis.reverse_order = True
+for yb, xb, wb, paras in [
+    (5.2, 0.58, 6.0, [P('**Hybrids favor Ingevity:** they need more advanced emission-control solutions even with less carbon per vehicle, and the Q2 2026 mix shift toward hybrids helped lift the ##segment margin to 53.6%##.', size=11, bullet=True, algn='just', color='000000')]),
+    (5.2, 7.0, 5.88, [P('**First municipal PFAS win:** a powdered activated carbon contract was awarded ##on technology rather than lowest bid##, an early proof point as PFOA/PFOS reporting begins; energy-storage carbons (hard carbon, nanotubes) are longer-dated options.', size=11, bullet=True, algn='just', color='000000')]),
+]:
+    rb = box(s, xb, yb, wb, 1.5, line='FFFFFF')
+    text_in(rb, paras)
+
+# ---- Pavement Technologies
+s = new_slide('Pavement Technologies: Warm Mix Runway',
+              'EVOTHERM® leads warm mix, still only ~20% of North American asphalt additive spend',
+              'Ingevity, Strategic Portfolio Update (L.E.K. research, NAPA Industry Survey); Q2 2026 Earnings Release')
+NEW['pave'] = s
+panel_header(s, 0.58, 1.4, 5.6, 'Addressable Market Opportunity', 'Annual hot + warm mix asphalt additive spend, North America')
+cdp = CategoryChartData(); cdp.categories = ['Warm mix', 'Hot mix (convertible)']; cdp.add_series('Share', [0.20, 0.80])
+gp = s.shapes.add_chart(XL_CHART_TYPE.DOUGHNUT, Inches(0.5), Inches(2.1), Inches(3.1), Inches(3.1), cdp).chart
+gp.has_legend = False; gp.has_title = False
+pl = gp.plots[0]; pl.has_data_labels = True
+pl.data_labels.number_format = '0%'; pl.data_labels.number_format_is_linked = False; pl.data_labels.font.size = Pt(11); pl.data_labels.font.bold = True
+pl.data_labels.font.color.rgb = RGBColor.from_string('FFFFFF')
+for i_, c in enumerate([DGREEN, 'BFBFBF']):
+    pt = pl.series[0].points[i_]; pt.format.fill.solid(); pt.format.fill.fore_color.rgb = RGBColor.from_string(c)
+hole = gp.plots[0]._element.find(qn('c:holeSize'))
+if hole is None:
+    hole = etree.SubElement(gp.plots[0]._element, qn('c:holeSize'))
+hole.set('val', '60')
+tbox(s, 1.15, 3.3, 1.8, 0.8, [P('**$500-600M**', size=15, algn='ctr', color=CHAR), P('annual spend', size=9, italic=True, algn='ctr')], anchor='ctr')
+stats = [('~$100M', '2025E Ingevity warm mix revenue'), ('$400M+', 'opportunity if hot mix converts to chemical warm mix'), ('5-7% / 10%+', 'segment revenue / EBITDA CAGR target')]
+y = 2.2
+for big, txt in stats:
+    tbox(s, 3.7, y, 2.5, 0.45, [P(big, size=18, bold=True, color=DGREEN)])
+    tbox(s, 3.7, y + 0.42, 2.5, 0.5, [P(txt, size=10, italic=True)])
+    y += 1.0
+panel_header(s, 6.8, 1.4, 6.08, 'The Warm Mix Advantage', 'Measured at Ingevity customer facilities')
+picture_fit(s, AS + 'logo_evotherm.png', 11.2, 1.36, 1.68, 0.38)
+adv = [('>60%', 'lower organic compound emissions'), ('50°F', 'lower paving temperatures'),
+       ('>20%', 'energy use reduction'), ('+30%', 'road life')]
+for k, (big, txt) in enumerate(adv):
+    xx = 6.8 + (k % 2) * 3.08; yy = 2.2 + (k // 2) * 1.12
+    b_ = box(s, xx, yy, 1.2, 0.95, fill=DGREEN)
+    text_in(b_, [P(big, size=18, bold=True, color='FFFFFF', algn='ctr')], anchor='ctr')
+    t_ = box(s, xx + 1.2, yy, 1.78, 0.95, fill=LGREEN)
+    text_in(t_, [P(txt, size=11, color='000000')], anchor='ctr')
+rb = box(s, 0.58, 5.4, 12.3, 1.35, line='FFFFFF')
+text_in(rb, [
+    P('**Stable base plus a growth leg:** ~50% of segment revenue comes from ##preservation and reconstruction## (applied to existing roads, low-single-digit growth), while ~33% is ##construction additives## growing high-single digits as states adopt warm mix specifications.', size=11, bullet=True, algn='just', color='000000'),
+    P('**Profitability is improving but seasonal:** Q2 2026 segment margin rose to 24.4% (vs. 21.4%), yet !!Q1 margins are near breakeven!! and higher oil prices and weaker China/South America weigh on project activity.', size=11, bullet=True, algn='just', color='000000', spcBef=3),
+])
+
+# ---- Competitive landscape
+s = new_slide('Competitive Landscape',
+              'Few carbon rivals in auto emissions; broader competition in pavement additives',
+              'Ingevity, 2025 Investor Overview; Q2 2026 Earnings Release')
+NEW['comp'] = s
+for xx, hd, col, share, sharetxt, comps, custs, bl in [
+    (0.58, 'Performance Materials', PURPLE, '~67%', 'of New Ingevity revenue (2025E PF) | Leader in activated carbon for auto',
+     ['logo_norit.png', 'logo_kuraray.png'], ['logo_kftc.png', 'logo_kayser.png', 'logo_phinia.png'],
+     ['**Norit and Kuraray (Calgon Carbon)** sell activated carbon broadly, but Ingevity’s pellet and honeycomb systems are engineered into Tier 3 / LEV III canisters built by ##Tier-1 suppliers such as KFTC, Kayser and PHINIA##.',
+      '**Legal overhang resolved:** the long-running BASF litigation tied to the auto carbon business was settled with a !!$113.2M payment in Q2 2026!!.']),
+    (6.88, 'Pavement Technologies', DGREEN, '~33%', 'of New Ingevity revenue (2025E PF) | Leader in asphalt additive technologies',
+     ['logo_nouryon.png', 'logo_arkema.png', 'logo_kao.png'], ['logo_ergon.png', 'logo_heritage.png', 'logo_idaho.png'],
+     ['**Nouryon, Arkema and Kao** compete in asphalt emulsifiers and warm mix additives; Ingevity leads warm mix through ##EVOTHERM® and advocacy with state DOTs##.',
+      '**Road Markings competitors became buyers:** PPG, a road markings rival, acquired Ingevity’s Ozark Materials business in April 2026.']),
+]:
+    hb = box(s, xx, 1.5, 6.0, 0.45, fill=col)
+    text_in(hb, [P(hd, size=14, bold=True, color='FFFFFF', algn='ctr')], anchor='ctr')
+    tbox(s, xx, 2.05, 1.5, 0.3, [P('Competitors', size=11, bold=True, italic=True, color=col)])
+    n = len(comps); cw = 4.4 / max(n, 1)
+    for j, lg in enumerate(comps):
+        picture_fit(s, AS + lg, xx + 1.5 + j * cw + 0.1, 2.0, cw - 0.2, 0.55)
+    if custs:
+        tbox(s, xx, 2.75, 1.5, 0.3, [P('Customers', size=11, bold=True, italic=True, color=col)])
+        cw = 4.4 / len(custs)
+        for j, lg in enumerate(custs):
+            picture_fit(s, AS + lg, xx + 1.5 + j * cw + 0.1, 2.7, cw - 0.2, 0.5)
+    else:
+        picture_fit(s, AS + 'logo_evotherm.png', xx + 1.6, 2.7, 1.9, 0.5)
+        picture_fit(s, AS + 'logo_ppg.png', xx + 4.4, 2.65, 0.8, 0.6)
+    sb = box(s, xx, 3.45, 1.5, 0.95, fill=col)
+    text_in(sb, [P(share, size=22, bold=True, color='FFFFFF', algn='ctr')], anchor='ctr')
+    st = box(s, xx + 1.5, 3.45, 4.5, 0.95, fill=LGREY)
+    text_in(st, [P(sharetxt, size=11, color='000000')], anchor='ctr'); st.text_frame.margin_left = Inches(0.15)
+    rb = box(s, xx, 4.6, 6.0, 2.1, line='FFFFFF')
+    text_in(rb, [P(b_, size=11, bullet=True, algn='just', color='000000', spcBef=(0 if i_ == 0 else 6)) for i_, b_ in enumerate(bl)])
+line(s, 6.73, 1.55, 6.73, 6.6, 'A6A6A6', 0.75, dash=True)
+
+# ---- Revenue by segment & region
+s = new_slide('Revenue by Segment & Region',
+              'Performance Materials is half of sales but ~70% of segment EBITDA; North America dominates',
+              'Ingevity, Q2 2026 Earnings Release; LSEG Workspace (FY2025 sales by region)')
+NEW['segreg'] = s
+rows_s = [('Segment', 'Q2-26 Revenue ($M)', 'Y/Y Growth', 'EBITDA Margin', 'Revenue %'),
+          ('Performance Materials', '$160.6', '+4%', '53.6%', '51%'),
+          ('Pavement Technologies', '$104.2', '-22%¹', '24.4%', '33%'),
+          ('Adv. Polymer Tech.', '$49.3', '+14%', '22.7%', '16%'),
+          ('Total', '$314.1', '-5%', '36.6%²', '100%')]
+gf = s.shapes.add_table(5, 5, Inches(0.58), Inches(1.55), Inches(6.3), Inches(2.9))
+tt = gf.table
+tblPr = tt._tbl.tblPr
+for k_ in ('firstRow', 'bandRow'): tblPr.set(k_, '0')
+sid = tblPr.find(A + 'tableStyleId')
+if sid is not None: sid.text = '{5940675A-B579-460E-94D1-54222C63F5DA}'
+for i, w_ in enumerate([2.05, 1.25, 0.95, 1.05, 1.0]): tt.columns[i].width = Inches(w_)
+segc = [None, PURPLE, DGREEN, STEEL, 'F5C400']
+for r, row in enumerate(rows_s):
+    for c, v in enumerate(row):
+        cell = tt.cell(r, c)
+        if r == 0:
+            fill_tf(cell, [P(v, size=10, bold=True, algn='ctr' if c else 'l', color='000000')]); cell_fill(cell, 'FFFFFF')
+        elif c == 0:
+            fill_tf(cell, [P(v, size=11, bold=True, color='FFFFFF' if r < 4 else '000000')]); cell_fill(cell, segc[r])
+        else:
+            fill_tf(cell, [P(v, size=11, bold=(r == 4), algn='ctr', color='000000')]); cell_fill(cell, 'FFFFFF' if r % 2 else LGREY)
+        cell.vertical_anchor = MSO_ANCHOR.MIDDLE
+tbox(s, 0.58, 4.5, 6.3, 0.5, [P('¹ +3% excluding the Road Markings divestiture.  ² Adjusted EBITDA margin, continuing operations.', size=9, italic=True)])
+tbox(s, 7.0, 1.45, 3.6, 0.35, [P('FY2025 Revenue by Region', size=12, bold=True, algn='ctr')])
+cdr = CategoryChartData()
+cdr.categories = ['North America', 'Asia-Pacific', 'EMEA', 'South America']
+cdr.add_series('FY2025', [665.1, 298.5, 158.9, 45.1])
+gr_ = s.shapes.add_chart(XL_CHART_TYPE.DOUGHNUT, Inches(7.0), Inches(1.8), Inches(3.6), Inches(3.35), cdr).chart
+gr_.has_title = False; gr_.has_legend = True; gr_.legend.position = XL_LEGEND_POSITION.BOTTOM; gr_.legend.include_in_layout = False; gr_.legend.font.size = Pt(9)
+pl = gr_.plots[0]; pl.has_data_labels = True; pl.data_labels.show_percentage = True; pl.data_labels.show_value = False
+pl.data_labels.number_format = '0%'; pl.data_labels.number_format_is_linked = False
+pl.data_labels.font.size = Pt(10); pl.data_labels.font.bold = True; pl.data_labels.font.color.rgb = RGBColor.from_string('FFFFFF')
+for i_, c in enumerate([PURPLE, DGREEN, STEEL, LIME]):
+    pt = pl.series[0].points[i_]; pt.format.fill.solid(); pt.format.fill.fore_color.rgb = RGBColor.from_string(c)
+hole = pl._element.find(qn('c:holeSize'))
+if hole is None: hole = etree.SubElement(pl._element, qn('c:holeSize'))
+hole.set('val', '55')
+cb = box(s, 10.75, 2.0, 2.1, 2.7, line='A6A6A6', shape=MSO_SHAPE.ROUNDED_RECTANGLE)
+cb.adjustments[0] = 0.08
+tbox(s, 10.75, 1.75, 2.1, 0.3, [P('Main Customers', size=11, bold=True, algn='ctr')])
+for j, lg in enumerate(['logo_kftc.png', 'logo_kayser.png', 'logo_phinia.png']):
+    picture_fit(s, AS + lg, 10.9, 2.15 + j * 0.85, 1.8, 0.6)
+for xb, txt in [(0.58, '**Performance Materials carries the group:** it generated ##$86.1M of $122.7M segment EBITDA (~70%)## in Q2 2026; after the APT sale, auto carbon will be roughly two-thirds of revenue and ~85% of segment EBITDA.'),
+                (6.88, '**North America is 57% of sales:** Asia-Pacific (roughly a quarter, including China) is the key region for auto carbon, where ##hybrid growth and stricter China 6 standards## support canister content, while EMEA and South America are smaller.')]:
+    rb = box(s, xb, 5.35, 6.0, 1.05, line='000000', lw=0.75)
+    text_in(rb, [P(txt, size=11, bullet=True, algn='just', color='000000')])
+
+# =====================================================================
+# Delete unused KLA slides and reorder
+for i in (6, 7, 8, 9, 10, 11, 15):
+    delete_slide(prs, S[i])
+final = [S[0], S[1], S[2], S[3], S[4], S[5],
+         NEW['div'], NEW['transform'], NEW['divest'], NEW['frame'],
+         NEW['evap'], NEW['hybrid'], NEW['pave'], NEW['comp'],
+         S[12], S[13], S[14], NEW['segreg'], S[16],
+         S[17]] + S[18:33]
+reorder(prs, final)
+# add slide-number placeholder (copied from template slide) to new General slides
+num_sp = copy.deepcopy(ph(S[2], 12)._element)
+for k_, sl in NEW.items():
+    if sl.slide_layout.name == 'General' and ph(sl, 12) is None:
+        sl.shapes._spTree.append(copy.deepcopy(num_sp))
+# clear notes that mention the template company
+for sl in prs.slides:
+    if sl.has_notes_slide:
+        sl.notes_slide.notes_text_frame.text = ''
+prs.save(OUT)
+print('saved', OUT, len(prs.slides))

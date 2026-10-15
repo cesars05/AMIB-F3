@@ -1,0 +1,234 @@
+# Financial Analysis (Bimbo): esqueleto para empezar a escribir
+
+**Fecha:** 7 octubre 2026. **Vale 20 puntos y es el criterio de desempate #1.**
+**Qué es esto:** el plano de TU sección. No repite el benchmark. Qué hizo cada equipo está en `11-FINANCIAL-ANALYSIS-BENCHMARK.md` y cómo se construye cada pieza está en `12-FINANCIAL-ANALYSIS-METODOLOGIAS.md` (recetas R1 a R10). Aquí solo se cita por número.
+**Idioma:** notas en español. Lo que va al reporte (subtítulos, etiquetas de tabla) está en inglés, sin guiones largos ni dos puntos.
+
+> **Origen de los números:** valores guardados la última vez en `Bimbo Financial Model_v4.xlsx` (hoja `Consolidated Model`), leídos sin abrir Excel. Si editaste el modelo después, refrescar antes de escribir cifras en el reporte. Todo lo marcado **VERIFICAR** no está confirmado contra un filing.
+
+---
+
+## 1. Presupuesto de espacio
+
+Plan de `07` §4: **página 8 completa + parte superior de la página 9** (la 9 se comparte con Investment Risks). Total ~1.5 páginas.
+
+| Pieza | Espacio | Palabras aprox. |
+|---|---|---|
+| Tabla de ratios (sección 2) | 1/3 de página | 0 |
+| 5 bloques con subtítulo-afirmación (sección 3) | ~1 página | 110 a 130 por bloque, ~600 en total |
+| Figuras pareadas a la derecha de los bloques | dentro del bloque | 3 a 4 figuras chicas |
+| Frase vs consenso (R10) y frase de marco de capital (R9) | dentro de bloques 4 y 5 | ~40 |
+
+Todo lo demás va al apéndice (sección 4).
+
+---
+
+## 2. La tabla de ratios, renglón por renglón
+
+Columnas: **2022A, 2023A, 2024A, 2025A, 2026E a 2030E** (9 columnas, igual que Waterloo y La Comer). Fuente: `Consolidated Model`. Estado revisado: cada fila de abajo devuelve valor en los 9 años, salvo lo anotado.
+
+| Bloque | Renglón en la tabla | Fila del modelo | Estado |
+|---|---|---|---|
+| **Growth and margins** | Revenue growth | 316 | OK |
+| | Gross margin | 299 | OK |
+| | **Adj. EBITDA** (MXN millones, renglón propio) | 37 | OK |
+| | Adj. EBITDA margin | 303 | OK |
+| | Operating margin | 302 | OK |
+| | Net margin | 306 | OK |
+| | Restructuring as % of Adj. EBITDA | 27 ÷ 37 | **Construir** (fila 27 solo tiene histórico, la proyección queda vacía; ver sección 5) |
+| **DuPont** | Asset turnover | 325 | OK |
+| | ROA | 326 | OK |
+| | Equity multiplier | 327 | OK |
+| | ROE | 328 | OK |
+| | ROIC | 330 | OK |
+| | IC turnover | 331 | OK (opcional, ayuda al bloque 5) |
+| **Working capital** | Receivable days / Inventory days / Payable days | 260 / 261 / 262 | OK |
+| | Cash conversion cycle | 263 | OK |
+| **Liquidity** | Current ratio, quick ratio | no hay fila | **Construir** desde balance (fila 210 es pasivo circulante; falta total de activo circulante) |
+| **Debt** | Net debt / Adj. EBITDA, con arrendamientos | 270 ÷ 37 | **Construir** |
+| | Net debt / Adj. EBITDA, sin arrendamientos | (267 − 269) ÷ 37 | **Construir** |
+| | Adj. EBITDA / interest expense | 37 ÷ 41 | **Construir** |
+| | Interest expense as % of Adj. EBITDA | 41 ÷ 37 | **Construir** |
+
+**No usar en el reporte:** filas 15 y 31 (renglones "Balancing Value", son tapones de cuadre del modelo) y filas 32 y 55 (llamadas "x").
+
+**Nota de formato:** 2022 es un año atípico (ver bloque 1). Marcarlo con asterisco como hace ITAM con su outlier de 2021, o dejar las razones de rentabilidad de 2022 con nota a pie. No dejar que ROE 40.9% y net margin 11.8% de 2022 parezcan tendencia.
+
+---
+
+## 3. Los cinco bloques
+
+Cada bloque: **subtítulo-afirmación (inglés)**, qué cifra lo prueba, de dónde sale, figura propuesta, estado. Los subtítulos salen de `12` §8 (los cinco que ya tienen evidencia en la carpeta) y se confirmaron contra el modelo.
+
+### Bloque 1. *Adjusted EBITDA is conservative, but restructuring is not one-off*
+- **Receta:** R1 de `12` (puente reportado a subyacente). **Este bloque no se delega al apéndice.**
+- **Qué muestran los datos:** el puente tiene poco que quitar. En 2023 a 2025 el renglón de ajustes (fila 36) es +670, −725 y +618. El único ajuste grande es 2022 con −18,337, que elimina una ganancia dentro de otros ingresos (otros ingresos netos de +15,309 ese año, fila 23). Verificado aritméticamente en 2022, 2024 y 2025: Adj. EBITDA = utilidad de operación + depreciación + amortización + ajustes.
+- **La reestructura se queda dentro del EBITDA ajustado** (el comunicado 4T25 atribuye la mejora de margen a "lower restructuring investments", o sea que cuesta dentro de la cifra). Ps1,657 en 2022, 2,959 en 2023, 6,293 en 2024 y 3,908 en 2025 = **Ps14.8bn en cuatro años, 6.6% del Adj. EBITDA acumulado** (3.1%, 5.4%, 11.3% y 6.6% por año).
+- **Hallazgo honesto a escribir:** el EBITDA ajustado de Bimbo NO está inflado por la reestructura, pero esta se repite cuatro años seguidos, así que no es no recurrente. Esta es una conclusión matizada, no una acusación. Es mejor que el molde de "el número reportado miente".
+- **Partida a señalar aparte:** el beneficio no monetario de MEPP por US$49m en 4T24 (lo menciona el comunicado 4T25) infla la base de 2024 dentro de utilidad de operación.
+- **Prueba de recurrencia a tres años (paso 6 de R1):** reestructura aparece en 2022, 2023, 2024 y 2025 y 2023 a 2025 tienen ajustes que casi se cancelan entre sí.
+- **Figura FA2:** barras Adj. EBITDA por año con la reestructura marcada encima, y la línea de margen.
+- **Estado:** datos listos. **VERIFICAR** la definición exacta de EBITDA ajustado en la nota al pie ^2^ del comunicado de resultados y qué contiene la fila 36 (qué partidas son los +670, −725, +618) contra la Nota 21 de los estados auditados 2025.
+- **Coordinación con Risks:** el puente VIVE aquí. En el handoff de Investment Risks, R4 (apalancamiento y calidad de utilidades) debe remitir a esta sección, no reescribirlo. La frase de la opinión del auditor (Mancera, EY, sin salvedades en FY2025, según ese handoff) se queda en Risks. Decidir quién escribe cada lado para que no se haga dos veces.
+
+### Bloque 2. *Margins diverge sharply across the four regions*
+- **Receta:** análisis por segmento, no consolidado (patrón 3 de `11` §4). Es lo que hizo Lightspeed con sus tres segmentos.
+- **Datos del consolidado:** Adj. EBITDA margin 13.4%, 13.7%, 13.6%, 13.9% en 2022 a 2025. Cuatro años casi planos.
+- **Datos por región** (hoja `Regional Model`, filas 128 a 131, margen Adj. EBITDA, 2022 / 2023 / 2024 / 2025 → 2026E / 2030E):
+
+  | Región | 2022 | 2023 | 2024 | 2025 | 2026E | 2030E |
+  |---|---|---|---|---|---|---|
+  | Norteamérica | 11.0% | 10.5% | 8.4% | 9.0% | 9.8% | 10.5% |
+  | México | 17.9% | 18.9% | 20.4% | 20.4% | 20.9% | 21.0% |
+  | EAA | 7.0% | 7.2% | 9.4% | 10.8% | 12.0% | 12.5% |
+  | Latinoamérica | 8.9% | 9.6% | 9.0% | 8.1% | 7.8% | 9.5% |
+
+  Lectura: el consolidado plano (13.4% a 13.9%) esconde que México sube 250 pb, EAA sube 380 pb y Norteamérica baja 200 pb en 2022 a 2025. En el pronóstico, **Norteamérica llega a 10.5% en 2030E, por debajo de la meta de 12% de la empresa** (notas de la llamada), así que el modelo es más conservador que la gerencia ahí. El alza del consolidado a 15.3% la cargan EAA (+170 pb vs 2025), México y el cambio de mezcla hacia México (Norteamérica baja de 42.9% a 40.4% de ventas y México sube de 34.9% a 36.6%, filas 15 y 16). Eso es lo que hay que defender. Norteamérica pasó de 11.0% a 9.0% mientras el consolidado no se movió: ese es el hallazgo del bloque.
+  Notas: Latinoamérica baja a 7.8% en 2026E antes de recuperarse (Wickbold, integración). Los datos de 2T26 (Norteamérica 10.0%, Latinoamérica con Wickbold −157 pb) vienen de `08`, no del modelo.
+- **Receta R3:** separar precio/mezcla de volumen por región. El comunicado solo da prosa, hay que construirlo (inflación de panificados de cada país como proxy de precio, volumen como residual). Declarar el método en el texto.
+- **Pregunta de Kozminski (`12` §9):** el consolidado muestra margen EBITDA subiendo de 13.9% (2025) a 14.6% (2026E) y **15.3% en 2030E**. El comunicado dice que 13.9% fue el segundo margen más alto de su historia, así que 15.3% sería un máximo nuevo por mucho. Hay que decir qué región lo sostiene y si lo anómalo es la recuperación futura o los márgenes bajos de EAA y Latinoamérica.
+- **Figura FA3:** líneas del Adj. EBITDA margin de las cuatro regiones, histórico y proyectado.
+- **Estado:** consolidado y regional listos (márgenes en `Regional Model`); split precio/volumen **por construir**. **VERIFICAR** que los márgenes del modelo coincidan con los segmentos reportados por la empresa antes de citarlos como históricos.
+
+### Bloque 3. *Working capital is absorbing cash, not funding growth*
+- **Receta:** R5 de `12`. El ratio es resultado del supuesto, no al revés.
+- **Esto contradice la hipótesis de `11` §5.** Ahí se sospechaba que el capital de trabajo se estiraba y que eso inflaba el flujo libre. Los datos del modelo dicen lo contrario en el histórico: días de proveedores bajaron de **140 (2021) a 118 (2025)**, el ciclo de conversión pasó de **−80 a −57 días**, y el capital de trabajo neto pasó de −Ps20.5bn a −Ps13.7bn. En 2023 el cambio de capital de trabajo consumió Ps5.8bn de efectivo.
+- **Lo que hay que defender en el pronóstico:** el modelo mantiene proveedores en 118 días, cuentas por cobrar en 30 e inventario en 29 a 30 hasta 2030E, con ciclo en −58 a −59 días. Los bloques de apéndice deben justificar por qué los días dejan de comprimirse.
+- **Ligar con el capex:** la empresa recortó el capex 2026 a US$1.0 a 1.2bn (handoff de Risks, pregunta #2 para IR). Si regresa en 2027, el flujo libre de 2026 está inflado.
+- **Figura FA4:** días de cobro, inventario y pago, con el ciclo de conversión encima.
+- **Estado:** datos listos. **VERIFICAR** que los 360 días de la fila 259 sean la base que quiere el equipo (en memoria quedó que el equipo eligió base de 360 con saldos promedio).
+
+### Bloque 4. *EBITDA recovery is lost to financing costs before it reaches shareholders*
+- **Receta:** la brecha entre prima de 8% en EV/EBITDA y 37% en P/E de `09`, explicada con el estado de resultados.
+- **Datos:** de 2021 a 2025 el Adj. EBITDA subió **25.5%** (Ps47.4bn a Ps59.5bn) mientras la utilidad neta controladora **bajó 30%** (Ps15.9bn a Ps11.1bn). El gasto por intereses pasó de **16.5% a 24.3% del Adj. EBITDA** (Ps7.8bn a Ps14.5bn). Depreciación y amortización también subió (4.8% a 5.8% de ventas). La brecha entre EBITDA y utilidad está debajo de la línea de EBITDA.
+- **Apalancamiento:** deuda neta Ps179.9bn en 2025 (con arrendamientos), 3.0x Adj. EBITDA por este modelo. **Ojo:** la empresa reporta 2.7x sin arrendamientos y el modelo da ~2.4x con la misma lógica, así que hay una diferencia de definición por reconciliar (la empresa dice que no considera IFRS 16, probablemente restando pagos de arrendamiento al EBITDA). **VERIFICAR antes de citar cualquiera de las dos.**
+- **Frase vs consenso (R10):** utilidad neta de 2T26 14.4% bajo consenso con EBITDA en línea (`09`). Es la evidencia de que el mercado ve EBITDA y no ve intereses. La cifra de BI de EPS 2027 (2.34 vs 3.89) está marcada NO verificada en Risks. No usarla hasta confirmarla en la terminal.
+- **Figura FA5:** índice 2021 = 100 de Adj. EBITDA, gasto por intereses y utilidad neta controladora.
+- **Estado:** datos listos.
+
+### Bloque 5. *Returns have fallen as capital outgrew earnings, and the forecast assumes they recover*
+- **Receta:** R2 (DuPont que argumenta) y R9 (juzgar con su propio marco).
+- **Datos (ajustados por extraordinarios, modelo v4 actualizado el 8-oct):** ROIC 9.8% (2021) a **7.4% (2025)**. El capital invertido promedio creció de Ps205bn a Ps303bn (**+48%**) mientras el NOPAT ajustado subió solo 11% (Ps20.2bn a Ps22.3bn). La rotación del capital invertido cayó de 1.65x a 1.41x. ROE de 14.5% a 9.3% con el multiplicador de capital casi igual (3.4x a 3.3x), así que **la caída es operativa y de capital, no de apalancamiento**. Con cifras reportadas el ROIC de 2022 era 16.6% y el ROE 40.9%. Ajustados son 10.9% y 15.1%.
+- **Lo que hay que defender:** el modelo lleva ROIC a **12.1% en 2030E**, por encima de **todos** los años históricos, incluido 2022 ajustado (10.9%). Ningún año de 2021 a 2025 pasó de 10.9%. En el modelo la deuda queda fija en Ps153.7bn y el efectivo acumula hasta Ps39.6bn en 2030E (deuda neta/EBITDA baja a ~1.8x). Eso es un supuesto de asignación de capital que hay que declarar.
+- **R9 (marco de la empresa):** buscar el objetivo de apalancamiento declarado y comparar. **VERIFICAR** qué dice el informe anual; el handoff de Risks lista la pregunta 9 de IR (M&A frente a desapalancamiento, objetivo de apalancamiento) sin respuesta todavía.
+- **Dividendo:** DPS 2026E de 1.845 contra 1.034 en 2025 es +78%, payout implícito ~51% contra ~40% en 2025. Revisar si es intencional.
+- **Figura FA6 (opcional, apéndice si no cabe):** ROIC descompuesto en margen NOPAT y rotación del capital.
+- **Estado:** histórico listo; marco de capital **por buscar**; la cascada de asignación de capital (R6) **por construir**.
+
+---
+
+## 4. Apéndice de Financial Analysis (sale de los 10 páginas de apéndice, orden de `07` §4)
+
+| # | Pieza | Receta | Fuente | Estado | Responsable |
+|---|---|---|---|---|---|
+| A1 | Tres estados completos, histórico y proyección | oblig. 4 | `Consolidated Model` | Existe en el modelo, falta formatear para el reporte (sin filas de cuadre) | por definir |
+| A2 | Puente Adj. EBITDA, año por año, con prueba de recurrencia | R1 | filas 27, 36, 37 + Nota 21 | Casi listo, falta verificar fila 36 | por definir |
+| A3 | Días de capital de trabajo y ciclo de conversión, con razón operativa por línea | R5 | filas 247 a 263 | Datos listos, falta redactar razones | por definir |
+| A4 | Beneish, Piotroski y Altman para Bimbo y pares | R7 | estados auditados 2025 | Por construir. **Calcular en moneda constante o por segmento** (advertencia de FX en `12` R7) | por definir |
+| A5 | Ratio propio de industria (ingreso por punto de venta o por ruta) | R8 | informe integrado, ~1,000,000 de puntos de venta (notas de la llamada) | Por construir y **definir por escrito antes de usarlo** | por definir |
+| A6 | Price deck de trigo y energía en tres capas | R4 | futuros, media histórica, convergencia a inflación | Por construir. Trigo es 37% de la canasta de México según BI | por definir |
+| A7 | Cascada de asignación de capital vs objetivos declarados | R6 | filas 99 a 133 | Por construir | por definir |
+| A8 | Precio vs volumen por región | R3 | `Regional Model`, `Market Growth & Inflation` | Parcial, método por declarar | por definir |
+
+---
+
+## 5. Lo que debes saber del modelo antes de citarlo
+
+Cosas que vi al leer las filas y que afectan lo que sale en la tabla:
+
+1. **Fila 36 (ajustes) vale 0 en 2026E a 2030E.** Es razonable, pero significa que el pronóstico no asume reestructura aparte. Fila 27 (reestructura) tampoco tiene proyección (verificado: vacía de 2026E a 2030E). Si la reestructura va a seguir (cuatro años seguidos), el margen proyectado de 14.6% a 15.3% la está dando por terminada. Hay que decirlo.
+2. **Filas 300 y 301 (distribución y administración como % de ventas) valen 0 en los años proyectados**, y las filas 10 a 12 y 310 a 313 están vacías en proyección. No ponerlas en la tabla. El margen bruto sí proyecta.
+3. **Deuda fija en 153,663 de 2025 a 2030E y efectivo creciendo hasta 39,586.** Ver bloque 5.
+4. **2022 distorsionado** por la ganancia en otros ingresos: ROE 40.9%, net margin 11.8%, utilidad neta 46,910.
+5. **Filas de cuadre** (15 y 31): no mostrarlas.
+6. **WACC y DCF.** El handoff de Risks dice que en v2 el WACC estaba en 4.92% contra 10.09% según la fuente de ERP. No sé si v4 ya lo resolvió. El bloque 5 y el bear/bull de Risks dependen de eso.
+
+---
+
+## 6. Dependencias abiertas
+
+| Dependencia | Afecta | Fecha |
+|---|---|---|
+| Tesis y recomendación del equipo sin definir | Los subtítulos se ordenan según las tesis. Los de arriba son los que hoy tienen evidencia, no un orden final | pendiente |
+| WACC y DCF | Bloque 5 y bear/bull | pendiente (verificar en v4) |
+| Resultados 3T26 de Bimbo | Todas las cifras de 2026, margen, guía, precio | **22 de octubre** |
+| Entrega del reporte | | **5 de noviembre** |
+| Cifras de BI (EPS 2027) y de Circana | Bloque 4 y bloque 2 | verificar en terminal |
+| Quién escribe qué entre Financial Analysis y Risks (puente, calidad de utilidades, opinión del auditor) | Evitar duplicado | decidir ya |
+
+---
+
+## 7. Siguiente paso sugerido
+
+1. Confirmar el contenido de la fila 36 y la definición de EBITDA ajustado (bloque 1 depende de eso, es el corazón de los 20 puntos).
+2. Armar la tabla de la sección 2 en una pestaña nueva del modelo (con las 6 filas por construir).
+3. Redactar bloque 1 y bloque 4 primero, que tienen datos completos.
+4. Ver con el equipo las tesis para ordenar los bloques.
+
+---
+
+## 8. Actualización 8 octubre: ratio propio de industria y revisión de extraordinarios
+
+### 8.1 Ratio propio de industria
+
+**Qué hay en los reportes de sell-side de la carpeta:** ninguno trae un ratio operativo propio de Bimbo. No hay reporte de Goldman en la carpeta (solo JPMorgan, Barclays y Bloomberg Intelligence). Lo que usan:
+- **Precio contra volumen.** Bloomberg Intelligence (Circana, solo EE.UU., semana al 3-may-26): Bimbo −0.7% en ventas en 13 semanas, con precio +3.5% y volumen −4.1%. Participación en pan fresco 22.5% (−25 pb).
+- **EBITDA por tonelada**, pero JPMorgan lo usa para Sigma, no para Bimbo. Bimbo no publica volumen en toneladas, así que no se puede replicar.
+- Barclays modela Bimbo solo con márgenes y rendimientos, sin métricas operativas.
+
+**Propuesta: ingreso y Adj. EBITDA por ruta** (receta R8 de `12`). Bimbo publica el número de rutas en cada informe anual, y es el ratio que mide su modelo de distribución directa (DSD). Es el análogo de miembros por tienda de BJ's o costo por block hour de Cargojet.
+
+| | 2021 | 2022 | 2023 | 2024 | 2025 |
+|---|---|---|---|---|---|
+| Rutas (informe anual) | 54,000 | 55,000 | 57,000 | 58,000 | 54,000 |
+| Ingreso por ruta (Ps millones) | 6.27 | 7.25 | 7.02 | 7.04 | 7.91 |
+| Adj. EBITDA por ruta (Ps millones) | 0.88 | 0.97 | 0.96 | 0.96 | 1.10 |
+
+Lectura: en 2025 las rutas bajaron 7% y el ingreso creció 4.6%, así que el ingreso por ruta subió 12% y el EBITDA por ruta 15%. Conecta con la transformación de Norteamérica.
+
+**Antes de usarlo, VERIFICAR:**
+- Los informes dicen "más de" o "over" (el dato es un piso redondeado).
+- Es un total del grupo, sin desglose por región.
+- 2021 y 2022 pueden incluir rutas de Ricolino, vendida en 2022 (ingresos restatados sin Ricolino, rutas posiblemente no).
+- La baja de 58,000 a 54,000 podría ser un cambio de definición. Pregunta para la llamada con IR: rutas por región y definición.
+- El ingreso está en pesos, así que el tipo de cambio mueve el ratio. Mostrar también índice en moneda constante.
+- Definirlo por escrito en el reporte antes de usarlo (regla de R8).
+
+**Dos ratios secundarios, ya en tu modelo:** materias primas como % del costo de ventas (63.8% en 2025, `Consolidated Model` fila 310; para México, BI da trigo 37% y PET 20% de la canasta), y precio contra volumen en EE.UU. con Circana como proxy externo (citar el dato, no pegar la gráfica).
+
+### 8.2 Calidad de utilidades de tu tabla
+
+**Lo que cuadra con lo reportado:** ingreso, utilidad bruta, utilidad de operación, Adj. EBITDA y utilidad neta mayoritaria de 2022 a 2025 coinciden con los comunicados 4T (EBITDA 2022 de 53,445 contra 53,446 del modelo y 2024 de 55,474 contra 55,473, diferencias de redondeo). La columna 2021 usa la cifra restatada sin Ricolino (Adj. EBITDA 47,372, no los 49,178 del comunicado original).
+
+**Qué columnas tienen extraordinarios:**
+
+| Renglón de tu tabla | Estado |
+|---|---|
+| Gross margin | Limpio |
+| Adj. EBITDA margin | Limpio de MEPP por definición de la empresa. Incluye reestructura e integración como costo |
+| Net margin, ROA, ROE, ROIC de **2022** | **Contaminados.** Utilidad de operación incluye el beneficio no monetario de MEPP (US$963m en el año, Ps14,395m en 4T22 según el comunicado) y la utilidad neta incluye la venta de Ricolino en operaciones discontinuadas (Ps15,004m de ganancia extraordinaria) |
+| 2021 | Leve. Ricolino aporta Ps1,254m de utilidad neta discontinuada |
+| 2023 a 2025 | Pequeños. Ajustes de MEPP de +670, −725 y +618. Reestructura recurrente de Ps3.9bn a 6.3bn por año, deterioro de crédito mercantil de Ps303m en 2023 |
+| **2026E a 2030E** | Limpios, pero **optimistas** (ver abajo) |
+
+**2022 normalizado** (cálculo mío, aproximado): net margin ~4.3% en vez de 11.77% (la propia empresa dice que sin MEPP ni Ricolino la utilidad neta mayoritaria creció 7% con margen −30 pb); ROE ~15% en vez de 40.9%; ROIC ~10.9% en vez de 16.55% (quitando Ps18,337m de MEPP al NOPAT con tasa de 31.3%). Poner asterisco en 2022 con nota al pie, como hace ITAM con su outlier.
+
+**Hallazgo nuevo: el EBITDA luce mejor que la utilidad de operación.** Utilidad de operación antes de otros ingresos y gastos (utilidad bruta − distribución − administración):
+
+| | 2021 | 2022 | 2023 | 2024 | 2025 |
+|---|---|---|---|---|---|
+| Core EBIT margin | 9.89% | 9.72% | 10.05% | 9.74% | 9.27% |
+| Adj. EBITDA margin | 13.98% | 13.40% | 13.74% | 13.59% | 13.93% |
+| Utilidad de operación reportada / Adj. EBITDA | 68.8% | 100.5% | 64.5% | 59.8% | 57.4% |
+
+De 2023 a 2025 el margen EBITDA sube 19 pb mientras el core EBIT baja 78 pb, porque depreciación y amortización pasaron de 4.7% a 5.8% de ventas (incluye depreciación de arrendamientos IFRS 16 y adquisiciones). La mejora del EBITDA no llega al EBIT. Esto va en el bloque 1 junto al puente.
+
+**El pronóstico no es comparable con el histórico en dos puntos:**
+- **Reestructura.** La fila 27 está vacía en 2026E a 2030E (fue Ps14.8bn en 2022 a 2025). Pero la reestructura está DENTRO del Adj. EBITDA, así que no se resta aparte de la utilidad. La pregunta correcta es si el margen EBITDA proyectado (14.6% en 2026E) la incluye al ritmo actual. Dato de los resultados recientes (BMV 2T26, acumulado a junio): **gasto de reestructura Ps1,709m en 1S26 contra Ps1,764m en 1S25 (−3%)**, más gastos de integración de Ps367m contra Ps74m (Wickbold). Combinado Ps2,076m contra Ps1,838m (+13%). El ritmo de 2026 es ~Ps3.4bn al año, casi igual al de 2025 (Ps3.9bn). Los comunicados dicen "lower restructuring investments" en Norteamérica (1T26) y EAA (2T26) pero no dan monto ni guía. Consecuencia: la mejora de margen de 2026 no viene de menos reestructura, y la sensibilidad de −20% que había calculado antes **no aplica** (doble contaría).
+- **Impuestos.** El modelo usa 30% (tasa legal de México) en 2026E a 2030E. Histórico: 33.1% (2023), 32.3% (2024), 35.7% (2025). **En 2026 la tasa efectiva real va en 37.0%** (1T26: 1,644 sobre 4,443; 2T26: 2,000 sobre 5,406; 1S25 fue 37.4%). Con 35.7% la utilidad del periodo 2026E bajaría ~Ps1.4bn (−8%); con 37% ~Ps1.7bn (−10%). Cada punto de tasa vale ~Ps245m (1.4%).
+  Conciliación de la nota 16 de los estados auditados 2025 (puntos sobre la utilidad antes de impuestos): tasa legal 30.0; efecto inflacionario de cuentas monetarias +5.3 (2024 +4.0; 2023 +3.2); pérdidas fiscales no reconocidas +4.2 (2024 −0.2; 2023 0.0); gastos no deducibles +0.4 (2024 +3.0; 2023 +3.8); valores fiscales de PP&E −3.4 (2024 −3.4; 2023 −2.4); diferencia de tasas por país −0.7; asociadas 0.0; total 35.7%. La nota no desglosa el efecto inflacionario por país.
+  Qué es cada uno: (1) **Inflación** no es FX. Es el efecto fiscal de la inflación sobre saldos monetarios. Explicación estándar en México (no viene en la nota, VERIFICAR con un fiscalista o con IR): una empresa deudora neta en pesos tiene un ajuste anual por inflación que es ingreso gravable y no está en la utilidad contable; también puede incluir economías hiperinflacionarias como Argentina. (2) **Pérdidas fiscales** (nota 16): pérdidas no utilizadas Ps36.7bn, de las cuales Ps23.8bn no tienen impuesto diferido reconocido (beneficio fiscal no reconocido de Ps7,009m en 2025, Ps6,207m en 2024, Ps6,572m en 2023). Subsidiarias con pérdida (la nota cita México, Brasil, Colombia, España y EE.UU.) bajan la utilidad consolidada antes de impuestos sin registrar ahorro de impuesto, mientras las rentables pagan completo. No tiene que ver con ventas de PP&E. (3) **Valores fiscales de PP&E** (−3.4 puntos, beneficio): la nota sólo dice "effects on tax values of PP&E". Explicación estándar (VERIFICAR): la depreciación fiscal en México se calcula sobre costo actualizado por inflación, así que deduce más que la contable. Tampoco son ventas de activos.
+- La utilidad neta 2026E sube 37% en parte por la tasa de 30%.
+- Barclays también tiene EBITDA 2025 en 58,984 contra los 59,456 de la empresa, o sea que ellos usan una definición distinta.
+
+**Pendiente:** confirmar qué contiene exactamente la fila 36 por año (la empresa dice que su Adj. EBITDA excluye el efecto de MEPP, lo que cuadra con 2022, pero los montos de 2021 y 2023 a 2025 no los verifiqué contra notas).

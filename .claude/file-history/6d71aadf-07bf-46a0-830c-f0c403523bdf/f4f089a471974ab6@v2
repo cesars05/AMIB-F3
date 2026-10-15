@@ -1,0 +1,106 @@
+# Phase 1: copy template, rebuild Data, Weights, Criteria, AZTD Holdings
+import shutil, json, pickle, time, pywintypes
+from attach import get_app
+def R(fn):
+    for i in range(900):
+        try: return fn()
+        except pywintypes.com_error as e:
+            if e.args[0] in (-2147418111,-2147417846,-2146777998): time.sleep(2); continue
+            raise
+def bgr(h): h=h.lstrip("#"); return int(h[4:6]+h[2:4]+h[0:2],16)
+SRC=r"C:\Users\cesar\AppData\Local\Temp\claude\C--Users-cesar-OneDrive-Desktop-AZTD-Peers\6d71aadf-07bf-46a0-830c-f0c403523bdf\scratchpad\univ.xlsx"
+DST=r"C:\Users\cesar\OneDrive\Desktop\AZTD Peers\AZTD Names.xlsx"
+shutil.copy(SRC,DST)
+N=json.load(open("names_top5.json")); FW=pickle.load(open("deck_fundw.pkl","rb"))
+SECS=["Materials","Financials","Consumer Discretionary","Utilities"]
+rics=[]
+for s in SECS:
+    for d in N[s]:
+        if d["ric"] not in rics: rics.append(d["ric"])
+print("unique rics",len(rics))
+app=get_app(None)
+wb=R(lambda: app.Workbooks.Open(DST,UpdateLinks=0))
+FONT="Aptos Narrow"
+# ---------- Data
+ws=wb.Worksheets("Data"); ws.Cells.Clear()
+ws.Cells.Font.Name=FONT; ws.Cells.Font.Size=11
+ws.Range("B2").Value="Data - Workspace fields for the top 5 names (live TR formulas, one spilled call per field)"; ws.Range("B2").Font.Bold=True; ws.Range("B2").Font.Size=14
+ws.Range("B3").Value="Market cap in USD millions. EPS: FY2025 actual and FY2028 mean estimate (absolute fiscal years). Do not paste values over the spilled ranges."
+ws.Range("B3").Font.Italic=True; ws.Range("B3").Font.Color=bgr("7F7F7F")
+hdr=["RIC","Name","Currency","Mkt Cap (USD M)","YTD (%)","3MO (%)","Net Debt / EBITDA","Fwd PE","Dividend Yield (%)","GICS Sector","ROE (%)","Net Margin LTM (%)","Price","52W High","EPS 2025A","EPS 2028E","Revenue FY1E","Revenue FY3E","# Analysts","HQ Country"]
+fields=[None,("TR.CommonName",""),("TR.PriceClose.currency",""),("TR.CompanyMarketCapitalization","Scale=6 Curn=USD"),("PCTCHG_YTD",""),("TR.TotalReturn3Mo",""),
+        ("TR.F.NetDebtToEBITDATTM",""),("TR.FwdPtoEPSSmartEst","Period=FY1"),("TR.DividendYield",""),("TR.GICSSector",""),("TR.F.ReturnAvgTotEqPctTTM",""),
+        ("TR.PCNetMarginPct","Period=LTM"),("TR.PriceClose",""),("TR.Price52WeekHigh",""),("TR.EPSActValue","Period=FY2025"),("TR.EPSMean","Period=FY2028"),
+        ("TR.RevenueMeanEstimate","Period=FY1"),("TR.RevenueMeanEstimate","Period=FY3"),("TR.NumberOfAnalysts",""),("TR.HeadquartersCountry","")]
+r0=5; n=len(rics); last=r0+n-1
+ws.Range(ws.Cells(4,2),ws.Cells(4,1+len(hdr))).Value=[hdr]
+g=ws.Range(ws.Cells(4,2),ws.Cells(4,1+len(hdr))); g.Interior.Color=bgr("002060"); g.Font.Color=0xFFFFFF; g.Font.Bold=True; g.WrapText=True; g.HorizontalAlignment=-4108; g.VerticalAlignment=-4108
+ws.Rows(4).RowHeight=32
+ws.Range(f"B{r0}:B{last}").Value=[[x] for x in rics]
+for j,f in enumerate(fields):
+    if f is None: continue
+    c=ws.Cells(r0,2+j); fld,par=f
+    c.Formula=f'=TR($B${r0}:$B${last},"{fld}","{par}")' if par else f'=TR($B${r0}:$B${last},"{fld}")'
+ws.Range(f"B{r0}:U{last}").HorizontalAlignment=-4108; ws.Range(f"C{r0}:C{last}").HorizontalAlignment=-4131
+for c,w in zip("ABCDEFGHIJKLMNOPQRSTU",[2,12,34,9,13,9,9,11,9,10,22,9,10,10,10,10,10,14,14,10,22]): ws.Columns(c).ColumnWidth=w
+# ---------- Weights (source of the top-5 lists)
+wsw=wb.Worksheets.Add(After=wb.Worksheets("Data")); wsw.Name="Weights"
+wsw.Cells.Font.Name=FONT; wsw.Cells.Font.Size=11
+wsw.Range("B2").Value="Top 5 holdings of each ETF by sector (weights as of 31-Aug-26)"; wsw.Range("B2").Font.Bold=True; wsw.Range("B2").Font.Size=14
+wsw.Range("B3").Value="Source: fund holdings 31-Aug-26 (AZTD - Top Holdings Peers_v5.xlsx, tabs 'AZTD Data'...'DFIS Data'); GICS sector from Workspace. Values, not formulas."
+wsw.Range("B3").Font.Italic=True; wsw.Range("B3").Font.Color=bgr("7F7F7F")
+H=["Sector","ETF","Rank","RIC","Company","Weight in ETF"]
+wsw.Range("B5:G5").Value=[H]; g=wsw.Range("B5:G5"); g.Interior.Color=bgr("002060"); g.Font.Color=0xFFFFFF; g.Font.Bold=True; g.HorizontalAlignment=-4108
+rows=[]
+for s in SECS:
+    rk={}
+    for d in N[s]:
+        rk[d["etf"]]=rk.get(d["etf"],0)+1; rows.append([s,d["etf"],rk[d["etf"]],d["ric"],d["name"],d["w"]])
+wsw.Range(f"B6:G{5+len(rows)}").Value=rows
+wsw.Range(f"G6:G{5+len(rows)}").NumberFormat="0.00%"; wsw.Range(f"C6:G{5+len(rows)}").HorizontalAlignment=-4108; wsw.Range(f"F6:F{5+len(rows)}").HorizontalAlignment=-4131
+for c,w in zip("ABCDEFG",[2,24,8,7,12,38,13]): wsw.Columns(c).ColumnWidth=w
+# ---------- Criteria
+wsc=wb.Worksheets.Add(Before=wb.Worksheets(1)); wsc.Name="Criteria"
+wsc.Cells.Font.Name=FONT; wsc.Cells.Font.Size=11
+wsc.Range("B2").Value="Aztlan screen - quant proxy (edit the yellow cells)"; wsc.Range("B2").Font.Bold=True; wsc.Range("B2").Font.Size=14
+wsc.Range("B3").Value="Automates the measurable part of the 7-point Aztlan screen. Catalyst, results that moved the stock and niche moat are judged in the Opinion column of 'Analysis'."
+wsc.Range("B3").Font.Italic=True; wsc.Range("B3").Font.Color=bgr("7F7F7F")
+crit=[["#","Criterion","Threshold","Rule"],
+ [1,"SMID market cap - min (USD M)",1000,"Mkt cap between min and max"],
+ ["","SMID market cap - max (USD M)",30000,""],
+ [2,"Leverage - max Net Debt / EBITDA",3,"Net debt / EBITDA <= max (not applied to Financials)"],
+ [3,"Quant - min Model 1.1",0.7,"Model 1.1 >= min"],
+ [4,"Momentum - max distance to 52W high",0.15,"Price within x% of the 52-week high ..."],
+ ["","Momentum - max YTD (not parabolic)",0.8,"... and YTD below this level"],
+ [5,"Valuation - Fwd PE vs sector median",1,"Fwd PE > 0 and <= sector median x this factor"],
+ [6,"Coverage - max # analysts",10,"Fewer analysts than this = informational edge"],
+ [7,"Trend - min Model 1.1 slope",0,"6M slope of Model 1.1 above this level"],
+ ["","Min score to pass (of 7)",5,"Pass = SMID + leverage + Model 1.1 met, score >= this, no exclusion flag"]]
+wsc.Range(f"B5:E{4+len(crit)}").Value=crit
+g=wsc.Range("B5:E5"); g.Interior.Color=bgr("002060"); g.Font.Color=0xFFFFFF; g.Font.Bold=True
+wsc.Range(f"D6:D{4+len(crit)}").Interior.Color=bgr("FFF2CC"); wsc.Range(f"D6:D{4+len(crit)}").HorizontalAlignment=-4108; wsc.Range(f"B6:B{4+len(crit)}").HorizontalAlignment=-4108
+for a,fmt in (("D6:D7","#,##0"),("D8","0.0x"),("D9","0.00"),("D10:D11","0%"),("D12","0.0x"),("D13","0"),("D14","0.00"),("D15","0")): wsc.Range(a).NumberFormat=fmt
+for nm,a in (("cMcapMin","D6"),("cMcapMax","D7"),("cLev","D8"),("cM11","D9"),("cHigh","D10"),("cYTD","D11"),("cPE","D12"),("cCov","D13"),("cSlope","D14"),("cPass","D15")):
+    wb.Names.Add(Name=nm,RefersTo=f"=Criteria!${a[0]}${a[1:]}")
+wsc.Range("B18").Value="Exclusions (Aztlan default: gambling / tobacco / weapons; >30% business in Israel, Saudi Arabia or emerging markets)"; wsc.Range("B18").Font.Bold=True
+ex=[["RIC","Company","Reason"],["LTMC.MI","Lottomatica Group SpA","Gambling"],["ENLT.TA","Enlight Renewable Energy","Israel"],["HARL.TA","Harel Insurance Investments","Israel"],
+    ["CLIS.TA","Clal Insurance Enterprises","Israel"],["BGEO.L","Lion Finance Group PLC","Georgia (EM)"]]
+wsc.Range(f"B19:D{18+len(ex)}").Value=ex
+g=wsc.Range("B19:D19"); g.Interior.Color=bgr("002060"); g.Font.Color=0xFFFFFF; g.Font.Bold=True
+wsc.Range(f"B20:D{18+len(ex)+6}").Interior.Color=bgr("FFF2CC")
+wb.Names.Add(Name="exRIC",RefersTo="=Criteria!$B$20:$B$40"); wb.Names.Add(Name="exWhy",RefersTo="=Criteria!$D$20:$D$40")
+wsc.Range("F18").Value="Emerging-market HQ countries (auto flag)"; wsc.Range("F18").Font.Bold=True
+em=["Israel","Saudi Arabia","China","Hong Kong","India","Brazil","Mexico","South Africa","Turkey","Indonesia","Thailand","Malaysia","Philippines","Chile","Peru","Colombia","Argentina","Egypt","Poland","Greece","Georgia","Kazakhstan","Qatar","United Arab Emirates","Kuwait","Vietnam","Russia","Nigeria","Taiwan","Korea"]
+wsc.Range(f"F19:F{18+len(em)}").Value=[[x] for x in em]; wsc.Range(f"F19:F{18+len(em)}").Interior.Color=bgr("FFF2CC")
+wb.Names.Add(Name="emList",RefersTo="=Criteria!$F$19:$F$60")
+for c,w in zip("ABCDEF",[2,10,38,12,60,26]): wsc.Columns(c).ColumnWidth=w
+# ---------- AZTD holdings refresh (31-Aug-26)
+wsa=wb.Worksheets("AZTD Holdings"); wsa.Range("B3:D200").ClearContents()
+az=sorted(FW["AZTD"].items(),key=lambda x:-x[1])
+qn=pickle.load(open("deck_rt.pkl","rb"))
+def col(L): return (ord(L[0])-64) if len(L)==1 else (ord(L[0])-64)*26+ord(L[1])-64
+nm={r[0]:r[col('D')-3] for r in qn["rows"]}
+wsa.Range(f"B3:D{2+len(az)}").Value=[[nm.get(r,r),w,r] for r,w in az]
+wsa.Range("B2").Value="Company (AZTD holding, 31-Aug-26)"
+wb.Save()
+print("phase1 ok, data rows to",last)

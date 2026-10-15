@@ -1,0 +1,42 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+# restaurar estado de Excel por si quedo colgado
+$xl.ScreenUpdating=$true
+$xl.Calculation=-4105
+Write-Output ("Calculation="+[string]$xl.Calculation+"  ScreenUpdating="+[string]$xl.ScreenUpdating)
+$sm=T { $wb.Worksheets.Item("Segment Model") }
+Write-Output ""
+Write-Output "### que quedo escrito r73-r80 ###"
+for($r=73;$r -le 80;$r++){
+  $lab=[string](T { $sm.Cells.Item($r,3).Text })
+  if($lab.Length -gt 46){ $lab=$lab.Substring(0,46) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(47)+" J="+([string](T { $sm.Cells.Item($r,10).Text })).PadLeft(9)+" K="+([string](T { $sm.Cells.Item($r,11).Text })).PadLeft(9))
+}
+Write-Output ""
+Write-Output "### que quedo escrito r200-r222 ###"
+for($r=200;$r -le 222;$r++){
+  $lab=[string](T { $sm.Cells.Item($r,3).Text })
+  $d=[string](T { $sm.Cells.Item($r,4).Text })
+  $k=[string](T { $sm.Cells.Item($r,11).Text })
+  if($lab.Trim() -eq "" -and $d.Trim() -eq "" -and $k.Trim() -eq ""){ continue }
+  if($lab.Length -gt 46){ $lab=$lab.Substring(0,46) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(47)+" D="+$d.PadLeft(10)+" K="+$k.PadLeft(10))
+}
+Write-Output ""
+Write-Output ("  C116 (fila plantilla de capex) = '"+[string](T { $sm.Range("C116").Text })+"'")
+Write-Output ("  C100 = '"+[string](T { $sm.Range("C100").Text })+"'   C101 = '"+[string](T { $sm.Range("C101").Text })+"'   C102 = '"+[string](T { $sm.Range("C102").Text })+"'")
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=T { $wb.Worksheets.Item($nm) }
+  $e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

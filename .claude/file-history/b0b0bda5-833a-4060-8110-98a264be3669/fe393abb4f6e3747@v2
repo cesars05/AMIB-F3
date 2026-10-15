@@ -1,0 +1,274 @@
+"""Build the archetype gallery (one slide per layout recipe) with ILLUSTRATIVE data.
+
+    python gallery.py aztlan out/gallery_aztlan.pptx
+    python gallery.py femsa  out/gallery_femsa.pptx
+
+Use it as (1) a visual catalogue to pick layouts from and (2) a regression test for house.py:
+render with render.ps1 and inspect every PNG after changing house.py.
+"""
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from house import Deck  # noqa: E402
+
+SYSTEM = sys.argv[1] if len(sys.argv) > 1 else "aztlan"
+OUT = sys.argv[2] if len(sys.argv) > 2 else f"gallery_{SYSTEM}.pptx"
+SRC = "Illustrative data - layout gallery"
+TEMPLATE = sys.argv[3] if len(sys.argv) > 3 else None
+LAYOUT = sys.argv[4] if len(sys.argv) > 4 else "General"
+if SYSTEM == "brand":  # example client-brand swap (Halliburton red) on the Aztlan grid
+    from house import make_brand_system
+    SYSTEM = make_brand_system("aztlan", primary="#8B1318", primary_dark="#630E12", tint1="#B96A73",
+                               tint2="#EAD2D2", accent="#CC0000", name="brand")
+
+d = Deck(SYSTEM, template=TEMPLATE, layout=LAYOUT, footer_left="Equity Research · Illustrative" if (SYSTEM == "aztlan" and not TEMPLATE) else None)
+S = d.S
+C = S["content"]
+X0, X1 = C["x0"], C["x1"]
+W = X1 - X0
+
+# 1 Cover -----------------------------------------------------------------
+d.cover("Layout Gallery: Slide Archetypes", subtitle="House style · native shapes & charts",
+        date="October 2026", team=["Analyst A", "Analyst B", "Analyst C"] if d.S["name"] == "femsa" else None)
+
+# 2 Agenda -----------------------------------------------------------------
+d.agenda(["Executive summary", "Company overview", "Financial performance", "Peers & positioning",
+          "Valuation", "Capital allocation", "Recommendation"], active=None)
+
+# 3 Executive summary / investment call (text-only F5) --------------------
+s = d.content_slide("Investment Call: Compounding Into the Upcycle",
+                    "Backlog of $12.6bn (+60% YoY) covers ~1.1x next-year revenue; valuation still 15% below peers", SRC)
+d.text(s, X0, C["y0"], W, 5.2, [
+    "- Company X is the **global leader in process control**, capturing rising complexity with ^^~56% market share^^ and 6.5x the share of its nearest competitor.",
+    "**Catalysts**",
+    "- **Order momentum:** bookings of ^^$3.2bn in Q2^^ (+25% YoY) and a backlog that already covers 82% of guided revenue.",
+    "- **Mix shift:** services grow to 38% of revenue by FY27E, lifting gross margin by ~150 bps.",
+    "- **Capital returns:** $3.4bn returned in FY26 with $9.7bn of authorisation still available.",
+    "**Key Risks to Monitor**",
+    "- !!Customer concentration:!! top-3 customers represent 41% of revenue; a capex pause hits orders first.",
+    "- !!Valuation:!! at 32x forward P/E any miss compresses the multiple before earnings catch up.",
+], size=14, align="justify")
+
+# 4 Company overview (KLA s3) ----------------------------------------------
+s = d.content_slide("Company Overview", "Global leader in process control for semiconductor manufacturing", SRC)
+d.text(s, X0, C["y0"], 8.6, 1.5, [
+    "- **Dominant provider of inspection and metrology systems** that detect defects at every step of chip manufacturing, serving foundry, logic and memory makers.",
+    "- Competes through **R&D scale and IP**: 9,100 patents and $1.5bn of annual R&D (11% of revenue).",
+], size=12, align="justify")
+d.rect(s, 9.6, C["y0"] + 0.05, 3.0, 1.0, line=S["grey3"], text="[ company logo ]", size=10, color=S["grey5"])
+segs = [("Process Control", "90% of revenue", S["primary"]), ("PCB & Components", "6% of revenue", S["tint1"]),
+        ("Specialty Process", "4% of revenue", S["grey5"])]
+bw = (W - 0.4) / 3
+for i, (nm, pct, col) in enumerate(segs):
+    bx = X0 + i * (bw + 0.2)
+    d.header_bar(s, bx, 3.15, bw, nm, fill=col, h=0.36, size=12)
+    d.text(s, bx, 3.53, bw, 0.25, pct, size=10, italic=True, align="center", inset=0)
+    d.bullet_box(s, bx, 3.82, bw, 1.55, ["Inspection & metrology for wafers and reticles",
+                                         "Revenue **+12% YoY** on AI/HBM demand",
+                                         "Mix: foundry/logic 79%, memory 21%"], size=10)
+d.conclusion_bar(s, "Takeaway: one segment drives 90% of revenue - the thesis is a process-control thesis", y=5.6)
+
+# 5 Stacked columns + CAGR + forecast + takeaways (C1/C4) ------------------
+s = d.content_slide("Revenue Compounds at 12% as Services Scale",
+                    "FY21-FY27E CAGR 11.8%; services rise from 24% to 38% of revenue", SRC)
+y = d.block_header(s, X0, 1.472, 7.6, "Revenue by Segment", "Amounts in USD millions; FY26E-FY27E consensus")
+d.stacked_columns(s, X0, y, 7.6, 6.75 - y, ["FY21", "FY22", "FY23", "FY24", "FY25", "FY26E", "FY27E"],
+                  {"Products": [5200, 5900, 6300, 6400, 7100, 7700, 8300],
+                   "Services": [1650, 1950, 2300, 2700, 3300, 4100, 5100]},
+                  forecast_from=5, forecast_label="Consensus forecast", cagr=(0, 6))
+y2 = d.block_header(s, 8.45, 1.472, X1 - 8.45, "Key Takeaways")
+d.text(s, 8.45, y2 + 0.05, X1 - 8.45, 4.6, [
+    "- **Services +21% CAGR:** installed base of 17,000 tools converts into recurring revenue.",
+    "- **Products cyclical:** FY24 flat as memory capex paused.",
+    "- **Estimate risk:** FY27E assumes WFE of $150bn; !!a 10% miss cuts revenue ~6%!!.",
+], size=12)
+
+# 6 Paired bars + diverging bars (AZTD s5) ---------------------------------
+s = d.content_slide("Overweight Tech, Underweight Materials",
+                    "Average 2024-26: +6.3pp in Info. Technology, -9.0pp in Materials vs the peer average", SRC)
+sec = ["Info. Technology", "Health Care", "Comm. Services", "Utilities", "Financials", "Industrials", "Energy", "Materials"]
+subj = [13.1, 7.9, 6.3, 5.5, 17.6, 18.6, 1.8, 6.8]
+peer = [6.8, 3.6, 3.1, 2.5, 15.8, 21.3, 6.5, 15.8]
+hw = (W - 0.36) / 2
+y = d.block_header(s, X0, 1.472, hw, "Average Weight by Sector", "Fund vs peer average, Jan-24 to Sep-26")
+d.paired_bars(s, X0, y, hw, 6.75 - y, sec, ("Fund", subj), ("Peer avg", peer))
+y = d.block_header(s, X0 + hw + 0.36, 1.472, hw, "Over / Underweight vs Peers", "Fund weight minus peer average (pp)")
+d.diverging_bars(s, X0 + hw + 0.36, y, hw, 6.75 - y, sec, [a - b for a, b in zip(subj, peer)], sort="desc")
+
+# 7 Lines with end labels + table below (AZTD s3) --------------------------
+s = d.content_slide("Fund Lagged the Peers by 7.4pp a Year",
+                    "Annualized Jan-24 to Sep-26: Fund 14.2% vs 21.7% for the peer average", SRC)
+cats = ["Dec-23", "Mar-24", "Jun-24", "Sep-24", "Dec-24", "Mar-25", "Jun-25", "Sep-25", "Dec-25", "Mar-26", "Jun-26", "Sep-26"]
+y = d.block_header(s, X0, 1.472, W, "Growth of 100", "Total return in USD, month-end; Dec-23 = 100")
+d.line_chart(s, X0, y, W, 2.55, cats,
+             {"Fund": [100, 104, 103, 110, 108, 115, 121, 129, 133, 138, 145, 144],
+              "Peer A": [100, 106, 108, 115, 116, 126, 135, 147, 155, 163, 176, 178],
+              "Peer B": [100, 103, 107, 111, 112, 120, 128, 136, 141, 149, 158, 161],
+              "Peer avg": [100, 105, 107, 113, 114, 123, 131, 141, 148, 156, 167, 170]},
+             subject="Fund", colors=[S["accent"], S["grey3"], S["tint1"], S["primary"]],
+             widths={"Peer avg": 2.0}, dashed=("Peer avg",), vmin=90, vmax=190, val_fmt="0")
+y = d.block_header(s, X0, 4.62, W, "Fund Snapshot", None)
+d.table(s, X0, y, W, [["Fund", "# Holdings", "3Y Perf.", "YTD", "3M", "1M", "12M Fwd P/E"],
+                      ["Fund", "50", "16.4%", "7.5%", "-7.9%", "-5.5%", "11.4x"],
+                      ["Peer A", "1,618", "28.3%", "18.6%", "6.6%", "-2.3%", "10.6x"],
+                      ["Peer B", "1,158", "18.8%", "9.7%", "3.2%", "-2.7%", "12.2x"],
+                      ["Fund vs peer avg", "", "-6.9pp", "-6.7pp", "-13.5pp", "-2.9pp", "-0.2x"]],
+        row_h=0.27, size=10, bold_rows=(4,), band_rows=(4,), col_w=[3.0] + [(W - 3.0) / 6] * 6)
+
+# 8 Waterfall + bullets (C5) -------------------------------------------------
+s = d.content_slide("70% of Excess Cash Is Returned",
+                    "Ps. 46.6bn approved returns; Ps. 32.1bn of remaining capacity at 2.0x ND/EBITDA", SRC)
+y = d.block_header(s, X0, 1.472, 7.4, "Use of Excess Cash", "Ps. billions, 2026E")
+d.waterfall(s, X0, y, 7.4, 6.7 - y, [("Excess cash", 79.0, "total"), ("Ordinary div.", -15.2, "delta"),
+                                      ("Extraord. div.", -25.8, "delta"), ("Buybacks", -5.6, "delta"),
+                                      ("New debt", 9.7, "delta"), ("Remaining", 42.1, "total")], fmt="{:,.1f}")
+y2 = d.block_header(s, 8.3, 1.472, X1 - 8.3, "What the bridge says")
+d.text(s, 8.3, y2 + 0.05, X1 - 8.3, 4.5, [
+    "- **Dividends absorb 52%** of excess cash (Ps. 41.0bn).",
+    "- **Buybacks are small** (Ps. 5.6bn) despite a 13% discount to intrinsic value.",
+    "- **Debt capacity of Ps. 9.7bn** keeps leverage at the 2.0x policy.",
+], size=12)
+
+# 9 Football field (BARC-N p15) -----------------------------------------------
+s = d.content_slide("Valuation Summary", "DCF and trading comps support $38-$46 per share; offer at $43.00 sits mid-range", SRC)
+y = d.block_header(s, X0, 1.472, 8.2, "Implied Price per Share", "US$; ranges as low-high")
+d.football_field(s, X0, y + 0.35, 8.2, 6.7 - y - 0.35, [
+    ("EV / EBITDA '25E (7.6x-13.5x)", 33.50, 45.10, "main"),
+    ("P / E '25E (14x-19x)", 36.75, 44.30, "main"),
+    ("Precedents (8x-12x)", 34.95, 46.20, "alt"),
+    ("DCF (WACC 10-12%, g 1-2%)", 37.80, 45.60, "alt"),
+    ("Analyst price targets", 31.50, 45.00, "ref"),
+    ("52-week trading range", 23.00, 39.90, "ref")],
+    ref_lines=[(28.97, "Unaffected", "#7F7F7F"), (43.00, "Offer", S["dash_red"])],
+    groups=[("Valuation", 0, 3, S["primary"]), ("Reference", 4, 5, S["grey5"])])
+y2 = d.block_header(s, 9.05, 1.472, X1 - 9.05, "Assumptions")
+for i, (m, b) in enumerate([("Trading comps", "7 generic peers; CY25E multiples"),
+                            ("Precedents", "12 pharma deals 2015-24; LTM EBITDA"),
+                            ("DCF", "Mgmt case to FY34E; mid-year convention")]):
+    d.bullet_box(s, 9.05, y2 + 0.05 + i * 1.5, X1 - 9.05, 1.35, [b], title=m, size=10)
+
+# 10 Tornado + heat map --------------------------------------------------------
+s = d.content_slide("DCF Sensitivity: Margin and WACC Drive the Value",
+                    "Midpoint $42.15 per share; +/-1pt of EBITDA margin moves value by $1.65", SRC)
+hw = (W - 0.36) / 2
+y = d.block_header(s, X0, 1.472, hw, "Tornado: impact on value per share", "US$ per share vs base case")
+d.tornado(s, X0, y + 0.35, hw, 6.7 - y - 0.35, [("Litigation accrual $141m", -3.75, 0.0),
+                                                 ("EBITDA margin +/-1.0%", -1.65, 1.65),
+                                                 ("WACC +/-1.0%", -1.25, 1.50),
+                                                 ("Revenue growth +/-1.0%", -0.65, 0.70),
+                                                 ("Perpetuity growth +/-1.0%", -0.55, 0.65)], base_value=42.15)
+y = d.block_header(s, X0 + hw + 0.36, 1.472, hw, "Heat map: WACC vs EBITDA margin", "Implied price, US$")
+d.heatmap_table(s, X0 + hw + 0.36, y + 0.1, hw, ["13%", "12%", "11%", "10%", "9%"], ["14%", "15%", "16%", "17%", "18%"],
+                [[164.6, 175.5, 186.5, 197.4, 208.4], [184.8, 197.4, 210.0, 222.6, 235.1],
+                 [209.5, 224.1, 238.7, 253.3, 267.9], [240.3, 257.5, 274.6, 291.8, 309.0],
+                 [279.7, 300.2, 320.8, 341.3, 361.8]], corner="WACC \\ Mg", base=(2, 2), row_h=0.42)
+
+# 11 Numbered rows (Jazz/Netflix) ---------------------------------------------
+s = d.content_slide("Valuation Conclusions", "Four methods point to a 20-35% gap between price and value", SRC)
+d.numbered_rows(s, [("Implied valuation", "Undervalued by 20-35% depending on the methodology and year"),
+                    ("Comparable companies", "Higher growth and margins, yet trades at a discount to median EV/EBITDA"),
+                    ("DCF analysis", "Management case implies moderate upside; consensus implies none"),
+                    ("Precedent transactions", "LTM EV/EBITDA implies $240+; premiums imply $180-$200")],
+                y=1.6, step=1.25)
+
+# 12 Chevron timeline + cards (ALLOC s5) ----------------------------------------
+s = d.content_slide("Capital Return Track Record", "Solid record since 2023; yield of ~4.2% with upside if leverage < 2x", SRC)
+d.rect(s, X0, 1.55, W, 0.34, fill=S["grey1"], text="**Evolution of the capital return programme (2021-2025)**",
+       size=12, align="left", inset=0.15, round_=0.2, shadow=(d.S["name"] == "femsa"))
+chev, cw = d.chevron_row(s, X0, 2.05, W, ["2021", "2022", "2023", "2024", "2025"], h=0.55, size=16, gap=-0.08)
+titles = ["Conservative", "Recovery", "Strategic pivot", "Record year", "Acceleration"]
+bul = [["Ordinary dividend Ps. 2.3", "-26% vs 2020"], ["Ordinary dividend Ps. 3.4", "+48% vs 2021"],
+       ["Stake sale for EUR 6.9bn", "Capital framework announced"], ["Ordinary + extraordinary Ps. 7.5", "Buybacks 2.9% of capital"],
+       ["Dividend +4.2%", "Total return 10.4% of market cap"]]
+for i in range(5):
+    cx = X0 + i * (cw - 0.08)
+    d.card(s, cx + 0.06, 2.75, cw - 0.2, 3.9, titles[i], bul[i], size=11, fill=S["grey1"] if i % 2 == 0 else "#E6E6E6",
+           outline=(i % 2 == 0))
+
+# 13 Process with phase pentagons (BofA p21) ------------------------------------
+s = d.content_slide("Process Overview", "Illustrative buy-in process: three phases, ~24 weeks to close", SRC)
+d.banner(s, "Every special-committee process is unique; timing below is illustrative", y=1.5, h=0.38, size=11)
+phases = [("Initial phase", 1.6, ["Board approves proposal and engages advisors", "Committee reviews strategic alternatives",
+                                  "Advisor prepares preliminary valuation"]),
+          ("Negotiations", 1.25, ["Parties negotiate price and terms", "Committee may request a revised offer"]),
+          ("Execution", 1.6, ["Definitive agreement and joint announcement", "Proxy filed with the SEC; unitholder vote",
+                              "Closing after regulatory approval"])]
+yy = 2.05
+for name, hh, bl in phases:
+    d.phase_pentagon(s, X0, yy, 1.6, hh, name)
+    d.text(s, X0 + 1.85, yy + 0.05, W - 1.9, hh - 0.1, [f"- {b}" for b in bl], size=12)
+    yy += hh + 0.12
+    d.line(s, X0 + 1.85, yy - 0.06, X1, yy - 0.06, color=S["grey3"], width=0.75)
+
+# 14 Comparison matrix + conclusion bar (ALLOC s10) -------------------------------
+s = d.content_slide("Evaluating the Options", "Which method creates more value for the shareholder?", SRC)
+cols = [X0, X0 + 4.05, X0 + 8.05]
+cw3 = 3.85
+for j, (hd, f, tc) in enumerate([("Dimension", S["primary"], "#FFFFFF"), ("Accelerated buyback", S["grey1"], "#000000"),
+                                 ("Dividend", S["grey1"], "#000000")]):
+    d.rect(s, cols[j], 1.55, cw3, 0.45, fill=f, text=hd, size=12, bold=True, color=tc, round_=0.2,
+           shadow=(d.S["name"] == "femsa"))
+rows = [("Market signal", "Very strong, immediate", "Strong, gradual"),
+        ("Future flexibility", "High (no recurring commitment)", "Low (cuts read as negative)"),
+        ("Tax efficiency", "Superior (capital gains)", "Lower in most jurisdictions"),
+        ("EPS accretion", "Immediate and concentrated", "None"),
+        ("Who benefits", "Holders who stay", "All current holders"),
+        ("Requires undervaluation", "Yes, to create value", "No")]
+for i, r in enumerate(rows):
+    ry = 2.15 + i * 0.6
+    for j in range(3):
+        d.text(s, cols[j] + 0.1, ry, cw3 - 0.2, 0.42, ("- **" + r[j] + "**") if j == 0 else "- " + r[j], size=12,
+               anchor="middle")
+    if i in (2, 3, 4):
+        d.dashed_box(s, cols[1] + 0.05, ry + 0.02, cw3 - 0.25, 0.4)
+    d.line(s, X0, ry + 0.5, X1, ry + 0.5, color=S["grey3"], width=0.75, dash="dot")
+d.conclusion_bar(s, "The accelerated buyback maximises value: tax-efficient, immediately accretive and signals undervaluation",
+                 y=6.0, h=0.6)
+
+# 15 KPI tiles (MS p3) -----------------------------------------------------------
+s = d.content_slide("Scale, Earnings and Returns at Record Levels", None, SRC)
+tw = (W - 0.6) / 3
+for i, (n, l) in enumerate([("$9.3Tn", "Total client assets"), ("$10.21", "Earnings per share"), ("21.6%", "ROTCE")]):
+    d.kpi_tile(s, X0 + i * (tw + 0.3), 2.0, tw, 3.2, n, l, num_size=40)
+
+# 16 Theme frame module (AZTD s10) -------------------------------------------------
+s = d.content_slide("Weak Sectors: Largest Contributors (1/4)",
+                    "Materials (-5.0pp): mostly selection; Metals & Mining +0.5pp vs +3.9pp for the peers", SRC)
+d.theme_frame(s, X0 - 0.006, 1.472, W, 3.55, "Materials", "#42825D",
+              stats="Fund wt 6.8% vs peers 15.8%  |  Annualized perf. Fund -3% vs peers 30%  |  Gap -5.0pp")
+hw = (W - 0.4) / 2
+for k, who in enumerate(["Fund's largest contributors", "Peers' largest contributors"]):
+    tx = X0 + 0.06 + k * (hw + 0.2)
+    d.text(s, tx, 2.03, hw, 0.24, f"**{who}**", size=12, inset=0)
+    d.table(s, tx, 2.3, hw, [["Name", "Industry", "Contrib.", "Return", "YTD"],
+                            ["Company A", "Metals & Mining", "+0.28pp", "391%", "-2%"],
+                            ["Company B", "Chemicals", "+0.22pp", "-12%", "-11%"],
+                            ["Company C", "Chemicals", "+0.20pp", "397%", "132%"],
+                            ["Company D", "Metals & Mining", "+0.16pp", "388%", "35%"],
+                            ["Company E", "Construction Mat.", "-0.38pp", "-69%", "-24%"]],
+            row_h=0.27, size=9, header_fill="#404040", text_cols=(0, 1), col_w=[hw * 0.28, hw * 0.3, hw * 0.14, hw * 0.14, hw * 0.14])
+d.rect(s, X0, 5.15, W, 0.5, line="#000000", line_w=0.5,
+       text=["- ^^Allocation vs selection:^^ allocation -0.7pp, selection -2.3pp; fund held 6.8% vs 15.8%.",
+             "- ^^By industry:^^ Metals & Mining +0.5pp vs +3.9pp; Chemicals -0.6pp vs +0.7pp."],
+       size=9, align="left", anchor="middle")
+
+# 17 Donut + KPI tiles (C9) + leverage bars with target (C13) -------------------
+s = d.content_slide("Balanced Mix and Leverage Below Policy",
+                    "Three segments of similar size; net debt / EBITDA of 1.0x vs the 2.0x policy", SRC)
+y = d.block_header(s, X0, 1.472, 5.8, "Revenue Mix", "FY25, % of revenue")
+d.donut(s, X0 + 0.3, y + 0.05, 3.3, ["Retail", "Beverages", "Health", "Other"], [45, 30, 15, 10],
+        center_text="$32bn", center_label="FY25 revenue")
+for i, (n, l) in enumerate([("45%", "Retail"), ("+9%", "Revenue YoY"), ("14%", "EBITDA margin")]):
+    d.kpi_tile(s, X0 + 3.95, y + 0.05 + i * 1.25, 1.85, 1.1, n, l, num_size=20)
+y = d.block_header(s, 6.9, 1.472, X1 - 6.9, "Net Debt / EBITDA vs Peers", "x, LTM")
+d.bar_chart(s, 6.9, y, X1 - 6.9, 6.7 - y, ["Company", "Peer A", "Peer B", "Peer C", "Peer D"], [1.02, 2.4, 1.8, 3.1, 2.2],
+            color=S["grey3"], highlight=[0], highlight_color=S["primary"], fmt='0.0"x"', target=2.0,
+            target_label="Policy 2.0x", sort=None)
+
+# 18 Divider ------------------------------------------------------------------------
+d.divider("Appendix", "Financial statements and sensitivity tables", number="05")
+
+d.closing("Thank you")
+d.save(OUT)
+print("saved", OUT, d.n, "slides")

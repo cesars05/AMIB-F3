@@ -1,0 +1,66 @@
+# Revisión: deck v2 vs la skill `slide-construction` (sin cambios aplicados)
+
+Leídas completas: `SKILL.md`, `style-systems.md`, `adaptation.md`, `slide-catalog.md`, `grid-typography.md`, `rotation-qc.md`, `structural-diagrams.md`, `shapes-components.md`, `charts.md`, `images.md`, `thinkcell-library.md`, y las galerías `gallery_aztlan.png` y `gallery_structural.png`.
+
+## Diagnóstico general
+El deck v2 copia la **estructura de Copper (2026-01)**, que es casi toda "bullets + screenshot". La skill destila decks más recientes (KLA, GTT, Mitsubishi, AZTD, FEMSA) y pide otra cosa:
+1. **Adaptar, no copiar** (`adaptation.md`). Antes de cada lámina se toman 6 decisiones: forma del mensaje, cuántas piezas, dirección, foco, capa de lectura y densidad. En v2 repetí 2–3 moldes.
+2. **Explicar estructuras con formas** (preferencia explícita del usuario). Hay solo 3 diagramas: rutas de producción, Section 232 y el régimen de la UE. El resto es texto e imagen.
+3. **Rotación** (`rotation-qc.md`). Máximo 2 láminas seguidas de la misma familia y nunca el mismo layout dos veces seguidas. Cada sección debe seguir: divisor → contexto (diagrama o texto) → 1–3 cuantitativas (gráfica o tabla) → implicación con barra de conclusión.
+4. **Recetas por tipo de mensaje** (`slide-catalog.md` §8 y §14). Por ejemplo: precio = "línea con eventos anotados" con caja de *market statistics* y bandas; desempeño vs índice = "indexado vs peers con etiquetas finales" y mini tabla de retornos; peers = "logos como categorías + filas de métricas alineadas".
+
+## Rotación actual
+Familias: T texto · C gráfica · K tabla · D diagrama/boxes · E evidencia/imagen · F marco.
+
+| Sección | Secuencia v2 | Problema |
+|---|---|---|
+| Intro | 3 T · 4 D | ok |
+| Global (6–13) | E · C · E · E+C · E · E · E · E | **5 E seguidas (9–13)**; layout "bullets arriba + 2 imágenes" repetido (10, 12); sin lámina de implicación |
+| US (15–23) | C · E · E · E · D · C · C · E · E | 3 E seguidas (16–18); 20 y 21 con la misma geometría; no cierra con conclusión |
+| Europa (25–27) | E · C · D | sin cierre |
+| Asia (29–31) | E · C · E | sin cierre; falta un diagrama del desvío China → ASEAN → OCDE |
+| Exposure (33–36) | (pendiente) · D · K · E+C | ok, pero la lámina 34 no sigue la receta de peers |
+
+## Hallazgos por severidad
+### Crítico (consistencia numérica y unidades, según el QC de la skill)
+- **Unidades mezcladas:** HRC en US$/short ton (CME, BofA) y en US$/metric tonne (OECD, SIMA, Europa), Mt y Mst (BofA). Hay que fijar una convención (por ejemplo, $/t métrica, convirtiendo $/st × 1.1023) o rotularla siempre con una nota numerada.
+- **El mismo concepto con varias cifras:**
+  - Participación de importaciones: ~15%, ~16% y 15.7%.
+  - Demanda de EE. UU.: +2.0% (SRO 2026), +2.4% (SIMA 2025) y +0.6% (OECD 2026).
+  - Precio HRC: $1,285/st (CME, 14-oct) y $1,260/st (BofA, 8-oct).
+  - Cada cifra se puede defender, pero falta decir de qué fuente y periodo es.
+- Correr `extract_text.py` y luego `extract_numbers.py --check`; aún no se corrieron.
+
+### Importante (estructura y skill)
+1. **Cerrar cada región con una lámina de implicación** (D o T con barra de conclusión o `tail_bar`), por ejemplo "What It Means for US Steel". Hoy el deck es una lista de evidencias sin conclusión por sección.
+2. **Sustituir screenshots por diagramas donde el mensaje es una relación** (la forma imita la relación):
+   - *Transmisión del exceso de capacidad* (OECD Fig. 1.4) → diagrama nativo `merge/fan`: China → exportación directa / acero embebido / ASEAN (trasbordo) → mercados OCDE, con foco en EE. UU. Reemplaza o acompaña "China exports".
+   - *Oferta y demanda global* → una cadena "capacidad → producción → demanda → excedente → exportaciones → defensas", con cifras en cada nodo y `tail_bar` de lectura.
+   - *Motores de demanda en EE. UU.* → boxes de encabezado (D1: header de color + caja de bullets) por sector (non-res / infraestructura / energía / auto / residencial), con % del consumo y señal; en vez de la imagen de CMC.
+3. **Precio HRC con la receta §8:** bandas sombreadas para los periodos del 232, callouts con fecha + precio, caja "Market statistics" (último, máximo, mínimo, promedio, vs promedio) arriba a la derecha y tira de resumen debajo.
+4. **Exposure:**
+   - **Acciones vs S&P 500:** "indexado vs peers con etiquetas finales" + mini tabla de retornos (YTD/1Y/3Y) con la columna clave en caja.
+   - **Productores:** combinar la lámina de cajas con la receta ALLOC s9: barras de EBITDA con **logos como categorías** y filas de métricas alineadas (precio/t, envíos, utilización, guía 3T).
+5. **Romper rachas de E:**
+   - En Global, convertir una de 10/12/13 en gráfica nativa. Ejemplo: utilización global 2019–2028 o márgenes con los datos de la OECD.
+   - En US, que 16–18 alternen D → E → K.
+6. **Executive Summary:** ya sigue la receta "texto con secciones etiquetadas". Falta el remate: una barra de conclusión o "Key Risks to Monitor" con lead-ins rojos (KLA s6).
+7. **Agenda:** decks recientes la usan (pills numeradas + barras grises, `d.agenda`). Con 4 regiones ayuda a navegar.
+
+### Menor
+- Bloque de gráfica: header en y1.472 y gráfica en y2.194 según grid; v2 usa y1.55.
+- Texto junto a gráfica a 12 pt (v2 usa 13); 14 solo en láminas de texto.
+- Títulos según la convención "Tema + periodo: veredicto". Ejemplo: "US Imports 2015-25: Tariffs Push Volumes Down".
+- Notas numeradas (1)(2) cuando se mezclan fuentes o unidades.
+- Los divisores ya usan el campo navy de la plantilla (ok); podrían numerarse ("01 Global").
+
+## Propuesta de storyline v3 (para aprobar antes de construir)
+| Sección | Láminas (familia) |
+|---|---|
+| Inicio | Portada · Disclaimer · **Agenda** (F) · Executive Summary + riesgos (T) · Rutas de producción (D) |
+| 01 Global | Divisor · Uso por sector (E) · Demanda por región SRO (C) · Demanda/producción a 2030, tablas OECD (K/E) · **Cadena oferta→excedente→exportaciones (D)** · Capacidad vs demanda (E) · Precios por región (E) · **Utilización/márgenes nativo (C)** · Defensas comerciales (E) · **Implicación (D + barra)** |
+| 02 US | Divisor · Precio HRC con eventos (C) · **Motores de demanda, boxes por sector (D)** · Lead times y construcción (E) · Balance BofA (K) · Section 232 (D) · Importaciones (C) · Mix por país (C+E) · Utilización (E) · Paridad de importación (E) · **Implicación (D + barra)** |
+| 03 Europa | Divisor · Demanda (E) · Producción por país (C) · Régimen comercial + precios (D) · **Implicación (T + barra)** |
+| 04 Asia | Divisor · **Desvío China→ASEAN→OCDE (D)** · China exporta (E) · Crecimiento a 2030 (C) · Capacidad en Asia (E) · **Implicación (T + barra)** |
+| 05 Exposure | Divisor · Acciones vs S&P 500 indexado + tabla (C/K) · **Peers con logos + métricas (C)** · Señales comunes (K) · Utilidades (E+C) |
+| Cierre | Cierre |

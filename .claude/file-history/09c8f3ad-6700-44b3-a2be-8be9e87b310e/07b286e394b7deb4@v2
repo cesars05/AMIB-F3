@@ -1,0 +1,343 @@
+import sys
+sys.path.insert(0, '.')
+from lib import *
+from pptx import Presentation
+
+prs = Presentation('work.pptx')
+S = list(prs.slides)
+s_over, s_glance, s_trans, s_rat, s_fin, s_pf, s_ver = S[2], S[3], S[4], S[5], S[6], S[7], S[8]
+
+# ============================================================ FACT BASE (all C$)
+EV = 5700.0                      # C$M, Cenovus/ATH releases
+EV_DACF_26 = 10.2                # mgmt 2026 exit, no synergies
+DACF_26 = EV / EV_DACF_26        # implied
+AFF_H1, INT_H1, TAX_H1 = 251.050, 14.607 - 4.799, 37.935 - 36.848   # ATH Q2-26 FS / PR
+EBITDA_H1 = AFF_H1 + INT_H1 + TAX_H1
+EBITDA_ANN = EBITDA_H1 * 2
+EV_EBITDA = EV / EBITDA_ANN
+CVE_PROD, ATH_PROD = 990.0, 45.0
+CVE_2P, ATH_2P = 9.6, 1.3
+CVE_AFF = 13.5                   # TTM to Jun-30-26 (C$B)
+SYN = 85.0
+CVE_SH, SH_CASH, SH_MAX = 1850.0, 31.7, 44.4
+pf_prod = CVE_PROD + ATH_PROD
+rl_cve = CVE_2P * 1e9 / (CVE_PROD * 1e3 * 365)
+rl_pf = (CVE_2P + ATH_2P) * 1e9 / (pf_prod * 1e3 * 365)
+rl_ath = ATH_2P * 1e9 / (ATH_PROD * 1e3 * 365)
+pf_aff = CVE_AFF + DACF_26 / 1000
+aff_sh = CVE_AFF / CVE_SH * 1000
+FIN = 4300 * 0.045 / 1000        # illustrative financing cost, C$B (4.5% assumed)
+pf_aff_sh = (CVE_AFF + DACF_26 / 1000 + SYN / 1000 - FIN) / ((CVE_SH + SH_CASH)) * 1000
+cve_mult_ttm = (84.4 + 3.0) / CVE_AFF
+cve_mult_q2 = (84.4 + 3.0) / (4.986 * 4)
+nav_prem = (12.0 - 12.0 / 1.25) * (5800 / 12.0)          # C$M
+syn_cap_lo, syn_cap_hi = SYN * 7, SYN * EV_DACF_26
+print('DACF26 %.0f | EBITDA H1 %.1f ann %.0f | EV/EBITDA %.2f' % (DACF_26, EBITDA_H1, EBITDA_ANN, EV_EBITDA))
+print('PF prod %.0f (+%.2f%%) | RL cve %.1f pf %.1f ath %.1f' % (pf_prod, ATH_PROD / CVE_PROD * 100, rl_cve, rl_pf, rl_ath))
+print('AFF/sh %.2f -> %.2f (%.1f%%) | PF AFF %.2f (+%.1f%%)' % (aff_sh, pf_aff_sh, (pf_aff_sh / aff_sh - 1) * 100, pf_aff, DACF_26 / 1000 / CVE_AFF * 100))
+print('CVE mult ttm %.1f q2ann %.1f | NAV prem $%.0fM | syn cap %.0f-%.0f' % (cve_mult_ttm, cve_mult_q2, nav_prem, syn_cap_lo, syn_cap_hi))
+
+SRC = lambda t: t
+
+
+def set_footer(slide, text):
+    set_simple_text(shape_by_name(slide, 'Text Placeholder 35'), text)
+
+
+def title_sub(slide, title=None, sub=None):
+    if title: set_simple_text(shape_by_name(slide, 'Title 2'), title)
+    if sub: set_simple_text(shape_by_name(slide, 'Subtitle 1'), sub)
+
+
+# ============================================================ SLIDE 3  Company Overview (audit fixes)
+title_sub(s_over, sub='Long-life oil sands producer: ~40 MBOE/d today, ~45 MBOE/d exiting 2026, 75+ years of reserves')
+set_footer(s_over, 'Source: Athabasca Q2 2026 results; Cenovus acquisition presentation (Oct 5, 2026)')
+write_paras(shape_by_name(s_over, 'Text Placeholder 8'), [mk_para(
+    ['Alberta energy company with two segments, thermal oil (SAGD) and light oil (Duvernay), producing ',
+     B('~40,000 boe/d today (98% liquids)'), ' and guiding to ', B('~45,000 boe/d at 2026 exit'), '.'],
+    size=14, algn='just')])
+r16 = shape_by_name(s_over, 'Rectangle 16')
+write_paras(r16, [
+    mk_para(['Core segment: bitumen via SAGD across ~300,000 gross acres in the McMurray fairway, with ',
+             B('1.2 billion barrels of 2P reserves'), '. Three key assets:'], size=12, bullet=False, algn='just'),
+    mk_para([''], size=12, bullet=False),
+    mk_para([B('Leismer: '), '~31,000 bbl/d 2026 exit (Q2 avg. 18,274 on turnaround); 40,000 by YE-2027'], size=12, algn='l'),
+    mk_para([B('Hangingstone: '), '~9,000 bbl/d'], size=12, algn='l', spc_bef=3),
+    mk_para([B('Corner: '), 'pre-sanction, 353 MMbbl 2P; Phase 1 first steam early 2029'], size=12, algn='l', spc_bef=3),
+])
+r18 = shape_by_name(s_over, 'Rectangle 18')
+write_paras(r18, [
+    mk_para(['Pure-play Kaybob Duvernay tight oil developer, ', B('70% owned by Athabasca'), ' (30% Cenovus).'],
+            size=12, bullet=False, algn='just'),
+    mk_para([''], size=12, bullet=False),
+    mk_para(['~5,000 boe/d in Q2-26 (82% liquids), ~6,000 at 2026 exit; ~200,000 gross acres, 432 gross locations '
+             '(Cenovus: >170 net) and ~20 years of inventory; self-funded by its own cash flow and credit facility.'],
+            size=12, bullet=False, algn='just'),
+])
+add_textbox(s_over, 7202585, 3590000, 4572000, 200000,
+            [mk_para([I('Current production (Jul-26); 2026 exit ~45,000 boe/d', size=9, color='595959')], size=9, bullet=False, algn='ctr')])
+
+# ============================================================ SLIDE 4  Athabasca at a Glance (NEW)
+s = s_glance
+title_sub(s, 'Athabasca at a Glance',
+          '~45 MBOE/d, 75+ years of reserves and net cash, priced at ~10x cash flow')
+set_footer(s, 'Source: Athabasca Q2-26 results and financials; Cenovus / Athabasca releases (Oct 5, 2026)')
+for nm in ('Picture 14',):
+    delete(shape_by_name(s, nm))
+for sid in (18, 20):
+    delete(shape_by_id(s, sid))
+DY = 1121466
+for nm in ('TextBox 21', 'Straight Connector 20', 'TextBox 22', 'TextBox 7', 'Straight Connector 4', 'TextBox 9'):
+    sh = shape_by_name(s, nm)
+    sh.top = Emu(sh.top + DY)
+set_simple_text(shape_by_name(s, 'TextBox 21'), 'Core assets & production')
+set_simple_text(shape_by_name(s, 'TextBox 22'), 'MBOE/d. 2026 exit: Leismer ~31, Hangingstone ~9, Duvernay ~5')
+set_simple_text(shape_by_name(s, 'TextBox 7'), 'Key financial metrics')
+set_simple_text(shape_by_name(s, 'TextBox 9'), 'C$; EV at the $12.00 per share offer')
+
+# KPI tiles
+tile_w, gap, ty, th = 2697689, 152400, 1352108, 1000000
+tiles = [
+    ('~45', 'MBOE/d', '2026 exit production, 98% liquids (~40 thermal + ~5 Duvernay)'),
+    ('>75', 'years', '2P reserve life: 1.3 BBOE 2P; 2.3 BBOE incl. 2C (~140 yrs)'),
+    ('10.2x', 'EV / DACF', '2026E exit, no synergies; ~7x on 2027E incl. synergies'),
+    ('$251M', 'AFF, H1-26', '$0.52 per share; Q2-26 $123M. Net cash $62M, liquidity $826M'),
+]
+for k, (big, unit, lab) in enumerate(tiles):
+    r = add_rect(s, 525464 + k * (tile_w + gap), ty, tile_w, th, fill=NAVY)
+    fill_shape_text(r, [
+        mk_para([('%s ' % big, {'b': True, 'color': 'FFFFFF', 'size': 24}), (unit, {'b': True, 'color': GOLD, 'size': 12})],
+                size=24, bullet=False, algn='l'),
+        mk_para([(lab, {'color': 'FFFFFF', 'size': 10})], size=10, bullet=False, algn='l', spc_bef=2),
+    ], anchor=MSO_ANCHOR.MIDDLE, margins=(109728, 45720, 91440, 45720))
+
+# Chart: production trajectory (stacked: reported + turnaround impact)
+add_chart(s, 525464, 3140000, 5394960, 2640000,
+          ["Q2-25", "Q2-26", "Jul-26", "2026E exit"],
+          [("Reported production", [39.1, 32.1, 40.0, 45.0], NAVY),
+           ("Planned turnaround impact", [0, 7.2, 0, 0], LBLUE)],
+          stacked=True, label_fmt='#,##0.0;;;', legend=True, label_colors={0: 'FFFFFF', 1: '000000'},
+          point_colors={0: {2: STEEL, 3: STEEL}}, gap=70)
+# Table: key financial metrics
+rows = [
+    ['Metric', 'Value', 'Basis'],
+    ['Enterprise value', '$5.7B', 'Equity ~$5.8B; net cash $62M'],
+    ['EV / DACF, 2026E exit', '10.2x', 'Mgmt forecast, pre-synergy'],
+    ['EV / DACF, 2027E', '~7x', 'Consensus incl. synergies'],
+    ['EV / EBITDA, H1-26 annualized', '~%.1fx' % EV_EBITDA, 'Aztlan est. (1)'],
+    ['DACF, 2026E (implied)', '~$%.2fB' % (DACF_26 / 1000), 'EV / 10.2x (Aztlan calc.)'],
+    ['EV per flowing boe/d', '$127k', '2026 exit, ~45 MBOE/d'],
+    ['EV / 2P | 2P+2C reserves', '$4.4 | $2.5 /boe', '1.3 | 2.3 BBOE'],
+    ['Net cash | liquidity', '$62M | $826M', 'Jun 30, 2026'],
+]
+add_table(s, 6378461, 3140000, [2150000, 1350000, 1894960], rows, 262000, size=10, aligns=['l', 'ctr', 'l'],
+          highlight_rows=(2,))
+add_note(s, '(1) EBITDA is not reported by Athabasca or Cenovus. Aztlan est. = H1-26 AFF + cash interest + current tax = $%.0fM, x2 = ~$%.0fM; '
+            'H1 is depressed by turnarounds (Q2: ~7.2 MBOE/d) and ~7,800 bbl/d of June volumes sold from inventory in July. Jul-26 and 2026E exit are estimates. Total ~45 MBOE/d = thermal ~40 + Duvernay Energy ~5 '
+            '(rounded; Athabasca cites ~6 at exit; DEC shown at 100%%).' % (EBITDA_H1, EBITDA_ANN), y=5880000)
+
+# ============================================================ SLIDE 5  Transaction Overview
+s = s_trans
+title_sub(s, 'Transaction Overview',
+          'C$5.7B EV, 65-75% cash: 14% premium to VWAP, 25% premium to NAV')
+set_footer(s, 'Source: Cenovus and Athabasca press releases (Oct 5, 2026); Aztlan market data')
+body = shape_by_name(s, 'Text Placeholder 15')
+set_geom(body, y=2560000, h=3250000)
+write_paras(body, [
+    mk_para(['Purchase price of ', B('$12.00 per Athabasca share'), ': a ', B('14% premium to the 20-day VWAP'),
+             ' (13.4% to prior close (2)) and a ', B('25% premium to 2P after-tax NAV'), '.'], size=14, algn='just', line_pts=18),
+    mk_para(['Shareholders elect ', B('$12.00 cash, 0.264 Cenovus shares, or a mix'), '; pro-ration caps cash at ', B('75% ($4.3B)'),
+             ' and shares at ', B('35% (44.4M)'), ', so the final mix is ', B('65-75% cash / 25-35% shares'), '.'],
+            size=14, algn='just', line_pts=18, spc_bef=8),
+    mk_para(['Implies ', B('equity value of ~$5.8B and EV of $5.7B'), ': ', B('10.2x EV/DACF'), ' (2026 exit, pre-synergy) (1), ',
+             B('~7x on 2027E'), ' and ', B('$127k per flowing boe/d'), '.'], size=14, algn='just', line_pts=18, spc_bef=8),
+    mk_para(['Max-cash case: $4.3B cash (cash on hand + short-term debt; no financing condition)'], size=12, lvl=1, algn='l', spc_bef=5),
+    mk_para(['$1.4B in ~31.7M Cenovus shares (1.7% of shares outstanding)'], size=12, lvl=1, algn='l', spc_bef=3),
+    mk_para(['Year-end 2026 pro forma net debt $5.0-5.5B (<0.5x AFF); $4.0B net debt target unchanged'], size=12, lvl=1, algn='l', spc_bef=3),
+])
+set_simple_text(shape_by_name(s, 'Rectangle 33'), 'Deal Timeline')
+for nm, txt in (('Oval 36', 'Oct 5'), ('Oval 44', 'Dec')):
+    sh = shape_by_name(s, nm)
+    if nm == 'Oval 36':
+        write_paras(sh, [mk_para([('Oct 5', {'b': True, 'color': '000000', 'size': 11})], size=11, bullet=False, algn='ctr')])
+for _n in ('Oval 36','Oval 40','Oval 44','Oval 48'):
+    _o = shape_by_name(s, _n); _o.text_frame.margin_left = Emu(0); _o.text_frame.margin_right = Emu(0); _o.text_frame.word_wrap = False
+set_simple_text(shape_by_name(s, 'Oval 48'), '2027+')
+set_simple_text(shape_by_name(s, 'Oval 40'), 'Nov')
+set_simple_text(shape_by_name(s, 'Oval 44'), 'Dec')
+tl = [
+    ('Rectangle 38', [B('Announcement: ', '000000'), 'definitive agreement; both boards unanimous; Athabasca insiders (~2.2%) lock up votes']),
+    ('Rectangle 42', [B('Early Nov: ', '000000'), 'circular filed on SEDAR+. ', B('Late Nov: ', '000000'), 'special shareholder meeting']),
+    ('Rectangle 46', [B('Closing: ', '000000'), 'court, Competition Act and other approvals; no financing contingency']),
+    ('Rectangle 50', [B('Integration: ', '000000'), '$85M synergies (mostly in year 1); Leismer to 40 kbbl/d by YE-27; Corner full production by 2032']),
+]
+for nm, runs in tl:
+    sh = shape_by_name(s, nm)
+    write_paras(sh, [mk_para(runs, size=10, algn='l')])
+    sh.text_frame.word_wrap = True
+set_geom(shape_by_name(s, 'Rectangle 50'), w=3400000, h=650000)
+adv = shape_by_name(s, 'TextBox 56')
+write_paras(adv, [mk_para([I('Advisors: CIBC (Cenovus); Peters & Co. and National Bank (Athabasca)', size=10)], size=10, bullet=False, algn='l')])
+set_geom(adv, y=5000000)
+add_note(s, '(1) Strip: US$85 WTI, US$15.50 WCS differential, C$1.80 AECO, 0.72 C$/US$ (Sept 28, 2026). (2) Per Aztlan market data; not stated in company releases. '
+            'Market caps per Aztlan market data; USD at ~0.70 C$/US$ (deal metrics use 0.72). Max-cash case assumes 75% cash / 25% shares.', y=5880000)
+
+# ============================================================ SLIDE 6  Rationale (The "Why")
+s = s_rat
+title_sub(s, 'Strategic Rationale: The "Why"',
+          'Adds ~45 MBOE/d next to Christina Lake and a path to 115 kbbl/d thermal by 2032')
+set_footer(s, 'Source: Cenovus acquisition presentation (Oct 5, 2026); Petrinex, AER, Enverus')
+tb = [sh for sh in s.shapes if sh.name == 'Text Placeholder 15' and sh.top == 1352108][0]
+write_paras(tb, [
+    mk_para([B('Scale next door: '), 'adds ', B('~45 MBOE/d'), ' (+4.5% on Cenovus\' ~990), thermal barrels adjacent to Christina Lake, May River and Thornbury; '
+             'combined SAGD ranks #1 in production, SOR and resource base.'], size=12, algn='just'),
+    mk_para([B('Resource, not just barrels: '), B('1.3 BBOE 2P'), ' (75+ year life) and 2.3 BBOE incl. contingent, bought at ', B('$4.4 per 2P boe'), '.'],
+            size=12, algn='just', spc_bef=5),
+    mk_para([B('Lower cost per barrel: '), 'Cenovus\' SAGD playbook targets ', B('~20% lower SOR'), ', plus ', B('$85M/yr synergies'),
+             ' (~$5/boe on 45 MBOE/d) and growth at ~$35k per flowing bbl/d vs. $127k paid.'], size=12, algn='just', spc_bef=5),
+])
+set_simple_text(shape_by_name(s, 'Rectangle 8'), 'Note: Peers include CNOOC, CNQ, COP, SCR, SU. (1) 2025 SAGD average (Petrinex, AER). (2) Enverus, Mar-2026.')
+rect8 = shape_by_name(s, 'Rectangle 8')
+for r_ in rect8.text_frame.paragraphs[0].runs:
+    r_.font.size = Pt(9)
+set_simple_text(shape_by_name(s, 'TextBox 18'), 'Fit with Cenovus\' footprint')
+set_simple_text(shape_by_name(s, 'TextBox 19'), 'Athabasca (light blue) sits next to Christina Lake')
+side = [sh for sh in s.shapes if sh.name == 'Text Placeholder 15' and sh.top != 1352108][0]
+write_paras(side, [
+    mk_para([B('Leismer: '), '~31 kbbl/d, to 40 by YE-27'], size=10, algn='l', spc_bef=0),
+    mk_para([B('Hangingstone: '), '~9 kbbl/d'], size=10, algn='l', spc_bef=3),
+    mk_para([B('Corner: '), 'greenfield, 353 MMbbl 2P'], size=10, algn='l', spc_bef=3),
+    mk_para([B('Tie-backs: '), 'May River, Thornbury'], size=10, algn='l', spc_bef=3),
+    mk_para([B('Duvernay: '), 'Cenovus owns 30% already'], size=10, algn='l', spc_bef=3),
+])
+
+# ============================================================ SLIDE 7  Financial Metrics
+s = s_fin
+title_sub(s, 'Financial Metrics',
+          '~10x cash flow today, ~7x with synergies: the price is a bet on growth')
+set_footer(s, 'Source: Cenovus / Athabasca releases (Oct 5, 2026); Athabasca Q2-26; Aztlan calcs.')
+delete(shape_by_id(s, 20))
+set_simple_text(shape_by_name(s, 'TextBox 22'), 'C$; Athabasca 2026 exit-rate basis unless stated')
+rows = [
+    ['Metric', 'Value', 'Basis'],
+    ['Enterprise value', '$5.7B', 'Equity ~$5.8B less net cash'],
+    ['EV / DACF, 2026E exit', '10.2x', 'Mgmt forecast, strip (2)'],
+    ['EV / DACF, 2027E', '~7x', 'Consensus incl. synergies'],
+    ['EV / EBITDA, H1-26 ann.', '~%.1fx' % EV_EBITDA, 'Aztlan est. (1)'],
+    ['EV per flowing boe/d', '$127k', '~45 MBOE/d at exit'],
+    ['EV per boe/d incl. 2032 growth', '$42k', '115 kbbl/d + 20 MBOE/d DEC'],
+    ['EV / 2P | 2P+2C reserves', '$4.4 | $2.5', 'per boe; 1.3 | 2.3 BBOE'],
+    ['Premium to 2P after-tax NAV', '25%', 'McDaniel NPV10, Dec-25'],
+]
+add_table(s, 525464, 2044130, [2250000, 1150000, 1994960], rows, 262000, size=10, aligns=['l', 'ctr', 'l'], highlight_rows=(2,))
+add_textbox(s, 525464, 4520000, 5394960, 1300000, [
+    mk_para([B('Cash-flow lens: '), '~10x today (~7x on 2027E) vs. ~%.1f-%.1fx for Cenovus itself (3): a premium multiple, not a bargain.' % (cve_mult_q2, cve_mult_ttm)],
+            size=12, algn='just'),
+    mk_para([B('Resource lens: '), '$4.4 per 2P boe and a 25% premium to NAV; the price embeds faster Leismer and Corner growth.'],
+            size=12, algn='just', spc_bef=6),
+])
+set_simple_text(shape_by_name(s, 'TextBox 9'), 'Mbbls/d: Athabasca standalone plan (left) vs. Cenovus 2032 plan (right)')
+ub = shape_by_id(s, 18)
+write_paras(ub, [
+    mk_para([B('Cenovus plan: 115 Mbbls/d by 2032'), ' (+25 vs. Athabasca\'s path; Corner delivered 3 years earlier) for ~$700-800M/yr capex through 2030, incl. ~$200M sustaining.'],
+            size=11, algn='just')])
+set_geom(ub, y=5560000, h=330000)
+add_note(s, '(1) EBITDA not reported; Aztlan est. = H1-26 AFF + cash interest + current tax, annualized (~$%.0fM). (2) Athabasca mgmt 2026 exit forecast at Sept 28 strip (US$85 WTI, US$15.50 WCS diff.). '
+            '(3) Aztlan calc.: (mkt cap $84.4B + net debt $3.0B) / AFF: %.1fx on TTM $13.5B, %.1fx on Q2-26 annualized; integrated company, not like-for-like.' % (EBITDA_ANN, cve_mult_ttm, cve_mult_q2),
+         y=5960000, h=380000)
+
+# ============================================================ SLIDE 8  Simplified Pro Forma (NEW)
+s = s_pf
+title_sub(s, 'Simplified Pro Forma: Before vs. After',
+          'A bolt-on: +4.5% production, +14% reserves, <2.5% dilution, leverage <0.5x AFF')
+set_footer(s, 'Source: Cenovus Corp. Presentation (Jul-26); Cenovus / Athabasca releases (Oct 5, 2026); Aztlan calcs.')
+delete(shape_by_name(s, 'Picture 14'))
+for sid in (18, 20):
+    delete(shape_by_id(s, sid))
+# left header (wider), right header
+lh, lr, ls_ = shape_by_name(s, 'TextBox 21'), shape_by_name(s, 'Straight Connector 20'), shape_by_name(s, 'TextBox 22')
+set_geom(lh, w=7050000); set_geom(lr, w=7050000); set_geom(ls_, w=7050000)
+set_simple_text(lh, 'Cenovus standalone  →  combined entity')
+set_simple_text(ls_, 'Cenovus on 2026 guidance midpoint; Athabasca on 2026 exit rate; C$')
+rh, rr, rs = shape_by_name(s, 'TextBox 7'), shape_by_name(s, 'Straight Connector 4'), shape_by_name(s, 'TextBox 9')
+RX, RW = 7850000, 3923421
+set_geom(rh, x=RX, w=RW); set_geom(rr, x=RX, w=RW); set_geom(rs, x=RX, w=RW)
+set_simple_text(rh, 'Scale: before vs. after')
+set_simple_text(rs, 'Standalone vs. pro forma')
+rows = [
+    ['Metric', 'Cenovus', '+ Athabasca', 'Pro forma', 'Change'],
+    ['Upstream production, MBOE/d (1)', '990', '+45', '1,035', ('+4.5%', {'b': True, 'color': NAVY})],
+    ['2P reserves, BBOE (2)', '9.6', '+1.3', '10.9', ('+13.5%', {'b': True, 'color': NAVY})],
+    ['2P reserve life, years (3)', '%.1f' % rl_cve, '>75', '%.1f' % rl_pf, ('+%.1f yrs' % (rl_pf - rl_cve), {'b': True, 'color': NAVY})],
+    ['Cash flow: AFF, EBITDA proxy, $B (4)', '13.5', '+%.2f' % (DACF_26 / 1000), '%.1f' % pf_aff, ('+%.1f%%' % (DACF_26 / 1000 / CVE_AFF * 100), {'b': True, 'color': NAVY})],
+    ['Annual synergies, $M', '-', '+85', '85', ('+0.6% of AFF', {'b': True, 'color': NAVY})],
+    ['AFF per share, $ (5)', '%.2f' % aff_sh, '-', '~%.2f' % pf_aff_sh, ('~+%.1f%%' % ((pf_aff_sh / aff_sh - 1) * 100), {'b': True, 'color': NAVY})],
+    ['Net debt, $B (6)', '3.0', 'up to +4.3 cash', '5.0-5.5', ('<0.5x AFF', {'b': True, 'color': GREEN})],
+    ['Shares outstanding, M', '1,850', '+32 to +44', '1,882-1,894', ('+1.7% to +2.4%', {'b': True, 'color': NAVY})],
+]
+add_table(s, 525464, 2044130, [2500000, 800000, 1150000, 1100000, 1500000], rows, 335000, size=10,
+          aligns=['l', 'ctr', 'ctr', 'ctr', 'ctr'])
+# right charts
+cw = 1900000
+add_textbox(s, RX, 2044130, cw, 230000, [mk_para([B('Production, MBOE/d', '000000', size=11)], size=11, bullet=False, algn='l')])
+add_textbox(s, RX + cw + 120000, 2044130, cw, 230000, [mk_para([B('Cash flow, $B', '000000', size=11)], size=11, bullet=False, algn='l')])
+add_chart(s, RX - 60000, 2330000, cw + 60000, 2420000, ['Standalone', 'Pro forma'],
+          [('Cenovus', [990, 990], NAVY), ('Athabasca', [0, 45], GOLD)], stacked=True, label_series=[0], label_fmt='#,##0',
+          label_colors={0: 'FFFFFF'}, gap=45, font=9, legend=True)
+add_chart(s, RX + cw + 60000, 2330000, cw + 60000, 2420000, ['Standalone', 'Pro forma'],
+          [('Cenovus', [CVE_AFF, CVE_AFF], NAVY), ('Athabasca', [0, round(DACF_26 / 1000, 2)], GOLD), ('Synergies', [0, 0.085], STEEL)],
+          stacked=True, label_series=[0], label_fmt='0.0', label_colors={0: 'FFFFFF'}, gap=45, font=9, legend=True)
+add_textbox(s, RX + 780000, 2330000, 1100000, 200000, [mk_para([B('+45 (+4.5%)', GOLD.replace('F5C400', '8A6D00'), size=10)], size=10, bullet=False, algn='ctr')])
+add_textbox(s, RX + cw + 120000 + 700000, 2330000, 1200000, 200000, [mk_para([B('+4.1% (+4.7% w/ syn.)', '8A6D00', size=9)], size=9, bullet=False, algn='ctr')])
+# so-what strip
+strip = add_rect(s, 525464, 5150000, 11247957, 560000, fill=NAVY)
+fill_shape_text(strip, [mk_para([('So what: ', {'b': True, 'color': GOLD, 'size': 12}),
+    ('the combination changes scale only modestly (<5% on production and cash flow) but lengthens reserve life to ~29 years and keeps leverage below 0.5x AFF; '
+     'the value case rests on growth and synergies, not on size.', {'color': 'FFFFFF', 'size': 12})], size=12, bullet=False, algn='l')],
+    margins=(137160, 45720, 137160, 45720))
+add_note(s, '(1) Cenovus 2026 guidance midpoint (970-1,010); Athabasca 2026 exit rate, which includes 100% of Duvernay Energy (Cenovus already owns 30%, so up to ~2 MBOE/d may already be in Cenovus volumes). '
+            '(2) YE-2025 2P; Athabasca per Cenovus (1.3 BBOE incl. Duvernay). (3) Aztlan calc.: 2P / (2026 production x 365); Cenovus reports 28 yrs on 2025 volumes. '
+            '(4) Neither company reports EBITDA: Cenovus TTM AFF to Jun-26; Athabasca = implied 2026E exit DACF (EV / 10.2x); excludes synergies. '
+            '(5) Aztlan illustration: (AFF + DACF + synergies - 4.5% assumed financing cost on $4.3B) / (1,850M + 31.7M sh.); no growth, no tax effect; Cenovus guides to accretion in 2027 on consensus. '
+            '(6) Cenovus Q3-26 ~$3.0B; pro forma YE-26 at strip, max cash ($4.3B) incl. costs and Q4 cash generation.', y=5760000, h=560000, size=7)
+
+# ============================================================ SLIDE 9  Value drivers & verdict (NEW)
+s = s_ver
+title_sub(s, 'Is It a Good Deal? Value Drivers and Risks',
+          'Fair price for a resource-and-growth thesis, not a cash-flow bargain')
+set_footer(s, 'Source: Cenovus / Athabasca releases (Oct 5, 2026); Athabasca Q2-26; Aztlan calcs.')
+delete(shape_by_name(s, 'Picture 14'))
+for sid in (18, 20):
+    delete(shape_by_id(s, sid))
+set_simple_text(shape_by_name(s, 'TextBox 21'), 'What the price buys')
+set_simple_text(shape_by_name(s, 'TextBox 22'), 'C$k per flowing boe/d: existing barrels are costly, new ones cheap')
+set_simple_text(shape_by_name(s, 'TextBox 7'), 'Value drivers and risks')
+set_simple_text(shape_by_name(s, 'TextBox 9'), 'Ranked by contribution to the investment case')
+add_chart(s, 525464, 2000000, 5394960, 2300000,
+          ['Price paid: existing (45 MBOE/d)', 'Price paid: incl. 2032 growth', 'Leismer expansion capex', 'Corner Phase 1 capex', 'Cenovus go-forward capex'],
+          [('C$k per flowing boe/d', [127, 42, 25, 36.5, 35], NAVY)], kind='bar', label_fmt='"$"General"k"', gap=40, font=10, vmax=150,
+          point_colors={0: {1: STEEL, 2: GOLD, 3: GOLD, 4: GOLD}}, reverse_cats=True)
+add_textbox(s, 525464, 4380000, 5394960, 700000, [
+    mk_para([B('Takeaway: '), 'Cenovus pays $127k for each existing flowing barrel but can add new ones for $25-37k, so the deal only works if growth is delivered.'],
+            size=12, algn='just')])
+add_textbox(s, 6378461, 1980000, 5394960, 3200000, [
+    mk_para([B('1. Resource + accelerated growth (primary). '), 'Thermal 40 to 115 kbbl/d by 2032, Corner 3 years earlier, on 1.2 BBbl 2P + 1 BBbl contingent.'], size=12, algn='l'),
+    mk_para([B('2. Operating uplift. '), 'SOR down ~20%%, 80+ redevelopment wells; $85M synergies (~$5/boe) are worth ~$%.1f-%.1fB at 7-10x, or 10-15%% of EV.' % (syn_cap_lo / 1000, syn_cap_hi / 1000)],
+            size=12, algn='l', spc_bef=4),
+    mk_para([B('3. Cash flow (smallest). '), 'Adds ~4%% to Cenovus AFF; AFF/share accretion ~+%.0f-2%% before growth (illustrative).' % round((pf_aff_sh / aff_sh - 1) * 100 - 0.5)],
+            size=12, algn='l', spc_bef=4),
+    mk_para([B('Risks', RED, size=12)], size=12, bullet=False, algn='l', spc_bef=8),
+    mk_para([B('Premium to NAV: ', RED), '25%% over 2P NAV is ~$%.1fB; synergies cover only about half to three-quarters of it.' % (nav_prem / 1000)], size=12, algn='l', spc_bef=2),
+    mk_para([B('Corner sanction ', RED), 'hinges on Alberta\'s new fiscal framework (details pending).'], size=12, algn='l', spc_bef=4),
+    mk_para([B('Execution and price: ', RED), 'SOR gains, Leismer ramp (31 to 40 kbbl/d), heavy differential (strip US$15.50).'], size=12, algn='l', spc_bef=4),
+])
+strip = add_rect(s, 525464, 5200000, 11247957, 560000, fill=NAVY)
+fill_shape_text(strip, [mk_para([('Aztlan view: ', {'b': True, 'color': GOLD, 'size': 12}),
+    ('fair, not cheap. Low financial risk (<0.5x net debt/AFF; EV is ~6.8% of Cenovus\' market cap), but returns depend on SOR gains and Corner sanction rather than on today\'s cash flow.',
+     {'color': 'FFFFFF', 'size': 12})], size=12, bullet=False, algn='l')], margins=(137160, 45720, 137160, 45720))
+add_note(s, 'Aztlan calcs: $127k = $5.7B / 45 MBOE/d; $42k = $5.7B / (115 kbbl/d thermal + 20 MBOE/d Duvernay); capex per flowing bbl/d from Athabasca Q2-26 (Leismer $25k, Corner Ph.1 $36.5k) and Cenovus (~$35k). '
+            'NAV premium = ($12.00 - $12.00/1.25) x ~483M shares. Synergy value = $85M x 7.0x-10.2x. Cenovus multiple ~%.1f-%.1fx = (mkt cap $84.4B + net debt $3.0B) / AFF (TTM vs. Q2-26 annualized).' % (cve_mult_q2, cve_mult_ttm),
+         y=5830000, h=450000)
+
+prs.save('out.pptx')
+print('saved')

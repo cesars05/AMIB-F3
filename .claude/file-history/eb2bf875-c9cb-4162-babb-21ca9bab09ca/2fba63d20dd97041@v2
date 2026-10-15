@@ -1,0 +1,49 @@
+$ErrorActionPreference="Stop"
+$xl=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); if([int]$xl.Workbooks.Count -gt 0){ break } }catch{}; Start-Sleep -Milliseconds 800 }
+Write-Output ("Workbooks abiertos: "+[string]$xl.Workbooks.Count)
+$libros=@()
+foreach($w in $xl.Workbooks){ $libros+=$w; Write-Output ("   ["+$w.Name+"]   guardado en: "+$w.Path) }
+if($libros.Count -lt 2){ Write-Output "`nSolo hay un libro abierto - no puedo comparar"; exit 0 }
+
+Write-Output ""
+Write-Output "=== comparacion de lineas clave (Base Case en ambos) ==="
+foreach($w in $libros){
+  $cm=$null
+  try{ $cm=$w.Worksheets.Item("Consolidated Model") }catch{ Write-Output ("  "+$w.Name+" : sin hoja Consolidated Model"); continue }
+  $wa=$null
+  try{ $wa=$w.Worksheets.Item("Assumptions") }catch{}
+  $esc=""
+  if($wa -ne $null){ $esc=[string]$wa.Range("F10").Text }
+  Write-Output ("")
+  Write-Output ("--- "+$w.Name+"   escenario: "+$esc+" ---")
+  Write-Output ("    "+"".PadRight(30)+((10..17 | ForEach-Object { $i=$_; ([string]$cm.Cells.Item(9,$i).Text).PadLeft(10) }) -join ""))
+  foreach($p in @(@(47,"Revenue"),@(48,"Cost of sales"),@(53,"Adj EBITDA"),@(56,"Adj EBIT"),@(77,"Gross Margin"),@(122,"Cash at bank"),@(147,"Bank loans"),@(164,"BALANCE CHECK"))){
+    Write-Output ("    "+([string]$p[1]).PadRight(30)+((10..17 | ForEach-Object { $i=$_; ([string]$cm.Cells.Item($p[0],$i).Text).PadLeft(10) }) -join ""))
+  }
+}
+
+Write-Output ""
+Write-Output "=== diferencias de FORMULA en el Consolidated Model (col K) ==="
+$a=$libros[0]; $b=$libros[1]
+$ca=$null; $cb=$null
+try{ $ca=$a.Worksheets.Item("Consolidated Model") }catch{}
+try{ $cb=$b.Worksheets.Item("Consolidated Model") }catch{}
+if($ca -ne $null -and $cb -ne $null){
+  $dif=0
+  for($r=10;$r -le 320;$r++){
+    $fa=""; $fb=""
+    try{ $fa=[string]$ca.Range("K"+$r).Formula }catch{}
+    try{ $fb=[string]$cb.Range("K"+$r).Formula }catch{}
+    if($fa -ne $fb){
+      $lab=[string]$ca.Cells.Item($r,3).Text
+      if($lab.Trim() -eq ""){ $lab=[string]$cb.Cells.Item($r,3).Text }
+      Write-Output ("  r"+$r+"  ["+$lab+"]")
+      Write-Output ("      "+$a.Name.Substring(0,[math]::Min(18,$a.Name.Length))+": "+$fa.Substring(0,[math]::Min(95,$fa.Length)))
+      Write-Output ("      "+$b.Name.Substring(0,[math]::Min(18,$b.Name.Length))+": "+$fb.Substring(0,[math]::Min(95,$fb.Length)))
+      $dif++
+      if($dif -ge 25){ Write-Output "  ... (mas de 25 diferencias, corto aqui)"; break }
+    }
+  }
+  Write-Output ("  total de filas con formula distinta: "+$dif)
+}

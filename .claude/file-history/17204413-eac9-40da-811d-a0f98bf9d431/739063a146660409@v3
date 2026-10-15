@@ -1,0 +1,372 @@
+"""Complejo de AI, organizado por la cadena de CapEx.
+
+    python generar_ai.py              # todo
+    python generar_ai.py --solo pe
+    python generar_ai.py --solo bubble
+
+Salidas en ai/:
+    PE_<tier>.png      -- 12M forward P/E por eslabon (12.60x4.64, ancho completo)
+    Bubble.png         -- valuacion vs crecimiento, tamano = market cap
+    Matriz_<grupo>.png -- retornos por periodo, partidos por eslabon
+    SOXvsSPX.png       -- semis relativo al S&P
+
+LA CADENA
+---------
+Los hyperscalers gastan; todo lo demas captura ese gasto. El orden de los
+tiers es el del flujo de dinero, no alfabetico:
+
+    Hyperscalers (demanda)
+      -> Silicon / Accelerators      el chip
+      -> Memory                       el otro chip, el mas ciclico
+      -> Server & Storage / EMS-ODM   el ensamble
+      -> Networking                   lo que conecta los racks
+      -> Power, Cooling & Facility    el edificio y su energia
+      -> On-site Power Generation     generacion detras del medidor
+
+WFE (equipo de obleas) es proveedor de los proveedores: le vende a Silicon y a
+Memory, no al hyperscaler.
+
+DOS TRAMPAS DE DATOS QUE YA COSTARON
+------------------------------------
+1. TR.CompanyMarketCap viene en MONEDA LOCAL. Tokyo Electron sale en 23,818B
+   (yenes) y Samsung en 1,620,869B (wones). En un bubble donde el tamano es el
+   market cap, eso pinta a Tokyo Electron 150x mas grande que a NVIDIA. Hay
+   que pedir parameters={"Curn": "USD"}.
+2. El P/E es TR.FwdPE (12 meses hacia adelante), no trailing. Micron cotiza a
+   ~6x forward contra ~21x trailing porque el consenso descuenta el pico del
+   ciclo de memoria; con trailing la lectura se invierte.
+
+Sobre el CAGR: va de FY0 a FY3, siempre 3 anios, pero los anios fiscales no
+estan alineados entre empresas (el FY0 de NVIDIA es 2026 y el de Broadcom
+2025). Es un CAGR a 3 anios hacia adelante, no un "2025-2028" de calendario.
+"""
+import sys
+sys.path.append(r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs")
+
+import argparse
+import json
+import os
+import warnings
+import lseg.data as ld
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+from datetime import datetime, timedelta
+from grafico_banquero import (configurar_estilo_banquero, PALETA, CICLO_COLORES,
+                              linea_referencia, ejes_limpios, matriz_calor)
+
+warnings.filterwarnings("ignore")
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except (AttributeError, OSError):
+    pass
+
+configurar_estilo_banquero()
+SALIDA = "ai"
+os.makedirs(SALIDA, exist_ok=True)
+
+ANCHO_COMPLETO = (12.60, 4.64)   # placeholder "1 Highlight"
+ANCHO_MATRIZ = 4.00              # placeholder "Segment Performance"
+
+# La cadena, en orden de flujo de dinero. El color es el del bubble chart.
+TIERS = {
+    "Hyperscalers": dict(color="claro", miembros={
+        "MSFT.OQ": "Microsoft", "AMZN.OQ": "Amazon", "GOOGL.OQ": "Alphabet",
+        "META.OQ": "Meta", "ORCL.N": "Oracle"}),
+    "Silicon": dict(color="primario", miembros={
+        "NVDA.OQ": "NVIDIA", "AMD.OQ": "AMD", "AVGO.OQ": "Broadcom",
+        "MRVL.OQ": "Marvell", "TSM.N": "TSMC"}),
+    "Memory": dict(color="acento", miembros={
+        "MU.OQ": "Micron", "000660.KS": "SK hynix", "005930.KS": "Samsung",
+        "WDC.OQ": "Western Digital", "SNDK.OQ": "SanDisk", "STX.OQ": "Seagate"}),
+    "WFE": dict(color="azul_claro", miembros={
+        "ASML.OQ": "ASML", "AMAT.OQ": "Applied Materials",
+        "LRCX.OQ": "Lam Research", "KLAC.OQ": "KLA",
+        "8035.T": "Tokyo Electron", "ONTO.N": "Onto Innovation"}),
+    "Server & Storage": dict(color="verde", miembros={
+        "CLS.N": "Celestica", "DELL.N": "Dell", "SMCI.OQ": "Super Micro",
+        "2317.TW": "Hon Hai"}),
+    "Networking": dict(color="medio", miembros={
+        "ANET.N": "Arista", "APH.N": "Amphenol", "CSCO.OQ": "Cisco",
+        "COHR.N": "Coherent", "CRDO.OQ": "Credo", "LITE.OQ": "Lumentum"}),
+    "Power & Facility": dict(color="carbon", miembros={
+        "VRT.N": "Vertiv", "ETN.N": "Eaton", "SCHN.PA": "Schneider",
+        "NVT.N": "nVent", "ABBN.S": "ABB", "MOD.N": "Modine",
+        "STRL.OQ": "Sterling Infra"}),
+    "On-site Power": dict(color="gris", miembros={
+        "GEV.N": "GE Vernova", "BE.N": "Bloom Energy", "POWL.OQ": "Powell"}),
+}
+
+# Como se agrupan los tiers en matrices. Cada grupo <= 14 filas para que la
+# imagen quepa en el placeholder de 4.00 x 5.07 sin recorte.
+GRUPOS_MATRIZ = {
+    "Hyperscalers": ["Hyperscalers"],
+    "Suppliers": ["Silicon", "WFE"],
+    "MemoryServer": ["Memory", "Server & Storage"],
+    "Buildout": ["Networking", "Power & Facility", "On-site Power"],
+}
+
+# Los P/E que valen slide propia: los eslabones con mas dispersion
+PE_TIERS = ["Silicon", "Memory", "WFE"]
+
+hoy = datetime.now()
+fin = hoy.strftime("%Y-%m-%d")
+inicio_pe = (hoy - timedelta(days=365 * 2)).strftime("%Y-%m-%d")
+trimestre = (hoy.month - 1) // 3 * 3 + 1
+PERIODOS = {
+    "1W":  (hoy - timedelta(days=7)).strftime("%Y-%m-%d"),
+    "MTD": hoy.replace(day=1).strftime("%Y-%m-%d"),
+    "QTD": hoy.replace(month=trimestre, day=1).strftime("%Y-%m-%d"),
+    "YTD": f"{hoy.year}-01-01",
+}
+
+TODOS = {}
+for _t, _cfg in TIERS.items():
+    for _r, _n in _cfg["miembros"].items():
+        TODOS[_r] = (_n, _t)
+
+
+def valor_base(serie, antes_de):
+    """Ultimo cierre estrictamente anterior al inicio del periodo."""
+    previos = serie[serie.index < antes_de]
+    return previos.iloc[-1] if not previos.empty else serie.iloc[0]
+
+
+def serie_pe(rics):
+    """TR.FwdPE semanal, DataFrame fechas x RIC."""
+    d = ld.get_data(universe=list(rics), fields=["TR.FwdPE"],
+                    parameters={"SDate": inicio_pe, "EDate": fin, "Frq": "W"})
+    d.columns = ["ric", "pe"]
+    out = {}
+    for ric in rics:
+        s = d[d["ric"] == ric]["pe"].astype(float).reset_index(drop=True)
+        if s.notna().sum() >= 10:
+            out[ric] = s
+        else:
+            print(f"    -- {ric} sin P/E forward")
+    if not out:
+        return pd.DataFrame()
+    n = max(len(s) for s in out.values())
+    idx = pd.bdate_range(end=hoy, periods=n, freq="W-FRI")
+    return pd.DataFrame({r: s.reindex(range(n)).values for r, s in out.items()},
+                        index=idx)
+
+
+def grafico_pe(df, nombres, archivo):
+    fig, ax = plt.subplots(figsize=ANCHO_COMPLETO, dpi=300)
+    ejes_limpios(ax, labelsize=9)
+    for ric, color in zip(df.columns, CICLO_COLORES):
+        s = df[ric].dropna()
+        ax.plot(s.index, s.values, color=PALETA[color], linewidth=1.8,
+                label=nombres[ric], zorder=3)
+    prom = float(df.stack().mean())
+    linea_referencia(ax, prom, f"2Y Average, {prom:.1f}x", fontsize=9,
+                     x=df.index[0])
+    trims = df.index.to_series().groupby(df.index.to_period("Q")).first().iloc[1:]
+    ax.set_xticks(trims.values)
+    ax.set_xticklabels([x.strftime("%b-%y") for x in trims.index.to_timestamp()],
+                       fontsize=8.5)
+    ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:.0f}x"))
+    ax.margins(x=0)
+    ax.set_ylim(bottom=0)
+    ax.legend(loc="upper left", frameon=False, fontsize=9, ncol=6,
+              handlelength=1.6, borderpad=0.2, columnspacing=1.4)
+    fig.savefig(f"{SALIDA}/{archivo}", dpi=300, bbox_inches="tight", pad_inches=0.03)
+    plt.close(fig)
+    return prom
+
+
+def grafico_bubble(fdf):
+    """Valuacion vs crecimiento, tamano = market cap, color = eslabon.
+
+    Los hyperscalers quedan fuera: son la demanda, no la cadena. Meterlos
+    compara cosas que no compiten entre si.
+    """
+    d = fdf[(fdf["tier"] != "Hyperscalers") & fdf["fpe"].notna()
+            & fdf["cagr"].notna() & fdf["mcap"].notna()].copy()
+    d = d[(d["fpe"] > 0) & (d["fpe"] < 120)]
+    if d.empty:
+        return d
+
+    fig, ax = plt.subplots(figsize=ANCHO_COMPLETO, dpi=300)
+    ejes_limpios(ax, labelsize=9)
+    ax.grid(True, color=PALETA["claro"], alpha=0.30, linewidth=0.6, zorder=0)
+    ax.set_axisbelow(True)
+
+    # Area proporcional al market cap: el radio exageraria a los grandes
+    escala = 2600 / np.sqrt(d["mcap"].max())
+    for tier in [t for t in TIERS if t in set(d["tier"])]:
+        sub = d[d["tier"] == tier]
+        ax.scatter(sub["cagr"], sub["fpe"], s=np.sqrt(sub["mcap"]) * escala,
+                   color=PALETA[TIERS[tier]["color"]], alpha=0.80,
+                   edgecolors="white", linewidths=0.8, zorder=3, label=tier)
+
+    # Etiquetar solo lo grande o lo extremo: etiquetar todo lo vuelve ilegible
+    umbral = d["mcap"].quantile(0.55)
+    for _, r in d.iterrows():
+        if (r["mcap"] >= umbral or r["fpe"] >= d["fpe"].quantile(0.92)
+                or r["cagr"] >= d["cagr"].quantile(0.92)):
+            ax.annotate(f"{r['nombre']}\n${r['mcap'] / 1e9:,.0f}B",
+                        xy=(r["cagr"], r["fpe"]), xytext=(0, -7),
+                        textcoords="offset points", ha="center", va="top",
+                        fontsize=7, color=PALETA["texto"], zorder=5)
+
+    ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:.0f}%"))
+    ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:.0f}x"))
+    ax.set_xlabel("Forward revenue CAGR, FY0\u2192FY3", fontsize=9,
+                  color=PALETA["texto_suave"])
+    ax.set_ylabel("12M forward P/E", fontsize=9, color=PALETA["texto_suave"])
+    ax.set_ylim(bottom=0)
+    ax.legend(loc="upper left", frameon=False, fontsize=8.5, ncol=4,
+              handlelength=1.0, borderpad=0.2, columnspacing=1.2,
+              scatterpoints=1, markerscale=0.30)
+    fig.savefig(f"{SALIDA}/Bubble.png", dpi=300, bbox_inches="tight", pad_inches=0.03)
+    plt.close(fig)
+    return d
+
+
+def main():
+    ap = argparse.ArgumentParser(description="Complejo de AI por cadena de CapEx")
+    ap.add_argument("--solo", choices=["pe", "bubble", "matriz"])
+    args = ap.parse_args()
+    ld.open_session()
+    resumen = {}
+
+    # --- P/E por eslabon ---------------------------------------------------
+    if args.solo in (None, "pe"):
+        for tier in PE_TIERS:
+            miembros = TIERS[tier]["miembros"]
+            print(f"P/E forward -- {tier}...")
+            df = serie_pe(miembros.keys())
+            if df.empty:
+                continue
+            prom = grafico_pe(df, miembros, f"PE_{tier.replace(' ', '')}.png")
+            ult = df.ffill().iloc[-1]
+            resumen[f"pe_{tier}"] = {
+                "promedio_2a": round(prom, 2),
+                "actual": {miembros[r]: round(float(v), 1)
+                           for r, v in ult.items() if v == v}}
+            print("  " + ";  ".join(f"{miembros[r]} {v:.1f}x"
+                                    for r, v in ult.items() if v == v))
+
+    # --- fundamentales para el bubble --------------------------------------
+    if args.solo in (None, "bubble"):
+        print("\nFundamentales (Curn=USD)...")
+        rics = list(TODOS)
+        base = ld.get_data(universe=rics,
+                           fields=["TR.FwdPE", "TR.CompanyMarketCap"],
+                           parameters={"Curn": "USD"})
+        base.columns = ["ric", "fpe", "mcap"]
+        base = base.drop_duplicates("ric").set_index("ric")
+
+        revs = {}
+        for per in ("FY0", "FY3"):
+            d = ld.get_data(universe=rics, fields=["TR.RevenueMean"],
+                            parameters={"Period": per, "Curn": "USD"})
+            d.columns = ["ric", "rev"]
+            revs[per] = d.drop_duplicates("ric").set_index("ric")["rev"]
+
+        filas = []
+        for ric, (nombre, tier) in TODOS.items():
+            f0, f3 = revs["FY0"].get(ric), revs["FY3"].get(ric)
+            try:
+                f0, f3 = float(f0), float(f3)
+                cagr = ((f3 / f0) ** (1 / 3) - 1) * 100 if f0 > 0 and f3 > 0 else np.nan
+            except (TypeError, ValueError):
+                cagr = np.nan
+            def val(col):
+                v = base[col].get(ric)
+                try:
+                    return float(v)
+                except (TypeError, ValueError):
+                    return np.nan
+            filas.append(dict(ric=ric, nombre=nombre, tier=tier,
+                              fpe=val("fpe"), mcap=val("mcap"), cagr=cagr))
+        fdf = pd.DataFrame(filas)
+        usados = grafico_bubble(fdf)
+        print(f"  {len(usados)} empresas en el bubble (de {len(fdf)}; "
+              f"se excluyen hyperscalers y las que no traen estimados)")
+        resumen["fundamentales"] = {
+            r["nombre"]: {
+                "tier": r["tier"],
+                "fwd_pe": round(r["fpe"], 1) if pd.notna(r["fpe"]) else None,
+                "cagr_3a_pct": round(r["cagr"], 1) if pd.notna(r["cagr"]) else None,
+                "mcap_usd_b": round(r["mcap"] / 1e9, 1) if pd.notna(r["mcap"]) else None}
+            for _, r in fdf.iterrows()}
+
+    # --- matrices y SOX ----------------------------------------------------
+    if args.solo in (None, "matriz"):
+        print("\nRetornos...")
+        universo = list(TODOS) + [".SOX", ".SPX"]
+        d = ld.get_history(universe=universo, fields=["TRDPRC_1"],
+                            interval="daily", start=f"{hoy.year - 1}-12-01", end=fin)
+        series = {}
+        for ric in universo:
+            try:
+                s = (d[ric]["TRDPRC_1"] if isinstance(d.columns, pd.MultiIndex)
+                     else d[ric]).astype(float).dropna()
+                if len(s) > 5:
+                    series[ric] = s
+            except Exception:
+                pass
+
+        filas = {}
+        for ric, (nombre, tier) in TODOS.items():
+            if ric not in series:
+                print(f"  -- sin serie: {nombre}")
+                continue
+            s = series[ric]
+            ult = float(s.iloc[-1])
+            filas[nombre] = dict(tier=tier, **{
+                p: (ult / float(valor_base(s, i)) - 1) * 100
+                for p, i in PERIODOS.items()})
+        todo = pd.DataFrame(filas).T
+
+        for grupo, tiers in GRUPOS_MATRIZ.items():
+            sub = todo[todo["tier"].isin(tiers)][list(PERIODOS)].astype(float)
+            if sub.empty:
+                continue
+            sub = sub.sort_values("YTD", ascending=False)
+            alto = 0.33 * len(sub) + 0.40
+            fig, ax = plt.subplots(figsize=(ANCHO_MATRIZ, alto), dpi=300)
+            matriz_calor(ax, sub)
+            fig.savefig(f"{SALIDA}/Matriz_{grupo}.png", dpi=300,
+                        bbox_inches="tight", pad_inches=0.04)
+            plt.close(fig)
+            print(f"  {grupo:14s} {len(sub):2d} filas  "
+                  f"{ANCHO_MATRIZ:.2f} x {alto:.2f} in")
+        resumen["retornos"] = {n: {k: round(float(v), 2) for k, v in r.items()
+                                   if k != "tier"} for n, r in todo.iterrows()}
+
+        sox, spx = series[".SOX"], series[".SPX"]
+        rel = (sox / spx.reindex(sox.index).ffill()).dropna()
+        rel = rel[rel.index >= f"{hoy.year}-01-01"]
+        rel = rel / rel.iloc[0] * 100
+        fig, ax = plt.subplots(figsize=(6.20, 2.90), dpi=300)
+        ejes_limpios(ax, labelsize=6.5)
+        linea_referencia(ax, 100)
+        ax.plot(rel.index, rel.values, color=PALETA["primario"], linewidth=1.4, zorder=3)
+        pr = rel.index.to_series().groupby(rel.index.to_period("M")).first()
+        ax.set_xticks(pr.values)
+        ax.set_xticklabels([x.strftime("%b") for x in pr.index.to_timestamp()])
+        ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:.0f}"))
+        ax.margins(x=0)
+        ax.annotate(f"{rel.iloc[-1]:.0f}", xy=(rel.index[-1], rel.iloc[-1]),
+                    xytext=(4, 0), textcoords="offset points", va="center",
+                    ha="left", fontsize=6.5, fontweight="bold",
+                    color=PALETA["primario"], annotation_clip=False)
+        fig.savefig(f"{SALIDA}/SOXvsSPX.png", dpi=300, bbox_inches="tight",
+                    pad_inches=0.02)
+        plt.close(fig)
+        resumen["sox_vs_spx_ytd"] = round(float(rel.iloc[-1]) - 100, 1)
+        print(f"  SOX vs S&P YTD: {resumen['sox_vs_spx_ytd']:+.1f}%")
+
+    with open("datos_ai.json", "w", encoding="utf-8") as f:
+        json.dump(resumen, f, indent=2, ensure_ascii=False)
+    print(f"\nListo: {SALIDA}/, datos_ai.json")
+    ld.close_session()
+
+
+if __name__ == "__main__":
+    main()

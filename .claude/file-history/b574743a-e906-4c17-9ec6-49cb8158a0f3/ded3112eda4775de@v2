@@ -1,0 +1,28 @@
+# 03 · Presentaciones de Clase (contenido del curso)
+
+**Qué es:** las diapositivas del Prof. Rincón (Capital Privado y Capital Emprendedor, Tec de Monterrey, ago–oct 2026). Sirven para (a) verificar que el proyecto cubre TODO lo visto y (b) usar el vocabulario y los datos que el comité espera oír. Cada `.pdf` tiene su `.md` (texto) al lado.
+
+| Archivo | Sesión / fecha | Tema | Ideas y datos más útiles para el proyecto |
+|---|---|---|---|
+| `Presentaciones_consolidadas.pdf` (78 láms.) | **C01–C06** · 12, 17, 18, 19, 24 y 26 ago | C01 *El dinero que no ves* (PE vs VC, curva J, fases de capitalización) · C02 *Lo que hicieron sin saberlo* (estructura LP/GP/empresas; fee vs carry) · C03 *Anatomía legal del vehículo* (LP canadiense, fideicomiso, CKD, CERPI, SAPI, Fibra E) · C04 *Las reglas tienen nombre* (los 11 componentes del Prospecto) · C05 *La cascada en números* (europea vs americana, clawback) · C06 *¿Ganaste o no?* (MOIC, TVPI, DPI, RVPI, TIR, vintage; ley de potencias) | AMEXCAP: $89,058M USD canalizados a PE en México desde 2003 (jul-2026) · AFOREs $8.67 billones MXN, 7.6% en estructurados, límite de 20→30% (oct-2024, CONSAR) · CKDs: $26,696M comprometidos vs CERPIs $39,634M (dic-2024, Funds Society) · 132 emisoras, 19 FIBRAs, 78 CKDs, 36 CERPIs (CNBV, may-2026) · SRS Acquiom 2026: múltiplo de salida promedio 6.5x / mediana 3.3x, 7.5 años · 11.9 años promedio de startup LatAm a adquisición · 75% de GPs mexicanos con dificultad para salidas |
+| `Sesión 7 (1).pdf` | **S13** · 9-sep | Valuación cuando el DCF no sirve: pre/post-money, cap table, option pool shuffle, método VC, múltiplos, comparables | Post = Pre + Inversión; % inversionista = Inv ÷ Post · método VC: salida ÷ múltiplo requerido, ajustar por dilución · mediana pre-money Serie A en LatAm: $30M (2025) → $150M (2026) · >60% de M&A destruyen valor para el comprador |
+| `Due_diligence_de_verdad.pdf` | **S14** · 14-sep | Las 5 diligencias (contable-financiera, fiscal, legal, laboral, operativa) + DD de métricas digitales | Casos Yogome, Casai, Jüsto (inversionistas top que no vieron el fraude/control) · DD de métricas: cohortes, CAC por canal, concentración (3 clientes = 60% de ingresos = 3 contratos), churn real, unit economics · salida del DD: seguir / ajustar precio / condiciones / retirarse |
+| `Term_Sheet_dinero_y_poder.pdf` | **C09** · 23-sep | Liquidation preference (1x non-part., participating, 2x, seniority), anti-dilución, option pool, consejo, protective provisions, drag/tag-along, vesting | Good Technology: venta de $425M, comunes ~$40M (precio de acción $4.32→$0.44) · Kavak: down round mar-2025, $8,700M→$2,200M (insider round) · tabla "misma empresa, 3 salidas" ($20M preferente, 60% comunes) |
+| `Sesión 10.pdf` | **S17** · 30-sep | PE y apalancamiento: LBO, 3 palancas (amortización de deuda, crecimiento EBITDA, expansión de múltiplo), creación de valor operativo, gobierno | Ejemplo: EBITDA $10M, 8x → 1.5x sin deuda vs 3.1x con 60% deuda; con EBITDA −20% la deuda borra el margen · 5 intervenciones de PE (gobierno, profesionalización, sistemas, add-ons, capital de trabajo) · caso Aeroméxico–Apollo (salida nov-2025, ~$178.8M USD) |
+| `Sesión 11.pdf` | **S18** · 7-oct | La salida: M&A, IPO, secundarios/continuation, write-off; Kavak, Jüsto, Círculo de Crédito→Equifax; "círculo vicioso" de México | Cero unicornios tecnológicos mexicanos en bolsa · 67% de la actividad de salida LatAm 2025 fue M&A · Círculo de Crédito→Equifax: EV $750M, ≈12.1x EBITDA (jul-2026) · 3 IPOs en México 2025: Fibra Next (MXN $8,000M), Aeroméxico, Esentia Energy (MXN $11,592M) — **Esentia es energía** · Fondo de Fondos Nafin/Bancomext recapitalizado MXN $4,000M (feb-2026) · Estándar AMEXCAP de gobierno corporativo (jul-2026) |
+
+## Mapa de cobertura — ¿el proyecto cubre lo visto en clase?
+| Concepto del curso | Dónde debe aparecer en el entregable | Estado |
+|---|---|---|
+| Tesis específica que excluye (C04 c.1) | Deck 3 · PPM 1 y 5 | Hay D2/D5; falta tesis v3 ≤200 car. |
+| Vehículo legal elegido y defendido (C03) | Deck 5 · PPM 6 | Propuesto: fideicomiso privado MX (sin confirmar; D5 decía LP Delaware) |
+| Fee, carry, hurdle, catch-up, cascada europea (C02, C04, C05) | Deck 5/10 · PPM 8 · Excel Hoja 2 | En el Excel ✔ |
+| Clawback, key man, LPAC, conflictos, concentración 15% (C04 c.8) | PPM 5/7 | Definidos en Supuestos; redactar |
+| Llamadas de capital, cierres (C04 c.2,3,11) | PPM 9 | Redactar (hay calendario implícito en Hoja 2) |
+| Curva J, TVPI/DPI/RVPI (C01, C06) | Deck 10 · Excel | Falta DPI/TVPI/RVPI por año |
+| Ley de potencias: "una empresa devuelve el fondo" (C06) | Deck 7/10 · caso de inversión | Revisar: con tope de 15% por empresa ninguna puede devolver el fondo ($100M): máx. recupera $60M (Niko, modelo v1) / $42.7M (XC, modelo v2). C06 dice "una sola tiene que poder devolver el fondo" → justificar o ajustar (aplica más a VC que a growth) |
+| Valuación / cap table / liquidation preference del caso (S13, C09) | Deck 8 (caso de inversión) | Decidir Niko o Quartux + usar `Liquidation Preference.xlsx` |
+| Due diligence (S14) | Deck 8/12 · PPM | Redactar (qué diligencias haría Aurex) |
+| Apalancamiento (S17) | Deck (1 frase) | Aurex es growth/minoritario → no usa deuda en el portafolio; decirlo |
+| Salida con ejemplo concreto (S18) | Deck 11 | Falta: comprador nombrado por empresa (ej. estratégicos del sector energético, PE, Fibra E) |
+| Realidad de México (AMEXCAP, AFOREs) | Deck 6 · PPM | Insumo en `../05_Informacion_Util/` |

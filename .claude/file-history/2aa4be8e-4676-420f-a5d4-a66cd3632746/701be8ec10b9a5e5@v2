@@ -1,0 +1,79 @@
+$ErrorActionPreference="Stop"
+$xl=[Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$nb=$xl.Workbooks | ?{ $_.Name -eq "SARD_Bimbo_Rebuild.xlsx" } | select -First 1
+$ws=$nb.Worksheets.Item("SARD")
+# find anchors by title so row shifts do not matter
+$evFirst=$ws.Range("B1:B400").Find("AGRO.N",[Type]::Missing,-4163,1,1,1)
+"first AGRO.N at "+$evFirst.Address($false,$false)
+# make sure target area is empty
+$start=$ws.UsedRange.Row+$ws.UsedRange.Rows.Count+2
+$cnt=$xl.WorksheetFunction.CountA($ws.Range("B"+$start+":L"+($start+40)))
+"start row=$start nonempty=$cnt"
+if($cnt -ne 0){ throw "target area not empty" }
+$s=$start
+function Hdr([string]$rng){ $r=$ws.Range($rng); $r.Font.Bold=$true; $r.Font.Color=7746854; $r.HorizontalAlignment=-4108; $r.Borders.Item(9).LineStyle=1; $r.Borders.Item(9).Color=13332572 }
+function Inp([string]$rng){ $c=$ws.Range($rng); $c.Interior.Color=13434879; $c.HorizontalAlignment=-4108; $c.Font.Color=16711680; foreach($b in 7,8,9,10){ $c.Borders.Item($b).LineStyle=1; $c.Borders.Item($b).Color=11711154 } }
+$ws.Range("B$($s):L$($s+30)").Font.Name="Arial"; $ws.Range("B$($s):L$($s+30)").Font.Size=11
+$ws.Range("B$s").Value2="Final peers. Business fit plus SARD"; $ws.Range("B$s").Font.Bold=$true
+$h=$s+2
+$hd=@("RIC","Company","Include (1 = yes)","Use in P/BV (1 = yes)","SARD rank EV/EBIT","SARD rank P/BV","Avg SARD rank","EV/EBIT","P/BV","Business rationale")
+for($i=0;$i -lt $hd.Count;$i++){ $ws.Cells.Item($h,2+$i).Value2=[string]$hd[$i] }
+Hdr "B$($h):K$($h)"; $ws.Range("B$($h):K$($h)").WrapText=$true
+$list=@(
+@("FLO.N",1,1,"Closest category peer with bread buns and snack cakes via DSD"),
+@("GRUMAB.MX",1,1,"Tortillas and flatbreads with Mexico and LatAm footprint"),
+@("CPB.OQ",1,1,"Pepperidge Farm and snacks overlap with Bimbo"),
+@("SJM.N",1,1,"Hostess sweet baked snacks compete directly"),
+@("GIS.N",1,1,"Global scale and LatAm presence with partial baking mixes"),
+@("JJSF.OQ",1,1,"Bakery pretzels and churros but much smaller"),
+@("SIGMAFA.MX",1,0,"Closest Mexican listed food peer and valid only for EV/EBIT"),
+@("MKC.N",1,1,"Indirect competition through seasonings and condiments on the same shelf"),
+@("HRL.N",0,1,"Protein company"),
+@("CAG.N",0,1,"Frozen and shelf stable grocery"),
+@("POST.N",0,1,"Cereal and eggs"),
+@("NOMD.N",0,1,"European frozen foods"),
+@("MZTI.OQ",0,1,"Dressings and sauces"),
+@("KHC.N",0,1,"No baked goods"))
+$r0=$h+1
+for($i=0;$i -lt $list.Count;$i++){ $r=$r0+$i
+  $ws.Range("B$r").Value2=[string]$list[$i][0]; $ws.Range("D$r").Value2=[double]$list[$i][1]; $ws.Range("E$r").Value2=[double]$list[$i][2]; $ws.Range("K$r").Value2=[string]$list[$i][3] }
+$r1=$r0+$list.Count-1
+$ws.Range("C$($r0):C$($r1)").Formula='=INDEX($C$20:$C$63,MATCH($B'+$r0+',$B$20:$B$63,0))'
+$ws.Range("F$($r0):F$($r1)").Formula='=IFERROR(INDEX($Q$105:$Q$148,MATCH($B'+$r0+',$B$105:$B$148,0)),"")'
+$ws.Range("G$($r0):G$($r1)").Formula='=IFERROR(INDEX($O$156:$O$199,MATCH($B'+$r0+',$B$156:$B$199,0)),"")'
+$ws.Range("H$($r0):H$($r1)").Formula='=IF(COUNT(F'+$r0+':G'+$r0+')=0,"",AVERAGE(F'+$r0+':G'+$r0+'))'
+$ws.Range("I$($r0):I$($r1)").Formula='=INDEX($K$20:$K$63,MATCH($B'+$r0+',$B$20:$B$63,0))'
+$ws.Range("J$($r0):J$($r1)").Formula='=INDEX($L$20:$L$63,MATCH($B'+$r0+',$B$20:$B$63,0))'
+Inp "D$($r0):E$($r1)"; $ws.Range("D$($r0):E$($r1)").NumberFormat="0"
+$ws.Range("B$($r0):J$($r1)").HorizontalAlignment=-4108; $ws.Range("K$($r0):K$($r1)").HorizontalAlignment=-4131
+$ws.Range("F$($r0):G$($r1)").NumberFormat="0"; $ws.Range("H$($r0):H$($r1)").NumberFormat="0.0"; $ws.Range("I$($r0):J$($r1)").NumberFormat="0.00x"
+# summary
+$q=$r1+2
+$ws.Range("B$q").Value2="Final peers valuation"; $ws.Range("C$q").Value2="EV/EBIT"; $ws.Range("D$q").Value2="P/BV"; Hdr "B$($q):D$($q)"
+$lab=@("Peers included (#)","Bimbo multiple","Peer mean","Peer median","Peer mean vs Bimbo","Implied market cap (MXN mn)","Current market cap (MXN mn)","Implied vs current market cap","Avg SARD rank of included peers","Avg combined SARD rank (EV/EBIT and P/BV)")
+for($i=0;$i -lt $lab.Count;$i++){ $ws.Cells.Item($q+1+$i,2).Value2=[string]$lab[$i] }
+$D="`$D`$$r0`:`$D`$$r1"; $E="`$E`$$r0`:`$E`$$r1"; $I="`$I`$$r0`:`$I`$$r1"; $J="`$J`$$r0`:`$J`$$r1"; $F="`$F`$$r0`:`$F`$$r1"; $G="`$G`$$r0`:`$G`$$r1"; $H="`$H`$$r0`:`$H`$$r1"
+$a=$q+1
+$ws.Range("C$a").Formula="=SUMPRODUCT($D,--ISNUMBER($I))"
+$ws.Range("D$a").Formula="=SUMPRODUCT($D,$E,--ISNUMBER($J))"
+$ws.Range("C$($a+1)").Formula='=K19'; $ws.Range("D$($a+1)").Formula='=L19'
+$ws.Range("C$($a+2)").Formula="=SUMPRODUCT($D,$I)/C$a"
+$ws.Range("D$($a+2)").Formula="=SUMPRODUCT($D,$E,$J)/D$a"
+$ws.Range("C$($a+3)").FormulaArray="=MEDIAN(IF($D=1,$I))"
+$ws.Range("D$($a+3)").FormulaArray="=MEDIAN(IF(($D=1)*($E=1),$J))"
+$ws.Range("C$($a+4)").Formula="=C$($a+2)/C$($a+1)-1"; $ws.Range("D$($a+4)").Formula="=D$($a+2)/D$($a+1)-1"
+$ws.Range("C$($a+5)").Formula="=C$($a+2)*`$V`$19-(`$N`$19-`$D`$19)"; $ws.Range("D$($a+5)").Formula="=D$($a+2)*`$S`$19"
+$ws.Range("C$($a+6)").Formula='=$D$19'; $ws.Range("D$($a+6)").Formula='=$D$19'
+$ws.Range("C$($a+7)").Formula="=C$($a+5)/C$($a+6)-1"; $ws.Range("D$($a+7)").Formula="=D$($a+5)/D$($a+6)-1"
+$ws.Range("C$($a+8)").Formula="=AVERAGEIFS($F,$D,1)"
+$ws.Range("D$($a+8)").Formula="=AVERAGEIFS($G,$D,1,$E,1)"
+$ws.Range("C$($a+9)").Formula="=AVERAGEIF($D,1,$H)"
+$ws.Range("B$($a):D$($a+9)").HorizontalAlignment=-4108
+$ws.Range("C$a`:D$a").NumberFormat="0"; $ws.Range("C$($a+1):D$($a+3)").NumberFormat="0.00x"; $ws.Range("C$($a+4):D$($a+4)").NumberFormat="0.0%"
+$ws.Range("C$($a+5):D$($a+6)").NumberFormat='$#,##0'; $ws.Range("C$($a+7):D$($a+7)").NumberFormat="0.0%"; $ws.Range("C$($a+8):D$($a+9)").NumberFormat="0.0"
+$ws.Columns("K").ColumnWidth=15
+$xl.Calculate(); $nb.Save()
+$o=@("block at rows $s to "+($a+9))
+for($r=$r0;$r -le $r1;$r++){ $o+=("  "+$ws.Range("B$r").Text+" | "+$ws.Range("C$r").Text+" | inc "+$ws.Range("D$r").Text+"/"+$ws.Range("E$r").Text+" | rank "+$ws.Range("F$r").Text+" / "+$ws.Range("G$r").Text+" avg "+$ws.Range("H$r").Text+" | "+$ws.Range("I$r").Text+" | "+$ws.Range("J$r").Text) }
+for($r=$q;$r -le $a+9;$r++){ $o+=($ws.Range("B$r").Text+" | "+$ws.Range("C$r").Text+" | "+$ws.Range("D$r").Text) }
+$o

@@ -1,0 +1,48 @@
+{
+  "items": [
+    {
+      "id": "rmv8bgi43taz",
+      "rule": "When using an acronym, explain what it means the first time you mention it, such as WBMS, in plain language.",
+      "scope": "project",
+      "project": "G:\\.shortcut-targets-by-id\\1wYoG0nnC8svaqyBKZ-61uOpLfK_2VHVY\\AZTLAN\\Research\\Commodity & Sector Research\\Steel Analysis",
+      "count": 1,
+      "firstAt": 1791994837683,
+      "lastAt": 1791994837683,
+      "status": "saved",
+      "confidence": 0.8
+    },
+    {
+      "id": "rmv8gi4pj52c",
+      "rule": "Never use screenshots when building or checking slides; use native charts and text instead.",
+      "scope": "global",
+      "project": "G:\\.shortcut-targets-by-id\\1wYoG0nnC8svaqyBKZ-61uOpLfK_2VHVY\\AZTLAN\\Research\\Commodity & Sector Research\\Steel Analysis",
+      "count": 1,
+      "firstAt": 1792003311703,
+      "lastAt": 1792003311703,
+      "status": "skipped",
+      "confidence": 0.8
+    },
+    {
+      "id": "rmv8gw1hiuo9",
+      "rule": "For this project's stock and return data, use the Workspace Datastream formulas, modeled on the Bimbo Financial Model template in Aztlan Templates.",
+      "scope": "project",
+      "project": "G:\\.shortcut-targets-by-id\\1wYoG0nnC8svaqyBKZ-61uOpLfK_2VHVY\\AZTLAN\\Research\\Commodity & Sector Research\\Steel Analysis",
+      "count": 1,
+      "firstAt": 1792003960710,
+      "lastAt": 1792003960710,
+      "status": "saved",
+      "confidence": 0.7
+    },
+    {
+      "id": "rmv8kphsynr6",
+      "rule": "When source charts are already provided, such as the OECD ones, embed them directly instead of recreating them.",
+      "scope": "project",
+      "project": "G:\\.shortcut-targets-by-id\\1wYoG0nnC8svaqyBKZ-61uOpLfK_2VHVY\\AZTLAN\\Research\\Commodity & Sector Research\\Steel Analysis",
+      "count": 1,
+      "firstAt": 1792010373730,
+      "lastAt": 1792010373730,
+      "status": "saved",
+      "confidence": 0.8
+    }
+  ]
+}

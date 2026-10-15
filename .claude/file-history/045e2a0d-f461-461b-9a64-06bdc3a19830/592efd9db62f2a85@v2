@@ -1,0 +1,65 @@
+import json, os, re, time, urllib.request
+
+ROOT = r"C:\Users\cesar\OneDrive\Desktop\AZTD_Filings"
+UA = {"User-Agent": "AZTD-Research research@aztd-research.org", "Accept-Encoding": "identity"}
+
+def get(url):
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=60) as r:
+                data = r.read()
+            time.sleep(0.25)
+            return data
+        except Exception as e:
+            print(f"  retry {attempt+1} {url}: {e}", flush=True); time.sleep(2)
+    raise RuntimeError(url)
+
+def save(folder, name, cik, acc, doc):
+    base = f"https://www.sec.gov/Archives/edgar/data/{cik}/{acc.replace('-', '')}/"
+    html = get(base + doc).decode("utf-8", errors="replace")
+    html = f'<base href="{base}">' + html
+    with open(os.path.join(folder, name + ".htm"), "w", encoding="utf-8") as f:
+        f.write(html)
+    print(f"  saved {name}.htm ({doc})", flush=True)
+
+def ex99(cik, acc):
+    idx = json.loads(get(f"https://www.sec.gov/Archives/edgar/data/{cik}/{acc.replace('-', '')}/index.json"))
+    names = [i["name"] for i in idx["directory"]["item"]]
+    c = [n for n in names if re.search(r"ex[-_]?99", n, re.I) and n.lower().endswith((".htm", ".html"))]
+    return c[0] if c else None
+
+tick = json.loads(get("https://www.sec.gov/files/company_tickers.json"))
+cik_of = {v["ticker"]: v["cik_str"] for v in tick.values()}
+
+def recent(sym):
+    cik = cik_of[sym]
+    rec = json.loads(get(f"https://data.sec.gov/submissions/CIK{int(cik):010d}.json"))["filings"]["recent"]
+    return cik, list(zip(rec["form"], rec["accessionNumber"], rec["primaryDocument"], rec["filingDate"], rec["items"]))
+
+for bad in ["FET/8-K_earnings_2013-01-17.htm", "FET/8-K_earnings_2014-01-15.htm", "CAMT/6-K_2020-09-21.htm"]:
+    p = os.path.join(ROOT, bad)
+    if os.path.exists(p): os.remove(p); print("removed", bad, flush=True)
+
+# US 8-K earnings releases since 2026-01 (FET and GCT got the wrong ones)
+for sym in ["FET", "GCT"]:
+    cik, rows = recent(sym)
+    print(sym, [(f, d, it) for f, a, doc, d, it in rows if f == "8-K" and d >= "2026-01-01"], flush=True)
+    n = 0
+    for f, acc, doc, d, items in rows:
+        if f == "8-K" and d >= "2026-04-01" and ("2.02" in items or "7.01" in items) and n < 2:
+            e = ex99(cik, acc)
+            if e:
+                save(os.path.join(ROOT, sym), f"8-K_earnings_{d}", cik, acc, e); n += 1
+
+# Foreign filers: 6-Ks in 2026, up to 5
+for sym in ["CAMT", "ITRN"]:
+    cik, rows = recent(sym)
+    folder = os.path.join(ROOT, sym); os.makedirs(folder, exist_ok=True)
+    if sym == "ITRN":
+        for f, acc, doc, d, _ in [r for r in rows if r[0] == "20-F"][:1]:
+            save(folder, f"20-F_{d}", cik, acc, doc)
+    six = [r for r in rows if r[0] == "6-K" and r[3] >= "2026-02-01"][:5]
+    for f, acc, doc, d, _ in six:
+        e = ex99(cik, acc) or doc
+        save(folder, f"6-K_{d}_{acc[-6:]}", cik, acc, e)
+print("DONE", flush=True)

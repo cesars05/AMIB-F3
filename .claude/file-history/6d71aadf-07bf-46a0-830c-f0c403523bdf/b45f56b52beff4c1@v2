@@ -1,0 +1,120 @@
+"""Separators, tab order & colors, Guide tab, YTD green palette, Aztlan title bars."""
+import time, pywintypes
+from attach import get_app
+app = get_app(); wb = app.Workbooks("AZTD - Top Holdings Peers_v2.xlsx")
+def R(fn):
+    for i in range(300):
+        try: return fn()
+        except pywintypes.com_error as e:
+            if e.args[0] in (-2147418111, -2147417846, -2146777998): time.sleep(1); continue
+            raise
+def bgr(h): h = h.lstrip("#"); return int(h[4:6] + h[2:4] + h[0:2], 16)
+R(lambda: setattr(app, "Calculation", -4135)); R(lambda: setattr(app, "ScreenUpdating", False))
+names = lambda: [s.Name for s in wb.Worksheets]
+SEP = wb.Worksheets("AZTD vs Peers 2024-2026 >")
+def make_sep(name):
+    if name in names(): return wb.Worksheets(name)
+    R(lambda: SEP.Copy(After=SEP)); ws = wb.Worksheets(SEP.Index + 1); ws.Name = name; return ws
+make_sep("AZTD vs Peers YTD 2026 >"); make_sep("Current Portfolio Aug-26 >")
+# ---------------- Guide tab
+if "Guide" not in names():
+    g = wb.Worksheets.Add(Before=wb.Worksheets(1)); g.Name = "Guide"
+g = wb.Worksheets("Guide"); g.Cells.Clear(); g.Activate(); app.ActiveWindow.DisplayGridlines = False
+g.Cells.Font.Name = "Arial"; g.Cells.Font.Size = 11
+g.Columns("A").ColumnWidth = 2; g.Columns("B").ColumnWidth = 34; g.Columns("C").ColumnWidth = 120
+g.Range("B2:C2").Interior.Color = bgr("242852"); g.Range("B2").Value = "AZTD vs Peers - Guide"
+g.Range("B2").Font.Size = 30; g.Range("B2").Font.Color = 0xFFFFFF; g.Rows(2).RowHeight = 37.2
+rows = [
+ ("H", "What this workbook answers"),
+ ("Question", "Why has AZTD underperformed the peers (AVDV, ISCF, DISV, DFIS)? By region, by sector, by stock picks inside each sector, and by rebalancing."),
+ ("Periods", "Jan-24 to Aug-26 (annualized, 32 months) and YTD-26 (Jan-Aug, cumulative). Each period has its own Summary, Attribution and Charts tabs."),
+ ("H", "How the tabs are organised"),
+ ("AZTD vs Peers 2024-2026 >", "Summary 2024-2026, Attribution 2024-2026 (incl. by calendar year, hit rate and 2025 focus), Charts 2024-2026. Navy / blue palette."),
+ ("AZTD vs Peers YTD 2026 >", "Summary YTD, Attribution YTD (incl. hit rate), Charts YTD, Model Test (how good Model 1.1 has been in 2026). Green / gold palette."),
+ ("Current Portfolio Aug-26 >", "Charts Aug-26 (snapshot of holdings, weights, scores), Model Screen (Top 25 names by score peers hold and AZTD doesn't), fund tabs."),
+ ("Data >", "Fund holdings (Workspace), Attr Setup / Attr Returns / Attr Holdings (attribution engine), Quant History (monthly scores 2026), Quant Model Aug."),
+ ("H", "Key concepts"),
+ ("Actual return", "What the ETF returned (Workspace total return, calendar months)."),
+ ("Holdings-based return", "Return of the month-start holdings held for the whole month (SEC N-PORT quarterly to Dec-25, Workspace monthly in 2026)."),
+ ("Actual - holdings", "What month-end holdings do not explain: intra-month trading / index rebalancing, fees, cash. Peers ~-1pp/yr; AZTD ~-6pp/yr, concentrated in rebalance months."),
+ ("Contribution", "Weight x return, added up month by month (pp). Sector contribution = sum of its stocks; total = holdings-based return."),
+ ("Sector return", "Contribution / average weight: how well the stocks AZTD (or the peers) held in that sector did."),
+ ("Allocation", "(AZTD weight - peer weight) x (peer sector return - peer total return). Did AZTD overweight the sectors that beat the average? Negative = too little of a strong sector (e.g. Materials / gold) or too much of a weak one."),
+ ("Selection", "AZTD weight x (AZTD sector return - peer sector return). Did AZTD pick better stocks than the peers inside each sector? Positive = better picks (e.g. Industrials); negative = worse picks (e.g. European banks in Financials)."),
+ ("Total gap", "Allocation + Selection + (Actual - holdings) = AZTD actual return - peer average actual return. A check cell shows the difference (~0)."),
+ ("Hit rate", "% of AZTD stocks whose return while held beat the peers' same-sector return over the same months. Weighted = by average weight. 50% = coin flip."),
+ ("Model Test", "Each month-end Model 1.1 score is ranked into quintiles and compared with the next month's return. Q5 - Q1 > 0 and IC > 0 mean the score added value."),
+ ("H", "Sources and caveats"),
+ ("Sources", "SEC Form N-PORT (quarterly holdings), Workspace Derived Holdings (monthly 2026), Workspace TR total returns and FX, Quant Model monthly files."),
+ ("2024", "AZTD held ~28 names with ~90% quarterly turnover and only quarterly snapshots exist: 2024 attribution is indicative only."),
+ ("US names", "Peers hold ~0% US, so AZTD's US result shows up as selection; it is really an exposure effect."),
+ ("Model Test", "Jul-26 scores are missing (file duplicates Aug-26). Monthly returns above +/-100% are excluded as data errors."),
+ ("Refresh", "Workspace > Refresh updates all TR formulas (~5,400 + ~8,400 stocks x monthly returns): allow 20-30 minutes. Cached values are kept otherwise."),
+]
+r = 4
+for k, v in rows:
+    if k == "H":
+        rg = g.Range(f"B{r}:C{r}"); rg.Interior.Color = bgr("002060"); rg.Font.Color = 0xFFFFFF; rg.Font.Bold = True
+        g.Range(f"B{r}").Value = v; r += 1; continue
+    g.Range(f"B{r}").Value = k; g.Range(f"B{r}").Font.Bold = True; g.Range(f"C{r}").Value = v; g.Range(f"C{r}").WrapText = True
+    g.Range(f"B{r}:C{r}").VerticalAlignment = -4160; g.Range(f"B{r}:C{r}").Borders(9).LineStyle = 1; g.Range(f"B{r}:C{r}").Borders(9).Color = bgr("D9D9D9")
+    g.Rows(r).AutoFit(); r += 1
+    if k in ("Periods", "Data >", "Model Test", "Refresh"): r += 1
+# ---------------- order
+ORDER = ["Guide", "AZTD vs Peers 2024-2026 >", "Summary 2024-2026", "Attribution 2024-2026", "Charts 2024-2026",
+         "AZTD vs Peers YTD 2026 >", "Summary YTD", "Attribution YTD", "Charts YTD", "Model Test",
+         "Current Portfolio Aug-26 >", "Charts Aug-26", "Model Screen", "AZTD", "AVDV", "ISCF", "DISV", "DFIS",
+         "Data >", "AZTD Data", "AVDV Data", "ISCF Data", "DISV Data", "DFIS Data", "Attr Setup", "Attr Returns", "Attr Holdings",
+         "Quant History", "Quant Model Aug"]
+for i, n in enumerate(ORDER):
+    if n in names():
+        ws = wb.Worksheets(n)
+        if i == 0: R(lambda: ws.Move(Before=wb.Worksheets(1)))
+        else: R(lambda: ws.Move(After=wb.Worksheets(ORDER[i - 1])))
+# ---------------- tab colors
+GROUP = {"Guide": "404040"}
+for n in ORDER[1:5]: GROUP[n] = "1F3864"
+for n in ORDER[5:10]: GROUP[n] = "3E7B5B"
+for n in ORDER[10:18]: GROUP[n] = "7A8AA8"
+for n in ORDER[18:]: GROUP[n] = "7F7F7F"
+for n, c in GROUP.items():
+    if n in names(): wb.Worksheets(n).Tab.Color = bgr(c)
+# separators: visible label
+for n, txt, col in (("AZTD vs Peers YTD 2026 >", "AZTD vs Peers - YTD 2026 (Jan-Aug)", "3E7B5B"), ("Current Portfolio Aug-26 >", "Current portfolio - 31-Aug-26", "7A8AA8"),
+                    ("AZTD vs Peers 2024-2026 >", "AZTD vs Peers - Jan-24 to Aug-26", "1F3864"), ("Data >", "Data", "7F7F7F")):
+    ws = wb.Worksheets(n); ws.Cells.Clear()
+    ws.Range("B2:M2").Interior.Color = bgr(col); ws.Range("B2").Value = txt; ws.Range("B2").Font.Size = 24; ws.Range("B2").Font.Color = 0xFFFFFF
+    ws.Range("B2").Font.Name = "Arial"; ws.Rows(2).RowHeight = 34
+    ws.Activate(); app.ActiveWindow.DisplayGridlines = False
+# ---------------- title bars: 2024-26 & portfolio tabs navy; YTD tabs green
+NAVY_T, GREEN_T = bgr("242852"), bgr("1E4D3A")
+for n in ("Attribution 2024-2026", "Charts 2024-2026", "Model Screen", "Charts Aug-26", "Attr Setup", "Attr Returns", "Attr Holdings", "Quant History"):
+    ws = wb.Worksheets(n)
+    for cell in ("C2", "B2"):
+        c = ws.Range(cell)
+        if c.Interior.Pattern != -4142 and c.Font.Size >= 20:
+            ws.Range(f"{cell}:{chr(ord(cell[0])+13)}2").Interior.Color = NAVY_T
+# YTD palette: recolor fills in YTD tabs
+MAP = {bgr("242852"): GREEN_T, bgr("0E2841"): GREEN_T, bgr("002060"): bgr("3E7B5B"), bgr("1F3864"): bgr("3E7B5B"),
+       bgr("DAE9F8"): bgr("E2EFDA"), bgr("E4E8ED"): bgr("E7EFE9"), bgr("E3E4F2"): bgr("EDF3EA")}
+for n in ("Summary YTD", "Attribution YTD", "Model Test", "Charts YTD"):
+    ws = wb.Worksheets(n)
+    for old, newc in MAP.items():
+        try:
+            app.FindFormat.Clear(); app.ReplaceFormat.Clear()
+            app.FindFormat.Interior.Color = old; app.ReplaceFormat.Interior.Color = newc
+            ws.Cells.Replace("", "", 2, 1, False, False, True, True)
+        except Exception as e:
+            print("replace", n, e)
+    for co in ws.ChartObjects():
+        ch = co.Chart
+        for k in range(1, ch.SeriesCollection().Count + 1):
+            s = ch.SeriesCollection(k)
+            try:
+                fc = int(s.Format.Fill.ForeColor.RGB)
+                if fc in (bgr("1F3864"),): s.Format.Fill.ForeColor.RGB = bgr("3E7B5B")
+                elif fc in (bgr("2E75B6"), bgr("C9A26B")): s.Format.Fill.ForeColor.RGB = bgr("F5C000")
+            except Exception: pass
+wb.Worksheets("Guide").Activate()
+R(lambda: setattr(app, "ScreenUpdating", True)); R(lambda: setattr(app, "Calculation", -4105))
+print("final order:", names())

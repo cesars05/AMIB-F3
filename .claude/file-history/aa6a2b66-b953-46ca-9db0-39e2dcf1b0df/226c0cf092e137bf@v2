@@ -1,0 +1,23 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t = $null; foreach ($w in $xl.Workbooks) { if ($w.Name -eq '20260922_SETSA Transportes.xlsx') { $t = $w } }
+$m = $t.Worksheets.Item('Modelo SETSA')
+$t.SaveCopyAs("$PSScriptRoot\backup_antes_quitar_capinv.xlsx")
+function Show($r) { "$r | " + $m.Cells.Item($r,3).Value2 + " | " + (('D','E','F','G','H','I','J','K' | ForEach-Object { [string]$m.Range("$_$r").Formula }) -join ' ; ') }
+$targets = @()
+$v = $m.Range('C1:C450').Value2
+for ($r = 1; $r -le 450; $r++) {
+    $s = [string]$v[$r, 1]
+    if ($s.StartsWith('Efectivo No Operativo') -or $s.StartsWith('Efectivo Operativo M') -or $s.StartsWith('Capital Invertido (Capital Contable Ajustado + Deuda')) { $targets += $r }
+}
+"--- filas candidatas y vecinas ---"
+foreach ($r in $targets) { Show ($r - 1); Show $r; Show ($r + 1) }
+# validar: sin fórmulas en D:J y nadie las referencia
+foreach ($r in $targets) {
+    foreach ($c in 'D','E','F','G','H','I','J') { $f = [string]$m.Range("$c$r").Formula; if ($f.StartsWith('=')) { throw "fila $r tiene formula en $c : $f" } }
+    $lab = [string]$m.Cells.Item($r,3).Value2
+    if ($lab.StartsWith('Efectivo Operativo M') -and [string]$m.Range("D$r").Value2 -ne '' -and $m.Range("D$r").Value2 -ne 0.02) { throw "D$r tiene un valor inesperado" }
+}
+$refs = 0
+foreach ($ws in $t.Worksheets) { foreach ($c in $ws.UsedRange.Cells) { $f = [string]$c.Formula; foreach ($r in $targets) { if ($f -match "(?<![0-9])\`$?[A-Z]\`$?$r(?![0-9])" -and $f.StartsWith('=')) { $refs++; "REF a fila $r en " + $ws.Name + "!" + $c.Address($false,$false) + " : $f" } } } }
+"referencias encontradas: $refs"

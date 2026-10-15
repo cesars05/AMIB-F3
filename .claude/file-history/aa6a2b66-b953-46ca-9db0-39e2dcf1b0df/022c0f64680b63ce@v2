@@ -1,0 +1,150 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t = $null; foreach ($w in $xl.Workbooks) { if ($w.Name -eq '20260922_SETSA Transportes.xlsx') { $t = $w } }
+$m = $t.Worksheets.Item('Modelo SETSA')
+$t.SaveCopyAs("$PSScriptRoot\backup_antes_metricas.xlsx")
+$o = [char]0xF3; $i_ = [char]0xED; $n_ = [char]0xF1; $a = [char]0xE1
+function RowX([string]$lab, [int]$from = 1) { for ($r = $from; $r -le 600; $r++) { if ([string]$m.Cells.Item($r, 3).Value2 -ceq $lab) { return $r } }; throw "No encontrado: $lab" }
+function RowL([string]$nd, [int]$from = 1) { for ($r = $from; $r -le 600; $r++) { if (([string]$m.Cells.Item($r, 3).Value2).Contains($nd)) { return $r } }; throw "No encontrado: $nd" }
+$cols = 'D','E','F','G','H','I'
+
+# ---------------- 1) bloque de métricas en la fila 153 ----------------
+$rCapexG = RowX 'Capex (%)'
+$rIns = $rCapexG + 2                                   # fila 153 (deja un blanco tras Capex %)
+if ($xl.WorksheetFunction.CountA($m.Rows.Item($rIns)) -ne 0) { throw "la fila $rIns no esta vacia" }
+$spec = @(
+  @('sub',  "Reinversi${o}n y Flujo"),
+  @('pct',  'Capex / Ingresos (%)'),
+  @('amt',  "Reinversi${o}n Neta (Capex - Depreciaci${o}n)"),
+  @('amt',  'EBITDA Ajustado - Capex'),
+  @('pct',  'EBITDA Ajustado - Capex / Ingresos (%)'),
+  @('mult', "Conversi${o}n de Caja (CFO / EBITDA Ajustado)"),
+  @('pct',  'Dividendos / Resultado Neto (%)'),
+  @('blank',''),
+  @('sub',  'Retorno sobre Capital Invertido'),
+  @('amt',  'NOPAT (EBIT x (1 - ISR))'),
+  @('amt',  'Capital Invertido (Deuda Neta + Capital Contable Ajustado)'),
+  @('pct',  'ROIC (%)'),
+  @('blank',''),
+  @('sub',  'Servicio de Deuda'),
+  @('mult', 'DSCR (EBITDA Ajustado - Impuestos) / (Intereses + Deuda CP)'),
+  @('mult', "A${n_}os para Pagar Deuda Neta (con EBITDA Ajustado - Capex)")
+)
+$N = $spec.Count
+$m.Range("$($rIns):$($rIns + $N - 1)").EntireRow.Insert() | Out-Null
+# filas modelo de formato (se buscan después de insertar)
+$fSub  = RowX "Crecimiento A/A"
+$fPct  = RowX 'Margen Bruto (%)'
+$fAmt  = RowX "Depreciaci${o}n Anualizada"
+$fMult = RowX "Capex / Depreciaci${o}n"
+for ($k = 0; $k -lt $N; $k++) {
+    $r = $rIns + $k; $kind = $spec[$k][0]
+    $src = switch ($kind) { 'sub' { $fSub } 'pct' { $fPct } 'amt' { $fAmt } 'mult' { $fMult } default { 0 } }
+    if ($src -gt 0) {
+        $m.Rows.Item($src).Copy() | Out-Null
+        $m.Rows.Item($r).PasteSpecial(-4122) | Out-Null
+        $m.Cells.Item($r, 3).Value2 = $spec[$k][1]
+    }
+    $m.Rows.Item($r).RowHeight = 15
+}
+$xl.CutCopyMode = $false
+
+# referencias (después de insertar)
+$rRev  = RowX 'Ingresos Totales'
+$rDep  = RowX 'Depreciaciones'
+$rEBIT = RowL 'Utilidad de Operaci'
+$rTax  = RowL 'ISR, PTU y Otros'
+$rNI   = RowX 'Resultado Neto'
+$rEA   = RowX 'EBITDA Ajustado'
+$rCFO  = RowL '(CFO)'
+$rCapx = RowL 'Capex Neto Impl'
+$rDiv  = RowX 'Dividendos Pagados a Socios'
+$rDeuH = RowX 'Deuda e Intereses'
+$rDN   = RowX 'Deuda Neta' $rDeuH
+$rGF   = RowL 'Gastos Financieros (anualizados)'
+$rCP   = RowX 'Cuentas por Pagar a Corto Plazo'
+$rEqA  = RowX 'Capital Contable Ajustado'
+$rISR  = RowX 'Tasa ISR'
+$ISR = "`$D`$$rISR"
+$R = @{}; for ($k = 0; $k -lt $N; $k++) { $R[$spec[$k][1]] = $rIns + $k }
+$rCxI = $R['Capex / Ingresos (%)']
+$rRN  = $R["Reinversi${o}n Neta (Capex - Depreciaci${o}n)"]
+$rEC  = $R['EBITDA Ajustado - Capex']
+$rECp = $R['EBITDA Ajustado - Capex / Ingresos (%)']
+$rCC  = $R["Conversi${o}n de Caja (CFO / EBITDA Ajustado)"]
+$rPay = $R['Dividendos / Resultado Neto (%)']
+$rNOP = $R['NOPAT (EBIT x (1 - ISR))']
+$rIC  = $R['Capital Invertido (Deuda Neta + Capital Contable Ajustado)']
+$rROI = $R['ROIC (%)']
+$rDS  = $R['DSCR (EBITDA Ajustado - Impuestos) / (Intereses + Deuda CP)']
+$rYr  = $R["A${n_}os para Pagar Deuda Neta (con EBITDA Ajustado - Capex)"]
+foreach ($c in $cols) {
+    $ann = "*12/$c`$11"
+    if ($c -ne 'D') {   # métricas que dependen del flujo (2021 no tiene flujo)
+        $m.Range("$c$rCxI").Formula = "=-$c$rCapx/$c$rRev"
+        $m.Range("$c$rRN").Formula  = "=-$c$rCapx+$c$rDep"
+        $m.Range("$c$rEC").Formula  = "=$c$rEA+$c$rCapx"
+        $m.Range("$c$rECp").Formula = "=$c$rEC/$c$rRev"
+        $m.Range("$c$rCC").Formula  = "=$c$rCFO/$c$rEA"
+        $m.Range("$c$rPay").Formula = "=IF($c$rNI>0,-$c$rDiv/$c$rNI,`"`")"
+        $m.Range("$c$rYr").Formula  = "=IFERROR($c$rDN/($c$rEC$ann),`"`")"
+    }
+    $m.Range("$c$rNOP").Formula = "=$c$rEBIT*(1-$ISR)$ann"
+    $m.Range("$c$rIC").Formula  = "=$c$rDN+$c$rEqA"
+    $m.Range("$c$rROI").Formula = "=$c$rNOP/$c$rIC"
+    $m.Range("$c$rDS").Formula  = "=($c$rEA+$c$rTax)$ann/($c$rGF+$c$rCP)"
+}
+"bloque insertado en filas $rIns-$($rIns + $N - 1)"
+
+# ---------------- 2) columna J: CAGR / Promedio 2021-2025 ----------------
+$m.Columns.Item(10).ColumnWidth = 13
+$last = (RowX 'Supuestos') - 1
+$hdrRows = @(); for ($r = 9; $r -le $last; $r++) { if ($m.Cells.Item($r, 3).Interior.Color -eq 5384228 -or $r -eq 9) { $hdrRows += $r } }
+$skipFrom = RowL 'Desglose de Deuda Financiera'; $skipTo = (RowX 'Activo Fijo y Flotilla') - 1
+$rCF = RowL 'Flujo de Efectivo'; $rBG = RowX 'Balance General'
+function Style-Hdr($cell, $text) {
+    $cell.Value2 = $text
+    $cell.Interior.ThemeColor = 8; $cell.Interior.TintAndShade = -0.25
+    $cell.Font.Name = 'Arial'; $cell.Font.Bold = $true; $cell.Font.Size = 8; $cell.Font.ThemeColor = 1
+    $cell.HorizontalAlignment = -4108
+}
+$nC = 0; $nA = 0
+for ($r = 12; $r -le $last; $r++) {
+    if ($hdrRows -contains $r) { continue }
+    if ($r -ge $skipFrom -and $r -le $skipTo) { continue }
+    $lab = [string]$m.Cells.Item($r, 3).Value2
+    if ($lab -eq '' -or $lab -match '^Cliente \d') { continue }
+    $hasNum = $false; foreach ($c in 'D','E','F','G','H') { $f = [string]$m.Range("$c$r").Formula; if ($f -ne '') { $hasNum = $true } }
+    if (-not $hasNum) { continue }
+    $nf = [string]$m.Range("H$r").NumberFormat
+    $isRatio = $nf.Contains('%') -or $nf.Contains('"x"') -or $nf.Contains(' d') -or $nf.Contains('os"')
+    $inCF = ($r -gt $rCF -and $r -lt $rBG)
+    $j = $m.Range("J$r")
+    if ($isRatio -or $inCF -or $r -eq $rNOP -or $r -eq $rIC -or $r -eq $rRN -or $r -eq $rEC) {
+        $j.Formula = "=IFERROR(AVERAGE(D$($r):H$r),`"`")"; $j.NumberFormat = $nf; $nA++
+    } else {
+        $j.Formula = "=IFERROR(IF(N(D$r)*N(H$r)<=0,`"`",(H$r/D$r)^(1/4)-1),`"`")"; $j.NumberFormat = '0.0%;\(0.0%\);"-"'; $nC++
+    }
+    $j.Font.Name = 'Arial'; $j.Font.Size = 10; $j.Font.Color = 0; $j.Font.Bold = $m.Range("H$r").Font.Bold; $j.Font.Italic = $false
+    $j.HorizontalAlignment = -4108; $j.Interior.Pattern = -4142
+}
+# encabezados verdes
+$labels = @{}
+foreach ($h in $hdrRows) {
+    $txt = [string]$m.Cells.Item($h, 3).Value2
+    $lbl = 'CAGR / Prom. 21-25'
+    if ($txt -like 'Estado de Resultados*' -or $txt -like 'Balance General*') { $lbl = 'CAGR 21-25' }
+    elseif ($txt -like 'Flujo de Efectivo*') { $lbl = 'Prom. 22-25' }
+    elseif ($txt -like 'M*rgenes*' -or $txt -like 'Liquidez*' -or $txt -like 'Activo Fijo*') { $lbl = 'Prom. 21-25' }
+    Style-Hdr $m.Range("J$h") $lbl
+    $labels[$h] = $lbl
+}
+"J: CAGR=$nC filas, Promedio=$nA filas; encabezados: " + (($labels.GetEnumerator() | Sort-Object Name | ForEach-Object { "$($_.Name)=$($_.Value)" }) -join ', ')
+
+$xl.CalculateFull()
+$err = 0
+foreach ($ws in $t.Worksheets) { foreach ($c in $ws.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $err++; "ERR " + $ws.Name + "!" + $c.Address($false,$false) + " " + $c.Formula } } }
+"errores=$err"
+for ($r = $rIns; $r -le $rIns + $N - 1; $r++) { ([string]$m.Cells.Item($r,3).Value2).PadRight(62) + (('D','E','F','G','H','I','J' | ForEach-Object { $m.Range("$_$r").Text.PadLeft(13) }) -join '') }
+foreach ($lab in 'Ingresos Totales','EBITDA Ajustado','Resultado Neto','TOTAL ACTIVO','Margen Bruto (%)','Margen EBITDA Ajustado (%)') { $r = RowX $lab; $lab.PadRight(30) + " J=" + $m.Range("J$r").Text }
+$t.Save(); "guardado=" + $t.Saved

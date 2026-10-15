@@ -1,0 +1,48 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$sm=$wb.Worksheets.Item("Segment Model")
+function Lab($sh,$i){
+  foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$sh.Cells.Item($i,$cc).Text }catch{}; if($t.Trim() -ne ""){ return $t } }
+  return ""
+}
+Write-Output "### Segment Model: cada fila % con su encabezado de bloque ###"
+foreach($i in 45,46,47,48,51,52,53,56,57,58,59,60,61,64,65,66,69,70,71,103,104,105,106,161,162,163,166,167,168,169,177,178,179,180,193,194,195){
+  $hdr=""
+  for($k=$i-1;$k -ge [math]::Max($i-8,10);$k--){
+    $l=Lab $sm $k
+    $kv=""; try{ $kv=[string]$sm.Cells.Item($k,11).Text }catch{}
+    if($l -ne "" -and $kv.Trim() -eq ""){ $hdr=$l; break }
+  }
+  Write-Output ("  r"+([string]$i).PadRight(4)+(Lab $sm $i).PadRight(32)+" <- bloque: "+$hdr)
+}
+Write-Output ""
+Write-Output "### Summary: formato numerico de las filas 38..59 (col E = FY2026) ###"
+$su=$wb.Worksheets.Item("Summary")
+for($i=38;$i -le 59;$i++){
+  $nf=""; try{ $nf=[string]$su.Cells.Item($i,5).NumberFormat }catch{}
+  $d=""; try{ $d=[string]$su.Cells.Item($i,4).Text }catch{}
+  $tipo="nivel"
+  if($nf -like "*%*"){ $tipo="PORCENTAJE" }
+  Write-Output ("  r"+([string]$i).PadRight(4)+(Lab $su $i).PadRight(28)+$tipo.PadRight(12)+" D(FY2025)='"+$d+"'   fmt="+$nf)
+}
+Write-Output ""
+Write-Output "### Consolidated: encabezados de las columnas R/S y filas de seccion ###"
+$cm=$wb.Worksheets.Item("Consolidated Model")
+foreach($i in 9,12,46,77,125,171,218,252,282,290){
+  Write-Output ("  r"+([string]$i).PadRight(4)+(Lab $cm $i).PadRight(30)+" R='"+[string]$cm.Cells.Item($i,18).Text+"'  S='"+[string]$cm.Cells.Item($i,19).Text+"'   Rf="+[string]$cm.Cells.Item($i,18).Formula)
+}
+Write-Output ""
+Write-Output "### Consolidated r77: bloque de ratios, que filas tienen R/S ###"
+for($i=77;$i -le 124;$i++){
+  $fr=""; try{ $fr=[string]$cm.Cells.Item($i,18).Formula }catch{}
+  $nf=""; try{ $nf=[string]$cm.Cells.Item($i,11).NumberFormat }catch{}
+  $l=Lab $cm $i
+  if($l -ne ""){ Write-Output ("  r"+([string]$i).PadRight(4)+$l.PadRight(40)+" R='"+([string]$cm.Cells.Item($i,18).Text)+"'  fmt="+$nf) }
+}

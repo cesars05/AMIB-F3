@@ -1,0 +1,81 @@
+"""Generates abstract WLFI-themed images (navy + gold) with PIL: cover wave art and side panels."""
+import math, random
+from PIL import Image, ImageDraw, ImageFilter
+
+NAVY = (8, 14, 28); NAVY2 = (20, 33, 61); GOLD = (212, 175, 55); GOLD2 = (150, 115, 30); PALE = (240, 228, 190)
+
+def _bg(w, h, c1, c2):
+    im = Image.new("RGB", (w, h), c1); px = im.load()
+    for y in range(h):
+        for x in range(w):
+            t = (x / w * 0.6 + y / h * 0.4)
+            px[x, y] = tuple(int(c1[i] + (c2[i] - c1[i]) * t) for i in range(3))
+    return im
+
+def cover(path, w=2400, h=1350):
+    im = _bg(w, h, NAVY, NAVY2); d = ImageDraw.Draw(im, "RGBA")
+    for k in range(46):
+        pts = []
+        off = k * 11
+        for x in range(0, w + 20, 12):
+            y = h * 0.72 + 230 * math.sin(x / 520 + k * 0.045) * math.cos(x / 1300) - (x * 0.38) + off - 260
+            pts.append((x, y))
+        a = int(40 + 130 * (k / 46))
+        d.line(pts, fill=(212, 175, 55, a if k % 5 else 230), width=3 if k % 5 == 0 else 1)
+    glow = Image.new("RGBA", (w, h), (0, 0, 0, 0)); g = ImageDraw.Draw(glow)
+    g.polygon([(w * 0.55, h), (w, h * 0.25), (w, h * 0.62), (w * 0.8, h)], fill=(212, 175, 55, 70))
+    im = Image.alpha_composite(im.convert("RGBA"), glow.filter(ImageFilter.GaussianBlur(40)))
+    im = im.convert("RGBA"); sh = Image.new("RGBA", (w, h), (0, 0, 0, 0)); sd = ImageDraw.Draw(sh)
+    for x in range(int(w * 0.75)):
+        sd.line([(x, 0), (x, h)], fill=(8, 14, 28, int(235 * (1 - x / (w * 0.75)) ** 0.7)))
+    Image.alpha_composite(im, sh).convert("RGB").save(path, quality=92)
+
+def network(path, w, h, seed=1, n=46):
+    random.seed(seed)
+    im = _bg(w, h, NAVY, NAVY2).convert("RGBA"); d = ImageDraw.Draw(im, "RGBA")
+    pts = [(random.randint(20, w - 20), random.randint(20, h - 20)) for _ in range(n)]
+    for i, p in enumerate(pts):
+        near = sorted(pts, key=lambda q: (q[0] - p[0]) ** 2 + (q[1] - p[1]) ** 2)[1:4]
+        for q in near: d.line([p, q], fill=(212, 175, 55, 90), width=2)
+    for p in pts:
+        r = random.choice([5, 7, 10, 14]); d.ellipse([p[0] - r, p[1] - r, p[0] + r, p[1] + r], fill=(212, 175, 55, 230))
+        d.ellipse([p[0] - r * 2, p[1] - r * 2, p[0] + r * 2, p[1] + r * 2], outline=(212, 175, 55, 70), width=2)
+    im.convert("RGB").save(path, quality=92)
+
+def coins(path, w, h, seed=2):
+    random.seed(seed)
+    im = _bg(w, h, NAVY, NAVY2).convert("RGBA"); d = ImageDraw.Draw(im, "RGBA")
+    cx, cy = w * 0.5, h * 0.52
+    for i in range(14, 0, -1):
+        r = i * min(w, h) * 0.045
+        d.ellipse([cx - r, cy - r, cx + r, cy + r], outline=(212, 175, 55, 40 + i * 12), width=3 if i % 3 else 6)
+    R = min(w, h) * 0.22
+    d.ellipse([cx - R, cy - R, cx + R, cy + R], fill=(212, 175, 55, 255))
+    d.ellipse([cx - R * .84, cy - R * .84, cx + R * .84, cy + R * .84], outline=(120, 90, 20, 255), width=5)
+    # simple "$" glyph from strokes
+    s = R * 0.5
+    d.line([(cx, cy - s * 1.25), (cx, cy + s * 1.25)], fill=(120, 90, 20, 255), width=int(R * .09))
+    d.arc([cx - s * .7, cy - s * 1.0, cx + s * .7, cy + s * .05], 20, 270, fill=(120, 90, 20, 255), width=int(R * .12))
+    d.arc([cx - s * .7, cy - s * .05, cx + s * .7, cy + s * 1.0], 200, 90, fill=(120, 90, 20, 255), width=int(R * .12))
+    im.convert("RGB").save(path, quality=92)
+
+def chain(path, w, h):
+    im = _bg(w, h, NAVY, NAVY2).convert("RGBA"); d = ImageDraw.Draw(im, "RGBA")
+    n = 4; bw = w * 0.5; bh = h * 0.13; gap = h * 0.055; y0 = (h - (n * bh + (n - 1) * gap)) / 2
+    for i in range(n):
+        x = w * 0.25 + (i % 2) * w * 0.06; y = y0 + i * (bh + gap)
+        d.rounded_rectangle([x, y, x + bw, y + bh], radius=14, fill=(212, 175, 55, 40 + i * 35), outline=(212, 175, 55, 255), width=3)
+        d.rectangle([x + 18, y + bh * .3, x + 18 + bw * .35, y + bh * .38], fill=(240, 228, 190, 220))
+        d.rectangle([x + 18, y + bh * .55, x + 18 + bw * .6, y + bh * .62], fill=(240, 228, 190, 120))
+        if i < n - 1:
+            d.line([(x + bw / 2, y + bh), (x + bw / 2 + (w * .06 if i % 2 == 0 else -w * .06), y + bh + gap)], fill=(212, 175, 55, 255), width=4)
+    im.convert("RGB").save(path, quality=92)
+
+if __name__ == "__main__":
+    import os
+    o = os.path.dirname(os.path.abspath(__file__))
+    cover(os.path.join(o, "art_cover.jpg"))
+    network(os.path.join(o, "art_net_tall.jpg"), 900, 1500, 3)
+    network(os.path.join(o, "art_net_wide.jpg"), 1400, 800, 7, 40)
+    coins(os.path.join(o, "art_coin.jpg"), 900, 1400)
+    chain(os.path.join(o, "art_chain.jpg"), 900, 1400)

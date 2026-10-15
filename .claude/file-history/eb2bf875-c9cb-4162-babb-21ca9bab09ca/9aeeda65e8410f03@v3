@@ -1,0 +1,47 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$sm=$wb.Worksheets.Item("Segment Model")
+$cm=$wb.Worksheets.Item("Consolidated Model")
+
+Write-Output "=== SEGMENT MODEL: etiqueta + formula col L, filas clave ==="
+foreach($r in 12,13,14,15,16,20,21,22,23,24,25,26,29,30,31,32,33,34,35,36,37,81,82,83,84,85,90,91,92,93,94,129,130,132,133,134,135,136,142,143,144,145,146,150,151,152,153,154){
+  $lab=""
+  foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$sm.Cells.Item($r,$cc).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  $fl=""; try{ $fl=[string]$sm.Cells.Item($r,12).Formula }catch{}
+  if($fl.Length -gt 175){ $fl=$fl.Substring(0,175)+"..." }
+  Write-Output ("r"+([string]$r).PadRight(4)+$lab.PadRight(34)+" L="+$fl)
+}
+Write-Output ""
+Write-Output "=== CONSOLIDATED: filas 15..30 y 50..70 etiquetas + L ==="
+foreach($r in 15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70){
+  $lab=""
+  foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$cm.Cells.Item($r,$cc).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  $fl=""; try{ $fl=[string]$cm.Cells.Item($r,12).Formula }catch{}
+  if($fl.Length -gt 130){ $fl=$fl.Substring(0,130)+"..." }
+  Write-Output ("r"+([string]$r).PadRight(4)+$lab.PadRight(42)+" L="+$fl)
+}
+Write-Output ""
+Write-Output "=== CONSOLIDATED: bloque dividendos/caja 190..220 ==="
+for($r=190;$r -le 220;$r++){
+  $lab=""
+  foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$cm.Cells.Item($r,$cc).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  $fl=""; try{ $fl=[string]$cm.Cells.Item($r,12).Formula }catch{}
+  if($fl.Length -gt 120){ $fl=$fl.Substring(0,120)+"..." }
+  if($lab.Trim() -ne "" -or $fl -ne ""){ Write-Output ("r"+([string]$r).PadRight(4)+$lab.PadRight(44)+" L="+$fl) }
+}
+Write-Output ""
+Write-Output "=== CONSOLIDATED: 260..275 (calculo de caja excedente) ==="
+for($r=260;$r -le 275;$r++){
+  $lab=""
+  foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$cm.Cells.Item($r,$cc).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  $fl=""; try{ $fl=[string]$cm.Cells.Item($r,12).Formula }catch{}
+  if($fl.Length -gt 120){ $fl=$fl.Substring(0,120)+"..." }
+  if($lab.Trim() -ne "" -or $fl -ne ""){ Write-Output ("r"+([string]$r).PadRight(4)+$lab.PadRight(44)+" L="+$fl) }
+}

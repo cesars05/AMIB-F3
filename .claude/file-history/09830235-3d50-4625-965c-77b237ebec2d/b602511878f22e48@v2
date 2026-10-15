@@ -1,0 +1,67 @@
+# Nota: Earnings calls de los productores de acero de EE. UU. (Q1–Q2 2026)
+
+**Procedencia:** resumen **proporcionado por el usuario** (pegado en el chat, 2026-10-14). No lo verifiqué contra 10-Q, comunicados ni presentaciones; las cifras son lo que la dirección dijo en las calls. Cobertura: Nucor (NUE), Steel Dynamics (STLD) y Cleveland-Cliffs (CLF) = Q1 y Q2 de 2026; Commercial Metals (CMC) = Q2 y Q3 **fiscal** (cierres feb y may; su año fiscal termina en agosto). **No incluye ningún Q3.**
+
+Cruce con lo que ya está en la carpeta: ver `Ciclo_Acero_Primer_Vistazo.md` (guía 3T de NUE, STLD, CLF y Nippon/U.S. Steel, de prensa especializada).
+
+## 1. Mensaje común
+Demanda sólida, menos importaciones (Section 232 + antidumping), precios al alza, inventarios bajos, plazos de entrega largos.
+
+## 2. Dinámica y datos de mercado
+
+| | Nucor | Steel Dynamics | CMC | Cleveland-Cliffs |
+|---|---|---|---|---|
+| Importaciones | Cuota en acero terminado >22% (1T25) → ~15%; 2T26 terminado -25% a/a; espera importaciones de sheet ~4.5 Mt en 2026 vs 9 Mt en 2024 | Asia envía vía 232 a ritmo creciente; espera que modere en 3T–4T | Espera que bajen en 2S | Mínimo desde 2009 |
+| Precio | Alza gradual, no persiguió el piso del 4T25 | HRC ~$850/t (4T25) → $975 (1T26) → >$1,000 en la call | Precios subiendo; balance NA "equilibrado" | Precios ~$800/t hace un año → ≥$1,150 hoy; rezago de contratos ~1 mes → ~2 meses |
+| Demanda | Fuerte: centros de datos, energía, infraestructura. Débil: consumo cíclico, oficinas, equipo pesado, agro. Consumo doméstico plano a +2% en 2026 | No residencial, energía, solar fuertes; vivienda débil. Backlog de fabricación >+45% a/a; Dodge Momentum >+30% | Consumo aparente EE. UU. +3.2%; bookings 2T fiscal los más altos desde fines de FY22 | Envíos automotrices 2T los más altos en 2 años; acero sustituye aluminio en auto, electrodomésticos y remolques |
+| Inventarios/plazos | Backlog plantas 4.7 Mt (1T), el mayor desde 2T21; service centers +10% a/a en junio; sin compras especulativas | Inventario bajo, lead times altos | — | — |
+| Utilización | ~87% (1T) | 90% propia vs ~81% industria (2T) | Arizona 2 >75% | — |
+
+## 3. Política
+
+- **Section 232 (arancel 50%):** Nucor: reafirmado y los derivados ahora pagan sobre valor total. Cliffs: "la política industrial más efectiva en una generación"; transformadores de distribución añadidos a derivados. STLD: lo apoya a largo plazo. Un analista planteó bajar a 10% para clientes que usen 100% acero de EE. UU.; **la dirección no lo confirmó**.
+- **AD/CVD:** CMC: varilla de Argelia 200% final (~500 kt fuera del mercado ≥5 años); casos también contra Bulgaria, Egipto y Vietnam (preliminares ~50% a 200%). Nucor: resistente a la corrosión. STLD: casos ganados en 2025 ayudan spreads de valor agregado.
+- **USMCA/T-MEC:** no se renueva sin cambios → revisión anual. Nucor pide melted-and-poured; Cliffs ve todos los escenarios favorables y dice que ya no hay "válvulas de escape" en México. Canadá extendió cuotas hasta jun-2027 (Cliffs: insuficiente; brecha de precio con EE. UU. de -40% en 1T se cerró en 2T).
+- **Section 301:** Brasil exime insumos siderúrgicos (Nucor); recomendaciones excluyen arrabio de Brasil (STLD: positivo para chatarra prime y mini-mills).
+- **Solo CMC:** CBAM (UE) ≈ €50/t sobre precios si se aplica bien; salvaguardias UE 1-jul recortan cuotas 50% y 50% de arancel fuera de cuota; tasa efectiva FY26 7–9%, sin impuestos federales en efectivo significativos FY26 y gran parte de FY27.
+- **Compras federales:** STLD impulsa Buy American (SHIPS for America Act, ley de carreteras).
+- **Huecos:** ninguna call detalla el proceso de inclusiones del 232.
+
+## 4. Demanda por segmento
+- **Auto:** Nucor +6% 2T vs 1T; STLD espera producción NA plana; Cliffs: ~mitad del aumento de volumen del 3T viene de auto.
+- **Construcción/infraestructura:** Nucor: consumo estructural +~15%, centros de datos (puede surtir ~95% del acero), valla fronteriza 1.5 Mt en 2 años, tubería API hasta 250 kt en 2027. CMC: >50% de fondos IIJA sin gastar; bookings downstream >+9%; precast en récord; mercado de varilla +1–3%. STLD: contratistas con backlog >9 meses; petróleo y gas y solar fuertes.
+- **Débil:** residencial (Nucor, STLD, CMC; multifamiliar mejor), equipo pesado, agricultura (mixto: Nucor más suave, STLD mejora).
+
+## 5. Capacidad y producción
+
+| | Dato |
+|---|---|
+| **Nucor** | Envíos récord 7.0 Mt (1T) y 7.1 Mt (2T); crecimiento 2026 cerca del extremo alto de 5–10%. West Virginia (sheet): arranque en 2T, termina a fin de año, envíos comerciales inicios 2027; costos de arranque $120 M en 2T, altos hasta 2027. Brandenburg >230 kt en 2T. Energía ~10% del costo |
+| **Steel Dynamics** | Envíos récord 3.6 Mt (1T) y 3.7 Mt (2T). Aluminio: 22.5 kt → 53 kt (por debajo de la guía 60–70 kt), pérdida operativa $65 M → $33 M, objetivo ≥90% de utilización a fin de año. Capex 2S $300–350 M; 2027 podría ser $500–600 M. Sin datos de Sinton |
+| **CMC (FY)** | Paros en 7 de 10 plantas ≈ $20 M; clima/inventario ≈ $10 M y ~50 kt. Guía 4T fiscal: +$40–50 M secuencial. Arizona 2 >75% → plena este año. West Virginia: arranque en caliente fines del verano 2026 (~100 días de retraso por clima), rampa ~12 meses, 250–300 kt en FY27. Capex FY26 ~$550 M (de ~$600 M) |
+| **Cleveland-Cliffs** | Envíos >4.1 Mt (1T), >4.0 Mt (2T), guía 3T >4.3 Mt; 2026: 16.5–17.0 Mt. Cerró línea de placa Burns Harbor y acabado de placa Gary. Costos unitarios +$15/t en 2T, -$10/t en 3T. Contratos de precio fijo se renuevan en 2S → ~+$500 M de EBITDA en 2027. Dearborn solo se reinicia con compromisos de automotrices |
+
+**Ojo:** hay **dos plantas "West Virginia" distintas** (la de Nucor, laminados planos ~3 Mtpa; la de CMC, mini-mill de productos largos). No mezclarlas.
+
+## 6. Resultados y capital
+
+| | 1T | 2T | Siguiente |
+|---|---|---|---|
+| **Nucor** | EBITDA ~$1.5 mil M, EPS $3.23 | EBITDA ~$2 mil M, EPS $5.04 ($4.84 sin $0.20 no monetario; incluye $130 M de reembolsos) | 3T: mayores utilidades, sin reembolsos |
+| **STLD** | NI $403 M, EPS $2.78, EBITDA aj. $700 M | NI $534 M, EPS $3.69, EBITDA aj. $921 M, ingresos $6.1 mil M | — |
+| **CMC (FY)** | 2T fiscal: EBITDA core $297.5 M (+114%) | 3T fiscal: EBITDA core $353.6 M (+78.6%), EPS aj. $1.73 | 4T: EBITDA aj. +$40–50 M |
+| **Cliffs** | EBITDA aj. $95 M; FCF negativo | EBITDA aj. $286 M (mejor en 2 años); FCF positivo | 3T: ~$575 M |
+
+Retorno/balance: Nucor devolvió $479 M en 2T (41% de utilidad neta; compromiso ≥40%), capex 2026 ~$2.5 mil M (~60% crecimiento). STLD recompró $200 M en 2T. CMC: apalancamiento 2.3x → 2.1x (meta <2x), programa TAG "muy por delante" de $150 M. Cliffs: prioridad deuda (<2.5x a mediados de 2027), $425 M por venta de propiedades inactivas.
+
+## 6b. Verificado contra comunicados oficiales (descargados en `Reports/Empresas/`)
+- Nucor 2T26 (comunicado PDF): EPS $5.04 / $4.84 ajustado ✔; precio de venta externo promedio **$1,145/t** (1T: $1,074); costo de chatarra $422/t; utilización **91%** en 2T vs **86%** en 1T. El resumen pegado decía ~87% en 1T: diferencia menor, usar 86%.
+- STLD 2T26: envíos 3.7 Mt, ingresos $6.1 mil M, NI $534 M, EPS $3.69 ✔ (incluye $16 M de deterioro por reubicar un centro de losa de aluminio de Arizona a Mississippi).
+- Cliffs 2T26: ingresos $5.2 mil M, EBITDA aj. $286 M vs $95 M, liquidez $3.1 mil M ✔; CEO dice que el 2S será el más fuerte desde 2021 y que el EBITDA del 4T superaría la guía del 3T.
+- CMC 3T fiscal: EBITDA core $353.6 M, EPS aj. $1.73 ✔.
+
+## 7. Preguntas abiertas
+1. ¿Qué dijeron en el 3T? Pendiente (STLD 19-oct, NUE 26-oct, CMC por confirmar, CLF por confirmar).
+2. Nucor: ¿la utilización de ~50% en West Virginia es a fin de 2026 o de 2027? (las dos calls no coinciden).
+3. STLD cita HRC >$1,000 en su call; BofA cita spot >$1,250 en oct-26: ¿cuánto fue alza posterior y cuánto es diferencia de definición (HRC vs. precio realizado)?
+4. Sin datos de Sinton (STLD) ni backlog/tonelaje por segmento en Cliffs.

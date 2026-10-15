@@ -1,0 +1,94 @@
+import os, shutil, csv, re, glob
+ROOT = r"C:\Users\cesar\Downloads\USD x ITESM"
+os.chdir(ROOT)
+log = []
+
+def mv(src, dst):
+    if not os.path.exists(src):
+        print("MISSING", src); return
+    os.makedirs(os.path.dirname(dst) or ".", exist_ok=True)
+    shutil.move(src, dst)
+    log.append((src, dst))
+
+def mv_doc(src_dir, old_stem, dst_dir, new_stem):
+    """Move a converted doc family (pdf/PDF, md, *_figuras*.pdf) and rewrite md refs."""
+    moved = []
+    for f in os.listdir(src_dir):
+        base, ext = os.path.splitext(f)
+        if base == old_stem or re.fullmatch(re.escape(old_stem) + r"_figuras(_\d+)?", base):
+            suffix = base[len(old_stem):]
+            mv(os.path.join(src_dir, f), os.path.join(dst_dir, new_stem + suffix + ext.lower()))
+            moved.append(new_stem + suffix + ext.lower())
+    md = os.path.join(dst_dir, new_stem + ".md")
+    if os.path.exists(md):
+        t = open(md, encoding="utf-8").read()
+        t = t.replace(old_stem, new_stem)
+        open(md, "w", encoding="utf-8", newline="\n").write(t)
+    if not moved:
+        print("NO FILES for", old_stem)
+
+A = "99_Archive"
+# ---- 1. quarantine junk -------------------------------------------------
+for f in os.listdir("."):
+    if f.startswith("Act3Report_Halliburton_Kuwait_KWD"):
+        mv(f, os.path.join(A, "root_act3_duplicates", f))
+mv(r"Bloomberg Data\Act. Clase 2\Halliburton.pdf", os.path.join(A, "empty_files", "Halliburton.pdf"))
+
+# ---- 2. brief -----------------------------------------------------------
+mv("Propuesta_Proyecto_Final_Integrado_USD_ITESM 1.docx", r"01_Brief\Propuesta_Proyecto_Final_Integrado_USD_ITESM.docx")
+mv(r"Bloomberg Data\Act. Clase 2\Actividad Clase 2 - Bloomberg - Activos Alternativos.docx", r"01_Brief\Actividad_Clase2_Bloomberg_Activos_Alternativos.docx")
+
+# ---- 3. company filings -------------------------------------------------
+CD = "Company Data"; D2 = "02_Company_Filings"
+mv_doc(CD, "Halliburton - Proxy filing", D2, "HAL_Proxy-Filing")
+mv_doc(CD, "Halliburton - Q1 2026", D2, "HAL_Q1-2026_10-Q")
+mv_doc(CD, "Halliburton - Q1 2026 (1)", D2, "HAL_Q1-2026_Earnings-Release")
+mv_doc(CD, "Halliburton - Q2 2026", D2, "HAL_Q2-2026_Earnings-Release")
+mv_doc(CD, "Halliburton - Q2 2026 (1)", D2, "HAL_Q2-2026_10-Q")
+mv_doc(CD, "Halliburton - Q4 2025 - Conference Call Deck", D2, "HAL_Q4-2025_Conference-Call-Deck")
+mv_doc(CD, "Halliburton 2Q26 IR Presentation", D2, "HAL_Q2-2026_IR-Presentation")
+mv_doc(CD, "Halliburton \u2013 Q1 2026 \u2013 Transcript \u2013 Quartr", D2, "HAL_Q1-2026_Earnings-Call-Transcript")
+mv_doc(CD, "Halliburton \u2013 Q2 2026 \u2013 Transcript \u2013 Quartr", D2, "HAL_Q2-2026_Earnings-Call-Transcript")
+mv_doc(CD, "Q1'26 Seg & Geo Website Table", D2, "HAL_Q1-2026_Segment-Geography-Table")
+
+# ---- 4. sell-side / third-party research --------------------------------
+D3 = "03_SellSide_Research"
+mv_doc(CD, "Global Oil & Gas Kuwait", D3, "UBS_Global-Oil-Gas_Hormuz-Tracker-Day139_2026-07-17")
+mv_doc(CD, "Middle Esast Kuwait", D3, "MUFG_Middle-East-Daily_Kuwait")
+mv_doc(CD, "Kuwait Goldman", D3, "Goldman_NBK-Kuwait_Mortgage-Law_2026-09-23")
+BA2 = r"Bloomberg Data\Act. Clase 2"
+mv_doc(BA2, "Halliburton Vulnerable to Shale Vicissitudes Equity Outlook", D3, "BI_HAL_Equity-Outlook_Shale-Vicissitudes")
+
+# ---- 5. Bloomberg data --------------------------------------------------
+B4 = "04_Bloomberg_Data"
+mv_doc(BA2, "HAL US EQUITY EXECUTIVE SUMMARY", B4 + r"\Class2_HAL_Profile_ESG_Risk_Debt", "HAL-US-Equity_Executive-Summary")
+mv(BA2 + r"\Perfil Halliburton.png", B4 + r"\Class2_HAL_Profile_ESG_Risk_Debt\Perfil Halliburton.png")
+for sub in ("Debt", "ESG", "Risk"):
+    mv(BA2 + "\\" + sub, B4 + r"\Class2_HAL_Profile_ESG_Risk_Debt" + "\\" + sub)
+BA3 = r"Bloomberg Data\Act 3"
+mv_doc(BA3, "Act3Report_Halliburton_Kuwait_KWD", B4 + r"\Class3_KWD-FX_HAL-Financials", "Act3Report_Halliburton_Kuwait_KWD")
+mv_doc(BA3, "HALLIBURTON FINANCIALS 2018-2027", B4 + r"\Class3_KWD-FX_HAL-Financials", "HAL_Financials_2018-2027")
+for f in os.listdir(BA3):
+    mv(os.path.join(BA3, f), os.path.join(B4, "Class3_KWD-FX_HAL-Financials", f))
+SN = r"Bloomberg Data\Screenshots de noticias"
+mv(SN + r"\Screenshot analisis ESG.png", B4 + r"\News_and_Forecast\Screenshot analisis ESG.png")
+mv(SN + r"\HALLIBURTON", B4 + r"\News_and_Forecast\HALLIBURTON")
+mv(SN + r"\News Crypto", B4 + r"\News_and_Forecast\News_Crypto")
+mv(SN + r"\News OIL", B4 + r"\News_and_Forecast\News_OIL")
+mv(SN + r"\Forecast", B4 + r"\News_and_Forecast\Forecast")
+
+# ---- 6. deck reference + templates --------------------------------------
+mv("Fina 405_ Halliburton (Kuwait).pptx", r"05_Team9_Reference_Deck\Fina405_Halliburton-Kuwait_Team9.pptx")
+mv("Templates", "06_Templates")
+
+# ---- cleanup of empty dirs ---------------------------------------------
+for d in ("Company Data", r"Bloomberg Data\Act. Clase 2", r"Bloomberg Data\Act 3", r"Bloomberg Data\Screenshots de noticias", "Bloomberg Data"):
+    try:
+        os.rmdir(d)
+    except OSError as e:
+        print("not empty:", d, os.listdir(d))
+
+os.makedirs(A, exist_ok=True)
+with open(os.path.join(A, "move_log.csv"), "w", newline="", encoding="utf-8") as fh:
+    w = csv.writer(fh); w.writerow(["from", "to"]); w.writerows(log)
+print("moves:", len(log))

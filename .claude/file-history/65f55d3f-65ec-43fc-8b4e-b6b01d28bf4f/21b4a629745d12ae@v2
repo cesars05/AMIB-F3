@@ -1,0 +1,258 @@
+from pptx import Presentation
+from pptx.chart.data import CategoryChartData
+from pptx.enum.chart import XL_TICK_LABEL_POSITION, XL_CHART_TYPE, XL_LABEL_POSITION, XL_LEGEND_POSITION, XL_MARKER_STYLE
+from pptx.enum.dml import MSO_LINE
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
+from pptx.util import Pt, Emu
+from pptx.dml.color import RGBColor
+
+SRC = r"C:\Users\cesar\Downloads\20261012_ProyectoAmbar.pptx"
+DST = r"C:\Users\cesar\Downloads\20261012_ProyectoAmbar_EBITDA_v2.pptx"
+NAVY = RGBColor(0x22, 0x1F, 0x56)
+GOLD = RGBColor(0xF5, 0xC4, 0x00)
+GRAY = RGBColor(0xF2, 0xF2, 0xF2)
+WHITE = RGBColor(0xFF, 0xFF, 0xFF)
+BLACK = RGBColor(0, 0, 0)
+NL = chr(10)
+
+years = ["2024", "2025", "2026P", "2027P", "2028P"]
+proj = [772, 841, 925, 1016, 1113]
+real = [789.44, 838.00, 811.05, 832.61, 853.72]
+mp = [14.39, 14.76, 15.26, 15.75, 16.23]  # %
+mr = [14.310, 14.047, 13.620, 13.444, 13.254]
+delta = [r - q for r, q in zip(real, proj)]
+dpct = [(r / q - 1) * 100 for r, q in zip(real, proj)]
+cum_p, cum_r = sum(proj[2:]), sum(real[2:])
+cum_pct = (cum_r / cum_p - 1) * 100
+print("acum", cum_p, round(cum_r, 1), round(cum_pct, 1), "margen 2028 pp", round(mr[-1] - mp[-1], 1))
+
+p = Presentation(SRC)
+layout = p.slides[2].slide_layout
+
+def settext(shape, t):
+    tf = shape.text_frame
+    para = tf.paragraphs[0]
+    if para.runs:
+        para.runs[0].text = t
+        for r in para.runs[1:]:
+            r.text = ""
+    else:
+        para.text = t
+
+def new_slide(title, subtitle, note):
+    s = p.slides.add_slide(layout)
+    for x in s.placeholders:
+        if x.name.startswith("Title"):
+            settext(x, title)
+        elif x.name.startswith("Subtitle"):
+            settext(x, subtitle)
+    tp = [x for x in s.placeholders if x.name.startswith("Text Placeholder")]
+    settext(tp[-1], note)
+    n = tp[-1]
+    n.left, n.top, n.width, n.height = 3300000, 6290000, 7950000, 480000
+    for para in n.text_frame.paragraphs:
+        for r in para.runs:
+            r.font.size = Pt(9)
+    for x in list(s.placeholders):
+        if x.has_text_frame and not x.text_frame.text.strip():
+            x._element.getparent().remove(x._element)
+    return s
+
+def textbox(s, x, y, w, h, text, size=12, bold=False, italic=False, color=BLACK, align=None, anchor=None):
+    tb = s.shapes.add_textbox(x, y, w, h)
+    tb.text_frame.word_wrap = True
+    tb.text_frame.text = text
+    if anchor:
+        tb.text_frame.vertical_anchor = anchor
+    para = tb.text_frame.paragraphs[0]
+    if align:
+        para.alignment = align
+    r = para.runs[0]
+    r.font.size = Pt(size); r.font.bold = bold; r.font.italic = italic; r.font.color.rgb = color
+    return tb
+
+def band(s, x, y, w, h, text, size=13):
+    b = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, x, y, w, h)
+    b.fill.solid(); b.fill.fore_color.rgb = NAVY
+    b.line.fill.background()
+    tf = b.text_frame
+    tf.margin_left = Emu(120000)
+    tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+    tf.text = text
+    para = tf.paragraphs[0]
+    para.alignment = PP_ALIGN.LEFT
+    r = para.runs[0]
+    r.font.size = Pt(size); r.font.bold = True; r.font.color.rgb = WHITE
+    return b
+
+def panel(s, x, y, w, h, head):
+    body = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, x, y, w, h)
+    body.fill.solid(); body.fill.fore_color.rgb = GRAY
+    body.line.fill.background()
+    band(s, x, y, w, 400000, head)
+
+def bar_chart(s, x, y, w, h, cats, series, fmt, mx, legend=True, mn=0, label_size=12, gap=60, overlap=-10):
+    cd = CategoryChartData(number_format=fmt)
+    cd.categories = cats
+    for nm, vals, _ in series:
+        cd.add_series(nm, vals)
+    ch = s.shapes.add_chart(XL_CHART_TYPE.COLUMN_CLUSTERED, x, y, w, h, cd).chart
+    ch.has_title = False
+    ch.has_legend = legend
+    if legend:
+        ch.legend.include_in_layout = False
+        ch.legend.position = XL_LEGEND_POSITION.TOP
+        ch.legend.font.size = Pt(12)
+    ch.font.size = Pt(12)
+    ch.value_axis.visible = False
+    ch.value_axis.has_major_gridlines = False
+    ch.value_axis.minimum_scale = mn
+    ch.value_axis.maximum_scale = mx
+    ch.category_axis.format.line.color.rgb = RGBColor(0x80, 0x80, 0x80)
+    ch.category_axis.tick_labels.font.size = Pt(12)
+    ch.category_axis.tick_label_position = XL_TICK_LABEL_POSITION.LOW
+    pl = ch.plots[0]
+    pl.gap_width = gap
+    pl.overlap = overlap
+    for se, (_, _, col) in zip(pl.series, series):
+        se.format.fill.solid(); se.format.fill.fore_color.rgb = col
+        se.invert_if_negative = False
+        dl = se.data_labels
+        dl.show_value = True
+        dl.number_format = fmt
+        dl.number_format_is_linked = False
+        dl.position = XL_LABEL_POSITION.OUTSIDE_END
+        dl.font.size = Pt(label_size); dl.font.bold = True
+    return ch
+
+def table(s, x, y, w, col0, rows, rowh=300000, size=11):
+    n, m = len(rows), len(rows[0])
+    gf = s.shapes.add_table(n, m, x, y, w, rowh * n)
+    t = gf.table
+    t.columns[0].width = col0
+    for j in range(1, m):
+        t.columns[j].width = int((w - col0) / (m - 1))
+    for i, row in enumerate(rows):
+        t.rows[i].height = rowh
+        for j, v in enumerate(row):
+            c = t.cell(i, j)
+            c.text = v
+            c.fill.solid()
+            c.fill.fore_color.rgb = RGBColor(0xE3, 0xE6, 0xEC) if i == 0 else WHITE
+            c.margin_top = c.margin_bottom = Emu(20000)
+            c.vertical_anchor = MSO_ANCHOR.MIDDLE
+            para = c.text_frame.paragraphs[0]
+            para.alignment = PP_ALIGN.LEFT if j == 0 else PP_ALIGN.CENTER
+            r = para.runs[0]
+            r.font.size = Pt(size); r.font.color.rgb = BLACK
+            r.font.bold = (i == 0)
+    return gf
+
+def cards(s, items, x0=7750000, y0=1450000, w=3950000, h=1380000, gap=130000):
+    y = y0
+    for i, (head, body) in enumerate(items, 1):
+        bx = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, x0, y, w, h)
+        bx.fill.solid(); bx.fill.fore_color.rgb = GRAY
+        bx.line.fill.background()
+        band(s, x0, y, w, 400000, "%d  %s" % (i, head))
+        textbox(s, x0 + 100000, y + 450000, w - 200000, h - 480000, body, size=13)
+        y += h + gap
+
+NOTE = "Notas: Adj. EBITDA = EBITDA antes de gastos corporativos. 2024 y 2025 son reales; 2026P–2028P corresponden al modelo actual. Cifras en millones de pesos."
+f0 = lambda v: f"${v:,.0f}"
+
+# ================= Alternativa A: gráfica + margen + tarjetas =================
+sA = new_slide("Adj. EBITDA: Antes y Después", "Lo proyectado en la valuación de 2023 frente al resultado real y al modelo actual", NOTE)
+textbox(sA, 525462, 1200000, 6900000, 260000, "Adj. EBITDA, en millones de pesos", size=12, italic=True)
+bar_chart(sA, 525462 + 1300000, 1450000, 5600000, 3450000, years,
+          [("Proyección dic-2023", proj, GOLD), ("Real / modelo actual", real, NAVY)], '"$"#,##0', 1300)
+rowsA = [["Margen"] + years,
+         ["Proyectado"] + ["%.1f%%" % v for v in mp],
+         ["Real / actual"] + ["%.1f%%" % v for v in mr],
+         ["Diferencia"] + ["%+.1f pp" % (b - a) for a, b in zip(mp, mr)]]
+table(sA, 525462, 4950000, 6900000, 1300000, rowsA, rowh=290000, size=11)
+cards(sA, [
+    ("2024–2025: en línea con lo proyectado", "Real de $789 y $838 MDP contra $772 y $841 proyectados."),
+    ("2026P–2028P: por debajo de lo proyectado", "EBITDA acumulado de %s MDP contra %s proyectados (%.0f%%)." % (f0(cum_r), f0(cum_p), cum_pct)),
+    ("El margen no se expande", "Margen de 2028P: %.1f%%, contra %.1f%% proyectado (%.1f pp)." % (mr[-1], mp[-1], mr[-1] - mp[-1])),
+])
+
+# ================= Alternativa B: brecha + margen =================
+sB = new_slide("Adj. EBITDA: Brecha vs. lo Proyectado", "Diferencia en Adj. EBITDA y en margen frente a la valuación de 2023", NOTE)
+yB, hB = 1350000, 3950000
+panel(sB, 525462, yB, 5500000, hB, "Diferencia en Adj. EBITDA vs. proyección")
+textbox(sB, 600000, yB + 430000, 5300000, 260000, "Millones de pesos; abajo, variación %", size=11, italic=True)
+bar_chart(sB, 600000, yB + 700000, 5350000, hB - 760000, [f"{y}{NL}{d:+.1f}%" for y, d in zip(years, dpct)],
+          [("Real / modelo actual vs. proyección", delta, NAVY)], '+"$"#,##0;-"$"#,##0', 60, legend=False, mn=-300, gap=70, overlap=0)
+panel(sB, 6170000, yB, 5500000, hB, "Margen Adj. EBITDA")
+textbox(sB, 6245000, yB + 430000, 5300000, 260000, "Porcentaje sobre ventas", size=11, italic=True)
+cd = CategoryChartData(number_format='0.0"%"')
+cd.categories = years
+cd.add_series("Proyección dic-2023", mp)
+cd.add_series("Real / modelo actual", mr)
+chm = sB.shapes.add_chart(XL_CHART_TYPE.LINE_MARKERS, 6245000, yB + 700000, 5350000, hB - 760000, cd).chart
+chm.has_title = False
+chm.has_legend = True
+chm.legend.include_in_layout = False
+chm.legend.position = XL_LEGEND_POSITION.BOTTOM
+chm.legend.font.size = Pt(12)
+chm.font.size = Pt(12)
+chm.value_axis.visible = False
+chm.value_axis.has_major_gridlines = False
+chm.value_axis.minimum_scale = 12
+chm.value_axis.maximum_scale = 17.5
+chm.category_axis.format.line.color.rgb = RGBColor(0x80, 0x80, 0x80)
+for se, col, pos, dash in zip(chm.plots[0].series, (GOLD, NAVY), (XL_LABEL_POSITION.ABOVE, XL_LABEL_POSITION.BELOW), (MSO_LINE.DASH, MSO_LINE.SOLID)):
+    se.smooth = False
+    se.format.line.color.rgb = col
+    se.format.line.width = Pt(2.75)
+    se.format.line.dash_style = dash
+    se.marker.style = XL_MARKER_STYLE.CIRCLE
+    se.marker.size = 8
+    se.marker.format.fill.solid(); se.marker.format.fill.fore_color.rgb = col
+    se.marker.format.line.color.rgb = col
+    dl = se.data_labels
+    dl.show_value = True
+    dl.number_format = '0.0"%"'
+    dl.number_format_is_linked = False
+    dl.position = pos
+    dl.font.size = Pt(12); dl.font.bold = True
+st = sB.shapes.add_shape(MSO_SHAPE.RECTANGLE, 525462, 5450000, 11145000, 700000)
+st.fill.solid(); st.fill.fore_color.rgb = NAVY
+st.line.fill.background()
+st.text_frame.word_wrap = True
+st.text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
+st.text_frame.text = "Acumulado 2026P–2028P: %s MDP contra %s proyectados (%.0f%%). Margen de 2028P: %.1f%% contra %.1f%% (%.1f pp)." % (f0(cum_r), f0(cum_p), cum_pct, mr[-1], mp[-1], mr[-1] - mp[-1])
+rr = st.text_frame.paragraphs[0].runs[0]
+rr.font.size = Pt(14); rr.font.bold = True; rr.font.color.rgb = WHITE
+st.text_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+
+# ================= Alternativa C: antes | después =================
+sC = new_slide("Adj. EBITDA: Proyección vs. Realidad", "Antes y después, con el margen Adj. EBITDA debajo de cada año", NOTE)
+yC, hC = 1350000, 3950000
+panel(sC, 525462, yC, 5500000, hC, "Antes: proyección dic-2023")
+textbox(sC, 600000, yC + 430000, 5300000, 260000, "Millones de pesos; abajo, margen Adj. EBITDA", size=11, italic=True)
+bar_chart(sC, 600000, yC + 700000, 5350000, hC - 760000, [f"{y}{NL}{m:.1f}%" for y, m in zip(years, mp)],
+          [("Proyección dic-2023", proj, GOLD)], '"$"#,##0', 1300, legend=False, gap=50, overlap=0)
+panel(sC, 6170000, yC, 5500000, hC, "Después: real y modelo actual")
+textbox(sC, 6245000, yC + 430000, 5300000, 260000, "Millones de pesos; abajo, margen Adj. EBITDA", size=11, italic=True)
+bar_chart(sC, 6245000, yC + 700000, 5350000, hC - 760000, [f"{y}{NL}{m:.1f}%" for y, m in zip(years, mr)],
+          [("Real / modelo actual", real, NAVY)], '"$"#,##0', 1300, legend=False, gap=50, overlap=0)
+st = sC.shapes.add_shape(MSO_SHAPE.RECTANGLE, 525462, 5450000, 11145000, 700000)
+st.fill.solid(); st.fill.fore_color.rgb = NAVY
+st.line.fill.background()
+st.text_frame.word_wrap = True
+st.text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
+st.text_frame.text = "El Adj. EBITDA acumulado de 2026P–2028P es %.0f%% menor y el margen de 2028P es %.1f pp menor a lo proyectado en 2023." % (abs(cum_pct), abs(mr[-1] - mp[-1]))
+rr = st.text_frame.paragraphs[0].runs[0]
+rr.font.size = Pt(14); rr.font.bold = True; rr.font.color.rgb = WHITE
+st.text_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+
+# ---- dejar solo las 3 nuevas
+ids = p.slides._sldIdLst
+for sid in list(ids)[:-3]:
+    p.part.drop_rel(sid.rId)
+    ids.remove(sid)
+p.save(DST)
+print("saved")

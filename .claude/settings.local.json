@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(powershell -Command \"New-Item -ItemType Directory -Path 'C:\\\\Users\\\\cesar\\\\Desktop\\\\Claude' -Force\"2)",
+      "Bash(cmd.exe /c \"mkdir C:\\\\Users\\\\cesar\\\\Desktop\\\\Claude\")",
+      "Bash(bash -c \"mkdir -p /c/Users/cesar/Desktop/Claude\")",
+      "Bash(bash -c \"curl -s http://localhost:11434/api/tags 2>/dev/null || echo 'Ollama no esta corriendo'\")",
+      "Bash(cmd.exe /c \"mkdir \\\\\"C:\\\\Users\\\\cesar\\\\OneDrive\\\\Desktop\\\\Claude Code\\\\Noticias\\\\Daily Reports\\\\\"\")",
+      "Bash(powershell -Command \"Get-ChildItem 'C:\\\\Users\\\\cesar\\\\OneDrive\\\\Desktop\\\\Atkore' -Filter '*.pdf' | ForEach-Object { $_.Name }\")",
+      "Bash(python C:/Users/cesar/Downloads/Actinver/ACTINVER_v2.py)",
+      "Bash(python C:/Users/cesar/Downloads/Actinver/generate_report.py)"
+    ]
+  }
+}

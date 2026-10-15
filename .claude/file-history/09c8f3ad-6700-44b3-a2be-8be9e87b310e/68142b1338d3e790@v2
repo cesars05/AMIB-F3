@@ -1,0 +1,100 @@
+"""Rebuild slides 3 (Athabasca) and 4 (Cenovus) as KLA-style Company Overviews."""
+import sys, io
+sys.path.insert(0, '.')
+from lib import *
+from pptx import Presentation
+
+prs = Presentation('work4.pptx')
+S = list(prs.slides)
+s_ath, s_cve, s_tr = S[2], S[3], S[4]
+
+# logos from the Transaction Overview slide
+ath_logo = shape_by_name(s_tr, 'Picture 22').image.blob
+cve_logo = shape_by_name(s_tr, 'Picture 23').image.blob
+
+
+def emu_in(v):
+    return int(v * IN)
+
+
+def kla_slide(s, title, subtitle, footer, top_paras, boxes, logo_blob, logo_w):
+    set_simple_text(shape_by_name(s, 'Title 2'), title)
+    set_simple_text(shape_by_name(s, 'Subtitle 1'), subtitle)
+    set_simple_text(shape_by_name(s, 'Text Placeholder 35'), footer)
+    for nm in ('Rectangle 7', 'Rectangle 10', 'Rectangle 16', 'Rectangle 18', 'Picture 6'):
+        delete(shape_by_name(s, nm))
+    top = shape_by_name(s, 'Text Placeholder 8')
+    set_geom(top, x=emu_in(0.575), y=emu_in(1.479), w=emu_in(7.995), h=emu_in(2.036))
+    write_paras(top, top_paras)
+    for k, (head, fill, label, paras) in enumerate(boxes):
+        x = emu_in(0.575 + k * 2.748)
+        h = add_rect(s, x, emu_in(3.638), emu_in(2.499), emu_in(0.5), fill=fill, line='000000')
+        fill_shape_text(h, [mk_para([(head, {'b': True, 'color': 'FFFFFF', 'size': 13})], size=13, bullet=False, algn='ctr')])
+        add_textbox(s, x, emu_in(4.15), emu_in(2.499), emu_in(0.26),
+                    [mk_para([I(label, size=12)], size=12, bullet=False, algn='ctr')])
+        b = add_rect(s, x, emu_in(4.422), emu_in(2.499), emu_in(2.083), fill='FFFFFF', line=NAVY)
+        fill_shape_text(b, paras, anchor=MSO_ANCHOR.TOP, margins=(91440, 64008, 91440, 45720))
+    pic = s.shapes.add_picture(io.BytesIO(logo_blob), emu_in(9.35), emu_in(1.9), width=emu_in(logo_w))
+    return pic
+
+
+def bx(runs, spc=0):
+    return mk_para(runs, size=10, algn='l', spc_bef=spc)
+
+
+# ------------------------------------------------------------- Athabasca
+ath_top = [
+    mk_para([B('Athabasca is a Canadian thermal oil producer', '000000'), ' that uses steam (SAGD) to extract bitumen in Alberta\'s McMurray fairway, '
+             'plus a light-oil business in the Duvernay. ', B('~40,000 boe/d today (98% liquids), guiding to ~45,000 boe/d at 2026 exit.', '000000')],
+            size=14, algn='just'),
+    mk_para([B('Long-life resource and a net-cash balance sheet: ', '000000'), '1.2 billion barrels of 2P thermal reserves (1.3 BBOE in total, a 75+ year reserve life), ',
+             B('$62M of net cash', '000000'), ' and an operating break-even near US$40 WTI.'], size=14, algn='just', spc_bef=10),
+]
+ath_boxes = [
+    ('Leismer & Corner', '1F3A7D', '57% of Q2-26 production', [
+        bx([B('Core asset: ', '000000'), 'flagship SAGD project, ~31,000 bbl/d at 2026 exit after a turnaround-hit Q2 (18,274 bbl/d).']),
+        bx([B('Expanding to 40,000 bbl/d by end-2027', NAVY), ' for ~$300M. Corner, next door, holds 353 MMbbl of 2P with first steam planned for 2029.'], 6),
+    ]),
+    ('Hangingstone', '4A6FA5', '28% of Q2-26 production', [
+        bx([B('Second SAGD asset: ', '000000'), 'steady at ~9,000 bbl/d, supported by two extended-reach well pairs added in 2025.']),
+        bx([B('Room to grow: ', NAVY), 'the plant is approved for 12,000 bbl/d, and growth options are being reviewed for 2027.'], 6),
+    ]),
+    ('Duvernay Energy', 'B22A2E', '15% of Q2-26 production', [
+        bx([B('Light-oil developer ', '000000'), 'in the Kaybob Duvernay, owned 70% by Athabasca and 30% by Cenovus.']),
+        bx([B('Production +89% YoY to 4,937 boe/d', NAVY), ' (82% liquids), self-funded, with ~20 years of drilling inventory.'], 6),
+    ]),
+]
+kla_slide(s_ath, 'Company Overview: Athabasca', 'Long-life Alberta oil sands producer with a light-oil growth arm in the Duvernay',
+          'Athabasca Oil Corporation, Q2 2026 results and financial statements', ath_top, ath_boxes, ath_logo, 2.7)
+grp = shape_by_name(s_ath, 'Group 13')
+set_geom(grp, x=emu_in(9.55), y=emu_in(3.55))
+
+# ------------------------------------------------------------- Cenovus
+delete(shape_by_name(s_cve, 'Group 13'))
+cve_top = [
+    mk_para([B('Cenovus is an integrated Canadian energy company', '000000'), ': it produces oil and gas (', B('~990 MBOE/d in 2026', '000000'),
+             ') and refines it in its own Canadian and U.S. plants (473 Mbbls/d), which protects it when Canadian heavy oil prices fall.'],
+            size=14, algn='just'),
+    mk_para([B('Low-cost, long-life oil sands and a strong balance sheet: ', '000000'), '9.6 BBOE of 2P reserves (28-year reserve life), ~$21/bbl oil sands operating plus sustaining cost, ',
+             B('$13.5B of TTM AFF', '000000'), ' and ~$3.0B of net debt at Q3-26.'], size=14, algn='just', spc_bef=10),
+]
+cve_boxes = [
+    ('Oil Sands', '254E5E', '80% of upstream production', [
+        bx([B('Core business: ', '000000'), 'Canada\'s largest SAGD operator: Christina Lake (366 MBOE/d), Foster Creek (221), Lloydminster (131) and Sunrise (63).']),
+        bx([B('Record 786 MBOE/d in Q2-26', NAVY), '; Christina Lake North (ex-MEG) adds ~40 Mbbls/d by 2028.'], 6),
+    ]),
+    ('Conventional & Offshore', '4F8FA6', '20% of upstream production', [
+        bx([B('Conventional: ', '000000'), '~120 MBOE/d of natural gas and liquids in Alberta (Clearwater, Edson, Rainbow Lake).']),
+        bx([B('Offshore: ', NAVY), '~71 MBOE/d in Asia Pacific and Atlantic Canada; West White Rose ramps to ~45,000 bbl/d net by 2028.'], 6),
+    ]),
+    ('Downstream (Refining)', '7FA9B8', '473 Mbbls/d of capacity', [
+        bx([B('Five upgrading and refining plants: ', '000000'), 'Lloydminster (Canada) plus Lima, Toledo and Superior (U.S.).']),
+        bx([B('~55% heavy oil capacity', NAVY), ', turning Cenovus\' own heavy barrels into diesel and gasoline and hedging the Canadian heavy-oil discount.'], 6),
+    ]),
+]
+kla_slide(s_cve, 'Company Overview: Cenovus', 'Integrated Canadian oil producer and the country\'s largest SAGD operator',
+          'Cenovus Energy, Corporate Presentation (July 2026); acquisition conference call (Oct 5, 2026)', cve_top, cve_boxes, cve_logo, 2.7)
+s_cve.shapes.add_picture('cve_fig07_0.jpeg', emu_in(8.7), emu_in(3.6), width=emu_in(4.15))
+
+prs.save('v4.pptx')
+print('saved')

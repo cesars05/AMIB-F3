@@ -1,0 +1,30 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 8;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 700 } }; return "??" }
+$xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb=$null; foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("SOTP") }
+$d=T { $wb.Worksheets.Item("DCF") }
+Write-Output ("Libro: "+[string]$wb.Name)
+Write-Output ""
+Write-Output "=== SOTP: WACC y g por bloque (estado actual) ==="
+foreach($o in 0,20,40,60){
+  $nom=[string](T { $s.Cells.Item(9+$o,2).Text })
+  Write-Output ("   "+$nom.PadRight(28)+" WACC="+([string](T { $s.Cells.Item(16+$o,13).Text })).PadLeft(7)+"  g="+([string](T { $s.Cells.Item(12+$o,13).Text })).PadLeft(7)+"  Ke="+([string](T { $s.Cells.Item(18+$o,13).Text })).PadLeft(7)+"  Kd="+([string](T { $s.Cells.Item(19+$o,13).Text })).PadLeft(7)+"  beta="+([string](T { $s.Cells.Item(16+$o,15).Text })).PadLeft(7)+"  margen TV="+[string](T { $s.Cells.Item(14+$o,10).Text }))
+}
+Write-Output ""
+Write-Output "=== SOTP summary ==="
+for($r=89;$r -le 112;$r++){
+  $lab=[string](T { $s.Cells.Item($r,2).Text })
+  if($lab.Trim() -eq ""){ continue }
+  Write-Output ("   r"+([string]$r).PadRight(4)+$lab.PadRight(32)+([string](T { $s.Cells.Item($r,3).Text })).PadLeft(9)+([string](T { $s.Cells.Item($r,4).Text })).PadLeft(13))
+}
+Write-Output ""
+Write-Output "=== DCF (para comparar) ==="
+foreach($p in @(@("E30","Enterprise Value"),@("E34","Equity Value"),@("E41","Implied Share Price"),@("E42","Upside"),@("P16","WACC"),@("P12","g"),@("R16","Levered Beta"),@("J14","Terminal EBITDA margin"))){
+  Write-Output ("   DCF!"+([string]$p[0]).PadRight(5)+([string]$p[1]).PadRight(26)+" = "+[string](T { $d.Range($p[0]).Text }))
+}
+Write-Output ""
+Write-Output "=== siguen rotas las tuberias? ==="
+foreach($a in "C45","C65","C85"){ Write-Output ("   "+$a+" = "+[string](T { $s.Range($a).Formula })) }
+foreach($a in "D96","D100","D104"){ Write-Output ("   "+$a+" = "+[string](T { $s.Range($a).Formula })) }
+foreach($a in "M33","M53","M73"){ Write-Output ("   "+$a+" = "+([string](T { $s.Range($a).Text })).PadLeft(8)+"   frm= "+[string](T { $s.Range($a).Formula })) }

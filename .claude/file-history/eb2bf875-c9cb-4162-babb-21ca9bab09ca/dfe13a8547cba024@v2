@@ -1,0 +1,131 @@
+$ErrorActionPreference="Stop"
+$wb=$null; $xl=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $su=$wb.Worksheets.Item("Summary")
+$cm=$wb.Worksheets.Item("Consolidated Model"); $d=$wb.Worksheets.Item("DCF")
+
+# ---------------- GUARDAS ----------------
+if([string]$as.Range("D13").Text -ne "Stress Case"){ throw "ABORTO: D13 no es 'Stress Case'" }
+if([string]$as.Range("F13").Text -ne "Base Case"){ throw "ABORTO: F13 no es 'Base Case'" }
+if([string]$as.Range("E15").Text -ne "FY2027"){ throw "ABORTO: E15 no es FY2027" }
+if([string]$as.Range("J15").Text -ne "FY2032"){ throw "ABORTO: J15 no es FY2032" }
+foreach($p in @(@(17,"Water Management","Stress"),@(18,"","Bear"),@(19,"","Base"),@(21,"Building Envelope","Stress"),@(25,"Housebuilding Products","Stress"),@(31,"Water Management","Stress"),@(35,"Building Envelope","Stress"),@(39,"Housebuilding Products","Stress"))){
+  $r=[int]$p[0]
+  if([string]$p[1] -ne "" -and [string]$as.Cells.Item($r,3).Text -ne [string]$p[1]){ throw ("ABORTO: C"+$r+" esperaba '"+[string]$p[1]+"' y dice '"+[string]$as.Cells.Item($r,3).Text+"'") }
+  if([string]$as.Cells.Item($r,4).Text -ne [string]$p[2]){ throw ("ABORTO: D"+$r+" esperaba '"+[string]$p[2]+"'") }
+}
+if([string]$as.Cells.Item(47,3).Text -ne "Water Management"){ throw "ABORTO: C47 no es Water Management" }
+if([string]$as.Cells.Item(67,3).Text -notlike "Annual cost inflation*"){ throw "ABORTO: C67 no es la inflacion central" }
+Write-Output "guardas OK"
+
+$xl.Calculation=-4135
+
+# ---------------- escribir 6 anos (E..J) en una fila ----------------
+function Fila6($r,$v1,$v2,$v3,$v4,$v5,$v6){
+  $as.Cells.Item([int]$r,5).Value2=[double]$v1
+  $as.Cells.Item([int]$r,6).Value2=[double]$v2
+  $as.Cells.Item([int]$r,7).Value2=[double]$v3
+  $as.Cells.Item([int]$r,8).Value2=[double]$v4
+  $as.Cells.Item([int]$r,9).Value2=[double]$v5
+  $as.Cells.Item([int]$r,10).Value2=[double]$v6
+}
+
+# ============ A - DOWNSIDE (fila 17,21,25 crecimiento; 31,35,39 margen) ============
+Fila6 17  0.040 -0.020 -0.030 -0.030 -0.025 -0.020
+Fila6 21  0.025 -0.010 -0.015 -0.010 -0.005 -0.005
+Fila6 25  0.020 -0.005 -0.010 -0.005  0.000  0.000
+Fila6 31  0.070  0.065  0.060  0.055  0.052  0.050
+Fila6 35  0.110  0.105  0.100  0.098  0.095  0.095
+Fila6 39  0.245  0.240  0.235  0.230  0.228  0.225
+
+# ============ B - STAGNATION (18,22,26 / 32,36,40) ============
+Fila6 18  0.010  0.010  0.010  0.010  0.010  0.010
+Fila6 22  0.010  0.010  0.010  0.010  0.010  0.010
+Fila6 26  0.015  0.015  0.015  0.015  0.015  0.015
+Fila6 32  0.070  0.070  0.070  0.070  0.070  0.070
+Fila6 36  0.116  0.116  0.116  0.116  0.116  0.116
+Fila6 40  0.251  0.251  0.251  0.251  0.251  0.251
+
+# ============ C - PARTIAL SUCCESS (19,23,27 / 33,37,41) ============
+Fila6 19  0.040  0.025  0.040  0.035  0.030  0.025
+Fila6 23  0.030  0.020  0.035  0.030  0.025  0.020
+Fila6 27  0.045  0.030  0.040  0.035  0.030  0.030
+Fila6 33  0.105  0.115  0.125  0.123  0.122  0.120
+Fila6 37  0.118  0.120  0.122  0.121  0.121  0.120
+Fila6 41  0.253  0.248  0.242  0.241  0.239  0.238
+
+# ============ palancas por escenario (D=A, E=B, F=C) ============
+$as.Cells.Item(47,4).Value2=[double]0.056   # capex WM - A, sin disciplina
+$as.Cells.Item(47,5).Value2=[double]0.056   # capex WM - B, sin disciplina
+$as.Cells.Item(47,6).Value2=[double]0.045   # capex WM - C, disciplina de capex
+$as.Cells.Item(67,4).Value2=[double]0.035   # inflacion central A
+$as.Cells.Item(67,5).Value2=[double]0.025   # inflacion central B
+$as.Cells.Item(67,6).Value2=[double]0.020   # inflacion central C
+
+# ============ renombrar ============
+$as.Range("D13").Value2="A - Downside"
+$as.Range("E13").Value2="B - Stagnation"
+$as.Range("F13").Value2="C - Partial Success"
+$as.Range("D44").Value2="A - Downside"
+$as.Range("E44").Value2="B - Stagnation"
+$as.Range("F44").Value2="C - Partial Success"
+$as.Range("D71").Value2="A - Downside"
+$as.Range("E71").Value2="B - Stagnation"
+$as.Range("F71").Value2="C - Partial Success"
+foreach($r in 17,21,25,31,35,39){ $as.Cells.Item([int]$r,4).Value2="Downside" }
+foreach($r in 18,22,26,32,36,40){ $as.Cells.Item([int]$r,4).Value2="Stagnation" }
+foreach($r in 19,23,27,33,37,41){ $as.Cells.Item([int]$r,4).Value2="Partial" }
+$as.Range("F10").Value2="C - Partial Success"
+$su.Range("C30").Value2="C - Partial Success"
+$su.Range("C31").Value2="B - Stagnation"
+$su.Range("C32").Value2="A - Downside"
+$su.Range("C14").Value2="DCF - C Partial Success"
+$su.Range("C15").Value2="DCF - B Stagnation"
+$su.Range("C16").Value2="DCF - A Downside"
+$su.Range("C66").Value2="DCF - A Downside"
+$su.Range("C67").Value2="DCF - B Stagnation"
+$su.Range("C68").Value2="DCF - C Partial Success"
+
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ("escenario activo: "+[string]$as.Range("F10").Text+"   F9="+[string]$as.Range("F9").Text)
+Write-Output ""
+Write-Output "=========== QUE PRODUCE CADA ESCENARIO AHORA ==========="
+foreach($esc in "A - Downside","B - Stagnation","C - Partial Success"){
+  $as.Range("F10").Value2=$esc
+  $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+  $e26=[double]$cm.Range("K53").Value2; $e32=[double]$cm.Range("Q53").Value2
+  $cagr=[math]::Pow($e32/$e26,1/6)-1
+  Write-Output ""
+  Write-Output ("  --- "+$esc+" ---")
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item(53,$c).Text).PadLeft(9) }
+  Write-Output ("   Adj. EBITDA     "+$v)
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item(13,$c).Text).PadLeft(9) }
+  Write-Output ("   Ingresos        "+$v)
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$wb.Worksheets.Item("Segment Model").Cells.Item(21,$c).Text).PadLeft(9) }
+  Write-Output ("   WM util. oper.  "+$v)
+  Write-Output ("   CAGR EBITDA FY26-32 = "+[string][math]::Round($cagr*100,1)+"%      DCF = "+[string]$d.Range("E41").Text)
+}
+$as.Range("F10").Value2="C - Partial Success"
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ""
+Write-Output ("restaurado: "+[string]$as.Range("F10").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary","Expected Returns"){
+  $s=$wb.Worksheets.Item($nm); $e=0
+  try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

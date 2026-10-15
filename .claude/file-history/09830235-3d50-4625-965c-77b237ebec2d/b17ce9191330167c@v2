@@ -1,0 +1,72 @@
+# Ciclo del acero – primer vistazo (oct-2026)
+
+Objetivo: entender en qué punto está el mercado hoy, qué datos sirven para leer el ciclo y cuáles son cuantitativos vs. cualitativos. **No es todavía una tesis**; es un mapa. Cifras calculadas por mí a partir de los archivos de `01_Datos/` y `02_Reportes/` (marcadas *calc.*) o citadas de los reportes.
+
+## 1. Lectura rápida (hipótesis de trabajo)
+
+| Mercado | Lectura | Confianza |
+|---|---|---|
+| **Global** | Plano/débil: demanda mundial -0.1% en 2026 (SRO), China cayendo, India y ASEAN compensando. Recuperación esperada en 2027 (+1.7%), **dependiente de ex-China**. | Media-alta (cifras de worldsteel y WBMS coinciden en signo) |
+| **EE. UU. (USMCA)** | Mercado **protegido y con precio alto**: aranceles 232 al 50%, HRC spot >$1,250/st, demanda +2%/año. Pero la oferta responde (Gary Works #14, Nucor West Virginia) y **las importaciones ya están rebotando**. | Media (precios solo en texto de BofA; sin serie) |
+
+Pregunta central del ciclo: ¿el HRC de EE. UU. está en pico o con recorrido? BofA proyecta $1,114 (2026E) y $975/st (2027E) → implica **descenso desde el spot**, aunque su propio texto es contradictorio (ver sección 4).
+
+## 2. Datos cuantitativos útiles (y qué miden)
+
+### Demanda – worldsteel SRO Oct-2026 (acero terminado, Mt) · *fuente primaria, verificada en PDF*
+| | 2025 | 2026f | 2027f | Δ26 | Δ27 |
+|---|---|---|---|---|---|
+| Mundo | 1,723.8 | 1,722.2 | 1,751.9 | -0.1% | +1.7% |
+| Mundo ex-China | 927.8 | 942.1 | 979.7 | +1.5% | +4.0% |
+| China | 796.0 | 780.1 | 772.3 | -2.0% | -1.0% |
+| India | 159.9 | 172.4 | 186.2 | +7.9% | +8.0% |
+| USMCA | 127.3 | 130.2 | 132.8 | +2.2% | +2.0% |
+| EE. UU. | 90.9 | 92.7 | 94.1 | +2.0% | +1.5% |
+| UE-27 + UK | 146.7 | 146.3 | 150.8 | -0.3% | +3.1% |
+| Oriente Medio | 63.7 | 54.8 | 59.6 | -13.9% | +8.8% |
+
+Lectura: China es ~46% de la demanda y se contrae; el crecimiento viene de India (+12.5 Mt en 2026 ≈ compensa casi 80% de la caída china de -15.9 Mt). Señal de ciclo: **demanda global estancada**.
+
+### Producción vs. consumo – WBMS (crudo, ene–jun 2026 vs ene–jun 2025, *calc.*)
+- Mundo: producción **-0.8%** (951→944 Mt); consumo **-1.7%** (944→928 Mt). Consumo cae más que producción → **oferta excedente creciente** (señal bajista de ciclo).
+- China producción -3.1%; India +7.7%; Rusia -7.8%; Turquía +8.1%; Alemania +8.9%; México +9.7%; Japón -0.4%.
+- Norteamérica (agregado WBMS): producción +5.5%, consumo +1.7% → **EE. UU./NA produciendo más que consumiendo en crecimiento** (más oferta local desplazando importaciones).
+- Caveat: los últimos meses de WBMS son en parte estimaciones (valores repetidos en filas de países chicos); validar con worldsteel antes de citar.
+
+### Importaciones de EE. UU. – US Dept. of Commerce (Mt, *calc.* de `ITA_imports_*`)
+- Anual: 2015 35.3 → 2020 20.0 → 2024 26.2 → **2025 22.9** (-12.6% vs 2024).
+- Mensual (Census): ene-25 2.79 → mínimo **dic-25 1.43** → **ago-26 2.21**. Interanual: jun-26 -7%, jul +1%, ago +30% (base baja por el arancel de 50% desde jun-25). *Corrección 14-oct:* el dato de sep-26 (2.26 Mt) es **license data preliminar**, no Census; no se compara contra Census.
+- Corroboración cualitativa: BofA dice que los permisos de planos de septiembre están +27% vs la media mensual. **Dato más claro de que el efecto arancel se está diluyendo.**
+- Caveat: oct-26 es parcial (License data, excluido); los CSV de país no traen fecha en uno de los archivos.
+
+### Precios y márgenes (solo en texto, **sin serie de datos en la carpeta**)
+- HRC EE. UU. spot >$1,250/st (BofA, 8-oct-26); previsión BofA 2026E $1,114 / 2027E $975 (+13% / +15% de revisión).
+- Spreads (Bloomberg, 3T25): HRC–chatarra busheling $459/t (2024: $392); varilla–chatarra $559/t (máx. histórico $709, oct-22); placa–HRC $125/t (media $216).
+- Utilización EE. UU. 77% (nov-25); el umbral de poder de precio es ~80% (Bloomberg).
+- Valuación: EV/EBITDA NA 8.6x vs 6.1x (nov-25). Dato viejo.
+
+## 3. Datos cualitativos (los "porqué")
+
+| Tema | Qué dicen las fuentes | Efecto en el ciclo |
+|---|---|---|
+| **Aranceles Sec. 232** | 25% (mar-25) → 50% (jun-25); sostiene precio doméstico | Alza de precio, pero **riesgo de revisión** (USMCA/T-MEC) |
+| **Oferta nueva en EE. UU.** | Gary Works #14 (2.7 Mtpa) reinicio sep-26; Nucor West Virginia (3 Mtpa) a fin de año | Más oferta → presión a 2027 |
+| **Demanda sectorial** | Positivo: infraestructura (IIJA), data centers, muro fronterizo. Negativo: auto e industria, construcción (ABI 43.3, contracción) | Demanda sostenida pero no amplia |
+| **Mano de obra** | Negociaciones en Cleveland-Cliffs y US Steel | Riesgo de oferta a corto plazo |
+| **Macro/geopolítica** | Guerra con Irán (energía, crecimiento); Medio Oriente -13.9% en demanda | Riesgo a la baja en demanda y costos |
+| **Estructura de costos** | EAF (STLD, NUE, CMC) vs. alto horno (Cliffs, US Steel) | EAF gana en márgenes y bolsa |
+| **Descarbonización** | IEA Breakthrough 2026 (sección Steel): coordinación internacional, planes | Largo plazo; **no mueve el ciclo actual** |
+| **Posicionamiento sell-side** | BofA: favorece CMC y NUE; sube PO acereras +4% pero "selectiva"; Goldman casi no cubre acero | Útil como termómetro, no como dato |
+
+## 4. Contradicciones y huecos (importante antes de usar)
+
+1. **HRC en BofA:** el mismo reporte dice previsión por debajo del spot, pero también "+12.8% 2026E vs spot". Y consenso -8% en un exhibit vs +4% en otro. **Revisar `Steel_figuras.pdf`.**
+2. **Bloomberg es de nov-2025** (10 meses): sus importaciones (-19%, -7%, -6.7%) y múltiplos son línea base, no actualidad. Nuestros datos de Commerce muestran que la tendencia ya giró.
+3. **Faltan series que definen el ciclo:** precio HRC/CRU diario, precio de chatarra, utilización semanal AISI, inventarios de service centers, exportaciones de China, capacidad nueva global. Hoy solo hay *niveles puntuales en texto*.
+4. **Datos no leídos:** `SIMA External Dashboard/Executive Summary`, `Steel Monthly Factsheet` (el PDF no se pudo renderizar aquí), `AISI Profile Book`, WBMS iron ore y stainless. Probable aporte: importaciones por país, factsheet mensual de worldsteel.
+
+## 5. Siguientes pasos sugeridos (sin ir granular)
+1. Conseguir una serie de precio HRC (EE. UU. y China) y utilización: es lo que convierte esto en "ciclo".
+2. Revisar manualmente los exhibits de BofA (`Steel_figuras.pdf`, FIG-022 a 027) para resolver la contradicción.
+3. Leer el Factsheet y el SIMA Executive Summary para ver importaciones por país y producto.
+4. Armar una tabla de semáforo de ciclo: demanda, inventarios, precio, márgenes, oferta nueva, política.

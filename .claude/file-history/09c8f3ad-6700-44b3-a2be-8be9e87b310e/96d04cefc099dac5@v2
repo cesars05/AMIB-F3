@@ -1,0 +1,123 @@
+"""Edits on the user's rebuilt deck (u1.pptx = 20261005_Acquisition of Athabasca.pptx) -> v3."""
+import sys
+sys.path.insert(0, '.')
+from lib import *
+from pptx import Presentation
+
+prs = Presentation('u1.pptx')
+S = list(prs.slides)
+s_tr, s_rat, s_trk, s_fin, s_mkt = S[3], S[4], S[5], S[6], S[7]
+
+
+def sub(slide, text):
+    set_simple_text(shape_by_name(slide, 'Subtitle 1'), text)
+
+
+# ------------------------------------------------ Slide 4: Deal timeline wording
+tl = {
+    'Rectangle 38': [B('Announced: ', '000000'), 'both boards approved the deal unanimously, and Athabasca insiders (~2.2% of shares) committed to vote in favour.'],
+    'Rectangle 42': [B('Shareholder vote: ', '000000'), 'circular mailed in early November; special meeting in late November.'],
+    'Rectangle 46': [B('Expected close: ', '000000'), 'after court and Competition Act approvals; there is no financing condition.'],
+    'Rectangle 50': [B('Integration: ', '000000'), '~$85M/yr of synergies, mostly in year one, and Leismer reaching 40 kbbl/d by end-2027.'],
+}
+for nm, runs in tl.items():
+    sh = shape_by_name(s_tr, nm)
+    write_paras(sh, [mk_para(runs, size=11, algn='l')])
+    sh.text_frame.word_wrap = True
+set_geom(shape_by_name(s_tr, 'Rectangle 50'), w=3400605)
+
+# ------------------------------------------------ Slide 5: Strategic rationale
+left = shape_by_id(s_rat, 11)
+write_paras(left, [
+    mk_para([B('Scale in its core region: '), 'adds ~45 MBOE/d (+4.5% on Cenovus\' ~990 MBOE/d) of thermal production right next to Christina Lake, '
+             'making the combined company ', B('#1 in Canadian SAGD'), ' by production, efficiency (SOR) and resource base.'], size=14, algn='just'),
+    mk_para([B('Lower cost per barrel: '), 'Cenovus will run Athabasca\'s wells with its own SAGD practices, targeting a ', B('~20% lower steam-to-oil ratio'),
+             ' (less steam, and gas, per barrel) and ', B('~$85M/yr of synergies'), ' (~$5 per barrel).'], size=14, algn='just', spc_bef=8),
+])
+right = shape_by_id(s_rat, 25)
+write_paras(right, [
+    mk_para([B('Oil sands: '), 'Leismer and Corner border Christina Lake and open tie-backs to May River and Thornbury.'], size=10, algn='l'),
+    mk_para([B('Duvernay: '), 'Cenovus goes from 30% to 100% of Duvernay Energy (>5 MBOE/d, >170 net locations, room to grow to ~20 MBOE/d).'],
+            size=10, algn='l', spc_bef=6),
+])
+set_simple_text(shape_by_name(s_rat, 'Text Placeholder 35'), 'Cenovus Energy, Athabasca Oil acquisition presentation (Oct 5, 2026)')
+
+# ------------------------------------------------ Slide 6: Track record + what the price buys
+sub(s_trk, 'Cenovus has lifted output 17-39% at the SAGD assets it runs; Athabasca is next')
+set_simple_text(shape_by_name(s_trk, 'TextBox 17'), 'Track record: SAGD assets grow under Cenovus')
+set_simple_text(shape_by_name(s_trk, 'TextBox 20'), 'Production before vs. after Cenovus\' operating playbook, Mbbls/d')
+set_simple_text(shape_by_name(s_trk, 'TextBox 18'), 'What Cenovus is paying for')
+set_simple_text(shape_by_name(s_trk, 'TextBox 19'), 'The same C$5.7B, measured two ways')
+rt = shape_by_id(s_trk, 11)
+set_geom(rt, h=2050000)
+write_paras(rt, [
+    mk_para([B('~$127k per flowing barrel today: '), '$5.7B divided by the ~45k boe/d Athabasca already produces. '
+             'It is the standard M&A yardstick, and on its own it is expensive.'], size=12, algn='l'),
+    mk_para([B('~$42k including growth to 2032: '), 'the same $5.7B divided by the ~135k boe/d Cenovus plans to reach (115k thermal + 20k Duvernay). '
+             'If the plan works, the price per barrel falls to one-third; the new barrels still need ~$25-37k/bbl/d of capex.'],
+            size=12, algn='l', spc_bef=8),
+])
+add_textbox(s_trk, 526212, 4860000, 6400800, 1300000, [
+    mk_para([B('~125 Mbbls/d already added'), ' at three assets (Lloydminster +30, Sunrise +20, Foster Creek/Christina Lake +75), with +20 more planned at '
+             'Christina Lake North (ex-MEG), using gas co-injection, longer steam reach, better well placement and redevelopment wells.'], size=12, algn='l'),
+    mk_para([B('Same playbook for Athabasca: '), '~20% lower SOR at Leismer, 80+ redevelopment wells and Corner brought forward three years.'],
+            size=12, algn='l', spc_bef=6),
+])
+set_simple_text(shape_by_name(s_trk, 'Text Placeholder 35'), 'Cenovus Energy, Athabasca Oil acquisition presentation (Oct 5, 2026); Aztlan calcs.')
+
+# ------------------------------------------------ Slide 7: Pro forma table
+sub(s_fin, 'Cenovus\' plan takes Athabasca to 115 kbbl/d by 2032 and is accretive to AFF/share')
+set_simple_text(shape_by_name(s_fin, 'TextBox 12'), 'Cenovus: 2026 guidance & TTM AFF; Athabasca: 2026 exit rate; C$')
+tbl = [sh for sh in s_fin.shapes if sh.has_table][0].table
+
+
+def cell(r, c, runs_or_text, algn='ctr', size=11, extra=None):
+    runs = [runs_or_text] if isinstance(runs_or_text, (str, tuple)) else runs_or_text
+    paras = [mk_para(runs, size=size, bullet=False, algn=algn)]
+    if extra is not None: paras.append(extra)
+    txb = tbl.cell(r, c)._tc.txBody
+    for p in txb.findall(qn('a:p')): txb.remove(p)
+    for p in paras: txb.append(p)
+
+
+set_simple_text_cell = None
+hdr = tbl.cell(0, 0).text_frame.paragraphs[0].runs[0]
+hdr.text = 'C$'
+labels = ['Upstream production, MBOE/d', '2P reserves, BBOE', '2P reserve life, years', 'Adj. Funds Flow (AFF), $B',
+          'AFF per share, $', 'Net debt, $B']
+data = [
+    ('990', '45', '1,035', '+4.5%'),
+    ('9.6', '1.3', '10.9', '+13.5%'),
+    ('26.6', '>75', '28.9', '+2.3 yrs'),
+    ('13.5', '0.56', '14.1', '+4.7%'),
+    ('7.30', '-', '7.41', None),
+    ('3.0', '(0.06)', '5.0-5.5', None),
+]
+for i, (lab, (a, b, pf, ch)) in enumerate(zip(labels, data), start=1):
+    cell(i, 0, lab, algn='l')
+    cell(i, 1, a)
+    cell(i, 2, b)
+    cell(i, 3, (pf, {'b': True}))
+    if ch:
+        cell(i, 4, (ch, {'b': True, 'color': NAVY}))
+cell(5, 4, ('+1.6%', {'b': True, 'color': GREEN}),
+     extra=mk_para([('Accretive', {'b': True, 'color': GREEN, 'size': 9})], size=9, bullet=False, algn='ctr'))
+cell(6, 4, ('<0.5x', {'b': True, 'color': GREEN}),
+     extra=mk_para([('of AFF', {'color': GREEN, 'size': 9})], size=9, bullet=False, algn='ctr'))
+note = shape_by_name(s_fin, 'Rectangle 28')
+set_geom(note, y=5900000, w=5394961, h=380000)
+for r_ in note.text_frame.paragraphs[0].runs[1:]:
+    r_._r.getparent().remove(r_._r)
+note.text_frame.paragraphs[0].runs[0].text = ('Note (1): Includes $85M/yr of synergies. Athabasca AFF = 2026E exit cash flow (EV / 10.2x). '
+                                               'AFF/share is an Aztlan estimate (4.5% cost on $4.3B cash); Cenovus guides accretion in 2027.')
+note.text_frame.word_wrap = True
+from pptx.enum.text import PP_ALIGN as _PA
+note.text_frame.paragraphs[0].alignment = _PA.LEFT
+for r_ in note.text_frame.paragraphs[0].runs:
+    r_.font.size = Pt(9)
+
+# ------------------------------------------------ Slide 8: Market reaction
+sub(s_mkt, 'After the announcement, Athabasca rose 13.9% to C$12.05, reaching the C$12.00 offer')
+
+prs.save('v3.pptx')
+print('saved')

@@ -1,0 +1,104 @@
+# Market Terminal: project brief
+
+Source of truth for requirements. Written 2026-09-24 from the working sessions with César.
+Rules for data and style live in `CLAUDE.md`; this file says *what* to build.
+
+## Goal
+
+A personal, institutional-grade markets system that runs mostly unattended:
+market data from LSEG Workspace plus free public sources, arithmetic done in code,
+prose written by an LLM around numbers it never invents.
+
+## Constraints
+
+- LSEG Workspace desktop (proxy `localhost:9000`) is guaranteed open at **16:00 CDMX**. US close is 14:00 CDMX. LSEG jobs run at or after 16:00.
+- Free and public sources first; LSEG is the paid exception. Minimize API calls and compute (cache, incremental pulls).
+- Text generation: Claude Haiku through `claude -p --model haiku` on César's subscription (no API key). The model receives JSON and returns prose; numbers are injected by code.
+- Scheduling runs locally (Windows Task Scheduler or the desktop app's local scheduled tasks), because cloud jobs cannot reach `localhost:9000`.
+- Deliverables in English, Arial, IB/corporate style, no em-dashes, few colons.
+- Design system: `engine/paleta.md` + `engine/grafico_banquero.py`. The dashboard supports **dark and light themes with a switch**; every chart must read in both.
+
+## Surfaces
+
+### 1. Market dashboard (main screen)
+
+Bloomberg TV-style arrangement (reference screenshots in the session, 2026-09-24):
+
+- **Main panel** (where Bloomberg shows video): rotating relevant charts chosen by the detector (anomalies, divergences, 52-week extremes).
+- **Below it**: "What it implies" and the insight for the chart on screen.
+- **News block**: market-moving headlines from the whitelisted sources, ranked, with related stories.
+- **Right column**: ticker tiles with last, change, % and intraday sparkline: major indices, selected single stocks, FX (EURUSD, USDMXN, ...), rates, commodities, VIX. Only verified RICs (`.DJI` is not licensed; use DIA). Crypto only if a verified source exists.
+- Market only. Portfolio has its own page.
+- Links to: deck library, Ideas Screener, 13F tracker, Portfolio.
+
+### 2. Decks
+
+- **Daily** (after 16:00 CDMX): 1-2 slides, market + portfolio.
+- **Weekly** (Friday close): full deck on `templates/News September.pptx`:
+  1. Cover "Market ..." + period
+  2. General market: main indices and why they moved (VIX up: why; S&P down: why)
+  3. S&P 500 by sector with deltas and reasons (arithmetic attribution: sector contribution in pp)
+  4. Sector multiples chart (harmonic, from constituents)
+  5. Macro + economic calendar (charts on one side, items listed vertically); rate-hike probabilities from fed funds futures
+  6. Mexico section (IPC, Banxico, local M&A such as tender offers)
+  7. Thematic: AI (forward P/E of WFE cluster KLA / AMAT / LRCX / TSMC vs 2-year group average; Memory: SK Hynix, Micron, Samsung; hyperscalers; buildout/power)
+  8. Portfolio moves and why (name contribution to portfolio return)
+  9. Portfolio forward P/E per name + blended (harmonic)
+  10. Closing slide
+- Decks are listed and downloadable in the dashboard and exported to the OneDrive folder in `config.SALIDA_DECKS`.
+- Existing chart generators in `engine/` are the building blocks; none of them assembles slides yet.
+
+### 3. Ideas Screener (refresh every ~15 days)
+
+- Universe: listings in the **US, Europe and Japan only**.
+- Filters:
+  - Limited revenue and customer exposure to Emerging Markets (needs geographic segment data; verify field availability).
+  - Net debt / EBITDA below 3x (hard ceiling 4x).
+  - Revenue CAGR positive and rising.
+  - Margins better than GICS peers, **or** a turnaround with improving fundamentals.
+- Output columns: Company, Sector, Currency, Market Cap (USD), YTD, 3M, ROE, Net Margin LTM, Net Debt / EBITDA, Fwd P/E (plus the peer-comparison columns from César's AZTD_Universe workbook: gross/EBIT/EBITDA margin, FCF conversion, FCF yield, capex % revenue, revenue growth last Q, revenue CAGR next 2Y, dividend). Reuse the `TR.F.*` codes proven in that workbook.
+- Bundles: **Small < US$10B, Mid < US$50B, Large >= US$50B**.
+- Peer average row per group (excluding the name itself), heat-colored against peers.
+- Deep dive per name, in the style of the WFE/portfolio analyses (forward P/E vs 2Y range, EPS revisions vs multiple, peers).
+
+### 4. Portfolio
+
+- Ingest IBKR Activity Statements / transaction files by dropping them in a folder; new files are detected and read. Port the V3 engine (FIFO, TWR, MWR, risk, Markowitz) and fix its multi-header parser bug.
+- Performance refreshed every **15 minutes** (yfinance intraday; LSEG at the close).
+- **Constant-FX exercise** and **MXN view**: return in pesos using the actual USDMXN of each deposit vs today, and at constant FX.
+- **Commissions**, discreet panel: total paid, % of traded value, per trade.
+- **Portfolio insights**: what moved it and why (news per holding), estimate revisions vs multiple change.
+- **Rivals**: 3 GICS peers per holding, their moves and news.
+- Bloomberg-style portfolio page (same layout grammar as the market dashboard).
+
+### 5. 13F tracker (quarterly)
+
+- Funds: AI-focused and infrastructure-focused managers with 13F holdings above US$30B (13F reports holdings value, not AUM; this is the proxy). Seed list to be approved by César.
+- Source: SEC EDGAR (free; User-Agent contact in `.env`). Prefer SEC's quarterly Form 13F structured datasets over scraping each filer.
+- Bot downloads new filings after each deadline (45 days after quarter end), computes QoQ allocation changes (new, exited, increased, trimmed, by weight), and flags overlaps with the portfolio and screener.
+- Own section in the dashboard; highlights feed the weekly deck in filing months. No politicians.
+
+## Free data sources (verified 2026-09-24)
+
+| Source | Use | Access |
+|---|---|---|
+| SEC EDGAR submissions + 13F datasets | 13F | Free, User-Agent contact, tested OK |
+| Fed FOMC calendar page | Meeting dates | Free, HTTP 200 |
+| Treasury FiscalData API | Treasury rates/auctions | Free, no key, tested OK |
+| FRED API | Release calendar, macro series | Free key (César registers) |
+| Banxico SIE API | USDMXN FIX, Mexican macro | Free token (César registers) |
+| yfinance | 15-min portfolio prices | Free, already used by V3 |
+| BLS | Release schedule | Blocked bot UA (403); use FRED release dates instead |
+
+## Existing assets
+
+- `engine/`: indicators (tier 1/2/3 + 12 `=ECI` macro), detector (67 series, z-score of returns), news layer (whitelist of 240 sources), AI tiers and bubble chart, sector charts, matrix heatmaps, P/E and decomposition charts, curve, valuation, winners/losers.
+- `backend/` + `frontend/`: Portafolio_Tracker V3 (FastAPI + Next.js + Plotly).
+- `templates/`: deck templates.
+
+## Open decisions
+
+- 13F seed list of funds.
+- Which single stocks go on the dashboard's right column.
+- FRED and Banxico keys (César registers; paste into `.env`).
+- Review of the 4 existing desktop scheduled tasks once the new pipeline runs.

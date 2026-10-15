@@ -1,0 +1,286 @@
+# Guía slide por slide · Aurex Capital (Equipo #5, Gpo. 602)
+
+**Base:** `Downloads/PF_Deck_AurexCapital.pdf` (versión del 14-oct-2026, la más reciente), más el modelo, el memorándum, los dossiers de `fuentes_investigacion/`, la guía del profesor y las sesiones 10 y 11.
+**Cifras:** todas salen del PDF o del Excel V2 (caso base: 3 de 8 empresas fallan; MOIC neto 2.26x; TIR neta 17.9%).
+
+> **Tres avisos antes de usarla**
+> 1. **No hay speaker notes.** Ningún archivo del proyecto (ni el .pptx ni el PDF) trae notas del orador. En su lugar usé las notas de lectura (`_notas/`), los dossiers, el memorándum y las hojas del modelo. Si tenías notas en otro lado (Canva, Gamma, apuntes), pásamelas y las integro.
+> 2. **Lo que dijo el profe sobre comités de industria no está en el deck ni en el memo.** Aparece abajo como **propuesta**, marcada así, para que decidan si lo agregan.
+> 3. **Los números impresos de página no coinciden con el orden del PDF** (Equipo dice 7, Curva J dice 24, Anexo E dice 23). Hay que renumerar antes de presentar. Además el .pptx de la carpeta (11-oct) trae una lámina de Agenda que el PDF del 14-oct ya no tiene: confirmen cuál es la versión final.
+
+---
+
+# PARTE 1 · Tus preguntas, una por una
+
+Cada respuesta dice: **qué contestar**, **en qué lámina está** y **qué falta o es débil**.
+
+## 1. ¿Por qué este fondo y no otros?
+
+**Respuesta corta:** porque hay un tramo de tamaño donde casi nadie escribe cheques, y porque el diseño del fondo (gobierno y alineación) compensa que no tenemos historial.
+
+- **El hueco de tamaño (lám. 5).** Las operaciones de Infraestructura y Energía promedian ≈US$262M y las de Growth & LBO ≈US$43M (AMEXCAP 1S-2026). Nuestro cheque de US$2 a 10M queda debajo de ambos. Los fondos visibles en energía en México escriben cheques unas 10 veces mayores: General Atlantic (US$50 a 400M, dato 2015), AINDA (hasta US$50M en Quartux), Riverstone/Skysense (control, plan US$110M), MIP (≈US$1,000M por operación).
+- **Por qué no es venture:** Ignia y similares invierten semilla a Serie A; nosotros compramos empresas que ya venden y operan, con contratos recurrentes (lám. 2).
+- **Por qué no es infraestructura/CKD:** no compramos activos de generación a escala ni salimos al mercado público (memo, sección 6).
+- **Nuestra posición frente a los grandes:** no competimos en precio de entrada; somos su **contraparte de salida natural** (lám. 5, "Lectura").
+- **Qué nos diferencia:** tamaño de cheque, asiento en el consejo y alineación del GP (2% en efectivo, carry solo después del 8%).
+- **Debilidad honesta:** el hueco existe porque a otros no les conviene el tamaño, y los fondos pequeños comparables (Blue Global Energy y viveenergía, US$30M cada uno; Exagon) sí son competidores directos por las mismas empresas. Está en el dossier, pero **la lámina 5 solo los muestra como filas**; vale decirlo en voz alta.
+
+## 2. El GAP entre lo que queremos recaudar y lo que se pensó
+
+Interpreté "GAP" de tres formas. Las tres tienen respuesta, pero **la lámina del deck no las junta**:
+
+| GAP | Qué pasó | Dónde está |
+|---|---|---|
+| **Tamaño del fondo** | D2 (17-ago) pensaba US$50M en Norteamérica, 8 empresas de US$3.75M promedio. La versión final es **US$100M, solo México, tickets US$2 a 10M + follow-on**. | Memo y lám. 2. **La razón del cambio no está escrita**; prepárenla. |
+| **Capital que pedimos vs. capital que invertimos** | De US$100M, **US$82M llegan a las empresas**; US$16.15M son comisiones y US$1.85M gastos (18 de cada 100). | Lám. 10 (waterfall) |
+| **Lo que prometemos vs. el mercado** | Base 17.9% neta, contra **mediana de fondos con actividad en México 16.15%** (AMEXCAP), AINDA I 15.5% y hurdle 8%. El caso Conservador (12.5%) queda **por debajo** de la mediana. | Lám. 14 |
+
+**Punto que no está en el deck y conviene tener listo:** según AMEXCAP, todo el capital levantado en México en 2025 fue US$1,766M entre 30 vehículos, y 1S-2026 apenas US$200M. Un fondo de US$100M sería ≈6% de todo lo levantado en 2025 (cálculo nuestro), siendo un primer fondo y sin AFOREs (≈59% del capital de vehículos 2021-2025). Por eso pedimos **primer cierre desde US$40M** y cierre final en 12 meses (lám. 17). La pregunta "¿es realista levantar US$100M?" es probable.
+
+## 3. Múltiplo de venta: ¿cómo lo justificamos y por qué?
+
+Hay **dos "múltiplos"** y conviene no mezclarlos:
+
+**A. Múltiplo de la empresa (EV/EBITDA, entrada y salida).** Regla del modelo (hoja `Escenarios`, memo sección 4):
+
+> **MOIC por empresa = (1 + crecimiento anual del EBITDA)^años × (1 − dilución) × (múltiplo de salida ÷ múltiplo de entrada)**, con el último factor **nunca mayor a 1.0x**.
+
+- **Sin expansión de múltiplo.** En las 5 empresas que funcionan, el múltiplo de salida es 5% a 10% **menor** que el de entrada (factor 0.90 a 0.95). El retorno viene de crecer EBITDA, no de vender más caro.
+- **Entrada barata:** en Pireos asumimos 7.5x EBITDA contra comparables públicos de 14 a 17x, con descuento ≈50% por tamaño, iliquidez y concentración en Walmart (lám. 12; dossier `comparables_precedentes_2026.md`, sección D).
+- **Los precedentes no sirven de ancla y lo decimos:** Vertiv pagó ≈13x EBITDA 2027E por UtilityInnovation (nicho de data centers, "no extrapolable a C&I mexicano"); las salidas recientes con precio visible en carga VE y almacenamiento fueron **rescates** (Volta 2023, Pod Point 2025, sonnen 2026). La lámina 15 lo dice: *"Mostramos quién compra, no qué múltiplo esperar."*
+
+**B. Múltiplo por empresa (MOIC bruto, lám. 11 y 13).** Va de 4.43x (Pireos) a 0.0x (Uriel/BRM); el portafolio da **3.15x bruto sobre lo invertido** y 2.26x neto al LP.
+
+**La debilidad que el comité va a encontrar (prepárenla):** los parámetros de crecimiento (**24.5% a 32.5% anual durante 5 a 7 años**) **se calibraron para que la TIR saliera ≈18%**; no son un pronóstico. El memo y el RESUMEN lo admiten. Eso exige que cada una de las 5 empresas buenas multiplique su capital **3.3x a 4.4x**. La defensa:
+- el caso **Conservador** (crecimiento 16% a 22%, sin tocar nada más) da 1.82x y 12.5%;
+- el **Bajo** da 1.29x y 5.2%; con **5 de 8 fallando** el LP aún recupera 1.33x;
+- la tabla de sensibilidades (lám. 14) muestra qué mueve la TIR: fallar 5 en vez de 3 pesa 11.2 pts; múltiplos de salida −20% pesan 2.6 pts. **Los múltiplos pesan poco; lo que importa es cuántas fallan.**
+
+## 4. ¿Por qué México y no otros lugares?
+
+**Lo que está documentado (úsenlo):**
+1. **Demanda de gobierno (lám. 4):** MXN 1.168 billones de inversión sexenal en electricidad (Presidencia, 7-oct-2026); 32,475 MW de capacidad nueva; 5,551 MW de baterías; generación distribuida de 5,190 MW al cierre de 2025 con meta de 14,432 MW al 2039 (PLADESE, DOF 17-oct-2025).
+2. **El fondo es mexicano por diseño (lám. 7):** el régimen fiscal del fideicomiso (LISR 192-193) exige **≥80% en empresas mexicanas no listadas**. Elegir EE.UU. o LatAm rompería el vehículo.
+3. **Incentivo fiscal:** deducción del 100% del equipo renovable (LISR art. 34 fr. XIII).
+4. **Tarifas:** aumento industrial 2025 de +8% a +12%, el mayor en cinco años (análisis de Quartux, prensa; dato débil).
+5. **El pipeline ya es mexicano:** Verdigris se excluyó por ser de California sin operación en México.
+6. **Mercado de capital:** US$5,376M invertidos en 2025 y US$6,028M en 1S-2026 (AMEXCAP); Energía es el mayor sector histórico (US$6,415M).
+
+**Lo que NO está documentado y el profe puede preguntar:**
+- **Por qué se abandonó "Norteamérica" (D2).** No hay un documento que explique la comparación EE.UU./Canadá/LatAm. Propuesta de respuesta, para que la validen: (a) el vehículo exige 80% mexicano; (b) el ticket de US$2 a 10M encuentra menos competencia en México; (c) el equipo da seguimiento a México. **Esto es argumento a construir, no hecho del dossier.**
+- **Demanda atribuible al nearshoring:** busqué datos de CENACE y AMPIP y **no los encontré** (`mercado_energia_mexico_2026.md`, C.5). No cites una cifra de nearshoring en energía si no la consiguen.
+
+## 5. ¿Por qué la distribución ahí?
+
+Puede ser **geográfica** o **de ganancias**. Ambas:
+
+- **Geográfica / por vertical.** Lám. 4 muestra adiciones por región (PLADESE) y generación distribuida por estado (CNE). Lám. 11 reparte los US$82M en 7 verticales: microrredes y solar C&I **35%** (US$29M), energía como servicio 17%, almacenamiento 13%, VE 11%, gestión 10%, solar pyme 11%, biogás 2%. El memo (Anexo E) trae la tabla por estado.
+  **Ojo:** el 35% en una sola vertical no viola ninguna regla (el tope es por empresa, no por vertical), pero es la concentración más alta del portafolio. Díganlo antes de que lo pregunten.
+- **De las ganancias (cascada, lám. 7 y Anexo B).** Europea sobre todo el fondo: (1) el LP recupera sus US$100M; (2) retorno preferente 8% compuesto (US$115.9M); (3) catch-up 100% al GP (US$29.0M); (4) resto 80/20. Caso base: LPs US$226.4M, GP US$31.6M. El GP necesita ≈**2.16x bruto sobre lo comprometido** para cobrar el primer peso y ≈2.45x para completar el catch-up.
+- **De los flujos en el tiempo (lám. 8, 9, 13):** 69% del capital se llama en los años 1 a 3; primeras distribuciones en el año 6; DPI 0.32x en el año 6 y 2.30x al año 9.
+
+## 6. Reglas del juego y límites de concentración
+
+| Regla | Valor | Dónde |
+|---|---|---|
+| **Máximo por empresa** | **15% del fondo = US$15M** (Pireos llega exacto: US$10M + US$5M) | Lám. 10, 11, 16 |
+| Cliente más grande de la empresa | **≤30% de ventas** (se verifica en data room antes de invertir) | Criterio (i), Anexo A |
+| Patrimonio mínimo en empresas mexicanas no listadas | **≥80%** | Lám. 7 |
+| Tenencia mínima por ticket | **2 años** (art. 192 LISR) | Lám. 7, 15 |
+| Distribución de ingresos | **≥80% en 2 meses** del cierre del año; si se incumple, el fideicomiso tributa al 30% | Memo, sec. 6 |
+| Reciclaje de distribuciones | Hasta **10% del fondo**, solo en el periodo de inversión | Memo; Anexo E |
+| Apalancamiento | Ninguno a nivel fondo; sin compra de control con deuda | Memo, sec. 5 |
+| Valuación de entrada | ≤US$100M por empresa | Criterio (v) |
+| Efectivo ocioso | Solo valores gubernamentales o fondos de deuda | Memo, sec. 5 |
+| Follow-on | Solo si la empresa cumple hitos (US$26M en total) | Lám. 8, 12 |
+| Llamadas | 1% a 25% del compromiso, máx. 4 al año, aviso de 10 días hábiles | Lám. 8, Anexo E |
+| Compromiso por LP | Mínimo US$1M, máximo 20% del fondo | Lám. 8, 17 |
+| Exclusiones | Cliente >30%, directivos sin experiencia, generación mayorista, dependencia de subsidios, valuación >US$100M | Lám. 6, Anexo A |
+
+**Lo que no existe y podrían definir:** no hay tope por **vertical** ni por **región**. Es una decisión (propuesta: ≤40% por vertical) que cierra el hueco del punto 5.
+
+## 7. Valor agregado del fondo y gobierno corporativo
+
+**Lo que ya está en el deck y en el memo (gobierno del fondo):**
+- **LPAC** con reunión sin el GP; revisa conflictos y valuaciones.
+- **Key man:** si salen dos personas clave (Managing Partner y Socio de inversión) se suspende el periodo de inversión.
+- **GP con 2%** (efectivo + renuncia parcial de comisión); **clawback**; remoción con y sin causa por mayoría calificada de LPs.
+- **Informes trimestrales** con política de valuación escrita y valuador independiente; referencia al Estándar AMEXCAP de Gobierno Corporativo (jul-2026).
+- **Conflicto de interés declarado** (familiar con empresa del sector): abstención y aprobación del LPAC.
+
+**Lo que ya está (gobierno dentro de cada empresa, lám. 12):** asiento en el consejo, vetos sobre deuda, venta y presupuesto, preferencia 1x no participativa, drag-along, tag-along y vesting de fundadores.
+
+**Lo que NO está y pidió el profe: comités de industria.** *(Propuesta; no figura hoy en ningún archivo.)*
+- **Qué sería:** comités asesores con expertos externos por vertical (p. ej. solar C&I y microrredes; almacenamiento BESS; movilidad eléctrica; software y gestión de energía), que acompañen al consejo en due diligence, seguimiento y salida.
+- **Por qué calza con nuestras reglas:** el criterio (ii) ya exige que los directivos tengan experiencia en energía "porque sin ese expertise el fondo no puede dar seguimiento efectivo". Los comités son la forma de que **el fondo** también tenga esa experiencia.
+- **Cómo conectarlo con la clase:** la Sesión 10 define cinco intervenciones del fondo (gobierno corporativo, profesionalización, sistemas de información, add-ons y consolidación, disciplina de capital de trabajo) y dice que un consejero que solo firma actas "está cobrando por estar". Se puede mapear cada una a una acción de Aurex.
+- **Decisiones pendientes:** quién forma los comités (¿nombres?), si son consultivos o vinculantes, cómo se declaran sus conflictos, y **quién los paga**: el presupuesto de gastos es de US$1.85M en 10 años (≈US$185 mil al año), y no hay línea para esto.
+- **Quién tiene el asiento en cada consejo:** el deck no lo define. La asignación natural por rol es Roberto (inversión) y Mariana (operaciones); hay que decidirlo.
+
+## 8. ¿Venture o PE? Tener claro qué somos
+
+**Somos private equity de capital de crecimiento (growth equity), minoritario.** No venture, no buyout.
+
+| | Venture | **Aurex** | Buyout |
+|---|---|---|---|
+| Etapa | Semilla a Serie A | **Crece, ya vende y opera** | Madura |
+| Control | Minoritario | **Minoritario con consejo y vetos** | Control |
+| Deuda | No | **Sin apalancamiento** | Sí |
+| Ingresos | Pocos o ninguno | **Recurrentes (PPA, arrendamiento, suscripción)** | Estables |
+
+**Dónde hay ruido en los documentos (corríjanlo o prepárense):**
+- **D2** dice "Estrategia de Venture Capital" y "etapas tempranas" (tesis); **D5** dice "Semilla–Serie B, etapa temprana" en una tabla. El deck y el memo ya dicen "crecimiento".
+- El vehículo legal se llama **"fideicomiso de capital de riesgo"** (así lo nombra la LISR). Un lector puede entender "venture". Aclaren: *es el nombre legal del régimen, no nuestra estrategia*.
+- El criterio (v) de D2 justifica el límite de US$100M con "posición minoritaria demasiado pequeña para tener influencia": es lógica de PE minoritario.
+- Pregunta que sí va a salir: *"¿por qué entran en Niko o FAZT, que son más cercanas a venture?"* (Niko: seed de US$16M post-money, 2024; FAZT: sin ronda pública). Respuesta: por eso el criterio (i)-(v) las deja como "Condición", y por eso FAZT y S2G están entre las 3 que fallan en el caso base.
+
+---
+
+# PARTE 2 · Slide por slide
+
+**Cómo leer cada ficha:** **Mensaje** (lo que debe quedar) · **Qué muestra** · **Justificación** (por qué importa y de dónde sale) · **Quién habla** (según los roles de la lám. 3) · **Pregunta probable** · **Ojo**.
+
+## Lám. 1 · Portada
+- **Mensaje:** Aurex Capital, fondo de crecimiento en energía distribuida en México, US$100M, ante un Comité de LPs, octubre 2026.
+- **Qué muestra:** nombre, subtítulo, seis integrantes con rol, curso (Capital Privado y Capital Emprendedor, Tec de Monterrey).
+- **Justificación:** el subtítulo ya fija el *qué* (energía distribuida), el *dónde* (México), la *etapa* (crecimiento) y el *tamaño*. Es la respuesta a "¿qué somos?" antes de la lámina 2.
+- **Ojo:** el .pptx del 11-oct trae la leyenda "caso académico, no constituye oferta de valores"; confirmen que siga en la versión final. La portada usa una miniatura ampliada de Canva (199x112 original): revisar calidad en proyector.
+
+## Lám. 2 · Resumen ejecutivo
+- **Mensaje:** "US$100M para 8 empresas de energía distribuida. Con 3 fallando, el LP gana 2.26x neto y 17.9% de TIR."
+- **Qué muestra:** cuatro bloques (Qué compramos / Dónde y cuándo / Cómo funciona / Cómo salimos) y un panel de retorno: 2.26x, 17.9%, US$32M carry, 10 años (5+5); más cuatro puntos de contexto (3.15x bruto; Conservador 1.82x y 12.5%; Bajo 1.29x y 5.2%; estrés 1.33x).
+- **Justificación:** cumple el punto 1 de la guía (idea, capital, duración, rendimiento). El titular lleva el escenario *duro* (3 fallas) para ganar credibilidad, no el optimista (sin fallas 2.47x).
+- **Quién habla:** Julio (Qué hacemos y por qué).
+- **Pregunta probable:** "¿Por qué no prometen más?" / "¿Quién les dijo que 3 fallan?" (supuesto del equipo: asignamos la falla a las 3 de menor puntaje).
+- **Ojo:** la última línea, *"Primer fondo sin historial: la credibilidad está en el gobierno"*, es la frase para preguntas 6 y 5 del comité.
+
+## Lám. 3 · Equipo (impresa como 7)
+- **Mensaje:** seis personas, cada parte del fondo con dueño.
+- **Qué muestra:** cada integrante con la pregunta que responde: Julio (qué hacemos y por qué), Roberto (cuánto invertimos y en quién), Mariana (cómo funciona el fondo), Tomás (por qué un LP elige Aurex), Pablo (qué tan bien podría irnos), Miguel (dónde está la oportunidad). Abajo, key man y conflictos.
+- **Justificación:** la guía dice "Si alguien no habla, se nota y se califica" (rúbrica y sección 3). Esta lámina asigna quién contesta qué.
+- **Ojo:** **no hay credenciales ni fotos** (círculos vacíos en versiones previas; no se inventó nada). Para un primer fondo, el comité mirará esto: agreguen cargo actual, experiencia y relación con el sector. La guía asume 5 integrantes; confirmen con el profe que 6 es válido. Mencionar el conflicto del familiar con empresa del sector sin dar nombre de empresa.
+
+## Lám. 4 · "El Estado abre espacio, pero no a nuestro ticket" (impresa como 4)
+- **Mensaje:** el gobierno impulsa miles de MW, pero en proyectos de cientos de MW; Aurex entra aguas abajo.
+- **Qué muestra:** cinco cifras (MXN 1.168 billones; 32,475 MW; 5,551 MW de baterías; 5,190 MW de GD; 7,411 MW de mixtos CFE), barras por región (PLADESE) y por estado (CNE) y el recuadro "Qué significa para Aurex".
+- **Justificación:** responde "por qué México" y "por qué ahora". Cada cifra tiene fuente y fecha (Presidencia 7-oct-2026; SENER/DOF 17-oct-2025; CNE 2S-2025; Von Wobeser 12-jun-2026).
+- **Quién habla:** Miguel (dónde está la oportunidad).
+- **Pregunta probable:** "¿No le quita el Estado el mercado a ustedes?" Respuesta: la Ley del Sector Eléctrico da al Estado un piso de 54% de la energía inyectada y los mixtos son CFE 54% / privado 46% por proyecto, pero eso es generación a escala; la generación distribuida y las baterías detrás del medidor de industria y comercio quedan abiertas (7,405 MW de particulares en el plan).
+- **Ojo:** (a) el Anexo D aclara que **38,000 MW (Presidencia) y 32,475 MW (ficha del plan) no están conciliados**; el deck usa 32,475. (b) 7,411 MW (mixtos adjudicados) y 7,405 MW (particulares PLADESE) son cifras distintas con números casi iguales: no las mezclen al hablar. (c) Los tres 54% no son el mismo 54%.
+
+## Lám. 5 · "Energía en sitio donde nadie la financia"
+- **Mensaje:** los fondos visibles escriben cheques ≈10 veces mayores; el hueco es US$2 a 10M.
+- **Qué muestra:** tesis (≤200 caracteres), tres columnas (Qué vemos que otros no / Dónde falta capital / Cómo ganamos) y tabla de gestoras: General Atlantic, AINDA, Riverstone, MIP/Macquarie, Blue Global/viveenergía, Aurex, con "¿Compite?".
+- **Justificación:** es la lámina de "por qué este fondo" (Pregunta 1 de tu lista). Datos: AMEXCAP (promedios ≈US$262M y ≈US$43M), comunicados de cada gestora, Techla (30-sep-2025), Bloomberg Law (mar-2025).
+- **Quién habla:** Julio.
+- **Ojo:** el cheque de General Atlantic (US$50 a 400M) es de **2015**; está etiquetado. Aclarar en voz alta que Blue Global y viveenergía sí compiten (ambos levantan US$30M). La nota "sin carry bajo ≈2.16x bruto" es el mismo umbral del hurdle, mencionado aquí como diferenciador.
+
+## Lám. 6 · "Tres razones verificables y un límite honesto"
+- **Mensaje:** primer fondo sin historial; lo compensamos con diligencia, alineación y protecciones.
+- **Qué muestra:** 8 de 8 empresas con dossier; GP ≥2% en efectivo; 6 de 6 protecciones al LP; abajo, "Límite del primer fondo / Qué ofrecemos a cambio".
+- **Justificación:** contesta la Pregunta 6 de la guía ("¿por qué ustedes y no un fondo con experiencia?") **admitiendo** la debilidad. Es la lámina de credibilidad.
+- **Quién habla:** Tomás (por qué un LP elige Aurex).
+- **Ojo:** la frase "Un integrante con acceso al sector; el vínculo se declara y se abstiene" es el conflicto del familiar: practiquen decirlo sin que suene a ventaja injusta.
+
+## Lám. 7 · "Fideicomiso privado y cascada europea" (impresa como 8)
+- **Mensaje:** el GP solo cobra carry si el LP gana más de 8% compuesto sobre todo lo comprometido.
+- **Qué muestra:** diagrama del vehículo (LPs → fideicomiso → GP → 8 empresas), tabla de términos (comisión 2% sobre comprometido años 1 a 5 y 1.5% sobre invertido años 6 a 10; carry 20%; hurdle 8%; catch-up 100%; extensiones 1+1) y los cuatro escalones de la cascada.
+- **Justificación:** hurdle sobre **todo lo comprometido** (convención del profesor, taller de cascada). Fideicomiso privado en lugar de CKD/CERPI/Fibra E: constitución en semanas (no 6 a 12 meses), sin revelación pública, más control del GP.
+- **Quién habla:** Mariana (cómo funciona el fondo).
+- **Costo reconocido:** las AFOREs no pueden entrar a un fideicomiso no listado; apuntamos a family offices y corporativos. La versión listada se deja para un Fondo II.
+- **Pregunta probable:** "¿Por qué europea y no americana?" Respuesta: protege al LP (el GP cobra al final, no deal por deal) y, siendo primer fondo, es la señal de alineación.
+- **Ojo:** las comisiones se cotizan más IVA y el modelo **no incluye IVA**; la estructura fiscal y legal "requiere asesores" (disclaimer del memo).
+
+## Lám. 8 · "Llamadas de capital: de 1% a 25% cada una" (impresa como 9)
+- **Mensaje:** el 69% del capital se llama en los años 1 a 3, cuando entran las 8 empresas.
+- **Qué muestra:** tres fases (años 1-3: US$68.6M; 4-5: US$24.4M; 6-10: US$7.1M), tabla de mínimos y máximos y gráfica del calendario.
+- **Justificación:** punto 9 del memorándum. El mínimo de 1% (no 5%) se fijó porque en los años 6 a 10 solo se llaman US$1.4M al año.
+- **Quién habla:** Mariana.
+- **Ojo:** mora = TIIE + 5 puntos, pierde derechos de voto y distribución a los 30 días; el faltante lo reparten los demás LPs. Si preguntan por qué 25% de máximo: el pico es 26.2 en los años 1 y 2, ≈26% del compromiso; revisen que el máximo (25%) sea coherente con ese pico, porque 26.2% de US$100M supera el 25% **si lo llama un solo LP en una sola llamada**; en la práctica se divide en varias llamadas (máx. 4 al año). Ténganlo claro.
+
+## Lám. 9 · Roadmap de 10 años ("Ocho empresas en tres años, salidas del 6 al 9")
+- **Mensaje:** el periodo de inversión termina en el año 5; no entra ninguna empresa nueva después del año 3.
+- **Qué muestra:** línea de tiempo con 4 etapas (primer cierre y 3 empresas; 5 empresas más en años 2-3; follow-on y fin de inversión años 4-5; salidas 6 a 10) y tabla anual: entradas (3, 3, 2), salidas (2, 3, 2, 1), llamadas, distribuciones (US$29.8M, 50.9M, 118.8M) y TVPI (0.92x en año 1 a 2.53x).
+- **Justificación:** lámina de "duración". Muestra la curva J: TVPI 0.92x por comisiones antes de que las empresas valgan más que su costo.
+- **Ojo:** entradas escalonadas reducen el riesgo de calendario. La tabla del PDF muestra TVPI hasta 2.53x y el cierre en 2.26x neto; **la tabla se extrajo de texto y no pude confirmar a qué año corresponde cada TVPI**: revisen en la lámina que el 2.53x (intermedio) no se confunda con el 2.26x final, y lo mismo con las distribuciones por año.
+
+## Lám. 10 · "De cada US$100M, US$82M llegan a las empresas" (impresa como 11)
+- **Mensaje:** comisiones US$16.15M y gastos US$1.85M: 18 de cada 100 dólares.
+- **Qué muestra:** waterfall 100 → (10.0 comisión 1-5) → (6.1 comisión 6-10) → (1.9 gastos) → 82.0, y barras por empresa (inicial + follow-on).
+- **Justificación:** transparencia; el LP ve cuánto cuesta el fondo. Ninguna empresa supera US$15M.
+- **Quién habla:** Pablo.
+- **Ojo:** el gasto de US$1.85M es **supuesto del modelo**; los comités de industria (si se aprueban) caerían aquí.
+
+## Lám. 11 · "Ocho empresas en siete verticales" (impresa como 12)
+- **Mensaje:** US$82M invertidos, de US$2M a US$15M por empresa; se supone que tres no funcionan.
+- **Qué muestra:** dona por vertical; tabla de las 8 empresas con qué hacen, US$M invertidos, año de entrada/salida, valuación estimada y condición; embudo (origina, filtra con 5 criterios, due diligence, term sheet, seguimiento).
+- **Justificación:** las empresas son las del pipeline de D3; se filtraron con los 5 criterios de D2. Verdigris (California) salió y entró BioEsol; Solar Inc. y Energypro Mx se descartaron por pequeñas (US$0.5 a 1M).
+- **Quién habla:** Roberto (cuánto invertimos y en quién).
+- **Ojo:** las **valuaciones son estimaciones del fondo** (ninguna es pública). Niko tiene un dato real de US$16M post-money (mar-2024). Las fallas se asignan a las de menor puntaje (Uriel/BRM, FAZT, S2G) "para ser conservadores"; el comité puede objetar que el fondo no sabe cuáles fallarán, de ahí el tope de 15% y los hitos de follow-on.
+
+## Lám. 12 · "Caso de inversión: Pireos Power" (impresa como 13)
+- **Mensaje:** US$10M en el año 1, +US$5M de follow-on en el año 4; retorno base de 4.43x (US$66.5M) en el año 8.
+- **Qué muestra:** valor de la inversión año por año; cap table (pre-money 40.0 + 10.0 = post 50.0; Aurex 20% / fundadores 70% / pool 10%); protecciones (preferencia 1x no participativa; consejo y vetos; drag/tag; vesting; ningún cliente >30%); qué hace la empresa (300+ proyectos declarados; microrred de Walmart 5 MWp + 14 MWh + 3.5 MW UPS).
+- **Justificación:** es el "caso de inversión" que la guía pide (cuánto, a qué valor, qué parte). Valuación derivada: ingresos supuestos US$35M × margen EBITDA 15% × 7.5x de entrada.
+- **Quién habla:** Roberto.
+- **Pregunta probable:** "¿Y si Walmart es más de 30%?" Respuesta de la lámina: no invertimos o reducimos el ticket; la regla (i) manda.
+- **Ojo:** ingresos, valuación y términos son **supuestos del fondo; Pireos no participó**. Pireos llega **exacto** al tope de 15% (US$15M): cualquier follow-on adicional es imposible, y la lámina lo puede decir como prueba de que la regla se respeta.
+
+## Lám. 13 · Curva J y detalle por empresa (impresa como 24)
+- **Mensaje:** DPI, RVPI y TVPI por año y salida de cada empresa en el caso base.
+- **Qué muestra:** gráfica de TVPI/DPI/RVPI y tabla con invertido, entra/sale, múltiplo y recupera por empresa (total: 3.15x y US$258.0M).
+- **Justificación:** soporta la lámina 14. Aquí se ve quién aporta: Pireos 66.5, XC 58.6, BioEsol 52.3, Quartux 44.0, Niko 29.8; las tres que fallan recuperan 4.5 + 2.4 + 0.0.
+- **Ojo:** sugerencia de orden: esta lámina va **después** de la 14 si quieren primero el titular de retorno (hoy el PDF la pone antes y su número impreso es 24).
+
+## Lám. 14 · "Caso base: 2.26x neto y 17.9% de TIR"
+- **Mensaje:** con 3 de 8 sin retorno suficiente, la TIR va de 5% a 20% según escenario.
+- **Qué muestra:** KPIs (2.26x; 17.9%; US$258M; US$31.6M carry; Conservador 1.82x/12%; Bajo 1.29x/5%), football field de TIR por caso con líneas del hurdle (8%) y la mediana en México (16%), y un tornado de qué mueve la TIR.
+- **Justificación:** punto 4 de la guía (rendimiento). Una sola TIR en voz alta: la **neta con calendario real, en USD**. La TIR simplificada de clase (8.5%) queda solo como piso en el Excel.
+- **Quién habla:** Pablo (qué tan bien podría irnos).
+- **Pregunta probable:** "¿Por qué su caso base está por encima de la mediana del mercado?" Respuesta honesta: porque asumimos empresas que crecen 24% a 33% al año; el piso razonable es el Conservador (12%).
+- **Ojo:** USD vs CETES en pesos (6.09%): la comparación exige ajustar por moneda.
+
+## Lám. 15 · "Compradores con nombre, salidas escalonadas"
+- **Mensaje:** ninguna salida mexicana comparable es de nuestro tamaño; es el riesgo principal.
+- **Qué muestra:** tabla por empresa (año, múltiplo, comprador o vía), recuperación por año (0, 0, 0, 0, 0, 30, 51, 59, 119, 0 según el gráfico) y precedentes (Ampol-Evie A$225M; Vertiv-UtilityInnovation ≈13x; COX-Iberdrola México; Shell-Volta; Enel-EnerNOC).
+- **Justificación:** contesta la Pregunta 3 de la guía ("¿cómo y a quién le venden?"). Plan B: venta a otro fondo, venta parcial o vehículo de continuación con valuador independiente y aprobación del LPAC.
+- **Quién habla:** Roberto.
+- **Ojo:** AMEXCAP reporta apenas ≈US$900M en 111 salidas en 2025-1S-2026. Los compradores nombrados son **hipótesis del equipo**. Las operaciones públicas citadas son 100 veces mayores que nuestros tickets: la lámina lo admite.
+
+## Lám. 16 · "Seis riesgos y siete controles para el LP"
+- **Mensaje:** el mayor riesgo es la salida; el segundo, la concentración de clientes; cada riesgo tiene un control.
+- **Qué muestra:** matriz de riesgo (probabilidad, impacto, qué hacemos): salida (alta/alto), fallan 3 de 8 (media/alto), concentración de clientes, regulatorio (LSE, CNE, CFE), régimen fiscal FICAP, persona clave; y siete protecciones numeradas (LPAC, key man, tope 15%, cascada europea, clawback, GP con 2%, informes trimestrales).
+- **Justificación:** Preguntas 4 y 5 de la guía.
+- **Quién habla:** Mariana.
+- **Ojo:** "probabilidad e impacto" es **juicio del equipo**. Aquí es donde se agregaría el riesgo "falta de experiencia sectorial del fondo" y su control (comités de industria, si se aprueban).
+
+## Lám. 17 · Preguntas / Lo que pedimos al comité
+- **Mensaje:** primer cierre desde US$40M; cierre final de US$100M en 12 meses; compromiso mínimo US$1M, máximo 20%; siguientes pasos (revisión del PPM, sesión con LPAC, due diligence de las 8 empresas).
+- **Justificación:** cierra con la petición concreta, que es lo que un comité espera de un pitch.
+- **Ojo:** Miguel aparece sin cargo en la lista de cierre; igualar con las demás láminas.
+
+## Anexos (para preguntas)
+- **A · Criterios de exclusión por empresa.** Matriz de 8 empresas × 5 criterios + FICAP: Cumple, Condición, No cumple. Solo Uriel/BRM es "No cumple (probable)" en el criterio (i). Sirve para responder "¿por qué esas ocho y no otras?".
+- **B · Cascada paso a paso (Bajo / Base / Alto).** Bajo: portafolio 129.0, LPs 129.0, GP 0. Base: 258.0, LPs 226.4, GP 31.6. Alto: 283.8, LPs 247.1, GP 36.8.
+- **C · Las seis preguntas del comité con respuesta corta.** Ahí está la respuesta lista a: (1) por qué esto y no algo seguro (17.9% neta en USD vs 6.09% CETES en pesos; el Bajo devuelve 1.29x); (2) cuántas deben salir bien (con 5 de 8 fallando, 1.33x y 7%); (3) a quién venden; (4) key man; (5) qué protege al LP; (6) por qué ustedes. **Cada integrante debe poder contestar cualquiera.**
+- **D · Mercado y gobierno: cifras verificadas.** Cada cifra con plan y periodo. Ahí se aclara que los dos planes de baterías difieren (2,216 vs 5,551 MW) y los tres 54%.
+- **E · Llamadas de capital y términos de gestión.** Calendario año a año y tabla de mínimos/máximos.
+
+---
+
+# PARTE 3 · Qué falta o hay que decidir (en orden de importancia)
+
+| # | Pendiente | Por qué importa | Dónde se arregla |
+|---|---|---|---|
+| 1 | **Comités de industria / valor agregado** | Lo pidió el profe y hoy el deck solo habla de gobierno del fondo, no de cómo ayudamos a las empresas | Nueva lámina entre 12 y 13 o en la 16; sumar línea de gasto |
+| 2 | **Por qué México y no Norteamérica** | D2 decía Norteamérica; no hay explicación escrita del cambio | Una frase en lám. 4 o 5 |
+| 3 | **Tope por vertical** | 35% en microrredes/solar C&I es la mayor concentración | Regla nueva en memo y lám. 16 |
+| 4 | **Calibración 24.5% a 32.5%** | El comité lo va a atacar; hoy solo se admite en el memo | Una línea en lám. 14: "calibrado al objetivo, no pronóstico" |
+| 5 | **Realismo de levantar US$100M** | ≈6% de todo lo levantado en México en 2025 y primer fondo | Lám. 17 o Anexo C |
+| 6 | **Renumerar láminas / versión final** | Numeración desordenada; el .pptx del 11-oct no es igual al PDF del 14-oct | Reexportar el PDF |
+| 7 | **Credenciales y fotos del equipo** | Primer fondo: el comité mira al equipo | Lám. 3 |
+| 8 | **Quién tiene asiento en cada consejo** | No definido | Lám. 12 o 16 |
+| 9 | **Validación legal y fiscal** | Los arts. 192-193 LISR, IVA, carry y renuncia de comisión son supuestos | Memo (ya lo avisa) |
+| 10 | **"Venture" en D2/D5** | Inconsistencia con "crecimiento" | Solo hablar de growth equity |
+
+*Todas las cifras de empresas (valuaciones, ingresos, compradores) son estimaciones o hipótesis del equipo; ninguna fue confirmada por las empresas.*

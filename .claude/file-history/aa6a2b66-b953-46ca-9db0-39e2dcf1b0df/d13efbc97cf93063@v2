@@ -1,0 +1,41 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t  = $xl.Workbooks.Item('20260922_SETSA Transportes.xlsx')
+$tx = $t.Worksheets.Item('Transacciones Precedentes')
+
+function Find-B([string]$needle, [int]$from = 1) {
+    $v = $tx.Range('B1:B200').Value2
+    for ($r = $from; $r -le 200; $r++) { if (([string]$v[$r, 1]).Contains($needle)) { return $r } }
+    throw "No encontrado: $needle"
+}
+$rDisc = Find-B 'Descuento por tama'
+$rM1   = Find-B 'ltiplo de las transacciones'
+$rA1   = Find-B 'con descuento' $rM1
+$rEV1  = Find-B 'Valor empresa' $rA1
+$rM2   = Find-B 'ltiplo de las transacciones' ($rEV1 + 1)
+$rA2   = Find-B 'con descuento' $rM2
+$rEV2  = Find-B 'Valor empresa' $rA2
+"antes: EV1 " + $tx.Range("E$rEV1").Formula + " | EV2 " + $tx.Range("E$rEV2").Formula
+
+# EV = múltiplo de transacciones x métrica (sin descuento)
+foreach ($c in 'E','F','G') {
+    $tx.Range("$c$rEV1").Formula = ([string]$tx.Range("$c$rEV1").Formula).Replace("$c$rA1", "$c$rM1")
+    $tx.Range("$c$rEV2").Formula = ([string]$tx.Range("$c$rEV2").Formula).Replace("$c$rA2", "$c$rM2")
+}
+"nuevo:  EV1 " + $tx.Range("E$rEV1").Formula + " | EV2 " + $tx.Range("E$rEV2").Formula
+
+# borrar de abajo hacia arriba
+$tx.Rows.Item($rA2).Delete() | Out-Null
+$tx.Rows.Item($rA1).Delete() | Out-Null
+$tx.Rows.Item($rDisc).Delete() | Out-Null
+$xl.CalculateFull()
+
+$n = 0
+foreach ($c in $tx.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $n++; "ERR " + $c.Address($false,$false) } }
+"errores=$n"
+$r0 = Find-B 'Supuestos' 20
+for ($r = $r0; $r -le $r0 + 32; $r++) {
+    $l = [string]$tx.Cells.Item($r, 2).Value2
+    if ($l -ne '') { "$r $l | " + $tx.Cells.Item($r,5).Text + " | " + $tx.Cells.Item($r,6).Text + " | " + $tx.Cells.Item($r,7).Text }
+}
+$t.Save(); "guardado=" + $t.Saved

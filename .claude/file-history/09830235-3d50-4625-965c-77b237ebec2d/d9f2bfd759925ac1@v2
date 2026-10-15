@@ -1,0 +1,130 @@
+import sys, io
+p = sys.argv[1]; t = io.open(p, encoding='utf-8').read()
+
+
+def cut(start, end):
+    global t
+    i = t.index(start); j = t.index(end, i)
+    blk = t[i:j]; t = t[:i] + t[j:]
+    return blk
+
+
+# 1) executive summary content
+i = t.index('ES = ['); j = t.index(']\nfor i, (kind, txt) in enumerate(ES):')
+t = t[:i] + '''ES = [("h", "Global"),
+      ("b", "Demand is flat in 2026 (-0.1%) and grows only ~0.9% a year to 2030, while !!excess capacity rises from 640 Mt to 745 Mt by 2028!!; prices and margins outside protected markets stay under pressure."),
+      ("h", "United States"),
+      ("b", "^^The 50% Section 232 tariff^^ cut the finished-steel import share to ~16% and keeps US hot-rolled coil at **$1,285/st**, more than twice China's price; demand from ^^data centers, energy and infrastructure^^ keeps utilization near 80%."),
+      ("h", "Europe"),
+      ("b", "!!Demand fell 1.2% in 2025 and German output dropped ~9%!! on energy costs and imports; ^^a new import regime (quotas -47%, 50% out-of-quota duty) and the carbon border tax^^ aim to protect mills from 2026."),
+      ("h", "Asia"),
+      ("b", "!!China's demand fell 6.9% in 2025 and it exported a record 131 Mt!!; ^^India (+5.1% a year to 2030) and Southeast Asia^^ lead growth, while Japan and Korea shrink and push more steel abroad."),
+      ("h", "Producers"),
+      ("b", "^^Record shipments and rising prices lift results^^ at Nucor, Steel Dynamics, Cleveland-Cliffs and CMC; !!new 2026-27 capacity and a >$400/t gap to import parity!! are the risks for 2027 prices.")''' + t[j:]
+t = t.replace('d._fmt_runs(p, txt, 17, True, False, NAVY); p.space_before = Pt(10 if i else 0)',
+              'd._fmt_runs(p, txt, 16, True, False, NAVY); p.space_before = Pt(8 if i else 0)')
+t = t.replace('d._fmt_runs(p, txt, 14, False, False, "#000000"); _set_bullet(p, "•", 0, 14); p.space_before = Pt(6)',
+              'd._fmt_runs(p, txt, 13, False, False, "#000000"); _set_bullet(p, "•", 0, 13); p.space_before = Pt(4)')
+
+# 2) cut blocks to move
+hrc_blk = cut('# 4 HRC price', '# 5 two routes')
+china_blk = cut('s = slide("China Exports Its Surplus"', 's = slide("Steel Prices Diverge Across Regions"')
+
+# 3) dividers
+t = t.replace('d.divider("Global Steel Demand")', 'd.divider("Global Steel Market", "Demand and Supply")')
+t = t.replace('d.divider("Global Steel Supply")\n', '')
+t = t.replace('d.divider("US Steel Demand")\n', 'd.divider("US Steel Market", "Prices, Demand and Supply")\n' + hrc_blk)
+t = t.replace('d.divider("US Steel Supply")\n', '')
+t = t.replace('sheet 23_Stocks_vs_SPX', 'sheet 33_Stocks_vs_SPX')
+
+# 4) Europe + Asia sections before exposure
+china_blk = china_blk.replace('"China holds **54% of global excess capacity**; with domestic construction weak, mills push the surplus abroad."',
+                              '"**Demand fell 6.9% in 2025** on the property slump and keeps shrinking through 2030, so mills push the surplus abroad."')
+china_blk = china_blk.replace('"China Exports Its Surplus"', '"China Exports What It Cannot Use"')
+region = '''# ================================================================== EUROPE
+d.divider("Europe Steel Market", "Demand, Supply and Trade Protection")
+
+s = slide("European Demand Struggles to Recover",
+          "EU and UK demand fell 1.2% in 2025; the OECD sees only a 1.4% recovery in 2026",
+          source="OECD (2026), OECD Steel Outlook 2026; BofA Global Research, 9-Oct-2026", link=URL["oecd"])
+img(s, "BofA_Ex63_Europe_demand.png", 0.575, 1.7, h=4.95)
+bullets(s, 6.75, 1.8, 6.1, 4.9, [
+    "**Industry and construction stay weak**, and high energy costs hurt energy-intensive manufacturing.",
+    "**Germany (-6.1%) and France (-12.6%)** led the 2025 decline; neither is expected to rebound meaningfully in 2026.",
+    "BofA's real-time indicator turned negative again in 2026: the recovery **has hit an air pocket**.",
+    "worldsteel sees EU and UK demand at -0.3% in 2026 before a **3.1% rebound in 2027**."], size=13)
+
+eu = [("Türkiye", 38.1, 36.9), ("Germany", 34.1, 37.3), ("Italy", 20.7, 20.0), ("Spain", 11.8, 11.9), ("France", 9.9, 10.8),
+      ("Austria", 7.6, 7.1), ("Belgium", 7.2, 7.1), ("Poland", 7.2, 7.1), ("Netherlands", 6.5, 6.4)]
+s = slide("Europe's Mills Shrink Under Cost and Import Pressure",
+          "EU and UK output fell 2.4% in 2025; Germany, the EU's largest producer, dropped ~9%",
+          source="worldsteel, World Steel in Figures 2026; OECD (2026), OECD Steel Outlook 2026", link=URL["ws"])
+yh = d.block_header(s, 0.575, 1.55, 7.0, "Crude Steel Production, 2025", "Million tonnes; y/y change in brackets")
+gfe, che = d._chart(s, XL_CHART_TYPE.BAR_CLUSTERED, 0.575, yh, 7.0, 6.75 - yh, [c for c, _, _ in eu][::-1], {"2025": [a for _, a, _ in eu][::-1]})
+che.plots[0].gap_width = 45
+d._axis_style(che, vmin=0, vmax=50, cat_size=10, label_low=True)
+d._plot_layout(che, 0.20, 0.01, 0.66, 0.97)
+sere = che.plots[0].series[0]; d._fill(sere.format, NAVY)
+for k, (c, a, b) in enumerate(eu[::-1]):
+    g = a / b - 1
+    d._fill(sere.points[k].format, RED if g < -0.03 else NAVY)
+    d._custom_label(sere.points[k], f"{a:.1f}  ({g:+.1%})", size=9, bold=False, color="#000000", pos=XL_LABEL_POSITION.OUTSIDE_END)
+d._legend(che, False)
+bullets(s, 7.95, 1.75, 4.9, 4.9, [
+    "**Germany** fell ~9% on weak demand, high energy costs and imports; Thyssenkrupp is cutting jobs and output.",
+    "**Italy and Türkiye** grew; Turkish exports rose more than 12% in 2025.",
+    "European exports are **down 53% since 2019** to 50 Mt, while the EU is the world's largest steel importer (43.7 Mt).",
+    "Brazilian shipments to Europe **doubled** after the US raised tariffs: Europe absorbs diverted steel."], size=12)
+
+s = slide("Europe Builds Its Own Trade Wall",
+          "From July 2026, import quotas fall ~47% and out-of-quota steel pays a 50% duty",
+          source="OECD (2026), OECD Steel Outlook 2026; CMC; US Commerce, SIMA; BofA Global Research", link=URL["oecd"])
+steps = [("Until Jun 2026", "Safeguard", "Country quotas; 25% duty on volumes above quota"),
+         ("1 Jan 2026", "CBAM", "Carbon border tax on imports; >€50/t on some long products once fully applied"),
+         ("1 Jul 2026", "New regulation", "Quotas cut ~47% vs. 2024; out-of-quota duty 25% to 50%; 'melt and pour' origin rule")]
+bw = 3.85; gp = (12.302 - 3 * bw) / 2; ly = 2.45
+d.line(s, 0.575, ly, 12.877, ly, color=NAVY, width=2.0)
+for k, (dte, tag, txt) in enumerate(steps):
+    bx = 0.575 + k * (bw + gp); cxk = bx + bw / 2; hot = k == 2
+    d.rect(s, cxk - 0.13, ly - 0.13, 0.26, 0.26, fill=GOLD if hot else NAVY, shape=MSO_SHAPE.OVAL)
+    d.text(s, bx, 1.5, bw, 0.3, dte, size=14, bold=True, align="center", inset=0)
+    d.rect(s, cxk - 0.95, 1.85, 1.9, 0.36, fill=GOLD if hot else NAVY, text=tag, size=12, bold=True, color="#000000" if hot else "#FFFFFF", round_=0.3)
+    d.rect(s, bx, 2.8, bw, 1.25, fill="#F2F2F2", line="#A6A6A6", text=txt, size=12, anchor="top", align="left", inset=0.1)
+yh = d.block_header(s, 0.575, 4.3, 12.3, "Hot-Rolled Band Price by Region, June 2026", "US$ per metric tonne")
+prices = [("United States", 1208), ("Europe", 780), ("China", 429)]
+for k, (n, v) in enumerate(prices):
+    bx = 0.575 + k * (bw + gp)
+    d.rect(s, bx, yh + 0.1, 2.0, 0.55, fill=NAVY if k == 0 else (STEEL if k == 1 else GREY), text=n, size=13, bold=True, color="#FFFFFF")
+    d.rect(s, bx + 2.0, yh + 0.1, 1.85, 0.55, fill="#FFFFFF", line=NAVY, text=f"${v:,}/t", size=15, bold=True)
+d.text(s, 0.575, yh + 0.85, 12.3, 0.6, ["- Europe still prices **~$430/t below the US** but $350/t above China; BofA sees Northern European HRC rising from **$836/t (2026E) to $879/t (2027E)** as protection tightens."], size=12, align="justify")
+
+# ================================================================== ASIA
+d.divider("Asia Steel Market", "China, India, Japan & Korea and Southeast Asia")
+
+''' + china_blk + '''
+s = slide("India and Southeast Asia Lead Asia's Growth",
+          "To 2030, India adds 5% a year to demand while Japan and Korea shrink; ASEAN output grows fastest",
+          source="OECD (2026), OECD Steel Outlook 2026, Tables 2.1-2.2; Aztlan calculations", link=URL["oecd"])
+asia = ["China", "Japan & Korea", "India", "ASEAN", "Other Asia"]
+yh = d.block_header(s, 0.575, 1.55, 7.6, "Demand vs. Production Growth, 2025-2030", "Compound annual growth rate, %")
+clustered(s, 0.575, yh, 7.6, 6.75 - yh, asia, {"Demand": [-0.3, -0.4, 5.1, 3.5, 1.8], "Production": [-0.6, -1.3, 4.8, 8.5, 0.4]},
+          [NAVY, GOLD], '0.0"%"', vmin=-3, vmax=10)
+bullets(s, 8.55, 1.75, 4.3, 4.9, [
+    "**India**: demand +9.8% in 2025 and 209 Mt by 2030; it added 41 Mt of capacity in 2021-25 and plans 32 Mt more, staying a modest net importer.",
+    "**ASEAN** output grows faster than its demand (+8.5% vs. +3.5% a year), much of it in Chinese-funded blast furnaces: a future export risk.",
+    "**Japan and Korea**: demand fell 5.1% in 2025 and output keeps shrinking; Korea is now the top supplier to the US (+54% YTD)."], size=12)
+
+s = slide("Asia Keeps Adding Blast Furnaces",
+          "Asia accounts for 84 Mt of the 139 Mt of new capacity planned worldwide for 2026-28",
+          source="OECD (2026), OECD Steel Outlook 2026", link=URL["oecd"])
+bullets(s, 0.575, 1.5, 12.2, 1.15, [
+    "**China (38.6 Mt) and India (31.8 Mt)** lead the planned additions; blast-furnace (BOF) routes still make up ~46% of new capacity.",
+    "**Chinese investors** are building mostly blast-furnace plants abroad, chiefly in Southeast Asia, extending overcapacity beyond China's borders."], size=13)
+img(s, "OECD_Fig3.3_capacity_additions.png", 0.575, 2.95, h=3.75)
+img(s, "OECD_Fig3.4_china_FDI_capacity.png", 6.45, 2.95, h=3.75)
+
+'''
+anchor = '# ================================================================== EXPOSURE'
+assert anchor in t
+t = t.replace(anchor, region + anchor)
+io.open(p, 'w', encoding='utf-8').write(t); print('patched')

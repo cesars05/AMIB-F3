@@ -1,0 +1,83 @@
+import re
+from docx import Document
+from docx.shared import Pt
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_COLOR_INDEX
+
+SCRIPT = [
+("Slide 3 — Company Overview: Athabasca", [
+ "Just as a reminder, Athabasca Oil Corporation is a Canadian oil producer with **two main businesses**: thermal oil in Alberta's oil sands, where it basically uses steam to get the bitumen out of the ground (that's SAGD), and a smaller light-oil business in the Duvernay.",
+ "Today it produces around **40,000 barrels a day**, almost all liquids, and it expects to exit 2026 at around **45,000**.",
+ "What really stands out is the resource: **1.2 billion barrels of 2P reserves** on the thermal side, which gives it **more than 75 years of reserve life**. And on top of that, it has about $62 million of net cash, so a very clean balance sheet.",
+ "Looking at the assets, there are three pieces:",
+ ["**Leismer**, the core asset, at 57% of second-quarter production. It's being expanded to 40,000 barrels a day by the end of 2027, and right next to it sits **Corner**, its next growth project.",
+  "**Hangingstone**, about 28%, steady at around 9,000 barrels a day.",
+  "And **Duvernay Energy**, about 15%, the light-oil business, owned 70% by Athabasca and 30% by Cenovus, where production almost doubled year over year."],
+]),
+("Slide 4 — Company Overview: Cenovus", [
+ "Now on the buyer side. Cenovus is an **integrated Canadian energy company**, which means it produces oil and then refines it in its own refineries in Canada and the U.S.",
+ "It expects to produce around **990,000 barrels of oil equivalent a day** this year, and it has about 473,000 barrels a day of refining capacity.",
+ "And the key point for this deal: Cenovus is **Canada's largest SAGD operator**, so it already runs exactly the kind of assets Athabasca has.",
+ "On the numbers, they have 9.6 billion barrels of 2P reserves, about 28 years of reserve life, **$13.5 billion of adjusted funds flow** over the last twelve months, and net debt down to around $3 billion at the end of September.",
+ "The business splits into three:",
+ ["**Oil Sands**, 80% of production, with Christina Lake, Foster Creek, Lloydminster and Sunrise, and a record 786,000 barrels a day in the second quarter.",
+  "**Conventional and Offshore**, the other 20%, where West White Rose ramps up to around 45,000 barrels a day by 2028.",
+  "And **Downstream**, the refineries, which turn Cenovus' own heavy oil into diesel and gasoline, so they're protected when the discount on Canadian heavy oil widens."],
+]),
+("Slide 5 — Transaction Overview", [
+ "Now the deal itself. Cenovus is paying **$12 per Athabasca share**, a 14% premium to the 20-day average price and a **25% premium over the value of Athabasca's reserves**. That puts the enterprise value at about **$5.7 billion**.",
+ "Shareholders can choose cash, Cenovus shares, or a mix, but in the end it will be **between 65% and 75% cash**. In the max-cash case, that's $4.3 billion in cash and about 32 million new Cenovus shares, roughly 1.7% of the company.",
+ "In terms of multiples, they're paying about **10 times cash flow** on Athabasca's 2026 exit rate, which drops to around **7 times in 2027** once you include synergies and growth.",
+ "On timing: the deal was announced October 5th, the shareholder vote is in late November, and they expect to close in December. After that, Cenovus expects **$85 million a year of synergies**, mostly in the first year. On the call they explained these come from lower G&A and financing costs, plus better transportation and marketing deals.",
+]),
+("Slide 6 — Strategic Rationale", [
+ "So, why is Cenovus buying this? Two main reasons.",
+ ["**The first is scale right in its backyard.** It adds about 45,000 barrels a day, around 4.5% more production, and these assets sit right next to Christina Lake, Cenovus' biggest asset. Together they become the number one SAGD player in Canada by production, efficiency and resource.",
+  "**The second is cost.** Cenovus wants to run these wells with its own playbook and cut the steam-to-oil ratio by about 20%, which basically means using less steam, and so less gas, for every barrel."],
+ "And something they remarked on the conference call was that **this acquisition is about the quality of the resource, not just the size**. Their point was that in this basin you often find companies that own a great resource but have undercapitalized it for years, and that's exactly where Cenovus can step in and accelerate the growth.",
+ "On the right side, two more things. Leismer and Corner border Christina Lake, which opens the door to Cenovus' undeveloped May River and Thornbury lands, around 550 million barrels of resource, without building a new plant. And in the Duvernay, Cenovus goes from owning **30% of the JV to 100%**.",
+]),
+("Slide 7 — Financial Metrics", [
+ "Looking at the financials. On the left is the growth plan. On its own, Athabasca was heading to around 90,000 barrels a day by 2035. Cenovus' plan gets thermal production to **115,000 barrels a day by 2032**, that's 25,000 more and three years earlier, mainly by expanding Leismer to over 60,000 and bringing Corner forward. That needs around $700 to $800 million a year of capex through 2030.",
+ "On the right is the pro forma. This is a **bolt-on**: production goes up about 4.5% to around 1,035,000 barrels a day, reserves up about 14% to 10.9 billion barrels, and cash flow up around 5%.",
+ "The important part is that **the deal is accretive**. Cenovus expects it to be accretive to adjusted funds flow per share in 2027, and in our estimate it's about **+1.6%**. Also, something they pointed out on the call: they **bought back 34 million shares in the third quarter**, which already offsets the roughly 32 million shares they'll issue.",
+ "And leverage stays low, with net debt of $5 to 5.5 billion by year-end, well under half a year of cash flow.",
+]),
+("Slide 8 — Cenovus Proven Track Record", [
+ "Now, why should we believe Cenovus can actually do this? Because they've done it before.",
+ "On the left, every SAGD asset they run has grown under their operating model: Lloydminster went up 38%, Sunrise 39%, and Foster Creek and Christina Lake 17%. In total, that's around **125,000 barrels a day added**, and they're planning another 20,000 at Christina Lake North, which they bought from MEG last year.",
+ "On the right is what they're really paying for. They pay around **$127,000 for every barrel a day** Athabasca produces today, which on its own is expensive. But if you divide the same $5.7 billion by the 135,000 barrels a day they plan to reach by 2032, it falls to around **$42,000**.",
+ "So basically, **this deal only makes sense if Cenovus delivers the growth**, and that's exactly what their track record supports.",
+]),
+("Slide 9 — Market Reaction", [
+ "Finally, the market reaction. After the announcement, Athabasca's stock jumped about **13.9% to $12.05**, basically right at the $12 offer price.",
+ "That tells us the market sees the deal as very likely to close, with little expectation of a competing bid.",
+]),
+]
+
+
+def add_runs(p, text):
+    for i, part in enumerate(re.split(r'\*\*', text)):
+        if not part: continue
+        r = p.add_run(part)
+        r.bold = (i % 2 == 1)
+
+
+doc = Document()
+st = doc.styles['Normal']
+st.font.name = 'Aptos'
+st.font.size = Pt(11)
+for head, items in SCRIPT:
+    hp = doc.add_paragraph()
+    r = hp.add_run(head); r.bold = True; r.font.highlight_color = WD_COLOR_INDEX.GRAY_25
+    for it in items:
+        if isinstance(it, list):
+            for b in it:
+                p = doc.add_paragraph(style='List Bullet')
+                p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                add_runs(p, b)
+        else:
+            p = doc.add_paragraph()
+            p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+            add_runs(p, it)
+doc.save('guion.docx')
+print('ok')

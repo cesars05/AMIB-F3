@@ -1,0 +1,14 @@
+---
+name: deck-writing-style
+description: How the user wants slide bullets written and how to edit their Aztlan decks
+metadata:
+  node_type: memory
+  type: feedback
+  originSessionId: 09c8f3ad-6700-44b3-a2be-8be9e87b310e
+  modified: 2026-10-05T18:58:05.338Z
+---
+
+Write slide bullets as short but complete, natural sentences (bold lead-in + plain explanation), not telegraphic fragments joined by semicolons. Left-align text in narrow boxes so justified spacing doesn't leave gaps. The user rebuilds slides themselves in the Aztlan template; edit their latest file (save as a new _vN copy) and change only the slides and areas they name. Always state explicitly whether a deal is accretive or dilutive.
+
+**Why:** On the Athabasca/Cenovus deck (Oct 2026) the user said my bullets read "medio cortados" and they didn't love my layout, so they rebuilt the slides and asked only for wording and content fixes.
+**How to apply:** For any Aztlan deck work, keep their layout, fill or reword only the requested parts, and render every slide to check before delivering. See [[aztlan-deck-template]].

@@ -1,0 +1,53 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions")
+Write-Output ("ESTADO: modulo venta J74='"+[string]$as.Range("J74").Text+"'  ano "+[string]$as.Range("J75").Text+"  mult "+[string]$as.Range("J76").Text+"  | Cash Sweep J80='"+[string]$as.Range("J80").Text+"'")
+$LT=@{1="A";2="B";3="C";4="D";5="E";6="F";7="G";8="H";9="I";10="J";11="K";12="L";13="M";14="N";15="O";16="P";17="Q";18="R";19="S";20="T"}
+
+$su=$wb.Worksheets.Item("Summary")
+Write-Output ""
+Write-Output "########## SUMMARY: filas 30..60, columnas C..N ##########"
+for($i=30;$i -le 60;$i++){
+  $lab=""
+  foreach($cc in 2,3){ $t=""; try{ $t=[string]$su.Cells.Item($i,$cc).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  $v=""
+  foreach($c in 4,5,6,7,8,9,10,11,12,13,14){ $t=""; try{ $t=[string]$su.Cells.Item($i,$c).Text }catch{}; $v+=$t.PadLeft(11) }
+  if(($lab+$v).Trim() -ne ""){ Write-Output ("r"+([string]$i).PadRight(4)+$lab.PadRight(26)+$v) }
+}
+Write-Output ""
+Write-Output "--- SUMMARY: formulas de la columna CAGR y encabezados ---"
+for($i=36;$i -le 60;$i++){
+  foreach($c in 11,12,13,14){
+    $f=""; try{ $f=[string]$su.Cells.Item($i,$c).Formula }catch{}
+    if($f -ne ""){ Write-Output ("  "+$LT[$c]+$i+"  = "+$f) }
+  }
+}
+
+foreach($pair in @(@("Segment Model",10,237),@("Consolidated Model",10,120))){
+  $sh=$wb.Worksheets.Item([string]$pair[0])
+  Write-Output ""
+  Write-Output ("########## "+[string]$pair[0]+": columnas R y S ##########")
+  Write-Output ("  encabezados: R9='"+[string]$sh.Cells.Item(9,18).Text+"'  S9='"+[string]$sh.Cells.Item(9,19).Text+"'   R8='"+[string]$sh.Cells.Item(8,18).Text+"'  S8='"+[string]$sh.Cells.Item(8,19).Text+"'")
+  $n=0
+  for($i=[int]$pair[1];$i -le [int]$pair[2];$i++){
+    $fr=""; $fs=""
+    try{ $fr=[string]$sh.Cells.Item($i,18).Formula }catch{}
+    try{ $fs=[string]$sh.Cells.Item($i,19).Formula }catch{}
+    if($fr -ne "" -or $fs -ne ""){
+      $lab=""
+      foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$sh.Cells.Item($i,$cc).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+      if($lab.Length -gt 34){ $lab=$lab.Substring(0,34) }
+      Write-Output ("  r"+([string]$i).PadRight(4)+$lab.PadRight(35)+" R="+([string]$sh.Cells.Item($i,18).Text).PadLeft(9)+"  "+$fr)
+      if($fs -ne ""){ Write-Output ("       S="+([string]$sh.Cells.Item($i,19).Text).PadLeft(9)+"  "+$fs) }
+      $n++
+    }
+  }
+  Write-Output ("  -> filas con algo en R/S: "+$n)
+}

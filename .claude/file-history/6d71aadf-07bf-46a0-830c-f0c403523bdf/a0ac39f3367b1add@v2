@@ -1,0 +1,101 @@
+import pickle, time, pywintypes
+import engine as E
+from build_live_helpers import *   # noqa
+M = pickle.load(open(E.S + "/model_layout.pkl", "rb"))
+def Lc(n):
+    s = ""
+    while n: n, r = divmod(n - 1, 26); s = chr(65 + r) + s
+    return s
+RT = wb.Worksheets("Attr Returns"); A = wb.Worksheets("Attribution"); S = wb.Worksheets("Summary"); AZ = wb.Worksheets("AZTD")
+d0, dl = 8, 8 + len(E.META) - 1
+col = lambda c: f"'Attr Returns'!${c}${d0}:${c}${dl}"
+hdr = RT.Range("A7:CZ7").Value[0]
+ci = lambda txt: [k for k, v in enumerate(hdr) if v and str(v).startswith(txt)][0] + 1
+NAME, REG = col("D"), col("H")
+SEC = col(Lc(ci("GICS sector (used)"))); YTD = col(Lc(ci("Return YTD-26"))); R3Y = col(Lc(ci("3Y return (ann")))
+MOD, SLP, STB, TAC, PW, NP, AW, MC, ADV = (col(Lc(91 + k)) for k in range(9))
+
+MS = sheet("Model Screen", "Attribution"); base(MS)
+MS.Cells.Font.Size = 10
+fmt_from(TITLE, MS.Range("C2:N2")); MS.Range("C2").Value = "Model 1.1 Screen - Peers vs AZTD"
+note(MS, "C3", "What the peers hold that ranks high in our Model 1.1, and where AZTD is weak. Scores: 'Quant Model Aug' (31-Aug-26). "
+               "Holdings: Aug-26 weights in each '<fund> Data' tab. Returns: YTD-26 in USD; 3Y = Sep-23 to Aug-26 annualized, local (Workspace).")
+widths = {"C": 38, "D": 24, "E": 22, "F": 11, "G": 11, "H": 11, "I": 11, "J": 10, "K": 12, "L": 13, "M": 13, "N": 3}
+for c, w in widths.items(): MS.Columns(c).ColumnWidth = w
+INP = AZ.Range("D4")
+def inp(cell, val, fmt):
+    c = MS.Range(cell); c.Value = val; c.NumberFormat = fmt
+    c.Interior.Color = INP.Interior.Color; c.Font.Color = INP.Font.Color; c.Font.Name = "Arial"; c.HorizontalAlignment = -4108
+    for b in (7, 8, 9, 10): c.Borders(b).LineStyle = 1; c.Borders(b).Weight = 1
+def hdr_row(r, labels, last="M"):
+    fmt_from(BAR, MS.Range(f"C{r}:{last}{r}")); put(MS, f"C{r}", [labels])
+    MS.Range(f"D{r}:{last}{r}").WrapText = True; MS.Range(f"D{r}:{last}{r}").HorizontalAlignment = -4108
+    MS.Rows(r).RowHeight = 30; MS.Range(f"C{r}").HorizontalAlignment = -4131
+# ---- filters
+hdr_row(5, ["Screen filters (edit the yellow cells)", "Value"], "D")
+for i, (lab, val, fmt) in enumerate((("Min market cap (US$ m)", 500, "#,##0"), ("Min average daily traded value (US$ m)", 1, "0.0"),
+                                      ("Min peer average weight", 0.0005, "0.00%"))):
+    MS.Range(f"C{6+i}").Value = lab; inp(f"D{6+i}", val, fmt)
+note(MS, "C9", "AZTD's smallest current holding is ~US$500m market cap; filters keep the screen to names AZTD could realistically own.")
+TH, TA, TW = "$D$6", "$D$7", "$D$8"
+liq = f"(IFERROR(--{MC},0)>={TH})*(IFERROR(--{ADV},0)>={TA})*({PW}>={TW})"
+isnum = f"ISNUMBER({MOD})"
+# ---- quality mix
+q0 = 11
+hdr_row(q0, ["Weight by Model 1.1 bucket (Aug-26)", "0.8 - 1.0", "0.6 - 0.8", "0.4 - 0.6", "< 0.4", "Not scored",
+             "Wtd avg Model 1.1", "Wtd avg Stability"], "J")
+hrow = {"AZTD": 10, "AVDV": 11, "ISCF": 10, "DISV": 10, "DFIS": 10}
+for i, f in enumerate(E.FUNDS):
+    rr = q0 + 1 + i; s = hrow[f] + 1; dt = f"'{f} Data'"
+    w, m, st = f"{dt}!$O${s}:$O$4000", f"{dt}!$P${s}:$P$4000", f"{dt}!$R${s}:$R$4000"; tot = f"SUM({w})"
+    put(MS, f"C{rr}", [[f, f'=SUMIFS({w},{m},">=0.8")/{tot}', f'=SUMIFS({w},{m},">=0.6",{m},"<0.8")/{tot}', f'=SUMIFS({w},{m},">=0.4",{m},"<0.6")/{tot}',
+                        f'=SUMIFS({w},{m},">0",{m},"<0.4")/{tot}', f"=1-SUM(D{rr}:G{rr})", f'=SUMPRODUCT({w},{m})/SUMIFS({w},{m},">0")',
+                        f'=SUMPRODUCT({w},{st})/SUMIFS({w},{st},">0")']])
+MS.Range(f"D{q0+1}:H{q0+5}").NumberFormat = "0.0%"; MS.Range(f"I{q0+1}:J{q0+5}").NumberFormat = "0.00"
+MS.Range(f"D{q0+1}:J{q0+5}").HorizontalAlignment = -4108; MS.Range(f"C{q0+1}:J{q0+1}").Font.Bold = True
+fc = MS.Range(f"D{q0+1}:D{q0+5}").FormatConditions; fc.Delete(); fc.AddDatabar()
+LABS = ["Sector", "Region", "Model 1.1", "Stability", "6M Slope", "Tactical", "# peers", "Peer avg wt", "Return YTD-26", "3Y return (ann.)"]
+def fmt_block(r, n):
+    MS.Range(f"F{r+1}:I{r+n}").NumberFormat = "0.00"; MS.Range(f"J{r+1}:J{r+n}").NumberFormat = "0"
+    MS.Range(f"K{r+1}:K{r+n}").NumberFormat = "0.00%"; MS.Range(f"L{r+1}:M{r+n}").NumberFormat = "0.0%"
+    MS.Range(f"D{r+1}:M{r+n}").HorizontalAlignment = -4108; MS.Range(f"D{r+1}:E{r+n}").Font.Size = 9
+    for i in range(n):
+        MS.Range(f"C{r+1+i}:M{r+1+i}").Borders(9).LineStyle = 1; MS.Range(f"C{r+1+i}:M{r+1+i}").Borders(9).Color = 0xD9D9D9
+    for cc in ("F", "G", "I"):
+        fc = MS.Range(f"{cc}{r+1}:{cc}{r+n}").FormatConditions; fc.Delete()
+        c1 = fc.Add(1, 7, "=0.7"); c1.Font.Bold = True
+        c2 = fc.Add(1, 8, "=0.4"); c2.Font.Color = 0x0000FF
+    for cc in ("L", "M"):
+        fc = MS.Range(f"{cc}{r+1}:{cc}{r+n}").FormatConditions; fc.Delete()
+        c2 = fc.Add(1, 6, "=0"); c2.Font.Color = 0x0000FF
+def block(r, title, cond, n, wcol=PW, sort_cols="{4,9}", orders="{-1,-1}", labs=LABS):
+    hdr_row(r, [title] + labs); MS.Rows(r).RowHeight = 32
+    tbl = f"HSTACK({NAME},{SEC},{REG},{MOD},{STB},{SLP},{TAC},{NP},{wcol},{YTD},{R3Y})"
+    fx = f'=IFERROR(TAKE(SORT(FILTER({tbl},{cond}),{sort_cols},{orders}),{n}),"")'
+    R(lambda: setattr(MS.Range(f"C{r+1}"), "Formula2", fx))
+    fmt_block(r, n)
+    return r + n + 2
+r = q0 + 8
+B1 = r; r = block(r, "Top 20 by Model 1.1 held by peers - NOT in AZTD", f"{isnum}*{liq}*({AW}=0)", 20)
+B2 = r; r = block(r, "Consensus: top 20 by Model 1.1 held by 2+ peers - NOT in AZTD", f"{isnum}*{liq}*({NP}>=2)*({AW}=0)", 20)
+B3 = r; r = block(r, "AZTD holdings with the LOWEST Model 1.1 (Aug-26)", f"{isnum}*({AW}>0)", 10, wcol=AW, sort_cols="4", orders="1",
+                  labs=LABS[:7] + ["AZTD wt"] + LABS[8:])
+note(MS, f"C{r-1}", "Bold = score >= 0.70; red = score <= 0.40 or negative return. Tactical blank = not scored in the Quant Model.")
+MS.Activate(); app.ActiveWindow.DisplayGridlines = False; MS.Range("A1").Select()
+# ---- repoint Summary block, then remove the old section from Attribution
+anchor = None
+for rr in range(15, 200):
+    if str(S.Range(f"B{rr}").Value or "").startswith("Top Model 1.1 names peers hold"):
+        anchor = rr; break
+for i in range(10):
+    rr = anchor + 1 + i; ar = B1 + 1 + i
+    put(S, f"B{rr}", [[f"='Model Screen'!C{ar}", f"='Model Screen'!D{ar}", f"='Model Screen'!F{ar}", f"='Model Screen'!G{ar}",
+                       f"='Model Screen'!H{ar}", f"='Model Screen'!J{ar}", f"='Model Screen'!L{ar}", f"='Model Screen'!M{ar}"]])
+S.Range(f"B{anchor+11}").Value = "Full screen (filters, consensus names, weakest AZTD holdings, quality mix by fund) in the 'Model Screen' tab."
+top = M["M1"] - 2   # section title row
+end = M["M4"] + 8
+assert str(A.Range(f"C{top}").Value).startswith("MODEL 1.1 SCREEN")
+A.Rows(f"{top-1}:{end}").Delete()
+app.Calculation = -4105; app.ScreenUpdating = True
+pickle.dump(dict(B1=B1, B2=B2, B3=B3, Q=q0), open(E.S + "/model_layout.pkl", "wb"))
+print("model tab", B1, B2, B3)

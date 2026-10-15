@@ -1,0 +1,175 @@
+import openpyxl
+from pptx import Presentation
+from pptx.chart.data import CategoryChartData
+from pptx.enum.chart import XL_CHART_TYPE, XL_LABEL_POSITION, XL_LEGEND_POSITION
+from pptx.util import Pt
+from pptx.dml.color import RGBColor
+from lxml import etree
+
+M = r"G:\.shortcut-targets-by-id\1wYoG0nnC8svaqyBKZ-61uOpLfK_2VHVY\AZTLAN\Advisory\Arabela\01 Modelo Vigente\ArabelaModelo2026_v12 (Julio).xlsx"
+wb = openpyxl.load_workbook(M, data_only=True, read_only=True)
+
+def find_rows(sheet):
+    return [list(r) for r in wb[sheet].iter_rows(values_only=True)]
+
+bs = find_rows("Balance General")
+hdr = [r for r in bs if 2026 in r and 2025 in r][0]
+i26 = hdr.index(2026)
+def get(rows, label):
+    for r in rows:
+        if label in r[:3]:
+            return r[i26]
+nd = (get(bs, "Deuda Corto Plazo") + get(bs, "Deuda Largo Plazo")
+      + get(bs, "Factoraje") - get(bs, "Efectivo y Equivalentes"))
+rm = find_rows("Resumen Modelo")
+h2 = [r for r in rm if 2026 in r and 2025 in r][0]
+e26 = [r for r in rm if "Adj. EBITDA (Interno)" in r[:3]][0][h2.index(2026)]
+mult = 4652.0 / 772.0
+ev26 = mult * e26
+eq26 = ev26 - nd
+ev23, nd23, eq23 = 4652.0, 664.0, 3988.0
+print("ND", nd, "EBITDA26", e26, "mult", mult, "EV", ev26, "EQ", eq26)
+
+p = Presentation(r"C:\Users\cesar\Downloads\20261012_Arabela.pptx")
+
+def settext(obj, t):
+    tf = obj.text_frame
+    para = tf.paragraphs[0]
+    if para.runs:
+        para.runs[0].text = t
+        for r in para.runs[1:]:
+            r.text = ""
+    else:
+        para.text = t
+    for extra in tf.paragraphs[1:]:
+        extra._p.getparent().remove(extra._p)
+
+def byname(s, n):
+    return [x for x in s.shapes if x.name == n][0]
+
+# ---------- Slide 4: EBITDA
+s = p.slides[2]
+settext(byname(s, "Title 2"), "El Adj. EBITDA 2026P es 12% menor al de 2023")
+settext(byname(s, "Subtitle 3"), "Las proyecciones de 2023 se cumplieron hasta 2025; desde 2026 la brecha se amplía")
+settext(byname(s, "TextBox 8"), "Adj. EBITDA proyectado en la valuación de 2023")
+settext(byname(s, "TextBox 16"), "Adj. EBITDA real y modelo vigente")
+settext(byname(s, "Text Placeholder 4"), "Fuente: Valuación Arabela (noviembre 2023); Modelo Arabela 2026 v12 (julio 2026). 2026P–2028P corresponden al modelo vigente.")
+
+# ---------- Slide 5: Covenants
+s = p.slides[4]
+settext(byname(s, "Title 2"), "Apalancamiento: pico en 2024 y normalización")
+settext(byname(s, "Subtitle 3"), "Deuda / EBITDA y cobertura de intereses, 2023–2028P, frente a los límites contractuales")
+settext(byname(s, "TextBox 8"), "Deuda / EBITDA")
+settext(byname(s, "TextBox 9"), "Veces; límite máximo de 3.0x")
+settext(byname(s, "TextBox 16"), "Cobertura de intereses")
+settext(byname(s, "TextBox 17"), "Veces; límite mínimo de 1.20x")
+settext(byname(s, "Text Placeholder 4"), "Fuente: Modelo Arabela 2026 v12 (julio 2026), caso conservador; EBITDA de bancos. 2023 de Resumen Modelo; 2024–2028P de la hoja Covenants. Límite de 3.0x según Resumen Modelo (la hoja Covenants usa 3.5x).")
+old = [x for x in s.shapes if x.has_chart][0]
+L, T, W, H = old.left, old.top, old.width, old.height
+old._element.getparent().remove(old._element)
+yrs = ["2023", "2024", "2025", "2026P", "2027P", "2028P"]
+CNS = "http://schemas.openxmlformats.org/drawingml/2006/chart"
+C = "{%s}" % CNS
+
+def covchart(left, vals, limit, fmt, mx):
+    cd = CategoryChartData(number_format=fmt)
+    cd.categories = yrs
+    cd.add_series("Real / proyectado", vals)
+    cd.add_series("Límite covenant", [limit] * 6)
+    gf = s.shapes.add_chart(XL_CHART_TYPE.COLUMN_CLUSTERED, left, T, W, H, cd)
+    ch = gf.chart
+    ch.has_legend = True
+    ch.legend.include_in_layout = False
+    ch.legend.position = XL_LEGEND_POSITION.BOTTOM
+    ch.legend.font.size = Pt(11)
+    ch.font.size = Pt(12)
+    va = ch.value_axis
+    va.visible = False
+    va.has_major_gridlines = False
+    va.minimum_scale = 0
+    va.maximum_scale = mx
+    ch.category_axis.format.line.color.rgb = RGBColor(0x80, 0x80, 0x80)
+    pl = ch.plots[0]
+    pl.gap_width = 60
+    s1 = pl.series[0]
+    s1.format.fill.solid()
+    s1.format.fill.fore_color.rgb = RGBColor(0x1F, 0x3A, 0x5F)
+    dl = s1.data_labels
+    dl.show_value = True
+    dl.number_format = fmt
+    dl.number_format_is_linked = False
+    dl.position = XL_LABEL_POSITION.OUTSIDE_END
+    dl.font.size = Pt(12)
+    bar = ch._chartSpace.xpath(".//c:barChart")[0]
+    ser2 = bar.xpath("c:ser")[1]
+    bar.remove(ser2)
+    for e in ser2.xpath("c:invertIfNegative") + ser2.xpath("c:spPr"):
+        ser2.remove(e)
+    line = etree.Element(C + "lineChart")
+    etree.SubElement(line, C + "grouping").set("val", "standard")
+    etree.SubElement(line, C + "varyColors").set("val", "0")
+    line.append(ser2)
+    sp = etree.fromstring(
+        '<c:spPr xmlns:c="%s" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">'
+        '<a:ln w="28575" cap="rnd"><a:solidFill><a:srgbClr val="C0392B"/></a:solidFill>'
+        '<a:prstDash val="dash"/><a:round/></a:ln></c:spPr>' % CNS)
+    ser2.xpath("c:tx")[0].addnext(sp)
+    mk = etree.fromstring('<c:marker xmlns:c="%s"><c:symbol val="none"/></c:marker>' % CNS)
+    sp.addnext(mk)
+    etree.SubElement(line, C + "marker").set("val", "1")
+    for ax in bar.xpath("c:axId"):
+        etree.SubElement(line, C + "axId").set("val", ax.get("val"))
+    bar.addnext(line)
+    return ch
+
+covchart(L, [1.21, 3.38, 2.26, 2.68, 2.57, 2.34], 3.0, '0.00"x"', 4.2)
+covchart(6288186, [2.40, 1.27, 1.99, 1.94, 2.10, 2.00], 1.2, '0.00"x"', 3.0)
+
+# ---------- Slide 6: Valuación
+s = p.slides[5]
+settext(byname(s, "Title 2"), "Mismo múltiplo, 20% menos valor de capital")
+settext(byname(s, "Subtitle 3"), "Múltiplo de 6.03x sobre Adj. EBITDA 2026P: el valor de empresa sube 5%, el de capital cae 20%")
+settext(byname(s, "Text Placeholder 4"), "Fuente: Valuación Arabela vF2 (noviembre 2023); contrapropuesta FSM (diciembre 2023); Modelo Arabela 2026 v12 (julio 2026). *Deuda neta 2026P = deuda financiera + factoraje – caja. En 2023 el múltiplo se aplicó al Adj. EBITDA 2024E; hoy se aplica al 2026P.")
+f1 = lambda v: f"${v:,.1f}"
+f0 = lambda v: f"${v:,.0f}"
+lt = byname(s, "Table 14").table
+vals = [("Supuestos de Valuación", ""), (" Concepto", "Valor"),
+        (" Salida FSM (2023)", "\xa0"), (" EV / Adj. EBITDA 24E", "%.2fx" % mult),
+        (" Hoy (2026P)", "\xa0"), (" Adj. EBITDA 2026P", f1(e26)),
+        (" Deuda neta 2026P*", f1(nd)), (" Múltiplo aplicado", "%.2fx" % mult),
+        (" Valor por 1%", f1(eq26 / 100))]
+for r, (a, b) in zip(lt.rows, vals):
+    settext(r.cells[0], a)
+    settext(r.cells[1], b)
+bt = byname(s, "Table 11").table
+d = lambda a, b: f"{b - a:+,.0f}"
+pc = lambda a, b: f"{(b / a - 1) * 100:+.1f}%"
+rows = [("(En millones MXN)", "Salida FSM (2023)", "Hoy (2026P)", "Var. MXN", "Var. %"),
+        ("Adj. EBITDA base", "$772", "$%.0f" % e26, d(772, e26), pc(772, e26)),
+        ("Múltiplo EV / Adj. EBITDA", "%.2fx" % mult, "%.2fx" % mult, "–", "–"),
+        ("Valor de Empresa", f0(ev23), f0(ev26), d(ev23, ev26), pc(ev23, ev26)),
+        ("Deuda Neta", f0(nd23), f0(nd), d(nd23, nd), pc(nd23, nd)),
+        ("Valor de Capital", f0(eq23), f0(eq26), d(eq23, eq26), pc(eq23, eq26)),
+        ("Valor por 1% de Capital", f1(eq23 / 100), f1(eq26 / 100), f"{(eq26 - eq23) / 100:+,.1f}", pc(eq23, eq26))]
+for r, vs in zip(bt.rows, rows):
+    for c, v in zip(r.cells, vs):
+        settext(c, v)
+settext(byname(s, "Rectangle: Rounded Corners 13"), "Var. Valor de Capital: %s" % pc(eq23, eq26))
+settext(byname(s, "TextBox 15"), "En millones de pesos")
+ch = [x for x in s.shapes if x.has_chart][0].chart
+cd = CategoryChartData(number_format='"$"#,##0')
+NL = chr(10)
+cd.categories = ["Salida FSM (2023)" + NL + "Valor de empresa: " + f0(ev23), "Hoy (2026P)" + NL + "Valor de empresa: " + f0(ev26)]
+cd.add_series("Deuda Neta", [nd23, nd])
+cd.add_series("Valor de Capital", [eq23, eq26])
+ch.replace_data(cd)
+ch.value_axis.maximum_scale = 5200
+ch.value_axis.minimum_scale = 0
+for se in ch.plots[0].series:
+    dl = se.data_labels
+    dl.show_value = True
+    dl.number_format = '"$"#,##0'
+    dl.number_format_is_linked = False
+    dl.font.size = Pt(12)
+p.save(r"C:\Users\cesar\Downloads\20261012_Arabela_v2.pptx")
+print("saved")

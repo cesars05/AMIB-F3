@@ -1,0 +1,1023 @@
+import openpyxl
+from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+from openpyxl.utils import get_column_letter as L
+
+OUT = r"G:\.shortcut-targets-by-id\1wYoG0nnC8svaqyBKZ-61uOpLfK_2VHVY\AZTLAN\Research\Company Research\Materials\2_Ingevity\20261007_New Ingevity_ProForma.xlsx"
+
+wb = openpyxl.Workbook()
+BLUE = Font(name="Arial", size=10, color="0000FF")
+BLK = Font(name="Arial", size=10, color="000000")
+BOLD = Font(name="Arial", size=10, bold=True)
+HDR = Font(name="Arial", size=10, bold=True, color="FFFFFF")
+TTL = Font(name="Arial", size=14, bold=True)
+NOTE = Font(name="Arial", size=9, italic=True, color="595959")
+HFILL = PatternFill("solid", fgColor="1F3864")
+SFILL = PatternFill("solid", fgColor="D9E1F2")
+YFILL = PatternFill("solid", fgColor="FFF2CC")
+N1 = '#,##0.0;(#,##0.0);"-"'
+PCT = '0.0%;(0.0%);"-"'
+EPS = '$0.00;($0.00);"-"'
+MULT = '0.0"x"'
+thin = Side(style="thin", color="999999")
+
+
+def put(ws, ref, v, fmt=None, bold=False, font=None, fill=None, wrap=False, align=None):
+    c = ws[ref]
+    c.value = v
+    if font:
+        c.font = font
+    elif isinstance(v, str) and v.startswith("="):
+        c.font = BOLD if bold else BLK
+    elif isinstance(v, (int, float)):
+        c.font = Font(name="Arial", size=10, color="0000FF", bold=bold)
+    else:
+        c.font = BOLD if bold else BLK
+    if fmt:
+        c.number_format = fmt
+    if fill:
+        c.fill = fill
+    if wrap or align:
+        c.alignment = Alignment(wrap_text=wrap, horizontal=align, vertical="top" if wrap else None)
+    return c
+
+
+def header(ws, row, labels, start_col=1):
+    for i, t in enumerate(labels):
+        c = ws.cell(row=row, column=start_col + i, value=t)
+        c.font = HDR
+        c.fill = HFILL
+        c.alignment = Alignment(horizontal="center" if i else "left", wrap_text=True)
+
+
+def section(ws, row, text, ncols):
+    for i in range(1, ncols + 1):
+        ws.cell(row=row, column=i).fill = SFILL
+    ws.cell(row=row, column=1, value=text).font = BOLD
+
+
+# =====================================================================
+# INPUTS
+# =====================================================================
+wi = wb.active
+wi.title = "Inputs"
+put(wi, "A1", "Inputs - New Ingevity pro forma (US$ M, salvo indicacion)", font=TTL)
+put(wi, "A2", "Azul = input / dato de filing; negro = formula. Celdas amarillas = selectores.", font=NOTE)
+put(wi, "A3", "Escenario operativo (1=Bear, 2=Base, 3=Bull)", bold=True)
+put(wi, "C3", 2, fill=YFILL)
+put(wi, "A4", "Caso venta APT (0=sin venta, 1=Low, 2=Base, 3=High)", bold=True)
+put(wi, "C4", 2, fill=YFILL)
+put(wi, "A5", "Escenario activo")
+put(wi, "C5", '=CHOOSE(C3,"Bear","Base","Bull")')
+put(wi, "D5", '=CHOOSE(C4+1,"Sin venta","Low","Base","High")')
+
+header(wi, 7, ["Driver (escenario)", "Bear", "Base", "Bull", "Activo", "Nota / fuente"])
+A = {}
+scen = [
+    ("pm_h2_g", "PM - crec. ventas H2'26 vs H2'25", -0.02, 0.01, 0.03, PCT, "H1'26 +5.1% YoY. Q2 call: autos NA mas debiles en H2 + paros planeados en 2 plantas."),
+    ("pm_h2_m", "PM - margen EBITDA H2'26", 0.50, 0.526, 0.545, PCT, "Guia FY26 'mid-50s'; H1'26 = 56.4%; CFO: 'leve presion' en H2 (Q2 call)."),
+    ("pm_g27", "PM - crec. ventas 2027", 0.0, 0.015, 0.03, PCT, "Mgmt: LSD (Investor Day dic-25). Target PM 2027E: 610-635."),
+    ("pm_m27", "PM - margen EBITDA 2027", 0.515, 0.535, 0.55, PCT, "Mgmt PF ~53%; '50%+ foreseeable future'. Upside: mix hibrido / filtracion."),
+    ("pm_g28", "PM - crec. ventas 2028", 0.005, 0.02, 0.035, PCT, "Extrapolacion; China 7 (~2028-29) es upside no modelado."),
+    ("pm_m28", "PM - margen EBITDA 2028", 0.51, 0.535, 0.555, PCT, "Extrapolacion."),
+    ("pt_g26", "PT core (ex-RM) - crec. ventas 2026 vs PF25 302.6", 0.015, 0.03, 0.045, PCT, "Q1 flat, Q2 +3% ex-RM; Evotherm +8% en Q2; China/SA debil por asfalto caro."),
+    ("pt_m26", "PT core - margen EBITDA 2026", 0.155, 0.167, 0.175, PCT, "Base burdened (costos varados de IS ya asignados a segmentos en 2026)."),
+    ("pt_g27", "PT core - crec. ventas 2027", 0.03, 0.06, 0.07, PCT, "Mgmt 5-7% CAGR; target PT 2027E 330-345. Riesgo: IIJA vencio sep-26."),
+    ("pt_m27", "PT core - margen EBITDA 2027", 0.155, 0.17, 0.18, PCT, "Mgmt ~18% (EBITDA 55-65M)."),
+    ("pt_g28", "PT core - crec. ventas 2028", 0.03, 0.06, 0.07, PCT, "Extrapolacion."),
+    ("pt_m28", "PT core - margen EBITDA 2028", 0.16, 0.175, 0.185, PCT, "Extrapolacion."),
+    ("apt_qe", "APT - EBITDA trimestral H2'26 (solo base reportada 2026)", 6.5, 9.0, 11.0, N1, "Q1'26 7.6; Q2'26 11.2 con vientos a favor (competidores sin suministro, surcharges) que mgmt dice se normalizan."),
+    ("apt_qs", "APT - ventas trimestrales H2'26", 42.0, 44.5, 47.0, N1, "Q1'26 44.3; Q2'26 49.3."),
+]
+r = 8
+for k, lab, b, m, u, f, n in scen:
+    put(wi, f"A{r}", lab)
+    put(wi, f"B{r}", b, f)
+    put(wi, f"C{r}", m, f)
+    put(wi, f"D{r}", u, f)
+    put(wi, f"E{r}", f"=CHOOSE($C$3,B{r},C{r},D{r})", f, bold=True)
+    put(wi, f"F{r}", n, font=NOTE)
+    A[k] = f"Inputs!$E${r}"
+    r += 1
+
+r += 1
+header(wi, r, ["Inputs por ano", "2026E", "2027E", "2028E", "", "Nota / fuente"])
+r += 1
+Y = {}
+yr = [
+    ("corp", "Corporate & other (EBITDA)", -33.0, -31.0, -31.5, N1, "H1'26 = -16.4 (~-33 anualizado). Mgmt PF dic-25: -30 a -35."),
+    ("strand", "Costos varados atribuibles a APT (post-venta)", -5.0, -3.0, -2.0, N1, "Puente 373.0 -> PF 335 deja ~-6 sin explicar (ver Model). Mgmt: 20-25M varados totales; ya eliminaron 10 de 20 (IS/RM), 5 mas con 'line of sight'."),
+    ("da", "D&A PM + PT (perimetro PF)", 58.0, 59.0, 60.0, N1, "Q1'26 14.4 + Q2'26 14.6 (22.0 total - 7.4 APT) anualizado. EPS ajustado NO suma amortizacion."),
+    ("capex", "Capex total (2026 = base reportada incl. APT)", 46.0, 55.0, 58.0, N1, "H1'26 = 20.6; consenso 2026 = 48; mgmt ~60M/ano 'traditional capex' + iniciativas estrategicas."),
+    ("oth", "Otros flujos operativos (capital de trabajo, reestructura, otros)", -35.0, -15.0, -12.0, N1, "Calibrado para que FCF 2026 caiga en guia 220-245. H1'26: reestructura -15.4, inventario mas alto."),
+    ("tax", "Tasa de impuesto ajustada", 0.23, 0.23, 0.23, PCT, "H1'26 efectiva ajustada ~22%; guia EPS implica ~23%."),
+    ("ctax", "% del impuesto que se paga en caja", 0.40, 0.60, 0.80, PCT, "Caja de impuestos H1'26 ~0/negativa; DTA 87M + deduccion litigio BASF."),
+    ("rate", "Tasa de interes neta s/ deuda neta inicial", 0.055, 0.055, 0.055, PCT, "Q2'26: 14.2 x4 = 56.8 sobre ND ~1,020 = 5.6%. Incluye trust de Wickliffe."),
+    ("bb", "Recompras regulares (US$ M) - compromiso >= 300 en 2026-27", 150.0, 150.0, 175.0, N1, "H1'26 ya 86.8. 2028 = supuesto (post-compromiso)."),
+    ("px", "Precio de recompra (US$)", 73.0, 80.0, 87.0, EPS, "Precio hoy ~72.8 (Annual Model). ~+9%/ano. SENSIBLE: cambia acciones retiradas."),
+    ("sbc", "Dilucion SBC (M acciones/ano)", 0.15, 0.30, 0.30, '0.00', "Supuesto."),
+    ("leak", "Otros usos de caja (tax withholding, leases, ops. discontinuadas, FX)", 20.0, 5.0, 5.0, N1, "Residual H1'26 = +19.6 sobre deuda neta."),
+]
+for k, lab, a, b, c, f, n in yr:
+    put(wi, f"A{r}", lab)
+    put(wi, f"B{r}", a, f)
+    put(wi, f"C{r}", b, f)
+    put(wi, f"D{r}", c, f)
+    put(wi, f"F{r}", n, font=NOTE)
+    Y[k] = (f"Inputs!$B${r}", f"Inputs!$C${r}", f"Inputs!$D${r}")
+    r += 1
+
+r += 1
+header(wi, r, ["Escalares / datos de filings", "Valor", "", "", "", "Nota / fuente"])
+r += 1
+S = {}
+sc = [
+    ("nd25", "Deuda neta 31-dic-25 (def. mgmt)", 1048.7, N1, "Q4'25 release, pag. 13."),
+    ("lit", "Pago litigio BASF 2026 (caja, Q2)", 113.2, N1, "Q2'26 release: fuera de FCF guiado."),
+    ("pis", "Proceeds IS + refineria CTO (Q1'26)", 93.1, N1, "Q1'26 call: ~$93M netos. Cash flow H1: sale of businesses 156.3 total."),
+    ("prm", "Proceeds Road Markings (Q2'26)", 63.2, N1, "Q2'26 cash flow: 63.2 (PPG, ~65 bruto)."),
+    ("h1bb", "Recompras H1'26", 86.8, N1, "Q2'26 cash flow."),
+    ("sh_h1", "Acciones diluidas promedio H1'26 (M)", 35.6, '0.00', "Q2'26 release."),
+    ("sh_q2", "Acciones diluidas fin Q2'26 (M) - estimado", 35.05, '0.00', "Estimado: Q2 promedio 35.3 menos ~0.25 por recompras intra-trimestre."),
+    ("px0", "Precio actual (US$)", 72.8, EPS, "Annual Model, FY1."),
+    ("mcap", "Market cap (US$ M)", 2502.7, N1, "Annual Model fila 96."),
+    ("rm_s", "Road Markings - ventas H1'26 (estimado)", 27.0, N1, "ESTIMADO: Q1 ~0.9x Q1'25 + 15 dias de abril. No reportado."),
+    ("rm_e", "Road Markings - EBITDA H1'26 (estimado)", -2.0, N1, "ESTIMADO: Q1'26 PC EBITDA cayo 5.2 por RM; CFO: 'near zero'."),
+    ("rm_s25", "Road Markings - ventas H2'25 (estimado)", 38.0, N1, "FY25 97.9; Q4 16.0; Q3 estimado ~22."),
+    ("apt_da", "APT - D&A 2026E", 30.7, N1, "H1'26 15.7 + H2 ~15.0."),
+    ("apt_cx", "APT - capex anual (estimado)", 10.0, N1, "ESTIMADO, no reportado por segmento."),
+    ("capa", "Capa (APT) - capital invertido proxy 2019", 543.5, N1, "Annual Model, 'Other Investing CF' 2019 (fila 152). Verificar contra 10-K."),
+]
+for k, lab, v, f, n in sc:
+    put(wi, f"A{r}", lab)
+    put(wi, f"B{r}", v, f)
+    put(wi, f"F{r}", n, font=NOTE)
+    S[k] = f"Inputs!$B${r}"
+    r += 1
+
+r += 1
+header(wi, r, ["Venta de APT (supuestos)", "Low", "Base", "High", "", "Nota / fuente"])
+r += 1
+put(wi, f"A{r}", "Multiplo EV / EBITDA normalizado")
+for col, v in zip("BCD", (6.0, 7.5, 9.0)):
+    put(wi, f"{col}{r}", v, MULT)
+put(wi, f"F{r}", "Supuesto. NGVT cotiza ~9x (consenso); el impairment de $32.1M en Q2'26 sugiere venta por debajo de libros.", font=NOTE)
+MULTROW = r
+r += 1
+put(wi, f"A{r}", "EBITDA normalizado de APT")
+put(wi, f"B{r}", 35.0, N1)
+put(wi, f"F{r}", "Promedio 2024-26E (39.0 / 32.1 / ~37). NO usar run-rate Q2 (22.7% margen con ayudas temporales).", font=NOTE)
+S["apt_norm"] = f"Inputs!$B${r}"
+r += 1
+put(wi, f"A{r}", "Fuga (impuestos + costos de transaccion) % del EV")
+put(wi, f"B{r}", 0.12, PCT)
+put(wi, f"F{r}", "Supuesto. Base fiscal de Capa desconocida.", font=NOTE)
+S["leak"] = f"Inputs!$B${r}"
+r += 1
+put(wi, f"A{r}", "% de proceeds netos a recompras extra (resto a deuda)")
+put(wi, f"B{r}", 0.5, PCT)
+put(wi, f"F{r}", "Mgmt: prioridad 1 organico, 2 deuda, 3 recompras; 'mayoria del excedente a deuda' (dic-25) pero ya estan en 2.4-2.5x (rango 2.0-2.5x) y CFO (Jefferies sep-26): proceeds 'podrian acelerar' recompras.", font=NOTE)
+S["pct_bb"] = f"Inputs!$B${r}"
+r += 1
+put(wi, f"A{r}", "Cierre supuesto de la venta")
+put(wi, f"B{r}", "1-ene-2027", font=BLK)
+put(wi, f"F{r}", "Mgmt: 'algo que anunciar este ano'. Anunciar != cerrar. La guia 2026 NO incluye proceeds.", font=NOTE)
+
+r += 2
+header(wi, r, ["Guia, targets y consenso", "Low", "High", "", "", "Fuente"])
+r += 1
+G = {}
+gd = [
+    ("g_sales", "Guia 2026 - ventas", 1050, 1150, N1, "Q2'26 release (incluye APT; excluye IS y RM desde 15-abr)."),
+    ("g_ebitda", "Guia 2026 - EBITDA ajustado", 380, 400, N1, "Q2'26 (elevada desde 370-395)."),
+    ("g_eps", "Guia 2026 - EPS ajustado", 5.00, 5.45, EPS, "Q2'26."),
+    ("g_fcf", "Guia 2026 - FCF (ex litigio 113.2)", 220, 245, N1, "Q2'26."),
+    ("t_rev", "Target 2027E - ventas", 940, 980, N1, "Strategic Portfolio Update dic-25."),
+    ("t_pm_rev", "Target 2027E - ventas PM", 610, 635, N1, ""),
+    ("t_pt_rev", "Target 2027E - ventas PT", 330, 345, N1, ""),
+    ("t_ebitda", "Target 2027E - EBITDA", 350, 370, N1, ""),
+    ("t_mgn", "Target 2027E - margen EBITDA", 0.36, 0.39, PCT, ""),
+    ("t_pm_e", "Target 2027E - EBITDA PM", 325, 340, N1, "~53%."),
+    ("t_pt_e", "Target 2027E - EBITDA PT", 55, 65, N1, "~18%."),
+    ("t_eps", "Target 2027E - EPS ajustado", 6.25, 6.55, EPS, "Incluye recompras + menor interes."),
+    ("t_fcfps", "Target 2027E - FCF/accion", 5.85, 6.15, EPS, "'$200M+' FCF anual."),
+]
+for k, lab, lo, hi, f, n in gd:
+    put(wi, f"A{r}", lab)
+    put(wi, f"B{r}", lo, f)
+    put(wi, f"C{r}", hi, f)
+    put(wi, f"F{r}", n, font=NOTE)
+    G[k] = (f"Inputs!$B${r}", f"Inputs!$C${r}")
+    r += 1
+r += 1
+header(wi, r, ["Consenso LSEG (incluye APT)", "2026E", "2027E", "2028E", "", "Fuente"])
+r += 1
+CONS = {}
+for k, lab, a, b, c, f in [
+    ("c_rev", "Ventas", 1113.7, 1129.7, 1153.0, N1),
+    ("c_ebitda", "EBITDA", 392.3, 413.3, 429.0, N1),
+    ("c_eps", "EPS (TR.EPSMean)", 5.36, 6.05, 6.82, EPS),
+]:
+    put(wi, f"A{r}", lab)
+    put(wi, f"B{r}", a, f)
+    put(wi, f"C{r}", b, f)
+    put(wi, f"D{r}", c, f)
+    put(wi, f"F{r}", "Annual Model filas 16-22. Brecha de ~170M en ventas vs perimetro PF => consenso aun incluye APT.", font=NOTE)
+    CONS[k] = (f"Inputs!$B${r}", f"Inputs!$C${r}", f"Inputs!$D${r}")
+    r += 1
+wi.column_dimensions["A"].width = 62
+for c in "BCDE":
+    wi.column_dimensions[c].width = 12
+wi.column_dimensions["F"].width = 110
+wi.freeze_panes = "B8"
+
+# =====================================================================
+# FY26_Puente
+# =====================================================================
+wp = wb.create_sheet("FY26_Puente")
+put(wp, "A1", "Puente 2026: H1 real + H2 estimado (base reportada: APT todo el ano, RM hasta 15-abr)", font=TTL)
+put(wp, "A2", "Segment EBITDA 2026 ya viene 'burdened' con costos indirectos de IS asignados a segmentos (en 2025 se reportaban aparte).", font=NOTE)
+header(wp, 4, ["Base historica", "FY25A", "H1'25A", "H2'25A", "H1'26A", "H1 YoY"])
+hist = [
+    ("Ventas PM", 606.9, 300.7, 316.0),
+    ("Ventas Perf. Chemicals / Pavement Tech. (incl. RM)", 400.5, 193.2, 162.5),
+    ("Ventas APT", 160.2, 85.5, 93.6),
+    ("EBITDA PM", 326.3, 164.5, 178.1),
+    ("EBITDA PC / PT (incl. RM)", 60.3, 34.6, 26.0),
+    ("EBITDA APT", 32.1, 15.6, 18.8),
+    ("Corporate & other", -31.2, -16.2, -16.4),
+    ("Indirect costs (IS varados)", -14.5, -6.2, 0.0),
+]
+P = {}
+r = 5
+for lab, fy, h1, h26 in hist:
+    put(wp, f"A{r}", lab)
+    put(wp, f"B{r}", fy, N1)
+    put(wp, f"C{r}", h1, N1)
+    put(wp, f"D{r}", f"=B{r}-C{r}", N1)
+    put(wp, f"E{r}", h26, N1)
+    put(wp, f"F{r}", f"=IF(C{r}=0,0,E{r}/C{r}-1)" if r < 12 else "=0", PCT)
+    P[lab] = r
+    r += 1
+put(wp, f"A{r}", "Adj. EBITDA continuo (suma)", bold=True)
+for col in "BCDE":
+    put(wp, f"{col}{r}", f"=SUM({col}8:{col}12)", N1, bold=True)
+put(wp, f"F{r}", "<- chequeo: FY25 = 373.0; H1'25 = 192.3; H1'26 = 206.5", font=NOTE)
+HT = r
+# fix F formulas: ventas rows 5-7, EBITDA rows 8-10, corp rows 11-12
+r += 2
+header(wp, r, ["Proyeccion 2026", "H1'26A", "H2'26E", "FY26E", "H2'25A", "H2 YoY", "Guia low", "Guia high"])
+r += 1
+pr = {}
+
+
+def prow(key, label, b, c, d, e, fmt=N1, bold=False):
+    global r
+    put(wp, f"A{r}", label, bold=bold)
+    if b is not None:
+        put(wp, f"B{r}", b, fmt, bold=bold)
+    if c is not None:
+        put(wp, f"C{r}", c, fmt, bold=bold)
+    if d is not None:
+        put(wp, f"D{r}", d, fmt, bold=bold)
+    if e is not None:
+        put(wp, f"E{r}", e, fmt, bold=bold)
+    if e is not None and c is not None and fmt == N1:
+        put(wp, f"F{r}", f"=IF(E{r}=0,0,C{r}/E{r}-1)", PCT)
+    pr[key] = r
+    r += 1
+
+
+# row numbers of base block
+rs_pm, rs_pc, rs_apt, re_pm, re_pc, re_apt, re_corp, re_ind = 5, 6, 7, 8, 9, 10, 11, 12
+prow("pm_s", "PM - ventas", f"=E{rs_pm}", f"=D{rs_pm}*(1+{A['pm_h2_g']})", f"=B{r}+C{r}", f"=D{rs_pm}")
+prow("rm_s", "Road Markings - ventas (estimado)", f"={S['rm_s']}", "=0", f"=B{r}+C{r}", f"={S['rm_s25']}")
+prow("pt_s", "PT core (ex-RM) - ventas", f"=E{rs_pc}-B{pr['rm_s']}", f"=D{r}-B{r}", f"=Model!C{{PT_S_FY25}}*(1+{A['pt_g26']})", f"=D{rs_pc}-E{pr['rm_s']}")
+prow("apt_s", "APT - ventas", f"=E{rs_apt}", f"=2*{A['apt_qs']}", f"=B{r}+C{r}", f"=D{rs_apt}")
+prow("tot_s", "Ventas totales (base reportada)", f"=B{pr['pm_s']}+B{pr['rm_s']}+B{pr['pt_s']}+B{pr['apt_s']}",
+     f"=C{pr['pm_s']}+C{pr['rm_s']}+C{pr['pt_s']}+C{pr['apt_s']}", f"=D{pr['pm_s']}+D{pr['rm_s']}+D{pr['pt_s']}+D{pr['apt_s']}",
+     f"=E{pr['pm_s']}+E{pr['rm_s']}+E{pr['pt_s']}+E{pr['apt_s']}", bold=True)
+put(wp, f"G{pr['tot_s']}", f"={G['g_sales'][0]}", N1)
+put(wp, f"H{pr['tot_s']}", f"={G['g_sales'][1]}", N1)
+prow("pm_e", "PM - EBITDA", f"=E{re_pm}", f"=C{pr['pm_s']}*{A['pm_h2_m']}", f"=B{r}+C{r}", f"=D{re_pm}")
+prow("pm_m", "  margen PM", f"=B{pr['pm_e']}/B{pr['pm_s']}", f"=C{pr['pm_e']}/C{pr['pm_s']}", f"=D{pr['pm_e']}/D{pr['pm_s']}", f"=E{pr['pm_e']}/E{pr['pm_s']}", fmt=PCT)
+prow("rm_e", "Road Markings - EBITDA (estimado)", f"={S['rm_e']}", "=0", f"=B{r}+C{r}", "=0")
+prow("pt_e", "PT core - EBITDA", f"=E{re_pc}-B{pr['rm_e']}", f"=D{r}-B{r}", f"=D{pr['pt_s']}*{A['pt_m26']}", f"=D{re_pc}-E{pr['rm_e']}")
+prow("pt_m", "  margen PT core", f"=B{pr['pt_e']}/B{pr['pt_s']}", f"=C{pr['pt_e']}/C{pr['pt_s']}", f"=D{pr['pt_e']}/D{pr['pt_s']}", f"=E{pr['pt_e']}/E{pr['pt_s']}", fmt=PCT)
+prow("apt_e", "APT - EBITDA", f"=E{re_apt}", f"=2*{A['apt_qe']}", f"=B{r}+C{r}", f"=D{re_apt}")
+prow("corp", "Corporate & other", f"=E{re_corp}", f"=D{r}-B{r}", f"={Y['corp'][0]}", f"=D{re_corp}")
+prow("ind", "Indirect costs (IS) - ya asignados a segmentos en 2026", f"=E{re_ind}", "=0", f"=B{r}+C{r}", f"=D{re_ind}")
+prow("tot_e", "Adj. EBITDA (base reportada)", f"=B{pr['pm_e']}+B{pr['rm_e']}+B{pr['pt_e']}+B{pr['apt_e']}+B{pr['corp']}+B{pr['ind']}",
+     f"=C{pr['pm_e']}+C{pr['rm_e']}+C{pr['pt_e']}+C{pr['apt_e']}+C{pr['corp']}+C{pr['ind']}",
+     f"=D{pr['pm_e']}+D{pr['rm_e']}+D{pr['pt_e']}+D{pr['apt_e']}+D{pr['corp']}+D{pr['ind']}",
+     f"=E{pr['pm_e']}+E{pr['rm_e']}+E{pr['pt_e']}+E{pr['apt_e']}+E{pr['corp']}+E{pr['ind']}", bold=True)
+put(wp, f"G{pr['tot_e']}", f"={G['g_ebitda'][0]}", N1)
+put(wp, f"H{pr['tot_e']}", f"={G['g_ebitda'][1]}", N1)
+put(wp, f"A{r}", "Dentro de guia EBITDA?")
+put(wp, f"D{r}", f'=IF(AND(D{pr["tot_e"]}>=G{pr["tot_e"]},D{pr["tot_e"]}<=H{pr["tot_e"]}),"OK","FUERA")')
+r += 1
+put(wp, f"A{r}", "Chequeo: H1'26 reconstruido = 206.5 reportado")
+put(wp, f"B{r}", f"=B{pr['tot_e']}-E{HT}", N1)
+r += 1
+put(wp, f"A{r}", "Margen EBITDA (base reportada)")
+put(wp, f"D{r}", f"=D{pr['tot_e']}/D{pr['tot_s']}", PCT)
+put(wp, f"E{r}", f"=E{pr['tot_e']}/E{pr['tot_s']}", PCT)
+# YoY F for historical rows (fix)
+for rr in range(5, 11):
+    put(wp, f"F{rr}", f"=IF(C{rr}=0,0,E{rr}/C{rr}-1)", PCT)
+for rr in (11, 12):
+    put(wp, f"F{rr}", f"=E{rr}-C{rr}", N1)
+wp.column_dimensions["A"].width = 58
+for c in "BCDEFGH":
+    wp.column_dimensions[c].width = 12
+
+# =====================================================================
+# APT
+# =====================================================================
+wa = wb.create_sheet("APT")
+put(wa, "A1", "Advanced Polymer Technologies (Capa) - rentabilidad, valor de venta y uso de los proceeds", font=TTL)
+header(wa, 3, ["Historia anual", "2022", "2023", "2024", "2025", "H1'26", "Nota"])
+ah = [
+    ("Ventas", 244.7, 204.0, 188.6, 160.2, 93.6, "2022-23 base original; 2024 recast (10-K 2025)."),
+    ("EBITDA segmento", 40.0, 44.5, 39.0, 32.1, 18.8, "2024 original = 35.2; 2022-23 con asignacion de costos anterior (no comparable 1:1)."),
+    ("D&A", 29.6, 31.3, 30.8, 33.6, 15.7, ""),
+]
+r = 4
+for lab, a, b, c, d, e, n in ah:
+    put(wa, f"A{r}", lab)
+    for col, v in zip("BCDEF", (a, b, c, d, e)):
+        put(wa, f"{col}{r}", v, N1)
+    put(wa, f"G{r}", n, font=NOTE)
+    r += 1
+put(wa, "A7", "EBIT (EBITDA - D&A)", bold=True)
+put(wa, "A8", "Margen EBITDA")
+put(wa, "A9", "Margen EBIT")
+put(wa, "A10", "EBITDA / capital invertido (proxy 543.5)")
+put(wa, "A11", "EBIT / capital invertido")
+for col in "BCDEF":
+    put(wa, f"{col}7", f"={col}5-{col}6", N1, bold=True)
+    put(wa, f"{col}8", f"={col}5/{col}4", PCT)
+    put(wa, f"{col}9", f"={col}7/{col}4", PCT)
+for col in "BCDE":
+    put(wa, f"{col}10", f"={col}5/{S['capa']}", PCT)
+    put(wa, f"{col}11", f"={col}7/{S['capa']}", PCT)
+put(wa, "G10", "H1'26 omitido (semestre). Proxy de capital = 2019 Other Investing CF del Annual Model.", font=NOTE)
+put(wa, "G11", "Lectura: siempre fue positivo en EBITDA, pero EBIT ~0-13M sobre ~$540M => retorno <3% = 'no best owner'.", font=NOTE)
+
+header(wa, 13, ["Trimestral", "Q1'25", "Q2'25", "Q3'25", "Q4'25", "Q1'26", "Q2'26"])
+put(wa, "A14", "Ventas")
+put(wa, "A15", "EBITDA segmento")
+put(wa, "A16", "D&A")
+put(wa, "A17", "EBIT", bold=True)
+put(wa, "A18", "Margen EBITDA")
+qs = {"B": (42.2, 13.6, 7.7), "C": (43.3, 2.0, 8.3), "E": (36.5, 5.5, 8.7), "F": (44.3, 7.6, 8.3), "G": (49.3, 11.2, 7.4)}
+for col, (s_, e_, d_) in qs.items():
+    put(wa, f"{col}14", s_, N1)
+    put(wa, f"{col}15", e_, N1)
+    put(wa, f"{col}16", d_, N1)
+put(wa, "D14", "=E4-B14-C14-E14-0", N1)  # placeholder replaced below
+put(wa, "D14", "=$E$4-B14-C14-E14", N1)
+put(wa, "D15", "=$E$5-B15-C15-E15", N1)
+put(wa, "D16", "=$E$6-B16-C16-E16", N1)
+for col in "BCDEFG":
+    put(wa, f"{col}17", f"={col}15-{col}16", N1, bold=True)
+    put(wa, f"{col}18", f"={col}15/{col}14", PCT)
+put(wa, "A19", "Q3'25 se deriva como FY25 menos los demas trimestres. Q2'26: EBITDA 11.2 pero EBIT solo ~3.8 -> 'rentable' en EBIT apenas, con ayudas temporales.", font=NOTE)
+
+# sale grid
+header(wa, 21, ["Valor de venta (EV bruto, US$ M)", "5.0x", "6.0x", "7.0x", "7.5x", "8.0x", "9.0x", "10.0x"])
+mults = [5.0, 6.0, 7.0, 7.5, 8.0, 9.0, 10.0]
+put(wa, "A22", "Multiplo", bold=True)
+for i, m in enumerate(mults):
+    put(wa, f"{L(2 + i)}22", m, MULT)
+for j, e in enumerate((30.0, 32.5, 35.0, 37.5, 40.0)):
+    rr = 23 + j
+    put(wa, f"A{rr}", e, '"EBITDA normalizado "0.0')
+    for i in range(7):
+        put(wa, f"{L(2 + i)}{rr}", f"=$A{rr}*{L(2 + i)}$22", N1)
+put(wa, "A28", "Referencia: Capa se compro por ~543.5 (proxy). A 7.5x x 35 = 262.5 => ~48% del costo historico.", font=NOTE)
+
+# sale cases + sensitivity (cols B..H = 7 cases)
+header(wa, 30, ["Uso de proceeds y EPS 2027E PF", "Sin venta", "Low", "Base", "High", "Base 0% a recompras", "Base 100% a recompras", "Caso activo (Model)"])
+cases = {  # col: (mult_ref or 0, pct_ref)
+    "B": ("0", S["pct_bb"]),
+    "C": (f"Inputs!$B${MULTROW}", S["pct_bb"]),
+    "D": (f"Inputs!$C${MULTROW}", S["pct_bb"]),
+    "E": (f"Inputs!$D${MULTROW}", S["pct_bb"]),
+    "F": (f"Inputs!$C${MULTROW}", "0"),
+    "G": (f"Inputs!$C${MULTROW}", "1"),
+    "H": (f"CHOOSE(Inputs!$C$4+1,0,Inputs!$B${MULTROW},Inputs!$C${MULTROW},Inputs!$D${MULTROW})", S["pct_bb"]),
+}
+rowsA = [
+    "Multiplo EV/EBITDA", "EV bruto", "Proceeds netos (despues de fuga)", "  a recompras extra", "  a repago de deuda",
+    "Deuda neta inicial 2027 (tras proceeds)", "EBITDA 2027E PF", "D&A", "Interes", "BAI ajustado", "Impuesto", "Utilidad ajustada",
+    "Acciones inicio ajustadas (M)", "Acciones fin (M)", "Acciones promedio (M)", "EPS ajustado 2027E", "Delta EPS vs sin venta",
+    "FCF 2027E", "FCF / accion", "Deuda neta fin 2027", "Deuda neta / EBITDA 2027E",
+]
+base_r = 31
+RA = {n: base_r + i for i, n in enumerate(rowsA)}
+for n, rr in RA.items():
+    put(wa, f"A{rr}", n, bold=n in ("EPS ajustado 2027E", "Deuda neta / EBITDA 2027E"))
+# these refer to Model rows; filled after Model built via placeholders
+wa.column_dimensions["A"].width = 52
+for c in "BCDEFGH":
+    wa.column_dimensions[c].width = 16
+wa.column_dimensions["G"].width = 22
+
+# =====================================================================
+# MODEL
+# =====================================================================
+wm = wb.create_sheet("Model")
+put(wm, "A1", "New Ingevity - modelo pro forma (US$ M)", font=TTL)
+put(wm, "A2", '="Escenario: "&Inputs!C5&" | Venta APT: "&Inputs!D5', font=BOLD)
+put(wm, "A3", "FY24A/FY25A = continuo reportado (recast 10-K 2025). FY25 PF = marco de mgmt (Dic-25). FY26E Rep = base de guia (APT dentro). FY26E-FY28E PF = New Ingevity (sin APT, sin RM).", font=NOTE)
+cols = ["FY24A", "FY25A", "FY25 PF (mgmt)", "FY26E Rep.", "FY26E PF", "FY27E PF", "FY28E PF"]
+header(wm, 5, ["US$ M"] + cols + ["Nota"])
+M = {}
+mr = 6
+
+
+def mrow(key, label, vals, fmt=N1, bold=False, note=""):
+    global mr
+    put(wm, f"A{mr}", label, bold=bold)
+    for col, v in zip("BCDEFGH", vals):
+        if v is None:
+            continue
+        put(wm, f"{col}{mr}", v, fmt, bold=bold)
+    if note:
+        put(wm, f"I{mr}", note, font=NOTE)
+    M[key] = mr
+    mr += 1
+
+
+def msec(t):
+    global mr
+    section(wm, mr, t, 9)
+    mr += 1
+
+
+msec("1. Ventas")
+R = lambda k: M[k]
+mrow("pm_s", "Performance Materials", [609.6, 606.9, "=C{r}", f"=FY26_Puente!D{pr['pm_s']}", "=E{r}", f"=F{{r}}*(1+{A['pm_g27']})", f"=G{{r}}*(1+{A['pm_g28']})"])
+mrow("pt_s", "Pavement Tech. core (ex-RM)", [300.9, 302.6, "=C{r}", f"=FY26_Puente!D{pr['pt_s']}", "=E{r}", f"=F{{r}}*(1+{A['pt_g27']})", f"=G{{r}}*(1+{A['pt_g28']})"], note="FY24A/25A: product line Pavement Tech. (incluye ~50 de dispersantes lignina ex-IS).")
+mrow("rm_s", "Road Markings (vendido 15-abr-26)", [101.0, 97.9, 0, f"=FY26_Puente!D{pr['rm_s']}", 0, 0, 0])
+mrow("apt_s", "Advanced Polymer Tech. (en venta)", [188.6, 160.2, 0, f"=FY26_Puente!D{pr['apt_s']}", 0, 0, 0])
+mrow("tot_s", "Ventas totales", ["=SUM(B{a}:B{b})", "=SUM(C{a}:C{b})", "=SUM(D{a}:D{b})", "=SUM(E{a}:E{b})", "=SUM(F{a}:F{b})", "=SUM(G{a}:G{b})", "=SUM(H{a}:H{b})"], bold=True)
+mrow("g_s", "  crecimiento YoY", [None, "=C{t}/B{t}-1", None, None, "=F{t}/D{t}-1", "=G{t}/F{t}-1", "=H{t}/G{t}-1"], PCT, note="FY26 PF vs FY25 PF (perimetro comparable).")
+
+msec("2. EBITDA ajustado")
+mrow("pm_e", "Performance Materials", [333.2, 326.3, 320.0, f"=FY26_Puente!D{pr['pm_e']}", "=E{r}", f"=G{M['pm_s']}*{A['pm_m27']}", f"=H{M['pm_s']}*{A['pm_m28']}"], note="FY25 PF: mgmt 320 (326.3 menos ~6 de costos varados asignados).")
+mrow("pt_e", "Pavement Tech. (FY24A/25A = Perf. Chemicals incl. RM)", [53.7, 60.3, 45.0, f"=FY26_Puente!D{pr['pt_e']}+FY26_Puente!D{pr['rm_e']}", f"=FY26_Puente!D{pr['pt_e']}", f"=G{M['pt_s']}*{A['pt_m27']}", f"=H{M['pt_s']}*{A['pt_m28']}"], note="FY25 PF: mgmt 45 (~15%) tras ~15 de costos varados. FY26E Rep = core + RM.")
+mrow("apt_e", "Advanced Polymer Tech.", [39.0, 32.1, 0, f"=FY26_Puente!D{pr['apt_e']}", 0, 0, 0])
+mrow("seg_e", "EBITDA de segmentos", ["=SUM(B{a}:B{b})", "=SUM(C{a}:C{b})", "=SUM(D{a}:D{b})", "=SUM(E{a}:E{b})", "=SUM(F{a}:F{b})", "=SUM(G{a}:G{b})", "=SUM(H{a}:H{b})"], bold=True)
+mrow("corp", "Corporate & other", [-27.3, -31.2, -30.0, f"={Y['corp'][0]}", f"={Y['corp'][0]}", f"={Y['corp'][1]}", f"={Y['corp'][2]}"])
+mrow("ind", "Indirect costs (IS varados, reportados aparte hasta 2025)", [-22.1, -14.5, 0, 0, 0, 0, 0], note="Desde 2026 ya estan repartidos en los segmentos.")
+mrow("str", "Costos varados post-venta APT", [0, 0, 0, 0, f"={Y['strand'][0]}", f"={Y['strand'][1]}", f"={Y['strand'][2]}"], note="Supuesto clave: lo que APT deja de absorber de servicios compartidos.")
+mrow("ebitda", "Adj. EBITDA", ["=B{s}+B{c}+B{i}+B{x}", "=C{s}+C{c}+C{i}+C{x}", "=D{s}+D{c}+D{i}+D{x}", "=E{s}+E{c}+E{i}+E{x}", "=F{s}+F{c}+F{i}+F{x}", "=G{s}+G{c}+G{i}+G{x}", "=H{s}+H{c}+H{i}+H{x}"], bold=True, note="FY25A = 373.0 reportado; FY25 PF = 335 (mgmt).")
+mrow("mgn", "  margen EBITDA", ["=B{e}/B{t}", "=C{e}/C{t}", "=D{e}/D{t}", "=E{e}/E{t}", "=F{e}/F{t}", "=G{e}/G{t}", "=H{e}/H{t}"], PCT)
+mrow("mgn_pm", "  margen PM", ["=B{p}/B{ps}", "=C{p}/C{ps}", "=D{p}/D{ps}", "=E{p}/E{ps}", "=F{p}/F{ps}", "=G{p}/G{ps}", "=H{p}/H{ps}"], PCT)
+mrow("mgn_pt", "  margen PT", ["=B{p}/(B{ps}+B{rs})", "=C{p}/(C{ps}+C{rs})", "=D{p}/D{ps}", "=E{p}/(E{ps}+E{rs})", "=F{p}/F{ps}", "=G{p}/G{ps}", "=H{p}/H{ps}"], PCT)
+
+msec("3. Estado de resultados ajustado")
+mrow("da", "D&A", [-99.6, -105.2, None, f"=-({Y['da'][0]}+{S['apt_da']})", f"=-{Y['da'][0]}", f"=-{Y['da'][1]}", f"=-{Y['da'][2]}"], note="El EPS ajustado de Ingevity NO suma de vuelta D&A/amortizacion.")
+mrow("ebit", "EBIT ajustado", ["=B{e}+B{d}", "=C{e}+C{d}", None, "=E{e}+E{d}", "=F{e}+F{d}", "=G{e}+G{d}", "=H{e}+H{d}"])
+mrow("int", "Interes neto", [-90.1, -73.1, None, f"=-{Y['rate'][0]}*{S['nd25']}", "=E{r}", "=-{rt}*G{nd_adj}", "=-{rt8}*H{nd_adj}"], note="Tasa x deuda neta inicial (ajustada por proceeds de APT en 2027).")
+mrow("pbt", "BAI ajustado", ["=B{eb}+B{i}", "=C{eb}+C{i}", None, "=E{eb}+E{i}", "=F{eb}+F{i}", "=G{eb}+G{i}", "=H{eb}+H{i}"])
+mrow("tax", "Impuesto", [None, None, None, f"=-E{{b}}*{Y['tax'][0]}", f"=-F{{b}}*{Y['tax'][0]}", f"=-G{{b}}*{Y['tax'][1]}", f"=-H{{b}}*{Y['tax'][2]}"])
+mrow("ni", "Utilidad ajustada (cont.)", [148.3, 151.5, None, "=E{b}+E{t}", "=F{b}+F{t}", "=G{b}+G{t}", "=H{b}+H{t}"], bold=True, note="FY24A/25A reportado (Q4'25 release).")
+mrow("sh", "Acciones diluidas promedio (M)", [None, None, None, "=E{shavg}", "=E{shavg}", "=G{shavg}", "=H{shavg}"], '0.00')
+mrow("eps", "EPS ajustado", [4.06, 4.13, 5.25, "=E{n}/E{s}", "=F{n}/F{s}", "=G{n}/G{s}", "=H{n}/H{s}"], EPS, bold=True, note="FY25 PF 5.25 = mgmt. FY24A derivado de +1.7%.")
+
+msec("4. Flujo de caja")
+mrow("cint", "Interes", [None, None, None, "=E{i}", "=F{i}", "=G{i}", "=H{i}"])
+mrow("ctax", "Impuestos en caja", [None, None, None, f"=E{{t}}*{Y['ctax'][0]}", f"=F{{t}}*{Y['ctax'][0]}", f"=G{{t}}*{Y['ctax'][1]}", f"=H{{t}}*{Y['ctax'][2]}"])
+mrow("capex", "Capex", [-77.6, -57.7, None, f"=-{Y['capex'][0]}", f"=-({Y['capex'][0]}-{S['apt_cx']})", f"=-{Y['capex'][1]}", f"=-{Y['capex'][2]}"], note="FY26 PF excluye capex estimado de APT.")
+mrow("oth", "Otros flujos operativos", [None, None, None, f"={Y['oth'][0]}", f"={Y['oth'][0]}", f"={Y['oth'][1]}", f"={Y['oth'][2]}"])
+mrow("fcf", "Free cash flow (def. mgmt: CFO - capex, ex litigio)", [51.0, 273.5, None, "=E{e}+E{ci}+E{ct}+E{cx}+E{o}", "=F{e}+F{ci}+F{ct}+F{cx}+F{o}", "=G{e}+G{ci}+G{ct}+G{cx}+G{o}", "=H{e}+H{ci}+H{ct}+H{cx}+H{o}"], bold=True, note="FY24A/25A: total company (incl. disc.). Guia 2026: 220-245.")
+mrow("fcfps", "FCF / accion", [None, None, 5.35, "=E{f}/E{s}", "=F{f}/F{s}", "=G{f}/G{s}", "=H{f}/H{s}"], EPS, note="FY25 PF 5.35 = mgmt.")
+
+msec("5. Deuda neta y destino de caja")
+mrow("nd_open", "Deuda neta inicial", [None, None, None, f"={S['nd25']}", None, "=E{close}", "=G{close}"])
+mrow("apt_p", "Proceeds netos de la venta de APT (caja que entra)", [None, None, None, None, None, "=-APT!$H$33", 0], note="Entra el 1-ene-27 en el modelo. NO esta en la guia 2026.")
+mrow("apt_bb", "  de los cuales se reciclan a recompras extra", [None, None, None, None, None, "=APT!$H$34", 0])
+mrow("nd_adj", "Deuda neta inicial ajustada (base de interes)", [None, None, None, "=E{o}", None, "=G{o}+G{p}+G{b}", "=H{o}+H{p}+H{b}"])
+mrow("nd_fcf", "(-) FCF", [None, None, None, "=-E{f}", None, "=-G{f}", "=-H{f}"])
+mrow("nd_lit", "(+) Litigio BASF pagado", [None, None, None, f"={S['lit']}", None, 0, 0])
+mrow("nd_div", "(-) Proceeds IS/CTO + Road Markings", [None, None, None, f"=-({S['pis']}+{S['prm']})", None, 0, 0], note="Ya ocurridos en H1'26.")
+mrow("nd_bb", "(+) Recompras regulares", [None, None, None, f"={Y['bb'][0]}", None, f"={Y['bb'][1]}", f"={Y['bb'][2]}"])
+mrow("nd_lk", "(+) Otros usos de caja", [None, None, None, f"={Y['leak'][0]}", None, f"={Y['leak'][1]}", f"={Y['leak'][2]}"])
+mrow("close", "Deuda neta final", [None, 1048.7, None, "=E{a}+E{f}+E{l}+E{d}+E{b}+E{k}", None, "=G{a}+G{f}+G{l}+G{d}+G{b}+G{k}", "=H{a}+H{f}+H{l}+H{d}+H{b}+H{k}"], bold=True)
+mrow("lev", "Deuda neta / EBITDA", [None, 2.6, None, "=E{c}/E{e}", None, "=G{c}/G{e}", "=H{c}/H{e}"], MULT, bold=True, note="Target mgmt 2.0-2.5x. FY25A = 2.6x reportado (LTM total).")
+
+msec("6. Acciones")
+mrow("sh_h1", "Promedio diluido H1'26", [None, None, None, f"={S['sh_h1']}", None, None, None], '0.00')
+mrow("sh_q2", "Fin Q2'26 / inicio del periodo (ajustado)", [None, None, None, f"={S['sh_q2']}", None, "=E{end}-APT!$H$34/" + Y['px'][1], "=G{end}"], '0.00')
+mrow("sh_bb", "(-) Acciones recompradas (regulares)", [None, None, None, f"=({Y['bb'][0]}-{S['h1bb']})/{Y['px'][0]}", None, f"={Y['bb'][1]}/{Y['px'][1]}", f"={Y['bb'][2]}/{Y['px'][2]}"], '0.00')
+mrow("sh_sbc", "(+) Dilucion SBC", [None, None, None, f"={Y['sbc'][0]}", None, f"={Y['sbc'][1]}", f"={Y['sbc'][2]}"], '0.00')
+mrow("sh_end", "Acciones diluidas fin de periodo", [None, None, None, "=E{q}-E{b}+E{c}", None, "=G{q}-G{b}+G{c}", "=H{q}-H{b}+H{c}"], '0.00', bold=True)
+mrow("shavg", "Acciones diluidas promedio", [None, None, None, "=(E{h}+(E{q}+E{e})/2)/2", None, "=(G{q}+G{e})/2", "=(H{q}+H{e})/2"], '0.00', bold=True)
+
+# ---- resolve placeholders ----
+def sub(rowkey, col, **kw):
+    cell = wm[f"{col}{M[rowkey]}"]
+    v = cell.value
+    if isinstance(v, str):
+        cell.value = v.format(**kw)
+
+a_s, b_s = M["pm_s"], M["apt_s"]
+for col in "BCDEFGH":
+    sub("tot_s", col, a=a_s, b=b_s)
+    sub("seg_e", col, a=M["pm_e"], b=M["apt_e"])
+# fix formula strings that used {r}
+for key in ("pm_s", "pt_s"):
+    for col in "DF":
+        cell = wm[f"{col}{M[key]}"]
+        cell.value = cell.value.replace("{r}", str(M[key])) if isinstance(cell.value, str) else cell.value
+    for col in "GH":
+        cell = wm[f"{col}{M[key]}"]
+        cell.value = cell.value.replace("{r}", str(M[key]))
+for col in "BCDEFGH":
+    sub("tot_s", col, a=a_s, b=b_s)
+for col, prev in (("C", "B"), ("F", "D"), ("G", "F"), ("H", "G")):
+    cell = wm[f"{col}{M['g_s']}"]
+    cell.value = cell.value.format(t=M["tot_s"])
+for col in "BCDEFGH":
+    sub("ebitda", col, s=M["seg_e"], c=M["corp"], i=M["ind"], x=M["str"])
+    sub("mgn", col, e=M["ebitda"], t=M["tot_s"])
+    sub("mgn_pm", col, p=M["pm_e"], ps=M["pm_s"])
+    sub("mgn_pt", col, p=M["pt_e"], ps=M["pt_s"], rs=M["rm_s"])
+    if col in "BCDEFGH" and wm[f"{col}{M['ebit']}"].value:
+        sub("ebit", col, e=M["ebitda"], d=M["da"])
+        sub("pbt", col, eb=M["ebit"], i=M["int"])
+    if wm[f"{col}{M['tax']}"].value:
+        sub("tax", col, b=M["pbt"])
+        sub("ni", col, b=M["pbt"], t=M["tax"])
+    sub("sh", col, shavg=M["shavg"])
+    sub("eps", col, n=M["ni"], s=M["sh"])
+    sub("cint", col, i=M["int"])
+    sub("ctax", col, t=M["tax"])
+    sub("fcf", col, e=M["ebitda"], ci=M["cint"], ct=M["ctax"], cx=M["capex"], o=M["oth"])
+    sub("fcfps", col, f=M["fcf"], s=M["sh"])
+for col in "GH":
+    sub("int", col, rt=Y['rate'][1], rt8=Y['rate'][2], nd_adj=M["nd_adj"])
+# interest placeholders use rate refs inside format string -> rebuild explicitly
+wm[f"G{M['int']}"].value = f"=-{Y['rate'][1]}*G{M['nd_adj']}"
+wm[f"H{M['int']}"].value = f"=-{Y['rate'][2]}*H{M['nd_adj']}"
+sub("nd_open", "G", close=M["close"])
+sub("nd_open", "H", close=M["close"])
+sub("nd_adj", "E", o=M["nd_open"])
+for col in "GH":
+    sub("nd_adj", col, o=M["nd_open"], p=M["apt_p"], b=M["apt_bb"])
+    sub("nd_fcf", col, f=M["fcf"])
+    sub("lev", col, c=M["close"], e=M["ebitda"])
+    sub("close", col, a=M["nd_adj"], f=M["nd_fcf"], l=M["nd_lit"], d=M["nd_div"], b=M["nd_bb"], k=M["nd_lk"])
+sub("nd_fcf", "E", f=M["fcf"])
+sub("close", "E", a=M["nd_adj"], f=M["nd_fcf"], l=M["nd_lit"], d=M["nd_div"], b=M["nd_bb"], k=M["nd_lk"])
+sub("lev", "E", c=M["close"], e=M["ebitda"])
+sub("sh_q2", "G", end=M["sh_end"])
+sub("sh_q2", "H", end=M["sh_end"])
+sub("sh_end", "E", q=M["sh_q2"], b=M["sh_bb"], c=M["sh_sbc"])
+for col in "GH":
+    sub("sh_end", col, q=M["sh_q2"], b=M["sh_bb"], c=M["sh_sbc"])
+    sub("shavg", col, q=M["sh_q2"], e=M["sh_end"])
+sub("shavg", "E", h=M["sh_h1"], q=M["sh_q2"], e=M["sh_end"])
+# H sh_q2 initial should be prior end (G end) - already set via {end} on G row? fix:
+wm[f"H{M['sh_q2']}"].value = f"=G{M['sh_end']}"
+wm[f"G{M['sh_q2']}"].value = f"=E{M['sh_end']}-APT!$H$34/{Y['px'][1]}"
+# F column for shares / ni: F sh uses E avg
+wm[f"F{M['sh']}"].value = f"=E{M['shavg']}"
+wm[f"E{M['sh']}"].value = f"=E{M['shavg']}"
+# PT_S_FY25 placeholder in puente
+cellp = wp[f"D{pr['pt_s']}"]
+cellp.value = cellp.value.replace("{PT_S_FY25}", str(M["pt_s"]))
+
+for row in wm.iter_rows():
+    for c in row:
+        if isinstance(c.value, str) and "{r}" in c.value:
+            c.value = c.value.replace("{r}", str(c.row))
+
+# checks
+mr += 1
+section(wm, mr, "7. Chequeos", 9)
+mr += 1
+put(wm, f"A{mr}", "Puente reportado FY25A -> PF mgmt (Adj. EBITDA)", bold=True)
+mr += 1
+brs = [
+    ("Adj. EBITDA FY25A reportado", f"=C{M['ebitda']}"),
+    ("(-) APT", f"=-C{M['apt_e']}"),
+    ("(-) Road Markings (CFO: ~0)", 0),
+]
+b0 = mr
+for lab, v in brs:
+    put(wm, f"A{mr}", lab)
+    put(wm, f"B{mr}", v, N1)
+    mr += 1
+put(wm, f"A{mr}", "(+/-) Costos varados / dis-synergies no asignados (plug)")
+put(wm, f"B{mr}", f"=D{M['ebitda']}-SUM(B{b0}:B{mr-1})", N1)
+put(wm, f"I{mr}", "Valida el supuesto de ~-5 de costos varados atribuibles a APT.", font=NOTE)
+mr += 1
+put(wm, f"A{mr}", "Adj. EBITDA PF mgmt 2025", bold=True)
+put(wm, f"B{mr}", f"=SUM(B{b0}:B{mr-1})", N1, bold=True)
+mr += 2
+put(wm, f"A{mr}", "Chequeo: caso activo APT sheet = EPS 2027 del Model")
+put(wm, f"B{mr}", f"=APT!$H$46-G{M['eps']}", '0.0000')
+CHK = mr
+wm.column_dimensions["A"].width = 58
+for c in "BCDEFGH":
+    wm.column_dimensions[c].width = 13
+wm.column_dimensions["I"].width = 90
+wm.freeze_panes = "B6"
+
+# ---- APT sensitivity block (needs Model rows) ----
+mm = lambda k, c: f"Model!${c}${M[k]}"
+for col, (mult, pct) in cases.items():
+    f = {
+        "Multiplo EV/EBITDA": f"={mult}",
+        "EV bruto": f"={col}{RA['Multiplo EV/EBITDA']}*{S['apt_norm']}",
+        "Proceeds netos (despues de fuga)": f"={col}{RA['EV bruto']}*(1-{S['leak']})",
+        "  a recompras extra": f"={col}{RA['Proceeds netos (despues de fuga)']}*{pct}",
+        "  a repago de deuda": f"={col}{RA['Proceeds netos (despues de fuga)']}-{col}{RA['  a recompras extra']}",
+        "Deuda neta inicial 2027 (tras proceeds)": f"={mm('close','E')}-{col}{RA['  a repago de deuda']}",
+        "EBITDA 2027E PF": f"={mm('ebitda','G')}",
+        "D&A": f"={mm('da','G')}",
+        "Interes": f"=-{Y['rate'][1]}*{col}{RA['Deuda neta inicial 2027 (tras proceeds)']}",
+        "BAI ajustado": f"={col}{RA['EBITDA 2027E PF']}+{col}{RA['D&A']}+{col}{RA['Interes']}",
+        "Impuesto": f"=-{col}{RA['BAI ajustado']}*{Y['tax'][1]}",
+        "Utilidad ajustada": f"={col}{RA['BAI ajustado']}+{col}{RA['Impuesto']}",
+        "Acciones inicio ajustadas (M)": f"={mm('sh_end','E')}-{col}{RA['  a recompras extra']}/{Y['px'][1]}",
+        "Acciones fin (M)": f"={col}{RA['Acciones inicio ajustadas (M)']}-{mm('sh_bb','G')}+{mm('sh_sbc','G')}",
+        "Acciones promedio (M)": f"=({col}{RA['Acciones inicio ajustadas (M)']}+{col}{RA['Acciones fin (M)']})/2",
+        "EPS ajustado 2027E": f"={col}{RA['Utilidad ajustada']}/{col}{RA['Acciones promedio (M)']}",
+        "Delta EPS vs sin venta": f"={col}{RA['EPS ajustado 2027E']}-$B${RA['EPS ajustado 2027E']}",
+        "FCF 2027E": f"={col}{RA['EBITDA 2027E PF']}+{col}{RA['Interes']}+{col}{RA['Impuesto']}*{Y['ctax'][1]}-{Y['capex'][1]}+{Y['oth'][1]}",
+        "FCF / accion": f"={col}{RA['FCF 2027E']}/{col}{RA['Acciones promedio (M)']}",
+        "Deuda neta fin 2027": f"={col}{RA['Deuda neta inicial 2027 (tras proceeds)']}-{col}{RA['FCF 2027E']}+{Y['bb'][1]}+{Y['leak'][1]}",
+        "Deuda neta / EBITDA 2027E": f"={col}{RA['Deuda neta fin 2027']}/{col}{RA['EBITDA 2027E PF']}",
+    }
+    for n, rr in RA.items():
+        fmt = N1
+        if n.startswith("Multiplo"):
+            fmt = MULT
+        elif "EPS" in n or "FCF / accion" in n:
+            fmt = EPS
+        elif "Acciones" in n:
+            fmt = '0.00'
+        elif "Deuda neta / EBITDA" in n:
+            fmt = MULT
+        put(wa, f"{col}{rr}", f[n], fmt, bold=n in ("EPS ajustado 2027E", "Deuda neta / EBITDA 2027E"))
+# fix: the Model references APT!$H$33 / $H$34 / $H$46 - verify row mapping
+assert RA["Proceeds netos (despues de fuga)"] == 33, RA
+assert RA["  a recompras extra"] == 34, RA
+assert RA["EPS ajustado 2027E"] == 46, RA
+put(wa, f"A{base_r + len(rowsA) + 1}", "Lectura: la venta de APT mejora EPS 2027E por menor interes y/o menos acciones. Los proceeds NO estan en la guia 2026, pero SI en los ~$1B de 'caja desplegable' de dic-25 (slide 24).", font=NOTE)
+
+# =====================================================================
+# Uso_Caja
+# =====================================================================
+wu = wb.create_sheet("Uso_Caja")
+put(wu, "A1", "Fuentes y usos de caja 2026-27 vs el framework de mgmt (~US$1B 'deployable cash')", font=TTL)
+put(wu, "A2", "Que dice mgmt: ~$1B de caja desplegable en 2026-27 = FCF del negocio + proceeds de IS/CTO, Road Markings y APT (Strategic Portfolio Update, slide 24, nota al pie 1). Prioridades: (1) organico/capex, (2) deuda a 2.0-2.5x, (3) recompras >= $300M.", font=NOTE)
+header(wu, 4, ["FUENTES (US$ M)", "2026E", "2027E", "Total 26-27", "Nota"])
+rows_u = [
+    ("FCF del negocio (base reportada 2026 / PF 2027)", f"={mm('fcf','E')}", f"={mm('fcf','G')}", "Modelo (ex litigio)."),
+    ("(+) Capex (el 'deployable' de mgmt es antes de capex: ~$120M en 2 anos)", f"=-{mm('capex','E')}", f"=-{mm('capex','G')}", "Jon Tanwanteng (CJS) en Q&A: $300M recompras + $120M capex + $480M 'resto'."),
+    ("Proceeds IS + CTO + Road Markings", f"={S['pis']}+{S['prm']}", 0, "Ya cobrados."),
+    ("Proceeds APT (netos) - escenario activo", 0, "=APT!$H$33", "NO en la guia; depende del caso seleccionado."),
+]
+r = 5
+for lab, a, b, n in rows_u:
+    put(wu, f"A{r}", lab)
+    put(wu, f"B{r}", a, N1)
+    put(wu, f"C{r}", b, N1)
+    put(wu, f"D{r}", f"=B{r}+C{r}", N1)
+    put(wu, f"E{r}", n, font=NOTE)
+    r += 1
+put(wu, f"A{r}", "Caja desplegable total (definicion mgmt: antes de capex)", bold=True)
+for col in "BCD":
+    put(wu, f"{col}{r}", f"=SUM({col}5:{col}8)", N1, bold=True)
+SRC = r
+r += 2
+header(wu, r, ["USOS (US$ M)", "2026E", "2027E", "Total 26-27", "Nota"])
+r += 1
+u0 = r
+uses = [
+    ("Capex", f"=-{mm('capex','E')}", f"=-{mm('capex','G')}", ""),
+    ("Litigio BASF", f"={S['lit']}", 0, "Pagado en Q2'26."),
+    ("Recompras regulares (compromiso >= 300)", f"={Y['bb'][0]}", f"={Y['bb'][1]}", "H1'26 ya 86.8: 'ahead of pace'."),
+    ("Recompras extra con proceeds APT", 0, "=APT!$H$34", "Ver % en Inputs."),
+    ("Repago de deuda (residual)", "=B{x}", "=C{x}", "Plug: lo que sobra tras los demas usos."),
+    ("Otros (reestructura/leases/otros)", f"={Y['leak'][0]}", f"={Y['leak'][1]}", ""),
+]
+for lab, a, b, n in uses:
+    put(wu, f"A{r}", lab)
+    put(wu, f"B{r}", a, N1)
+    put(wu, f"C{r}", b, N1)
+    put(wu, f"D{r}", f"=B{r}+C{r}", N1)
+    put(wu, f"E{r}", n, font=NOTE)
+    r += 1
+debt_r = u0 + 4
+# residual = sources - other uses  (sources include capex add-back so capex is a use)
+for col in "BC":
+    others = "+".join(f"{col}{u0 + i}" for i in (0, 1, 2, 3, 5))
+    wu[f"{col}{debt_r}"].value = f"={col}{SRC}-({others})"
+    wu[f"{col}{debt_r}"].font = BLK
+wu[f"D{debt_r}"].value = f"=B{debt_r}+C{debt_r}"
+put(wu, f"A{r}", "Total usos", bold=True)
+for col in "BCD":
+    put(wu, f"{col}{r}", f"=SUM({col}{u0}:{col}{r-1})", N1, bold=True)
+r += 2
+put(wu, f"A{r}", "Chequeos vs compromisos de mgmt", bold=True)
+r += 1
+chk = [
+    ("Recompras totales 2026-27 (regulares + extra APT)", f"=D{u0+2}+D{u0+3}", N1),
+    ("Compromiso minimo de mgmt", 300, N1),
+    ("Cumple compromiso?", f'=IF(B{r}>=B{r+1},"OK","NO")', None),
+    ("Deuda neta / EBITDA fin 2026 (base reportada)", f"={mm('lev','E')}", MULT),
+    ("Deuda neta / EBITDA fin 2027 PF", f"={mm('lev','G')}", MULT),
+    ("Rango objetivo mgmt", "2.0x - 2.5x", None),
+    ("Deuda neta 31-dic-26E", f"={mm('close','E')}", N1),
+    ("Vencimiento: revolver 2027 (80M finance lease Wickliffe cubierto por trust) y bono $550M nov-2028", "n/a", None),
+]
+for lab, v, f in chk:
+    put(wu, f"A{r}", lab)
+    put(wu, f"B{r}", v, f)
+    r += 1
+r += 1
+put(wu, f"A{r}", "Inferencia (no es dato de mgmt): proceeds APT implicitos en los ~$1B", bold=True)
+r += 1
+put(wu, f"A{r}", "'Nearly/almost $1B' (Investor Update) vs desglose de CJS en Q&A ($300+120+480 = 900)", font=NOTE)
+r += 1
+put(wu, f"B{r}", "Si total =", font=BOLD)
+put(wu, f"C{r}", 900, N1)
+put(wu, f"D{r}", 1000, N1)
+r += 1
+put(wu, f"A{r}", "Proceeds APT implicitos = total - (FCF + capex 2026-27) - proceeds IS/CTO/RM")
+put(wu, f"C{r}", f"=C{r-1}-($D$5+$D$6)-$D$7", N1)
+put(wu, f"D{r}", f"=D{r-1}-($D$5+$D$6)-$D$7", N1)
+r += 1
+put(wu, f"A{r}", "  => multiplo implicito sobre EBITDA normalizado de APT")
+put(wu, f"C{r}", f"=C{r-1}/{S['apt_norm']}", MULT)
+put(wu, f"D{r}", f"=D{r-1}/{S['apt_norm']}", MULT)
+put(wu, f"E{r}", "Rango, no punto: depende de si el 'deployable' incluye caja existente. Orden de magnitud ~$200-300M (~6-9x).", font=NOTE)
+r += 2
+put(wu, f"A{r}", "Mensaje de mgmt sobre el destino de los proceeds (transcripts)", bold=True)
+r += 1
+for t in [
+    "Investor Update (dic-25): 'esperaria que la mayoria del cash restante vaya a pago de deuda'; M&A no es prioridad 2 anos; dividendo 'siempre sobre la mesa' pero recompras son la mejor opcion.",
+    "Q4'25 call (CFO): la guia NO incluye proceeds de APT ni RM; recompras de $300M en 2 anos de forma ratable.",
+    "Jefferies (sep-26, CFO): comprometidos a >= $300M en 2026-27 (87M hechos al Q2); 'si y cuando' cierre APT, los proceeds 'podrian acelerar' recompras.",
+    "Water Tower (sep-26, CEO): ya estan en 2.5x dentro del rango 2.0-2.5x; recompras 'adelantadas' sin contar proceeds de APT; bolt-ons de filtracion posibles en mediano plazo.",
+]:
+    put(wu, f"A{r}", t, wrap=True)
+    wu.merge_cells(f"A{r}:E{r}")
+    wu.row_dimensions[r].height = 30
+    r += 1
+wu.column_dimensions["A"].width = 70
+for c in "BCD":
+    wu.column_dimensions[c].width = 14
+wu.column_dimensions["E"].width = 90
+
+# =====================================================================
+# GAAP_Bridge
+# =====================================================================
+wg = wb.create_sheet("GAAP_Bridge")
+put(wg, "A1", "Por que GAAP fue negativo si el EBITDA ajustado siempre fue ~$360-400M", font=TTL)
+header(wg, 3, ["Operaciones continuas (US$ M)", "FY24", "FY25", "H1'25", "H1'26", "Nota"])
+gb = [
+    ("Utilidad neta cont. (GAAP)", -121.4, -150.3, -112.3, 63.2, ""),
+    ("Reestructura y otros", 18.1, 12.8, 9.1, 2.2, ""),
+    ("Impairment goodwill", 306.6, 183.8, 183.8, 0.0, "FY24: Perf. Chemicals; FY25: APT."),
+    ("Impairment activos largo plazo", 0.0, 109.3, 0.0, 32.1, "FY25: Road Markings; H1'26: APT (Q2)."),
+    ("Litigio BASF (honorarios)", 0.0, 0.0, 0.0, 16.2, "Pago total en caja Q2'26: 113.2."),
+    ("Ganancia venta de negocio", 0.0, 0.0, 0.0, -8.6, "Road Markings."),
+    ("Perdida venta inversion estrategica", 2.1, 19.6, 2.5, 0.0, ""),
+    ("Proxy contest / portafolio / licencia / otros", 0.5, 11.3, 8.2, 8.9, ""),
+    ("Efecto fiscal de los ajustes", -78.6, -81.8, -50.7, -12.4, ""),
+    ("Partidas fiscales discretas", 21.0, 46.8, 41.3, 1.3, ""),
+]
+r = 4
+for lab, a, b, c, d, n in gb:
+    put(wg, f"A{r}", lab)
+    for col, v in zip("BCDE", (a, b, c, d)):
+        put(wg, f"{col}{r}", v, N1)
+    put(wg, f"F{r}", n, font=NOTE)
+    r += 1
+put(wg, f"A{r}", "Utilidad ajustada cont. (non-GAAP)", bold=True)
+for col in "BCDE":
+    put(wg, f"{col}{r}", f"=SUM({col}4:{col}{r-1})", N1, bold=True)
+put(wg, f"F{r}", "Chequeo vs reportado: 148.3 / 151.5 / 81.9 / 102.9", font=NOTE)
+r += 1
+put(wg, f"A{r}", "Reportado")
+for col, v in zip("BCDE", (148.3, 151.5, 81.9, 102.9)):
+    put(wg, f"{col}{r}", v, N1)
+r += 1
+put(wg, f"A{r}", "Diferencia (debe ser ~0)")
+for col in "BCDE":
+    put(wg, f"{col}{r}", f"={col}{r-2}-{col}{r-1}", N1)
+r += 2
+put(wg, f"A{r}", "Operaciones discontinuadas (Industrial Specialties / CTO)", bold=True)
+r += 1
+for lab, a, b, c, d, n in [
+    ("Utilidad neta disc. (GAAP)", -308.9, -16.8, -13.7, 31.9, "FY24 incluye: reestructura 168.1, goodwill 42.5, perdida reventa CTO 52.7, terminacion contrato CTO 100.0."),
+    ("Utilidad neta total (GAAP)", -430.3, -167.1, -126.0, 95.1, "Coincide con Annual Model: -430.3 / -167.1."),
+]:
+    put(wg, f"A{r}", lab)
+    for col, v in zip("BCDE", (a, b, c, d)):
+        put(wg, f"{col}{r}", v, N1)
+    put(wg, f"F{r}", n, font=NOTE)
+    r += 1
+r += 1
+header(wg, r, ["Adj. EBITDA continuo", "FY24", "FY25", "H1'25", "H1'26", ""])
+r += 1
+put(wg, f"A{r}", "Adj. EBITDA cont.")
+for col, v in zip("BCDE", (376.5, 373.0, 192.3, 206.5)):
+    put(wg, f"{col}{r}", v, N1)
+put(wg, f"F{r}", "FY24 = suma de segmentos recast (333.2+53.7+39.0-27.3-22.1).", font=NOTE)
+r += 2
+header(wg, r, ["Trimestral (cont.)", "Q1'25", "Q2'25", "Q3'25", "Q4'25", "Q1'26", "Q2'26"])
+r += 1
+put(wg, f"A{r}", "Utilidad neta GAAP")
+for col, v in zip("BCDEFG", (29.1, -141.4, 40.8, -78.8, 23.4, 39.8)):
+    put(wg, f"{col}{r}", v, N1)
+r += 1
+put(wg, f"A{r}", "Adj. EBITDA")
+for col, v in zip("BCDEFG", (91.3, 101.0, 110.4, 70.3, 91.5, 115.0)):
+    put(wg, f"{col}{r}", v, N1)
+r += 1
+put(wg, f"A{r}", "Cargos especiales en el trimestre (pre-impuesto, aprox.)")
+for col, v in zip("BCDEFG", (None, 183.8 + 7.2 + 2.5, None, 109.3 + 17.1 + 2.7 + 2.0, 22.7, 32.1 + 2.9 + 1.7 - 8.6)):
+    if v is not None:
+        put(wg, f"{col}{r}", v, N1)
+r += 2
+for t in [
+    "Lectura: los ultimos dos trimestres (Q1'26 NI 23.4; Q2'26 NI 39.8) YA son positivos en GAAP continuo, pero siguen trayendo cargos (Q1 litigio 16.2; Q2 impairment APT 32.1). Q3'25 tambien fue positivo (40.8).",
+    "Las perdidas de 2024-25 NO vienen de un EBITDA debil: vienen de impairments (goodwill Perf. Chemicals 306.6 en 2024; APT 183.8 + Road Markings 109.3 en 2025), reestructura/CTO en discontinuadas (2024) y partidas fiscales.",
+    "APT: siempre tuvo EBITDA positivo; el problema es retorno sobre capital (EBIT ~0-13M sobre ~$540M). Ver hoja APT.",
+]:
+    put(wg, f"A{r}", t, wrap=True)
+    wg.merge_cells(f"A{r}:G{r}")
+    wg.row_dimensions[r].height = 42
+    r += 1
+wg.column_dimensions["A"].width = 58
+for c in "BCDEG":
+    wg.column_dimensions[c].width = 12
+wg.column_dimensions["F"].width = 60
+
+# =====================================================================
+# Summary
+# =====================================================================
+ws = wb.create_sheet("Summary", 0)
+put(ws, "A1", "New Ingevity (Performance Materials + Pavement Technologies) - financieros pro forma", font=TTL)
+put(ws, "A2", '="Escenario: "&Inputs!C5&" | Venta APT: "&Inputs!D5&" | US$ M | EPS/FCF ajustados (def. Ingevity)"', font=BOLD)
+header(ws, 4, ["US$ M", "FY24A", "FY25A", "FY25 PF (mgmt)", "FY26E PF", "FY27E PF", "FY28E PF"])
+sm = [
+    ("Ventas", "tot_s", N1, True), ("  Performance Materials", "pm_s", N1, False), ("  Pavement Technologies (core)", "pt_s", N1, False),
+    ("  crecimiento", "g_s", PCT, False),
+    ("Adj. EBITDA", "ebitda", N1, True), ("  margen", "mgn", PCT, False), ("  EBITDA PM", "pm_e", N1, False), ("  margen PM", "mgn_pm", PCT, False),
+    ("  EBITDA PT", "pt_e", N1, False), ("  margen PT", "mgn_pt", PCT, False), ("  Corporate + varados", None, N1, False),
+    ("D&A", "da", N1, False), ("Interes neto", "int", N1, False), ("Utilidad ajustada", "ni", N1, False),
+    ("Acciones diluidas prom. (M)", "sh", '0.00', False), ("EPS ajustado", "eps", EPS, True),
+    ("FCF", "fcf", N1, True), ("FCF / accion", "fcfps", EPS, False), ("Deuda neta fin de ano", "close", N1, False), ("Deuda neta / EBITDA", "lev", MULT, False),
+]
+r = 5
+SR = {}
+srcmap = {"B": "B", "C": "C", "D": "D", "E": "F", "F": "G", "G": "H"}
+for lab, key, fmt, b in sm:
+    put(ws, f"A{r}", lab, bold=b)
+    for col, mc in srcmap.items():
+        if key is None:
+            if col in "EFG":
+                put(ws, f"{col}{r}", f"=Model!{mc}{M['corp']}+Model!{mc}{M['str']}", fmt)
+            elif col in "BCD":
+                put(ws, f"{col}{r}", f"=Model!{mc}{M['corp']}+Model!{mc}{M['ind']}+Model!{mc}{M['str']}", fmt)
+            continue
+        if key in ("close", "lev") and col == "E":
+            put(ws, f"{col}{r}", f"=Model!E{M[key]}", fmt)  # YE26 on reported basis
+            continue
+        if key in ("close", "lev") and col in "D":
+            continue
+        put(ws, f"{col}{r}", f"=IF(Model!{mc}{M[key]}=\"\",\"\",Model!{mc}{M[key]})", fmt, bold=b)
+    SR[key or "corp"] = r
+    r += 1
+put(ws, f"A{r}", "FY26E deuda neta/apalancamiento = base reportada al 31-dic-26 (APT aun adentro, antes de la venta). FY25A apalancamiento reportado 2.6x.", font=NOTE)
+r += 2
+header(ws, r, ["Contraste 2027E PF", "Modelo", "Mgmt low", "Mgmt high", "Dentro?", "Consenso (incl. APT)", "Modelo - consenso"])
+r += 1
+cmp_rows = [
+    ("Ventas", f"=Model!G{M['tot_s']}", G['t_rev'], N1, f"={CONS['c_rev'][1]}"),
+    ("Adj. EBITDA", f"=Model!G{M['ebitda']}", G['t_ebitda'], N1, f"={CONS['c_ebitda'][1]}"),
+    ("Margen EBITDA", f"=Model!G{M['mgn']}", G['t_mgn'], PCT, None),
+    ("EBITDA PM", f"=Model!G{M['pm_e']}", G['t_pm_e'], N1, None),
+    ("EBITDA PT", f"=Model!G{M['pt_e']}", G['t_pt_e'], N1, None),
+    ("EPS ajustado", f"=Model!G{M['eps']}", G['t_eps'], EPS, f"={CONS['c_eps'][1]}"),
+    ("FCF / accion", f"=Model!G{M['fcfps']}", G['t_fcfps'], EPS, None),
+]
+for lab, v, (lo, hi), fmt, cons in cmp_rows:
+    put(ws, f"A{r}", lab)
+    put(ws, f"B{r}", v, fmt, bold=True)
+    put(ws, f"C{r}", f"={lo}", fmt)
+    put(ws, f"D{r}", f"={hi}", fmt)
+    put(ws, f"E{r}", f'=IF(B{r}<C{r},"Debajo",IF(B{r}>D{r},"Arriba","Dentro"))')
+    if cons:
+        put(ws, f"F{r}", cons, fmt)
+        put(ws, f"G{r}", f"=B{r}-F{r}", fmt)
+    r += 1
+put(ws, f"A{r}", "Consenso LSEG todavia incluye APT (brecha ~170M en ventas), por eso no es comparable 1:1. Consenso EBITDA 2027 menos APT (~37) y varados (~3) da una referencia ex-APT:", font=NOTE)
+r += 1
+put(ws, f"A{r}", "  Consenso EBITDA 2027 ajustado ex-APT (indicativo)")
+put(ws, f"B{r}", f"={CONS['c_ebitda'][1]}-{A['apt_qe']}*4-{Y['strand'][1]}*-1*-1", N1)
+ws[f"B{r}"].value = f"={CONS['c_ebitda'][1]}-{S['apt_norm']}+{Y['strand'][1]}"
+r += 2
+header(ws, r, ["Guia 2026 (base reportada, APT dentro)", "Modelo", "Guia low", "Guia high", "Dentro?", "Consenso", ""])
+r += 1
+for lab, v, (lo, hi), fmt, cons in [
+    ("Ventas", f"=Model!E{M['tot_s']}", G['g_sales'], N1, f"={CONS['c_rev'][0]}"),
+    ("Adj. EBITDA", f"=Model!E{M['ebitda']}", G['g_ebitda'], N1, f"={CONS['c_ebitda'][0]}"),
+    ("EPS ajustado", f"=Model!E{M['eps']}", G['g_eps'], EPS, f"={CONS['c_eps'][0]}"),
+    ("FCF (ex litigio)", f"=Model!E{M['fcf']}", G['g_fcf'], N1, None),
+]:
+    put(ws, f"A{r}", lab)
+    put(ws, f"B{r}", v, fmt, bold=True)
+    put(ws, f"C{r}", f"={lo}", fmt)
+    put(ws, f"D{r}", f"={hi}", fmt)
+    put(ws, f"E{r}", f'=IF(B{r}<C{r},"Debajo",IF(B{r}>D{r},"Arriba","Dentro"))')
+    if cons:
+        put(ws, f"F{r}", cons, fmt)
+    r += 1
+r += 1
+header(ws, r, ["Sensibilidades clave", "Valor", "", "", "", "", ""])
+r += 1
+put(ws, f"A{r}", "FCF/accion 2027E si impuestos en caja = 100% del libro (base: 60%)")
+put(ws, f"B{r}", f"=(Model!G{M['fcf']}+Model!G{M['tax']}*(1-{Y['ctax'][1]}))/Model!G{M['sh']}", EPS, bold=True)
+put(ws, f"C{r}", "vs target mgmt 5.85-6.15; el 60% es un supuesto (DTA 87M + deduccion litigio BASF).", font=NOTE)
+r += 1
+put(ws, f"A{r}", "FCF/accion 2028E si impuestos en caja = 100% (base: 80%)")
+put(ws, f"B{r}", f"=(Model!H{M['fcf']}+Model!H{M['tax']}*(1-{Y['ctax'][2]}))/Model!H{M['sh']}", EPS, bold=True)
+r += 1
+put(ws, f"A{r}", "EBITDA PF 2026E si margen PT core H2'26 = 18% ('high teens' dicho en Q1 call) - delta vs modelo")
+put(ws, f"B{r}", f"=FY26_Puente!C{pr['pt_s']}*(0.18-FY26_Puente!C{pr['pt_m']})", N1, bold=True)
+put(ws, f"C{r}", "El modelo calibra a la guia y deja H2 PT en ~13.7% (-6% YoY); probablemente subestima PT/PF 2026.", font=NOTE)
+r += 2
+header(ws, r, ["Venta de APT: efecto en 2027E PF", "Sin venta", "Low", "Base", "High", "Base 0% recompras", "Base 100% recompras"])
+r += 1
+for lab, key, fmt in [("Proceeds netos", "Proceeds netos (despues de fuga)", N1), ("EPS ajustado 2027E", "EPS ajustado 2027E", EPS),
+                      ("Delta EPS vs sin venta", "Delta EPS vs sin venta", EPS), ("FCF / accion", "FCF / accion", EPS),
+                      ("Deuda neta / EBITDA fin 2027", "Deuda neta / EBITDA 2027E", MULT)]:
+    put(ws, f"A{r}", lab)
+    for col, ac in zip("BCDEFG", "BCDEFG"):
+        put(ws, f"{col}{r}", f"=APT!{ac}{RA[key]}", fmt)
+    r += 1
+r += 1
+header(ws, r, ["Valuacion (precio actual)", "Valor", "", "", "", "", ""])
+r += 1
+vr = r
+put(ws, f"A{r}", "Precio / market cap (Annual Model)")
+put(ws, f"B{r}", f"={S['px0']}", EPS)
+put(ws, f"C{r}", f"={S['mcap']}", N1)
+r += 1
+put(ws, f"A{r}", "EV PF = market cap + deuda neta inicial 2027 ajustada (tras venta APT)")
+put(ws, f"B{r}", f"={S['mcap']}+Model!G{M['nd_adj']}", N1)
+r += 1
+put(ws, f"A{r}", "EV / EBITDA 2027E PF")
+put(ws, f"B{r}", f"=B{r-1}/Model!G{M['ebitda']}", MULT, bold=True)
+r += 1
+put(ws, f"A{r}", "EV consolidado (incl. APT, sin venta) / consenso EBITDA 2027")
+put(ws, f"B{r}", f"=({S['mcap']}+Model!E{M['close']})/{CONS['c_ebitda'][1]}", MULT)
+r += 1
+put(ws, f"A{r}", "P/E 2027E PF")
+put(ws, f"B{r}", f"={S['px0']}/Model!G{M['eps']}", MULT, bold=True)
+r += 1
+put(ws, f"A{r}", "FCF yield 2027E PF")
+put(ws, f"B{r}", f"=Model!G{M['fcf']}/{S['mcap']}", PCT, bold=True)
+ws.column_dimensions["A"].width = 62
+for c in "BCDEFG":
+    ws.column_dimensions[c].width = 17
+ws.freeze_panes = "B5"
+
+# =====================================================================
+# Notas
+# =====================================================================
+wn = wb.create_sheet("Notas")
+put(wn, "A1", "Metodologia, fuentes y limites", font=TTL)
+notes = [
+    "PERIMETRO: New Ingevity = Performance Materials + Pavement Technologies (core, ex-Road Markings), sin APT ni Industrial Specialties. El modelo se arma desde segmentos (no desde lineas de LSEG, que son inconsistentes: D&A 106->67->95; SG&A -200->-115).",
+    "ANCLA: FY25 PF = marco de mgmt (dic-25): ventas ~900, EBITDA ~335 (PM 320 / PT 45 / corp -30), EPS ~5.25, FCF/accion ~5.35. Puente desde 373.0 reportado esta en Model, seccion 7.",
+    "2026: H1 real (Q1+Q2 releases) + H2 estimado. Guia incluye APT todo el ano y RM hasta 15-abr; la columna 'FY26E Rep.' reproduce esa base y se contrasta con la guia. 'FY26E PF' quita APT y RM todo el ano.",
+    "ESTIMADOS NO REPORTADOS (marcados en Inputs): ventas/EBITDA de Road Markings por periodo, capex de APT, acciones fin de Q2, costos varados atribuibles a APT, tasa de caja de impuestos, precio de recompra.",
+    "COSTOS VARADOS: el EBITDA PF NO es guia - APT. APT absorbe servicios compartidos que se quedan al venderlo; mgmt incluye 20-25M de varados (IS+RM+APT) en su PF de 335. Se modelan -5/-3/-2 (rango 0 a -10).",
+    "VENTA DE APT: la guia 2026 NO incluye proceeds. El framework de ~$1B (dic-25) SI los incluye. En el modelo: multiplo x EBITDA normalizado, menos fuga; el % a recompras extra vs deuda es input (default 50%). Cierre supuesto 1-ene-27.",
+    "EPS ajustado de Ingevity solo agrega de vuelta cargos especiales; la D&A (incl. amortizacion) pesa en el EPS.",
+    "Historia: 2024 usa recast del 10-K 2025 (PM 333.2 vs 319.1 original; APT 39.0 vs 35.2). 2022-23 de APT estan en la base de asignacion anterior.",
+    "Capital de Capa: proxy = Other Investing CF 2019 del Annual Model (543.5). Puede incluir otros conceptos; verificar contra 10-K 2019.",
+    "Consenso: Annual Model del workspace (LSEG). Filas EPS: TR.EPSMean (5.36/6.05/6.82) vs NI/acciones (4.98/5.55/5.89) no coinciden; aqui se usa TR.EPSMean, igual que el deck v3.",
+    "NO se modifico 20261007_Ingevity Corp.xlsx ni el deck (ambos abiertos, con formulas LSEG). Este archivo es independiente; sus hojas se pueden copiar al workbook.",
+]
+for i, t in enumerate(notes, start=3):
+    put(wn, f"A{i}", t, wrap=True)
+    wn.row_dimensions[i].height = 48
+wn.column_dimensions["A"].width = 160
+
+order = ["Summary", "Inputs", "Model", "FY26_Puente", "APT", "Uso_Caja", "GAAP_Bridge", "Notas"]
+wb._sheets = [wb[n] for n in order]
+wb.calculation.fullCalcOnLoad = True
+wb.save(OUT)
+print("saved", OUT, M)

@@ -1,0 +1,219 @@
+import math
+from openpyxl import Workbook
+from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+
+OUT = r"C:\Users\cesar\OneDrive\Documentos\20260930_SETSA_Posibles_Compradores.xlsx"
+NAVY, WHITE, SECT, BAND = "242852", "FFFFFF", "D9E1F2", "F2F2F2"
+AFF = {"Alta": "C6EFCE", "Media-Alta": "E2EFDA", "Media": "FFEB9C", "Baja-Media": "FCE4D6", "Baja": "F8CBAD"}
+thin = Side(style="thin", color="BFBFBF")
+F = lambda **k: Font(name="Arial", size=k.pop("size", 10), **k)
+
+cols = ["Comprador", "Tipo", "Sede / Dónde opera", "Flotilla / Escala", "Descripción", "Por qué SETSA (≤30 palabras)", "Dueño / CEO", "Afinidad", "Sitio web"]
+widths = [26, 18, 30, 22, 44, 46, 30, 12, 26]
+I_AFF, I_WEB = cols.index("Afinidad"), cols.index("Sitio web")
+
+data = [
+ ("Operadores de transporte de personal – Coahuila", [
+  ("DM Control, S.A. de C.V.", "Privado (familiar)", "Saltillo (2 bases), Sabinas, SLP, Irapuato, Toluca", "+700 unidades",
+   "Transporte de personal, ejecutivo y renta de unidades. Clientes: GM, Lear, Magna, Whirlpool, ABB. Se perfila para operar rutas del transporte público de Saltillo.",
+   "Consolidador local con base en Sabinas (Carbonífera) y Saltillo; SETSA le suma Monclova, Nava y Piedras Negras, clientes industriales y talleres con densidad regional.",
+   "Familia Musa: José Musa de León (fundador); José Rodolfo Musa Pader (director)", "Alta", "dm-control.com.mx"),
+  ("Empresariales Ibarra (Grupo Regional Santa Fe / Transpersonal Santa Fe)", "Privado (familiar)", "Piedras Negras, Cd. Acuña, Sabinas", "N.D.; +30,000 traslados al mes",
+   "Transporte de personal para maquiladoras, escolar, urbano y turismo; 30+ años, escuela de choferes y talleres propios en Piedras Negras, Acuña y Sabinas. También opera gasolineras.",
+   "Competidor directo en Piedras Negras y Carbonífera; comprar SETSA elimina competencia, comparte talleres y choferes y le agrega Monclova y Apodaca.",
+   "Arturo Ibarra González (Grupo Empresarial Ibarra)", "Alta", "empresarialesibarra.com"),
+  ("Transporte IBSOM, S.A. de C.V.", "Privado (familiar)", "Saltillo, Ramos Arizpe (región sureste)", "+300 unidades; +250 mil pasajeros por semana",
+   "Transporte de personal para industria, comercio y escuelas; +6,500 viajes semanales y 212 permisos de transporte de personal en Saltillo.",
+   "Escala similar o mayor a SETSA pero concentrada en Saltillo; SETSA le diversifica hacia Monclova, frontera y NL con contratos ya firmados.",
+   "Laura Rocío Ibarra Somera (administradora)", "Media-Alta", "mx.linkedin.com/company/transporte-ibsom-sa-de-cv"),
+  ("Transporte Empresarial del Norte (TEN)", "Privado", "Sede SLP; base en Torreón (La Laguna); 6 estados", "150 autobuses en La Laguna (2021); +100 clientes",
+   "Transporte de personal empresarial, ejecutivo y turismo desde 2012; invirtió ~MXN 240–270 M para entrar a La Laguna con unidades DINA nuevas. ISO 9001 y 14000.",
+   "Crece por inversión y geografía nueva; SETSA le daría entrada inmediata a Monclova–Piedras Negras y NL, más rápido que abrir base desde cero.",
+   "Arturo Ortiz (accionista)", "Media-Alta", "transportesten.com"),
+  ("SEUAC", "Privado (local)", "Torreón (La Laguna)", "N.D.; +10,000 pasajeros al día",
+   "Transporte de personal empresarial, PyME, ejecutivo y escolar con 37+ años. Clientes: Caterpillar, John Deere, Wrangler, Lincoln Electric, Linamar, Joyson.",
+   "Líder en La Laguna con escala comparable; SETSA le abre el centro y norte de Coahuila y Apodaca con clientes industriales similares.",
+   "N.D. (privada)", "Media", "seuac.com"),
+  ("GTA Transportes, S.A. de C.V.", "Privado (local)", "Frontera, Coahuila (zona Monclova)", "N.D.",
+   "Transporte de empleados, escolar, eventos y grupos desde 1997 (~30 años).",
+   "Opera en la misma plaza que SETSA; la compra da densidad de rutas en Monclova–Frontera y ahorro en talleres. Duda: capacidad para pagar el TEV.",
+   "N.D. (contacto: Víctor Arreola)", "Media", "gtatransportes.com.mx"),
+  ("Punto Transportes", "Privado (local)", "Piedras Negras, Cd. Acuña, Sabinas", "N.D.; +20,000 traslados al mes",
+   "Transporte de personal corporativo; 99% de puntualidad y monitoreo GPS 24/7.",
+   "Competidor directo en el norte de Coahuila; fusión o compra daría escala, rutas compartidas y mejor poder de negociación con clientes maquiladores fronterizos.",
+   "N.D. (privada)", "Media", "puntotransportes.com"),
+  ("Autotransportes Especiales de Cd. Acuña (AECA)", "Privado (local)", "Cd. Acuña (Parque Industrial Amistad)", "N.D.; autobuses Freightliner, Zafiro, Express y vans",
+   "Transporte de personal desde 1988. Clientes: Arconic, Bendix, GE (Fisher Lighting), Gentherm, RPS.",
+   "Operador fronterizo con clientes maquiladores; SETSA le suma Piedras Negras–Nava y Monclova para cubrir todo el corredor norte de Coahuila.",
+   "N.D. (contacto: Manuel Octavio Ramón)", "Media", "aecamexico.com"),
+  ("Traper Laguna (Pamesa de la Laguna)", "Privado (local)", "Torreón (La Laguna)", "N.D.; flota de menos de 5 años",
+   "Transporte de personal industrial, comercial, escolar y viajes especiales desde 2001.",
+   "Operador lagunero mediano; SETSA le daría escala y geografía nueva. Más probable como socio de fusión que como comprador en efectivo.",
+   "N.D. (privada)", "Baja-Media", "traperlaguna.com"),
+  ("Transportes LAIN", "Privado (local)", "Saltillo, Coahuila", "N.D.",
+   "Transporte de personal, ejecutivo, aeropuerto y última/media milla; monitoreo GPS 24 h.",
+   "Operador de Saltillo que busca diversificar; SETSA le da escala y presencia en Monclova y frontera. Probable fusión más que compra en efectivo.",
+   "N.D. (contacto: Fernando Torres)", "Baja-Media", "transporteslain.com"),
+  ("Trans Saltillo", "Privado (local)", "Saltillo y región sureste de Coahuila", "Chica (Transit, Sprinter, camiones de 41)",
+   "Transporte de personal empresarial y renta con o sin operador; vans ejecutivas y camiones de 41 pasajeros.",
+   "Operador chico en Saltillo; SETSA le daría escala y presencia en Monclova y la región norte. Más probable como socio de fusión que como comprador en efectivo.",
+   "N.D. (privada)", "Baja-Media", "transsaltillo.com"),
+  ("Transportes Leymart", "Privado (local)", "Saltillo, Coahuila", "N.D.",
+   "Transporte de personal industrial en Saltillo, enfocado en puntualidad garantizada.",
+   "Jugador local en expansión; adquirir SETSA le permitiría diversificar fuera de Saltillo hacia Monclova y la región Carbonífera con contratos ya firmados.",
+   "N.D. (privada)", "Baja-Media", "leymart.mx"),
+  ("Transportes GAD Solutions", "Privado (local)", "Saltillo, Ramos Arizpe, Derramadero, Arteaga", "Chica (Boxer de 35 y Transit de 15–18)",
+   "Transporte de personal, turismo y fletes.",
+   "Operador del corredor Saltillo–Ramos Arizpe; SETSA complementa geografía y le agrega unidades de turismo de 39–47 pasajeros.",
+   "N.D. (privada)", "Baja", "transportesgad.com"),
+ ]),
+ ("Operadores de transporte de personal – Nuevo León", [
+  ("Grupo Senda (SIR – Servicio Industrial Regiomontano / Senda Citi)", "Privado (familiar)", "Monterrey; Saltillo, Torreón, Reynosa, SLP, Zacatecas, Cd. Juárez, Cd. Victoria", "SIR: ~1,700 camiones de personal",
+   "Grupo de autobuses con 87+ años; SIR es su brazo de transporte industrial y estudiantil. Clientes: DENSO, LG, HEB, Mercedes-Benz, Nemak, Carrier, Metalsa.",
+   "Ya opera personal industrial en Saltillo y Torreón; SETSA le da densidad en Monclova y Carbonífera, clientes y sinergias de flotilla, talleres y choferes.",
+   "Familia Sada: Juan Carlos Sada González", "Alta", "sendaciti.com"),
+  ("Transpais (Transpais Mobiliti)", "Privado (familiar)", "Cd. Victoria / Monterrey; NL, Tamaulipas, SLP, Veracruz", "N.D. (grupo con 80+ años)",
+   "Grupo de autotransporte; pasajeros, turismo, escolar y división de Transporte Industrial.",
+   "Tiene división industrial pero no está en Coahuila; SETSA sería su entrada inmediata al corredor Monclova–Piedras Negras con contratos vigentes.",
+   "Abelardo Osuna Cobos (Presidente); Abelardo Osuna Morales (DG)", "Alta", "transpaismobiliti.com.mx"),
+  ("Transportes GEMA", "Privado", "Monterrey y área metropolitana", "N.D.; 201–500 empleados",
+   "Transporte de personal industrial, escolar, turismo y eventos desde 1996. Clientes: Panasonic, Nemak, Maseca, Liverpool, Coppel, Teleperformance.",
+   "Operador regio de escala media; la base de Apodaca de SETSA encaja directo y Coahuila le abre plazas industriales nuevas.",
+   "N.D. (privada)", "Media", "transportesgema.com.mx"),
+  ("Moveo", "Privado", "Monterrey; también cubre Saltillo", "N.D.; renta de flotillas con chofer",
+   "Renta de autos y flotillas para empresas, rutas de traslado de personal y transporte ejecutivo.",
+   "Busca crecer en rutas de personal; SETSA le daría contratos recurrentes y flota de autobuses. Perfil más de arrendadora que de operador.",
+   "N.D. (privada)", "Baja-Media", "tumoveo.mx"),
+ ]),
+ ("Estratégicos nacionales", [
+  ("Transportes Lipu (Grupo Traxión)", "Estratégico nacional (privado tras OPA)", "23 ciudades; oficinas en Saltillo y Monterrey", "~8,400 unidades",
+   "Líder nacional de transporte de personal y escolar; ~750 mil usuarios diarios.",
+   "SETSA es chica para Traxión, pero cierra cobertura en Monclova y Piedras Negras. En contra: recorte de capex 2026 y consolidación del control vía OPA.",
+   "Aby Lijtszain Chernizky (Presidente Ejecutivo, Traxión)", "Media-Alta", "traxion.global/lipu"),
+  ("Mobility ADO (TEPER)", "Privado (familiar)", "Nacional; personal (TEPER) en el sureste; España, Chile, Centroamérica", "Grande (nacional)",
+   "Mayor grupo de movilidad de México; TEPER es su marca de transporte especializado de personal.",
+   "Tiene la marca de personal pero no está en el norte industrial; SETSA sería su plataforma de entrada al corredor Coahuila–NL del nearshoring.",
+   "José Antonio Pérez Antón (CEO)", "Media", "teper.com.mx"),
+  ("Grupo IAMSA", "Privado", "Nacional; rutas fuertes en el norte", "~10,000 unidades",
+   "Conglomerado de autotransporte (Ómnibus de México, Flecha Amarilla); ~24% del mercado foráneo.",
+   "Escala y talleres en el norte; podría usar SETSA para diversificarse del foráneo hacia contratos industriales recurrentes.",
+   "Roberto Alcántara Rojas (Presidente)", "Baja-Media", "grupo-iamsa.com.mx"),
+ ]),
+ ("Operadores de EE.UU. / internacionales", [
+  ("Kelsian Group (All Aboard America!)", "Estratégico (ASX: KLS)", "TX, AZ, NM, CA, CO, LA, MS", "—",
+   "Cuarto operador de motorcoach de EE.UU.; chárter, transporte de trabajadores con contrato (LNG), corporativo y escolar.",
+   "Ya mueve trabajadores con contrato en Texas; podría seguir a clientes binacionales al lado mexicano. Comparable directo (6.9x EV/EBITDA).",
+   "Clint Feuerherdt (CEO)", "Media", "kelsian.com"),
+  ("Student Transportation of America", "Estratégico (respaldo de fondos)", "EE.UU. y Canadá; entró a Arizona (2024)", "—",
+   "Operador escolar y chárter; adquisiciones seriales y expansión en transporte industrial (+US$100M de crecimiento).",
+   "Adquirente serial con apuesta por transporte industrial; México sería expansión nueva vía un operador rentable y fronterizo.",
+   "Gene Kowalczewski (CEO)", "Baja-Media", "ridesta.com"),
+  ("Avalon Transportation", "Privado", "TX, CA, AZ", "—",
+   "Motorcoach y chárter; compró Wynne (TX, 2023), Kerrville y Coach USA (TX, 2024) y Rose Chauffeured (2025).",
+   "Roll-up activo en Texas; SETSA sería un puente para clientes de nearshoring en la frontera de Coahuila.",
+   "Jeffrey Brush (CEO y dueño, vía Virgin-Fish)", "Baja", "avalonbus.com"),
+  ("Flix (Greyhound México)", "Estratégico", "Rutas Monterrey–Nuevo Laredo–Texas; EE.UU. y Europa", "—",
+   "Operador global de autobús foráneo; dueño de Greyhound y Greyhound México.",
+   "Presencia fronteriza, pero su negocio es foráneo; SETSA aportaría contratos corporativos recurrentes y turismo.",
+   "André Schwämmlein (CEO)", "Baja", "flix.com"),
+ ]),
+ ("Fondos de capital privado / infraestructura", [
+  ("Discovery Americas", "Capital privado (México)", "México; vertical de transporte y logística", "—",
+   "Primer inversionista de Fondo de Transporte México (Lipu + Egoba), hoy Traxión; también invirtió en Volaris y Arrenda+.",
+   "Conoce la tesis: roll-up de transporte de personal. SETSA podría ser plataforma para consolidar operadores regionales del noreste.",
+   "Carlos Mendoza (cofundador); Alberto Moreno, Harry Krensky (socios)", "Alta", "discoveryamericas.com"),
+  ("Nexxus Capital", "Capital privado (México)", "México; capital de crecimiento para empresas medianas", "—",
+   "Coinvirtió en Fondo de Transporte México (2016) junto con Discovery Americas.",
+   "Conoce el sector y el tamaño de SETSA encaja con su perfil de empresa mediana familiar con plan de institucionalización.",
+   "Arturo José Saval Pérez (Presidente)", "Media-Alta", "nexxuscapital.com"),
+  ("I Squared Capital", "Fondo de infraestructura global", "Global; compró el negocio escolar de Mobico (2025)", "—",
+   "Infraestructura con apetito por transporte con contratos; US$608M por Mobico North America School Bus.",
+   "SETSA es chica para su ticket; solo encaja como complemento de una plataforma de movilidad en México.",
+   "Sadek Wahba (Fundador y Managing Partner)", "Baja", "isquaredcapital.com"),
+  ("Vinci Compass / GEF Capital", "Capital privado (LatAm)", "Brasil, Colombia; transporte y logística", "—",
+   "Compraron Solística Brasil y Colombia a Traxión (2025).",
+   "Activos en transporte regional; podrían interesarse si arman plataforma de movilidad corporativa en México.",
+   "Alessandro Horta (CEO, Vinci Compass)", "Baja", ""),
+ ]),
+ ("Compradores de flotilla / sale & leaseback", [
+  ("Arrendadora Banorte", "Banco / arrendadora", "Nacional; sede Monterrey", "—",
+   "Arrendamiento de equipo de transporte; hoy es el mayor acreedor de SETSA ($25.1M).",
+   "Sale & leaseback de unidades para liquidar deuda de corto plazo sin vender la empresa; ya conoce el riesgo y las garantías.",
+   "Marcos Ramírez Miguel (DG, GF Banorte)", "Media", "banorte.com"),
+  ("Arrendadora Afirme", "Banco / arrendadora", "Nacional; sede Monterrey", "—",
+   "Arrendamiento y crédito empresarial; acreedor de SETSA ($21.3M, incluye revolvente de $8M).",
+   "Reestructurar el revolvente de corto plazo vía sale & leaseback; libera liquidez y mejora el perfil para un comprador estratégico.",
+   "Julio César Villarreal Guajardo (Presidente, Grupo Afirme)", "Media", "afirme.com"),
+  ("Engen Capital (ex Engenium)", "Arrendadora especializada", "Nacional; empresas medianas", "—",
+   "Ex GE Capital México; arrendamiento de activos estratégicos y flotillas para empresas medianas.",
+   "Compra de unidades con arrendamiento de regreso; alternativa no bancaria para refinanciar flotilla y liberar caja.",
+   "Juan Pablo Loperena (CEO; dato 2020)", "Baja-Media", ""),
+  ("Navistar / International (toma a cuenta)", "Fabricante / financiera", "Nacional", "—",
+   "Fabricante y financiera de unidades; hoy financia $18.5M de la flotilla de SETSA.",
+   "Toma de unidades usadas a cuenta de renovación de flotilla; útil para depurar unidades viejas antes de una venta.",
+   "N.D.", "Baja", ""),
+ ]),
+]
+
+wb = Workbook(); ws = wb.active; ws.title = "Posibles Compradores"
+ws.sheet_view.showGridLines = False; ws.sheet_view.zoomScale = 85
+ws.column_dimensions["A"].width = 3; ws.column_dimensions["B"].width = 3
+from openpyxl.utils import get_column_letter as L
+for i, w in enumerate(widths): ws.column_dimensions[L(3 + i)].width = w
+last = L(3 + len(cols) - 1)
+
+# título
+for c in range(3, 3 + len(cols)): ws.cell(2, c).fill = PatternFill("solid", fgColor=NAVY)
+t = ws.cell(2, 3, "Grupo SESA (SETSA Transportes) – Posibles Compradores"); t.font = F(size=16, bold=True, color=WHITE)
+ws.row_dimensions[2].height = 30; t.alignment = Alignment(vertical="center")
+s = ws.cell(3, 3, "Criterios: presencia en Coahuila / NL o frontera de Texas · negocio de transporte de personal · flotilla igual o mayor a SETSA · apetito de adquisición · capacidad para un TEV de ~MXN 180–250 M")
+s.font = F(size=9, italic=True, color="595959")
+
+# encabezados
+hr = 5
+for i, h in enumerate(cols):
+    c = ws.cell(hr, 3 + i, h); c.font = F(bold=True, color=WHITE); c.fill = PatternFill("solid", fgColor=NAVY)
+    c.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+ws.row_dimensions[hr].height = 30
+
+r = hr + 1
+def est_lines(text, width):
+    if not text: return 1
+    cpl = max(1, int(width * 1.15))
+    return sum(max(1, math.ceil(len(p) / cpl)) for p in str(text).split("\n"))
+
+for sect, rows in data:
+    r += 1
+    for c in range(3, 3 + len(cols)):
+        ws.cell(r, c).fill = PatternFill("solid", fgColor=SECT); ws.cell(r, c).border = Border(bottom=thin)
+    sc = ws.cell(r, 3, sect); sc.font = F(bold=True, color=NAVY)
+    ws.row_dimensions[r].height = 18
+    for k, row in enumerate(rows):
+        assert len(row) == len(cols), row[0]
+        r += 1
+        band = PatternFill("solid", fgColor=BAND) if k % 2 else None
+        lines = 1
+        for i, v in enumerate(row):
+            c = ws.cell(r, 3 + i, v)
+            c.font = F(bold=(i == 0))
+            c.alignment = Alignment(vertical="center", wrap_text=True, horizontal="center" if i == I_AFF else "left")
+            c.border = Border(bottom=thin)
+            if band: c.fill = band
+            if i == I_AFF: c.fill = PatternFill("solid", fgColor=AFF[v]); c.font = F(bold=True)
+            if i == I_WEB and v: c.font = F(color="0563C1", underline="single"); c.hyperlink = "https://" + v
+            lines = max(lines, est_lines(v, widths[i]))
+        ws.row_dimensions[r].height = max(28, 13.5 * lines + 6)
+
+r += 2
+notes = ["Afinidad: criterio propio con base en presencia geográfica, negocio de personal, tamaño de flotilla, historial de adquisiciones y tamaño relativo del deal.",
+         "N.D.: dato no disponible en fuentes públicas (empresas privadas). Traslados y pasajeros son cifras publicadas por cada empresa; flotilla por confirmar en llamada.",
+         "Descartados por escala (flotilla de vans, menor a SETSA): Rentrip, TREGAR, Transpor, APCO Logistic y Konect (Monterrey).",
+         "Riesgos comunes: concentración en Monclova (AHMSA), 'Reserva de Cuentas Incobrables' ($35.1M) y 50% de la deuda con vencimiento a 12 meses."]
+for n in notes:
+    ws.cell(r, 3, n).font = F(size=9, italic=True, color="595959"); r += 1
+
+ws.freeze_panes = "D6"
+ws.print_area = f"C2:{last}{r}"
+ws.page_setup.orientation = "landscape"; ws.page_setup.fitToWidth = 1; ws.page_setup.fitToHeight = 0
+ws.sheet_properties.pageSetUpPr.fitToPage = True
+wb.save(OUT); print("saved", OUT, "rows", r)

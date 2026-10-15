@@ -1,0 +1,53 @@
+# ASSET CATALOG (curated) — images the deck should use
+Rule from the user: *images that Halliburton itself or the reports provide add a lot of value → use them.* All assets below are copied into `08_Assets/selected/` (descriptive names). **Max placed width at 150 dpi = pixel width ÷ 150.** Never stretch beyond; crop instead.
+Auto index of every extracted report figure: `ASSET_CATALOG_auto.md`. Contact sheets: `_contact/`. Native image dump: `company_images/`.
+
+## 1. Brand & cover
+| File | Px | Max width @150dpi | Use |
+|---|---|---|---|
+| `selected/COVER_cover_4k.jpg` (+ `cover/cover_4k.png`, `cover_qhd.jpg`) | 3840×2160 | full-bleed (288 dpi) | Cover **and** closing background (user-provided red-wave art, de-pixelated) |
+| `selected/hal_logo_white_transparent.png` | 2224×170 | 14.8 in | Cover/closing/dividers (white on red) |
+| `selected/hal_logo_red_transparent.png` | 2224×170 | 14.8 in | Content-slide top-right (place w2.4 h0.18 at x10.43 y0.50) |
+| `selected/flag_kuwait_632x316.png` | 632×316 | 4.2 in | Country slides (small, ≤1.0 in) |
+| `cover/_compare_crop.png`, `cover/_preview_logo_on_cover.png` | – | – | QA only: before/after upscaling, logo placement preview |
+
+## 2. Halliburton photography (native resolution, from the company's Q2-26 IR deck)
+| File | Px | Max @150 | Content | Suggested slide |
+|---|---|---|---|---|
+| `photo_rig_desert_dusk_892x767.png` | 892×767 | 5.9 in | Land rig in desert at dusk with light trails — best "Gulf/Kuwait" mood | Section-2 divider or Kuwait context (E1) |
+| `photo_hal_trucks_desert_773x972.png` | 773×972 | 5.1 in | Row of red HAL frac trucks on desert sand | Kuwait operations / activity-risk slide (E1) |
+| `photo_frac_fleet_dusk_2161x1081_HIRES.png` | 2161×1081 | 14.4 in | Electric/pressure-pumping fleet at dusk, wide | Full-bleed band (E2) or section divider background (darken 40%) |
+| `viz_digital_frac_2000x1016_HIRES.png` | 2000×1016 | 13.3 in | Dark teal digital frac visualization | Ahmadi Innovation Valley / digital-AI R&D slide (H21) |
+| `photo_rig_tower_HALLIBURTON_774x976.png` | 774×976 | 5.2 in | Rig substructure with HALLIBURTON branding | Company overview (E1) |
+| `photo_worker_headset_logo_854x862.png` | 854×862 | 5.7 in | Worker in red jacket with logo | People/local-workforce (91% local hires, H23) |
+| `photo_worker_pipe_rig_773x973.png` | 773×973 | 5.1 in | Worker at rig with pipe | Activity-risk slide |
+| `photo_frac_fleet_field_773x973.png` | 773×973 | 5.1 in | Frac fleet in wheat field | North America contrast |
+| `photo_scientist_lab_625x787.png` | 625×787 | 4.2 in | Researcher | R&D center / Ahmadi Innovation Valley (≤ 4.2 in wide) |
+| `photo_team_collage_764x982.png` | 764×982 | 5.1 in | 12-photo people collage | Closing/people |
+| `illus_oilfield_lifecycle_1055x402.png` | 1055×402 | 7.0 in | 5-stage oilfield lifecycle 3-D illustration | "Where HAL participates" diagram (E2/D2) |
+| `viz_digital_laptop_760x373.png` | 760×373 | 5.0 in | Digital services | optional |
+| `hal_map_global_footprint.png` (200-dpi crop of vector map) | 1900×1125 | 12.7 in | Global footprint, Middle East dots, TCs | Overview (D6) — recolor-free, original |
+| `hal_key_facts_panel.png` | 642×1005 | 4.3 in | 1919 · 46,000 · 70+ · 12 · Houston | Company overview KPI side panel (or rebuild as 5 KPI tiles) |
+| `table_segment_geo_results_1459x818.png` | 1459×818 | 9.7 in | Official quarterly segment/region table | backup for T4 appendix (rebuild natively) |
+Quality warning: photos on IR-deck p7 (product-service-line thumbnails, 161×138 px) are **too small** for anything beyond 1.0 in — excluded.
+
+## 3. Company/report charts to REBUILD natively (numbers in FACT_BASE)
+| Chart | Source | Numbers | Layout |
+|---|---|---|---|
+| Revenue by region 2021–2027E | BBG financials (`HAL_Financials_2018-2027.md`), H02–H04 | ME/Asia 3,843→5,832→5,015E→5,823E | C1 |
+| ME/Asia quarterly 2024–Q2-26 | Segment/Geo table + Q2 release (`HAL_Q1-2026_Segment-Geography-Table.md`, H05) | 1,421 … 1,298 | C3 |
+| Debt maturity profile | IR deck fig-057 (H14) | 2027: 90; 2030: 1,000; >2030: 6,132 | C6 |
+| Adjusted ROCE vs peers | IR fig-055/058 (H25) | see H25 | C3 |
+| OCF & FCF 2022–Q2'26 TTM | IR fig-056 (H15) | see H15 | C3 |
+| Leverage & coverage trend 2018–2025 | BBG credit-analysis screenshot (H11) | EBITDA/interest 6.8 → 11.9 → 8.5 | C3 |
+| KWD/USD monthly 2020–2026 | `data/kwd_usd_monthly_close.csv` (X02) | 3.2336–3.3306 | C7 |
+| Hormuz transits / Gulf oil on water | UBS figs 001–003, 010 | see CHART_ANALYSIS | C7 |
+| GCC bond issuance incl. Kuwait USD 6bn | MUFG fig-002 | ≈ read from chart | C1 |
+| Oil forward curve (CL1) | `News_and_Forecast/Forecast/CL1 Futures.png` | ≈ 91 front → ≈ 53 (2036) | C7 |
+| NGFS revenue path (Track B ESG) | ESG `CT_ Future impact on rev.png` (B04) | −45.95% by 2050 | C3 |
+
+## 4. Bloomberg Terminal exhibits (framed, ≤ 1 per section, E3)
+`Risk/Bloomberg Default Risk.png` (DRSK), `Risk/MIPD.png`, `Perfil Halliburton.png`, `KWD_USD Yahoo.png`, `ESG SCORES.png` — crop to the panel, white card + 0.5 pt grey border, caption with source/date. Full analysis: `04_Bloomberg_Data/IMAGE_ANALYSIS.md`.
+
+## 5. Excluded / duplicates
+`Screenshot analisis ESG.png` (IBM), Spanish ESG duplicates in `News_and_Forecast/HALLIBURTON/` (except the peer asset-damage chart), 38 duplicate images removed from `company_images/HAL_Q4-2025_Deck/` (same as Q2 deck).

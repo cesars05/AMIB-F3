@@ -1,0 +1,81 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); if([int]$xl.Workbooks.Count -gt 0){ foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } } } }catch{}; if($wb -ne $null){break}; Start-Sleep -Milliseconds 800 }
+$cm=$null
+for($i=0;$i -lt 30;$i++){ try{ $cm=$wb.Worksheets.Item("Consolidated Model"); if($cm -ne $null){ break } }catch{}; Start-Sleep -Milliseconds 700 }
+$dst=Join-Path "C:\Users\cesar\OneDrive\Desktop\Alumasc & Peers\Alumasc\Financials" ("BACKUP_PRE_TIDY_"+(Get-Date -Format "yyyyMMdd_HHmmss")+"_"+$wb.Name)
+$wb.SaveCopyAs($dst)
+Write-Output ("Libro: "+$wb.Name+"   Backup: "+(Split-Path $dst -Leaf))
+
+Write-Output ""
+Write-Output "=== bordes en K285 (para ver la linea) ==="
+$c=$cm.Cells.Item(285,11)
+foreach($p in @(@(7,"izquierda"),@(8,"arriba"),@(9,"abajo"),@(10,"derecha"),@(5,"diagonal desc"),@(6,"diagonal asc"))){
+  $ls="?"
+  try{ $ls=[string]$c.Borders.Item($p[0]).LineStyle }catch{}
+  if($ls -ne "-4142"){ Write-Output ("   "+$p[1]+" LineStyle="+$ls) }
+}
+Write-Output ("   (-4142 = sin borde)")
+
+# ---------- quitar cursiva de las filas de datos, dejarla solo en las notas ----------
+$cm.Range("C279:S282").Font.Italic=$false
+$cm.Range("C284:S290").Font.Italic=$false
+$cm.Range("C292:S297").Font.Italic=$false
+$cm.Range("C283").Font.Italic=$true
+$cm.Range("C291").Font.Italic=$true
+$cm.Range("S277").Font.Italic=$false
+Write-Output ""
+Write-Output "  cursiva quitada de las filas de datos"
+
+# ---------- quitar cualquier borde raro heredado ----------
+foreach($r in 279,280,281,282,284,285,286,287,288,289,290,292,293,294,295,296,297){
+  $rng=$cm.Range("D"+$r+":S"+$r)
+  foreach($idx in 5,6,7,8,9,10,11,12){
+    try{ $rng.Borders.Item($idx).LineStyle=-4142 }catch{}
+  }
+}
+Write-Output "  bordes heredados limpiados"
+
+# ---------- devolver los negrita/color que si queremos ----------
+$RED=255; $BLUE=16711680; $GREY=8421504
+foreach($r in 279,284,292){ $cm.Cells.Item($r,3).Font.Bold=$true }
+$cm.Range("S280:S282").Font.Color=$BLUE
+$cm.Range("S293").Font.Color=$RED
+$cm.Range("S294:S297").Font.Bold=$true
+$cm.Range("S277").Font.Bold=$true
+$cm.Range("D280:Q282").Font.Color=$GREY
+$cm.Range("C283").Font.Color=$GREY
+$cm.Range("C291").Font.Color=$GREY
+
+# ---------- ignorar los avisos de formula inconsistente ----------
+$ign=0
+for($r=280;$r -le 297;$r++){
+  for($c=4;$c -le 19;$c++){
+    try{
+      $cell=$cm.Cells.Item($r,$c)
+      if($cell.Errors.Item(4).Value -eq $true){ $cell.Errors.Item(4).Ignore=$true; $ign++ }
+      if($cell.Errors.Item(6).Value -eq $true){ $cell.Errors.Item(6).Ignore=$true; $ign++ }
+      if($cell.Errors.Item(7).Value -eq $true){ $cell.Errors.Item(7).Ignore=$true; $ign++ }
+    }catch{}
+  }
+}
+Write-Output ("  avisos de Excel ignorados: "+$ign)
+
+$xl.CalculateFullRebuild()
+$xl.CalculateFullRebuild()
+Write-Output ""
+Write-Output ("        "+"".PadRight(48)+((10..17 | ForEach-Object { $i=$_; ([string]$cm.Cells.Item(277,$i).Text).PadLeft(9) }) -join "")+"        S")
+for($r=277;$r -le 297;$r++){
+  $lab=[string]$cm.Cells.Item($r,3).Text
+  $v=(10..17 | ForEach-Object { $i=$_; ([string]$cm.Cells.Item($r,$i).Text).PadLeft(9) }) -join ""
+  $s=[string]$cm.Cells.Item($r,19).Text
+  $it=[string]$cm.Cells.Item($r,11).Font.Italic
+  if(($lab+$v+$s).Trim() -ne ""){ Write-Output ("r"+$r+"  "+$lab.PadRight(48)+$v+"  "+$s.PadLeft(8)+"   cursiva="+$it) }
+}
+$tot=0
+foreach($ws in $wb.Worksheets){ if(@("Assumptions","Segment Model","Consolidated Model","DCF","EPV") -contains $ws.Name){ $bc=$null; try{ $bc=$ws.UsedRange.SpecialCells(-4123,16) }catch{ $bc=$null }; if($bc -ne $null){ $n=0; try{$n=[int]$bc.Count}catch{}; if($n -gt 0){ Write-Output ("  !! "+$ws.Name+" "+$n); $tot+=$n } } } }
+Write-Output ("")
+Write-Output ("  Errores: "+$tot)
+Write-Output ("  Balance check: "+((11..17 | ForEach-Object { $i=$_; [string]$cm.Cells.Item(164,$i).Text }) -join " | "))
+$wb.Save()
+Write-Output "guardado"

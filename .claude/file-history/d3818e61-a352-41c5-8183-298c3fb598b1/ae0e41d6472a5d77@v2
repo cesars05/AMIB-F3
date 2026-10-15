@@ -1,0 +1,92 @@
+import json, datetime, win32com.client as w
+from openpyxl.utils import get_column_letter as L
+x=w.GetActiveObject('Excel.Application'); wb=x.ActiveWorkbook; ws=wb.Worksheets('Market Growth & Inflation')
+wb.SaveCopyAs('backup_before_part4.xlsx')
+D=json.load(open('infl.json'))
+BLACK=0; PCT='0.0%'
+def V(): return ws.Range('B1:B520').Value2
+def find(p,start=1,end=520):
+    v=V()
+    for r in range(start,end+1):
+        t=v[r-1][0]
+        if isinstance(t,str) and t.startswith(p): return r
+    raise Exception('nf '+p)
+def fmt_from(t,r,c1='B',c2='Q'):
+    ws.Range('%s%d:%s%d'%(c1,t,c2,t)).Copy(); ws.Range('%s%d:%s%d'%(c1,r,c2,r)).PasteSpecial(-4122); x.CutCopyMode=False
+def ins(after,n):
+    ws.Rows('%d:%d'%(after+1,after+n)).Insert(Shift=-4121,CopyOrigin=0)
+    ws.Range('A%d:R%d'%(after+1,after+n)).ClearFormats()
+    ws.Range('A%d:R%d'%(after+1,after+n)).Font.Name='Arial'; ws.Range('A%d:R%d'%(after+1,after+n)).Font.Size=11
+def setf(r,c1,c2,fn):
+    ws.Range(ws.Cells(r,c1),ws.Cells(r,c2)).Formula=tuple([tuple(fn(L(c),c) for c in range(c1,c2+1))])
+x.ScreenUpdating=False; x.Calculation=-4135
+snap=ws.Range('B13:Q25').Value2
+
+# ---------- 1. monthly table columns H,I,J ----------
+hm=find('Monthly Inflation Data')
+heads={8:('MX','Mexico INPC Bread, Tortillas & Cereals YoY (%) (INEGI)'),9:('BR','Brazil IPCA Panificados YoY (%) (IBGE)'),10:('ES','Spain CPI Bread & Bakery Products YoY (%) (INE)')}
+ws.Cells(hm,7).Value='Brazil IPCA General YoY (%) (IBGE)'
+for c,(k,t) in heads.items():
+    ws.Range('G%d:G%d'%(hm,hm+108)).Copy(); ws.Range('%s%d:%s%d'%(L(c),hm,L(c),hm+108)).PasteSpecial(-4122)
+    ws.Cells(hm,c).Value=t
+    for i in range(1,109):
+        d=ws.Cells(hm+i,2).Value2
+        dt=datetime.datetime(1899,12,30)+datetime.timedelta(days=int(d)); key='%d%02d'%(dt.year,dt.month)
+        v=D[k].get(key)
+        ws.Cells(hm+i,c).Value=v if v is not None else None
+x.CutCopyMode=False
+
+# ---------- 2. Spain inserts (bottom-up within block) ----------
+spb=find('EAA (proxy: Spain')
+sh=find('Market Data (Baked Goods, Retail), Spain')
+ppg=sh+13
+ins(ppg,1)
+ins(spb+1,3)
+# Brazil templates
+bb=find('Latin America (proxy: Brazil')
+b_country,b_infl=bb+2,bb+3
+bh=find('Market Data (Baked Goods, Retail), Brazil')
+b_vs=bh+14
+assert ws.Cells(b_country,2).Value=='Brazil', ws.Cells(b_country,2).Value
+assert ws.Cells(b_vs,2).Value.startswith('Price per kg Growth vs'), ws.Cells(b_vs,2).Value
+sh=find('Market Data (Baked Goods, Retail), Spain')
+s_country,s_infl=spb+2,spb+3
+fmt_from(b_country,s_country); ws.Cells(s_country,2).Value='Spain'
+fmt_from(b_infl,s_infl); ws.Cells(s_infl,2).Value='CPI Bread & Bakery Products (Spain, INE), YoY Change'
+fmt_from(b_vs,sh+14); ws.Cells(sh+14,2).Value='Price per kg Growth vs Inflation (pp)'
+fmt_from(b_vs+1 if False else sh+15,sh+15)   # keep blank
+# ---------- 3. Mexico insert ----------
+core=find('Core Inflation (INPC Subyacente)')
+ins(core,1)
+fmt_from(core,core+1); ws.Cells(core+1,2).Value='INPC Pan, Tortillas y Cereales (INEGI), YoY Change'
+hm=find('Monthly Inflation Data')
+r1,r2=hm+1,hm+108
+def avg(col,c): return '=AVERAGEIFS($%s$%d:$%s$%d,$D$%d:$D$%d,%s$5)/100'%(col,r1,col,r2,r1,r2,L(c))
+bread_mx=core+1
+setf(bread_mx,4,11,lambda c,i:avg('H',i))
+mxb=find('Mexico (MXN mm)'); mx_pe=find('o/w Price Effect',start=mxb); mx_vs=find('Price per kg Growth vs Inflation',start=mxb)
+setf(bread_mx,12,16,lambda c,i:'=%s%d'%(c,mx_pe))
+ws.Range('L%d:P%d'%(bread_mx,bread_mx)).Font.Color=BLACK
+setf(mx_vs,4,16,lambda c,i:'=%s%d-%s%d'%(c,mx_vs-1,c,bread_mx))
+# ---------- 4. Brazil: switch to Panificados ----------
+bb=find('Latin America (proxy: Brazil'); b_infl=bb+3
+bh=find('Market Data (Baked Goods, Retail), Brazil'); b_pe=bh+5
+assert ws.Cells(b_pe,2).Value.startswith('o/w Price Effect')
+ws.Cells(b_infl,2).Value='IPCA Panificados (Brazil, IBGE), YoY Change'
+setf(b_infl,4,11,lambda c,i:avg('I',i))
+setf(b_infl,12,16,lambda c,i:'=%s%d'%(c,b_pe)); ws.Range('L%d:P%d'%(b_infl,b_infl)).Font.Color=BLACK
+# ---------- 5. Spain formulas ----------
+spb=find('EAA (proxy: Spain'); s_infl=spb+3; sh=find('Market Data (Baked Goods, Retail), Spain'); s_pe=sh+5; s_vs=sh+14; s_ppg=sh+13
+assert ws.Cells(s_pe,2).Value.startswith('o/w Price Effect') and ws.Cells(s_ppg,2).Value=='Price per kg Growth', (ws.Cells(s_pe,2).Value,ws.Cells(s_ppg,2).Value)
+setf(s_infl,4,11,lambda c,i:avg('J',i))
+setf(s_infl,12,16,lambda c,i:'=%s%d'%(c,s_pe)); ws.Range('L%d:P%d'%(s_infl,s_infl)).Font.Color=BLACK
+setf(s_vs,4,16,lambda c,i:'=%s%d-%s%d'%(c,s_ppg,c,s_infl))
+# Brazil vs inflation re-point (already uses b_infl row)
+x.Calculation=-4105; x.ScreenUpdating=True; x.Calculate()
+after=ws.Range('B13:Q25').Value2
+bad=[(i+13,j+2) for i in range(13) for j in range(16) if isinstance(snap[i][j],float) and isinstance(after[i][j],float) and abs(snap[i][j]-after[i][j])>1e-9*max(1,abs(snap[i][j]))]
+print('top diffs',bad[:8])
+VV=ws.Range('A1:R520').Value2
+print('errors',[(r+1,c+1) for r in range(520) for c in range(18) if isinstance(VV[r][c],int) and VV[r][c]<-2000000000][:8])
+def show(r): print(r,str(VV[r-1][1])[:52].ljust(52),[round(VV[r-1][c],3) if isinstance(VV[r-1][c],float) else VV[r-1][c] for c in (3,10,11,15)])
+for r in (core,bread_mx,mx_vs,b_infl,b_infl+1,s_infl,s_vs,bh+14): show(r)

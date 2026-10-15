@@ -1,0 +1,61 @@
+"""Lista de lo que falta y no se pudo resolver desde el computador (Aurex Capital).
+Uso: python FALTA.py
+Ninguno de estos puntos aparece como texto de pendiente en los entregables; cada uno dice que valor se uso mientras tanto."""
+import sys
+sys.stdout.reconfigure(encoding="utf-8")
+
+FALTA = [
+ ("Portada: imagen completa de Canva",
+  "La herramienta de Canva solo entrego una miniatura de 199x112 (MEDIA id MAHXwcM072A). La portada usa esa miniatura ampliada a 4K con una capa de lineas finas.",
+  "Entrar a Canva, abrir la imagen generada, descargarla y guardarla como assets/portada/aurex_cover_canva.jpg; luego correr build_deck_v2.py (la usa automaticamente).",
+  "Deck: portada y cierre"),
+ ("Credenciales verificables y fotos de los 6 integrantes; foto del equipo",
+  "No hay datos verificables en la carpeta; no se inventaron. Las laminas 6 y la portada traen nombre, rol y responsabilidad; las fotos son circulos vacios.",
+  "Cada integrante: formacion, empleo o fondo, anos, y una foto cuadrada; foto de equipo. Guardar en assets/fotos_equipo/.",
+  "Deck lamina 6; memo seccion 7"),
+ ("Conflicto de interes familiar (D2)",
+  "El memo y el deck dicen que un familiar directo de un integrante es dueno de una empresa de infraestructura energetica; se declara con abstencion.",
+  "Confirmar quien es el integrante y la empresa, y que no es una de las 8 del portafolio.",
+  "Memo seccion 7; deck laminas 5 y 6"),
+ ("Fecha de la defensa y del deck",
+  "La guia dice 11-oct; la clase y D5 hablan de 14 y 15 de octubre. Memo y Excel vencen el domingo 11-oct 11:59 pm.",
+  "Confirmar con el profesor Francisco Roman Rincon (frincon@tec.mx).",
+  "Entrega"),
+ ("Nombre exacto de los archivos y equipo de 6 personas",
+  "Se usan PF_Modelo_AurexCapital.xlsx, PF_Memorandum_AurexCapital.docx y PF_Deck_AurexCapital.pptx.",
+  "Confirmar con el profesor el nombre exacto y que un equipo de 6 es valido.",
+  "Entrega"),
+ ("Validacion legal y fiscal",
+  "Vehiculo: fideicomiso privado de capital de riesgo (LISR 192-193). El memo lo trata como ejercicio academico.",
+  "Abogado y fiscalista: vigencia de los arts. 192-193 LISR y RMF 2026, trato del carry y de la renuncia de comision, IVA, si los derechos del fideicomiso son valores, calificacion de cada LP.",
+  "Memo secciones 6 y 8"),
+ ("Valuaciones de las 8 empresas",
+  "Ninguna valuacion es publica. Las del modelo son estimaciones del fondo (Niko 40, Quartux 55, Pireos 40, FAZT 30, XC 35, BioEsol 50, S2G 20, Uriel 4.4; US$M). La de Pireos se deriva de comparables.",
+  "Cotejar los multiplos de comparables (stockanalysis.com, cierre 9-oct-2026) con Bloomberg o CapIQ y reemplazar si cambian.",
+  "Excel Hoja1 y Escenarios; deck laminas 11 y 12"),
+ ("Datos de empresas que no publican",
+  "Experiencia energetica de los fundadores de BioEsol; razon social de S2G ('LLC'); si BioEsol es sociedad mexicana; ubicacion de proyectos de BioEsol y S2G.",
+  "Pedirlos en el due diligence; el modelo los trata como condiciones del criterio.",
+  "Excel Criterios y Proyectos_Region; memo anexo E"),
+ ("Mapa de Mexico del portafolio y de la oportunidad",
+  "El deck usa graficos de barras por region (PLADESE) y por estado (CNE); el memo trae una tabla por estado (anexo E). No se dibujo mapa.",
+  "Construir con limites de INEGI (Marco Geoestadistico) o Natural Earth y los datos de Proyectos_Region y Mercado_Gobierno.",
+  "Deck laminas 4 y 11"),
+ ("Roadmap con 7 pines",
+  "La plantilla think-cell tc:18 trae 4 pines; el roadmap usa 4 etapas (ano 1, anos 2 y 3, anos 4 y 5, salidas) y una tabla de 10 anos debajo.",
+  "Duplicar pines en PowerPoint si se quieren 7.",
+  "Deck lamina 10"),
+ ("Cifras de gobierno con una sola fuente",
+  "I Squared (SHCP): solo Bloomberg Linea con fuentes anonimas; demanda record de 54,300 MW: solo El Financiero citando a CFE; 38,000 MW de la presidenta no concilian con 32,475 MW de la ficha del plan. No se afirman como hechos oficiales.",
+  "Buscar comunicado de SHCP y de CENACE; confirmar que el Paquete Economico 2026 no cambio el art. 34 fr. XIII LISR.",
+  "Mercado_Gobierno; anexo D"),
+ ("Envio",
+  "Nada se envio a nadie.",
+  "El lider del equipo manda un solo correo a frincon@tec.mx.",
+  "Entrega"),
+]
+
+if __name__ == "__main__":
+    for i, (t, que, quien, donde) in enumerate(FALTA, 1):
+        print(f"{i:>2}. {t}\n    Situacion: {que}\n    Falta: {quien}\n    Afecta: {donde}\n")
+    print(f"Total: {len(FALTA)} puntos")

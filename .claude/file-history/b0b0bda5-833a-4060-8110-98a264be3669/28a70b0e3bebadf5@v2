@@ -1,0 +1,35 @@
+base = r"C:\Users\cesar\OneDrive\Documentos\Slide Construction\skill\slide-construction\scripts"
+p = base + r"\house.py"
+s = open(p, encoding="utf-8").read()
+
+
+def rep(old, new):
+    global s
+    assert old in s, old[:80]
+    s = s.replace(old, new)
+
+
+rep('''        texts = [t for t in [title] + list(lines) if t]
+        bodies = list(s.placeholders)
+        for ph, t in zip(bodies, texts):
+            ph.text_frame.text = t''', '''        texts = [t for t in [title] + list(lines) if t]
+        bodies = sorted(s.placeholders, key=lambda ph: ph.top or 0)
+        if bodies and len(texts) > len(bodies):  # e.g. subtitle + date into the template's 2nd box
+            texts = texts[:len(bodies) - 1] + ["\\n".join(texts[len(bodies) - 1:])]
+        for ph, t in zip(bodies, texts):
+            ph.text_frame.text = t''')
+rep('''    def content_slide(self, title, subtitle=None, source=None, layout=None):
+        """Standard frame: title, so-what subtitle, rule, logo, source, page number."""
+        S = self.S''', '''    def content_slide(self, title, subtitle=None, source=None, layout=None):
+        """Standard frame: title, so-what subtitle, rule, logo, source, page number."""
+        S = self.S
+        est = len(title) * S["title"]["size"] * (0.56 if S["title"]["bold"] else 0.5) / 72
+        if est > S["title"]["w"]:
+            print(f"WARNING slide {self.n + 1}: title ~{est:.1f}in wide > {S['title']['w']}in -> will wrap; shorten it: {title!r}")''')
+open(p, "w", encoding="utf-8").write(s)
+g = base + r"\gallery.py"
+t = open(g, encoding="utf-8").read()
+t = t.replace('"Investment Call: Leader Compounding Into a Capex Upcycle"', '"Investment Call: Compounding Into a Capex Upcycle"')
+t = t.replace('"Capital Allocation: 70% of Excess Cash Goes Back to Shareholders"', '"Capital Allocation: 70% of Excess Cash Is Returned"')
+open(g, "w", encoding="utf-8").write(t)
+print("ok")

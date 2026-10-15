@@ -1,0 +1,24 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t = $null; foreach ($w in $xl.Workbooks) { if ($w.Name -eq '20260922_SETSA Transportes.xlsx') { $t = $w } }
+if (-not $t) { 'MODELO NO ABIERTO'; exit }
+$out = @()
+$tx = $t.Worksheets.Item('Transacciones Precedentes')
+$out += '=== TX'
+for ($r = 11; $r -le 56; $r++) {
+    $line = "$r"
+    foreach ($c in 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M') { $v = [string]$tx.Range("$c$r").Text; if ($v -ne '') { $line += " | $c=" + $v.Substring(0, [Math]::Min(45, $v.Length)) } }
+    if ($line -ne "$r") { $out += $line }
+}
+$m = $t.Worksheets.Item('Modelo SETSA')
+$out += '=== MODELO'
+$last = $m.UsedRange.Row + $m.UsedRange.Rows.Count
+for ($r = 12; $r -le $last; $r++) {
+    $lab = [string]$m.Cells.Item($r, 3).Text
+    if ($lab -eq '') { continue }
+    $line = "$r | " + $lab.Substring(0, [Math]::Min(50, $lab.Length))
+    foreach ($c in 'D', 'E', 'F', 'G', 'H', 'I', 'J') { $line += ' | ' + [string]$m.Range("$c$r").Text }
+    $out += $line
+}
+$out | Out-File -Encoding utf8 "$PSScriptRoot\snapshot.txt"
+'ok ' + $out.Count

@@ -1,0 +1,70 @@
+"""Barrido de disponibilidad de indicadores en Workspace.
+Prueba cada RIC con varios campos y reporta cual funciona.
+"""
+import lseg.data as ld
+import warnings
+warnings.filterwarnings("ignore")
+
+ld.open_session()
+
+CAMPOS = ["TRDPRC_1", "MID_PRICE", "MID_YLD_1", "CF_LAST", "VALUE", "ECON_ACT", "ACT_VAL_NS"]
+
+CANDIDATOS = {
+"A. INDICADORES ECONOMICOS (=ECI)": [
+    "USCPI=ECI", "USCPIX=ECI", "USCPF=ECI", "USPPI=ECI",
+    "USUNR=ECI", "USNFP=ECI", "USJOB=ECI", "USJOBN=ECI",
+    "USGDP=ECI", "USGDPF=ECI",
+    "USHST=ECI", "USBPE=ECI", "USNHS=ECI", "USEHS=ECI",
+    "USRSL=ECI", "USRSLX=ECI",
+    "USISM=ECI", "USNPMI=ECI", "USPMIM=ECI",
+    "USCONC=ECI", "USUMSF=ECI",
+    "USPCE=ECI", "USCPCE=ECI",
+    "USIP=ECI", "USDGO=ECI", "USTBAL=ECI",
+],
+"B. ENERGIA / CRACK SPREAD": [
+    "RBc1", "HOc1", "NGc1", "CLc1", "LCOc1", "CLc2", "RBc2", "HOc2",
+],
+"C. VIVIENDA": [
+    "XHB.P", "ITB.P", ".HGX", "PHM.N", "DHI.N", "LEN.N",
+],
+"D. INFLACION IMPLICITA / TIPS": [
+    "US5YTIP=RR", "US10YTIP=RR", "UST5YIE=R", "UST10YIE=R", "TIP.P",
+],
+"E. FX ADICIONAL": [
+    "CAD=", "BRL=", "AUD=", "CHF=", "KRW=", "INR=", "CLP=", "COP=",
+],
+"F. RIESGO / OTROS INDICES": [
+    ".SOX", ".MOVE", ".BADI", "BTC=", ".RUI", ".NDX", ".VXN", ".SKEW",
+],
+"G. TASAS CORTAS": [
+    "USONFFE=", "SOFRRATE=", "US3MT=RR", "EONIA=",
+],
+"H. ETFs TEMATICOS": [
+    "SMH.P", "XRT.P", "KRE.P", "XBI.P", "JETS.P", "URA.P", "COPX.P", "TAN.P",
+],
+}
+
+
+def probar(ric):
+    for campo in CAMPOS:
+        try:
+            d = ld.get_history(universe=[ric], fields=[campo], interval="daily",
+                                start="2026-07-01", end="2026-09-15")
+            d = d.dropna()
+            if len(d):
+                return campo, float(d.iloc[-1, 0]), str(d.index[-1].date())
+        except Exception:
+            continue
+    return None, None, None
+
+
+for grupo, rics in CANDIDATOS.items():
+    print(f"\n{'='*70}\n{grupo}\n{'='*70}")
+    for ric in rics:
+        campo, valor, fecha = probar(ric)
+        if campo:
+            print(f"  OK    {ric:14s} [{campo:10s}] {valor:>14,.3f}   {fecha}")
+        else:
+            print(f"  --    {ric:14s} (sin datos / sin permiso)")
+
+ld.close_session()

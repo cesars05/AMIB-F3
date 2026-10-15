@@ -1,0 +1,115 @@
+# Segment Analysis Prompt v0.1 (DRAFT for iteration)
+Framework: **Consensus first, then Management, then Gap.** Same layout for every company. The template is Atkore V3 ("Annual Model - KPIs (2)" + "Atkore Financials"). Ingevity ("Segment Breakdown", rows 242-301) is a secondary reference for the financial rows only.
+
+---
+
+## 0. PARAMETERS (fill before running)
+
+| Parameter | Fuso Chemical value |
+|---|---|
+| MODEL_FILE | `20261009_Fuso Chemicals.xlsx` (ignore `20261007_Fuso.xlsx`, it is old) |
+| TARGET_SHEET / ANCHOR | `Annual Model`, header "Segment Analysis" at `E29` (rows 30 to 47 are empty; insert rows as needed) |
+| SEGMENT_DATA_FILE | `Workspace Segment Financials.xlsx`: tab "Business Line By Stat" (historical, as reported, to FY Mar-25) and tab "Statement App" (consensus mean, FY Mar-27 to FY Mar-31, plus a Guidance row) |
+| STYLE_REFERENCE | `20260325_Atkore_V3.xlsx`, sheets "Annual Model - KPIs (2)" and "Atkore Financials" |
+| SECONDARY_REFERENCE | `20261007_Ingevity Corp.xlsx`, "Annual Model" rows 242-301 |
+| COMPANY SOURCES | FY03/2026 results deck (15-May-2026), medium-term plan 飛躍2030, FY03/2026 annual report (有報), FY03/2027 Q1 release |
+| UNITS | JPY millions in the model (Scale = 6). Workspace consensus is in JPY billions: multiply by 1,000 |
+| FY CONVENTION | FY0 = FY Mar-26. Company calls it "FY2025". Always label as FY Mar-XX |
+
+---
+
+## 1. NON-NEGOTIABLE RULES
+
+1. **Back up first.** Before any edit: `SaveCopyAs` to `..._BACKUP_<timestamp>.xlsx`.
+2. **Edit through Excel (COM) on the open workbook. Never save the model with openpyxl.** The workbook has LSEG `RDP.Data` formulas, hidden sheets and data validations that openpyxl strips or breaks.
+3. Insert rows with Excel's own Insert (references update). Never move or overwrite existing cells. Only touch the segment block and, if needed, one new sheet "Segment Data".
+4. **Colors:** blue `FF0000FF` = hardcoded input or company/consensus data; black = formula; green `FF008000` = link to another sheet. No hardcodes inside formulas.
+5. **Every hardcoded number carries a source in a side column**: document, slide or page, date. Tag `[D]` disclosed, `[I]` inferred or calculated, `[ND]` not disclosed.
+6. Do not invent. If a driver (price, volume, segment D&A, segment capex) is not disclosed, leave the cell empty or mark it `[ND]`, or use a clearly labeled assumption in an "Assumptions" box.
+7. **Stop after each step and report.** Do not run ahead.
+
+---
+
+## 2. WORKFLOW
+
+### Step 0. Read and map (report, then wait)
+- Inventory the four workbooks: sheets, anchors, units, FY end, last actual column, which cells are inputs.
+- Confirm the target block, existing formats and any row conflicts.
+- List data conflicts you found (see section 6) and what you propose for each.
+
+### Step 1. Data layer (new sheet "Segment Data", mirrors "Atkore Financials")
+Three clearly separated blocks, same columns as the model (FY Mar-17 to FY Mar-31):
+1. **Historical (as reported):** sales, operating profit, D&A, capex, assets by segment. Source: Workspace "Business Line By Stat" for FY Mar-20 to FY Mar-25. **Add FY Mar-26 from the company filings** (Workspace does not have it). Rename the LSEG label "Electronic Materials And Chemicals Business Functionality" to "Electronic Materials".
+2. **Consensus (mean):** from "Statement App": segment revenue and operating profit, corporate/eliminations, total revenue/OP/EBITDA, capex, CFO. Keep the "Guidance" row in a separate row and label it "as shown by Workspace (last revised)".
+3. **Management:** guidance (FY Mar-27), medium-term targets (FY Mar-31), and a dated log of qualitative drivers (price increases, capacity, qualification, customer adoption).
+
+### Step 2. Block A, Consensus Segment Analysis (in TARGET_SHEET)
+For each segment (header fill light blue `FFD9E1F2`):
+- Net sales (¥m), YoY %, net change (¥m), share of total sales, contribution to growth (pp)
+- Operating profit, margin %, YoY %
+- D&A, EBITDA (OP + D&A), margin %. If consensus has no segment D&A: use the company's segment D&A plan as an anchor and label it `[I]`
+- Capex, capex % sales, capex / D&A
+- Corporate and eliminations
+- **Reconciliation block:** sum of segments vs consensus total (revenue, OP), difference, and a flag if |difference| > 1%. Segment means come from different analyst sets and often do not sum to the total (Fuso FY Mar-27: sum 92.9 vs total 91.3 bn)
+- Price / volume decomposition **only where the company discloses drivers** (Atkore rows: Volume %, ASP %, M&A %, Other %, Net Sales %, Net Change, Price Change $, Volume $). For Fuso: Life Science products have volume and price indices (citric acid, vitamin C, malic acid, fumaric acid; FY2023 = 1.0) in the results deck. Electronic Materials has no volume disclosure, so leave it `[ND]` and show implied growth only
+
+### Step 3. Block B, Management Analysis (same rows, management numbers)
+- **Guidance FY Mar-27** by segment (sales, OP, D&A, EBITDA) and the company-wide capex plan.
+- **Medium-term targets FY Mar-31** by segment (sales, OP, pre-depreciation OP), CAGR from FY0, and **implied D&A = pre-depreciation OP minus OP**.
+- Intermediate years (FY Mar-28 to FY Mar-30): CAGR interpolation, clearly labeled `[I] interpolated`, never presented as guidance.
+- **Guidance credibility rows:** actual vs last guidance and vs initial guidance, by year (company decks give initial; Workspace "Guidance" is the last revised).
+- Qualitative driver log: driver, segment, quantified effect if any, source and date.
+
+### Step 4. Block C, Gap (Consensus minus Management)
+- Per segment and for FY Mar-27 and FY Mar-31: sales, OP, margin: absolute gap, % gap, and which side is above.
+- Path comparison: consensus CAGR vs plan CAGR for each segment.
+- Flags: consensus margin above or below plan; consensus sales above guidance by more than 5%; segments where consensus equals the plan exactly (anchoring signal).
+- Short "so what" text box, 5 bullets maximum, insight first, number second.
+
+### Step 5. QA checks (visible row at the bottom of the block, must show OK)
+- Segment sales + eliminations = model revenue (historical).
+- Segment OP + corporate = model EBIT (historical).
+- Units: consensus x1,000 matches model scale. Fiscal-year alignment checked on the first actual column.
+- No cell in the block shows an error (`#REF!`, `#NAME?`, `#DIV/0!`).
+
+### Step 6. Memo (max 1 page, in chat)
+What was built, where it lives (sheet and rows), top 5 findings, open items.
+
+---
+
+## 3. LAYOUT AND STYLE (copied from Atkore V3)
+- Arial 11. Section header: Arial 14 bold white on the theme fill, years in the same fill (`yyyy`, right aligned). Segment name row: bold, fill `FFD9E1F2`. Total rows: bold, fill `FFEBF3FB`, thin bottom border.
+- Number formats: `#,##0.0;\(#,##0.0\);\-` for amounts, `0.0%;\(0.0%\);\-` for percentages. Fuso template default is `"$"#,##0`: **change to yen without a currency symbol**.
+- Same columns as the model. Highlight the FY0 column (light gray `theme0 -5%`). CAGR columns V and W as in the model. Gridlines off. Column B/C hold the "Real Data / Estimates" labels.
+- Order inside each block: Net sales > drivers > OP > D&A/EBITDA > capex > reconciliation.
+
+---
+
+## 4. ADAPTATION TABLE (Atkore to Fuso)
+
+| Atkore | Fuso |
+|---|---|
+| 2 segments (Electrical, Infrastructure) | 2 segments (Electronic Materials, Life Science) |
+| Price and volume disclosed per segment | Only Life Science products have indices; Electronic Materials `[ND]` |
+| Second segment = consensus total minus first (plug) | Use segment consensus as master, show the difference vs the total in a reconciliation row |
+| COGS price/volume drivers | Not disclosed by segment. Use raw-material notes (benzene, metallic silicon) in the driver log |
+| "Atkore Financials" feeds the KPI sheet | New sheet "Segment Data" feeds the block |
+
+---
+
+## 5. STYLE OF TEXT OUTPUT
+English labels. No em dashes. No investment ratings or price targets. Insight before data. Define jargon the first time. Every figure with its fiscal year.
+
+---
+
+## 6. KNOWN DATA ISSUES TO CHECK EVERY TIME
+- Workspace segment consensus does not always sum to the total (FY Mar-27 +1.55 bn, FY Mar-29 -2.35 bn, matches from FY Mar-30).
+- Workspace "Guidance" row for FY Mar-27 net income (19,200) and EPS (181.48) do not match the company slide (16,600 and 156.9 yen post-split). Revenue (85,800), OP (24,300) and pre-tax (24,500) do match. **Company documents prevail.**
+- Workspace historical stops at FY Mar-25. FY Mar-26 must come from the company filings.
+- Model D&A for FY Mar-29 and later shows 0 where consensus is missing (not a real zero).
+- The stock split (3 for 1, 1-Apr-2026) affects per-share figures. Label before and after.
+
+---
+
+## 7. DEFINITION OF DONE
+Blocks A, B, C built in the target sheet with sources, QA row all OK, backup saved, memo delivered, open items listed.

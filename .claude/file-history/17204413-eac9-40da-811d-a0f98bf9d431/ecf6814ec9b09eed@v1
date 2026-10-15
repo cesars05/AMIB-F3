@@ -1,0 +1,146 @@
+"""
+Template for "banker style" charts (BofA / Goldman / Bloomberg Research look).
+
+Typical usage:
+    from grafico_banquero import configurar_estilo_banquero, crear_grafico_banquero, PALETA
+    configurar_estilo_banquero()
+    fig, ax = crear_grafico_banquero(
+        titulo="S&P 500",
+        subtitulo="Index Performance: YTD: +12.2%; MTD: +2.5%; Last (08/25/2026): 7,677.28",
+        nota="Amounts in USD",
+        fuente="Source: LSEG Workspace",
+    )
+    ax.plot(df.index, df["S&P 500"], color=PALETA["azul"], linewidth=2)
+    fig.savefig("my_chart.png", dpi=200, bbox_inches="tight")
+"""
+
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+# ---------------------------------------------------------------------------
+# Research-style color palette
+# ---------------------------------------------------------------------------
+PALETA = {
+    "azul": "#1F3B57",          # primary line
+    "naranja": "#E87722",       # secondary line
+    "celeste": "#7BAFD4",       # tertiary line
+    "gris_azulado": "#5B7A99",  # quaternary line
+    "gris": "#9A9A9A",          # reference / secondary lines
+    "rojo": "#DA2338",          # negativos y highlight (rojo de marca)
+    "verde": "#148572",         # positivos (verde de marca)
+    "negro": "#1A1A1A",         # main text
+    "gris_texto": "#555555",    # subtitle / note / source text (darkened per feedback)
+    "eje": "#595959",           # axis lines and tick marks (dark gray, not pure black)
+}
+
+CICLO_COLORES = ["azul", "naranja", "celeste", "gris_azulado", "rojo", "gris"]
+
+# Left margin shared by subplots_adjust and the title/subtitle text, so the
+# title/subtitle always line up exactly with the y-axis, not with the raw figure edge.
+MARGEN_IZQUIERDO = 0.12
+
+
+def configurar_estilo_banquero():
+    """Applies the global style (typography, borders, no gridlines) to all matplotlib charts."""
+    mpl.rcParams.update({
+        "font.family": "sans-serif",
+        "font.sans-serif": ["Calibri", "Segoe UI", "Arial", "DejaVu Sans"],
+        "font.size": 11,
+        "axes.edgecolor": PALETA["eje"],
+        "axes.linewidth": 1.0,
+        "axes.grid": False,
+        "axes.axisbelow": True,
+        "xtick.color": PALETA["eje"],
+        "ytick.color": PALETA["eje"],
+        "xtick.labelcolor": "black",   # tick numbers: black
+        "ytick.labelcolor": "black",   # tick numbers: black
+        "xtick.labelsize": 11,
+        "ytick.labelsize": 11,
+        "axes.labelsize": 11,
+        "axes.labelcolor": PALETA["gris_texto"],
+        "figure.facecolor": "white",
+        "axes.facecolor": "white",
+        "legend.frameon": False,
+        "legend.fontsize": 10,
+    })
+
+
+def crear_grafico_banquero(titulo, subtitulo=None, nota=None, fuente=None, firma=None, figsize=(9, 5.5)):
+    """
+    Creates a figure/axis with the typical research-chart layout:
+    bold title top-left (aligned with the y-axis), gray subtitle below it,
+    an optional small italic note line (e.g. "Amounts in USD"), and an
+    optional source line at the bottom. No gridlines are drawn in the plot area.
+    Returns (fig, ax) so the caller can draw series on top.
+    """
+    fig, ax = plt.subplots(figsize=figsize)
+
+    # Only left and bottom axis lines are visible, in a dark (not pure black) gray
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_color(PALETA["eje"])
+    ax.spines["bottom"].set_color(PALETA["eje"])
+
+    ax.tick_params(axis="x", length=4, color=PALETA["eje"], labelsize=11, labelcolor="black")
+    ax.tick_params(axis="y", length=4, color=PALETA["eje"], labelsize=9, labelcolor="black")
+
+    # Title, subtitle and note are aligned with the y-axis (MARGEN_IZQUIERDO),
+    # not with the raw figure edge.
+    fig.text(MARGEN_IZQUIERDO, 0.96, titulo, fontsize=14, fontweight="bold", color=PALETA["negro"], ha="left")
+    y_siguiente = 0.905
+    if subtitulo:
+        fig.text(MARGEN_IZQUIERDO, y_siguiente, subtitulo, fontsize=10.5, color=PALETA["gris_texto"], ha="left")
+        y_siguiente -= 0.045
+    if nota:
+        fig.text(MARGEN_IZQUIERDO, y_siguiente, nota, fontsize=9, color=PALETA["gris_texto"], ha="left", style="italic")
+
+    # Source (left) and firm signature (right), at the bottom
+    if fuente:
+        fig.text(MARGEN_IZQUIERDO, 0.02, fuente, fontsize=9, color=PALETA["gris_texto"], ha="left")
+    if firma:
+        fig.text(0.98, 0.02, firma, fontsize=9, color=PALETA["gris_texto"], ha="right", fontweight="bold")
+
+    fig.subplots_adjust(top=0.80, bottom=0.14, left=MARGEN_IZQUIERDO, right=0.96)
+
+    return fig, ax
+
+
+def banda_sigma(ax, serie, fontsize=5.5, color=None, alpha=0.10, etiqueta=True):
+    """Banda sombreada de +/-1 desviacion estandar sobre TODO el periodo (fija).
+
+    Es fija a proposito: la pregunta de un reporte semanal es "donde estamos
+    parados respecto al rango del anio", y solo una referencia estatica la
+    contesta. Una banda movil tipo Bollinger persigue al precio y esconde
+    justo los rompimientos de rango que interesa senalar.
+    """
+    color = color or PALETA["rojo"]
+    media, sigma = serie.mean(), serie.std()
+    ax.fill_between(serie.index, media - sigma, media + sigma,
+                    color=color, alpha=alpha, zorder=1)
+    for nivel in (media + sigma, media - sigma):
+        ax.axhline(nivel, color=color, linewidth=0.8, linestyle="--", alpha=0.55, zorder=2)
+    if etiqueta:
+        ax.text(serie.index[0], media + sigma, " +1σ", color=color,
+                fontsize=fontsize, va="bottom", ha="left", zorder=3)
+        ax.text(serie.index[0], media - sigma, " −1σ", color=color,
+                fontsize=fontsize, va="top", ha="left", zorder=3)
+    return media, sigma
+
+
+def linea_referencia(ax, valor, etiqueta=None, color=None):
+    """Adds a dashed horizontal reference line (e.g. historical average), BofA style.
+    Use sparingly -- only call this when a reference line is actually meaningful,
+    not as a default gridline."""
+    color = color or PALETA["gris"]
+    ax.axhline(valor, color=color, linewidth=1, linestyle="--")
+    if etiqueta:
+        ax.text(
+            ax.get_xlim()[0], valor, f"  {etiqueta}",
+            color=color, fontsize=9, fontstyle="italic", va="bottom",
+        )
+
+
+def resaltar_zona(ax, x_inicio, x_fin, color=None):
+    """Shades a vertical band, like the red box in the Goldman chart."""
+    color = color or PALETA["rojo"]
+    ax.axvspan(x_inicio, x_fin, color=color, alpha=0.08, edgecolor=color, linewidth=1.2)

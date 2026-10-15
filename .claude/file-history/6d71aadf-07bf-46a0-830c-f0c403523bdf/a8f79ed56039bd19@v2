@@ -1,0 +1,294 @@
+# v6 = user's v5 + slide-10 format for every weak-sector slide (all periods) + slide-11 format for every
+# Top Holdings slide (Aztlan gradient bubbles), Sept-26 Quant Model scores everywhere.
+import pickle, copy, re, statistics, json, math, csv, os
+from collections import defaultdict
+S="C:/Users/cesar/AppData/Local/Temp/claude/C--Users-cesar-OneDrive-Desktop-AZTD-Peers/6d71aadf-07bf-46a0-830c-f0c403523bdf/scratchpad/"
+src4=open(S+"deck4.py",encoding="utf-8").read()
+exec(src4.split("# ---------------- start from the user's deck")[0])          # imports, constants, D/TOP/RT
+SRCDECK=S+"user_v5.pptx"
+OUT="C:/Users/cesar/OneDrive/Desktop/AZTD Peers/AZTD vs Peers_v6.pptx"
+prs=Presentation(SRCDECK)
+slides=list(prs.slides); ids=list(prs.slides._sldIdLst)
+sldnum_xml=None
+for sh in slides[2].shapes:
+    if sh.is_placeholder and sh.placeholder_format.idx==12: sldnum_xml=copy.deepcopy(sh._element)
+LAY={l.name:l for l in prs.slide_layouts}
+exec(src4.split("# ---------------- primitives")[1].split("# ================= slide builders =================")[0].replace("# ---------------- charts","#"))
+TITLE={i:[ph.text_frame.text for ph in s.placeholders if ph.placeholder_format.idx in (0,11)] for i,s in enumerate(slides)}
+def tid(t):
+    for i,v in TITLE.items():
+        if v and v[0]==t: return i
+    raise KeyError(t)
+def tint(h,f=0.8):
+    r,g,b=int(h[0:2],16),int(h[2:4],16),int(h[4:6],16)
+    return RGBColor(int(r+(255-r)*f),int(g+(255-g)*f),int(b+(255-b)*f))
+# ---------------- data: Sept quant, industries, market caps, workbook fund scores
+Q={}
+for r in csv.DictReader(open(r"C:/Users/cesar/OneDrive/Desktop/AZTD Peers/Quant Model/data_2026-09-30.csv",encoding="utf-8-sig")): Q[r["RIC"]]=r
+def qf(ric,k):
+    try: return float(Q[ric][k])
+    except Exception: return None
+IND=json.load(open(S+"industry_fallback.json")) if os.path.exists(S+"industry_fallback.json") else {}
+def industry(ric):
+    v=(Q.get(ric) or {}).get("Industry") or IND.get(ric) or "n/a"
+    if v in ("NULL","",None): v="n/a"
+    return {"Hotels, Restaurants & Leisure":"Hotels & Leisure","Independent Power and Renewable Electricity Producers":"IPP & Renewables",
+            "Textiles, Apparel & Luxury Goods":"Apparel & Luxury","Oil, Gas & Consumable Fuels":"Oil, Gas & Fuels","Energy Equipment & Services":"Energy Equipment",
+            "Consumer Staples Distribution & Retail":"Staples Retail","Electronic Equipment, Instruments & Components":"Electronic Equipment",
+            "Paper & Forest Products":"Paper & Forest","Diversified Consumer Services":"Consumer Services","Automobile Components":"Auto Components",
+            "Trading Companies & Distributors":"Trading Cos.","Diversified Telecommunication Services":"Telecom Services"}.get(v,v)
+MC=pickle.load(open(S+"mktcap_by_ric.pkl","rb"))
+FW=pickle.load(open(S+"deck_fundw.pkl","rb"))
+def gr(r,L):
+    c=(ord(L[0])-64) if len(L)==1 else (ord(L[0])-64)*26+ord(L[1])-64
+    return r[c-3]
+ROWS=RT["rows"]
+def disp_name(r):
+    n=gr(r,"D")
+    if isinstance(n,str) and n.startswith("Unable"): return "Lawson Inc" if gr(r,"C")=="2651.T" else gr(r,"C")
+    return n
+COLS={"P":dict(wa="CB",ca="CW",wp="BZ",cp="BX",ret="DE"),"25":dict(wa="CZ",ca="CY",wp="DB",cp="DA",ret="DC"),"Y":dict(wa="CC",ca="CX",wp="CA",cp="BY",ret="CF")}
+RP={"P":D["perf_p"][6][3],"25":D["cal"][2][5],"Y":D["perf_y"][6][2]}           # peer holdings-based total return per period
+def contributors(period,sector,side,n=11):
+    c=COLS[period]; w,cc=(c["wa"],c["ca"]) if side=="A" else (c["wp"],c["cp"])
+    rs=[r for r in ROWS if gr(r,"CK")==sector and num(gr(r,w)) and gr(r,w)>0 and num(gr(r,cc))]
+    rs=sorted(rs,key=lambda r:-abs(gr(r,cc)))[:n]
+    return sorted(rs,key=lambda r:-gr(r,cc))
+def ind_breakdown(period,sector):
+    c=COLS[period]; agg=defaultdict(lambda:[0.0,0.0,0.0,0.0])
+    for r in ROWS:
+        if gr(r,"CK")!=sector: continue
+        a=agg[industry(gr(r,"C"))]
+        for i,L in enumerate((c["wa"],c["ca"],c["wp"],c["cp"])):
+            v=gr(r,L); a[i]+=v if num(v) else 0
+    return sorted(agg.items(),key=lambda kv: kv[1][1]-kv[1][3])
+# ---------------- slide-10 format
+def weak_sector_slide(period,row,k,nk):
+    c=PER[period]; s=row[0]; col=SC.get(s,"242852")
+    lbl={"P":"2024-26","25":"2025","Y":"2026 YTD"}[period]
+    inds=ind_breakdown(period,s); worst=inds[0]; wi,(wA,cA,wP,cP)=worst
+    if period=="P": bk="brin_sec_p"
+    elif period=="Y": bk="brin_sec_y"
+    else: bk=None
+    if bk: b=find(D[bk],s); alloc,sel=b[1],b[2]
+    else:
+        alloc=(row[8]-row[9])*(row[11]-RP[period]) if num(row[11]) else 0; sel=row[8]*(row[10]-row[11]) if num(row[10]) and num(row[11]) else 0
+    driver="selection" if abs(sel)>=abs(alloc) else "allocation"
+    sub=f"{short(s)} ({ppx(row[7])}): mostly {driver}; {wi} {ppx(cA)} for AZTD vs {ppx(cP)} for the peers"
+    if len(sub)>98: sub=f"{short(s)} ({ppx(row[7])}): mostly {driver}; {wi[:24]} {ppx(cA)} AZTD vs {ppx(cP)} peers"
+    sl=new_slide(fit(f"Weak Sectors {lbl}: Largest Contributors ({k}/{nk})",52),fit(sub,98),
+                 f"Contribution = wt x return; {c['ret'].replace(' (cumulative)','')}; scores 30-Sep-26")
+    bx=sl.shapes.add_shape(MSO_SHAPE.RECTANGLE,E(41),E(106),E(886),E(303))
+    bx.fill.background(); bx.line.color.rgb=h2r(col); bx.line.width=Pt(1.5); bx.line.dash_style=MSO_LINE_DASH_STYLE.DASH; bx.shadow.inherit=False
+    tbox(sl,49,112,200,22,s,16,True,h2r(col))
+    perf=f"{c['perf']} AZTD {pc(row[10],0)} vs peers {pc(row[11],0)}" if num(row[10]) and num(row[11]) else f"{c['perf']} n/a"
+    pl=sl.shapes.add_textbox(E(255),E(118),E(458),E(18)); tf=pl.text_frame; tf.word_wrap=True; tf.vertical_anchor=MSO_ANCHOR.MIDDLE
+    pl.fill.solid(); pl.fill.fore_color.rgb=tint(col); pl.line.color.rgb=h2r(col); pl.line.width=Pt(0.75)
+    p=tf.paragraphs[0]; p.alignment=PP_ALIGN.CENTER; r_=p.add_run(); r_.text=f"AZTD wt {pc(row[8],1)} vs peers {pc(row[9],1)}  |  {perf}  |  Gap {ppx(row[7])}"; run_fmt(r_,9,True)
+    tbox(sl,46,148,382,15,"AZTD's largest contributors",12,True); tbox(sl,468,148,418,15,"Peers' largest contributors",12,True)
+    cc=COLS[period]; ytd=(period=="Y")
+    def rowvals(r,side):
+        ric=gr(r,"C"); con=gr(r,cc["ca"] if side=="A" else cc["cp"])
+        base=[clean_name(disp_name(r),20),industry(ric)[:22],ppx(con,2)]
+        if not ytd: base+=[pc(gr(r,cc["ret"]),0),pc(gr(r,"CF"),0)]
+        else: base+=[pc(gr(r,"CF"),0)]
+        base+=[sc2(qf(ric,"Model1.1")),sc2(qf(ric,"STABILITYSCORE"))]
+        if ytd: base+=[pc(gr(r,"CI"),0)]
+        if side=="P": base+=["Yes" if num(gr(r,cc["wa"])) and gr(r,cc["wa"])>0 else "No"]
+        return base
+    L=[rowvals(r,"A") for r in contributors(period,s,"A")]; Rr=[rowvals(r,"P") for r in contributors(period,s,"P")]
+    if not ytd: hl=["Name","Industry","Contribution","Return","YTD","M1.1","Stab."]
+    else: hl=["Name","Industry","Contribution","YTD","M1.1","Stab.","3Y ret."]
+    cw=[97.2,108.0,67.7,38.9,34.6,34.6,34.6]
+    table(sl,44,165,415.4,hl,L,cw,19.2,9,"242852"); table(sl,468,165,450.1,hl+["AZTD"],Rr,cw+[34.6],19.2,9,"404040")
+    # header font 10 like the reference
+    for shp in sl.shapes:
+        if shp.has_table:
+            for ce in shp.table.rows[0].cells:
+                for pa in ce.text_frame.paragraphs:
+                    for rr in pa.runs: rr.font.size=Pt(10)
+    top2=[t for t in inds if abs(t[1][1]-t[1][3])>0.0005][:2]
+    items=[[("Allocation vs selection: ",2),(f"allocation {ppx(alloc)}, selection {ppx(sel)}; AZTD held {pc(row[8],1)} vs {pc(row[9],1)} and its stocks returned {pc(row[10],0)} vs {pc(row[11],0)}{' a year' if c['ann'] else ''}.",0)]]
+    if top2:
+        items.append([("By industry: ",2),("; ".join(f"{n_} AZTD {ppx(v[1])} vs peers {ppx(v[3])} ({pc(v[0],1)} vs {pc(v[2],1)} weight)" for n_,v in top2)+".",0)])
+    note_box(sl,41,417,886,items,9,3)
+    LOG.setdefault("weak_"+period,[]).append(dict(sector=s,alloc=alloc,sel=sel,inds=[(n_,v) for n_,v in inds[:3]],aztd=L[:5],peers=Rr[:5]))
+    return sl
+# ---------------- slide-11 format (Top Holdings by ETF) with Aztlan gradient bubbles
+GRAD={"AZTD":("FFE680","C99A00"),"AVDV":("5A6496","242852"),"ISCF":("C5CEDD","7F8FA9"),"DISV":("8DB9E6","2E75B6"),"DFIS":("8CC2A0","42825D"),"Several ETFs":("A6A6A6","404040")}
+def grad_xml(lt,dk):
+    A="http://schemas.openxmlformats.org/drawingml/2006/main"; Cc="http://schemas.openxmlformats.org/drawingml/2006/chart"
+    return etree.fromstring(f'''<c:spPr xmlns:c="{Cc}" xmlns:a="{A}"><a:gradFill rotWithShape="1"><a:gsLst>
+<a:gs pos="0"><a:srgbClr val="{lt}"/></a:gs><a:gs pos="100000"><a:srgbClr val="{dk}"/></a:gs></a:gsLst>
+<a:path path="circle"><a:fillToRect l="30000" t="25000" r="70000" b="75000"/></a:path></a:gradFill><a:ln><a:noFill/></a:ln>
+<a:effectLst><a:outerShdw blurRad="40000" dist="23000" dir="5400000" rotWithShape="0"><a:srgbClr val="000000"><a:alpha val="35000"/></a:srgbClr></a:outerShdw></a:effectLst>
+<a:scene3d><a:camera prst="orthographicFront"/><a:lightRig rig="threePt" dir="t"/></a:scene3d><a:sp3d><a:bevelT w="63500" h="25400"/></a:sp3d></c:spPr>''')
+def scale(v,lo,mid,hi):
+    R_,Y_,G_=(0xF8,0x69,0x6B),(0xFF,0xEB,0x84),(0x63,0xBE,0x7B)
+    if v<=mid: t=0 if mid==lo else (v-lo)/(mid-lo); a,b=R_,Y_
+    else: t=1 if hi==mid else (v-mid)/(hi-mid); a,b=Y_,G_
+    t=max(0,min(1,t)); return "%02X%02X%02X"%tuple(int(a[i]+(b[i]-a[i])*t) for i in range(3))
+def topholdings_slide(s):
+    rows={gr(r,"C"):r for r in ROWS if gr(r,"CK")==s}
+    picks={}
+    for f in FUNDS:
+        cand=[(w_,ric) for ric,w_ in FW[f].items() if ric in rows and num(gr(rows[ric],"CF")) and num(qf(ric,"Model1.1")) and w_>0]
+        for w_,ric in sorted(cand,reverse=True)[:5]: picks.setdefault(ric,[]).append((f,w_))
+    items=[]
+    for ric,lst in picks.items():
+        r=rows[ric]; funds=[f for f,_ in lst]; grp=funds[0] if len(funds)==1 else "Several ETFs"
+        items.append(dict(ric=ric,name=clean_name(disp_name(r),20),funds=funds,grp=grp,w=max(w_ for _,w_ in lst),ytd=gr(r,"CF"),m11=qf(ric,"Model1.1"),stab=qf(ric,"STABILITYSCORE")))
+    order=["AZTD","AVDV","ISCF","DISV","DFIS","Several ETFs"]
+    items.sort(key=lambda d:(order.index(d["grp"]),-d["w"])); groups=[g for g in order if any(d["grp"]==g for d in items)]
+    seq=[d for g in groups for d in items if d["grp"]==g]
+    az=[d for d in seq if "AZTD" in d["funds"]]; pe=[d for d in seq if d["funds"]!=["AZTD"]]
+    am=statistics.median([d["ytd"] for d in az]) if az else None; pm=statistics.median([d["ytd"] for d in pe])
+    amm=statistics.mean([d["m11"] for d in az]) if az else None; pmm=statistics.mean([d["m11"] for d in pe])
+    sl=new_slide(f"Top Holdings by ETF: {s}",fit(f"Top 5 of each ETF. Median YTD: AZTD {pc(am,0)} vs peers {pc(pm,0)}; Model 1.1 {sc2(amm)} vs {sc2(pmm)}",98),
+                 "Top 5 by weight in each ETF (31-Aug-26); scores 30-Sep-26; LSEG Workspace; Quant Model")
+    sec_head(sl,41,520,"Model 1.1 vs YTD Return","Each bubble = one of the top 5 names of an ETF in the sector")
+    cd=BubbleChartData()
+    for g in groups:
+        se=cd.add_series(g)
+        for d in seq:
+            if d["grp"]==g: se.add_data_point(d["ytd"],d["m11"],1)
+    ch=sl.shapes.add_chart(XL_CHART_TYPE.BUBBLE,E(41),E(158),E(520),E(330),cd).chart; chart_base(ch,True)
+    ch.plots[0].bubble_scale=30
+    va=ch.value_axis; ca=ch.category_axis
+    va.minimum_scale=0; va.maximum_scale=1.05; va.major_unit=0.2; va.has_major_gridlines=True; va.major_gridlines.format.line.color.rgb=h2r("F2F2F2")
+    va.tick_labels.number_format="0.0"; va.tick_labels.number_format_is_linked=False; va.tick_labels.font.size=Pt(9)
+    xs=[d["ytd"] for d in seq]; lo=min(xs+[0]); hi=max(xs); sp=hi-lo
+    mu=0.05 if sp<=0.4 else (0.1 if sp<=0.9 else (0.2 if sp<=1.8 else 0.5))
+    xmin=math.floor((lo-0.08*sp)/mu)*mu; xmax=math.ceil((hi+0.25*sp)/mu)*mu
+    ca.minimum_scale=xmin; ca.maximum_scale=xmax; ca.major_unit=mu
+    ca.tick_labels.number_format="0%"; ca.tick_labels.number_format_is_linked=False; ca.tick_labels.font.size=Pt(9); ca.has_major_gridlines=False
+    ca.tick_label_position=XL_TICK_LABEL_POSITION.LOW; va.tick_label_position=XL_TICK_LABEL_POSITION.LOW
+    va.has_title=True; va.axis_title.text_frame.text="Model 1.1 (30-Sep-26)"; va.axis_title.text_frame.paragraphs[0].runs[0].font.size=Pt(9)
+    ca.has_title=True; ca.axis_title.text_frame.text="YTD-26 total return (USD)"; ca.axis_title.text_frame.paragraphs[0].runs[0].font.size=Pt(9)
+    PW,PH=430.0,250.0; placed=[]
+    centers=[((d["ytd"]-xmin)/(xmax-xmin),d["m11"]/1.05) for d in seq]
+    def rect(pos,x,y,n):
+        w_=n*3.6/PW; h=9/PH; rr_=0.025
+        return {"R":(x+rr_,x+rr_+w_,y-h/2,y+h/2),"L":(x-rr_-w_,x-rr_,y-h/2,y+h/2),"T":(x-w_/2,x+w_/2,y+rr_*1.5,y+rr_*1.5+h),"B":(x-w_/2,x+w_/2,y-rr_*1.5-h,y-rr_*1.5)}[pos]
+    def ov(a,b): return max(0,min(a[1],b[1])-max(a[0],b[0]))*max(0,min(a[3],b[3])-max(a[2],b[2]))
+    LP={}
+    for k in sorted(range(len(seq)),key=lambda k:centers[k][1],reverse=True):
+        x,y=centers[k]; n=len(seq[k]["name"]); best=None
+        for pos in ("R","L","T","B"):
+            rc=rect(pos,x,y,n)
+            pen=sum(ov(rc,q) for q in placed)*1000+sum(ov(rc,(cx-0.018,cx+0.018,cy-0.028,cy+0.028)) for j,(cx,cy) in enumerate(centers) if j!=k)*500
+            if rc[1]>1.0 or rc[0]<0: pen+=5
+            if best is None or pen<best[0]-1e-9: best=(pen,pos,rc)
+        placed.append(best[2]); LP[k]=best[1]
+    POS={"R":XL_LABEL_POSITION.RIGHT,"L":XL_LABEL_POSITION.LEFT,"T":XL_LABEL_POSITION.ABOVE,"B":XL_LABEL_POSITION.BELOW}
+    k=0
+    for si,g in enumerate(groups):
+        ser=ch.plots[0].series[si]
+        old=ser._element.find(qn("c:spPr"))
+        new=grad_xml(*GRAD[g])
+        if old is not None: old.getparent().replace(old,new)
+        else: ser._element.find(qn("c:tx")).addnext(new)
+        for pi,d in enumerate([d for d in seq if d["grp"]==g]):
+            dl=ser.points[pi].data_label; tf=dl.text_frame; tf.text=d["name"]
+            f=tf.paragraphs[0].runs[0].font; f.size=Pt(7.5); f.name="Arial"; f.bold=(g=="AZTD")
+            dl.position=POS[LP[k]]; k+=1
+    sec_head(sl,585,342,"Names and Scores","YTD-26 return; scores 30-Sep-26")
+    tr=[[d["name"],("$%.1fB"%(MC[d["ric"]]/1000)) if num(MC.get(d["ric"])) else "n/a","/".join(d["funds"]),pc(d["ytd"],0),sc2(d["m11"]),sc2(d["stab"])] for d in seq]
+    rc=[NAVYB if "AZTD" in d["funds"] else None for d in seq]
+    nrow=len(tr)+1; rh=min(16,300/nrow)
+    tb=table(sl,585,158,342,["Name","Mkt Cap","ETF","YTD","M1.1","Stab."],tr,[0.34,0.15,0.17,0.11,0.115,0.115],rh,8 if nrow<=18 else 7,"404040",row_colors=rc)
+    rng={}
+    for key in ("ytd","m11","stab"):
+        v=[d[key] for d in seq if num(d[key])]; rng[key]=(min(v),statistics.median(v),max(v))
+    for i,d in enumerate(seq,1):
+        for key,ci in (("ytd",3),("m11",4),("stab",5)):
+            if num(d[key]):
+                tcPr=tb.cell(i,ci)._tc.get_or_add_tcPr()
+                for e in tcPr.findall(qn("a:noFill"))+tcPr.findall(qn("a:solidFill")): tcPr.remove(e)
+                sf=etree.SubElement(tcPr,qn("a:solidFill")); cl=etree.SubElement(sf,qn("a:srgbClr")); cl.set("val",scale(d[key],*rng[key]))
+    LOG["top_"+s]=dict(am=am,pm=pm,amm=amm,pmm=pmm,n=len(seq))
+    return sl
+# ---------------- update existing slides with Sept scores
+NAME2RIC={}
+for r in ROWS: NAME2RIC.setdefault(clean_name(disp_name(r),23),gr(r,"C"))
+def update_region_tables(i):
+    sl=slides[i]; n=0
+    for sh in sl.shapes:
+        if not sh.has_table: continue
+        tb=sh.table; hdr=[c.text for c in tb.rows[0].cells]
+        if "M1.1" not in hdr: continue
+        im=hdr.index("M1.1"); is_=hdr.index("Stab.") if "Stab." in hdr else None
+        for rr in range(1,len(tb.rows)):
+            ric=NAME2RIC.get(tb.cell(rr,0).text.strip())
+            if not ric: continue
+            for ci,key in ((im,"Model1.1"),(is_,"STABILITYSCORE")):
+                if ci is None: continue
+                v=qf(ric,key); cell=tb.cell(rr,ci); runs=[r_ for pa in cell.text_frame.paragraphs for r_ in pa.runs]
+                if runs: runs[0].text=sc2(v); n+=1
+    return n
+FS=pickle.load(open(S+"fund_scores_sep.pkl","rb")) if os.path.exists(S+"fund_scores_sep.pkl") else None
+def update_snapshot(i):
+    if not FS: return 0
+    sl=slides[i]; n=0
+    for sh in sl.shapes:
+        if not sh.has_table: continue
+        tb=sh.table; hdr=[c.text for c in tb.rows[0].cells]
+        if "Model 1.1" not in hdr: continue
+        cols={h:hdr.index(h) for h in ("Model 1.1","6M Slope","Stability","Tactical") if h in hdr}
+        for rr in range(1,len(tb.rows)):
+            f=tb.cell(rr,0).text.strip()
+            if f in FS:
+                for h,ci in cols.items():
+                    v=FS[f][h]; fmt="{:+.3f}" if h=="6M Slope" else "{:.2f}"
+                    runs=[r_ for pa in tb.cell(rr,ci).text_frame.paragraphs for r_ in pa.runs]
+                    if runs: runs[0].text=fmt.format(v); n+=1
+            elif f.startswith("AZTD vs"):
+                for h,ci in cols.items():
+                    v=FS["AZTD"][h]-statistics.mean(FS[p_][h] for p_ in FUNDS[1:]); fmt="{:+.3f}" if h=="6M Slope" else "{:+.2f}"
+                    runs=[r_ for pa in tb.cell(rr,ci).text_frame.paragraphs for r_ in pa.runs]
+                    if runs: runs[0].text=fmt.format(v); n+=1
+        tbx=[s_ for s_ in sl.shapes if s_.has_text_frame and "Quant scores" in s_.text_frame.text]
+        for s_ in tbx:
+            for pa in s_.text_frame.paragraphs:
+                for r_ in pa.runs: r_.text=r_.text.replace("Quant scores and holdings as of 31-Aug-26","Quant scores 30-Sep-26, holdings 31-Aug-26")
+    return n
+LOG["snapshot_cells"]=update_snapshot(tid("AZTD vs Peers: Performance 2024 to 2026"))
+reg_ids=[tid("Europe and Japan 2024-26: Largest Positions"),tid("Europe and Japan 2025: Largest Positions"),tid("Europe and Japan 2026 YTD: Largest Positions")]
+LOG["region_cells"]=[update_region_tables(i) for i in reg_ids]
+for i in reg_ids:
+    ph=[p_ for p_ in slides[i].placeholders if p_.placeholder_format.idx==14]
+    if ph: ph[0].text_frame.text=ph[0].text_frame.text.replace("; LSEG Workspace","; scores 30-Sep-26").replace(" (cumulative)","")
+# ---------------- build new slides
+new={}
+for period in ("P","25","Y"):
+    ws_=weak(PER[period]["sec"],4)
+    new[period]=[weak_sector_slide(period,row,k+1,4) for k,row in enumerate(ws_)]
+    LOG["weak_list_"+period]=[r[0] for r in ws_]
+TH={s:topholdings_slide(s) for s in ("Materials","Financials","Consumer Discretionary","Utilities")}
+# ---------------- order
+def sid_of(sl):
+    for s_ in prs.slides._sldIdLst:
+        if prs.part.related_part(s_.rId) is sl.part: return s_
+idmap=lambda i: ids[i]
+old_drop=[tid("Weak Sectors 2024-26: Largest Positions (1/4)"),tid("Top Holdings by ETF: Materials"),tid("Top Holdings by ETF: Financials"),tid("Top Holdings by ETF: Consumer Discretionary"),tid("Top Holdings by ETF: Utilities"),tid("Top Holdings by ETF")]
+old_drop+= [i for i,v in TITLE.items() if v and v[0].startswith("Weak Sectors") and i not in old_drop]
+keep_before=[i for i in range(0,tid("Weak Sectors 2024-26: Largest Positions (1/4)"))]
+seq_ids=[ids[i] for i in keep_before]
+for k,s_ in enumerate(LOG["weak_list_P"]):
+    seq_ids.append(sid_of(new["P"][k]))
+    if s_ in TH: seq_ids.append(sid_of(TH[s_]))
+seq_ids+= [ids[tid("ETF By Region Annualized Performance")],ids[tid("Europe and Japan 2024-26: Largest Positions")]]
+seq_ids+= [ids[tid("2025")],ids[tid("Sectors 2025: Materials Lagged, Industrials Led")],ids[tid("Regions 2025: Japan and Europe Lagged")]]
+seq_ids+= [sid_of(s_) for s_ in new["25"]]+[ids[tid("Europe and Japan 2025: Largest Positions")]]
+seq_ids+= [ids[i] for i in (tid("2026 YTD"),tid("2026 YTD: AZTD vs Peers"),tid("Sectors 2026 YTD: Materials Lagged, Tech Led"),tid("Regions 2026 YTD: Europe and Japan Lagged"),tid("YTD Allocation: Health Care Weight Cost the Most"),tid("YTD Selection: Health Care Strong, Financials Weak"))]
+seq_ids+= [sid_of(s_) for s_ in new["Y"]]+[ids[tid("Europe and Japan 2026 YTD: Largest Positions")]]
+seq_ids+= [ids[len(ids)-1]]
+lst=prs.slides._sldIdLst
+allids=list(lst)
+for s_ in allids:
+    if s_ not in seq_ids: prs.part.drop_rel(s_.rId)
+    lst.remove(s_)
+for s_ in seq_ids: lst.append(s_)
+prs.save(OUT)
+json.dump(LOG,open(S+"deck6_log.json","w"),default=str,indent=1)
+print("saved",len(prs.slides))

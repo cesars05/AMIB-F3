@@ -1,0 +1,75 @@
+T = {}
+T[37] = """Title: III. Transforming the portfolio with new functional materials
+Three loops: new customer acquisition, next-generation material development, exhibitions.
+New customer acquisition:
+ - For CMP: sample work under way for the A16/A14 generations; customer qualification work in progress for high-concentration and high-productivity products.
+ - Hollow submicron silica Miralica (TM): sample work continues with several companies, mainly for low-dielectric-constant uses. Mid-scale production to be set up and launched within FY2026.
+ - Toner external additive: sample work with several companies, aiming for adoption from FY2026.
+ - Cosmetics materials: sample work continues.
+Next-generation material development:
+ - For CMP: development started for the A10 generation; expand high-concentration and high-productivity product line-up.
+ - New materials: high-purity organosol; porous silica; silica nanosheet; FDC (TM) method (FUSO Dispersible Coat, Fuso's own particle-coating technology); silica-coat materials.
+Exhibitions: exhibiting at Chemical Material Japan and nano tech."""
+T[38] = """Section divider: III. FY03/2027 earnings forecast"""
+T[39] = """Title: Earnings forecast
+Unit: 100 million yen. FY03/2027 forecast vs prior-year actual.
+Net sales: 858 vs 769 (+11.5%)
+Operating profit: 243 vs 188 (+28.9%)
+Net income: 166 vs 143 (+16.0%)
+Operating profit before depreciation: 370 vs 297 (+24.2%)
+Key assumptions (FY03/2027 vs prior year):
+ - Annual exchange rate: 150 yen (prior year 150 yen)
+ - Benzene price (reference: ENEOS ACP price): flat vs prior year (prior year average 745 dollars per ton)
+ - Manufacturing cost: depreciation increases (both years)
+ - Other: semiconductor market expands (prior year: semiconductor market recovery)
+ - FX sensitivity (per 1 yen change): net sales 210 million yen; operating profit 90 million yen (based on prior-year actual)
+Comments: Sales and profit growth from full-scale operation of added facilities. Increase share in overseas markets and focus on high-margin products. The Middle East situation is NOT factored in."""
+T[40] = """Title: Earnings forecast (detail). Unit: 100 million yen. FY03/2027 first-half plan | full-year forecast, with FY03/2026 actuals.
+Net sales: H1 431.0 (+14.3%; prior H1 377.0) | full year 858.0 (+11.5%; prior 769.2)
+ Life Science: H1 184.0 (+3.5%; 177.8) | FY 364.0 (+2.8%; 354.1)
+ Electronic Materials: H1 247.0 (+24.0%; 199.2) | FY 494.0 (+19.0%; 415.1)
+Operating profit: H1 116.0 (+19.0%; 97.4) | FY 243.0 (+28.9%; 188.5)
+ Life Science: H1 27.0 (+7.3%; 25.1) | FY 55.0 (+3.6%; 53.0)
+ Electronic Materials: H1 104.0 (+23.4%; 84.2) | FY 217.0 (+36.2%; 159.2)
+ Adjustments: H1 -15.0 (-11.9) | FY -29.0 (-23.8)
+Ordinary profit: H1 117.0 (+19.3%; 98.0) | FY 245.0 (+25.2%; 195.7)
+Net income: H1 78.5 (+14.1%; 68.7) | FY 166.0 (+16.0%; 143.1)
+Operating profit before depreciation: H1 178.0 (+24.2%; 143.2) | FY 370.0 (+24.2%; 297.8)
+EPS (note: after the 3-for-1 split): H1 74.1 yen (+14.1%) | FY 156.9 yen (+16.0%; prior FY 135.3 yen). The prior-year H1 EPS of 195.1 yen appears to be a pre-split figure on the slide (about 65 yen post-split)."""
+T[41] = """Title: Depreciation outlook
+Increase factors from FY03/2026: Life Science: Osaka plant seismic reinforcement. Electronic Materials: start-up of new Kashima equipment (Phase II, fixed-rate depreciation from December 2025).
+Increase factors from FY03/2027: Life Science: Osaka plant office building. Common: Kashima quality control building (from 2H 2027).
+Depreciation by segment (100 million yen), FY03/2024 | 25 | 26 | 27 plan | 28 rough estimate:
+ Life Science: 16.1 | 15.6 | 16.3 | 18.0 | 20.0
+ Electronic Materials: 53.3 | 65.2 | 90.9 | 107.0 | 105.0
+ Common: 2.0 | 2.1 | 2.0 | 2.0 | 2.0
+ Total: 71.6 | 83.0 | 109.3 | 127.0 | 127.0
+Capital expenditure (100 million yen): FY03/2021 18.9 | 22: 124.9 | 23: 208.3 | 24: 142.9 | 25: 174.9 | 26: 107.8 | FY03/2027 plan: 299.0"""
+T[42] = """Title: Factors in the change in net income, FY03/2027 plan
+Unit: 100 million yen (waterfall chart).
+Net income FY03/2026: 143.1
+Net sales: +88.7
+Cost of sales, excluding depreciation: +2.7 (as shown on the slide)
+Cost of sales, depreciation: -17.6
+SG&A: -19.3
+Non-operating income and expenses: -5.2
+Extraordinary income and losses: -1.5
+Income taxes, etc.: -24.8
+Net income FY03/2027 plan: 166.0"""
+T[43] = """Title: Earnings trend and forecast
+Unit: 100 million yen. FY03/2022 | 23 | 24 | 25 | 26 | FY03/2027 plan
+Net sales: 557.6 | 684.5 | 589.7 | 695.0 | 769.2 | 858.0
+Operating profit: 150.3 | 189.3 | 110.8 | 162.3 | 188.5 | 243.0
+Ordinary profit: 155.0 | 197.4 | 118.8 | 165.6 | 195.7 | 245.0
+Net income: 108.9 | 141.2 | 83.4 | 116.2 | 143.1 | 166.0"""
+T[44] = """Title: Stock information
+Left: market capitalization and number of shareholders, March 2019 to March 2026. Market capitalization (red line, 100 million yen) rose to about 2,850 at the end of March 2026; shareholder count (bars) rose to roughly 5,800 (chart reading is approximate).
+Top right: shareholder composition (end of March 2026): domestic corporations 45%, financial institutions 20%, foreign investors 25%, individuals 8%, treasury shares 1%.
+Bottom right: cross-held listed shares (number of issues): March 2021 25; 2022 16; 2023 8; 2024 6; 2025 6; March 2026 1 issue."""
+T[45] = """Title: Shareholder returns
+Policy: to reward shareholders stably over the long term, a progressive dividend approach is adopted.
+FY03/2026: ordinary dividend 82 yen (before the 3-for-1 split).
+FY03/2027 forecast: 28 yen after the split (interim 14 yen, year-end 14 yen); equivalent to 84 yen before the split.
+Dividend per share history (yen, before the split): FY03/2015 18 | 16: 35 | 17: 43 | 18: 45 | 19: 46 | 20: 46 | 21: 48 | 22: 55 | 23: 63 | 24: 66 | 25: 73 | 26: 82 | 27 plan: 28 (post-split).
+Line: payout ratio, between about 16% and 28% over the period, falling to about 18% in the FY03/2027 plan. Highlight: FUSO VISION 2025 medium-term plan period. Note: stock split of 3 for 1 effective April 1, 2026."""
+T[46] = """Section divider: IV. Medium-term management plan, Next Growth 2030 (飛躍2030), FY2026 to FY2030"""

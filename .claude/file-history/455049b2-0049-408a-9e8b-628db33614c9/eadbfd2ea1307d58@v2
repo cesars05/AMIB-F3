@@ -1,0 +1,193 @@
+
+
+---
+
+# PARTE 4 · Dos aclaraciones
+
+## 4.1 ¿A qué nos referimos con "contraparte de salida natural"?
+
+**Contraparte** es el otro lado de una operación: si nosotros vendemos, la contraparte es el que compra. **"Contraparte de salida natural"** significa: *los fondos grandes con los que no competimos al entrar son los que más probablemente nos compren al salir.*
+
+- **Al entrar** (años 1 a 3) compramos una parte de empresas chicas, con cheques de US$2 a 10M. Los fondos grandes (AINDA, Riverstone/Skysense, MIP, Macquarie) escriben cheques de US$50M a cientos de millones; una empresa de US$40M de valor no les sirve, así que **no pelean con nosotros por comprarla**.
+- **Al salir** (años 6 a 9) las empresas ya serán más grandes (en el caso base, entre 3.3x y 4.4x lo invertido), y para entonces **sí caben en el tamaño de cheque de esos fondos**. Ahí ellos son compradores posibles.
+- Es la misma lógica de una liga menor que forma jugadores y los vende a la liga grande: nosotros hacemos crecer a la empresa hasta el tamaño en que ellos la quieren.
+
+**Dónde sale en el deck:** lámina 5 ("somos su contraparte de salida natural") y lámina 15 (compradores por empresa: por ejemplo Pireos a Skysense/Riverstone o AINDA en el año 8).
+
+**Qué hay que decir con honestidad:** es una **hipótesis del equipo**, no un compromiso de nadie. Ningún fondo ha dicho que nos comprará; la lámina 15 lo reconoce ("compradores: hipótesis del equipo") y AMEXCAP reporta apenas ≈US$900M en 111 salidas entre 2025 y 1S-2026. Por eso existe el plan B: venta a otro fondo, venta parcial o vehículo de continuación con valuador independiente y aprobación del LPAC. Además, AINDA ya está dentro de Quartux, así que para esa empresa sería socio, no comprador nuevo.
+
+## 4.2 "Sin expansión de múltiplo": ¿cómo definimos el múltiplo si las empresas no cotizan?
+
+**Idea central:** en una empresa privada no hay un precio de pantalla. El múltiplo (EV/EBITDA: cuántas veces el EBITDA pagamos) **se negocia**, no se observa. Lo que hicimos es (1) fijar el de entrada con una referencia pública y un descuento, (2) asumir que el de salida es igual o menor, y (3) mostrar qué pasa si estamos equivocados.
+
+**Paso a paso (con Pireos, lámina 12):**
+
+| Paso | Qué hicimos | Cifra |
+|---|---|---|
+| 1 | Estimamos el tamaño de la empresa (no publica sus números) | Ingresos supuestos US$35M × margen EBITDA 15% = EBITDA ≈US$5.25M |
+| 2 | Tomamos como referencia empresas públicas comparables | Múltiplo de 14x a 17x (precios al 9-oct-2026, agregador; falta cotejarlo con Bloomberg o CapIQ) |
+| 3 | Aplicamos un descuento ≈50% por ser privada, chica, poco líquida y con concentración en Walmart | Múltiplo de entrada **7.5x** |
+| 4 | Valor de la empresa = EBITDA × múltiplo | 5.25 × 7.5 ≈ **US$40M** (pre-money) |
+| 5 | Aurex pone US$10M | Post-money US$50M, participación **20%** |
+| 6 | Supuesto de salida: múltiplo **5% a 10% menor** que el de entrada | ≈6.75x (si es 0.90) |
+
+**Cómo se define el de salida:** no pronosticamos el mercado. Usamos una **regla**: múltiplo de salida ÷ múltiplo de entrada **nunca mayor a 1.0x**, y en las cinco empresas que funcionan es 0.90 a 0.95. En la práctica el múltiplo real lo fijará el comprador en una negociación o subasta, y durante los años de tenencia lo estima cada trimestre el GP con una **política de valuación escrita** y, cuando se pueda, un **valuador independiente**, revisado por el LPAC.
+
+**Detalle importante:** para el retorno de cada empresa solo importa el **cociente** entre salida y entrada, no el nivel absoluto:
+
+> MOIC de la empresa = (1 + crecimiento anual del EBITDA)^años × (1 − dilución) × (múltiplo de salida ÷ múltiplo de entrada)
+
+Ejemplo Pireos: 1.265⁷ ≈ 5.19 × 0.95 (dilución 5%) × 0.90 (salida 10% menor) ≈ **4.43x**. Es decir, **el retorno viene de que crezca el EBITDA, no de vender a un múltiplo más alto.**
+
+**Límites que hay que reconocer (el comité los va a notar):**
+- Los ingresos, el EBITDA y las valuaciones de las ocho empresas son **estimaciones del fondo**; ninguna es pública y las empresas no participaron.
+- Los precedentes de venta no sirven para fijar el múltiplo: el único múltiplo visible (Vertiv, ≈13x EBITDA 2027E) es de un nicho de data centers, y las salidas recientes en carga VE y almacenamiento fueron rescates.
+- El **crecimiento del EBITDA (24.5% a 32.5% anual) es lo que realmente mueve el resultado**, y se calibró para llegar a ≈18% de TIR. Por eso mostramos el caso Conservador (1.82x, 12.5%) y el Bajo (1.29x, 5.2%).
+- Los múltiplos de entrada de las otras siete empresas están en el modelo; **yo solo verifiqué el de Pireos (7.5x)**. Antes de la defensa, revisen que cada empresa tenga su múltiplo de entrada y su fuente.
+
+---
+
+# PARTE 5 · Guion slide por slide
+
+**Cómo usarlo.** Está escrito para decirse en voz alta, con las definiciones dentro del texto. Es la **versión larga, para que todos entiendan todo**; las frases marcadas *(opcional)* se cortan para llegar a los 10 minutos de la defensa. Las cifras son las del PDF del 14-oct (caso base).
+Entre corchetes va **quién habla**, según los roles de la lámina 3, y un tiempo sugerido. Los tiempos suman más de 10 minutos si se dice todo: la guía del profe pide 10 y que **hablen todos**.
+
+## Lámina 1 · Portada [Julio · 0:15]
+"Buenas tardes. Somos el equipo 5 y les presentamos **Aurex Capital**: un fondo de **US$100 millones** que invierte en **empresas mexicanas de energía distribuida**, es decir, energía que se genera y se guarda en el lugar donde se consume: la fábrica, la tienda, el centro de distribución. Somos seis: Julio, Roberto, Mariana, Tomás, Pablo y Miguel, y cada uno va a defender una parte."
+
+## Lámina 2 · Resumen ejecutivo [Julio · 1:00]
+"Les resumo todo en una frase: **invertimos US$100M en 8 empresas mexicanas y, aun suponiendo que 3 de las 8 fallan, el inversionista gana 2.26 veces su dinero, neto de todos los costos, con una tasa de retorno anual de 17.9%.**
+
+Voy por partes:
+- **Qué compramos.** Participaciones **minoritarias**, o sea, una parte de la empresa y no el control, con **asiento en el consejo**, en 8 empresas que **ya venden** solar, baterías, microrredes y gestión de energía. No son ideas: son negocios con clientes y contratos.
+- **Dónde y cuándo.** México, etapa de **crecimiento**. Cada ticket inicial es de **US$2 a 10 millones**, más un segundo pago, el *follow-on*, cuando la empresa cumple metas. Ninguna empresa puede pasar del **15% del fondo**, es decir US$15M. De los US$100M, **US$82M llegan a las empresas: US$56M iniciales y US$26M de follow-on.**
+- **Cómo funciona.** Es un **fideicomiso privado** para inversionistas calificados. Dura **10 años, divididos 5 + 5: los primeros 5 años son el *periodo de inversión***, en que buscamos, compramos y apoyamos a las empresas; **los siguientes 5 son el *periodo de desinversión***, en que las vendemos y devolvemos el dinero. Tiene extensiones de 1 + 1 año si queda alguna empresa sin vender. Los inversionistas, a los que llamamos **LPs**, no entregan los US$100M de golpe: los aportan en **llamadas de capital** de 1% a 25% del compromiso, máximo cuatro al año.
+- **Cómo salimos.** Vendemos cada empresa entre los años 6 y 9 a compradores que ya identificamos: empresas estratégicas, fondos de infraestructura o fondos secundarios.
+
+**Y aquí está lo importante: asumimos que 3 de las 8 empresas fallan.** Uriel/BRM no devuelve nada, FAZT devuelve la mitad de lo invertido y S2G devuelve 30 centavos por dólar. **Las otras 5 sí funcionan**, y entre las cinco generan el retorno que cubre las pérdidas de las tres. Con eso: **2.26x neto, 17.9% de TIR, y US$32 millones de *carry* para el GP**. *(opcional)* Si fallan 5 de 8, el inversionista aún recupera 1.33x.
+
+Y una advertencia honesta: somos un **primer fondo sin historial**. Nuestra credibilidad no está en adjetivos sino en el diseño: comité de inversionistas, cláusula de persona clave, devolución de carry y 2% de nuestro dinero dentro del fondo."
+
+*(Definiciones para ustedes: **TIR** = rendimiento anual compuesto; **MOIC** = cuántas veces regresa el dinero; **carry** = la participación de las ganancias que cobra el GP, 20%, solo si el inversionista ya ganó su mínimo; **GP** = la gestora, nosotros; **LP** = el inversionista.)*
+
+## Lámina 3 · Equipo [Julio · 0:30]
+"Seis personas, cinco roles, y cada una responde una pregunta. Yo, Julio, dirijo el fondo y respondo **qué hacemos y por qué**. Roberto, socio de inversión: **cuánto invertimos y en quién**. Mariana, socio de operaciones: **cómo funciona el fondo**. Tomás, relación con inversionistas: **por qué un inversionista elige Aurex**. Pablo, que construyó el modelo financiero: **qué tan bien podría irnos**. Miguel, mercado y datos de gobierno: **dónde está la oportunidad**.
+
+Dos reglas que protegen al inversionista: si salen **dos personas clave**, el Managing Partner y el Socio de inversión, **se suspende el periodo de inversión** hasta que los LPs decidan si continúan. Y los **conflictos de interés** se declaran, la persona se abstiene y los revisa el comité de inversionistas. *(Aquí, si preguntan: un familiar de un integrante es dueño de una empresa del sector; está declarado y esa empresa no entra al portafolio sin aprobación del comité.)*"
+
+## Lámina 4 · El Estado abre espacio, pero no a nuestro ticket [Miguel · 0:45]
+"¿Por qué México y por qué ahora? Porque el gobierno anunció el 7 de octubre una inversión de **MXN 1.168 billones** en electricidad en este sexenio, y el plan contempla **32,475 MW** de capacidad nueva y **5,551 MW de baterías** hasta 2030. La **generación distribuida** ya suma **5,190 MW** y la meta es **14,432 MW en 2039**.
+
+Pero fíjense en el tamaño: esos proyectos de generación son de **cientos de megawatts**; los mixtos con CFE, de cientos de millones de pesos. Un fondo de nuestro tamaño no entra ahí, y no queremos. **Nosotros entramos aguas abajo**: la energía solar y las baterías que se instalan *detrás del medidor* de una fábrica o de un comercio, que es donde el Estado no invierte y los fondos grandes no llegan. Además, el equipo renovable se puede **deducir al 100%** (LISR, art. 34 fr. XIII), lo que ayuda al cliente a decidir.
+
+En una frase: la demanda de energía en sitio existe, pero el capital institucional fluye a escala *utility*; Aurex entra donde nadie financia."
+
+## Lámina 5 · Energía en sitio donde nadie la financia [Julio · 0:45]
+"Esta es nuestra tesis en 193 caracteres: **invertimos US$2 a 10M en empresas mexicanas de energía distribuida y eficiencia con ingresos recurrentes, para escalar solar, baterías y gestión de energía en clientes industriales y comerciales.**
+
+¿Por qué hay un hueco? Según AMEXCAP, las operaciones de infraestructura y energía en México promedian unos **US$262 millones**, y las de *growth* y *buyout*, unos **US$43 millones**. Nuestro cheque queda **por debajo de ambos**. Los fondos visibles escriben cheques **unas 10 veces más grandes**: General Atlantic, AINDA, Riverstone, MIP.
+
+Por eso **no competimos con ellos al comprar, pero somos su contraparte de salida natural**: cuando nuestras empresas crezcan, serán del tamaño que ellos sí compran. *(Aquí aclaren que es una hipótesis: nadie nos ha prometido comprar.)* Y lo reconocemos: hay fondos de tamaño parecido, como Blue Global y viveenergía, que levantan US$30 millones y sí compiten con nosotros. Nuestra diferencia es el tamaño del cheque, el asiento en el consejo y la alineación del GP."
+
+## Lámina 6 · Tres razones verificables y un límite honesto [Tomás · 0:30]
+"Un inversionista nos va a preguntar: ¿por qué ustedes y no un fondo con experiencia? Les respondo con tres razones y un límite.
+
+**Uno:** las **8 empresas están investigadas** con fuente y liga, y cada una pasó por **5 criterios de exclusión**: ningún cliente mayor a 30% de las ventas, directivos con experiencia en energía, sin generación mayorista, sin dependencia de subsidios y valuación de hasta US$100M. Verdigris la excluimos por ser de California, sin operación en México.
+**Dos:** el GP pone **al menos 2%** del fondo, en efectivo y renunciando a parte de su comisión: si el inversionista pierde, nosotros también.
+**Tres:** **seis protecciones desde el día uno**: comité de inversionistas, persona clave, tope de 15%, devolución de carry, informes trimestrales y valuador independiente.
+
+Y el límite: **no tenemos historial ni salidas propias que mostrar.** Les pedimos confiar en el diseño del fondo, no en una trayectoria que todavía no existe."
+
+## Lámina 7 · Fideicomiso privado y cascada europea [Mariana · 1:00]
+"Así funciona por dentro. Los inversionistas, familias, family offices y corporativos, ponen el dinero en un **fideicomiso privado**; nosotros, la gestora Aurex, lo administramos y decidimos las inversiones con un comité de inversión, vigilado por el comité de inversionistas.
+
+Las condiciones: **US$100M, 10 años: 5 de inversión y 5 de salida**, con 1 + 1 de extensión. Cobramos una **comisión de administración de 2% anual sobre lo comprometido en los años 1 a 5**, y **1.5% sobre lo invertido en los años 6 a 10**: baja porque ya no estamos comprando, solo administrando y vendiendo. Y un ***carry* de 20%**.
+
+La clave es la **cascada europea**, que es el orden en que se reparte el dinero que sale de las ventas:
+1. **Primero, el inversionista recupera sus US$100M.**
+2. **Segundo, recibe su retorno preferente: 8% anual compuesto sobre todo lo comprometido**, que son **US$115.9M**. Esto es el *hurdle*: el mínimo que debe ganar antes de que nosotros cobremos.
+3. **Tercero, el *catch-up*: US$29M para el GP**, hasta que tengamos el 20% de la ganancia total.
+4. **Cuarto, lo que sobre se reparte 80% al inversionista y 20% al GP.**
+
+En el caso base el inversionista recibe **US$226.4M** y el GP **US$31.6M**. Lo que significa: **el GP necesita que el portafolio rinda unas 2.16 veces lo comprometido para cobrar su primer peso.** Y si cobramos de más, hay *clawback*: devolvemos el exceso.
+
+Una decisión que tomamos y tiene costo: elegimos fideicomiso privado y no un vehículo listado (CKD o CERPI) porque se constituye en semanas, no en 6 a 12 meses, y no tiene revelación pública. El costo: **las AFOREs no pueden entrar**, así que apuntamos a family offices y corporativos."
+
+## Lámina 8 · Llamadas de capital [Mariana · 0:45]
+"El inversionista no entrega los US$100M el primer día. Los **compromete** y nosotros se los **llamamos** cuando hace falta. Cada llamada es de **1% a 25% del compromiso**, con **10 días hábiles de aviso** y **máximo cuatro al año**.
+
+Mire el calendario: **69% del capital se llama en los años 1 a 3, US$68.6M**, que es cuando entran las 8 empresas. En los **años 4 y 5, US$24.4M**, sobre todo follow-on, que solo damos a empresas que cumplen metas. Del **año 6 al 10, apenas US$7.1M**, para comisiones y gastos, que se compensan con lo que ya estamos distribuyendo.
+
+Si un inversionista no paga una llamada, paga mora de TIIE + 5 puntos, pierde su voto y sus distribuciones a los 30 días, y los demás cubren el faltante. Primer cierre desde US$40M; cierre final de US$100M en 12 meses."
+
+## Lámina 9 · Roadmap de 10 años [Mariana · 0:45]
+"Esta es la película completa del fondo. **Año 1: primer cierre y entran 3 empresas. Año 2: entran 3 más. Año 3: entran las últimas 2.** Después del año 3 no entra ninguna empresa nueva. **Años 4 y 5: follow-on y fin del periodo de inversión.** **Años 6 a 9: las salidas.** El año 10 es colchón.
+
+Esto es lo que quiero que noten: **al inicio el inversionista ve que su inversión vale menos de lo que puso: 0.92 veces en el año 1.** Eso se llama **curva J**: caen las comisiones y los gastos antes de que las empresas valgan más que su costo. Es normal y lo mostramos. Luego sube, y el dinero empieza a regresar desde el año 6."
+
+## Lámina 10 · De cada US$100M, US$82M llegan a las empresas [Pablo · 0:45]
+"Transparencia total sobre costos: de cada **US$100 que nos comprometen, US$82 llegan a las empresas**. Se van **US$16.15M en comisiones** (US$10M en los años 1 a 5 y US$6.1M en los años 6 a 10) y **US$1.85M en gastos**. Son 18 de cada 100 dólares. El gasto de US$1.85M es un supuesto de nuestro modelo.
+
+A la derecha, cómo se reparten los US$82M: Pireos US$15M, XC US$14M, BioEsol US$14M, y bajando hasta Uriel con US$2M. **Ninguna pasa del tope de 15% del fondo**; Pireos llega justo a ese límite, con US$10M iniciales y US$5M de follow-on."
+
+## Lámina 11 · Ocho empresas en siete verticales [Roberto · 2:00]
+"Estas son las 8 empresas. Una **vertical** es un segmento del negocio. Tenemos siete: microrredes y solar industrial y comercial, **35%** del capital (US$29M); energía como servicio, 17%; almacenamiento con baterías, 13%; carga de vehículos eléctricos, 11%; solar para pymes, 11%; gestión de energía, 10%; y biogás, 2%.
+
+Cómo llegamos a ellas: partimos de un pipeline de empresas reales, aplicamos los cinco criterios de exclusión, hicimos una investigación con fuente, y el siguiente paso es *due diligence* y *term sheet*. Descartamos a Verdigris, por ser de California sin operación en México, y a Solar Inc. y Energypro, que valen menos de US$1M, muy pequeñas para tickets de US$2M o más.
+
+**Aquí viene lo que mencionaba Julio: asumimos que 3 de las 8 fallan.** No sabemos cuáles serán, así que para ser conservadores se las asignamos a las **tres con menor puntaje en nuestros criterios**: **Uriel/BRM**, que depende de un solo comprador y de un solo anfitrión, y recupera **0.0x**; **FAZT**, con sus 31 estaciones en un solo anfitrión, que recupera **0.5x** gracias a que tenemos *preferencia de liquidación 1x*, es decir, cobramos antes que los fundadores; y **S2G**, la más pequeña, que recupera **0.3x**. **Sobreviven 5: Pireos, XC, BioEsol, Quartux y Niko.**
+
+Las valuaciones de la tabla son **estimaciones del fondo**: ninguna de estas empresas publica su valor. Lo que nos protege de equivocarnos es el tope de 15% y que el follow-on solo se entrega con metas cumplidas."
+
+## Lámina 12 · Caso de inversión: Pireos Power [Roberto · 2:30]
+"Veamos una empresa a fondo. **Pireos Power** instala microrredes, solar y baterías para industria y comercio; declara **más de 300 proyectos**, entre ellos una microrred de Walmart de 5 MWp con 14 MWh de baterías.
+
+**Cuánto, a qué valor y qué parte:** estimamos ingresos de US$35M y margen de 15%, un EBITDA de ≈US$5M. Lo valuamos en **7.5 veces EBITDA**, que es la mitad de lo que valen las empresas públicas comparables (14 a 17 veces), por ser privada, pequeña y concentrada. Eso da **US$40M antes de nuestra inversión** (*pre-money*). Ponemos **US$10M**, el valor después queda en **US$50M** (*post-money*) y recibimos **20%**; los fundadores conservan 70% y 10% queda para un *pool* de incentivos. En el **año 4** damos **US$5M más de follow-on**, solo si cumplen metas.
+
+**Qué esperamos:** que crezca su EBITDA ≈26.5% al año durante 7 años, con 5% de dilución y que la vendamos a un múltiplo 10% menor al de entrada. En el año 8 nuestra inversión de US$15M vale **US$66.5M: 4.43 veces**.
+
+**Cómo nos protegemos:** preferencia 1x no participativa, asiento en el consejo y vetos sobre deuda, venta y presupuesto, *drag-along* y *tag-along* (poder arrastrar a los demás en una venta y acompañar la venta de los fundadores) y *vesting* para los fundadores. Y la regla principal: **si el due diligence muestra que algún cliente pasa de 30% de las ventas, no invertimos o reducimos el ticket.** El riesgo real es que el grupo Walmart supere ese 30%.
+
+*(Para no olvidarlo: ingresos, valuación y términos son supuestos del fondo; Pireos no participó.)*"
+
+## Lámina 13 · Curva J y detalle por empresa [Pablo · 1:00]
+"Tres indicadores que se usan en fondos: **DPI** es lo que ya devolvimos en efectivo, dividido entre lo aportado; **RVPI** es lo que todavía vale en las empresas; **TVPI** es la suma de los dos. En el año 1 el TVPI es 0.92x por los costos. El **DPI** es 0.32x en el año 6, cuando empiezan las salidas, llega a 2.30x en el año 9 y cierra en 2.26x neto.
+
+A la derecha, empresa por empresa lo que recupera el portafolio: Pireos 66.5, XC 58.6, BioEsol 52.3, Quartux 44.0, Niko 29.8, y las tres que fallan 4.5, 2.4 y 0. **Total: US$258M, 3.15 veces lo invertido.** De ese bruto, tras costos y *carry*, queda el 2.26x neto del inversionista."
+
+## Lámina 14 · Caso base: 2.26x neto y 17.9% de TIR [Pablo · 1:30]
+"El resultado. **2.26 veces y 17.9% de TIR neta**, en dólares y con las fechas reales de cada flujo. Esa es la única tasa que usamos.
+
+Pero un solo número no basta, por eso mostramos rangos. **Escenario Bajo: 1.29x y 5%.** **Conservador: 1.82x y 12%.** **Alto: 2.47x y 20%.** Con **5 de 8 empresas fallando**, el inversionista todavía recupera 1.33x.
+
+Contra qué nos comparamos: la mediana de fondos con actividad en México es **16.15%**, AINDA I 15.5% y nuestro *hurdle* 8%. Nuestro caso base está arriba porque asumimos empresas que crecen entre 24% y 33% al año; **el piso razonable es el caso Conservador, 12%.** Y a la derecha, el tornado: **lo que más mueve el resultado es cuántas empresas fallan** (fallan 5 en vez de 3 resta 11.2 puntos), y **mucho menos el múltiplo de venta** (múltiplos 20% menores restan 2.6 puntos)."
+
+## Lámina 15 · Compradores con nombre, salidas escalonadas [Roberto · 1:00]
+"El riesgo principal de este fondo es la salida, y lo decimos de frente: **no hay salidas mexicanas comparables de nuestro tamaño**; AMEXCAP reporta unos US$900M en 111 salidas en año y medio.
+
+Por eso nombramos al comprador de cada empresa: Pireos a Skysense/Riverstone, AINDA o utilities en el año 8; Quartux a un IPP con apetito por industria y comercio o a fondos de infraestructura en el año 9; BioEsol a Enlight/ENGIE, Atera o Schneider/Siemens; FAZT a Soriana o Factorenergia. Son **hipótesis**; mostramos precedentes de otros países, pero **no los usamos para fijar el múltiplo**, porque esas operaciones son 100 veces más grandes que nuestros tickets.
+
+Si no aparece comprador: venta a otro fondo, venta parcial, o un **vehículo de continuación** con valuador independiente y aprobación del comité de inversionistas. Y el fondo puede extenderse 1 + 1 años."
+
+## Lámina 16 · Seis riesgos y siete controles [Mariana · 0:45]
+"Los riesgos: la **salida** (alta probabilidad, alto impacto); que **fallen 3 de 8**, que ya está dentro del caso base; la **concentración de clientes**, con la regla del 30%; el **riesgo regulatorio** (LSE, CNE, CFE), que manejamos invirtiendo solo en industria y comercio sin subsidios; el **régimen fiscal** del fideicomiso, que exige 2 años de tenencia, 80% en empresas mexicanas y distribuir 80% en 2 meses; y la **dependencia de personas clave**.
+
+Los siete controles: comité de inversionistas que se reúne sin nosotros, persona clave, tope de 15%, cascada europea, *clawback*, GP con 2% de su dinero, e informes trimestrales con valuador independiente. Y los inversionistas pueden remover al GP con o sin causa por mayoría calificada.
+
+La frase que resume: **el inversionista no compra una promesa de retorno; compra un diseño que le paga primero y que nos cobra solo si el fondo gana.**"
+
+## Lámina 17 · Lo que pedimos al comité [Julio · 0:30]
+"Lo que les pedimos: **primer cierre desde US$40M y cierre final de US$100M dentro de 12 meses**; compromiso mínimo de **US$1M** por inversionista y máximo **20% del fondo**; revisar nuestro memorándum, una sesión con el comité de inversionistas y el *due diligence* de las 8 empresas. Caso base: **2.26x y 17.9%**; escenario Bajo, **1.29x**. Gracias; estamos listos para sus preguntas."
+
+## Si las preguntas van a los anexos
+- **Anexo A (criterios):** "Por qué esas ocho": la matriz de 5 criterios. Solo Uriel/BRM es "No cumple (probable)", y por eso es una de las tres que fallan.
+- **Anexo B (cascada):** el reparto en Bajo, Base y Alto. En el Bajo el GP no cobra carry.
+- **Anexo C (las seis preguntas del comité):** tenerla memorizada; cada integrante puede recibir cualquiera.
+- **Anexos D y E:** cifras verificadas de gobierno y calendario de llamadas.
+
+## Frases para repetir (las que sostienen todo)
+1. "**10 años: 5 para invertir y 5 para vender.**"
+2. "**Asumimos que 3 de 8 fallan; las otras 5 sostienen el resultado.**"
+3. "**No dependemos de que el mercado pague más: el retorno viene de que crezca el EBITDA.**"
+4. "**El GP no cobra hasta que el inversionista gana 8% anual compuesto sobre todo lo comprometido.**"
+5. "**Somos un primer fondo: nuestra credibilidad es el diseño, no una trayectoria.**"

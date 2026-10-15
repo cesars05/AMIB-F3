@@ -1,0 +1,121 @@
+$ErrorActionPreference="Stop"
+$wb=$null; $xl=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+foreach($s in $wb.Worksheets){ if([string]$s.Name -eq "Scenarios Summary"){ throw "ABORTO: 'Scenarios Summary' ya existe" } }
+$vs=$wb.Worksheets.Item("Valuation Summary")
+$xl.DisplayAlerts=$false
+$xl.ScreenUpdating=$false
+
+# copiar la hoja para heredar tipografia, anchos, colores y tema
+$vs.Copy([System.Reflection.Missing]::Value,$vs)
+$ns=$wb.Worksheets.Item($vs.Index+1)
+$ns.Name="Scenarios Summary"
+Write-Output ("hoja creada: '"+[string]$ns.Name+"' en posicion "+[string]$ns.Index)
+
+# borrar graficos heredados y el cuerpo, conservando el bloque de encabezado r1..r8
+try{ $n=$ns.ChartObjects().Count; for($k=$n;$k -ge 1;$k--){ $ns.ChartObjects().Item($k).Delete() }; Write-Output ("  graficos eliminados: "+$n) }catch{ Write-Output "  sin graficos" }
+$ns.Range("C10:N100").Clear() | Out-Null
+$ns.Range("C2").Value2="Alumasc Group PLC - Scenarios Summary"
+
+$NAVY=5384228
+$WHITE=16777215
+$GREY=8421504
+$BLUE=16711680      # entradas duras
+$FMT_P='0.0"p"'
+$FMT_X='0.00"x"'
+$FMT_PC='0.0%;(0.0%);"-"'
+
+# ---------- bloque 1: retornos por caso ----------
+$ns.Range("C12").Value2="Scenario Returns"
+$ns.Range("D12").Value2="Operating Case"
+$ns.Range("E12").Value2="Disposal"
+$ns.Range("F12").Value2="Hold"
+$ns.Range("G12").Value2="Exit Multiple"
+$ns.Range("H12").Value2="MOIC"
+$ns.Range("I12").Value2="IRR"
+$ns.Range("C12:I12").Font.Bold=$true
+$ns.Range("C14").Value2="A  -  Downside"
+$ns.Range("C15").Value2="B  -  Stagnation"
+$ns.Range("C16").Value2="C  -  Partial Success"
+$ns.Range("C17").Value2="D  -  Base"
+$ns.Range("C18").Value2="E  -  Upside"
+$ns.Range("D14").Value2="Downside"
+$ns.Range("D15").Value2="Stagnation"
+$ns.Range("D16").Value2="Partial Success"
+$ns.Range("D17").Value2="Partial Success"
+$ns.Range("D18").Value2="Partial Success"
+$ns.Range("E14").Value2="None"
+$ns.Range("E15").Value2="None"
+$ns.Range("E16").Value2="None"
+$ns.Range("E17").Value2="Water Mgmt @ 8.0x"
+$ns.Range("E18").Value2="Water Mgmt @ 8.0x"
+$ns.Range("F14").Value2="3 years"
+$ns.Range("F15").Value2="3 years"
+$ns.Range("F16").Value2="3 years"
+$ns.Range("F17").Value2="6 years"
+$ns.Range("F18").Value2="6 years"
+$ns.Range("G14").Value2=[double]5.25
+$ns.Range("G15").Value2=[double]6.10
+$ns.Range("G16").Value2=[double]7.50
+$ns.Range("G17").Value2=[double]8.50
+$ns.Range("G18").Value2=[double]10.00
+$ns.Range("G14:G18").NumberFormat=$FMT_X
+$ns.Range("H14:H18").NumberFormat=$FMT_X
+$ns.Range("I14:I18").NumberFormat='0.0%;(0.0%);"-"'
+$ns.Range("D14:F18").HorizontalAlignment=-4152
+$ns.Range("C20").Value2="Entry Assumptions"
+$ns.Range("C20").Font.Bold=$true
+$ns.Range("C21").Value2="Entry price (p)"
+$ns.Range("C22").Value2="% of the company acquired"
+$ns.Range("C23").Value2="Water Management disposal - last full year of ownership"
+$ns.Range("D21").Formula="=+'Expected Returns'!D15"
+$ns.Range("D22").Formula="=+'Expected Returns'!D17"
+$ns.Range("D23").Value2="FY2029  (completes in FY2030)"
+$ns.Range("D21").NumberFormat=$FMT_P
+$ns.Range("D22").NumberFormat='0.0%'
+$ns.Range("D23").HorizontalAlignment=-4152
+
+# ---------- bloque 2: efectivo devuelto ----------
+$ns.Range("C26").Value2="Cash Returned to the Investor"
+$ns.Range("C26:I26").Interior.Color=$NAVY
+$ns.Range("C26:I26").Font.Color=$WHITE
+$ns.Range("C26:I26").Font.Bold=$true
+$ns.Range("D27").Value2="Entry"
+$ns.Range("E27").Value2="Ordinary Dividends"
+$ns.Range("F27").Value2="Special Dividend"
+$ns.Range("G27").Value2="Exit Proceeds"
+$ns.Range("H27").Value2="Total Returned"
+$ns.Range("I27").Value2="Net of Entry"
+$ns.Range("D27:I27").Font.Bold=$true
+$ns.Range("D27:I27").HorizontalAlignment=-4152
+$ns.Range("C28").Value2="A  -  Downside"
+$ns.Range("C29").Value2="B  -  Stagnation"
+$ns.Range("C30").Value2="C  -  Partial Success"
+$ns.Range("C31").Value2="D  -  Base"
+$ns.Range("C32").Value2="E  -  Upside"
+$ns.Range("D28:I32").NumberFormat=$FMT_P
+$ns.Range("C34").Value2="pence per share, time-weighted IRR on dated cash flows.  Snapshot - recapture after changing any assumption."
+$ns.Range("C34").Font.Italic=$true
+$ns.Range("C34").Font.Size=9
+$ns.Range("C34").Font.Color=$GREY
+
+$xl.ScreenUpdating=$true
+$xl.DisplayAlerts=$true
+$wb.Save()
+Write-Output "estructura creada"
+Write-Output ""
+for($i=10;$i -le 35;$i++){
+  $lab=[string]$ns.Cells.Item($i,3).Text
+  $v=""
+  foreach($c in 4,5,6,7,8,9){ $v+=([string]$ns.Cells.Item($i,$c).Text).PadLeft(20) }
+  if(($lab+$v).Trim() -ne ""){
+    if($lab.Length -gt 52){ $lab=$lab.Substring(0,52) }
+    Write-Output ("r"+([string]$i).PadRight(4)+$lab.PadRight(53)+$v)
+  }
+}

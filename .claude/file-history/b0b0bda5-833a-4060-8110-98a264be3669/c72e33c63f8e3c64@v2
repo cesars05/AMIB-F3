@@ -1,0 +1,17 @@
+---
+name: slide-design-preferences
+description: "User's taste in slide design — structural diagrams yes, bare KPI tiles no, think-cell shapes for variety, usage-conscious"
+metadata:
+  node_type: memory
+  type: feedback
+  originSessionId: b0b0bda5-833a-4060-8110-98a264be3669
+  modified: 2026-10-10T00:15:52.041Z
+---
+
+- Loves slides that **explain a structure/concept with shapes** (KLA s7 process chain with focus bracket, FEMSA share-structure tree, nested ownership circles, price-range number line, cylinder bridge, the "Conclusiones" bar with the soft wide triangle beneath acting as a big arrow). Treat them as adaptable concepts, not rigid templates.
+- Rejected a slide of only 3 big-number KPI tiles (MS style) as "muy sencilla" — never offer it as an option.
+- Wants think-cell shapes (from `06_Templates\Thinkcell.pptx`) used for variety; importing + recolouring them via the skill's `tclib.py` is the agreed approach.
+- Asked to limit analysis scope to save usage (only their curated Thinkcell deck, not the whole ~500-slide library).
+
+**Why:** user judges decks on professional, concept-explaining visuals; usage cost matters to them.
+**How to apply:** when choosing layouts prefer structural diagrams / think-cell imports over plain tiles or bullets; ask before large analysis sweeps. See [[slide-construction-skill]].

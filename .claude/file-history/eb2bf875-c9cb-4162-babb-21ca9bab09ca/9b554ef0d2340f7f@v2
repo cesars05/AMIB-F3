@@ -1,0 +1,35 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 40;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 1200 } }; return "??" }
+$xl=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); break }catch{ Start-Sleep -Milliseconds 900 } }
+$wb=$null; foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("Segment Beta") }
+T { $xl.Calculate() }
+Start-Sleep -Seconds 12
+T { $xl.Calculate() }
+Start-Sleep -Seconds 6
+Write-Output "================= TABLA DE BETAS ================="
+Write-Output ("      "+"RIC".PadRight(9)+"Company / Section".PadRight(44)+"D/E".PadLeft(9)+"Beta".PadLeft(8)+"BetaU".PadLeft(8)+"BetaRe".PadLeft(9)+"Tax".PadLeft(10))
+for($r=12;$r -le 29;$r++){
+  $ric=[string](T { $s.Cells.Item($r,3).Text }); $nm=[string](T { $s.Cells.Item($r,4).Text })
+  if(($ric+$nm).Trim() -eq ""){ Write-Output ""; continue }
+  if($nm.Length -gt 43){ $nm=$nm.Substring(0,43) }
+  $line="   "+$ric.PadRight(9)+$nm.PadRight(44)
+  foreach($c in 9,10,11,12,13){ $line+=([string](T { $s.Cells.Item($r,$c).Text })).PadLeft(9) }
+  Write-Output ("r"+([string]$r).PadRight(3)+$line)
+}
+Write-Output ""
+Write-Output "================= RESUMEN ================="
+for($r=32;$r -le 45;$r++){
+  $line=""
+  for($c=4;$c -le 8;$c++){
+    $t=[string](T { $s.Cells.Item($r,$c).Text })
+    if($t.Trim() -eq ""){ continue }
+    if($c -eq 4){ if($t.Length -gt 46){ $t=$t.Substring(0,46) }; $line+=$t.PadRight(48) } else { $line+=$t.PadLeft(20) }
+  }
+  if($line.Trim() -ne ""){ Write-Output ("r"+([string]$r).PadRight(3)+" "+$line) }
+}
+$e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+Write-Output ("`n  errores en la hoja: "+$e)
+T { $wb.Save() }
+Write-Output "guardado"

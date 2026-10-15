@@ -1,0 +1,57 @@
+import time, pythoncom, pywintypes
+import win32com.client as w
+
+BUSY = (-2146777998, -2147418111, -2147417846)
+
+def retry(fn, tries=120):
+    for _ in range(tries):
+        try:
+            return fn()
+        except pywintypes.com_error as e:
+            codes = {e.hresult} | ({e.excepinfo[5]} if e.excepinfo and len(e.excepinfo) > 5 else set())
+            if codes & set(BUSY):
+                time.sleep(0.5); continue
+            raise
+    raise RuntimeError('Excel stayed busy for 60s, try again when Excel is idle')
+
+xl = w.GetActiveObject('Excel.Application')
+wb = retry(lambda: [xl.Workbooks(i) for i in range(1, xl.Workbooks.Count + 1) if xl.Workbooks(i).Name == 'Bimbo Financial Model_v2.xlsx'][0])
+ws = retry(lambda: wb.Worksheets('Market Growth & Inflation'))
+rgb = lambda h: int(h[0:2], 16) + int(h[2:4], 16) * 256 + int(h[4:6], 16) * 65536
+GREEN, NAVY, GRAY, RED = rgb('E2EFDA'), rgb('05346E'), rgb('595959'), rgb('D81E24')
+
+def run():
+    change, key, subs = [], [], []
+    for r in range(5, 67):
+        lab = str(ws.Cells(r, 2).Value or '').strip()
+        c = ws.Cells(r, 2)
+        green = c.Interior.ColorIndex != -4142 and int(c.Interior.Color) == GREEN
+        if lab.startswith('Implied Volume'): key.append(r)
+        elif green: change.append(r)
+        elif lab in ('United States', 'Mexico') or lab.endswith('mm)'): subs.append(r)
+    for r in change + key:
+        ws.Range(ws.Cells(r, 2), ws.Cells(r, 10)).Interior.ColorIndex = -4142
+    for r in change:
+        rg = ws.Range(ws.Cells(r, 2), ws.Cells(r, 10)); rg.Font.Italic = True; rg.Font.Color = GRAY
+    for r in key:
+        rg = ws.Range(ws.Cells(r, 2), ws.Cells(r, 10)); rg.Font.Bold = True; rg.Font.Italic = False; rg.Font.Color = NAVY
+        rg.Borders(8).LineStyle = 1; rg.Borders(8).Color = NAVY
+        d = ws.Range(ws.Cells(r, 3), ws.Cells(r, 10)); d.FormatConditions.Delete()
+        fc = d.FormatConditions.Add(Type=1, Operator=6, Formula1='=0')     # value < 0
+        fc.Font.Color = RED; fc.Font.Bold = True
+    for r in subs:
+        rg = ws.Range(ws.Cells(r, 2), ws.Cells(r, 10)); rg.Font.Bold = True; rg.Font.Color = NAVY
+        rg.Borders(9).LineStyle = 1; rg.Borders(9).Color = NAVY
+    ws.Range('B62').Font.Color = GRAY
+    return change, key, subs
+
+try:
+    retry(lambda: setattr(xl, 'ScreenUpdating', False))
+    change, key, subs = retry(run)
+    retry(lambda: xl.CalculateFull()); retry(lambda: wb.Save())
+    print('change rows', change); print('key rows', key); print('sub-headers', subs)
+    left = [r for r in range(1, 200) for c in (2, 5) if ws.Cells(r, c).Interior.ColorIndex != -4142 and int(ws.Cells(r, c).Interior.Color) == GREEN]
+    print('green cells left:', left)
+finally:
+    retry(lambda: setattr(xl, 'ScreenUpdating', True))
+    print('ScreenUpdating restored:', xl.ScreenUpdating)

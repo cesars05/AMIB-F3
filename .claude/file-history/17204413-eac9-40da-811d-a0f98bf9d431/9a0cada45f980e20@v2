@@ -1,0 +1,50 @@
+---
+name: verify-before-done
+description: Verification gate for the Market Terminal project. Run before saying any task is done, before reporting a number, chart, data availability claim or portfolio figure to César, and before committing. Covers the data traps this project has already hit (empty-means-blocked, wrong field, local currency, units, silent patch failures, invented portfolio) plus build checks for the Python engine, FastAPI backend and Next.js frontend.
+---
+
+# Verify before done
+
+"Done" means checked against the source, not "the script ran". Every past
+error in this project ran without an exception.
+
+Run only the sections that apply to what changed. Report what you ran and
+what you skipped. Never claim a check you did not run.
+
+## 1. Data claims
+
+For every number, availability claim or chart that reaches César:
+
+- [ ] **"Not available" claims.** Did you retry without `interval` and `fields`, and search the RIC with `lseg.data.discovery.search()`? Is the Workspace proxy on `localhost:9000` actually up? Empty or timeout means "not verified", not "blocked".
+- [ ] **Field.** The field is declared explicitly per instrument class (`MID_YLD_1`, `MID_PRICE`, `TRDPRC_1`, `CF_LAST`). No fallback loop picked it.
+- [ ] **Currency.** Any market cap, revenue or EV compared across countries was pulled with `Curn=USD`.
+- [ ] **Units.** Mixed-unit formulas (e.g. $/gal vs $/bbl) are converted. Spot-check one value against Workspace or a public quote.
+- [ ] **Aggregation.** Group multiples are harmonic (sum MV / sum earnings). Price decomposition is multiplicative.
+- [ ] **Sanity print.** Print the 3 largest and 3 smallest values of any new series. Anything off by orders of magnitude is a units or currency bug.
+- [ ] **Direction vs level.** Any "rose/fell" wording is backed by the time series, not by a percentile or a single snapshot.
+
+## 2. Portfolio
+
+- [ ] Holdings came from the latest IBKR file (`config.ultimo_estado()` or the backend ingest), never from memory, a skill or a screenshot.
+- [ ] Sections with more than one Header row were parsed by block.
+- [ ] The return label matches the math: TWR vs return on cost vs market return. No mixing.
+
+## 3. Code changes
+
+- [ ] Every string patch (`.replace`, `re.sub`) asserts it matched.
+- [ ] Python: `python -m py_compile` on touched files, then run the touched script end to end against live data and read its output.
+- [ ] Backend: start `uvicorn main:app` and hit the touched endpoints; check `/health`.
+- [ ] Frontend: `npm run build` in `frontend/` (type errors surface here) and load the touched page in the browser pane, both themes.
+- [ ] No new absolute path outside `engine/config.py`. No secret outside `.env`.
+
+## 4. Output
+
+- [ ] Deck/dashboard text: English, Arial, no em-dashes, few colons.
+- [ ] Every number in generated prose was injected from JSON, not written by the model.
+- [ ] Charts follow `engine/paleta.md`: red only for reference lines, no green/red for sign, max 6 series. Open the PNG and look at it.
+- [ ] Images placed in the deck match the placeholder aspect (save without `bbox_inches="tight"` when sizing matters).
+
+## Report format
+
+End with one line per section: `ran` / `skipped (why)` / `failed (what)`.
+If anything failed, the task is not done.

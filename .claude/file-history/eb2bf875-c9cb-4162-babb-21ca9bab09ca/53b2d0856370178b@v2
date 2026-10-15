@@ -1,0 +1,65 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); if([int]$xl.Workbooks.Count -gt 0){ foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } } } }catch{}; if($wb -ne $null){break}; Start-Sleep -Milliseconds 800 }
+$cm=$null
+for($i=0;$i -lt 30;$i++){ try{ $cm=$wb.Worksheets.Item("Consolidated Model"); if($cm -ne $null){ break } }catch{}; Start-Sleep -Milliseconds 700 }
+Write-Output ("Libro: "+$wb.Name)
+Write-Output ("Iteration="+[string]$xl.Iteration+"  MaxIter="+[string]$xl.MaxIterations)
+Write-Output ("Balance check ANTES: "+((11..17 | ForEach-Object { $i=$_; [string]$cm.Cells.Item(164,$i).Text }) -join " | "))
+Write-Output ""
+Write-Output "=== formulas del circuito de caja/revolver (deben ser identicas al backup) ==="
+foreach($r in 264,265,266,267,122,209,210,256,257,258,260,193){
+  Write-Output ("  r"+$r+"  "+([string]$cm.Cells.Item($r,3).Text).PadRight(44)+" K = "+[string]$cm.Range("K"+$r).Formula)
+}
+Write-Output ""
+Write-Output "=== deteccion de referencias circulares (iteracion OFF, temporal) ==="
+$dsp=$xl.DisplayAlerts
+$xl.DisplayAlerts=$false
+try{
+  $xl.Iteration=$false
+  try{ $xl.CalculateFullRebuild() }catch{}
+  foreach($ws in $wb.Worksheets){
+    $c2=$null
+    try{ $c2=$ws.CircularReference }catch{ $c2=$null }
+    if($c2 -ne $null){
+      $addr=""
+      try{ $addr=[string]$c2.Address(0,0) }catch{}
+      $lab=""
+      try{ $lab=[string]$ws.Cells.Item($c2.Row,3).Text }catch{}
+      Write-Output ("   "+$ws.Name.PadRight(24)+" -> "+$addr+"   ["+$lab+"]")
+    }
+  }
+} finally {
+  $xl.Iteration=$true
+  $xl.MaxIterations=200
+  $xl.MaxChange=1E-07
+  $xl.CalculateFullRebuild()
+  $xl.CalculateFullRebuild()
+  $xl.CalculateFullRebuild()
+  $xl.DisplayAlerts=$dsp
+}
+Write-Output ""
+Write-Output ("Iteration restaurada = "+[string]$xl.Iteration)
+Write-Output ("Balance check DESPUES: "+((11..17 | ForEach-Object { $i=$_; [string]$cm.Cells.Item(164,$i).Text }) -join " | "))
+Write-Output ("FY2026 revenue / EBIT / caja: "+[string]$cm.Cells.Item(47,11).Text+"  "+[string]$cm.Cells.Item(56,11).Text+"  "+[string]$cm.Cells.Item(122,11).Text)
+Write-Output ""
+Write-Output "=== mis celdas nuevas: alguna alimenta de regreso al modelo? ==="
+$feeds=0
+foreach($ws in $wb.Worksheets){
+  $fc=$null; try{ $fc=$ws.UsedRange.SpecialCells(-4123) }catch{ continue }
+  if($fc -eq $null){ continue }
+  foreach($area in $fc.Areas){ foreach($cell in $area.Cells){
+    $f=[string]$cell.Formula
+    $inBlock = ($ws.Name -eq "Consolidated Model" -and $cell.Row -ge 279 -and $cell.Row -le 297)
+    if(-not $inBlock){
+      if($f -match "\`$?[D-S]\`$?(28[0-9]|29[0-7])\b" -and $ws.Name -eq "Consolidated Model"){
+        Write-Output ("   "+$ws.Name+"!"+$cell.Address(0,0)+" usa el bloque -> "+$f.Substring(0,[math]::Min(80,$f.Length)))
+        $feeds++
+      }
+      if($f -match "Assumptions!\`$?F\`$?42"){
+        Write-Output ("   "+$ws.Name+"!"+$cell.Address(0,0)+" usa el shock -> "+$f.Substring(0,[math]::Min(80,$f.Length)))
+      }
+    }
+  } }
+}
+if($feeds -eq 0){ Write-Output "   ninguna celda fuera del bloque lee del bloque (es solo lectura)" }

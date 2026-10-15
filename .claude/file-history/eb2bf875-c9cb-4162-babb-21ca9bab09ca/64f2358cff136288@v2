@@ -1,0 +1,74 @@
+﻿$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$sm=$wb.Worksheets.Item("Segment Model")
+$as=$wb.Worksheets.Item("Assumptions")
+$q='"'; $emp=$q+$q
+
+Write-Output "### Como se proyectan los ACTIVOS por segmento (para saber si el escenario ya mueve la base) ###"
+foreach($r in 82,83,84){
+  $lab=[string]$sm.Cells.Item($r,3).Text
+  Write-Output ("  r"+$r+" "+$lab.PadRight(24)+" L= "+[string]$sm.Cells.Item($r,12).Formula)
+}
+Write-Output ""
+Write-Output "### Tasas de depreciacion: historico real vs supuesto ###"
+$h="  "+"".PadRight(26)
+for($c=6;$c -le 12;$c++){ $h+=([string]$sm.Cells.Item(9,$c).Text).PadLeft(9) }
+Write-Output $h
+foreach($r in 183,184,185){
+  $lab=[string]$sm.Cells.Item($r,3).Text
+  if($lab.Length -gt 25){ $lab=$lab.Substring(0,25) }
+  $v=""
+  for($c=6;$c -le 12;$c++){ $v+=([string]$sm.Cells.Item($r,$c).Text).PadLeft(9) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(26)+$v)
+}
+Write-Output ""
+Write-Output "### ARREGLO: depreciacion fantasma tras la venta ###"
+if([string]$sm.Cells.Item(143,3).Text -ne "Water Management"){ throw "ABORTO: r143 no es WM" }
+if([string]$sm.Cells.Item(144,3).Text -ne "Building Envelope"){ throw "ABORTO: r144 no es BE" }
+if([string]$sm.Cells.Item(145,3).Text -ne "Housebuilding Products"){ throw "ABORTO: r145 no es HP" }
+$fL=[string]$sm.Range("L143").Formula
+Write-Output ("  antes  L143 = "+$fL)
+if($fL -match "J\`$74"){ throw "ABORTO: r143 ya tiene el interruptor" }
+$xl.Calculation=-4135
+foreach($t3 in @(@(143,82,183),@(144,83,184),@(145,84,185))){
+  $rr=[int]$t3[0]; $aa=[int]$t3[1]; $tt=[int]$t3[2]
+  $f="=+IFERROR(IF(AND(Assumptions!`$J`$74=`$C"+$rr+",Assumptions!`$J`$75>0,VALUE(RIGHT(L`$9,4))>Assumptions!`$J`$75),0,K"+$aa+"*L"+$tt+"),"+$emp+")"
+  $sm.Cells.Item($rr,12).Formula=$f
+  $sm.Range("L"+$rr+":Q"+$rr).FillRight() | Out-Null
+}
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ("  despues L143 = "+[string]$sm.Range("L143").Formula)
+Write-Output ""
+Write-Output "### Verificacion con el modulo APAGADO (debe quedar igual que antes) ###"
+$h2="  "+"".PadRight(26)
+for($c=11;$c -le 17;$c++){ $h2+=([string]$sm.Cells.Item(9,$c).Text).PadLeft(9) }
+Write-Output $h2
+foreach($r in 143,144,145,146){
+  $lab=[string]$sm.Cells.Item($r,3).Text
+  if($lab.Trim() -eq ""){ $lab=[string]$sm.Cells.Item($r,2).Text }
+  if($lab.Length -gt 25){ $lab=$lab.Substring(0,25) }
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$sm.Cells.Item($r,$c).Text).PadLeft(9) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(26)+$v)
+}
+$cm=$wb.Worksheets.Item("Consolidated Model")
+Write-Output ("  CM Adj. EBITDA: "+([string]$cm.Range("L53").Text)+" | "+([string]$cm.Range("M53").Text)+" | "+([string]$cm.Range("N53").Text)+" | "+([string]$cm.Range("O53").Text)+" | "+([string]$cm.Range("P53").Text)+" | "+([string]$cm.Range("Q53").Text))
+Write-Output ("  DCF = "+[string]$wb.Worksheets.Item("DCF").Range("E41").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=$wb.Worksheets.Item($nm)
+  $e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)
+

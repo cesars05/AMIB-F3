@@ -1,0 +1,56 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+
+# que columna es que anio, en cada hoja
+foreach($nm in "Segment Model","Consolidated Model","Summary"){
+  $sh=$wb.Worksheets.Item($nm)
+  $fila=9
+  if($nm -eq "Summary"){ $fila=37 }
+  $s=""
+  foreach($c in 3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19){
+    $t=""; try{ $t=[string]$sh.Cells.Item($fila,$c).Text }catch{}
+    if($t.Trim() -ne ""){ $s+=("c"+$c+"="+$t+"  ") }
+  }
+  Write-Output ($nm.PadRight(20)+" fila "+$fila+": "+$s)
+}
+
+Write-Output ""
+Write-Output "########## Segment Model: resumen de filas con R/S (solo las que son % o raras) ##########"
+$sm=$wb.Worksheets.Item("Segment Model")
+$cnt=0; $pct=0
+for($i=10;$i -le 237;$i++){
+  $fr=""; try{ $fr=[string]$sm.Cells.Item($i,18).Formula }catch{}
+  if($fr -eq ""){ continue }
+  $cnt++
+  $nfK=""; try{ $nfK=[string]$sm.Cells.Item($i,11).NumberFormat }catch{}
+  $lab=""
+  foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$sm.Cells.Item($i,$cc).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  if($lab.Length -gt 40){ $lab=$lab.Substring(0,40) }
+  if($nfK -like "*%*"){ $pct++; Write-Output ("  PCT  r"+([string]$i).PadRight(4)+$lab.PadRight(41)+" R="+([string]$sm.Cells.Item($i,18).Text).PadLeft(9)+" S="+([string]$sm.Cells.Item($i,19).Text).PadLeft(9)) }
+}
+Write-Output ("  -> Segment Model: "+$cnt+" filas con formula en R, de las cuales "+$pct+" son porcentajes")
+
+Write-Output ""
+Write-Output "########## Consolidated Model: columnas R y S ##########"
+$cm=$wb.Worksheets.Item("Consolidated Model")
+$cnt2=0; $pct2=0
+for($i=10;$i -le 380;$i++){
+  $fr=""; try{ $fr=[string]$cm.Cells.Item($i,18).Formula }catch{}
+  if($fr -eq ""){ continue }
+  $cnt2++
+  $nfK=""; try{ $nfK=[string]$cm.Cells.Item($i,11).NumberFormat }catch{}
+  $lab=""
+  foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$cm.Cells.Item($i,$cc).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  if($lab.Length -gt 40){ $lab=$lab.Substring(0,40) }
+  $tag="    "
+  if($nfK -like "*%*"){ $pct2++; $tag="PCT " }
+  Write-Output ("  "+$tag+"r"+([string]$i).PadRight(4)+$lab.PadRight(41)+" R="+([string]$cm.Cells.Item($i,18).Text).PadLeft(9)+" S="+([string]$cm.Cells.Item($i,19).Text).PadLeft(9)+"   "+$fr)
+}
+Write-Output ("  -> Consolidated: "+$cnt2+" filas con formula en R, de las cuales "+$pct2+" son porcentajes")

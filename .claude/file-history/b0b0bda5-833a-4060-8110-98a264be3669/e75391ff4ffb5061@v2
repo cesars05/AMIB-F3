@@ -1,0 +1,33 @@
+import shutil, os
+root = r"C:\Users\cesar\OneDrive\Documentos\Slide Construction\skill\slide-construction"
+p = os.path.join(root, "SKILL.md")
+s = open(p, encoding="utf-8").read()
+
+
+def rep(old, new):
+    global s
+    assert old in s, old[:60]
+    s = s.replace(old, new)
+
+
+rep("Todo lo de aquí sale de los decks en `C:\\Users\\cesar\\OneDrive\\Documentos\\Slide Construction\\06_Templates` (análisis en `07_Template_Analysis`). Medido en .pptx; aproximado en los PDF escaneados de bancos.",
+    "**Raíz del proyecto (PROJECT):** `C:\\Users\\cesar\\OneDrive\\Documentos\\Slide Construction` — plantillas en `PROJECT\\06_Templates`, análisis en `PROJECT\\07_Template_Analysis`. Todas las rutas `07_Template_Analysis/...` de las referencias son relativas a PROJECT. Medido en .pptx; aproximado en los PDF escaneados de bancos.\n\n"
+    "Copia canónica de la skill: `PROJECT\\skill\\slide-construction` (editar ahí y volver a copiar a `~/.claude/skills/slide-construction`).")
+rep("   - Si el usuario da una plantilla real (.pptx de Aztlan/FEMSA), pásala: `Deck(\"aztlan\", template=path)` usa su master, logo y placeholders.",
+    "   - **Plantilla real (preferido cuando existe):** `Deck(\"aztlan\", template=PROJECT+r\"\\06_Templates\\AZTD vs Peers_v6.pptx\", layout=\"General\")` o `Deck(\"femsa\", template=PROJECT+r\"\\06_Templates\\M&A FEMSA.pptx\", layout=\"Section Header\")`. Usa master, regla, logo y placeholders reales; `cover()`, `divider()` y `closing()` usan el layout de portada de la plantilla (arte FEMSA / navy Aztlan). Subtítulo y source que no tengan placeholder se dibujan como textbox. Nombres de layout duplicados se resuelven al de contenido; también acepta índice (`layout=2`).\n"
+    "   - `content_slide()` imprime WARNING si el título no cabe en una línea — acórtalo, no reduzcas la letra.")
+rep("## Referencias (lee la que aplique)",
+    "## Límites conocidos (dilo si aplica)\n"
+    "- Sin receta aún: línea de precio con eventos anotados (BARC-N p8 / JEF p4 / ALLOC s6) — constrúyela con `line_chart` + `callout(to=...)` + `dashed_box`; cilindros 3-D de ALLOC s8 (usa `waterfall`); gantt/calendario; mapas.\n"
+    "- Specs de bancos vienen de PDFs escaneados: posiciones y colores aproximados.\n"
+    "- En `football_field`, si un precio de referencia cae sobre el inicio de una barra, la etiqueta low puede encimarse con la línea punteada: mueve la línea o acorta la etiqueta.\n\n"
+    "## Referencias (lee la que aplique)")
+rep("`scripts/gallery.py <system> out.pptx` genera 18 slides",
+    "`scripts/gallery.py <aztlan|femsa|ib_navy|ms_clean|brand> out.pptx [template.pptx] [layout]` genera 19 slides")
+open(p, "w", encoding="utf-8").write(s)
+import yaml
+d = yaml.safe_load(s.split("---")[1])
+print("frontmatter ok", d["name"], len(d["description"]))
+dst = os.path.expanduser(r"~\.claude\skills\slide-construction")
+shutil.copytree(root, dst, dirs_exist_ok=True, ignore=shutil.ignore_patterns("__pycache__"))
+print("installed ->", dst, sorted(os.listdir(dst)))

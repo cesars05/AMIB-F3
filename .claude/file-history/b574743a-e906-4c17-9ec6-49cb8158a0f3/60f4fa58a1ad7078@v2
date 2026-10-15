@@ -1,0 +1,68 @@
+import numpy as np, sys
+sys.stdout.reconfigure(encoding='utf-8')
+C = 100.0; FEE1 = .02; FEE2 = .015; INV_Y = 5; LIFE = 10; H = .08; CARRY = .2
+# nombre: (ini, entrada, fo, fo_year, salida)
+E = {
+ 'Niko':   (6, 1, 3, 3, 6),
+ 'Quartux':(8, 1, 3, 3, 7),
+ 'Pireos': (10, 1, 5, 4, 8),
+ 'FAZT':   (6, 2, 3, 4, 7),
+ 'XC':     (9, 2, 5, 4, 9),
+ 'BioEsol':(9, 2, 5, 4, 8),
+ 'S2G':    (6, 3, 2, 5, 7),
+ 'Uriel':  (2, 3, 0, 0, 6),
+}
+FAIL = {'Uriel': 0.0, 'FAZT': 0.5, 'S2G': 0.3}
+
+
+def waterfall(P):
+    r1 = min(P, C); rem = P - r1
+    pref = C * ((1 + H) ** LIFE - 1)
+    r2 = min(rem, pref); rem -= r2
+    cu = min(rem * 1.0, r2 * CARRY / (1 - CARRY)); rem -= cu
+    return r1 + r2 + rem * (1 - CARRY), cu + rem * CARRY
+
+
+def irr(cf):
+    lo, hi = -.9, 1.0
+    f = lambda r: sum(c / (1 + r) ** (i + 1) for i, c in enumerate(cf))
+    for _ in range(200):
+        mid = (lo + hi) / 2
+        if f(mid) > 0: lo = mid
+        else: hi = mid
+    return mid
+
+
+def run(mult, factor=1.0, verbose=False):
+    inv = sum(v[0] + v[2] for v in E.values())
+    fee_tot = C * FEE1 * INV_Y + inv * FEE2 * (LIFE - INV_Y)
+    gastos = C - inv - fee_tot
+    calls = np.zeros(LIFE); dist_p = np.zeros(LIFE)
+    for k, (ini, ent, fo, foy, sal) in E.items():
+        calls[ent - 1] += ini
+        if fo: calls[foy - 1] += fo
+        dist_p[sal - 1] += (ini + fo) * mult[k] * factor
+    for y in range(1, LIFE + 1):
+        calls[y - 1] += (C * FEE1 if y <= INV_Y else inv * FEE2) + gastos / LIFE
+    cum = np.cumsum(dist_p); lp_cum = np.array([waterfall(x)[0] for x in cum])
+    lp_d = np.diff(np.concatenate([[0], lp_cum]))
+    cf = lp_d - calls
+    P = cum[-1]; lp, gp = waterfall(P)
+    return dict(P=P, lp=lp, gp=gp, moic=lp / C, irr=irr(cf), gross_inv=P / inv, inv=inv, fee=fee_tot, gastos=gastos, calls=calls, dist=dist_p)
+
+
+def rule(g, dil, ratio, yrs):
+    return (1 + g) ** yrs * (1 - dil) * ratio
+
+if __name__ == '__main__':
+    yrs = {k: v[4] - v[1] for k, v in E.items()}
+    print(yrs)
+    params = {  # g, dil, ratio
+        'Pireos': (0.27, .08, .90), 'Quartux': (0.30, .15, .80), 'Niko': (0.28, .20, .90),
+        'XC': (0.25, .08, .95), 'BioEsol': (0.30, .20, .85)}
+    for d in np.arange(0, 0.08, 0.01):
+        m = dict(FAIL)
+        for k, (g, dil, ra) in params.items():
+            m[k] = rule(g + d, dil, ra, yrs[k])
+        r = run(m)
+        print(round(d, 2), {k: round(v, 2) for k, v in m.items()}, round(r['P'], 1), round(r['moic'], 2), round(r['irr'] * 100, 2), round(r['gp'], 1))

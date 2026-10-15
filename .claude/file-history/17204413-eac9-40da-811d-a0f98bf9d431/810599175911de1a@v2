@@ -1,0 +1,122 @@
+"""Matrices de retorno tipo "Style Performance".
+
+  MatrizIndices.png   -- indices x periodo (1W, MTD, QTD, YTD)
+  MatrizSectores.png  -- sectores del S&P x periodo
+
+Celdas sombreadas por valor: navy los positivos, gris los negativos, con
+intensidad proporcional. Es el formato correcto cuando el lector compara
+muchas celdas entre si; para una sola dimension una barra ordenada se lee
+mejor.
+
+Convencion de retorno: la base de cada periodo es el ultimo cierre
+ESTRICTAMENTE anterior al inicio del periodo (cierre del anio previo, del mes
+previo, etc.), que es como lo calcula Workspace. No el primer dato del rango.
+"""
+import sys
+sys.path.append(r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs")
+
+import json
+import warnings
+import lseg.data as ld
+import pandas as pd
+import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
+from grafico_banquero import configurar_estilo_banquero, matriz_calor, PALETA
+
+warnings.filterwarnings("ignore")
+configurar_estilo_banquero()
+ld.open_session()
+
+# .DJI y .N225 no estan habilitados -> DIA.P y .TOPX como proxies
+INDICES = {
+    ".SPX":   ("S&P 500", "TRDPRC_1"),
+    ".NDX":   ("Nasdaq 100", "TRDPRC_1"),
+    ".RUT":   ("Russell 2000", "TRDPRC_1"),
+    "DIA.P":  ("Dow Jones*", "TRDPRC_1"),
+    ".STOXX": ("STOXX Europe", "TRDPRC_1"),
+    ".GDAXI": ("DAX", "TRDPRC_1"),
+    ".TOPX":  ("TOPIX", "TRDPRC_1"),
+    ".KS11":  ("KOSPI", "TRDPRC_1"),
+    ".MXX":   ("Mexico IPC", "TRDPRC_1"),
+}
+
+SECTORES = {
+    "XLK.P": "Info. Tech", "XLC.P": "Comm. Services", "XLY.P": "Discretionary",
+    "XLI.P": "Industrials", "XLB.P": "Materials", "XLE.P": "Energy",
+    "XLF.P": "Financials", "XLV.P": "Health Care", "XLP.P": "Staples",
+    "XLU.P": "Utilities", "XLRE.P": "Real Estate",
+}
+
+hoy = datetime.now()
+inicio_descarga = f"{hoy.year - 1}-12-01"
+fin = hoy.strftime("%Y-%m-%d")
+
+trimestre = (hoy.month - 1) // 3 * 3 + 1
+PERIODOS = {
+    "1W":  (hoy - timedelta(days=7)).strftime("%Y-%m-%d"),
+    "MTD": hoy.replace(day=1).strftime("%Y-%m-%d"),
+    "QTD": hoy.replace(month=trimestre, day=1).strftime("%Y-%m-%d"),
+    "YTD": f"{hoy.year}-01-01",
+}
+
+
+def valor_base(serie, antes_de):
+    """Ultimo cierre estrictamente anterior al inicio del periodo."""
+    previos = serie[serie.index < antes_de]
+    return previos.iloc[-1] if not previos.empty else serie.iloc[0]
+
+
+def retornos(rics, nombres):
+    d = ld.get_history(universe=list(rics), fields=["TRDPRC_1"],
+                        interval="daily", start=inicio_descarga, end=fin)
+    filas = {}
+    for ric in rics:
+        try:
+            s = (d[ric]["TRDPRC_1"] if isinstance(d.columns, pd.MultiIndex)
+                 else d[ric]).astype(float).dropna()
+        except Exception:
+            print(f"  -- {ric} sin datos")
+            continue
+        if len(s) < 5:
+            print(f"  -- {ric} serie corta")
+            continue
+        ultimo = float(s.iloc[-1])
+        filas[nombres[ric]] = {
+            p: (ultimo / float(valor_base(s, ini)) - 1) * 100
+            for p, ini in PERIODOS.items()
+        }
+    return pd.DataFrame(filas).T[list(PERIODOS)]
+
+
+def dibujar(df, archivo, alto_fila=0.30, ancho=3.10, margen_izq=1.05):
+    """Alto proporcional al numero de filas para que la celda sea cuadrada."""
+    fig, ax = plt.subplots(figsize=(ancho, alto_fila * len(df) + 0.35), dpi=300)
+    matriz_calor(ax, df)
+    fig.subplots_adjust(left=margen_izq / (ancho + margen_izq), top=0.93,
+                        bottom=0.02, right=0.99)
+    fig.savefig(archivo, dpi=300, bbox_inches="tight", pad_inches=0.04)
+    plt.close(fig)
+
+
+print("Indices...")
+nombres_idx = {r: v[0] for r, v in INDICES.items()}
+df_idx = retornos(INDICES.keys(), nombres_idx).sort_values("YTD", ascending=False)
+dibujar(df_idx, "MatrizIndices.png")
+
+print("Sectores...")
+df_sec = retornos(SECTORES.keys(), SECTORES).sort_values("YTD", ascending=False)
+dibujar(df_sec, "MatrizSectores.png")
+
+print()
+print(df_idx.round(1).to_string())
+print()
+print(df_sec.round(1).to_string())
+
+with open("datos_matriz.json", "w", encoding="utf-8") as f:
+    json.dump({"indices": df_idx.round(2).to_dict("index"),
+               "sectores": df_sec.round(2).to_dict("index"),
+               "nota_dow": "DIA.P (ETF) como proxy: .DJI no esta habilitado"},
+              f, indent=2, ensure_ascii=False)
+
+print("\nListo: MatrizIndices.png, MatrizSectores.png, datos_matriz.json")
+ld.close_session()

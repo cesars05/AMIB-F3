@@ -1,0 +1,373 @@
+
+# =============== helpers (v2)
+from pptx.enum.chart import XL_MARKER_STYLE
+GICS=["Communication Services","Consumer Discretionary","Consumer Staples","Energy","Financials","Health Care","Industrials","Information Technology","Materials","Real Estate","Utilities"]
+def short(s): return {"Communication Services":"Comm. Services","Consumer Discretionary":"Cons. Discretionary","Consumer Staples":"Cons. Staples","Information Technology":"Info. Technology","Asia Pacific ex-Japan":"APAC ex-Japan"}.get(s,s)
+def find(rows,name): return [r for r in rows if r[0]==name][0]
+def num(v): return isinstance(v,(int,float))
+
+def fix_invert(ser):
+    ser.invert_if_negative=False
+    for d in ser._element.findall(qn("c:dPt")):
+        if d.find(qn("c:invertIfNegative")) is None:
+            e=etree.Element(qn("c:invertIfNegative")); e.set("val","0")
+            d.find(qn("c:idx")).addnext(e)
+def pad_axis(ch,vals,lo_pad=0.30,hi_pad=0.22):
+    v=[x for x in vals if num(x)]
+    lo=min(v+[0]); hi=max(v+[0]); span=(hi-lo) or 1
+    va=ch.value_axis
+    va.minimum_scale=lo-lo_pad*span if lo<0 else 0
+    va.maximum_scale=hi+hi_pad*span if hi>0 else 0
+def table_style(tb): pass
+
+def table(sl,x,y,w,hdr,rows,col_w=None,row_h=16,font=8,bold_last=False,first_left=True,hdr_fill=NAVY):
+    nr=len(rows)+1; nc=len(hdr)
+    gf=sl.shapes.add_table(nr,nc,Emu(int(x*12700)),Emu(int(y*12700)),Emu(int(w*12700)),Emu(int(row_h*nr*12700)))
+    tb=gf.table; tblPr=tb._tbl.tblPr
+    for a in ("bandRow","firstRow"): tblPr.set(a,"0")
+    sid=tblPr.find(qn("a:tableStyleId"))
+    if sid is not None: sid.text="{5940675A-B579-460E-94D1-54222C63F5DA}"
+    if col_w:
+        tot=sum(col_w)
+        for i,cw in enumerate(col_w): tb.columns[i].width=Emu(int(w*12700*cw/tot))
+    for r in range(nr): tb.rows[r].height=Emu(int(row_h*12700))
+    def cell(r,c,text,bold=False,color=BLACK,fill=None,align=PP_ALIGN.CENTER):
+        ce=tb.cell(r,c); ce.margin_left=ce.margin_right=Emu(36000); ce.margin_top=ce.margin_bottom=Emu(12000)
+        ce.vertical_anchor=MSO_ANCHOR.MIDDLE
+        tf=ce.text_frame; tf.word_wrap=True; txt(tf,str(text),font,bold,color,align=align)
+        tcPr=ce._tc.get_or_add_tcPr()
+        for ch_ in list(tcPr): tcPr.remove(ch_)
+        for tag in ("a:lnL","a:lnR","a:lnT","a:lnB"):
+            ln=etree.SubElement(tcPr,qn(tag)); ln.set("w","6350" if tag=="a:lnB" else "0")
+            if tag=="a:lnB":
+                sf=etree.SubElement(ln,qn("a:solidFill")); clr=etree.SubElement(sf,qn("a:srgbClr")); clr.set("val","D9D9D9")
+            else: etree.SubElement(ln,qn("a:noFill"))
+        if fill is None: etree.SubElement(tcPr,qn("a:noFill"))
+        else:
+            sf=etree.SubElement(tcPr,qn("a:solidFill")); clr=etree.SubElement(sf,qn("a:srgbClr")); clr.set("val",str(fill))
+    for c_,h in enumerate(hdr): cell(0,c_,h,True,WHITE,hdr_fill,PP_ALIGN.LEFT if (c_==0 and first_left) else PP_ALIGN.CENTER)
+    for r_,row in enumerate(rows,1):
+        last=(bold_last and r_==nr-1)
+        for c_,v in enumerate(row):
+            cell(r_,c_,v,bold=last,fill=RGBColor(0xEE,0xF2,0xFA) if last else None,align=PP_ALIGN.LEFT if (c_==0 and first_left) else PP_ALIGN.CENTER)
+    return tb
+
+def insight_box(sl,x,y,w,h,title,sub,bullets,size=10):
+    tbox(sl,x,y,w,14,title,10,True); line(sl,x,y+16,w)
+    if sub: tbox(sl,x,y+19,w,12,sub,7.5,False,MGREY,True)
+    sh=sl.shapes.add_textbox(Emu(int(x*12700)),Emu(int((y+38)*12700)),Emu(int(w*12700)),Emu(int(h*12700)))
+    tf=sh.text_frame; tf.word_wrap=True; tf.margin_left=tf.margin_right=tf.margin_top=tf.margin_bottom=Emu(0)
+    first=True
+    for b in bullets: rich(tf,b,size,first,7,True); first=False
+    return sh
+
+# ---- computed totals
+def brin_totals(key):
+    rows=D[key]
+    sec=[r for r in rows if r[0] in GICS or r[0]=="Unclassified"]; cash=[r for r in rows if str(r[0]).startswith("Cash")]
+    alloc=sum(r[1] for r in sec if num(r[1]))+(cash[0][1] if cash and num(cash[0][1]) else 0)
+    sel=sum(r[2] for r in sec if num(r[2]))
+    act=[r for r in rows if str(r[0]).startswith("Actual")][0][3]
+    return alloc,sel,act,alloc+sel+act
+AP_,SP_,RP_,TP_=brin_totals("brin_sec_p"); AY_,SY_,RY_,TY_=brin_totals("brin_sec_y")
+def under_over(key,n_u=4,n_o=3,thr=0.005):
+    rows=[r for r in D[key] if r[0] in GICS]
+    u=sorted([r for r in rows if r[7]<-thr],key=lambda r:r[7]); o=sorted([r for r in rows if r[7]>thr],key=lambda r:-r[7])
+    return u,o
+def fg(r): return f"{short(r[0])} ({r[7]*100:+.1f}pp)"
+def fg2(r): return f"{short(r[0])} {r[7]*100:+.1f}pp"
+
+# =============== overview
+def overview(period):
+    if period=="P":
+        perf=D["perf_p"][1:8]; growth=D["growth_p"]
+        a,pe=perf[0],perf[5]; gap=perf[6]
+        title="AZTD Trails the Peers by ~7pp a Year"
+        sub=f"Annualized, Jan-24 to Sep-26: AZTD {pct(a[1])} vs peer average {pct(pe[1])} ({pp(gap[1])})"
+        c1="Growth of 100 - actual total return"; c2="Annualized Return, Jan-24 to Sep-26"; c2s="Actual vs holdings-based (return of the stocks held)"
+        hi=3
+    else:
+        perf=D["perf_y"][1:8]; growth=D["growth_y"]
+        a,pe=perf[0],perf[5]; gap=perf[6]
+        title="YTD 2026: AZTD Lags by ~7pp"
+        sub=f"YTD, Jan-Sep: AZTD {pct(a[1])} vs peer average {pct(pe[1])} ({pp(gap[1])}); holdings-based gap is only {pp(gap[2])}"
+        c1="Growth of 100 - YTD-26 (Dec-25 = 100)"; c2="YTD-26 Return (Jan-Sep, cumulative)"; c2s="Actual vs holdings-based (return of the stocks held)"
+        hi=2
+    sl=new_slide("General",title,sub)
+    section(sl,41,100,421,c1,"Peers: AVDV, ISCF, DISV, DFIS; month-end total returns in USD")
+    cd=CategoryChartData(); cd.categories=[g[0].strftime("%b-%y") for g in growth]
+    for k,f in enumerate(FUNDS): cd.add_series(f,[g[k+1] for g in growth])
+    ch=add_chart(sl,XL_CHART_TYPE.LINE,cd,41,134,421,172); style_chart(ch); axis_clean(ch,val_fmt="0")
+    ch.value_axis.minimum_scale=80 if period=="P" else 90
+    for k,s in enumerate(ch.plots[0].series):
+        s.format.line.color.rgb=FCOL[k]; s.format.line.width=Pt(2.75 if k==0 else 1.25); s.smooth=False; s.marker.style=XL_MARKER_STYLE.NONE
+    ch.category_axis.tick_labels.font.size=Pt(7)
+    if period=="P":
+        ca=ch.category_axis._element; sk=etree.Element(qn("c:tickLblSkip")); sk.set("val","3")
+        nm=ca.find(qn("c:noMultiLvlLbl")); (nm.addprevious(sk) if nm is not None else ca.append(sk))
+    section(sl,507,100,421,c2,c2s)
+    cd=CategoryChartData(); cd.categories=["AZTD","AVDV","ISCF","DISV","DFIS","Peer avg"]
+    cd.add_series("Actual",[x[1] for x in perf[:6]]); cd.add_series("Holdings-based",[x[hi] for x in perf[:6]])
+    ch=add_chart(sl,XL_CHART_TYPE.COLUMN_CLUSTERED,cd,507,134,421,172); style_chart(ch); axis_clean(ch,val_fmt="0%")
+    for k,c_ in enumerate((NAVY,GOLD)): color_series(ch.plots[0].series[k],c_); fix_invert(ch.plots[0].series[k])
+    labels(ch.plots[0],"0.0%",7,XL_LABEL_POSITION.OUTSIDE_END); ch.plots[0].gap_width=60; ch.plots[0].overlap=-5
+    pad_axis(ch,[x[1] for x in perf[:6]]+[x[hi] for x in perf[:6]],0.0,0.25)
+    section(sl,41,318,886,"Fund Snapshot","Holdings, quant scores and trailing performance. 3Y performance is annualized; scores and holdings as of 31-Aug-26, performance to 30-Sep-26")
+    hdr=["Fund","# Holdings","Model 1.1","6M Slope","Stability","Tactical","3Y Perf.","YTD","3M","1M","12M Fwd P/E"]
+    e=D["etf"][1:7]; names=["AZTD","AVDV","ISCF","DISV","DFIS","AZTD vs peer avg"]; rows=[]
+    for k,r in enumerate(e):
+        if k<5: rows.append([names[k],f"{int(r[1]):,}",f"{r[2]:.2f}",f"{r[3]:+.3f}",f"{r[4]:.2f}",f"{r[5]:.2f}",pct(r[6]),pct(r[7]),pct(r[8]),pct(r[9]),f"{r[10]:.1f}x"])
+        else: rows.append([names[k],"",f"{r[2]:+.2f}",f"{r[3]:+.3f}",f"{r[4]:+.2f}",f"{r[5]:+.2f}",pp(r[6]),pp(r[7]),pp(r[8]),pp(r[9]),f"{r[10]:+.1f}x"])
+    table(sl,41,352,886,hdr,rows,col_w=[130,70,70,70,70,70,100,70,70,70,86],row_h=17,bold_last=True)
+    return sl
+
+# =============== decomposition
+def decomp_slide(period):
+    ann=(period=="P")
+    alloc,sel,reb,tot=(AP_,SP_,RP_,TP_) if ann else (AY_,SY_,RY_,TY_)
+    pos=alloc+sel
+    title="Where the Gap Comes From" if ann else "Where the YTD Gap Comes From"
+    if ann: sub=f"Stock positions explain {pos*100:.1f}pp a year; rebalancing, trading and fees explain {reb*100:.1f}pp"
+    else: sub=f"The stocks held explain only {pos*100:.1f}pp YTD; rebalancing, trading and fees explain {reb*100:.1f}pp"
+    sl=new_slide("General",title,sub)
+    unit="pp / yr, annualized" if ann else "pp, cumulative"
+    section(sl,41,100,430,f"Gap vs Peer Average by Source ({unit})","AZTD actual return minus peer average actual return")
+    cd=CategoryChartData(); cd.categories=["Sector allocation","Stock selection","Rebalancing, trading & fees","Total gap"]; cd.add_series("Gap",[alloc,sel,reb,tot])
+    ch=add_chart(sl,XL_CHART_TYPE.COLUMN_CLUSTERED,cd,41,134,430,350); style_chart(ch,legend=False); axis_clean(ch,val_fmt="0.0%")
+    ser=ch.plots[0].series[0]
+    for i,v in enumerate([alloc,sel,reb,tot]):
+        pt=ser.points[i]; pt.format.fill.solid(); pt.format.fill.fore_color.rgb=(NAVY if v>=0 else SALMON) if i<3 else GOLD
+    fix_invert(ser)
+    labels(ch.plots[0],"+0.0%;-0.0%",9,XL_LABEL_POSITION.OUTSIDE_END); ch.plots[0].gap_width=70; ch.value_axis.visible=False
+    pad_axis(ch,[alloc,sel,reb,tot],0.25,0.25)
+    if ann:
+        section(sl,507,100,420,"Actual vs Holdings-Based, by Year","AZTD vs peer average; holdings-based = return of the stocks held")
+        cal=D["cal"][1:]
+        rows=[[c[0],pct(c[1]),pct(c[2]),pct(c[3]),pct(c[4]),pct(c[7],1,True)] for c in cal]
+        table(sl,507,134,420,["Period","AZTD actual","AZTD holdings","AZTD act. - hold.","Peers actual","AZTD vs peers"],rows,col_w=[80,60,64,72,60,64],row_h=24,font=8)
+        c24,c25,c26=cal
+        bul=[[("2024: ",True),(f"AZTD rotated nearly its whole portfolio every month, so the stocks it held returned {abs(c24[3])*100:.0f}pp more than the fund did.",False)],
+             [("2025: ",True),(f"holdings and fund return match ({pct(c25[2])} vs {pct(c25[1])}); the {abs(c25[7])*100:.1f}pp gap vs peers is positions, not trading.",False)],
+             [("2026 YTD: ",True),(f"positions are close to the peers ({pct(c26[2])} vs {pct(c26[5])}), but the fund lags its holdings by {abs(c26[3])*100:.1f}pp, concentrated in the Feb, May and Aug rebalances.",False)]]
+        insight_box(sl,507,262,420,200,"Key Takeaways",None,bul,10)
+    else:
+        P=D["perf_y"]
+        bul=[[("The stocks are not the problem: ",True),(f"the stocks AZTD held returned {pct(P[1][2])} vs {pct(P[6][2])} for the peers ({pp(P[7][2])}).",False)],
+             [("Allocation ",True),(f"added {alloc*100:+.1f}pp (Tech overweight, no Real Estate) and ",False),("selection ",True),(f"took {sel*100:+.1f}pp (Financials and Consumer Staples picks), net {pos*100:+.1f}pp.",False)],
+             [("Implementation cost ",True),(f"{reb*100:+.1f}pp: the fund returned {pct(P[1][1])} vs {pct(P[1][2])} for its own holdings. Feb-26 alone cost ~3.7pp (Lumentum +79% in the month).",False)]]
+        insight_box(sl,507,100,420,200,"Key Takeaways","YTD-26, Jan-Sep",bul,10)
+        section(sl,507,318,420,"Actual vs Holdings-Based, by Fund","YTD-26, Jan-Sep (cumulative)")
+        rows=[[P[k][0],pct(P[k][1]),pct(P[k][2]),pct(P[k][3],1,True)] for k in range(1,7)]
+        table(sl,507,352,420,["Fund","Actual","Holdings-based","Actual - holdings"],rows,col_w=[90,80,90,90],row_h=18,font=8,bold_last=True)
+    return sl
+
+# =============== sector / region charts
+def sector_slide(key,title,sub,src,ann=False,region=False):
+    rows=[r for r in D[key] if r[0] not in ("Unclassified","Other / unclassified","Other")]
+    rows=sorted(rows,key=lambda r:r[7])
+    sl=new_slide("2ChartsSubtitles",title,sub,src,keep_idx=(15,21,17,23,16,22))
+    unit="pp / yr, annualized" if ann else "pp, cumulative"
+    if not region: h1,s1,h2,s2="Contribution by Sector",f"AZTD vs peer average ({unit})","Gap vs Peers by Sector",f"AZTD minus peer average contribution ({unit}); worst first"
+    else: h1,s1,h2,s2="Return by Region","AZTD vs peers (peers hold ~0% in the US)","Gap vs Peers by Region",f"AZTD minus peer average contribution ({unit}); worst first"
+    ph={p.placeholder_format.idx:p for p in sl.placeholders}
+    ph[17].text_frame.text=h1; ph[16].text_frame.text=s1; ph[23].text_frame.text=h2; ph[22].text_frame.text=s2
+    cats=[short(r[0]) for r in rows]
+    cd=CategoryChartData(); cd.categories=cats
+    if not region: cd.add_series("AZTD",[r[1] for r in rows]); cd.add_series("Peer average",[r[6] for r in rows]); v1=[r[1] for r in rows]+[r[6] for r in rows]; f1="0.0%"
+    else:
+        cd.add_series("AZTD return",[r[10] if num(r[10]) else None for r in rows]); cd.add_series("Peers return",[r[11] if num(r[11]) else None for r in rows]); v1=[r[10] for r in rows]+[r[11] for r in rows]; f1="0%"
+    gf=ph[15].insert_chart(XL_CHART_TYPE.BAR_CLUSTERED,cd); ch=gf.chart; style_chart(ch); axis_clean(ch,val_fmt=f1)
+    ch.category_axis.reverse_order=True; ch.value_axis.visible=False
+    for k,c_ in enumerate((NAVY,GOLD)): color_series(ch.plots[0].series[k],c_); fix_invert(ch.plots[0].series[k])
+    labels(ch.plots[0],f1,7,XL_LABEL_POSITION.OUTSIDE_END); ch.plots[0].gap_width=45; ch.plots[0].overlap=-5
+    pad_axis(ch,v1,0.28,0.20)
+    cd=CategoryChartData(); cd.categories=cats; cd.add_series("AZTD vs peer",[r[7] for r in rows])
+    gf=ph[21].insert_chart(XL_CHART_TYPE.BAR_CLUSTERED,cd); ch2=gf.chart; style_chart(ch2,legend=False); axis_clean(ch2,val_fmt="0.0%")
+    ch2.category_axis.reverse_order=True; ch2.value_axis.visible=False
+    ser=ch2.plots[0].series[0]
+    for i,r in enumerate(rows):
+        pt=ser.points[i]; pt.format.fill.solid(); pt.format.fill.fore_color.rgb=NAVY if r[7]>=0 else SALMON
+    fix_invert(ser)
+    labels(ch2.plots[0],"+0.00%;-0.00%",7,XL_LABEL_POSITION.OUTSIDE_END); ch2.plots[0].gap_width=45
+    pad_axis(ch2,[r[7] for r in rows],0.32,0.22)
+    return sl
+
+# =============== allocation / selection
+def alloc_sel_slide(kind,key_brin,key_sec,period_lbl,ann,hit_key):
+    rows=[r for r in D[key_brin] if r[0] in GICS]; idx=1 if kind=="alloc" else 2
+    rows=sorted(rows,key=lambda r:r[idx]); sec=D[key_sec]
+    alloc,sel=(AP_,SP_) if ann else (AY_,SY_)
+    tot=alloc if kind=="alloc" else sel
+    neg=[r for r in rows if r[idx]<0][:3]; pos=[r for r in rows[::-1] if r[idx]>0][:2]
+    def s_(n): return find(sec,n)
+    if kind=="alloc":
+        title="Allocation: "+(f"{short(neg[0][0])} Cost the Most" if neg else "Weights Helped");
+        sub=f"Sector weights vs the peers explain {tot*100:+.1f}pp {'a year' if ann else 'YTD'} ({period_lbl})"
+        bul=[]
+        for r in neg:
+            s=s_(r[0]); bul.append([(f"{short(r[0])} {r[idx]*100:+.2f}pp: ",True),(f"AZTD held {pct(s[8])} on average vs {pct(s[9])} for the peers; the peers' stocks in the sector returned {pct(s[11],0) if num(s[11]) else 'n/a'}.",False)])
+        for r in pos:
+            s=s_(r[0]); bul.append([(f"{short(r[0])} {r[idx]*100:+.2f}pp: ",True),(f"weights of {pct(s[8])} (AZTD) vs {pct(s[9])} (peers) were on the right side of the sector's return.",False)])
+        bul.append([("Reading: ",True),("allocation compares sector weights, valued at each sector's return vs the peers' total return.",False)])
+        desc="Effect of holding more or less of each sector than the peers (vs the peers' total return)"
+    else:
+        title="Selection: "+(f"{short(pos[0][0])} Strong, {short(neg[0][0])} Weak" if pos and neg else "Stock Picks")
+        sub=f"Stock picks inside each sector explain {tot*100:+.1f}pp {'a year' if ann else 'YTD'} ({period_lbl})"
+        bul=[]
+        for r in pos:
+            s=s_(r[0]); bul.append([(f"{short(r[0])} {r[idx]*100:+.2f}pp: ",True),(f"AZTD's stocks returned {pct(s[10],0) if num(s[10]) else 'n/a'} vs {pct(s[11],0) if num(s[11]) else 'n/a'} for the peers' in the same sector.",False)])
+        for r in neg:
+            s=s_(r[0]); bul.append([(f"{short(r[0])} {r[idx]*100:+.2f}pp: ",True),(f"AZTD's stocks returned {pct(s[10],0) if num(s[10]) else 'n/a'} vs {pct(s[11],0) if num(s[11]) else 'n/a'} for the peers'.",False)])
+        h=D[hit_key][-1]
+        bul.append([("Hit rate: ",True),(f"{pct(h[3],0)} of AZTD's stocks beat the peers' sector average ({pct(h[4],0)} weighted); 50% = coin flip.",False)])
+        desc="Effect of AZTD's stocks beating or lagging the peers' stocks inside each sector"
+    sl=new_slide("General",title,sub)
+    unit="pp / yr, annualized" if ann else "pp, cumulative"
+    nm="Allocation" if kind=="alloc" else "Selection"
+    section(sl,41,100,520,f"{nm} Effect by Sector ({unit})",desc)
+    cd=CategoryChartData(); cd.categories=[short(r[0]) for r in rows]; cd.add_series(nm,[r[idx] for r in rows])
+    ch=add_chart(sl,XL_CHART_TYPE.BAR_CLUSTERED,cd,41,134,520,352); style_chart(ch,legend=False); axis_clean(ch,val_fmt="0.0%")
+    ch.category_axis.reverse_order=True; ch.value_axis.visible=False
+    ser=ch.plots[0].series[0]
+    for i,r in enumerate(rows):
+        pt=ser.points[i]; pt.format.fill.solid(); pt.format.fill.fore_color.rgb=NAVY if r[idx]>=0 else SALMON
+    fix_invert(ser)
+    labels(ch.plots[0],"+0.00%;-0.00%",8,XL_LABEL_POSITION.OUTSIDE_END); ch.plots[0].gap_width=40
+    pad_axis(ch,[r[idx] for r in rows],0.30,0.22)
+    insight_box(sl,590,100,337,360,"Key Takeaways","How to read: negative = it cost AZTD performance vs the peers",bul,10)
+    return sl
+
+# =============== names grid
+def names_grid(period_idx,sectors,title,sub,hit_key,unit_note):
+    sl=new_slide("General",title,sub)
+    bw,bh=436,186; xs=[41,491]; ys=[100,305]
+    for k,s in enumerate(sectors[:4]):
+        x=xs[k%2]; y=ys[k//2]; d=N[(period_idx,s)]
+        hit=[r for r in D[hit_key] if r[0]==s]
+        hr=(f"hit rate {pct(hit[0][3],0)} ({pct(hit[0][4],0) if num(hit[0][4]) else '-'} wtd)") if hit and num(hit[0][3]) else ""
+        st=str(d['stats'])
+        wt=st.split("|")[0].replace("AZTD wt","AZTD wt").strip()
+        bar=sl.shapes.add_shape(1,Emu(int(x*12700)),Emu(int(y*12700)),Emu(int(bw*12700)),Emu(int(15*12700)))
+        bar.fill.solid(); bar.fill.fore_color.rgb=NAVY; bar.line.fill.background()
+        tf=bar.text_frame; tf.margin_left=Emu(40000); tf.margin_top=tf.margin_bottom=Emu(0); tf.vertical_anchor=MSO_ANCHOR.MIDDLE
+        txt(tf,f"{s}  |  {wt}  |  {hr}",8,True,WHITE,align=PP_ALIGN.LEFT)
+        L=d["left"][:5]; Rr=d["right"][:5]
+        tbox(sl,x,y+19,210,10,"AZTD names (worst contributors)",7.5,True,NAVY)
+        tbox(sl,x+224,y+19,210,10,"Peers' best names (by peer contribution)",7.5,True,NAVY)
+        lrows=[[r[0][:26],pct(r[1]),pct(r[3],0) if num(r[3]) else "-",f"{r[5]:.2f}" if num(r[5]) else "-"] for r in L]
+        rrows=[[r[0][:26],pct(r[1]),pct(r[3],0) if num(r[3]) else "-",f"{r[5]:.2f}" if num(r[5]) else "-",str(r[9])[:3]] for r in Rr]
+        table(sl,x,y+31,212,["Name","Wt","Ret.","M1.1"],lrows,col_w=[100,28,32,28],row_h=21,font=8)
+        table(sl,x+224,y+31,212,["Name","Wt","Ret.","M1.1","AZTD"],rrows,col_w=[80,26,30,26,30],row_h=21,font=8)
+        tbox(sl,x,y+31+21*6+4,bw,10,f"Wt = avg weight; Ret. = stock return {unit_note}; M1.1 = Model 1.1 score (31-Aug-26); AZTD = did AZTD hold it",6.5,False,MGREY,True)
+    return sl
+
+# =============== build
+SRC="LSEG Workspace; SEC N-PORT; Aztlan Equity Management"
+overview("P"); decomp_slide("P")
+u,o=under_over("sec_p")
+sector_slide("sec_p","Sectors: Industrials Wins, Materials Loses",
+    "Annualized gap vs peers: "+", ".join(fg2(r) for r in u[:2])+" lag; "+fg2(o[0])+" leads",SRC,ann=True)
+rp=D["reg_p"]; jp,eu,us,ca,apx=[find(rp,n) for n in ("Japan","Europe","United States","Canada","Asia Pacific ex-Japan")]
+sector_slide("reg_p","Regions: Europe and Japan Held AZTD Back",
+    f"Annualized: Europe {eu[7]*100:+.1f}pp and Japan {jp[7]*100:+.1f}pp lag; the US ({us[7]*100:+.1f}pp) is exposure the peers lack",SRC,ann=True,region=True)
+alloc_sel_slide("alloc","brin_sec_p","sec_p","Jan-24 to Sep-26, annualized",True,"hit_p")
+alloc_sel_slide("sel","brin_sec_p","sec_p","Jan-24 to Sep-26, annualized",True,"hit_p")
+names_grid(0,[r[0] for r in u[:4]],"Where We Lost: Names in the Weak Sectors","Jan-24 to Sep-26: AZTD's worst contributors vs the peers' best names in the four weakest sectors","hit_p","over the period (while held for AZTD; cumulative)")
+# 2025
+u25,o25=under_over("sec_25")
+sector_slide("sec_25","2025 Sectors: Materials and Cons. Disc. Hurt","Calendar 2025: "+", ".join(fg2(r) for r in u25[:2])+" lag; "+fg2(o25[0])+" leads",SRC,ann=False)
+r25=D["reg_25"]; jp5,eu5,us5=[find(r25,n) for n in ("Japan","Europe","United States")]
+sector_slide("reg_25","2025 Regions: Japan and Europe Lagged, US Helped",
+    f"Calendar 2025: Japan {jp5[7]*100:+.1f}pp and Europe {eu5[7]*100:+.1f}pp lag; the US ({us5[7]*100:+.1f}pp) is exposure",SRC,ann=False,region=True)
+names_grid(1,[r[0] for r in u25[:4]],"2025 Where We Lost: Names in the Weak Sectors","Calendar 2025: AZTD's worst contributors vs the peers' best names in the four weakest sectors","hit_25","in 2025 (while held for AZTD)")
+# YTD
+overview("Y"); decomp_slide("Y")
+uy,oy=under_over("sec_y")
+sector_slide("sec_y","YTD Sectors: Tech and Health Care Lead",
+    "YTD: "+", ".join(fg2(r) for r in oy[:2])+" lead; "+", ".join(fg2(r) for r in uy[:2])+" lag","LSEG Workspace; Aztlan Equity Management",ann=False)
+ry=D["reg_y"]; jpy,euy,usy=[find(ry,n) for n in ("Japan","Europe","United States")]
+sector_slide("reg_y","YTD Regions: Europe and Japan Held Back AZTD",
+    f"YTD: Europe {euy[7]*100:+.1f}pp and Japan {jpy[7]*100:+.1f}pp lag; the US ({usy[7]*100:+.1f}pp) is exposure the peers lack","LSEG Workspace; Aztlan Equity Management",ann=False,region=True)
+alloc_sel_slide("alloc","brin_sec_y","sec_y","YTD-26, Jan-Sep",False,"hit_y")
+alloc_sel_slide("sel","brin_sec_y","sec_y","YTD-26, Jan-Sep",False,"hit_y")
+names_grid(2,[r[0] for r in uy[:4]],"YTD Where We Lost: Names in the Weak Sectors","YTD, Jan-Sep: AZTD's worst contributors vs the peers' best names in the four weakest sectors","hit_y","YTD-26 (while held for AZTD)")
+
+# =============== bubbles
+BS=("Materials","Energy","Financials","Utilities","Consumer Discretionary")
+rows=[r for r in SEC if num(r["azw"]) and r["azw"]==0 and num(r["npeers"]) and r["npeers"]>=3 and num(r["peerw"]) and r["sector"] in BS and num(r["ytd"]) and num(r["m11"]) and num(r["stab"])]
+rows=sorted(rows,key=lambda r:-r["peerw"])[:25]
+top5=sorted([r for r in SEC if num(r["azw"]) and r["azw"]>0 and num(r["ytd"]) and num(r["m11"]) and num(r["stab"])],key=lambda r:-r["azw"])[:5]
+SCOL={"Materials":RGBColor(0xE0,0x7B,0x5F),"Energy":RGBColor(0x2E,0x75,0xB6),"Financials":RGBColor(0x42,0x82,0x5D),"Utilities":RGBColor(0x7F,0x8F,0xA9),"Consumer Discretionary":RGBColor(0x9B,0x59,0xB6)}
+def clean_name(n): return re.sub(r"( Inc\.?| Corp\.?| Ltd\.?| PLC| Plc| SA| AG| ASA| Co\.?| Limited| Corporation| Holdings| Group|, Inc\.)","",n).strip(" ,.")[:22]
+def bubble_slide(ykey,ylabel,title,sub):
+    sl=new_slide("1Chart",title,sub,"LSEG Workspace; Quant Model (31-Aug-26)",keep_idx=(24,))
+    ph=[p for p in sl.placeholders if p.placeholder_format.idx==24][0]
+    cd=BubbleChartData(); groups={}
+    for r in rows: groups.setdefault(r["sector"],[]).append(r)
+    order=[]
+    for sct,lst in groups.items():
+        s=cd.add_series(sct)
+        for r in lst: s.add_data_point(r["ytd"],r[ykey],max(r["peerw"],0.0015)*100)
+        order.append((sct,lst))
+    s=cd.add_series("AZTD top-5 holdings")
+    for r in top5: s.add_data_point(r["ytd"],r[ykey],0.9)
+    order.append(("AZTD top-5 holdings",top5))
+    gf=ph.insert_chart(XL_CHART_TYPE.BUBBLE,cd); ch=gf.chart; style_chart(ch)
+    gf.height=Emu(int(372*12700)); tbox(sl,41,478,886,10,"Bubble size = peers' average weight (AZTD top-5 holdings not to scale). Names held by 3+ peers and not by AZTD, in Materials, Energy, Financials, Utilities and Cons. Discretionary.",7,False,MGREY,True)
+    ch.plots[0].bubble_scale=55
+    va=ch.value_axis; ca=ch.category_axis
+    va.minimum_scale=0; va.maximum_scale=1.1; va.has_major_gridlines=True; va.major_gridlines.format.line.color.rgb=RGBColor(0xE6,0xE6,0xE6)
+    va.tick_labels.number_format="0.0"; va.tick_labels.number_format_is_linked=False; va.tick_labels.font.size=Pt(8)
+    ca.tick_labels.number_format="0%"; ca.tick_labels.number_format_is_linked=False; ca.tick_labels.font.size=Pt(8); ca.has_major_gridlines=False
+    va.has_title=True; va.axis_title.text_frame.text=ylabel; va.axis_title.text_frame.paragraphs[0].runs[0].font.size=Pt(8)
+    ca.has_title=True; ca.axis_title.text_frame.text="YTD total return (Jan-Sep 2026)"; ca.axis_title.text_frame.paragraphs[0].runs[0].font.size=Pt(8)
+    ca.tick_label_position=XL_TICK_LABEL_POSITION.LOW
+    for si,(sct,lst) in enumerate(order):
+        ser=ch.plots[0].series[si]; col=NAVY if sct.startswith("AZTD") else SCOL[sct]
+        ser.format.fill.solid(); ser.format.fill.fore_color.rgb=col
+        sf=ser._element.find(qn("c:spPr")).find(qn("a:solidFill"))
+        al=etree.SubElement(sf[0],qn("a:alpha")); al.set("val","90000" if sct.startswith("AZTD") else "55000")
+        ser.format.line.color.rgb=col
+        for pi,r in enumerate(lst):
+            dl=ser.points[pi].data_label; tf=dl.text_frame; tf.text=clean_name(r["name"])
+            f=tf.paragraphs[0].runs[0].font; f.size=Pt(6.5); f.name="Arial"; f.bold=sct.startswith("AZTD")
+            dl.position=XL_LABEL_POSITION.RIGHT
+    return sl
+bubble_slide("m11","Model 1.1 score","Peer Names to Watch: Model 1.1 vs YTD Return",
+    "25 names held by 3+ peers and not by AZTD in the weak sectors, vs AZTD's top-5 holdings (navy)")
+bubble_slide("stab","Stability score","Peer Names to Watch: Stability vs YTD Return",
+    "Same 25 names; higher Stability = steadier fundamentals; AZTD's top-5 holdings in navy")
+
+# =============== insights
+P=D["perf_p"]; PY=D["perf_y"]
+sl=new_slide("General","Key Insights","What explains AZTD's underperformance and where to look next")
+sp_=D["sec_p"]; s25_=D["sec_25"]
+hp=D["hit_p"][-1]
+ins=[
+ [("The gap is large: ",True),(f"AZTD returned {pct(P[1][1])} a year (Jan-24 to Sep-26) vs {pct(P[6][1])} for the peers ({pp(P[7][1])}); YTD-26 it is {pct(PY[1][1])} vs {pct(PY[6][1])}.",False)],
+ [("About half is the stocks, half is implementation: ",True),(f"positions explain {pp(P[7][3])} a year and rebalancing, trading and fees {pp(P[7][4])}. 2025 had no implementation gap; 2024 and 2026 did, concentrated in a few rebalance months.",False)],
+ [("Sectors: ",True),(", ".join(fg(r) for r in o[:3])+" add value; "+", ".join(fg(r) for r in u[:4])+" lag (annualized). In 2025: "+", ".join(fg(r) for r in u25[:3])+".",False)],
+ [("Allocation: ",True),(f"AZTD holds {pct(find(sp_,'Materials')[8],0)} in Materials vs {pct(find(sp_,'Materials')[9],0)} for the peers and {pct(find(sp_,'Energy')[8],0)} in Energy vs {pct(find(sp_,'Energy')[9],0)}, both sectors that rallied.",False)],
+ [("Selection: ",True),(f"Industrials ({D['brin_sec_p'][6][2]*100:+.1f}pp/yr) is the best sleeve; Financials ({find(D['brin_sec_p'],'Financials')[2]*100:+.1f}pp/yr) the worst. Hit rate {pct(hp[3],0)} by names and {pct(hp[4],0)} by weight (50% = coin flip).",False)],
+ [("Regions: ",True),(f"Europe ({eu[7]*100:+.1f}pp/yr) and Japan ({jp[7]*100:+.1f}pp/yr) lag mostly through underweights; the US ({us[7]*100:+.1f}pp/yr) is exposure the peers do not own (AZTD {pct(us[8],0)} vs {pct(us[9],1)}).",False)],
+ [("Rebalancing: ",True),("turnover was 931% (FY24) and 316% (FY25), with monthly rebalances until Oct-24 and quarterly after; the residual is lumpy (2024; Feb, May and Aug-26).",False)],
+ [("Next: ",True),("review the repeated peer names in Materials, Energy and Financials (bubble charts) against Model 1.1 and Stability, and test the cost of the quarterly rebalance dates.",False)]]
+tb=sl.shapes.add_textbox(Emu(41*12700),Emu(110*12700),Emu(886*12700),Emu(370*12700)); tf=tb.text_frame; tf.word_wrap=True
+tf.margin_left=tf.margin_right=tf.margin_top=tf.margin_bottom=Emu(0)
+first=True
+for b in ins: rich(tf,b,12,first,11,True); first=False
+
+ids=list(prs.slides._sldIdLst)
+prs.slides._sldIdLst.remove(ids[2]); prs.slides._sldIdLst.append(ids[2])
+for sl_ in prs.slides:
+    for sh in sl_.shapes:
+        if sh.has_chart:
+            cs=sh.chart._chartSpace; chart=cs.find(qn("c:chart"))
+            t=chart.find(qn("c:title"))
+            if t is not None: chart.remove(t)
+            atd=chart.find(qn("c:autoTitleDeleted"))
+            if atd is None:
+                atd=etree.Element(qn("c:autoTitleDeleted")); chart.insert(0,atd)
+            atd.set("val","1")
+prs.save(OUT)
+print("saved",len(prs.slides))

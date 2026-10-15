@@ -1,0 +1,65 @@
+﻿$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb=$null; foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("SOTP") }
+$xl.Calculation=-4135
+$CREAM=13300991; $LGREY=10921638
+
+T { $s.Range("B7").Value2="Gordon Growth" }
+T { $s.Range("C7").Value2="<-- Terminal Value Method" }
+T { $s.Range("B7").Interior.Color=$CREAM }
+T { $s.Range("B7").Font.Bold=$true }
+try{ $s.Range("B7").Validation.Delete() }catch{}
+try{ $s.Range("B7").Validation.Add(3,1,1,"Gordon Growth,Exit Multiple") }catch{}
+
+$offs  = @(0,20,40,60)
+$ebs   = @(13,33,53,73)
+$fcs   = @(23,43,63,83)
+$was   = @(16,36,56,76)
+$mults = @(10.84,11.43,9.35,7.90)
+$notas = @("Median of 9 water / drainage peers","Median of 5 roofing / waterproofing peers","Median of 6 housebuilding products peers","Held at the model's own implied GGM multiple")
+
+for($i=0;$i -lt 4;$i++){
+  $o=$offs[$i]; $eb=$ebs[$i]; $fc=$fcs[$i]; $wa=$was[$i]
+  T { $s.Cells.Item(21+$o,12).Value2="Terminal Value Exit Multiple" }
+  T { $s.Range("L"+(21+$o)).Font.Bold=$true }
+  T { $s.Cells.Item(22+$o,12).Value2="Exit multiple (EV/EBITDA)" }
+  T { $s.Cells.Item(22+$o,13).Value2=[double]$mults[$i] }
+  T { $s.Range("M"+(22+$o)).NumberFormat='0.00"x"' }
+  T { $s.Range("M"+(22+$o)).Interior.Color=$CREAM }
+  T { $s.Cells.Item(23+$o,12).Value2="Implied g at that multiple" }
+  $f="=+IFERROR((J"+$eb+"*M"+(22+$o)+"*M"+$wa+"-J"+$fc+")/(J"+$eb+"*M"+(22+$o)+"+J"+$fc+"),0)"
+  T { $s.Cells.Item(23+$o,13).Formula=$f }
+  T { $s.Range("M"+(23+$o)).NumberFormat="0.0%" }
+  T { $s.Cells.Item(24+$o,12).Value2=[string]$notas[$i] }
+  T { $s.Range("L"+(24+$o)).Font.Italic=$true }
+  T { $s.Range("L"+(24+$o)).Font.Size=9 }
+  T { $s.Range("L"+(24+$o)).Font.Color=$LGREY }
+}
+Write-Output "  inputs listos"
+
+$rows=@(92,96,100,104); $grs=@(12,32,52,72); $mus=@(22,42,62,82)
+for($i=0;$i -lt 4;$i++){
+  $f="=+IFERROR(IF(`$B`$7=""Exit Multiple"",J"+$ebs[$i]+"*M"+$mus[$i]+",J"+$fcs[$i]+"*(1+M"+$grs[$i]+")/(M"+$was[$i]+"-M"+$grs[$i]+")),0)"
+  T { $s.Range("D"+$rows[$i]).Formula=$f }
+}
+Write-Output "  terminal values con switch y referencias por segmento"
+
+$xl.Calculation=-4105
+T { $xl.CalculateFullRebuild() }
+$wb.Save()
+
+Write-Output ""
+Write-Output "========== GORDON GROWTH =========="
+for($r=89;$r -le 112;$r++){
+  $lab=[string](T { $s.Cells.Item($r,2).Text }); if($lab.Trim() -eq ""){ continue }
+  Write-Output ("  "+$lab.PadRight(34)+([string](T { $s.Cells.Item($r,3).Text })).PadLeft(9)+([string](T { $s.Cells.Item($r,4).Text })).PadLeft(13))
+}
+Write-Output ""
+Write-Output "  g implicito en el multiplo de peers:"
+for($i=0;$i -lt 4;$i++){
+  $o=$offs[$i]
+  Write-Output ("    "+([string](T { $s.Cells.Item(9+$o,2).Text })).PadRight(28)+" mult="+([string](T { $s.Cells.Item(22+$o,13).Text })).PadLeft(8)+"   g implicito="+([string](T { $s.Cells.Item(23+$o,13).Text })).PadLeft(9)+"   WACC="+[string](T { $s.Cells.Item($was[$i],13).Text }))
+}
+

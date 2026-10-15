@@ -1,0 +1,173 @@
+"""Edit the user's v3 in place: replicate OR layout to all investor tabs, vertical cashflows for XIRR,
+single 3Q26/4Q26 dividend columns in Summary (pay dates as notes), everything celeste."""
+import sys, copy, datetime as dt
+import openpyxl
+from openpyxl.styles import Font, PatternFill, Border, Side, Alignment
+from openpyxl.comments import Comment
+
+src, dst = sys.argv[1], sys.argv[2]
+test_val = sys.argv[3] if len(sys.argv) > 3 else None   # test mode: fixed valuation date + Aug-31 prices
+wb = openpyxl.load_workbook(src)
+
+CEL = PatternFill("solid", fgColor="DAE9F8")
+NOFILL = PatternFill(fill_type=None)
+THIN = Side(style="thin")
+NUM = '#,##0.00_);\\(#,##0.00\\);\\-_)'
+DSH = '[$-409]d\\-mmm\\-yy;@'
+TABS = ["OR", "PZB", "JL", "EZB", "JCZB"]
+TK = ["MSDL", "CGBD", "FSK", "NCDL"]
+
+
+def f(b=False, i=False, color="FF000000"): return Font(name="Calibri", size=10, bold=b, italic=i, color=color)
+
+
+def put(ws, ref, v, fmt=None, b=False, i=False, color="FF000000", h=None, border=None):
+    c = ws[ref]; c.value = v; c.font = f(b, i, color)
+    if fmt: c.number_format = fmt
+    c.alignment = Alignment(horizontal=h) if h else Alignment()
+    c.fill = NOFILL; c.border = border or Border()
+    return c
+
+
+def hdr(ws, r, c1, labels, first_center=True):
+    for k, t in enumerate(labels):
+        c = ws.cell(r, c1 + k); c.value = t; c.font = f(True); c.fill = CEL; c.border = Border(bottom=THIN)
+        c.alignment = Alignment(horizontal="center" if (k == 0 and first_center) else "right", vertical="center")
+
+
+def clear(ws, r1, r2, c1, c2):
+    for r in range(r1, r2 + 1):
+        for c in range(c1, c2 + 1):
+            cell = ws.cell(r, c)
+            cell.value = None; cell.fill = NOFILL; cell.border = Border(); cell.font = f(); cell.number_format = "General"
+            cell.comment = None
+
+
+# ------------------------------------------------------------------ 1. capture data from old-layout tabs
+old = {}
+for t in TABS[1:]:
+    ws = wb[t]
+    old[t] = dict(name=ws["B3"].value, amt=ws["C6"].value, date=ws["C7"].value,
+                  alloc=[ws[f"D{10+k}"].value for k in range(4)],
+                  pos=[(ws[f"C{18+k}"].value, ws[f"D{18+k}"].value) for k in range(4)])
+
+# ------------------------------------------------------------------ 2. OR template: replace cashflow area with vertical table
+orw = wb["OR"]
+clear(orw, 46, 70, 2, 12)
+T = "FF0000FF"  # section titles: blue italic (as set by user in OR)
+put(orw, "B46", "Cashflows", i=True, color=T)
+hdr(orw, 47, 2, ["BDC", "Cashflow", "Date", "Amount"])
+r = 48
+for k in range(4):   # purchases
+    put(orw, f"B{r}", f"=+C{11+k}"); put(orw, f"C{r}", "Purchase", h="right")
+    put(orw, f"D{r}", "=+$C$7", DSH, h="right"); put(orw, f"E{r}", f"=-H{11+k}", NUM); r += 1
+for q, (col_amt, col_pay) in enumerate([("C", "D"), ("D", "G")]):   # 3Q26 / 4Q26 dividends
+    lab = ["3Q26 Dividend", "4Q26 Dividend"][q]
+    for k in range(4):
+        put(orw, f"B{r}", f"=+C{11+k}"); put(orw, f"C{r}", lab, h="right")
+        put(orw, f"E{r}", f"=+{col_amt}{40+k}", NUM)
+        put(orw, f"D{r}", f"=IF(E{r}>0,Inputs!${col_pay}${21+k},$C$7)", DSH, h="right"); r += 1
+for k in range(4):   # market value
+    put(orw, f"B{r}", f"=+C{11+k}"); put(orw, f"C{r}", "Market Value", h="right")
+    put(orw, f"D{r}", "=+Inputs!$C$6", DSH, h="right"); put(orw, f"E{r}", f"=+E{32+k}", NUM); r += 1
+last = r - 1  # 63
+put(orw, f"B{r}", "Total", b=True, h="center", border=Border(top=THIN))
+for c in "CD": put(orw, f"{c}{r}", None, b=True, border=Border(top=THIN))
+put(orw, f"E{r}", f"=SUM(E48:E{last})", NUM, b=True, border=Border(top=THIN))
+put(orw, f"B{r+1}", "Unpaid dividends show 0 on the investment date. Total = Whole Dollar Profit.", i=True)
+orw["C28"].value = f'=IFERROR(XIRR(E48:E{last},D48:D{last}),"")'
+
+# ------------------------------------------------------------------ 3. replicate OR to the other investors
+for t in TABS[1:]:
+    d = old[t]
+    del wb[t]
+    ws = wb.copy_worksheet(orw); ws.title = t
+    ws.sheet_view.showGridLines = False
+    ws["B3"].value = d["name"]; ws["C6"].value = d["amt"]; ws["C7"].value = d["date"]
+    for k in range(4):
+        ws[f"D{11+k}"].value = d["alloc"][k]
+        ws[f"F{11+k}"].value, ws[f"G{11+k}"].value = d["pos"][k]
+order = ["Summary", "Inputs"] + TABS
+wb._sheets = [wb[n] for n in order]
+
+# ------------------------------------------------------------------ 4. Inputs: celeste, no beige banners
+ip = wb["Inputs"]
+for row in ip.iter_rows():
+    for c in row:
+        if c.fill.fill_type and c.fill.fgColor.rgb == "FFDDD9C4":
+            if c.row in (17, 30):  # former banners -> plain titles like "Share Prices"
+                c.fill = NOFILL; c.border = Border()
+            else:
+                c.fill = CEL
+for ref in ("B17", "B30"): ip[ref].font = f(True, True)
+ip["B17"].value = "Dividends Declared"
+ip["B30"].value = "Next Dividend - Consensus (memo only, not used in returns)"
+
+# ------------------------------------------------------------------ 5. Summary
+sm = wb["Summary"]
+for col in ("N",): sm.column_dimensions[col].hidden = False; sm.column_dimensions[col].width = 13
+def over(cell): return "+".join(f"{t}!{cell}" for t in TABS)
+clear(sm, 8, 14, 10, 18)          # old J..R cashflow columns
+clear(sm, 8, 8, 2, 18)            # row 8 labels
+hdr(sm, 9, 10, ["3Q26 Div", "4Q26 Div", "=+Inputs!$C$6"], first_center=False)
+for c in "JKL": sm[f"{c}9"].alignment = Alignment(horizontal="center")
+sm["L9"].number_format = DSH
+put(sm, "L8", "Market Value", b=True, h="center")
+for k in range(4):
+    rr = 10 + k
+    for j, t in enumerate(TABS): sm.cell(rr, 5 + j).value = f"=-{t}!H{11+k}"
+    put(sm, f"J{rr}", "=" + over(f"C{40+k}"), NUM, h="center")
+    put(sm, f"K{rr}", "=" + over(f"D{40+k}"), NUM, h="center")
+    put(sm, f"L{rr}", f"=+F{26+k}", NUM, h="center")
+    sm[f"C{rr}"].value = f"=+SUM(E{rr}:L{rr})"
+    pay = ip[f"D{21+k}"].value
+    sm[f"J{rr}"].comment = Comment(f"{TK[k]} 3Q26 pay date: {pay:%d-%b-%y}" if pay else f"{TK[k]} 3Q26: not declared", "Icarus")
+    sm[f"K{rr}"].comment = Comment(f"{TK[k]} 4Q26: not declared yet (see Inputs)", "Icarus")
+for c in "JKL":
+    put(sm, f"{c}14", f"=+SUM({c}10:{c}13)", NUM, b=True, h="center", border=Border(top=THIN))
+for c in range(2, 13): sm.cell(14, c).border = Border(top=THIN)
+# market value table refs to new investor layout
+for k in range(4):
+    rr = 26 + k
+    sm[f"C{rr}"].value = "=" + over(f"F{11+k}")
+    sm[f"D{rr}"].value = "=" + over(f"H{11+k}")
+    sm[f"G{rr}"].value = "=" + over(f"E{40+k}")
+sm["B18"].value = "Total Return (Incl. Dividends)"
+for row in sm.iter_rows():
+    for c in row:
+        if c.fill.fill_type and c.fill.fgColor.rgb == "FFDDD9C4": c.fill = CEL
+# check
+put(sm, "B32", "Check (investor tabs = Summary)", i=True)
+put(sm, "C32", '=IF(AND(ABS(C14-(H30-D30))<0.01,ABS(D30+SUM(E14:I14))<0.01,ABS(G30-SUM(J14:K14))<0.01),"OK","ERROR")',
+    b=True, i=True, color="FFC00000", h="right")
+# vertical cashflows for IRR
+put(sm, "B34", "Cashflows (for IRR)", b=True, i=True)
+hdr(sm, 35, 2, ["Investor / BDC", "Cashflow", "Date", "Amount"])
+r = 36
+for t in TABS:
+    put(sm, f"B{r}", f"=+{t}!B3"); put(sm, f"C{r}", "Purchase", h="right")
+    put(sm, f"D{r}", f"=+{t}!C7", DSH, h="right"); put(sm, f"E{r}", f"=-{t}!H15", NUM); r += 1
+for q, (col, pay_col) in enumerate([("J", "D"), ("K", "G")]):
+    lab = ["3Q26 Dividend", "4Q26 Dividend"][q]
+    for k in range(4):
+        put(sm, f"B{r}", TK[k]); put(sm, f"C{r}", lab, h="right")
+        put(sm, f"E{r}", f"=+{col}{10+k}", NUM)
+        put(sm, f"D{r}", f"=IF(E{r}>0,Inputs!${pay_col}${21+k},$D$36)", DSH, h="right"); r += 1
+for k in range(4):
+    put(sm, f"B{r}", TK[k]); put(sm, f"C{r}", "Market Value", h="right")
+    put(sm, f"D{r}", "=+Inputs!$C$6", DSH, h="right"); put(sm, f"E{r}", f"=+L{10+k}", NUM); r += 1
+last = r - 1
+put(sm, f"B{r}", "Total", b=True, border=Border(top=THIN))
+for c in "CD": put(sm, f"{c}{r}", None, b=True, border=Border(top=THIN))
+put(sm, f"E{r}", f"=SUM(E36:E{last})", NUM, b=True, border=Border(top=THIN))
+put(sm, f"B{r+1}", "Purchases must stay first (earliest date first). Unpaid dividends show 0 on the first investment date.", i=True)
+sm["C20"].value = f'=IFERROR(XIRR(E36:E{last},D36:D{last}),"")'
+
+# ------------------------------------------------------------------ test mode
+if test_val:
+    ip["C6"].value = dt.date.fromisoformat(test_val)
+    for k, px in enumerate([15.35, 11.98, 12.41, 12.51]): ip[f"D{11+k}"].value = px
+    for k in range(4): ip[f"D{33+k}"].value = 0
+wb.calculation.fullCalcOnLoad = True
+wb.save(dst)
+print("saved", dst)

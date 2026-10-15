@@ -1,0 +1,34 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 40;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 1200 } }; return "??" }
+$xl=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); break }catch{ Start-Sleep -Milliseconds 900 } }
+$wb=$null; foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } }
+$ct=T { $wb.Worksheets.Item("Company Tearsheet") }
+Write-Output ("Company Tearsheet M5 = "+[string](T { $ct.Range("M5").Text })+"   frm="+[string](T { $ct.Range("M5").Formula }))
+Write-Output ("Company Tearsheet N5 = "+[string](T { $ct.Range("N5").Text })+"   frm="+[string](T { $ct.Range("N5").Formula }))
+Write-Output ("Company Tearsheet M4 = "+[string](T { $ct.Range("M4").Text })+"   frm="+[string](T { $ct.Range("M4").Formula }))
+Write-Output ("Company Tearsheet M6 = "+[string](T { $ct.Range("M6").Text })+"   frm="+[string](T { $ct.Range("M6").Formula }))
+
+$s=T { $wb.Worksheets.Item("Segment Beta") }
+# celdas de prueba, se limpian al final
+$ric=@("GENG.L","HILS.L","MSLH.L","FAN.L","ECEL.L","FORT.L","ALUG.L")
+$row=60
+foreach($x in $ric){
+  T { $s.Cells.Item($row,3).Value2=$x }
+  T { $s.Cells.Item($row,4).Formula=("=+TR(`$C"+$row+",`"TR.WACCBeta`",`"Null=BLANK`")") }
+  T { $s.Cells.Item($row,5).Formula=("=+TR(`$C"+$row+",`"TR.BetaFiveYear`",`"Null=BLANK`")") }
+  T { $s.Cells.Item($row,6).Formula=("=+TR(`$C"+$row+",`"TR.Beta5Y`",`"Null=BLANK`")") }
+  T { $s.Cells.Item($row,7).Formula=("=+TR(`$C"+$row+",`"TR.BetaWklyBeta5Y`",`"Null=BLANK`")") }
+  $row++
+}
+T { $xl.CalculateFullRebuild() }
+Start-Sleep -Seconds 25
+T { $xl.Calculate() }
+Start-Sleep -Seconds 12
+Write-Output ""
+Write-Output ("   "+"RIC".PadRight(9)+"WACCBeta(3Y sem)".PadLeft(18)+"BetaFiveYear".PadLeft(15)+"Beta5Y".PadLeft(12)+"BetaWkly5Y".PadLeft(13))
+for($r=60;$r -le 66;$r++){
+  $line="   "+([string](T { $s.Cells.Item($r,3).Text })).PadRight(9)
+  foreach($c in 4,5,6,7){ $line+=([string](T { $s.Cells.Item($r,$c).Text })).PadLeft(15) }
+  Write-Output $line
+}

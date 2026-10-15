@@ -1,0 +1,132 @@
+from pptx import Presentation
+from pptx.chart.data import CategoryChartData
+from pptx.enum.chart import XL_CHART_TYPE, XL_LABEL_POSITION, XL_LEGEND_POSITION
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
+from pptx.util import Pt, Emu
+from pptx.dml.color import RGBColor
+
+SRC = r"C:\Users\cesar\Downloads\20261012_ProyectoAmbar.pptx"
+DST = r"C:\Users\cesar\Downloads\20261012_ProyectoAmbar_EBITDA.pptx"
+NAVY = RGBColor(0x22, 0x1F, 0x56)
+GOLD = RGBColor(0xF5, 0xC4, 0x00)
+GRAY = RGBColor(0xF2, 0xF2, 0xF2)
+
+p = Presentation(SRC)
+base = p.slides[2]
+layout = base.slide_layout
+s = p.slides.add_slide(layout)
+
+proj = [772, 841, 925, 1016, 1113]
+real = [789.44, 838.00, 811.05, 832.61, 853.72]
+cum_p = sum(proj[2:])
+cum_r = sum(real[2:])
+print("acumulado 2026-28:", cum_p, round(cum_r, 1), round((cum_r / cum_p - 1) * 100, 1))
+
+def ph(sl, name):
+    for x in sl.placeholders:
+        if x.name.startswith(name):
+            return x
+
+def settext(shape, t):
+    tf = shape.text_frame
+    para = tf.paragraphs[0]
+    if para.runs:
+        para.runs[0].text = t
+        for r in para.runs[1:]:
+            r.text = ""
+    else:
+        para.text = t
+
+for x in s.placeholders:
+    print("ph:", x.placeholder_format.idx, x.placeholder_format.type, x.name)
+
+settext(ph(s, "Title"), "Adj. EBITDA: Antes y Después")
+settext(ph(s, "Subtitle"), "Lo proyectado en la valuación de 2023 frente al resultado real y al modelo actual")
+note = [x for x in s.placeholders if x.name.startswith("Text Placeholder")]
+if note:
+    settext(note[-1], "Notas: Adj. EBITDA = EBITDA antes de gastos corporativos. 2024 y 2025 son reales; 2026P–2028P corresponden al modelo actual. Cifras en millones de pesos.")
+    n = note[-1]
+    n.left, n.top, n.width, n.height = 3300000, 6290000, 7950000, 480000
+    for para in n.text_frame.paragraphs:
+        for r in para.runs:
+            r.font.size = Pt(9)
+
+# --- gráfica
+cd = CategoryChartData(number_format='"$"#,##0')
+cd.categories = ["2024", "2025", "2026P", "2027P", "2028P"]
+cd.add_series("Proyección dic-2023", proj)
+cd.add_series("Real / modelo actual", real)
+gf = s.shapes.add_chart(XL_CHART_TYPE.COLUMN_CLUSTERED, 525462, 1450000, 6900000, 4500000, cd)
+ch = gf.chart
+ch.has_legend = True
+ch.legend.include_in_layout = False
+ch.legend.position = XL_LEGEND_POSITION.TOP
+ch.legend.font.size = Pt(12)
+ch.font.size = Pt(12)
+ch.value_axis.visible = False
+ch.value_axis.has_major_gridlines = False
+ch.value_axis.minimum_scale = 0
+ch.value_axis.maximum_scale = 1300
+ch.category_axis.format.line.color.rgb = RGBColor(0x80, 0x80, 0x80)
+pl = ch.plots[0]
+pl.gap_width = 60
+pl.overlap = -10
+for se, col in zip(pl.series, (NAVY, GOLD)):
+    se.format.fill.solid()
+    se.format.fill.fore_color.rgb = col
+    dl = se.data_labels
+    dl.show_value = True
+    dl.number_format = '"$"#,##0'
+    dl.number_format_is_linked = False
+    dl.position = XL_LABEL_POSITION.OUTSIDE_END
+    dl.font.size = Pt(12)
+    dl.font.bold = True
+
+cap = s.shapes.add_textbox(525462, 1200000, 6900000, 260000)
+cap.text_frame.text = "Adj. EBITDA, en millones de pesos"
+cap.text_frame.paragraphs[0].runs[0].font.size = Pt(12)
+cap.text_frame.paragraphs[0].runs[0].font.italic = True
+
+# --- tarjetas
+cards = [
+    ("2024–2025: en línea con lo proyectado",
+     "Real de $789 y $838 MDP contra $772 y $841 proyectados."),
+    ("2026P–2028P: por debajo de lo proyectado",
+     "EBITDA acumulado de $%s MDP contra $%s proyectados (%.0f%%)." % (f"{cum_r:,.0f}", f"{cum_p:,.0f}", (cum_r / cum_p - 1) * 100)),
+    ("El margen no se expande",
+     "Margen Adj. EBITDA de 2028P: 13.3%, contra 16.2% proyectado."),
+]
+x0, w, h, gap = 7750000, 3950000, 1380000, 130000
+y = 1450000
+for i, (head, body) in enumerate(cards, 1):
+    box = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, x0, y, w, h)
+    box.fill.solid(); box.fill.fore_color.rgb = GRAY
+    box.line.fill.background()
+    hd = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, x0, y, w, 400000)
+    hd.fill.solid(); hd.fill.fore_color.rgb = NAVY
+    hd.line.fill.background()
+    tf = hd.text_frame
+    tf.margin_left = Emu(120000)
+    tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+    tf.text = "%d  %s" % (i, head)
+    r = tf.paragraphs[0].runs[0]
+    r.font.size = Pt(13); r.font.bold = True; r.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
+    tf.paragraphs[0].alignment = PP_ALIGN.LEFT
+    bt = s.shapes.add_textbox(x0 + 100000, y + 450000, w - 200000, h - 480000)
+    bt.text_frame.word_wrap = True
+    bt.text_frame.text = body
+    rr = bt.text_frame.paragraphs[0].runs[0]
+    rr.font.size = Pt(13); rr.font.color.rgb = RGBColor(0, 0, 0)
+    y += h + gap
+
+for x in list(s.placeholders):
+    if x.has_text_frame and not x.text_frame.text.strip():
+        x._element.getparent().remove(x._element)
+# --- dejar solo esta slide
+ids = p.slides._sldIdLst
+for sid in list(ids)[:-1]:
+    p.part.drop_rel(sid.rId)
+    ids.remove(sid)
+p.save(DST)
+print("saved")

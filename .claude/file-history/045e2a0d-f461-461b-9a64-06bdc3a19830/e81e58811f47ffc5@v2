@@ -1,0 +1,73 @@
+function Retry([scriptblock]$b) { for ($k=0; $k -lt 80; $k++) { try { $res = & $b; return ,$res } catch { Start-Sleep -Milliseconds 600 } }; throw "gave up: $b" }
+function RangeOf($addr) { for ($k=0; $k -lt 80; $k++) { try { $x = $ws.Range($addr); return ,$x } catch { Start-Sleep -Milliseconds 600 } }; throw "gave up range $addr" }
+function RGB($r,$g,$b) { return $r + 256*$g + 65536*$b }
+
+$excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb = Retry { $excel.Workbooks.Item(1) }
+$ws = Retry { $wb.Sheets.Item("Peers") }
+$qm = Retry { $wb.Sheets.Item("Quant Model") }
+trap { try { $excel.ScreenUpdating = $true; $excel.Calculation = -4105 } catch {}; Write-Output "FAILED: $_"; break }
+
+$t4 = Retry { $ws.Cells.Item(4,20).Text }; $u4 = Retry { $ws.Cells.Item(4,21).Text }; $qmM = Retry { $qm.Cells.Item(1,13).Text }
+if ($t4 -ne "Model 1.1" -or $u4 -ne "Slope" -or $qmM -ne "STABILITYSCORE") { Write-Output "Unexpected layout T4='$t4' U4='$u4' QM M1='$qmM', aborting"; exit 1 }
+
+Retry { $excel.Calculation = -4135 }
+Retry { $excel.ScreenUpdating = $false }
+try { $ws.Outline.ShowLevels(0, 2) | Out-Null } catch {}
+
+$colU = RangeOf "U:U"
+Retry { $colU.EntireColumn.Insert(-4161, 0) } | Out-Null
+Retry { $ws.Cells.Item(4,21).Value2 = "Stability Score" }
+
+$blocks = @(@{F=7;L=10;A=11}, @{F=14;L=17;A=18}, @{F=21;L=24;A=25}, @{F=28;L=32;A=33}, @{F=36;L=38;A=39}, @{F=42;L=46;A=47}, @{F=50;L=55;A=56}, @{F=59;L=62;A=63})
+foreach ($blk in $blocks) {
+  for ($r = $blk.F; $r -le $blk.L; $r++) {
+    $ric = Retry { $ws.Cells.Item($r,3).Text }
+    $lk = if ($ric -eq "TS.N") { """TENR.MI""" } else { "`$C$r" }
+    $f = "=IFERROR(VALUE(XLOOKUP($lk,'Quant Model'!`$A:`$A,'Quant Model'!`$M:`$M)),""n/a"")"
+    Retry { $ws.Cells.Item($r,21).Formula = $f }
+  }
+  $pf = $blk.F + 1
+  $fa = "=IFERROR(AVERAGE(U${pf}:U$($blk.L)),""n/a"")"
+  Retry { $ws.Cells.Item($blk.A,21).Formula = $fa }
+}
+Retry { $ws.Range("U6:U70").NumberFormat = "0.0%" }
+Retry { $ws.Range("U6:U70").HorizontalAlignment = -4108 }
+Retry { $ws.Columns.Item(21).ColumnWidth = 10.5 }
+
+Retry { $ws.Activate() }
+$green = RGB 198 239 206; $greenF = RGB 0 97 0
+$red = RGB 255 199 206; $redF = RGB 156 0 6
+foreach ($blk in $blocks) {
+  $rng = RangeOf "U$($blk.F):U$($blk.L)"
+  Retry { $rng.FormatConditions.Delete() } | Out-Null
+  Retry { $rng.Select() } | Out-Null
+  $cell = "U$($blk.F)"; $avg = "U`$$($blk.A)"
+  $fc1 = Retry { $rng.FormatConditions.Add(2, [Type]::Missing, "=AND(ISNUMBER($cell),ISNUMBER($avg),$cell>$avg)") }
+  Retry { $fc1.Interior.Color = $green }; Retry { $fc1.Font.Color = $greenF }
+  $fc2 = Retry { $rng.FormatConditions.Add(2, [Type]::Missing, "=AND(ISNUMBER($cell),ISNUMBER($avg),$cell<$avg)") }
+  Retry { $fc2.Interior.Color = $red }; Retry { $fc2.Font.Color = $redF }
+}
+
+# Inputs moved from W:AG to X:AH
+try { $ws.Columns("W:AH").Ungroup() | Out-Null } catch {}
+try { $ws.Columns("X:AH").Ungroup() | Out-Null } catch {}
+Retry { $ws.Columns("X:AH").Group() } | Out-Null
+try { $ws.Outline.ShowLevels(0, 1) | Out-Null } catch {}
+Retry { $ws.Range("B2").Select() } | Out-Null
+
+Retry { $excel.ScreenUpdating = $true }
+Retry { $excel.Calculation = -4105 }
+
+$out = @("Headers S..W: " + ((19..23 | ForEach-Object { Retry { $ws.Cells.Item(4,$_).Text } }) -join " | "))
+foreach ($blk in $blocks) {
+  for ($r = $blk.F; $r -le $blk.A; $r++) {
+    $n = Retry { $ws.Cells.Item($r,2).Text }; if ($n.Length -gt 26) { $n = $n.Substring(0,26) }
+    $col = Retry { $ws.Range("U$r").DisplayFormat.Interior.Color }
+    $tag = switch ($col) { 13561798 {"G"} 13551615 {"R"} default {"-"} }
+    $out += ("{0,-26} M1.1={1,-6} Stab={2,-6}({3}) Slope={4}" -f $n, (Retry { $ws.Cells.Item($r,20).Text }), (Retry { $ws.Cells.Item($r,21).Text }), $tag, (Retry { $ws.Cells.Item($r,22).Text }))
+  }
+}
+$out -join "`n"
+Retry { $wb.Save() } | Out-Null
+"Saved"

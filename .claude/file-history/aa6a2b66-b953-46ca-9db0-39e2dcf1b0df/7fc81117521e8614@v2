@@ -1,0 +1,19 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$w = $xl.Workbooks.Item('20260930_SETSA_Posibles_Compradores.xlsx')
+$out = @()
+foreach ($s in $w.Worksheets) {
+    $out += "===== " + $s.Name + " used=" + $s.UsedRange.Address($false, $false) + " freeze? zoom=" + " grid"
+    $last = $s.UsedRange.Row + $s.UsedRange.Rows.Count
+    for ($r = 1; $r -le $last; $r++) {
+        $out += "--- row $r h=" + $s.Rows.Item($r).RowHeight
+        for ($c = 2; $c -le 12; $c++) {
+            $x = $s.Cells.Item($r, $c)
+            $t = [string]$x.Text; if ($t.Length -gt 25) { $t = $t.Substring(0, 25) }
+            $b = ''; foreach ($e in 7, 8, 9, 10) { $bb = $x.Borders.Item($e); $b += "${e}:" + $bb.LineStyle + '/' + $bb.Weight + '/' + $bb.Color + ' ' }
+            $out += "  c$c '" + $t + "' " + $x.Font.Name + ' ' + $x.Font.Size + ' b=' + $x.Font.Bold + ' i=' + $x.Font.Italic + ' u=' + $x.Font.Underline + ' fc=' + $x.Font.Color + ' fill=' + $x.Interior.Color + '/' + $x.Interior.Pattern + ' ha=' + $x.HorizontalAlignment + ' va=' + $x.VerticalAlignment + ' wr=' + $x.WrapText + ' ind=' + $x.IndentLevel + ' nf=' + $x.NumberFormat + ' B[' + $b + ']'
+        }
+    }
+}
+$out | Out-File -Encoding utf8 "$PSScriptRoot\fmt_dump.txt"
+'ok ' + $out.Count

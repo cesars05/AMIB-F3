@@ -1,0 +1,32 @@
+# WORKFLOW — the repeatable pipeline (one recipe per kind of task)
+Principle: **convert once → index → extract facts with IDs → build from facts → verify visually.** Nothing is typed into a slide from memory.
+
+## 1. New source arrives (PDF / docx / xlsx / pptx / image)
+1. Drop it in the right numbered folder (`02` filings · `03` research · `04` Bloomberg · `01` brief). Use the naming pattern `<Issuer>_<Period>_<DocType>` (e.g., `HAL_Q3-2026_Earnings-Release`).
+2. Convert:
+   * PDF → `C:\Users\cesar\Downloads\Cueva.exe pdf-a-markdown "<file.pdf>"` (**per file**; add `--figures ninguna` for style-only PDFs). Never point Cueva at a folder that already contains its outputs (`*_figuras.pdf`) — that caused the recursive `_figuras_figuras…` files.
+   * docx/xlsx/pptx → `python 00_HANDOFF/tools/convert_office.py <file>` (xlsx keeps formulas next to values).
+   * Images → open each with the Read tool; log what it shows + numbers in `04_Bloomberg_Data/IMAGE_ANALYSIS.md` (OCR is not reliable on Terminal screens).
+3. Re-run `python 00_HANDOFF/tools/gen_index.py` (updates `00_INDEX.md`).
+
+## 2. Extract facts
+Add rows to `FACT_BASE.md` (ID, value, source file + page/figure, status ✅/⚠️/❓). Reconcile against the primary document (filing) before marking ✅; log conflicts in §E. Key sources: balance sheet = 10-Q; segments/regions = earnings release + Segment/Geo table; consensus = Bloomberg financials; macro = Bloomberg Excel.
+
+## 3. Extract images/charts
+* Native images: `pymupdf` `page.get_images` → `08_Assets/company_images/<doc>/pNN_xREF_WxH.png` (record pixel size; rule: placed width ≤ px/150 in).
+* Vector charts/maps: render page at 200 dpi and crop (`08_Assets/selected/hal_map_global_footprint.png` is an example).
+* Add to `ASSET_CATALOG.md` (what, px, max width, where to use). Chart numbers go to `08_Assets/data/*.csv`.
+
+## 4. Template / style analysis (when a new reference deck appears)
+`powershell -File 00_HANDOFF/tools/ppt_forensics.ps1 -Pptx <deck> -OutDir 07_Template_Analysis/renders/<name>` → `ppt_master_dump.ps1` (layouts) → `python 00_HANDOFF/tools/chart_forensics.py …` → `python 00_HANDOFF/tools/gen_slide_specs.py`. If PowerPoint export throws a transient COMException, rerun that deck alone (happened once with Ingevity).
+
+## 5. Build a slide
+1. Pick the layout ID in `STORYLINE.md` → open the reference render in `07_Template_Analysis/renders/…`.
+2. Pull numbers only from `data.py` (loaded from FACT_BASE/CSV). Write title (action sentence) + subtitle (quantified so-what) first; then content.
+3. Apply `tokens.json` (fonts/sizes/colors/grid). Add `Source:` line + notes (claim → evidence IDs → so-what → transition + target seconds).
+
+## 6. Verify (every batch of ~6 slides)
+Export PNGs via COM → look at them → compare with the reference template slide → `python 09_Deck_Build/qa_check.py <deck>` → fix → repeat. Final: PDF export + `AUDIT.md`.
+
+## 7. Division of labor suggested for the team (7 members)
+USD (4): Sections 1–5 numbers and slides 4–27 · ITESM (3): Track-B slides 28–32, integration 33–35, portfolio. Everyone: review `FACT_BASE.md` conflicts before recording the video (due Wed 21-Oct-2026).

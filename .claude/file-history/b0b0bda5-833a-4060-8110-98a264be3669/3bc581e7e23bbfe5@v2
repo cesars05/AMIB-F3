@@ -1,0 +1,49 @@
+"""Ejemplo v2: el MISMO lenguaje visual de KLA s7 (entradas blancas, pasos grises, foco en color de marca con
+alpha, marco rojo punteado, loop de retroalimentación) pero con OTRA ESTRUCTURA:
+3 fuentes que CONVERGEN -> 1 hub -> 4 usos que DIVERGEN -> 2 de ellos vuelven a CONVERGER en el accionista,
+y el loop de capex regresa por ABAJO. Abajo, en vez de tarjetas, barra con cola + 2 columnas. Datos ilustrativos."""
+import sys
+sys.path.insert(0, r"C:\Users\cesar\OneDrive\Documentos\Slide Construction\skill\slide-construction\scripts")
+from house import Deck
+
+T = r"C:\Users\cesar\OneDrive\Documentos\Slide Construction\06_Templates\M&A FEMSA.pptx"
+d = Deck("femsa", template=T, layout="Section Header")
+
+s = d.content_slide("Tres Fuentes, Una Decisión, Cuatro Destinos",
+                    "Todo el efectivo pasa por la holding; ahí se decide cuánto se reinvierte y cuánto se distribuye",
+                    source="Ilustrativo; estructura basada en reportes anuales de FEMSA")
+
+# 1) Fuentes (3, apiladas) -> convergen
+src = [d.node(s, 0.667, 2.00, 2.2, 0.62, "Dividendo KOF", "input"),
+       d.node(s, 0.667, 2.80, 2.2, 0.62, "Proximidad y Salud", "input"),
+       d.node(s, 0.667, 3.60, 2.2, 0.62, "OXXO", "input")]
+fcf = d.node(s, 3.35, 2.00, 1.65, 2.22, "Flujo libre\nconsolidado", "neutral", size=12)
+d.merge(s, src, fcf, trunk_x=3.12)
+
+# 2) Hub (una sola caja alta, en foco)
+hub = d.node(s, 5.08, 2.00, 1.75, 2.22, "Holding\nFEMSA", "focus", alpha=0.85, size=14)
+
+# 3) Usos (4, apilados) -> divergen desde el hub
+uses = [d.node(s, 7.45, 1.98, 2.25, 0.47, "Dividendos", "focus", alpha=0.7),
+        d.node(s, 7.45, 2.56, 2.25, 0.47, "Recompras", "focus", alpha=0.55),
+        d.node(s, 7.45, 3.14, 2.25, 0.47, "Pago de deuda", "neutral"),
+        d.node(s, 7.45, 3.72, 2.25, 0.47, "Capex: tiendas nuevas", "neutral")]
+d.fan(s, hub, uses, trunk_x=7.15)
+
+# 4) Solo dividendos + recompras vuelven a converger en el accionista
+acc = d.node(s, 10.35, 1.98, 2.3, 1.05, "Accionistas", "end", size=13)
+d.merge(s, uses[:2], acc, trunk_x=10.05)
+
+# 5) Marco de foco alrededor de la decisión y loop de reinversión por abajo, de capex a OXXO
+d.focus_frame(s, [hub] + uses, label="Asignación de Capital", pad=0.12)
+d.loop_back(s, uses[3], src[2], side="bottom", offset=0.42, label="Reinversión: el capex regresa a abrir tiendas")
+
+# 6) Lectura: barra con cola + 2 columnas (en lugar de las tarjetas de KLA)
+yb = d.tail_bar(s, 0.667, 5.0, 12.0, "Qué significa para la asignación", h=0.42)
+d.bullet_columns(s, 0.667, yb + 0.12, 12.0, [
+    "**La holding no opera tiendas**: su flujo depende de lo que suben OXXO, Proximidad y el dividendo de KOF",
+    "**Cada peso tiene cuatro destinos**; solo dividendos y recompras llegan al accionista, el resto se queda en el negocio"],
+    h=1.0, size=12)
+
+d.save(r"C:\Users\cesar\OneDrive\Documentos\Slide Construction\Ejemplos\Ejemplo_cadena_reestructurada.pptx")
+print("ok")

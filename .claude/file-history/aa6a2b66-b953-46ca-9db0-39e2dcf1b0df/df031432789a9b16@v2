@@ -1,0 +1,79 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t  = $xl.Workbooks.Item('20260922_SETSA Transportes.xlsx')
+$m  = $t.Worksheets.Item('Modelo SETSA')
+$tx = $t.Worksheets.Item('Transacciones Precedentes')
+$t.SaveCopyAs("$PSScriptRoot\backup_antes_360.xlsx")
+$ia = [char]0xED; $o = [char]0xF3; $n_ = [char]0xF1; $a = [char]0xE1; $e = [char]0xE9
+
+function Find-In($ws, [string]$col, [string]$needle, [int]$from = 1, [switch]$exact) {
+    $v = $ws.Range("$($col)1:$($col)400").Value2
+    for ($r = $from; $r -le 400; $r++) {
+        $s = [string]$v[$r, 1]
+        if ($exact) { if ($s -ceq $needle) { return $r } } elseif ($s.Contains($needle)) { return $r }
+    }
+    throw "No encontrado: $needle"
+}
+
+# ---------- 1) Supuestos nuevos: días por año y recuperación de cartera ----------
+$rIVA = Find-In $m 'C' 'Tasa IVA'
+$m.Range("$($rIVA + 1):$($rIVA + 2)").EntireRow.Insert() | Out-Null
+$m.Rows.Item($rIVA).Copy($m.Range("$($rIVA + 1):$($rIVA + 2)")) | Out-Null
+$rDays = $rIVA + 1; $rRec = $rIVA + 2
+$m.Cells.Item($rDays, 3).Value2 = "D${ia}as por a${n_}o (convenci${o}n comercial)"
+$m.Cells.Item($rDays, 4).Value2 = 360
+$m.Cells.Item($rDays, 4).NumberFormat = '0'
+$m.Cells.Item($rDays, 5).Value2 = "<-- Para DSO y dem${a}s rotaciones"
+$m.Cells.Item($rRec, 3).Value2 = "Recuperaci${o}n esperada de cartera en concurso (%)"
+$m.Cells.Item($rRec, 4).Value2 = 0
+$m.Cells.Item($rRec, 4).NumberFormat = '0.0%'
+$m.Cells.Item($rRec, 5).Value2 = "<-- 0% por prudencia; upside negociable v${ia}a earn-out"
+$DAYS = "`$D`$$rDays"; $REC = "`$D`$$rRec"
+$rISR = Find-In $m 'C' 'Tasa ISR'; $rPTU = Find-In $m 'C' 'Tasa PTU'
+$ISR = "`$D`$$rISR"; $PTU = "`$D`$$rPTU"; $IVA = "`$D`$$rIVA"
+
+# ---------- 2) DSO a 360 días (desde el supuesto) ----------
+$rD1 = Find-In $m 'C' 'DSO (cartera con IVA'
+$rD2 = Find-In $m 'C' 'DSO sobre cartera promedio'
+foreach ($r in $rD1, $rD2) {
+    foreach ($c in 'D','E','F','G','H','I') {
+        $f = [string]$m.Range("$c$r").Formula
+        if ($f.EndsWith('*365')) { $m.Range("$c$r").Formula = $f.Substring(0, $f.Length - 4) + "*$DAYS" }
+    }
+}
+
+# ---------- 3) Recuperación neta de cartera en concurso (en el modelo) ----------
+$r25 = Find-In $m 'C' 'Cliente 25' -exact
+$r01 = Find-In $m 'C' 'Cliente 01' -exact
+$rAT = Find-In $m 'C' 'Cartera en concurso / activo total'
+$m.Rows.Item($rAT + 1).Insert() | Out-Null
+$m.Rows.Item($rAT).Copy($m.Rows.Item($rAT + 1)) | Out-Null
+$rNet = $rAT + 1
+$m.Cells.Item($rNet, 3).Value2 = "Recuperaci${o}n neta esperada (sin IVA, despu${e}s de ISR y PTU)"
+foreach ($c in 'D','E','F','G','H','I') {
+    $m.Range("$c$rNet").Formula = "=($c$r25+$c$r01)*$REC/(1+$IVA)*(1-$ISR-$PTU)"
+    $m.Range("$c$rNet").NumberFormat = $m.Range("$c$r25").NumberFormat
+}
+$m.Cells.Item($rNet, 11).Value2 = "Clientes 01 y 25 (masa concursal) x % de recuperaci${o}n; se grava al cobrarse"
+
+# ---------- 4) Valuación: sumar la recuperación al valor del capital ----------
+$rLat = Find-In $tx 'B' 'ISR y PTU latentes'
+$rCap = Find-In $tx 'B' 'Valor del capital (100%)' ($rLat + 1)
+$tx.Rows.Item($rCap).Insert() | Out-Null
+$tx.Rows.Item($rLat).Copy($tx.Rows.Item($rCap)) | Out-Null
+$rNewTx = $rCap; $rCap = $rCap + 1
+$tx.Cells.Item($rNewTx, 2).Value2 = "(+) Recuperaci${o}n neta de cartera en concurso"
+$tx.Range("E$rNewTx").Formula = "='Modelo SETSA'!I$rNet"
+$tx.Range("E$rCap").Formula = "=E$($rCap - 4)+E$($rCap - 3)+E$($rCap - 2)+E$rNewTx"
+
+$xl.CalculateFull()
+# ---------- verificación ----------
+$err = 0
+foreach ($ws in $t.Worksheets) { foreach ($c in $ws.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $err++; "ERR " + $ws.Name + "!" + $c.Address($false,$false) } } }
+"errores=$err"
+"Supuestos: " + $m.Cells.Item($rDays,3).Value2 + " = " + $m.Cells.Item($rDays,4).Text + " | " + $m.Cells.Item($rRec,3).Value2 + " = " + $m.Cells.Item($rRec,4).Text
+"DSO: " + $m.Range("H$rD1").Formula + " -> 2025=" + $m.Range("H$rD1").Text + " 1S26=" + $m.Range("I$rD1").Text + " | prom 2025=" + $m.Range("H$rD2").Text
+"Recuperacion neta: " + $m.Range("I$rNet").Formula + " = " + $m.Range("I$rNet").Text
+for ($r = $rCap - 5; $r -le $rCap + 1; $r++) { "TX $r " + $tx.Cells.Item($r,2).Value2 + " | " + $tx.Cells.Item($r,5).Formula + " = " + $tx.Cells.Item($r,5).Text }
+foreach ($r in ($rCap - 4), ($rCap - 3)) { $f = [string]$tx.Cells.Item($r,5).Formula; $ref = $f.Split('!')[1]; "  link " + $f + " -> [" + $m.Range($ref).Offset(0, 0).EntireRow.Cells.Item(1,3).Value2 + "]" }
+$t.Save(); "guardado=" + $t.Saved

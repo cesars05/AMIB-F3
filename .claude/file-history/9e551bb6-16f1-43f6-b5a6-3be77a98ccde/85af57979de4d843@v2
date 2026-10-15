@@ -1,0 +1,82 @@
+import win32com.client as w, time
+x = w.GetActiveObject('Excel.Application')
+wb = [b for b in x.Workbooks if b.Name == '20261007_Ingevity Corp.xlsx'][0]
+am = wb.Worksheets('Annual Model')
+INBLUE = 16719360
+USD1 = '$#,##0.0;($#,##0.0);"-"'
+
+
+def lab(r):
+    return str(am.Range(f'E{r}').Value or '')
+
+
+def find(text, start=1, end=400, exact=True):
+    for r in range(start, end):
+        v = lab(r)
+        if (v == text) if exact else v.startswith(text):
+            return r
+    raise AssertionError('not found: ' + text)
+
+
+x.Calculation = -4135
+x.ScreenUpdating = False
+try:
+    r44 = find('Net Income', 30, 60)
+    assert r44 == 44, r44
+    assert lab(45) == '' and lab(46) == 'EPS', (lab(45), lab(46))
+    r_ni_blk = find('Net Income (GAAP, total company)', 45, 120)
+    r_memo = find('Memo: special items & divestiture result', 45, 120, exact=False)
+    r_proc_cf = find('Proceeds from sale of businesses', 150, 200)
+    r_dproc = find('Divesture Proceds', 280, 360)
+    print('before:', dict(blk_ni=r_ni_blk, memo=r_memo, cf_proc=r_proc_cf, dproc=r_dproc), 'Q171 formula', am.Range(f'Q{r_proc_cf}').Formula)
+
+    # ---- insert 2 rows below Net Income (row 44) ----
+    am.Rows('45:46').Insert()
+    am.Rows(43).Copy()
+    am.Rows(45).PasteSpecial(-4122)   # formats of Minority Interest row
+    am.Rows(44).Copy()
+    am.Rows(46).PasteSpecial(-4122)   # formats of Net Income row
+    x.CutCopyMode = False
+    r_ni_blk += 2
+    r_memo += 2
+    r_proc_cf += 2
+    r_dproc += 2
+
+    am.Range('E45').Value = 'Special items & divestiture result (after-tax; +gain / -charge)'
+    am.Range('E46').Value = 'Net Income GAAP (incl. special items)'
+    am.Range('E45').Font.Italic = True
+    for col in 'LMNOP':
+        # historical: row 44 is already GAAP
+        c = am.Range(f'{col}46')
+        c.Formula = f'=+{col}44'
+        am.Range(f'{col}45').Value = 0
+    for col in 'QRS':
+        c45 = am.Range(f'{col}45')
+        if col == 'Q':
+            # divestiture block total special items 2026 (after-tax)
+            r_sp = find('Total special items 2026', 280, 360, exact=False)
+            c45.Formula = f'=+L{r_sp}'
+            c45.Font.Color = 0
+        else:
+            c45.Value = 0
+            c45.Font.Color = INBLUE
+        am.Range(f'{col}46').Formula = f'=+{col}44+{col}45'
+    for col in 'LMNOPQRS':
+        am.Range(f'{col}45').NumberFormat = '$#,##0;-$#,##0; "-"'
+        am.Range(f'{col}46').NumberFormat = '$#,##0;-$#,##0; "-"'
+    am.Range('Q45').AddComment('2026: total partidas especiales after-tax = perdida APT (L-block) + especiales H1 reales. Ver bloque APT Divesture.')
+    am.Range('Q46').AddComment('Net Income GAAP = fila 44 (ajustado, consenso) + partidas especiales. Alimenta el equity. EPS, EBITDA y DCF siguen ajustados.')
+
+    # ---- block rows now reference the IS rows (single source) ----
+    for col in 'QRS':
+        am.Range(f'{col}{r_memo}').Formula = f'=+{col}45'
+        am.Range(f'{col}{r_memo}').Font.Color = 0
+        am.Range(f'{col}{r_ni_blk}').Formula = f'=+{col}46'
+
+    # ---- fix proceeds in investing: full price ----
+    am.Range(f'Q{r_proc_cf}').Formula = f'=+L{r_dproc}+156.3'
+finally:
+    x.Calculation = -4105
+    x.ScreenUpdating = True
+    x.CutCopyMode = False
+print('done')

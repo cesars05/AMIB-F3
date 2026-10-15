@@ -1,0 +1,35 @@
+$ErrorActionPreference = 'Stop'
+$good = 'C:\Users\cesar\setsa_good.xlsx'
+Copy-Item "$PSScriptRoot\disk_copy.xlsx" $good -Force
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t = $null; foreach ($w in $xl.Workbooks) { if ($w.Name -eq '20260922_SETSA Transportes.xlsx') { $t = $w } }
+if (-not $t) { throw 'no esta abierto el libro' }
+$t.SaveCopyAs("$PSScriptRoot\roto_antes_restaurar.xlsx")
+$xl.DisplayAlerts = $false
+$src = $xl.Workbooks.Open($good)
+$src.Activate()
+$src.Worksheets.Item('Modelo SETSA').Select()
+$src.Worksheets.Item('Transacciones Precedentes').Select($false)
+$lastT = $t.Worksheets.Item($t.Worksheets.Count)
+$xl.ActiveWindow.SelectedSheets.Copy([System.Reflection.Missing]::Value, $lastT)
+$src.Close($false)
+Remove-Item $good -Force
+# borrar hojas rotas y renombrar las buenas
+$t.Worksheets.Item('Modelo SETSA').Delete()
+$t.Worksheets.Item('Transacciones Precedentes').Delete()
+foreach ($ws in $t.Worksheets) {
+    if ($ws.Name -like 'Modelo SETSA*') { $ws.Name = 'Modelo SETSA' }
+    elseif ($ws.Name -like 'Transacciones Precedentes*') { $ws.Name = 'Transacciones Precedentes' }
+}
+$xl.DisplayAlerts = $true
+$names = @(); foreach ($ws in $t.Worksheets) { $names += $ws.Name }
+"hojas: " + ($names -join ', ')
+$links = $t.LinkSources(1); "vinculos externos: " + ($links -ne $null)
+$xl.CalculateFull()
+foreach ($ws in $t.Worksheets) { $n = 0; foreach ($c in $ws.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $n++ } }; $ws.Name + " errores=" + $n }
+$m = $t.Worksheets.Item('Modelo SETSA'); $tx = $t.Worksheets.Item('Transacciones Precedentes')
+"Encabezados: " + $m.Range('D13').Text + ' ' + $m.Range('E13').Text + ' ' + $m.Range('H13').Text + ' ' + $m.Range('I13').Text + " | Ingresos 2025=" + $m.Range('H14').Text
+$rv = 0; for ($q = 1; $q -le 80; $q++) { if (([string]$tx.Cells.Item($q,2).Value2) -like 'Valor del capital (100%)*') { $rv = $q; break } }
+"Valor del capital: " + $tx.Range("E$rv").Text + " | formula " + $tx.Range("E$rv").Formula
+$m.Activate()
+$t.Save(); "guardado=" + $t.Saved

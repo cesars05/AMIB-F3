@@ -1,0 +1,72 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 40;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800A03EC"){ Start-Sleep -Milliseconds 1200 } else { throw } } }; throw "Excel ocupado" }
+$wb=$null; $xl=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $su=$wb.Worksheets.Item("Summary"); $d=$wb.Worksheets.Item("DCF")
+
+# ---- guardas ----
+$nStress=[string]$as.Range("D13").Text; $nBear=[string]$as.Range("E13").Text; $nBase=[string]$as.Range("F13").Text
+Write-Output ("escenarios: D13='"+$nStress+"'  E13='"+$nBear+"'  F13='"+$nBase+"'")
+if($nBase -notlike "*Base*"){ throw "ABORTO: F13 no es el caso Base" }
+if([string]$as.Range("J74").Text -ne ""){ throw "ABORTO: el modulo de venta esta encendido; apagalo antes de recapturar" }
+if([string]$su.Cells.Item(30,3).Text -notlike "*Base*"){ throw ("ABORTO: Summary r30 no dice Base, dice '"+[string]$su.Cells.Item(30,3).Text+"'") }
+if([string]$su.Cells.Item(31,3).Text -notlike "*Bear*"){ throw "ABORTO: Summary r31 no es Bear" }
+if([string]$su.Cells.Item(32,3).Text -notlike "*Stress*"){ throw "ABORTO: Summary r32 no es Stress" }
+$orig=[string]$as.Range("F10").Text
+Write-Output ("escenario actual: "+$orig)
+Write-Output ("ANTES  football field DCF Base target = "+[string]$su.Range("E14").Text+"   DCF vivo = "+[string]$d.Range("E41").Text)
+Write-Output ""
+
+$mapa=@{}
+$mapa[$nBase]=30; $mapa[$nBear]=31; $mapa[$nStress]=32
+foreach($esc in @($nStress,$nBear,$nBase)){
+  T { $as.Range("F10").Value2=$esc }
+  T { $xl.CalculateFullRebuild() }
+  T { $xl.CalculateFullRebuild() }
+  $fila=[int]$mapa[$esc]
+  $vals=@()
+  for($c=3;$c -le 9;$c++){ $vals+=[double]$d.Cells.Item(23,$c).Value2 }   # C..I = FY1..FY6 + terminal
+  for($i=0;$i -lt 7;$i++){
+    $col=6+$i    # F..L
+    $v=$vals[$i]
+    T { $su.Cells.Item($fila,$col).Value2=$v }
+  }
+  $txt=""
+  foreach($v in $vals){ $txt+=([string][math]::Round($v,0)).PadLeft(9) }
+  Write-Output ("  "+$esc.PadRight(14)+" -> Summary r"+$fila+"  FCFF:"+$txt+"   DCF="+[string]$d.Range("E41").Text)
+}
+T { $as.Range("F10").Value2=$orig }
+T { $xl.CalculateFullRebuild() }
+T { $xl.CalculateFullRebuild() }
+T { $wb.Save() }
+
+Write-Output ""
+Write-Output ("escenario restaurado: "+[string]$as.Range("F10").Text+"  (F9="+[string]$as.Range("F9").Text+")")
+Write-Output ""
+Write-Output "########## FOOTBALL FIELD ##########"
+Write-Output ("  "+"".PadRight(28)+"Low".PadLeft(11)+"Target".PadLeft(11)+"High".PadLeft(11))
+Write-Output ("  WACC".PadRight(30)+([string]$su.Range("D24").Text).PadLeft(11)+([string]$su.Range("E24").Text).PadLeft(11)+([string]$su.Range("F24").Text).PadLeft(11))
+for($i=14;$i -le 21;$i++){
+  $lab=""
+  foreach($cc in 2,3){ $x=""; try{ $x=[string]$su.Cells.Item($i,$cc).Text }catch{}; if($x.Trim() -ne ""){ $lab=$x; break } }
+  if($lab -eq ""){ continue }
+  Write-Output ("  "+$lab.PadRight(28)+([string]$su.Cells.Item($i,4).Text).PadLeft(11)+([string]$su.Cells.Item($i,5).Text).PadLeft(11)+([string]$su.Cells.Item($i,6).Text).PadLeft(11))
+}
+Write-Output ""
+Write-Output ("  CONTRASTE: football field DCF Base target = "+[string]$su.Range("E14").Text+"   vs DCF vivo = "+[string]$d.Range("E41").Text)
+Write-Output ("             SOTP = "+[string]$su.Range("E18").Text+"   vs SOTP vivo = "+[string]$wb.Worksheets.Item("SOTP").Range("D112").Text)
+Write-Output ("             EPV  = "+[string]$su.Range("E17").Text+"   vs EPV vivo  = "+[string]$wb.Worksheets.Item("EPV").Range("E61").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary","Expected Returns"){
+  $s=$wb.Worksheets.Item($nm); $e=0
+  try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

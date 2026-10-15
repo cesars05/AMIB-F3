@@ -1,0 +1,42 @@
+# 08 · Proyecto Final — Aurex Capital (lo que SÍ se entrega)
+
+**Qué es:** el taller del proyecto. Aquí viven los insumos del equipo, las versiones del modelo y, cuando existan, los entregables finales. El resto de la carpeta (01–07) es material de apoyo.
+
+```
+08_Proyecto_Final/
+├─ insumos_equipo/     Supuestos iniciales.docx  (variables definidas / propuestas / supuestos / pendientes — 7-oct-2026, @Pablo)
+├─ modelo_financiero/  PF_Modelo_AurexCapital.xlsx (v1)  ·  PF_Modelo_AurexCapital_v2.xlsx (v2, con anexo Monte Carlo)  ·  (futuro) v3 con formato verde
+├─ entregables/        (vacía) aquí van SOLO los 3 archivos finales con el nombre exacto de la guía
+├─ assets/             logos/ · fotos_equipo/ (dejar espacio para la foto del equipo) · fotos_empresas/  — con su fuente anotada
+└─ fuentes_investigacion/  PDFs/datos oficiales bajados (2026), cada uno con su nota de fuente
+```
+
+## `insumos_equipo/Supuestos iniciales.docx` — qué contiene (7-oct-2026)
+- **A. Confirmadas por el equipo:** fondo $100M USD · 10 años (5 inversión + 5 desinversión, extensiones 1+1) · fee 2% sobre comprometido años 1–5 y 1.5% sobre invertido años 6–10 · carry 20% · hurdle 8% compuesto · catch-up 100% · **cascada europea** con clawback opcional · compromiso del GP mixto (efectivo + renuncia parcial de fee) · concentración máx. 15% por empresa · key man con umbrales · **geografía México** · Pablo y Miguel = analistas.
+- **B. Propuestas SIN confirmar:** vehículo = **fideicomiso privado mexicano** (AFOREs no pueden comprarlo; evita CKD/CERPI) · LPs = family offices + HNWI como ancla + corporativos · LPAC con representantes de LPs mayores (+ posible independiente) · etapa = crecimiento.
+- **C/D. Supuestos del Excel y resultados "caso base":** ⚠️ las cifras de esta sección (LPs $220.8M, carry $30.2M, múltiplo neto 2.21x, TIR simplificada 8.2% / con fechas 19.9%) **corresponden al modelo v1, NO al v2** (ver abajo).
+- **E. Pendientes del equipo:** validar propuestas B · revisar múltiplos/años/escenarios · ajustar exclusión (v) de D2 de "$5–10M" a "$2M a $10M" (Uriel es de $2M) · tesis v2→v3 ≤200 caracteres (México + crecimiento) · memorándum 4–6 págs. · deck 10–12 láminas con la **lámina 10 alineada al Excel** · decidir si se usa `Liquidation Preference.xlsx` para el caso de inversión (Niko o Quartux) · confirmar con el profesor que un equipo de 6 es válido · **entregar memorándum y modelo el domingo 11-oct, 11:59 pm**.
+
+## `modelo_financiero/` — estado de las versiones  ⚠️ DECISIÓN PENDIENTE
+| | **v1** `PF_Modelo_AurexCapital.xlsx` | **v2** `…_v2.xlsx` |
+|---|---|---|
+| Hojas | `Hoja1_Portafolio`, `Hoja2_Distribucion` (2) | + `1_Comparables`, `2_Simulacion`, `3_Precios`, `4_Rendimientos` (6) |
+| Múltiplos por empresa | Supuestos del equipo: Niko 4.0x, Quartux 3.5x, Pireos 3.5x, FAZT 3.0x, XC 2.5x, Verdigris 2.5x, S2G 1.5x, Uriel 0.25x | **Mediana (P50) de Monte Carlo** sobre comparables públicos (precios Alpaca ene-2024→8-oct-2026): Niko 1.23x, Quartux 1.88x, Pireos 3.18x, FAZT 1.06x, XC 3.88x, Verdigris 2.69x, S2G 1.51x, Uriel 0.85x |
+| Proceeds caso base | **$251.0M** (3.06x sobre invertido, 2.51x sobre comprometido) | **$176.36M** (2.15x sobre invertido, 1.76x sobre comprometido) |
+| A LPs / Carry GP (base) | $220.8M / **$30.2M** | $176.36M / **$0** (no alcanza el hurdle: se requieren ≈2.16x sobre comprometido) |
+| Múltiplo neto LP | 2.21x | 1.76x |
+| TIR LP simplificada / con fechas | 8.2% / 19.9% | 5.8% / 12.4% |
+| Escenario Bajo (×0.5) | LPs $125.5M · 1.26x · TIR 2.3% / 5.3% | LPs $88.18M · **0.88x (pérdida)** · TIR −1.3% / −2.6% |
+| Escenario Alto (×1.25) | LPs $271.0M · carry $42.75M · 2.71x · 10.5% / 25.2% | LPs $215.9M · carry $4.56M · 2.16x · 8.0% / 17.2% |
+| Capital invertido / fee total / gastos | $82M ($60M iniciales + $22M follow-on) / $16.15M / $1.85M (igual en ambas) | igual |
+
+**Por qué importa (rúbrica: *Coherencia interna* 25%):** el docx de Supuestos, la lámina 10 y el PPM no pueden citar cifras de v1 si el Excel entregado es v2 (o al revés). Además, con v2 el GP **no cobra carry en el caso base** — es honesto, pero el comité preguntará por qué un LP debería invertir si el retorno neto base (1.76x, TIR 5.8%/12.4%) apenas supera un instrumento seguro. Con v1 el mensaje es más vendible pero los múltiplos son "supuestos del equipo", no respaldados con datos (la guía pide "decisiones justificadas con lógica, no con números inventados").
+**Opciones:** (a) v1 como *Caso Base (equipo)* y v2 como *Caso Conservador (Monte Carlo)* en el mismo libro, con ambos reportados; (b) v2 como base y ajustar el relato (retorno neto ~1.8x, carry solo en escenarios altos, tesis de "preservación + upside"); (c) recalibrar múltiplos con evidencia de salidas reales en energía/México 2026.
+**Hasta que el equipo decida, NINGUNA cifra de retorno es "oficial".**
+
+## Otras observaciones técnicas del modelo (para el formato y las verificaciones)
+- `Hoja1_Portafolio!K17:K24` en v2 contiene fórmulas matriciales (`ArrayFormula`) que enlazan a `2_Simulacion!K7:K14`; al re-guardar con openpyxl hay que verificar que se conserven (y que `K18:K24` ya son constantes redondeadas).
+- `2_Simulacion` contiene percentiles pegados como valores (calculados en Python con semilla 2026, 10,000 simulaciones): **si cambian supuestos hay que volver a correrlos.** Aviso en la propia hoja.
+- La cascada de la Hoja 2 usa la convención del profesor (hurdle sobre todo el capital comprometido × 10 años) — conservadora para el GP — y trata todo el capital como de LP (el compromiso del GP de $2M no se modela por separado).
+- El fee de años 6–10 se calcula sobre capital invertido **sin descontar salidas** (simplificación conservadora).
+- Las hojas ya tienen verificaciones (`OK`/`REVISAR`): concentración ≤15%, gastos ≥0, salida posterior a entrada, LPs+GP=proceeds, aportado=comprometido.

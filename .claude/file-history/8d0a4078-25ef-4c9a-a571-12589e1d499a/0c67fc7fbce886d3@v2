@@ -1,0 +1,92 @@
+import io, sys
+p = sys.argv[1]
+t = io.open(p, encoding="utf-8").read()
+
+def rep(old, new):
+    global t
+    assert old in t, "NOT FOUND: " + old[:90]
+    t = t.replace(old, new, 1)
+
+# abbreviations
+rep("**Modelo** = hoja `Fuso Financials` del Excel.", "**Deck bilingüe** = PDF bilingüe JP-EN de la presentación de resultados (carpeta Fase0), **Modelo** = hoja `Fuso Financials` del Excel.")
+# 0.4
+rep("Ese desfase explica por qué el margen operativo cayó a 19% en FY03/2024.", "Ese desfase, junto con un ajuste de inventarios de clientes en 2023, ayuda a explicar por qué el margen operativo cayó a 19% en FY03/2024.")
+# 0.8
+rep("con un enfriamiento de la IA en 2027-28 [D:", "con un enfriamiento del crecimiento de la IA en los años fiscales 2027-28 de la empresa (FY03/2028-29) [D:")
+# 0.9
+rep("9. **Las ganancias de FY03/2026 superaron 35% la guía inicial** (utilidad operativa 188.5 contra 140.0)", "9. **La utilidad operativa de FY03/2026 superó en 34.6% la guía inicial** (188.5 contra 140.0)")
+# section 1
+rep("| Antes de depreciación | 250.2 (60% de ventas) | 69.4 (20%) |", "| Antes de depreciación | 250.2 (60% de ventas) | 69 (20%) |")
+rep("la empresa construyó en Kashima una planta de ácidos orgánicos de alta pureza (\"Aprisious\") para clientes de electrónica [D: Yuho25 P23; Yuho26 P29]", "la empresa construyó en Kashima una planta de ácidos orgánicos de alta pureza (marca アプリシャス) para clientes de electrónica, terminada en oct-2024 [D: Yuho25 P14, P26; Yuho26 P32]")
+# 2.1 rows
+rep("| **Kashima Fase II** | EM | Kashima | **¥20.0 bn**, todo financiado con deuda bancaria (¥12.5 bn pagados a mar-2025) [D] | Inicio sep-2023, terminada ago-2025 (el plan decía jul-2025), depreciación desde dic-2025 | **Certificación en curso al 15-may-2026**. La dirección se propuso certificarla temprano y llegar a plena operación en el 1S de FY03/2027 [D: Q2deck P33] | Yuho25 P32, P29; Deck26 P32, P41 |",
+    "| **Kashima Fase II** | EM | Kashima | **¥20.0 bn**, todo financiado con deuda bancaria (¥12.5 bn pagados a mar-2025) [D] | Inicio sep-2023, terminada ago-2025 (el plan decía jul-2025), depreciación desde dic-2025 | **Certificación en curso al 15-may-2026**. La dirección había planeado prototipos en el 3T de FY03/2026 y \"certificación temprana\"; no declara fecha de plena operación [ND] | Yuho25 P32, P29; Deck26 P32, P41; Q2deck P33 |")
+rep("Certificación terminada \"antes de lo esperado\"; operación plena desde fines de FY03/2026. Subsidio de ¥3.69 bn por esta línea [D] | Yuho26 P33, P104 |",
+    "Certificación terminada \"antes de lo esperado\"; operación plena desde fines de FY03/2026 (el plan de nov-2025 apuntaba a plena operación en el 1S de FY03/2027). Subsidio de ¥3.69 bn por esta línea [D] | Yuho26 P33, P104; Q2deck P33 |")
+# 2.2
+rep("se construye en 18 a 24 meses y se llena en otros 12 a 24 meses mientras los clientes certifican el producto de esa línea [I, con las fechas de la sección 4]", "se construye en unos 23 meses (Kashima II: sep-2023 a ago-2025) y se llena en otros 17 a 23 meses mientras los clientes certifican el producto de esa línea [I, con las fechas de la sección 4]")
+# 2.3
+rep("El capex de FY03/2027 solo es 299.0 oku, es decir, 45% del equivalente comprometido en un año [I].", "El capex planificado de FY03/2027 (¥29.9 bn) equivale a 45% de esos ¥67 bn comprometidos para cinco años [I].")
+# 2.4 bonus
+rep("El bono ejecutivo de FY03/2026 solo se paga si utilidad antes de impuestos más depreciación supera ¥29.7 bn [D: Yuho26 P60], lo que muestra por qué la empresa destaca el EBITDA.", "El bono ejecutivo de FY03/2027 (se paga en 2027) solo se activa si la utilidad antes de impuestos más depreciación supera ¥29.7 bn, el nivel real de FY03/2026 [D: Yuho26 P60]; la guía de ese indicador es 37.0 bn. Eso muestra por qué la empresa destaca el EBITDA.")
+# 3
+rep("2. **El valle de FY03/2021 (18.9) fue la espera previa a la ola.** FY03/2021 tuvo un capex mínimo porque el negocio de semiconductores todavía no justificaba otra planta; la demanda de IA y la ola de nodos avanzados detonó las tres plantas [I].", "2. **El valle de FY03/2021 (18.9) fue un mínimo aislado.** Los archivos no explican por qué [ND]; la primera ola de plantas de sílice empezó a gastarse en FY03/2022 (124.9).")
+rep("lo que implica un capex devengado de unos ¥13.7 bn en el trimestre (5.0 bn de caja más 8.6 bn de aumento en cuentas por pagar), 46% del plan anual [I].", "lo que implica un capex devengado de unos ¥13.6 bn en el trimestre (5.0 bn de caja más 8.6 bn de aumento en cuentas por pagar), 45% del plan anual [I].")
+# 4.1
+rep("| Kashima II | ago-2025 (plan jul) | **En curso al 15-may-2026**; prototipos esperados en el 4T de FY03/2026 |", "| Kashima II | ago-2025 (plan jul) | **En curso al 15-may-2026**; prototipos planeados en el 3T-4T de FY03/2026 |")
+# 4.2
+rep("la depreciación subió 25.7 oku y consumió casi todo el aumento de utilidad antes de depreciación (+53.3)", "la depreciación subió 25.7 oku y consumió casi la mitad (48%) del aumento de utilidad antes de depreciación (+53.3)")
+# 4.3
+rep("| **FY03/2028** | Depreciación estable en 127.0 (las líneas más antiguas se amortizan a medida que entran las nuevas); pico del capex de Kyoto; edificio de control de calidad (2S 2027) | Deck26 P41; consenso capex |",
+    "| **FY03/2028** | Depreciación estable en 127.0 (la empresa la llama \"estimación aproximada\"; consistente con que el método decreciente reduce el cargo de las líneas viejas mientras entran las nuevas [I]); capex de Kyoto en ejecución (consenso 23.6 bn); edificio de control de calidad (2S 2027) | Deck26 P41; consenso capex |")
+# 5.1
+rep("- **El crecimiento de ingresos de 71% entre FY03/2022 y FY03/2026 supera con holgura el crecimiento de capacidad.** La capacidad pasó de 125 a unos 165-185 según el gráfico de capacidad (base 2018 = 100) [D: Deck26 P32; lectura aproximada]; el resto es precio, mezcla de productos y utilización (incluye yen débil, que la empresa cita en la revisión de oct-2025 [D: Rev]).\n",
+    "- **Las ventas de FY03/2026 se hicieron sin Kashima II.** Esa fase aún no estaba certificada, de modo que la capacidad útil de FY03/2026 estaba por debajo de las 1.5 veces (respecto de FY03/2023) que la empresa cita para las tres líneas completas [D: Yuho25 P14; I]. El aumento de ventas que viene en FY03/2027 depende de poner a producir esa fase.\n")
+rep("y los precios de FY03/2025-26 se mantuvieron casi planos (\"sin grandes cambios de precio\", [D: Yuho26 P34]); recién en FY03/2027 hay un aumento explícito.", "y en FY03/2026 los precios se mantuvieron casi planos (\"sin grandes cambios de precio\" [D: Yuho26 P34]), mientras que en FY03/2025 hubo revisiones por factor de costo [D: Yuho25 P24]; en FY03/2027 hay un aumento explícito de 5-10%.")
+# 5.2
+rep("| Producto | Volumen FY03/2026 | Precio medio FY03/2026 (FY03/2024 = 1.0) | Plan FY03/2027 | Comentario |", "| Producto | Volumen FY03/2026 | Precio medio FY03/2026 (FY03/2024 = 1.0) | Precio plan FY03/2027 | Comentario |")
+rep("| Precio −13% por competencia; volumen gana con licitaciones |", "| Precio −13% acumulado desde FY03/2024 por competencia; volumen gana con licitaciones |")
+# 5.3
+rep("| Benceno, azúcar/materias de fermentación, ácido sulfúrico, energía |", "| Benceno, ácido sulfúrico, energía; materias de fermentación [ND] |")
+# 6.4 final paragraph
+i = t.index("Los dos números que más desafían la narrativa")
+j = t.index("Referencia de pares (no son cifras de Fuso)")
+new = ("Dos números tensionan la narrativa. Primero, el plan de ventas de EM crece 13.2% al año, mientras los clientes de Fuso proyectan 8-10% de volumen. "
+       "Entre FY03/2025 (332.1) y FY03/2031 (770) las ventas se multiplican por 2.3, y 8-10% de volumen anual en seis años da 1.6 a 1.8 veces: "
+       "queda un factor de 1.3 a 1.5 que debe venir de precio, mezcla (más de 1.5 veces los productos de alta concentración para 2030 [D: Q2deck P34]) y participación [I]. "
+       "Segundo, los propios clientes anticipan que el crecimiento de IA se modere en los años fiscales 2027-28, cuando las plantas nuevas entran en servicio [D: Q2deck P32].\n\n")
+t = t[:i] + new + t[j:]
+# 6.6 item 7
+rep("7. **Controles de exportación de chips de IA.** Fujimi informó una caída de ventas de HBM por estas restricciones en el trimestre dic-2024 a feb-2025 [D: Fujimi 03], señal de sensibilidad a la política.", "7. **Controles de exportación de chips de IA.** Una lámina de Fujimi cita a Samsung Electronics: las ventas de HBM cayeron por las restricciones de exportación de chips de IA y por menores precios [D: Fujimi 03, FY03/2025], señal de sensibilidad a la política.")
+# 7.1
+rep("| ROE / ROIC | 15.4 / 15.4 | 17.4 / 17.4 | 9.1 / 8.2 | 11.7 / 9.7 | 12.9 / 11.1 | | meta ROIC 13% (FY03/2031) |\n| Flujo operativo | | 139 (FY23) | 70 | 227 | 247 | | |\n| Flujo de inversión | | −134 (FY23) | −185 | −205 | −110 | | |",
+    "| ROE / ROIC | ND | 15.4% / 15.4% | 17.4% / 17.4% | 9.1% / 8.2% | 11.7% / 9.7% | 12.9% / 11.1% | meta ROIC 13% (FY03/2031) |\n| Flujo operativo | ND | ND | 139 | 70 | 227 | 247 | ND |\n| Flujo de inversión | ND | ND | −134 | −185 | −205 | −110 | ND |")
+i = t.index("Alineación de las columnas de ROE/ROIC")
+j = t.index("ROE y ROIC (Corp P3):")
+t = t[:i] + t[j:]
+rep("ROE y ROIC (Corp P3): FY03/2022 15.4% y 15.4%; FY03/2023 17.4% y 17.4%; FY03/2024 9.1% y 8.2%; FY03/2025 11.7% y 9.7%; FY03/2026 12.9% y 11.1%. Costo de capital", "ROE y ROIC vienen de Corp P3. Costo de capital")
+# 7.2
+rep("entre FY03/2022 y FY03/2026 el capex acumulado fue 659 oku; la empresa tomó deuda por ¥20 bn en 2023", "entre FY03/2022 y FY03/2026 el capex acumulado fue 758.8 oku (¥75.9 bn), 636 de ellos en Electronic Materials [Modelo; Deck26 P12]; la empresa tomó deuda por ¥20 bn en 2023")
+# 7.5
+rep("ventas 769 (−10%)", "ventas 769 (−9.5%)")
+# 8.2
+rep("[D: Yuho26 P23, \"原料価格を販売価格へ転嫁\"]. En FY03/2026, cuando el benceno bajó, los precios también bajaron: \"menores precios de venta por menor precio de materias primas\" aparece entre los factores de la caída de ventas de LS [D: Yuho26 P29].",
+    "[D: Yuho26 P26, \"原料価格を販売価格へ転嫁\"]. En FY03/2026, cuando el benceno bajó, los precios también bajaron: \"menor precio de venta por menor precio de materias primas\" aparece entre los factores de la caída de ventas de LS, y el menor costo de materias primas figura entre los factores que sostuvieron la utilidad [D: Yuho26 P29, P32].")
+rep("[D: Yuho26 P23, riesgo 11]", "[D: Yuho26 P26, riesgo 11]")
+rep("el mínimo de FY03/2026 fue 675", "el mínimo, hacia el final de FY03/2026, fue unos 675")
+# 8.3
+i = t.index("- Orden de magnitud [I-general, no es dato de la empresa]")
+j = t.index("- **La guía de FY03/2027 supone benceno igual")
+new8 = ("- **Umbral útil:** el sobrecosto bruto de un precio 52% mayor equivale a 10% de la utilidad operativa de LS (¥0.53 bn) con solo unas 9,200 toneladas de benceno al año (530 millones sobre ¥57,750 por tonelada) [I: aritmética].\n"
+        "- Orden de magnitud [I-general, no es dato de la empresa]: producir una tonelada de ácido málico requiere cerca de una tonelada de benceno (unas 0.7 t de anhídrido maleico, a razón de 1.1 a 1.2 t de benceno por tonelada de anhídrido). "
+        "Solo las 12,400 t de ácido málico vendidas al exterior en FY03/2026 [D] implicarían unas 11,000 t de benceno, es decir un sobrecosto bruto de unos ¥0.65 bn al año antes de traspaso. "
+        "Con el ácido fumárico, el málico doméstico y el anhídrido vendido directamente, la cifra total sería mayor [ND]. Es consistente con que el benceno pese más de 10% de la utilidad de LS antes de traspaso.\n")
+t = t[:i] + new8 + t[j:]
+# 9
+rep("| 2 | **Depreciación trimestral** | Q1: 3,025 millones (guía anual 12,700). Más de 3,200 en Q2 | Más alta: arranque de nuevas líneas antes de lo previsto, presión sobre el margen en el corto plazo |",
+    "| 2 | **Depreciación trimestral** | Q1: 3,025 millones; la guía anual (12,700) exige unos 3,200 por trimestre en el resto del año | Por encima de 3,200 en Q2: la guía se cumple y entra Kashima II; muy por debajo: arranque demorado |")
+rep("| 3 | **Obra en curso y cuentas por pagar de equipo** | CIP 17.3 bn y 14.0 bn al cierre de Q1 | Si CIP supera ~25 bn: Kyoto avanza más rápido que el plan de 29.9 bn. La razón de patrimonio por debajo de 70% sería la señal de que se usa deuda |",
+    "| 3 | **Obra en curso, cuentas por pagar de equipo y efectivo** | CIP 17.3 bn y cuentas por pagar de equipo 14.0 bn al cierre de Q1; efectivo 38.3 bn contra deuda 15.9 bn | Si el efectivo cae por debajo de la deuda o la razón de patrimonio por debajo de 70%, el plan de ¥29.9 bn está presionando la caja (umbrales de criterio mío, I) |")
+
+io.open(p, "w", encoding="utf-8").write(t)
+print("saved", len(t))

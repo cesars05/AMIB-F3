@@ -1,0 +1,58 @@
+"""Rutas y parametros del proyecto. Unico lugar donde vive una ruta absoluta.
+
+Los secretos (llaves de API, correo para la SEC) viven en ../.env, que git
+ignora. Formato: una linea CLAVE=valor por variable.
+"""
+import os
+import re
+from pathlib import Path
+
+RAIZ = Path(__file__).resolve().parent.parent
+ENGINE = RAIZ / "engine"
+DATOS = RAIZ / "data"
+TEMPLATES = RAIZ / "templates"
+
+# Los decks terminados se exportan a OneDrive para verlos en el celular.
+# El codigo NO vive ahi: OneDrive corrompe .git y sincroniza basura de build.
+SALIDA_DECKS = Path(r"C:\Users\cesar\OneDrive\Desktop\News")
+
+# Estados de cuenta de IBKR tal como se descargan
+CARPETA_IBKR = Path(r"C:\Users\cesar\Downloads")
+CUENTA_IBKR = "U18244610"
+
+
+def _leer_env():
+    archivo = RAIZ / ".env"
+    if not archivo.exists():
+        return
+    for linea in archivo.read_text(encoding="utf-8").splitlines():
+        linea = linea.strip()
+        if linea and not linea.startswith("#") and "=" in linea:
+            clave, valor = linea.split("=", 1)
+            os.environ.setdefault(clave.strip(), valor.strip())
+
+
+_leer_env()
+
+
+def secreto(clave):
+    """Lee una variable de .env o del entorno. Falla ruidoso si no esta."""
+    valor = os.environ.get(clave)
+    if not valor:
+        raise RuntimeError(f"Falta {clave} en {RAIZ / '.env'}")
+    return valor
+
+
+def ultimo_estado():
+    """Activity Statement mas reciente: U18244610_AAAAMMDD_AAAAMMDD.csv.
+
+    Se elige por la fecha FINAL del nombre, no por fecha de modificacion:
+    re-descargar un estado viejo no debe volverlo el vigente. Los archivos
+    TRANSACTIONS.* son otro formato y no entran.
+    """
+    patron = re.compile(rf"^{CUENTA_IBKR}_(\d{{8}})_(\d{{8}})\.csv$")
+    candidatos = [(m.group(2), f) for f in CARPETA_IBKR.iterdir()
+                  if (m := patron.match(f.name))]
+    if not candidatos:
+        raise FileNotFoundError(f"No hay estados {CUENTA_IBKR}_*_*.csv en {CARPETA_IBKR}")
+    return str(max(candidatos)[1])

@@ -1,0 +1,103 @@
+"""Matrices al tamano exacto del placeholder, sin recorte al insertarlas."""
+import io
+
+G = r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs\grafico_banquero.py"
+g = io.open(G, encoding="utf-8").read()
+
+if "def guardar_matriz" not in g:
+    helper = '''
+
+def guardar_matriz(df, archivo, ancho=4.00, alto=5.07, margen_etiquetas=0.30,
+                   dpi=300, **kw):
+    """Renderiza una matriz al tamano EXACTO pedido, para que entre en su
+    placeholder sin recorte.
+
+    El resto de los graficos se guardan con bbox_inches="tight", que recorta el
+    blanco sobrante -- comodo, pero devuelve una imagen mas chica que el
+    figsize pedido. En una matriz eso importa: la altura depende del numero de
+    filas, asi que el recorte deja una relacion de aspecto distinta para cada
+    tabla (una de 11 filas salia en 1.23 contra el 0.789 del placeholder, 56%
+    de desviacion) y PowerPoint la recorta al insertarla.
+
+    Aqui se fija el figsize y se guarda SIN bbox_inches, asi que la imagen sale
+    del tamano declarado. El espacio sobrante queda como margen, no como
+    deformacion.
+
+    margen_etiquetas: fraccion del ancho reservada a los nombres de fila.
+    """
+    fig, ax = plt.subplots(figsize=(ancho, alto), dpi=dpi)
+    matriz_calor(ax, df, **kw)
+    fig.subplots_adjust(left=margen_etiquetas, right=0.99, top=0.94, bottom=0.01)
+    fig.savefig(archivo, dpi=dpi, facecolor="white")
+    plt.close(fig)
+    return fig
+'''
+    g = g.rstrip() + "\n" + helper
+    io.open(G, "w", encoding="utf-8").write(g)
+    print("guardar_matriz() agregado")
+
+# --- generar_ai.py ---------------------------------------------------------
+A = r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs\generar_ai.py"
+a = io.open(A, encoding="utf-8").read()
+a = a.replace("                              linea_referencia, ejes_limpios, matriz_calor)",
+              "                              linea_referencia, ejes_limpios, matriz_calor,\n"
+              "                              guardar_matriz)")
+viejo = '''            sub = sub.sort_values("YTD", ascending=False)
+            alto = 0.33 * len(sub) + 0.40
+            fig, ax = plt.subplots(figsize=(ANCHO_MATRIZ, alto), dpi=300)
+            matriz_calor(ax, sub)
+            fig.savefig(f"{SALIDA}/Matriz_{grupo}.png", dpi=300,
+                        bbox_inches="tight", pad_inches=0.04)
+            plt.close(fig)
+            print(f"  {grupo:14s} {len(sub):2d} filas  "
+                  f"{ANCHO_MATRIZ:.2f} x {alto:.2f} in")'''
+nuevo = '''            sub = sub.sort_values("YTD", ascending=False)
+            guardar_matriz(sub, f"{SALIDA}/Matriz_{grupo}.png",
+                           ancho=ANCHO_MATRIZ, alto=ALTO_MATRIZ)
+            print(f"  {grupo:14s} {len(sub):2d} filas  "
+                  f"{ANCHO_MATRIZ:.2f} x {ALTO_MATRIZ:.2f} in")'''
+assert viejo in a
+a = a.replace(viejo, nuevo)
+a = a.replace('ANCHO_MATRIZ = 4.00              # placeholder "Segment Performance"',
+              'ANCHO_MATRIZ, ALTO_MATRIZ = 4.00, 5.07   # placeholder "Segment Performance"')
+io.open(A, "w", encoding="utf-8").write(a)
+print("generar_ai.py migrado")
+
+# --- generar_matriz.py -----------------------------------------------------
+M = r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs\generar_matriz.py"
+m = io.open(M, encoding="utf-8").read()
+m = m.replace("from grafico_banquero import configurar_estilo_banquero, matriz_calor, PALETA",
+              "from grafico_banquero import (configurar_estilo_banquero, matriz_calor,\n"
+              "                              guardar_matriz, PALETA)")
+viejo_m = '''def dibujar(df, archivo, alto_fila=0.30, ancho=3.10, margen_izq=1.05):
+    """Alto proporcional al numero de filas para que la celda sea cuadrada."""
+    fig, ax = plt.subplots(figsize=(ancho, alto_fila * len(df) + 0.35), dpi=300)
+    matriz_calor(ax, df)
+    fig.subplots_adjust(left=margen_izq / (ancho + margen_izq), top=0.93,
+                        bottom=0.02, right=0.99)
+    fig.savefig(archivo, dpi=300, bbox_inches="tight", pad_inches=0.04)
+    plt.close(fig)'''
+nuevo_m = '''def dibujar(df, archivo, ancho=4.00, alto=5.07):
+    """Tamano exacto del placeholder "Segment Performance", sin recorte."""
+    guardar_matriz(df, archivo, ancho=ancho, alto=alto)'''
+if viejo_m in m:
+    m = m.replace(viejo_m, nuevo_m)
+    io.open(M, "w", encoding="utf-8").write(m)
+    print("generar_matriz.py migrado")
+
+# --- generar_portafolio.py -------------------------------------------------
+P = r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs\generar_portafolio.py"
+p = io.open(P, encoding="utf-8").read()
+p = p.replace("from grafico_banquero import (configurar_estilo_banquero, PALETA, matriz_calor,",
+              "from grafico_banquero import (configurar_estilo_banquero, PALETA, matriz_calor,\n"
+              "                              guardar_matriz,")
+viejo_p = '''fig, ax = plt.subplots(figsize=(3.05, 0.30 * len(df_bmk) + 0.35), dpi=300)
+matriz_calor(ax, df_bmk)
+fig.savefig(f"{SALIDA}/MatrizPortafolio.png", dpi=300, bbox_inches="tight",
+            pad_inches=0.04)
+plt.close(fig)'''
+nuevo_p = '''guardar_matriz(df_bmk, f"{SALIDA}/MatrizPortafolio.png", ancho=4.00, alto=5.07)'''
+assert viejo_p in p
+p = p.replace(viejo_p, nuevo_p)
+io.open(P, "w", encoding="utf-8").write(p)
+print("generar_portafolio.py migrado")

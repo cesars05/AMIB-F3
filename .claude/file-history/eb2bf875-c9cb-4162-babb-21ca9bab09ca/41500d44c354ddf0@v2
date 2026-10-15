@@ -1,0 +1,104 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 40;$k++){ try{ & $sb; return }catch{ $m=$_.Exception.Message; if($m -match "0x800AC472|0x80010001|RPC_E_CALL|rejected|0x800A03EC"){ Start-Sleep -Milliseconds 1500 } else { throw } } }; throw "Excel ocupado" }
+$xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb=$null
+foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc.*v3"){ $wb=$w } }
+if($wb -eq $null){ throw "ABORTO: no encuentro v3" }
+$pw=$wb.Worksheets.Item("Payment Waterfall")
+# ---- guardas contra el layout actual ----
+if([string]$pw.Range("C10").Text -notlike "Total Investment*"){ throw "ABORTO: C10" }
+if([string]$pw.Range("C18").Text -ne "Term (years)"){ throw ("ABORTO: C18 dice '"+[string]$pw.Range("C18").Text+"'") }
+if([string]$pw.Range("C19").Text -ne "GBP / USD"){ throw "ABORTO: C19" }
+if([string]$pw.Range("C25").Text -ne "Period End Date"){ throw "ABORTO: C25" }
+if([string]$pw.Range("C30").Text -ne "Gross Distributions to the Vehicle"){ throw "ABORTO: C30" }
+if([string]$pw.Range("C37").Text -ne "Net Distributable to Partners"){ throw "ABORTO: C37" }
+if([string]$pw.Range("C41").Text -notlike "Unreturned Capital*Opening"){ throw "ABORTO: C41" }
+Write-Output "guardas OK - layout actual confirmado"
+$GREY=8421504; $NAVY=5384228; $WHITE=16777215; $BLUE=16711680
+$CENTER=-4108
+$FN='#,##0;(#,##0);"-"'
+$COLS=@("E","F","G","H","I","J")
+$xl.ScreenUpdating=$false
+
+# ---------- 1) Total Investment pasa a USD, con memo en GBP ----------
+T { $pw.Range("C10").Value2="Total Investment  (USD)" }
+T { $pw.Range("D10").Formula="=+'Expected Returns'!D18*D19" }
+T { $pw.Range("C22").Value2="Memo:  Total Investment, GBP 000s" }
+T { $pw.Range("D22").Formula="=+'Expected Returns'!D18" }
+T { $pw.Range("D22").NumberFormat=$FN }
+T { $pw.Range("D22").HorizontalAlignment=$CENTER }
+T { $pw.Range("C22").Font.Color=$GREY }
+T { $pw.Range("D22").Font.Color=$GREY }
+
+# ---------- 2) limpiar la prueba suelta de F15/G15 ----------
+T { $pw.Range("E15:H15").ClearContents() }
+
+# ---------- 3) bloque GBP: queda como fuente ----------
+T { $pw.Range("C24").Value2="Vehicle Cash Flows  -  source, GBP 000s" }
+T { $pw.Range("D27").Formula="=-'Expected Returns'!D18" }
+
+# ---------- 4) bloque USD: coherente de punta a punta ----------
+T { $pw.Range("C33").Value2="Vehicle Cash Flows  -  USD 000s" }
+T { $pw.Range("C34").Value2="Gross Distributions to the Vehicle" }
+T { $pw.Range("D34").Formula="=+D30*`$D`$19" }
+foreach($i in 0,1,2,3,4,5){
+  $x=$COLS[$i]
+  T { $pw.Range($x+"34").Formula="=+"+$x+"30*`$D`$19" }
+  T { $pw.Range($x+"35").Formula="=-IF("+$x+"`$26<=`$D`$18+VALUE(RIGHT('Expected Returns'!`$E`$42,4))-1,`$D`$10*`$D`$15,0)" }
+  T { $pw.Range($x+"36").Formula="=-IF("+$x+"`$26<=`$D`$18+VALUE(RIGHT('Expected Returns'!`$E`$42,4))-1,`$D`$20/1000,0)" }
+  T { $pw.Range($x+"37").Formula="=+"+$x+"34+"+$x+"35+"+$x+"36" }
+}
+T { $pw.Range("D35").Value2=[double]0 }
+T { $pw.Range("D36").Value2=[double]0 }
+T { $pw.Range("D37").Formula="=+D34+D35+D36" }
+foreach($r in 34,35,36,37){ T { $pw.Range("K"+[string]$r).Formula="=+SUM(D"+[string]$r+":J"+[string]$r+")" } }
+T { $pw.Range("D34:K37").NumberFormat=$FN }
+T { $pw.Range("D34:K37").HorizontalAlignment=$CENTER }
+
+# ---------- 5) encabezados de las demas secciones a USD ----------
+T { $pw.Range("C40").Value2="Preferred Return Accrual  -  USD 000s" }
+T { $pw.Range("C47").Value2="Distribution Waterfall  -  USD 000s" }
+T { $pw.Range("C68").Value2="Annual Allocation  -  USD 000s" }
+T { $pw.Range("C77").Value2="Returns to the Limited Partner  -  USD 000s" }
+
+# ---------- 6) economia a Aztlan: ya todo en USD, quitar la conversion ----------
+T { $pw.Range("D88").Formula="=-K35*1000" }
+T { $pw.Range("D89").Formula="=+K36*1000" }
+T { $pw.Range("D93").Formula="=+E64*1000" }
+T { $pw.Range("D96").Formula="=-D13*1000" }
+T { $pw.Range("D97").Formula="=+E62*1000" }
+
+# ---------- 7) la comparacion de convenciones del preferente ----------
+T { $pw.Range("C100").Value2="Preferred Return  -  which convention applies" }
+T { $pw.Range("C100").Font.Bold=$true }
+T { $pw.Range("C101").Value2="A)   Accrues on unreturned capital; dividends reduce the base   (modelled)" }
+T { $pw.Range("D101").Formula="=+K42" }
+T { $pw.Range("C102").Value2="B)   Accrues on full capital for the whole term; nothing returned until exit" }
+T { $pw.Range("D102").Formula="=+D10*(1+D17)^D18-D10" }
+T { $pw.Range("C103").Value2="Difference" }
+T { $pw.Range("D103").Formula="=+D102-D101" }
+T { $pw.Range("D101:D103").NumberFormat=$FN }
+T { $pw.Range("D101:D103").HorizontalAlignment=$CENTER }
+T { $pw.Range("C100:D103").Font.Size=10 }
+T { $pw.Range("C104").Value2="The Terms pass dividends through as a return of capital, so the base declines and (A) applies. (B) is the bullet case, where nothing is distributed before exit." }
+T { $pw.Range("C104").Font.Size=9 }
+T { $pw.Range("C104").Font.Italic=$true }
+T { $pw.Range("C104").Font.Color=$GREY }
+
+$xl.ScreenUpdating=$true
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output "convertido a USD"
+Write-Output ""
+foreach($blk in @(@(9,22),@(24,30),@(33,37),@(40,44),@(47,53),@(56,65),@(77,84),@(87,97),@(100,103))){
+  for($r=[int]$blk[0];$r -le [int]$blk[1];$r++){
+    $lab=[string]$pw.Cells.Item($r,3).Text
+    $v=""
+    foreach($c in 4,5,6,7,8,9,10,11){ $v+=([string]$pw.Cells.Item($r,$c).Text).PadLeft(12) }
+    if(($lab+$v).Trim() -ne ""){
+      if($lab.Length -gt 48){ $lab=$lab.Substring(0,48) }
+      Write-Output ("r"+([string]$r).PadRight(4)+$lab.PadRight(49)+$v)
+    }
+  }
+  Write-Output ""
+}

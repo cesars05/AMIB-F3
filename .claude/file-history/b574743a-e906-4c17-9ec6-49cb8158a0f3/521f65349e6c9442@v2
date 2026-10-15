@@ -1,0 +1,101 @@
+"""Sincronia y QC de Excel, Word y PowerPoint (Aurex Capital).
+Uso: python sync_check.py [carpeta con los tres archivos]"""
+import sys, os, re
+sys.stdout.reconfigure(encoding="utf-8")
+import openpyxl
+from docx import Document
+from pptx import Presentation
+
+D = sys.argv[1] if len(sys.argv) > 1 else r"C:\Users\cesar\Downloads\PE\08_Proyecto_Final\entregables\V2_11oct"
+XL = os.path.join(D, "PF_Modelo_AurexCapital.xlsx"); DX = os.path.join(D, "PF_Memorandum_AurexCapital.docx"); PX = os.path.join(D, "PF_Deck_AurexCapital.pptx")
+fails = []
+def check(ok, msg):
+    print(("OK    " if ok else "FALLA ") + msg)
+    if not ok: fails.append(msg)
+
+# ---------- textos ----------
+def docx_text(p):
+    d = Document(p); out = [x.text for x in d.paragraphs]
+    for t in d.tables:
+        for r in t.rows:
+            for c in r.cells: out.append(c.text)
+    for s in d.sections:
+        out += [x.text for x in s.header.paragraphs] + [x.text for x in s.footer.paragraphs]
+    return "\n".join(out)
+def pptx_text(p):
+    pr = Presentation(p); out = []
+    def walk(shapes):
+        for sh in shapes:
+            if sh.shape_type == 6: walk(sh.shapes)
+            if sh.has_text_frame: out.append(sh.text_frame.text)
+            if getattr(sh, "has_table", False) and sh.has_table:
+                for r in sh.table.rows:
+                    for c in r.cells: out.append(c.text)
+    for s in pr.slides:
+        walk(s.shapes)
+        if s.has_notes_slide: out.append(s.notes_slide.notes_text_frame.text)
+    return "\n".join(out), len(pr.slides)
+wbv = openpyxl.load_workbook(XL, data_only=True); wbf = openpyxl.load_workbook(XL)
+xl_text = []
+for ws in wbf.worksheets:
+    for row in ws.iter_rows():
+        for c in row:
+            if isinstance(c.value, str) and not c.value.startswith("="): xl_text.append(c.value)
+XT = "\n".join(xl_text); WT = docx_text(DX); PT, NS = pptx_text(PX)
+
+# ---------- 1) cifras clave del Excel presentes en Word y deck ----------
+S = wbv["Summary"]; H2 = wbv["Hoja2_Distribucion"]
+moic = S["D17"].value; irr = S["D18"].value; proc = S["D10"].value; carry = S["D14"].value; lps = S["D13"].value
+FF = wbv["Football_Field"]; hdr = {FF.cell(row=27, column=c).value: c for c in range(3, 17)}
+def ffv(n, r): return FF.cell(row=r, column=hdr[n]).value
+tokens = {"MOIC base": f"{moic:.2f}x", "TIR base": f"{irr*100:.1f}%", "carry": f"{carry:.1f}", "LPs": f"{lps:.1f}",
+          "MOIC Conservador": f"{ffv('Conservador',31):.2f}x", "TIR Conservador": f"{ffv('Conservador',32)*100:.1f}%",
+          "MOIC Bajo": f"{S['E17'].value:.2f}x", "MOIC estres": f"{ffv('Estrés: fallan 5',31):.2f}x"}
+for k, v in tokens.items():
+    check(v in WT, f"Word contiene {k} = {v}")
+    check(v in PT, f"Deck contiene {k} = {v}")
+for v in ("US$100M", "82", "16.15", "1.85", "115.9"):
+    check(v in WT and v in PT, f"Word y deck contienen {v}")
+# calendario de entradas / salidas
+H1 = wbv["Hoja1_Portafolio"]
+for r in range(18, 26):
+    nm = H1[f"B{r}"].value
+    check(nm.split()[0] in WT and nm.split()[0] in PT, f"empresa {nm} en Word y deck")
+check(all(H1[f"F{r}"].value <= 3 for r in range(18, 26)), "las 8 empresas entran en los años 1 a 3")
+# ---------- 2) textos prohibidos ----------
+bad = ["—", "–"]
+pend = ["pendiente", "PENDIENTE", "por validar", "por confirmar", "falta verificar", "[Nombre", "n.d.", "TODO", "[PEND"]
+for nm, txt in (("Excel", XT), ("Word", WT), ("Deck", PT)):
+    for b in bad: check(b not in txt, f"{nm}: sin '{b}' ({txt.count(b)})")
+    for w in pend:
+        n = len(re.findall(r"(?<![A-Za-z])" + re.escape(w) + r"(?![a-z])", txt))
+        check(n == 0, f"{nm}: sin '{w}' ({n})")
+# ---------- 3) estructura ----------
+pr = Presentation(PX)
+check(NS >= 20, f"deck con {NS} láminas")
+# contenido: de la lámina 2 (agenda) a la 16 = 15 láminas; cierre = 17
+titles = []
+for i, s in enumerate(pr.slides, 1):
+    t = [sh.text_frame.text for sh in s.shapes if sh.has_text_frame and sh.text_frame.text.strip()]
+    titles.append(t[0] if t else "")
+print("Títulos 2 a 16:", titles[1:16])
+check(len(titles[1:16]) == 15, "15 láminas de contenido entre portada y cierre")
+# ---------- 4) Excel ----------
+errs = 0
+for ws in wbv.worksheets:
+    for row in ws.iter_rows():
+        for c in row:
+            if isinstance(c.value, str) and c.value.startswith("#"): errs += 1
+check(errs == 0, f"Excel sin errores de fórmula ({errs})")
+for lab, ref in (("concentración", "C37"), ("gastos", "C38"), ("salida", "C39"), ("tenencia", "C40")):
+    check(H1[ref].value == "OK", f"Hoja1 verificación {lab} = OK")
+for c in "DEF": check(H2[f"{c}34"].value == "OK", f"Hoja2 LPs + GP = proceeds ({c})")
+check(H2["C52"].value == "OK" and H2["C64"].value == "OK", "Hoja2 aportado = comprometido y TIR coincide con cascada")
+check(FF["C34"].value == "OK", "Football_Field Base coincide con Hoja2")
+LC = wbv["Llamadas_Capital"]
+check(all(LC.cell(row=r, column=3).value == "OK" for r in range(43, 47)), "Llamadas_Capital: 4 verificaciones OK")
+check(17.4 <= irr * 100 <= 18.6, f"TIR neta base en 17.5%-18.5% ({irr*100:.2f}%)")
+check(all(H1[f"F{r}"].value is not None for r in range(18, 26)), "Hoja1 sin celdas de entrada vacías")
+print("\nRESULTADO:", "TODO OK" if not fails else f"{len(fails)} fallas")
+for f in fails: print(" -", f)
+sys.exit(1 if fails else 0)

@@ -1,0 +1,47 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 25;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 1000 } else { throw } } }; throw "Excel ocupado" }
+$xl=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); break }catch{ Start-Sleep -Milliseconds 900 } }
+$wb=$null; foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("Segment Beta") }
+$dst=Join-Path "C:\Users\cesar\OneDrive\Desktop\Alumasc & Peers\Alumasc\Financials" ("BACKUP_PRE_SEGBETA2_"+(Get-Date -Format "yyyyMMdd_HHmmss")+"_"+$wb.Name)
+$wb.SaveCopyAs($dst)
+Write-Output ("Libro: "+[string]$wb.Name+"   Backup: "+(Split-Path $dst -Leaf))
+
+if(([string](T { $s.Cells.Item(12,3).Text })) -ne "ALUG.L"){ throw "r12 no es ALUG.L" }
+foreach($c in 4,5,6,7,8,10,13){
+  $f=[string](T { $s.Cells.Item(12,$c).Formula })
+  if($f -notmatch "TR\("){ throw ("r12 col"+$c+" no tiene formula TR - no sirve de plantilla") }
+}
+Write-Output "Guards OK - r12 sirve de plantilla"
+
+$xl.Calculation=-4135
+$xl.DisplayAlerts=$false
+
+# limpiar todo debajo de r12
+T { $s.Range("C13:N120").Clear() }
+Write-Output "  zona r13:r120 limpiada"
+
+# replicar la fila plantilla a las 20 filas de datos
+$dataRows=@(15,16,17,18,19,20,21,22,23, 27,28,29,30,31, 35,36,37,38,39,40)
+T { $s.Rows.Item(12).Copy() | Out-Null }
+foreach($r in $dataRows){ T { $s.Rows.Item($r).PasteSpecial(-4104) | Out-Null } }
+T { $xl.CutCopyMode=$false }
+Write-Output ("  plantilla replicada a "+$dataRows.Count+" filas")
+
+# asignar RICs
+$map=@{
+ 15="GENG.L"; 16="HILS.L"; 17="MSLH.L"; 18="GEBN.S"; 19="GF.S"; 20="WMS.N"; 21="ZWS.N"; 22="MWA.N"; 23="CNM.N";
+ 27="KSP.I"; 28="CSL.N"; 29="SIKA.S"; 30="AMRZ.N"; 31="RPM.N";
+ 35="FAN.L"; 36="GENG.L"; 37="FORT.L"; 38="MAS.N"; 39="ROCK.OQ"; 40="BLDR.N"
+}
+foreach($r in $map.Keys){ T { $s.Cells.Item($r,3).Value2=$map[$r] } }
+Write-Output "  RICs asignados"
+
+# la beta re-apalancada solo va en las filas de promedio
+foreach($r in $dataRows){ T { $s.Cells.Item($r,12).Clear() } }
+
+$xl.Calculation=-4105
+T { $xl.CalculateFullRebuild() }
+$wb.Save()
+Write-Output "etapa 1 lista - esperando refresh de LSEG"

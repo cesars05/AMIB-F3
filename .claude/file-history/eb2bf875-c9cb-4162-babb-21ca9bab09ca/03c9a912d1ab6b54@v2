@@ -1,0 +1,21 @@
+---
+name: excel-com-concurrent-editing
+description: "Cómo trabajar sobre los Excel de Alumasc vía COM cuando el usuario edita el mismo libro en paralelo, y por qué el wrapper de reintentos debe fallar rápido"
+metadata: 
+  node_type: memory
+  type: feedback
+  originSessionId: eb2bf875-c9cb-4162-babb-21ca9bab09ca
+  modified: 2026-09-11T19:39:30.084Z
+---
+
+El usuario **edita el libro mientras yo trabajo sobre él**. En la sesión del 11-sep-2026 eso rompió el modelo dos veces: escribí fórmulas contra un layout que había leído ~20 minutos antes y que ya había cambiado (bloques de WACC por segmento que él consolidó en uno solo), dejando tres terminal values en cero.
+
+**Cómo aplicar:**
+- **Releer inmediatamente antes de escribir**, no al inicio del turno. Un read de hace varios mensajes no es estado actual.
+- Poner **guards que aborten** si la celda destino no contiene lo esperado, en vez de escribir a ciegas.
+- Buscar el libro **por patrón** (`-match "Alumasc"`), nunca por nombre exacto: renombra seguido (v2 → v3 → v4 en una sola sesión).
+- Reconfirmar números de fila por **etiqueta**, no por posición recordada.
+
+**El wrapper de reintentos debe fallar rápido.** Uno que hacía 40 intentos × 1.2s por celda, con ~150 celdas, podía moler horas sin morirse cuando el add-in de LSEG bloqueó COM durante un refresh. Reintentar **solo** en errores de Excel-ocupado (`0x80010001`, `RPC_E_CALL_REJECTED`, `0x800AC472`) y **propagar todo lo demás** — si no, los errores reales quedan invisibles.
+
+Related: [[alumasc-historical-model]]

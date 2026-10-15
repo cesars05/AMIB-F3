@@ -1,0 +1,202 @@
+# 10 — Preguntas para la llamada con Investor Relations
+
+**Fecha:** 17 septiembre 2026
+**Uso:** preparación del contacto permitido con Grupo Bimbo.
+
+---
+
+## ⚠️ Antes que nada: la regla que aplica a esta llamada
+
+**Rule 2.5b, texto literal:**
+
+> *"If the Company agrees, teams may have **one follow-up communication** prior to the local final. **This follow-up communication must be organized by the local host** and the contact **must be confined to those corporate officers who normally interact with investors, such as investor relations officers, CEOs, or chief financial officers**."*
+
+Y Rule 2.5c: *"Teams **may not** contact Company corporate executives for the purposes of the Research Challenge other than as described in (a) and (b)."*
+
+**Tres condiciones duras:**
+
+1. **La organiza CFA Society Mexico, no el equipo.** Si están gestionando la llamada directamente con IR de Bimbo por su cuenta, **eso es causa de descalificación** (es el riesgo #5 del `00-MASTER`). Hay que canalizarla por el host.
+2. **Es UNA sola.** No hay segunda oportunidad. Por eso este documento prioriza en lugar de listar veinte preguntas.
+3. **Solo con IR, CEO o CFO.** Una llamada con IR cumple; una con un director de operaciones o de una planta, no.
+
+**Y Rule 2.5f:** las preguntas se envían **antes** al faculty advisor, que **debe estar presente** en la llamada — pero solo para verificar que no se discuta información material no pública. No puede preguntar ni opinar. **Ese tiempo no cuenta contra sus 10 horas.**
+
+> Si la llamada no es la de Rule 2.5b sino la **sesión informativa** del kickoff (Rule 2.5a), aplica lo mismo en cuanto a preparación, y ahí sí hay Q&A abierto. Estas preguntas sirven para cualquiera de las dos — y también como preparación del Q&A con los jueces.
+
+---
+
+## Cómo aprovechar una sola oportunidad
+
+**Lo que IR sí puede contestar:** marcos de referencia, drivers, cómo piensan un tema, aclaraciones de lo ya publicado, definiciones contables, contexto histórico.
+
+**Lo que NO va a contestar, y quema el turno si lo preguntan:**
+- Guía que no hayan publicado ("¿cómo va el 3T?")
+- Cifras de participación de mercado por competidor
+- Detalles de negociación con clientes específicos
+- Cualquier cosa que sea información material no pública — **y preguntarlo pone al advisor en la posición incómoda de tener que intervenir**
+
+**La regla práctica:** preguntar *"¿cómo debemos pensar sobre X?"* y *"¿qué tendría que pasar para que Y?"* en vez de *"¿cuánto va a ser X?"*. La segunda forma es la que usaron ustedes para la pregunta de volumen, y es la correcta.
+
+---
+
+## Las tres preguntas del equipo — afiladas con datos
+
+### 1️⃣ Marca privada en EE.UU. y México
+
+**Su versión:** *"Estrategias para competir con private label en USA, MX."*
+
+**Versión afilada, con el dato que la hace difícil de esquivar:**
+
+> "En pan en EE.UU., Euromonitor ubica su participación de valor en **16.7%** y la de marca privada en **16.3%** — prácticamente empatadas. En México la penetración de marca privada es de apenas **1%**. Son dos juegos completamente distintos. **¿Cómo difiere la estrategia entre los dos mercados, y qué papel juega la arquitectura de precio-empaque frente a bajar precio de lista?**"
+
+**Por qué funciona:** el contraste 16.3% vs. 1% los obliga a hablar de estrategia diferenciada y no de un lugar común. Y "price-pack architecture" es el término que ellos mismos usan en sus llamadas — **en el 2T26 describieron la estrategia de México como *"balanced price-pack/value proposition"***, así que se les está devolviendo su propio marco.
+
+**Seguimiento si hay tiempo:** *"Barclays reporta que las marcas nacionales cobran una prima de 48% en botanas saladas. Con 3.5% de participación ahí, ¿esa prima es defendible o es la categoría donde más presión de valor ven?"*
+
+---
+
+### 2️⃣ Volumen vs. precio — la mejor de las tres
+
+**Su versión:** *"No se gana en volumen, más en pricing, qué necesitaría pasar para que se empiece a recuperar volumen."*
+
+**El planteamiento es correcto. Reforzarlo con evidencia de terceros para que no lo puedan responder en genérico:**
+
+> "Los datos de panel de Numerator muestran que **la penetración de su pan empaquetado en EE.UU. pasó de ~43% a ~39.6% entre junio de 2024 y junio de 2026**, con la frecuencia de compra bajando de 2.9 a 2.7 veces y el gasto por viaje subiendo. Al mismo tiempo, el consenso implica un **CAGR de 4.8% en EE.UU. a 2030 contra una categoría que crece 2.7%**. **¿Qué tendría que pasar — en ingreso del consumidor, en arquitectura de precio, en innovación o en ejecución — para que el volumen se recupere? ¿Y en qué orden esperarían ver esas señales?**"
+
+**Por qué funciona:** la pregunta "¿qué tendría que pasar y en qué orden?" les pide un **mapa de indicadores adelantados**, que es algo que IR sí puede dar y que es directamente modelable. Y citar Numerator y el consenso muestra que el equipo hizo la tarea.
+
+**Seguimiento de alto valor:**
+> *"En sus reportes trimestrales describen el desempeño como 'favorable price/mix and positive volume growth', pero no publican la descomposición. **¿Nos pueden ayudar a entender cómo pensar el split entre precio, mezcla y volumen por segmento?**"*
+
+💡 **Esa es probablemente la pregunta con mayor retorno de todo el documento.** El desglose price/mix vs. volumen por segmento **no está publicado**, es la pieza que falta para el modelo, y no es información material no pública — es una aclaración metodológica. Si la contestan, el equipo tiene algo que nadie más va a tener.
+
+---
+
+### 3️⃣ Regulación: IEPS y ley de 40 horas
+
+**Su versión:** *"Impacto de cambios en regulaciones, IEPS y ley de 40 horas."*
+
+**Cuidado con el IEPS: la premisa cambió hace una semana.** El Paquete Económico 2027 se entregó el **9 de septiembre de 2026 SIN** el impuesto al sodio ni el alza de 8% a 20% en alimentos de alta densidad calórica. JPMorgan nombró a Bimbo como uno de los principales beneficiados del alivio. **Preguntar "¿cuál es el impacto del alza del IEPS?" suena desactualizado.**
+
+**Reformulación:**
+
+> "El Paquete Económico 2027 no incluyó el alza al IEPS de alimentos no básicos, pero es el tercer año consecutivo que se discute. **¿Cómo incorporan un riesgo regulatorio recurrente como éste en su planeación de portafolio y de reformulación? ¿La estrategia de Nutriguides está diseñada en parte para reducir la exposición a ese 8% actual?**"
+
+**Y la de 40 horas está muy bien apuntada — más de lo que quizá creen.** Los hechos verificados:
+
+- Reforma constitucional al Artículo 123 publicada en el **DOF el 3 de marzo de 2026**, vigente desde el **1 de mayo de 2026**
+- **Escalonamiento: 46 horas en 2027 · 44 en 2028 · 42 en 2029 · 40 en 2030**
+- 2026 es periodo de transición y adaptación
+- **La reducción no puede implicar disminución de salarios ni prestaciones**
+
+**Por qué es la pregunta más potente del set:** según el IA25, **México concentra +77K colaboradores (~52% de la plantilla global) y genera 55.4% del EBITDA ajustado**. Y el modelo mexicano es DSD con decenas de miles de rutas — operadores que trabajan jornadas largas. Misma nómina, menos horas, es un **aumento estructural del costo por hora** concentrado justo en el segmento que sostiene la rentabilidad del grupo.
+
+> "La reforma de jornada empieza a escalonarse en **2027 con 46 horas**, y México es **~52% de su plantilla global**. Para una operación intensiva en rutas de distribución, **¿cómo están dimensionando el impacto en costo laboral, y qué palancas tienen — rediseño de rutas, automatización, turnos — para absorberlo sin afectar el nivel de servicio?**"
+
+---
+
+## Preguntas adicionales, por prioridad
+
+### 🔴 Prioridad máxima — cambian el modelo
+
+**4. Coberturas y el puente hacia 2027**
+
+> "En la llamada del 2T26 señalaron que las coberturas limitaron el impacto en 2026 pero que **el entorno luce más difícil para 2027 conforme se toman posiciones a costos más altos**, y mencionaron trigo, resinas y energía. **¿Nos pueden ayudar a entender el marco de cobertura — horizonte típico, qué proporción de la canasta se cubre, y cómo debemos pensar el traspaso a resultados conforme rotan las posiciones?**"
+
+💡 **Es la pregunta más importante de todas.** Ellos ya abrieron el tema, así que no es intrusiva. Bloomberg estima ~9 meses rodantes, pero **la empresa nunca lo ha confirmado públicamente**. Si dan el marco, el equipo puede modelar el traspaso con fundamento en vez de suponerlo.
+
+**5. Capex: ¿diferimiento o atraso?**
+
+> "El capex de 2026 bajó a US$1.0–1.2bn, descrito como *phasing*, pero también mencionaron **proyectos corriendo atrasados o más difíciles de ejecutar**. **¿Ese capex diferido reaparece en 2027, o refleja un cambio en el alcance de los proyectos?**"
+
+💡 Las dos respuestas importan y son distintas: si regresa en 2027, **el flujo libre de 2026 está inflado**; si es alcance, **el programa de transformación se recortó**.
+
+**6. El programa de transformación de Norteamérica — cuantificarlo**
+
+> "La transformación de EE.UU. se describe como consolidación de panaderías, automatización y optimización de rutas. Entre 2024 y 2025 las panaderías y plantas de Norteamérica pasaron de **77 a 75**. **¿Cómo debemos pensar la trayectoria de esa huella, y qué ahorro anualizado esperan capturar y para cuándo?**"
+
+💡 Todas las casas coinciden en que el crecimiento de utilidades vendrá de **ejecución, no de demanda**. Esta es la pregunta que convierte esa frase en algo modelable. Es la nota 📌 N1.
+
+---
+
+### 🟡 Prioridad alta — estructurales
+
+**7. EAA: muchos activos, poco retorno**
+
+> "EAA tiene **94 panaderías y plantas — el mayor número de cualquier región — y aporta 12.7% de las ventas y 9.8% del EBITDA ajustado**, mientras México genera 55.4% del EBITDA con 38 plantas. **¿Cómo evalúan el retorno sobre capital por región, y qué los tiene agregando huella en EAA?**"
+
+💡 Muestra un nivel de lectura que casi nadie va a llegar. Y toca el punto incómodo: **están añadiendo plantas de baja productividad mientras cierran las de productividad media.**
+
+**8. M&A frente a desapalancamiento**
+
+> "Cerraron el 2T26 en **2.5x** deuda neta a EBITDA ajustado, 0.2x abajo de diciembre, y en la llamada mencionaron expectativas de cerrar adquisiciones *bolt-on* en el segundo semestre. **¿Cómo priorizan entre seguir desapalancando y ampliar el portafolio? ¿Hay un nivel de apalancamiento objetivo?**"
+
+**9. Concentración de clientes**
+
+> "En la industria de alimentos empaquetados en EE.UU., el índice de precios al consumidor ha corrido por encima del índice de precios al productor, lo que sugiere que buena parte del alza de precio se queda en el canal. **¿Cómo ha evolucionado su capacidad de trasladar costos a los grandes minoristas de EE.UU., y qué tan distinta es esa dinámica frente al canal tradicional en México?**"
+
+💡 No hay que nombrar a Walmart ni pedir detalles de negociación — se pregunta por la **dinámica estructural**, que sí pueden contestar.
+
+**10. Wickbold y la capacidad de integración**
+
+> "Brasil fue la principal excepción dentro de LatAm en el 2T26, con el margen contrayéndose **157 pb** por costos de integración, y mencionaron que las sinergias se buscarán gradualmente. **¿Qué aprendizajes se llevan de Wickbold que apliquen a los bolt-on que contemplan?**"
+
+---
+
+### 🟢 Si sobra tiempo
+
+**11. Ocasión de consumo** — *"¿Rastrean internamente el desempeño por ocasión de consumo (desayuno, media tarde, lonchera)? ¿Es una dimensión que use el equipo comercial para innovación y arquitectura de precio-empaque?"*
+💡 **No publican nada de esto.** Si dicen que sí lo rastrean, abre una línea de investigación propia.
+
+**12. GLP-1** — *"Bloomberg Intelligence menciona los medicamentos GLP-1 como factor estructural para alimentos empaquetados. ¿Lo ven ya en sus datos de consumo, o es un tema de horizonte más largo para su categoría?"*
+
+**13. Deuda neta / EBITDA — definición** — *"Reportan 2.5x. ¿Esa métrica es sobre EBITDA ajustado e incluye pasivos por arrendamiento bajo IFRS-16?"*
+💡 Pregunta puramente técnica, pero **resuelve la discrepancia entre el 2.5x de la empresa y el 1.94x de Bloomberg**, y evita un error en el modelo.
+
+**14. Costo integral de financiamiento** — *"El costo integral de financiamiento subió reflejando coberturas de energía y pérdidas cambiarias. ¿Cómo debemos pensar esa línea hacia adelante?"*
+💡 Ataca el hueco entre EBITDA y utilidad neta — **la utilidad neta del 2T26 quedó 14.4% abajo del consenso con EBITDA en línea.**
+
+---
+
+## ❌ Qué NO preguntar
+
+- **"¿Cómo va el 3T26?"** — no lo pueden contestar y quema credibilidad
+- **"¿Cuál es su participación de mercado contra Flowers Foods?"** — no dan datos de competidores
+- **"¿Van a subir precios?"** — es información sensible de mercado
+- **Cualquier cosa sobre el precio de la acción o la valuación** — IR no comenta valuación
+- **"¿Qué opinan del reporte de JPMorgan?"** — no comentan research de terceros
+- **Preguntas cuya respuesta ya está en los reportes** — se nota, y desperdicia el turno
+
+---
+
+## 💡 El hilo conductor: todo converge en 2027
+
+Si hay que elegir **una sola cosa** que la llamada debe dejar clara, es ésta. Cuatro presiones distintas aterrizan en el mismo ejercicio:
+
+| Factor | Qué pasa en 2027 | Fuente |
+|---|---|---|
+| **Coberturas** | Las posiciones rotan a costos más altos — trigo, resinas, energía | La empresa, llamada 2T26 |
+| **Trackers de costos** | COGS revierte a **+10.7% en EE.UU. y +17.1% en México** | Bloomberg Intelligence |
+| **FX** | La apreciación del peso se revierte (+2.4% y +4.5% a/a) | Curva USDMXN de BI |
+| **Jornada laboral** | Primer escalón: **48 → 46 horas**, sin reducir salario | DOF, 3-mar-2026 |
+| **Don Don** | Se acaba el impulso inorgánico (última contribución: 2T26) | La empresa, llamada 2T26 |
+
+**Y el consenso proyecta EPS 2027 de 3.89 contra 2.34 del modelo de Bloomberg Intelligence** — una brecha de ~40%.
+
+> **La pregunta de cierre, si queda espacio:** *"Varios factores parecen converger en 2027: rotación de coberturas a costos más altos, el escalonamiento de la jornada laboral en México, y comparativos sin el efecto inorgánico de Don Don. **¿Cómo están pensando la construcción del margen para 2027, y qué palancas de productividad tienen ya identificadas para compensar?**"*
+
+💡 Esa pregunta, bien formulada, **le dice a IR que el equipo entendió el negocio** — y la respuesta, sea cual sea, es material para la tesis.
+
+---
+
+## Checklist antes de la llamada
+
+- [ ] **Confirmar que la llamada la organiza CFA Society Mexico** (Rule 2.5b) — si no, no hacerla
+- [ ] Enviar las preguntas al faculty advisor **antes** (Rule 2.5f)
+- [ ] Confirmar que el faculty advisor estará presente
+- [ ] Recordarle que **no puede preguntar ni opinar** sobre la empresa
+- [ ] Registrar sus horas en la bitácora, **marcadas como exentas** del tope
+- [ ] Priorizar: es **una sola** oportunidad. Llevar las 6 primeras en orden y el resto como reserva
+- [ ] Asignar quién pregunta qué — y quién toma notas
+- [ ] Cada integrante se identifica como estudiante y revela su participación en el Challenge
+- [ ] Después: documentar respuestas y **citarlas correctamente** en el reporte

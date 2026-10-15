@@ -1,0 +1,16 @@
+---
+name: slide-construction-skill
+description: "Where the user's slide-building skill lives, how it's organised, and what the user wants from deck work"
+metadata:
+  node_type: memory
+  type: project
+  originSessionId: b0b0bda5-833a-4060-8110-98a264be3669
+  modified: 2026-10-09T23:57:12.883Z
+---
+
+The user (works at Aztlan Equity Management; also builds FEMSA team decks, writes in Spanish) asked on 2026-10-09 for a reusable skill on HOW banks/Aztlan/FEMSA structure and present slides (boxes, shapes, what follows the boxes, fonts, coordinates, colours, images, charts), adaptable and rotating layouts.
+
+Built: canonical copy `C:\Users\cesar\OneDrive\Documentos\Slide Construction\skill\slide-construction` (installed copy in `~/.claude/skills/slide-construction` — re-copy after edits). `scripts/house.py` builds native slides/charts; works with real templates `06_Templates\AZTD vs Peers_v6.pptx` (layout General) and `M&A FEMSA.pptx` (Section Header). Raw per-deck notes: `07_Template_Analysis\IB_REVIEW_NOTES.md`. Old `STYLE_GUIDE.md`/`LAYOUT_LIBRARY.md` are the Halliburton/Kuwait project version.
+
+**Why:** user's main complaint is that Claude's charts lack detail; wants IB-grade native charts.
+**How to apply:** for any deck/slide work, load the slide-construction skill, use the template mode, always render via render.ps1 and look before delivering. BofA deck in the folder = Green Plains + Taro PDFs.

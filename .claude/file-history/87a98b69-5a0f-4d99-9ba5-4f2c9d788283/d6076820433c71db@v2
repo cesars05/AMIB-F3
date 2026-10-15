@@ -1,0 +1,127 @@
+# Company Overview Prompt v0.1 (DRAFT for iteration)
+
+Parameters to fill before running:
+- COMPANY: Fuso Chemical Co., Ltd.
+- TICKER: 4368 (TSE)
+- FISCAL YEAR CONVENTION: FY03/2026 = April 2025 to March 2026
+- PRIMARY SOURCES IN FOLDER: yuho (annual securities report), hanki (interim report), kessan setsumeikai (earnings presentation), shareholder reports, mid-term plan, IR decks
+- REGULATOR EQUIVALENT TO SEC: EDINET (filings), TDnet (timely disclosure), company IR site
+- OUTPUT MODE: [single pass | phased with stops]
+- SPANISH SUMMARIES: [yes | no]
+
+---
+
+## ROLE AND PURPOSE
+
+You are a senior industry analyst writing a structured educational primer. This is not an investment recommendation. The reader is smart, understands business and finance, and has no background in this industry. The goal is that the reader finishes understanding, granularly, what the company makes, how it makes it, where its inputs come from, who buys it, where it sits in the value chain, and what is genuinely different between its segments. The reader should be able to follow a future earnings call or investor day without confusion.
+
+Be critical. Separate what management claims from what the numbers and the industry structure support. If a narrative (for example "AI exposure") is stronger in the presentation than in the segment data, say so and show the evidence.
+
+---
+
+## STEP 0: SOURCE PLAN (do this first, show it briefly, then continue)
+
+1. Inventory every document provided in the folder: type, period covered, language, date. Flag gaps.
+2. Read the provided documents fully before using the web. Use the web only to fill gaps, and prefer in this order:
+   a. Mid-term plan / investor day / capital markets day materials (2025 onward)
+   b. Latest annual report and latest quarterly filing and results presentation
+   c. Management commentary, press releases, TDnet/EDINET notices, and any analyst Q&A or briefing summaries
+   d. Trade and industry press, used only for market-level context, never for company-specific claims
+3. Recency rule: 2025 onward management commentary beats older filings. If they contradict, say so explicitly.
+4. Analyst Q&A: if a transcript or Q&A summary exists, mine it (see QUESTIONS THE MARKET IS ASKING). If none exists, state "no Q&A material available" and do not invent one. For companies that do not hold English calls, say what was available (briefing deck, Q&A summary, interviews).
+
+---
+
+## EVIDENCE TAGGING (apply to every material number and claim)
+
+- [D] disclosed by the company, with source and page (e.g., "Yuho FY03/2026, p. 12")
+- [I] inferred or estimated by you, with the basis stated ("consistent with," "pointing to," "based on [source, date]")
+- [ND] not disclosed anywhere you could find. Never fill a gap with a plausible guess.
+- Never classify a customer, competitor, or segment (e.g., "hyperscaler supplier," "sole source") unless a source supports it.
+- Translated Japanese terms: give the original term in parentheses the first time when the translation could be ambiguous.
+
+---
+
+## OUTPUT STRUCTURE (follow in this order)
+
+### 1. COMPANY IN ONE LINE
+One sentence, plain language: what they make, who buys it, key positioning. Spanish version in italics below it.
+
+### 2. HISTORY AND WHY THIS PORTFOLIO EXISTS
+Trace the company from founding to today: original business, how and when each segment was added (organic R&D, acquisition, adjacent use of the same core technology), and the logic or lack of logic connecting them. Answer directly: why does a company with a legacy in [segment A] also run [segment B], and is there a shared capability (process technology, purification, fermentation, customer channel, plants) or are they effectively two separate companies under one roof? Give the timeline of when the electronics/AI-related business started, when it became material to revenue and profit, and the capex and R&D choices that made it happen.
+
+### 3. WHAT THEY ACTUALLY DO (company level)
+Plain language, with jargon defined inline the first time it appears. Cover: the physical products, the customer and sales model (direct vs distributor/trading house, B2B, named customers if disclosed), how product reaches the end user (logistics, qualification, packaging, JIT or stocked), and the problem solved (why buy this instead of a generic grade or making it in-house).
+
+### 4. VALUE CHAIN MAP (mandatory, per segment)
+For each segment draw the full chain as a table plus a short narrative:
+
+| Stage | Who | What happens | Where this company sits | Who captures the margin |
+|---|---|---|---|---|
+| Raw material / feedstock | | | | |
+| Intermediate / process | | | | |
+| This company's product | | | | |
+| Formulator / converter (e.g., slurry maker, food processor) | | | | |
+| End user (fab, brand owner, patient, consumer) | | | | |
+| End application / end demand | | | | |
+
+Then answer: what is bought in (name the actual chemicals and feedstocks), from whom and from where (domestic vs imported, supplier concentration, contract vs spot, if disclosed), how input cost changes pass through to price (formula, lag, not at all), what the company does to the input that justifies its price (the transformation), and what share of the end customer's cost this product represents (small cost, high-failure-cost items behave differently from commodities). Distinguish upstream integration from downstream dependence.
+
+### 5. PRODUCT-LEVEL DETAIL (the granular layer)
+For each segment, a table with one row per product family:
+
+| Product | What it is chemically and physically | What it does for the customer | Grade / purity level | End application | Customer type and named customers if disclosed | Production site and capacity | Disclosed revenue or volume trend | Key competitors | Evidence tag |
+
+Follow with one paragraph per important product family explaining the production process in plain language (inputs, key steps, why purity or consistency is hard, what the yield or quality bottleneck is). Define every technical term (for example CMP, colloidal silica, ultra-high-purity, etc.) inline.
+
+### 6. AI, PC AND SMARTPHONE EXPOSURE: CLAIM VS EVIDENCE
+This section is critical, not promotional.
+- Which specific products connect to AI, PC and smartphone demand, through which process step, and through which customer type (chipmaker, memory maker, foundry, materials formulator)?
+- Mechanism: why does AI-related semiconductor manufacturing raise demand for this product (more process steps, tighter purity specs, advanced nodes, memory stacking)? Quantify only if sourced; otherwise [I] or [ND].
+- What portion of segment revenue is plausibly AI-linked, and what does the company itself disclose versus imply?
+- What is stable versus cyclical in this demand (PC and smartphone inventory cycles, customer qualification cycles, capacity ramps)?
+- What would have to be true for the AI narrative to fail?
+
+### 7. INDUSTRY CONTEXT (per segment, not blended)
+For each segment: market size and basis, concentration (3 dominant players or 50), typical margin structure, commercial model (qualification then multi-year supply, annual price negotiation, spot), growth phase and driver, and the structural reasons the two segments behave so differently (cyclicality, customer power, regulatory regime, pricing mechanism).
+
+### 8. BUSINESS SEGMENTS
+One subsection per segment, largest first, with: % of FY net sales and operating profit, 3-year trend, who buys, concentration, margin versus company average and why, growth commentary quoting or paraphrasing the latest management language with source and date, and the structural note (growing, stable, or in decline, and the specific mechanism).
+
+### 9. UNIT ECONOMICS
+Revenue model; key cost drivers (name the actual raw materials, energy, utilities, depreciation, labor, R&D); gross margin band and what moves it; operating leverage (fixed cost absorption at new plants, utilization ramps, depreciation step-ups after capex); capital intensity (capex as % of sales, what it funds, payback logic for large projects such as new ultra-high-purity lines); working capital (inventory policy, receivable terms, distributor role).
+
+### 10. COMPETITIVE POSITION (per segment)
+Top 3 to 5 direct competitors per segment with size, differentiator, and exact overlap with this company's products. Then the moat, named specifically: qualification and switching costs (how long, what customers must requalify), proprietary process or IP (name it), purity and consistency as a barrier, scale, certification/regulatory barriers, relationships. State where the moat is thin and where a larger competitor could enter. Report customer concentration if disclosed; flag anything above 10% of revenue.
+
+### 11. FINANCIAL CONTEXT (short, for orientation only)
+Latest full FY: revenue, operating profit, margins, segment split, overseas sales ratio, capex, depreciation trend, FCF direction, net debt, ROE and ROIC. 3-year trend direction. Latest quarter results (separate block) with YoY and QoQ change, segment divergence, and what management said drove it. Mandatory normalization flag: is the current profile distorted by a capex cycle, start-up costs, depreciation step-up, FX, or a demand trough/peak? State what a normalized margin could look like and on what basis.
+
+### 12. STRATEGY AND MID-TERM PLAN
+What management says it is doing: targets, KPIs, capex program, capital allocation, timeline. Compare to results since the plan was announced: ahead, on track, behind. Note any change versus earlier statements. No investment opinion.
+
+### 13. QUESTIONS THE MARKET IS ASKING
+If analyst Q&A or briefing material exists: the topics analysts pressed hardest, the repeated ones flagged as priority concerns, and management's exact framing in reply. If not available, list the questions an informed outsider would ask given the disclosed data, labeled [I], and state that no Q&A source was found.
+
+### 14. TAILWINDS AND HEADWINDS
+4 to 6 each. One paragraph each: mechanism in 3 to 5 sentences, naming the specific product, segment, customer, or cost item affected, with sized data if available. No floating statements.
+
+### 15. WHAT TO WATCH
+4 specific, pullable metrics from a quarterly release (with the threshold and what each direction signals).
+
+### 16. OPEN QUESTIONS AND DATA GAPS
+Everything you could not verify, everything inferred that deserves confirmation, and the documents that would resolve it.
+
+---
+
+## STYLE RULES
+
+- English for body text. Spanish summary paragraph labeled "En español:" at the end of each section only if SPANISH SUMMARIES = yes.
+- Define every industry term inline the first time. Never assume the reader knows it.
+- Insight before data: lead with the implication, then the number. Never open a sentence with a raw figure.
+- Every figure carries its fiscal year in company convention (FY03/2026). Never "recently."
+- No em dashes. No standalone "likely"; use "consistent with" or "pointing to." No arrows between data points.
+- No ratings, price targets, or buy/sell opinions.
+- Depth over brevity. Tables where they carry the information better than prose.
+- Currency: yen with unit stated; give USD conversion only if you state the rate used.
+- Do not paste Japanese source text unless the original term matters. Translate and cite.

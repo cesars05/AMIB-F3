@@ -1,0 +1,84 @@
+# Fuso Chemical Deep-Dive Prompt v0.1 (pre-overview, written 12-Oct-2026)
+
+Purpose: before running the phased `/company_overview` (Prompt_Company_Overview_v0.2), answer a specific list of "how does this company really work and where does it show up in the numbers" questions for a reader with **no industry background**. This is a learning document, not a recommendation. It feeds the later overview and the segment model (Prompt_Segment_Analysis_Framework_v0.2).
+
+Read first: `_NOTES.md` in each folder (file identity, period, reliability of each .md). Do not re-inventory the folder. Status: executed on 12-Oct-2026, output in `Fuso_DeepDive_2026-10-12.md` (root).
+
+---
+
+## 0. PARAMETERS
+
+| Parameter | Value |
+|---|---|
+| COMPANY | Fuso Chemical Co., Ltd. (扶桑化学工業), TSE Prime 4368 |
+| FY CONVENTION | Company "FY2025" (2025年度) = FY03/2026 = Apr-2025 to Mar-2026. MTP "2026-2030年度" = FY03/2027 to FY03/2031. "2028年度完成" = FY03/2029 |
+| UNITS | Company decks use 億円 (100 million yen). Tanshin/yuho use millions or thousands of yen. State the unit every time |
+| STOCK SPLIT | 3-for-1 on 1-Apr-2026. Label every per-share figure pre/post split |
+| LANGUAGE OF OUTPUT | Spanish body text (the reader is learning the industry), English house tags, FY labels as FY03/20XX |
+| STYLE | No em dashes. No standalone "likely" (use "consistent with" / "pointing to"). Insight before data. No ratings or price targets. Define every industry term inline the first time |
+| TAGS | [D] disclosed (source + page), [I] inferred (basis stated), [ND] not disclosed. Never fill a gap with a plausible guess |
+| OUTPUT FILE | `Fuso_DeepDive_<date>.md` in the root of `2_Fuso Chemicals` |
+
+---
+
+## 1. SOURCE RULES (learned the hard way)
+
+1. **Slide-deck .md files are NOT a number source.** The PDF-to-markdown conversion detaches chart values from their axis labels (example: capex series on Q4 deck slide 12 appears as loose numbers). For any chart or table in a deck, **render the PDF page to PNG (pymupdf) into the scratchpad and read the image**. Use the .md only to locate the slide.
+2. **Hard numbers come from filings:** yuho (有価証券報告書) for capex by segment (設備の状況), depreciation, cash flow, segment tables, risk factors, raw materials, customers; tanshin (決算短信) for quarterly P&L and balance sheet; decks for management framing.
+3. **Japanese prevails.** The English decks are translations (the JP twin of the Q4 FY03/2026 deck is `3825ea4a...`; the English one sits in the root). Where wording differs, quote the Japanese and flag it.
+4. **PDF page vs printed slide number.** MTP deck: PDF page = printed slide + 1. Quote PDF pages, not printed numbers, and say which.
+5. **Folder labels are not evidence.** "Competidores" holds Fujimi, Nissan Chemical, Mitsubishi Chemical Group. Do not call any of them a competitor, customer or supplier of Fuso unless that peer's own filings (or Fuso's) say so. Fujimi, for instance, formulates CMP slurry; its only yuho in the folder is the **FY03/2013** one (61st term), which shows it was a Fuso customer then. Check the period of every peer file (see `Company/Competidores/_NOTES.md`).
+6. **Conflicts between sources must be shown, not resolved silently.** Known open conflict: FY03/2027 net income guidance is 16,600 (Q4 deck, 15-May-2026) vs 19,200 (Q1 tanshin, 7-Aug-2026, marked "no revision"). The gap of 2,600m equals the after-tax value of the 3,694m subsidy (yuho P104) and the H1 forecast moves by the same amount, so the Aug figure probably includes the subsidy [I]. Still check TDnet / the IR site for a notice between May and August 2026 before calling either number wrong. This also tests the note in Segment Prompt v0.2 section 5 that the Workspace guidance row is "wrong": it may only be newer.
+7. **Verify the reader's premises.** "Capex has fallen" must be tested against the yuho series and the Q1 balance sheet (construction in progress 4.2 to 17.3 bn yen and facility payables 5.4 to 14.0 bn yen in Q1 FY03/2027) before explaining it.
+
+---
+
+## 2. QUESTIONS TO ANSWER (one section each, in this order)
+
+### Q1. Capital expenditure plans: what, where, how much, for what, and what do they expect
+Table with one row per project: product line and segment, site, amount (planned and spent to date), start, completion, certification status, capacity added (if disclosed), customer-cost sharing, subsidy, and management's stated expectation. Cover at least: Kashima Phase I (done Apr-2023), Kyoto new line (done Oct-2024), Kashima Phase II (done Aug-2025, certification in progress), Kyoto ultra-high-purity colloidal silica project (400 oku yen, to Feb-2029), Kashima QC building (to Sep-2027), PMP Fermentation (US gluconic acid, operation Jul-2027), Osaka plant (FFA relocation / office / upgrades), Higashi-Osaka R&D center (2028), Tokyo R&D expansion (done Feb-2026), HQ relocations. Then the MTP envelope: growth investment 1,000 oku yen excluding general capex, capex 670+ oku, R&D 100 oku, M&A/other, operating cash flow 1,640 oku, repayments 170 oku, shareholder returns 200 oku+. Explain, in plain language, what each plant makes and why it must be built in waves.
+
+### Q2. Why did capex fall in recent years, and is that the right reading?
+Series FY03/2020 to FY03/2027 plan: capex, depreciation, R&D, by segment (yuho). Separate "lumpy wave" logic (build, then certify, then fill) from a genuine decline. State the cash-flow capex vs additions definition used. Link each wave to the demand signal that triggered it and to the lag before revenue.
+
+### Q3. When will the new capacity show up in the P&L?
+Build the lag chain per project: completion date, customer certification (qualification, 認証), first mass production, ramp, full utilization. Use the company's own examples (Kashima I: completion Apr-2023, full operation from end FY03/2025, about 23 months; Kyoto new line: completion Oct-2024, certification complete and full operation from end FY03/2026, about 17 months; the English deck says "end of Mar.2025", which mistranslates 2025年度末; Kashima II: completion Aug-2025, depreciation from Dec-2025, certification still in progress on 15-May-2026). Pair with the depreciation step-up (slide "Forecast for Depreciation": increase in FY03/2027 and FY03/2028) and the price revision of 5-10% from FY2026 with customers sharing next-capex cost (the price revision starts in the company's "2026年度", which is FY03/2027). Output: a timeline table of "depreciation starts" vs "revenue starts", and the years where operating margin is compressed. Tag the lags [I] unless the company states them.
+
+### Q4. Segments: what each does, who buys it, what drives it
+Electronic Materials (ultra-high-purity colloidal silica for CMP slurry, functional chemicals, organo silica sol, silica nano powder, alkyl silicate) and Life Science (fruit acids: malic, citric, gluconic, fumaric; maleic anhydride; vitamin C; food additive formulations). For each: revenue, operating profit, margin, EBITDA, 5-year trend, volume vs price (Life Science has indices), customers if disclosed, overseas share, what management says went up and down and why (use the "Factors Affecting" slides), and FY03/2027 guidance by segment. Also: why the two segments behave so differently, and whether they share capability.
+
+### Q5. HBM and CMP slurry: why would Fuso need to make more?
+Teach the chain from zero: what a wafer is, what CMP (chemical mechanical planarization) does, what slurry is, where colloidal silica sits inside slurry, why silica purity matters, who the slurry formulators are (Fujimi, Resonac, Fujifilm, CMC/Entegris, DuPont-type players: verify from peer filings), how HBM (high-bandwidth memory: DRAM chips stacked vertically and connected through TSVs) multiplies the number of polishing steps per bit versus planar DRAM, what hybrid bonding adds (Fuso slide 35), and how that becomes tons of silica. Then **claim vs evidence**: which numbers does Fuso disclose (CMP slurry market forecast from Fuji Chimera in MTP PDF page 15; "growth above the CMP slurry market"; capacity index chart; 1.5x particle density of high-concentration products), which does it not (share of AI in segment sales, volume, price), and what would make the AI narrative fail. Use Fujimi and Nissan Chemical decks only for market-level facts and cite them as such.
+
+### Q6. What has changed financially
+FY03/2020 to FY03/2026 plus Q1 FY03/2027: sales, gross margin, SG&A, depreciation, operating profit, EBITDA, non-operating, extraordinary items, tax rate, net profit, EPS (pre/post split), capex, free cash flow, net cash/debt, equity ratio, ROE/ROIC, dividend payout. Bridge FY03/2025 to FY03/2026 and FY03/2026 to FY03/2027 plan (company has both bridge slides: read the images). Normalization flags: Q1 FY03/2027 net profit +115% vs operating profit +31.5% (subsidy gain 3,704 million yen), FX at 150 yen/USD, depreciation step-up, benzene, and whether FY03/2026 is a cycle peak. Compare outcome vs initial and revised budget (initial OP 140 oku, revised 175 oku, actual 188.5 oku) as a credibility check.
+
+### Q7. Benzene: why it matters and what Fuso did
+Chain: crude oil / naphtha, benzene, maleic anhydride (made by oxidation of benzene), malic acid and fumaric acid (both made from maleic anhydride), then food, beverage, detergent and feed customers. Explain what is made in-house vs bought (maleic anhydride operation "until scheduled maintenance early May", external procurement under consideration), the Middle East situation (benzene price and supply, sulfur and sulfuric acid, logistics materials), which products are NOT exposed (gluconic acid, vitamin C), how price is revised (formula, lag, customer pushback), the FY03/2027 assumption (benzene 745 USD/t annual average) and the sensitivity. Then the Electronic Materials parallel: metallic silicon (diversify to Malaysia, Brazil). Mitigations listed by the company: price revision, multi-sourcing, in-house production rate target (in-house share 71%, 49% domestic plus 22% overseas, against a 75% target; 29% outsourced), external procurement of maleic anhydride, inventory. Quantify only what is disclosed; otherwise [I] with the basis or [ND].
+
+### Q8. What to monitor (4 to 6 items, each with a threshold and what each direction signals)
+
+---
+
+## 3. SOURCE MAP (file to question)
+
+Paths are relative to `2_Fuso Chemicals`. P = PDF page.
+
+| Question | Primary | Secondary |
+|---|---|---|
+| Q1 capex | `Company/Fase0_descargas_IR/01_MTP_Next-Growth-2030_plan.pdf` P7 (cash allocation), P18-19 (capex timeline), P20-22 (R&D center); Q4 deck P52, P56; yuho FY03/2026 `34f9a5a7...` 設備の状況 | `Company/Fase0_descargas_IR/06_Dialogue-QA...` P5; shareholder report FY03/2026 `02463db5...` (PMP Jul-2027); Q1 tanshin (CIP) |
+| Q2 capex history | yuho FY03/2026 and FY03/2025 (`cc1030a6...`), Q4 deck P12 (image) | `07_FUSO-TOPICS_2026` (history of announcements), `08_Prev-MTP_FUSO-VISION-2025` |
+| Q3 timing | Q4 deck P32 (certification Gantt, image), P33-34 (start-up shortening), P41-42 (depreciation) | Q2 deck `05_Presentation_Q2...`, `Fuso Chemical - Q2 2026 - Conference Call Deck.pdf`, Dialogue Q&A P5 |
+| Q4 segments | Q4 deck P5-7, P15-25 (Life Science), P27-37 (Electronic Materials), P40 (guidance by segment); yuho segment note | tanshin FY03/2026 `03_...`, Q3 `04_...`, Q2 `11_...` |
+| Q5 HBM / CMP | MTP P15 (market chart), Q4 deck P31-35 | `Company/Competidores/Fujimi/` (Presentation FY03/2026 P?, Integrated Report), `Nissan_Chemical/` (Q&A decks), `Mitsubishi_Chemical_Group/` (check relevance first) |
+| Q6 financials | tanshin FY03/2026 `03_...`, yuho 5-year table, Q4 deck P4-13, P39-43; Q1 tanshin; Corporate presentation (ROIC/ROE table) | Excel model `20261009_Fuso Chemicals.xlsx` (read-only), sheet `Fuso Financials` if present |
+| Q7 benzene | Q4 deck P25 (image), P36-39 (assumptions); yuho risk factors / raw materials | Q2 deck, Integrated Report (JPN), AGM material |
+
+---
+
+## 4. WORKFLOW
+
+1. Read `_NOTES.md` files (2 min). 2. Grep the md corpus before reading whole files: 設備投資, 減価償却, 京都, 鹿島, 認証, HBM, ベンゼン, 無水マレイン酸, 金属シリコン, 価格改定, 補助金, 高濃度. 3. Render the PDF pages listed in the map to PNG in the scratchpad and read them. 4. Fill the tables per question with tags. 5. Cross-check against the Excel model (read-only via openpyxl `read_only=True, data_only=True`; never save). 6. Write the deep-dive, save to the folder, then report conflicts and open items.
+
+## 5. DEFINITION OF DONE
+Every question answered with sourced tables; conflicts listed, not hidden; premises verified; Spanish body; tags on every material number; open data gaps and the documents that would close them (Japanese Q1 FY03/2027 tanshin and any interim revision notice; Japanese Q1 results deck if one exists; segment capex by plant if only in the yuho).

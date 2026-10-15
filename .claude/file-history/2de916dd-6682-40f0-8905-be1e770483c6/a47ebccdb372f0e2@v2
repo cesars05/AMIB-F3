@@ -1,0 +1,38 @@
+import win32com.client as w, sys
+xl = w.GetActiveObject('Excel.Application')
+wb = [xl.Workbooks(i) for i in range(1, xl.Workbooks.Count + 1) if xl.Workbooks(i).Name == 'Bimbo Financial Model_v2.xlsx'][0]
+wc = wb.Worksheets('Consolidated Model'); wr = wb.Worksheets('Regional Model')
+lab = lambda ws, r: str(ws.Cells(r, 2).Value or '').strip()
+F, G = 6, 7   # 2019, 2020
+if not (lab(wc, 352).startswith('Bakeries and Plants') and lab(wc, 353) == 'Distribution Routes' and lab(wc, 354) == 'Sales Centers'
+        and lab(wc, 355) == 'Associates' and wc.Cells(5, F).Value == 2019):
+    sys.exit('consolidated layout changed')
+if not (lab(wr, 63) == 'Unit Economics by Region' and [lab(wr, r) for r in range(65, 69)] == ['North America', 'Mexico', 'EAA', 'Latin America']
+        and wr.Cells(63, F).Value == 2019):
+    sys.exit('regional layout changed')
+
+cons = {352: (194, 203), 353: (59000, 53000), 354: (1700, 1700), 355: (133000, 133000)}
+for r, (a, b) in cons.items():
+    for c, v in ((F, a), (G, b)):
+        if wc.Cells(r, c).Formula not in ('', None): sys.exit(f'cell not empty {r},{c}')
+        wc.Cells(r, c).Value2 = v
+reg = {65: (77, 78), 66: (37, 38), 67: (48, 55), 68: (32, 32)}
+for r, (a, b) in reg.items():
+    for c, v in ((F, a), (G, b)):
+        if wr.Cells(r, c).Formula not in ('', None): sys.exit(f'regional cell not empty {r},{c}')
+        wr.Cells(r, c).Value2 = v
+
+def note(cell, t):
+    if cell.Comment is not None: cell.Comment.Delete()
+    cell.AddComment(t)
+note(wc.Range('B352'), 'Sources: plants and routes at 31 Dec per BMV annual reports 2019, 2020, 2021, 2022, 2024 and 2025. Associates and sales centers 2019 per 2019 Integrated Annual Report, 2020 and 2023 per the About Grupo Bimbo paragraph of the 4Q results release (matches BMV year-end figures in 2021, 2024 and 2025). Counts are reported as "more than" and are rounded. 2016-2018 not available (BMV 2018 link offline, integrated reports show counts only as images).')
+note(wr.Range('B63'), 'Plants per BMV annual reports (section 10.1, productive facilities at 31 Dec) for 2019, 2020, 2021, 2022, 2024 and 2025. NA = USA + Canada, EAA = Europe + Asia + Africa. A plant is any bakery or production site regardless of size, capacity is not disclosed, so compare each region over time rather than across regions. EAA includes many small acquired bakeries (Europe 25 in 2019 to 61 in 2025). 2023 BMV report not available, 2016-2018 not available. 2019-2021 sales and EBITDA are on the original basis including Ricolino, consistent with those plant counts.')
+xl.CalculateFull()
+try: err = [ws.UsedRange.SpecialCells(-4123, 16).Address for ws in (wc, wr)]
+except Exception: err = 'none'
+print('errors', err)
+for r in list(range(352, 356)) + list(range(357, 361)) + [363]:
+    print('C', r, lab(wc, r)[:34].ljust(34), [wc.Cells(r, c).Text for c in range(6, 13)])
+for r in list(range(65, 70)) + list(range(72, 77)) + list(range(79, 84)):
+    print('R', r, lab(wr, r)[:30].ljust(30), [wr.Cells(r, c).Text for c in range(6, 13)])
+wb.Save()

@@ -1,0 +1,74 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$cm=$wb.Worksheets.Item("Consolidated Model")
+$d =$wb.Worksheets.Item("DCF")
+if([string]$cm.Range("C185").Text -notlike "*discontinued*"){ throw ("ABORTO: r185 no es la linea de discontinuadas, es: "+[string]$cm.Range("C185").Text) }
+if([string]$cm.Range("C373").Text -notlike "*working capital released*"){ throw "ABORTO: r373 cambio" }
+if([string]$d.Range("C15").Formula -notlike "*Consolidated Model'!L22*"){ Write-Output ("aviso: DCF C15 = "+[string]$d.Range("C15").Formula) }
+Write-Output "guardas OK"
+$xl.Calculation=-4135
+
+# --- FIX 1: el capital de trabajo vendido NO es efectivo cobrado ---
+$cm.Range("L185").Formula="=-L373"
+$cm.Range("L185:Q185").FillRight() | Out-Null
+Write-Output "FIX 1: r185 (discontinuadas) = -(capital de trabajo que se fue con el negocio)"
+
+# --- FIX 2: el DCF debe leer utilidad operativa ajustada, sin la ganancia de venta ---
+for($c=3;$c -le 8;$c++){
+  $f=[string]$d.Cells.Item(15,$c).Formula
+  if($f -match "Consolidated Model'!([A-Z]+)22"){
+    $col=$Matches[1]
+    $nf=$f.Replace("Consolidated Model'!"+$col+"22","Consolidated Model'!"+$col+"56")
+    $d.Cells.Item(15,$c).Formula=$nf
+  }
+}
+Write-Output "FIX 2: DCF r15 ahora lee r56 (Adj. Operating Profit) en vez de r22 (EBIT estatutario)"
+
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ""
+Write-Output "==================== VERIFICACION ===================="
+Write-Output ("            "+"".PadRight(32)+"  FY2029     FY2030     FY2031     FY2032")
+$chk=@{}
+$chk[13]="P&L  Revenue"
+$chk[22]="P&L  Statutory EBIT"
+$chk[56]="P&L  Adj. Operating Profit"
+$chk[32]="P&L  Profit for the year"
+$chk[126]="BS   Cash at bank"
+$chk[140]="BS   TOTAL ASSETS"
+$chk[157]="BS   TOTAL LIABILITIES"
+$chk[165]="BS   TOTAL EQUITY"
+$chk[168]="BS   CHECK (=0)"
+$chk[185]="CF   Discontinued (WC vendido)"
+$chk[187]="CF   Net cash from operating"
+$chk[195]="CF   Net cash investing"
+$chk[199]="CF   Extraordinary dividend"
+$chk[215]="CF   CHECK caja (=0)"
+$chk[253]="DEU  Total Debt"
+$chk[257]="DEU  Net Debt incl leases"
+foreach($r in ($chk.Keys | Sort-Object)){
+  $v=""
+  for($c=14;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(11) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$chk[$r].PadRight(32)+$v)
+}
+Write-Output ""
+$e=0; try{ $e=[int]$cm.UsedRange.SpecialCells(-4123,16).Count }catch{}
+Write-Output ("  errores en Consolidated Model: "+$e)
+Write-Output ("  DCF EBIT por anio: "+([string]$d.Range("C15").Text)+" | "+([string]$d.Range("D15").Text)+" | "+([string]$d.Range("E15").Text)+" | "+([string]$d.Range("F15").Text)+" | "+([string]$d.Range("G15").Text)+" | "+([string]$d.Range("H15").Text))
+Write-Output ("  DCF precio implicito = "+[string]$d.Range("E41").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=$wb.Worksheets.Item($nm)
+  $e2=0; try{ $e2=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e2 -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e2) }
+  $tot+=$e2
+}
+Write-Output ("  total celdas con error: "+$tot)

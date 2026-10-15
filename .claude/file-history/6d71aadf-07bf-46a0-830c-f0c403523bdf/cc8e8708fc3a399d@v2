@@ -1,0 +1,37 @@
+import time, atexit, pywintypes
+import win32com.client as w
+BUSY=(-2147418111,-2147417846,-2146777998)
+def _retry(fn):
+    for i in range(900):
+        try: return fn()
+        except pywintypes.com_error as e:
+            code=e.args[0]; inner=e.args[2][5] if (len(e.args)>2 and e.args[2] and len(e.args[2])>5) else None
+            if code in BUSY or inner in BUSY: time.sleep(1); continue
+            raise
+    raise RuntimeError("Excel busy too long")
+def _unwrap(v): return object.__getattribute__(v,"_o") if isinstance(v,P) else v
+def _wrap(v):
+    if hasattr(v,"_oleobj_"): return P(v)
+    if callable(v): return lambda *a,**k: _wrap(_retry(lambda: v(*[_unwrap(x) for x in a],**{kk:_unwrap(vv) for kk,vv in k.items()})))
+    return v
+class P:
+    def __init__(self,o): object.__setattr__(self,"_o",o)
+    def __getattr__(self,n): return _wrap(_retry(lambda: getattr(object.__getattribute__(self,"_o"),n)))
+    def __setattr__(self,n,v): _retry(lambda: setattr(object.__getattribute__(self,"_o"),n,_unwrap(v)))
+    def __call__(self,*a,**k): return _wrap(_retry(lambda: object.__getattribute__(self,"_o")(*[_unwrap(x) for x in a],**{kk:_unwrap(vv) for kk,vv in k.items()})))
+def _iter(self):
+    o=object.__getattribute__(self,"_o"); n=_retry(lambda: o.Count)
+    for i in range(1,n+1): yield _wrap(_retry(lambda: o(i)))
+P.__iter__=_iter
+def private_excel():
+    x=P(w.DispatchEx("Excel.Application")); x.Visible=False; x.DisplayAlerts=False
+    t=x.Workbooks.Add(); x.Calculation=-4135
+    def _cl():
+        try:
+            for i in range(x.Workbooks.Count,0,-1): x.Workbooks(i).Close(False)
+        except Exception: pass
+        try: x.Quit()
+        except Exception: pass
+    atexit.register(_cl)
+    return x,t
+def bgr(h): h=h.lstrip("#"); return int(h[4:6]+h[2:4]+h[0:2],16)

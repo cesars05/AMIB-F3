@@ -1,0 +1,22 @@
+# 02 · Trabajos de Clase (lo que el equipo ya entregó)
+
+**Qué es esta carpeta:** las dinámicas y ejercicios hechos por el **Equipo #5 · Aurex Capital** (Gpo. 602, Prof. Francisco Román Rincón Núñez). Documentan la evolución de la idea del fondo — son los antecedentes de la tesis, el pipeline y la economía del fondo.
+
+**Equipo (6 personas):** Julio César Silva de la Rosa (Managing Partner) · Roberto Flores (Socio de inversión) · Mariana González (Socio de operaciones) · Tomás Tapia (Socio de relación con inversionistas) · Pablo Belmonte y Miguel Montalvo (Analistas).
+
+| Archivo | Fecha | Qué contiene | Se usa para |
+|---|---|---|---|
+| `D2_Aurex Capital.pdf` (+ `.md`, `_figuras.pdf`) | 17-ago-2026 | **Constitución del fondo:** nombre, 5 roles, tesis (≤200 car.), 4 decisiones (sector, etapa, geografía, tamaño: versión original **$50M USD**, 8 empresas, 5 verticales), **5 criterios de exclusión**, 3 diferenciadores. | Antecedente de tesis. ⚠️ Versión vieja: hoy el fondo es $100M, México. La exclusión v ("tickets $5–10M") debe ajustarse a $2–10M. |
+| `_D3_ AurexCapital.docx.pdf` (+ `.md`) | 18-ago-2026 | **Dinámica 3 — Pipeline:** 10 empresas objetivo (Niko Energy, Quartux, Solar Inc., Pireos Power, S2G Energy, XC Generation, Verdigris, Energypro Mx, FAZT, Uriel Renovables) con descripción, encaje con la tesis, valor estimado y vertical; Uriel = "la que va a fracasar". | **Base del portafolio del modelo** (8 de las 10 pasaron al Excel; Solar Inc. y Energypro Mx se descartaron por tamaño $0.5–1M). |
+| `D5_Aurex Capital (1).docx` | 25-ago-2026 | **Dinámica 5 — El espejo:** tabla comparativa vs. General Atlantic, Ignia, Alta Growth III, Artha, Nexxus, Discovery Americas; 3 preguntas (traslape, espacio vacío, decisión); **tesis v2**; enunciado de diferenciación. | Sección de competencia del PPM y lámina "mercado y diferencia". ⚠️ Tesis v2 dice tickets $1–5M y corredor México-EE.UU. (no coincide con el modelo). |
+| `Ejercicio Clase TVPI.pdf` (+ `.md`) | ~26-ago-2026 (clase C06) | Respuesta de 3 min al LPAC: fondo año 7, TVPI 2.1x, DPI 0.2x, 3 empresas sin comprador. Argumenta credibilidad del TVPI (Kroll como tercero, comparables con descuento por iliquidez, ronda externa), salidas (estratégico → PE → continuation vehicle) y 2 preguntas dolorosas. | Preparar la ronda de preguntas de la defensa (Q5 "¿qué protege al inversionista?", Q2 "cuántas apuestas"). |
+
+## Datos por documento que no hay que perder
+- **Tesis v1 (D2, 17-ago):** "AUREX Capital invierte en empresas de infraestructura energética en etapas tempranas en Norteamérica, impulsando la electrificación, la adopción de energías limpias y el crecimiento industrial sostenible."
+- **Tesis v2 (D5, 25-ago):** "Invertimos $1–5 M USD en empresas de eficiencia energética con ingresos recurrentes, para escalar proyectos en el corredor industrial México-EE.UU. impulsado por el nearshoring." (la tesis del docx de Supuestos exige reescribirla v3: México + crecimiento, ≤200 car.)
+- **Enunciado de diferenciación (D5):** "Este fondo es el único, de los seis analizados por el grupo, que combina eficiencia energética como sector, etapa de crecimiento con ingresos recurrentes, y el corredor industrial México-Estados Unidos como geografía." (el propio documento admite que falta correr la tabla contra un universo más amplio.)
+- **Exclusiones D2:** (i) cliente único >30% de ventas, (ii) directivos sin experiencia en energía, (iii) generación utility al mercado mayorista, (iv) ingresos dependientes de subsidios vigentes, (v) valuación >$100M.
+- **Diferenciadores D2:** red de contactos en energía/finanzas; un miembro trabaja en un fondo de inversión; un familiar dueño de empresa de infraestructura energética (⚠️ posible conflicto de interés a declarar en el PPM).
+
+## Faltan en esta carpeta (según el balance de D5)
+Documentos del 11-ago (portafolio del ejercicio inicial) y del 24-ago (radiografía individual de un fondo real, 5 integrantes) — no están en la carpeta; solo aparecen citados.

@@ -1,0 +1,101 @@
+# v4 = user's v3 + bubble-slide tables: Name | Market Cap | ETF | YTD | M1.1 | Stab. (no Wt), colour scale on YTD / M1.1 / Stab.
+import copy, pickle, re, json, statistics
+from pptx import Presentation
+from pptx.util import Pt, Emu
+from pptx.oxml.ns import qn
+from lxml import etree
+S="C:/Users/cesar/AppData/Local/Temp/claude/C--Users-cesar-OneDrive-Desktop-AZTD-Peers/6d71aadf-07bf-46a0-830c-f0c403523bdf/scratchpad/"
+SRC=S+"user_v3.pptx"; OUT="C:/Users/cesar/OneDrive/Desktop/AZTD Peers/AZTD vs Peers - Performance Review_v4.pptx"
+MC=pickle.load(open(S+"mktcap_by_ric.pkl","rb"))          # ric -> USD M
+FW=pickle.load(open(S+"deck_fundw.pkl","rb")); RT=pickle.load(open(S+"deck_rt.pkl","rb"))
+FUNDS=["AZTD","AVDV","ISCF","DISV","DFIS"]
+def col(L): return (ord(L[0])-64) if len(L)==1 else (ord(L[0])-64)*26+ord(L[1])-64
+def g_(r,L): return r[col(L)-3]
+def num(v): return isinstance(v,(int,float)) and not isinstance(v,bool)
+def clean_name(n,k=20):
+    n=str(n)
+    for _ in range(2):
+        n=re.sub(r"(,? Inc\.?$|,? Corp\.?$|,? Ltd\.?$| PLC$| Plc$| S\.A\.?$| SA$| AG$| ASA$| N\.V\.$| NV$| SpA$| S\.p\.A\.$| SE$| Oyj$| AB$| A/S$| Corporation$| CORPORATION$| Holdings?$| Limited$| Co\.?,? Ltd\.?$| CO\., LTD\.$| Co\.?$| Group$| LP$)","",n).strip(" ,.")
+    if n.isupper() and len(n)>4: n=n.title()
+    return n if len(n)<=k else n[:k-1].rstrip()+"."
+def seq_for(s):
+    rows={g_(r,"C"):r for r in RT["rows"] if g_(r,"CK")==s}
+    picks={}
+    for f in FUNDS:
+        cand=[(w,ric) for ric,w in FW[f].items() if ric in rows and num(g_(rows[ric],"CF")) and num(g_(rows[ric],"CM")) and w>0]
+        for w,ric in sorted(cand,reverse=True)[:5]: picks.setdefault(ric,[]).append((f,w))
+    items=[]
+    for ric,lst in picks.items():
+        r=rows[ric]; funds=[f for f,_ in lst]; grp=funds[0] if len(funds)==1 else "Several ETFs"
+        items.append(dict(ric=ric,name=clean_name(g_(r,"D"),20),funds=funds,grp=grp,w=max(w for _,w in lst),ytd=g_(r,"CF"),m11=g_(r,"CM"),stab=g_(r,"CO")))
+    order=["AZTD","AVDV","ISCF","DISV","DFIS","Several ETFs"]
+    items.sort(key=lambda d:(order.index(d["grp"]),-d["w"]))
+    groups=[g for g in order if any(d["grp"]==g for d in items)]
+    return [d for g in groups for d in items if d["grp"]==g]
+def scale(v,lo,mid,hi):
+    """Excel-like 3-colour scale red F8696B - yellow FFEB84 - green 63BE7B"""
+    R,Y,G=(0xF8,0x69,0x6B),(0xFF,0xEB,0x84),(0x63,0xBE,0x7B)
+    if v<=mid: t=0 if mid==lo else (v-lo)/(mid-lo); a,b=R,Y
+    else: t=1 if hi==mid else (v-mid)/(hi-mid); a,b=Y,G
+    t=max(0,min(1,t)); return "%02X%02X%02X"%tuple(int(a[i]+(b[i]-a[i])*t) for i in range(3))
+def fill(tc,hexc):
+    tcPr=tc.get_or_add_tcPr()
+    for tag in ("a:noFill","a:solidFill","a:gradFill"):
+        for e in tcPr.findall(qn(tag)): tcPr.remove(e)
+    sf=etree.SubElement(tcPr,qn("a:solidFill")); c=etree.SubElement(sf,qn("a:srgbClr")); c.set("val",hexc)
+def set_text(cell,text):
+    tf=cell.text_frame; p=tf.paragraphs[0]
+    if p.runs:
+        p.runs[0].text=text
+        for r in p.runs[1:]: r._r.getparent().remove(r._r)
+    else:
+        r=p.add_run(); r.text=text
+prs=Presentation(SRC)
+SECS={"Top Holdings by ETF: Materials":"Materials","Top Holdings by ETF: Financials":"Financials","Top Holdings by ETF: Consumer Discretionary":"Consumer Discretionary","Top Holdings by ETF: Utilities":"Utilities"}
+LOG={}
+for sl in prs.slides:
+    title=[ph.text_frame.text for ph in sl.placeholders if ph.placeholder_format.idx==0]
+    if not title or title[0] not in SECS: continue
+    s=SECS[title[0]]; seq=seq_for(s)
+    tbs=[sh for sh in sl.shapes if sh.has_table]; tsh=tbs[0]; tb=tsh.table; tbl=tb._tbl
+    hdr=[c.text.strip() for c in tb.rows[0].cells]
+    # build the column structure Name | Market Cap | ETF | YTD | M1.1 | Stab.
+    grid=tbl.find(qn("a:tblGrid")); gcs=grid.findall(qn("a:gridCol"))
+    trs=tbl.findall(qn("a:tr"))
+    if "Market Cap" not in hdr:            # insert after Name (clone the ETF column)
+        ei=hdr.index("ETF")
+        gcs[0].addnext(copy.deepcopy(gcs[ei]))
+        for tr in trs:
+            tcs=tr.findall(qn("a:tc")); tcs[0].addnext(copy.deepcopy(tcs[ei]))
+        hdr=hdr[:1]+["Market Cap"]+hdr[1:]
+    wi=hdr.index("Wt")
+    gcs=grid.findall(qn("a:gridCol")); grid.remove(gcs[wi])
+    for tr in trs: tr.remove(tr.findall(qn("a:tc"))[wi])
+    hdr.pop(wi)
+    # widths: keep total
+    gcs=grid.findall(qn("a:gridCol")); tot=int(tsh.width)
+    for gc,f in zip(gcs,[0.34,0.15,0.17,0.11,0.115,0.115]): gc.set("w",str(int(tot*f)))
+    tb=tsh.table
+    set_text(tb.cell(0,0),"Name"); set_text(tb.cell(0,1),"Mkt Cap")
+    href=[r for pa in tb.cell(0,0).text_frame.paragraphs for r in pa.runs][0].font
+    for r_ in [r for pa in tb.cell(0,1).text_frame.paragraphs for r in pa.runs]: r_.font.size=href.size; r_.font.bold=True; r_.font.name="Arial"
+    nrow=len(tb.rows)-1
+    assert nrow==len(seq), (s,nrow,len(seq))
+    ytd=[d["ytd"] for d in seq]; m11=[d["m11"] for d in seq]; stb=[d["stab"] for d in seq if num(d["stab"])]
+    rng={"ytd":(min(ytd),statistics.median(ytd),max(ytd)),"m11":(min(m11),statistics.median(m11),max(m11)),"stab":(min(stb),statistics.median(stb),max(stb))}
+    for i,d in enumerate(seq,1):
+        assert tb.cell(i,0).text.strip()==d["name"], (tb.cell(i,0).text,d["name"])
+        mc=MC.get(d["ric"])
+        set_text(tb.cell(i,1),("$%.1fB"%(mc/1000)) if num(mc) else "n/a")
+        ref=[r for pa in tb.cell(i,0).text_frame.paragraphs for r in pa.runs][0].font
+        for r_ in [r for pa in tb.cell(i,1).text_frame.paragraphs for r in pa.runs]:
+            r_.font.size=ref.size; r_.font.name="Arial"; r_.font.bold=ref.bold
+            try: r_.font.color.rgb=ref.color.rgb
+            except Exception: pass
+        for k,cidx in (("ytd",3),("m11",4),("stab",5)):
+            v=d[k]
+            if num(v): fill(tb.cell(i,cidx)._tc,scale(v,*rng[k]))
+    LOG[s]=[(d["name"],MC.get(d["ric"])) for d in seq]
+prs.save(OUT)
+json.dump(LOG,open(S+"deck_v4_log.json","w"),indent=0,default=str)
+print("saved v4", {k:len(v) for k,v in LOG.items()})

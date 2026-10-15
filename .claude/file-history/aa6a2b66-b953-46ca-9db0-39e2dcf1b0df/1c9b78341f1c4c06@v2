@@ -1,0 +1,18 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t = $null; foreach ($w in $xl.Workbooks) { if ($w.Name -eq '20260922_SETSA Transportes.xlsx') { $t = $w } }
+if (-not $t) { throw 'libro no encontrado' }
+$tx = $t.Worksheets.Item('Transacciones Precedentes')
+$m  = $t.Worksheets.Item('Modelo SETSA')
+for ($i = 30; $i -le 56; $i++) {
+    $f = [string]$tx.Range("F$i").Formula
+    if ($f -ne '') { "$i | " + $tx.Cells.Item($i,3).Value2 + " | " + $f + " = " + $tx.Range("F$i").Text }
+}
+"--- referencias al modelo ---"
+for ($i = 30; $i -le 56; $i++) {
+    $f = [string]$tx.Range("F$i").Formula
+    foreach ($mm in [regex]::Matches($f, "'Modelo SETSA'!\`$?([A-Z]+)\`$?(\d+)")) {
+        $r = [int]$mm.Groups[2].Value
+        "  F$i usa Modelo!" + $mm.Groups[1].Value + $r + " -> [" + $m.Cells.Item($r,3).Value2 + "]"
+    }
+}

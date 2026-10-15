@@ -1,0 +1,112 @@
+$ErrorActionPreference="Stop"
+$xl=[Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$v4=$xl.Workbooks | ?{$_.Name -like "*v4*" -and $_.Name -notlike "*BACKUP*"} | select -First 1
+$ws=$v4.Worksheets.Item("EPV")
+$CM="'Consolidated Model'!"
+$epv=@("C","D","E","F","G","H")
+$cmc=@("G","H","I","J","K","L")
+$prev=@("F","G","H","I","J","K")
+$fyOffset=@(-5,-4,-3,-2,-1,0)
+
+# base font on working area
+$ws.Range("B1:M70").Font.Name="Arial"; $ws.Range("B1:M70").Font.Size=11
+
+# title and units, same style as Multiples tab
+$ws.Range("B2").Value2="Earnings Power Value"; $ws.Range("B2").Font.Bold=$true; $ws.Range("B2").Font.Size=14
+$ws.Range("B3").Value2="MXN in millions, except per share data"; $ws.Range("B3").Font.Italic=$true
+
+# assumptions block
+$ws.Range("B5:H5").Interior.Color=1709731; $ws.Range("B5:H5").Font.Color=16777215; $ws.Range("B5:H5").Font.Bold=$true
+$ws.Range("B6").Value2="WACC"; $ws.Range("C6").Formula="=+WACC!J19"
+$ws.Range("B7").Value2="Valuation date"; $ws.Range("C7").Formula="=+DCF!C7"
+$ws.Range("B8").Value2="Tax rate (latest actual year)"; $ws.Range("C8").Formula="=+${CM}L306"
+$ws.Range("C6").NumberFormat="0.0%"; $ws.Range("C7").NumberFormat="dd-mmm-yyyy"; $ws.Range("C8").NumberFormat="0.0%"
+$ws.Range("C6:C8").HorizontalAlignment=-4108
+$ws.Range("B10").Value2="Adjusted earnings = sales x average operating margin 2020 to 2025. EPV = NOPAT / WACC."
+$ws.Range("B11").Value2="Invested capital excludes cash and current financial debt, and includes right-of-use assets."
+$ws.Range("B10:B11").Font.Italic=$true
+
+# header years linked to the model
+for($i=0;$i -lt 6;$i++){ $c=$epv[$i]; $ws.Range("${c}13").Formula="=+${CM}$($cmc[$i])6" }
+$ws.Range("C13:H13").HorizontalAlignment=-4108
+
+# statement lines
+$ws.Range("B24").Value2="PP&E (incl. right-of-use)"
+$ws.Range("B25").Value2="Current Assets (ex-cash)"
+$ws.Range("B26").Value2="Current Liabilities (ex-debt)"
+for($i=0;$i -lt 6;$i++){ $c=$epv[$i]; $m=$cmc[$i]; $p=$prev[$i]
+  $ws.Range("${c}14").Formula="=+${CM}${m}8"
+  if($i -eq 0){ $ws.Range("${c}15").Formula="=+IFERROR(C14/${CM}F8-1,0)" } else { $ws.Range("${c}15").Formula="=+IFERROR($($epv[$i])14/$($epv[$i-1])14-1,0)" }
+  $ws.Range("${c}16").Formula="=+${CM}${m}32+${CM}${m}36"
+  $ws.Range("${c}17").Formula="=+IFERROR(${c}16/${c}14,0)"
+  $ws.Range("${c}18").Formula="=+${c}14*${c}19"
+  $ws.Range("${c}19").Formula='=+AVERAGE($C$17:$H$17)'
+  $ws.Range("${c}20").Formula="=+${c}18*(1-${CM}${m}306)"
+  $ws.Range("${c}21").Formula='=+$C$6'
+  $ws.Range("${c}22").Formula="=+${c}20/${c}21"
+  $ws.Range("${c}24").Formula="=+${CM}${m}165+${CM}${m}201"
+  $ws.Range("${c}25").Formula="=+${CM}${m}163-${CM}${m}146"
+  $ws.Range("${c}26").Formula="=+${CM}${m}210-${CM}${m}211-${CM}${m}215"
+  $ws.Range("${c}27").Formula="=+${CM}${m}181+${CM}${m}182"
+  $ws.Range("${c}28").Formula="=+${c}24+${c}25-${c}26+${c}27"
+  $ws.Range("${c}29").Formula="=+${c}14/${c}28"
+  $off=$fyOffset[$i]
+  $ws.Range("${c}42").Formula="=+IFERROR(TR(`"BIMBOA.MX`",`"TR.F.EV(Period=FY$off)`",`"Curn=#1 Scale=#2 Null=BLANK`",,Multiples!`$C`$6,Multiples!`$C`$7),`"`")"
+  $ws.Range("${c}32").Formula='=+$C$6'
+  $ws.Range("${c}46").Formula="=+${c}37/${c}`$42"
+  $ws.Range("${c}47").Formula="=+${c}38/${c}`$42"
+  $ws.Range("${c}48").Formula="=+${c}41/${c}`$42"
+}
+$ws.Range("G52").Value2="NOPAT CAGR Last 5Y"
+$ws.Range("H52").Formula="=+(H20/C20)^(1/5)-1"
+$ws.Range("C14:H14").NumberFormat='#,##0'; $ws.Range("C15:H15").NumberFormat='0.0%'
+$ws.Range("C16:H16").NumberFormat='#,##0'; $ws.Range("C17:H17").NumberFormat='0.0%'
+$ws.Range("C18:H18").NumberFormat='#,##0'; $ws.Range("C19:H19").NumberFormat='0.0%'
+$ws.Range("C20:H20").NumberFormat='#,##0'; $ws.Range("C21:H21").NumberFormat='0.0%'
+$ws.Range("C22:H22").NumberFormat='$#,##0'
+$ws.Range("C24:H28").NumberFormat='#,##0'; $ws.Range("C29:H29").NumberFormat='0.00x'
+$ws.Range("C42:H42").NumberFormat='$#,##0'; $ws.Range("C42:H42").Font.Bold=$true; $ws.Range("C42:H42").Font.Color=3684411
+$ws.Range("C14:H52").HorizontalAlignment=-4108
+$ws.Range("C34").HorizontalAlignment=-4108
+
+# bridge
+$ws.Range("E56").Formula="=+H22"
+$ws.Range("E57").Formula="=+H37"; $ws.Range("D57").Formula="=+E57/E56"
+$ws.Range("E58").Formula="=+H38"; $ws.Range("D58").Formula="=+E58/E56"
+$ws.Range("E59").Formula="=+E56-E62-E63+E64"
+$ws.Range("E60").Formula="=-(DCF!C71+DCF!C72)"
+$ws.Range("E61").Formula="=+DCF!C73"
+$ws.Range("E62").Formula="=+E60-E61"
+$ws.Range("E63").Formula="=-DCF!C74"
+$ws.Range("E64").Formula="=+DCF!C75"
+$ws.Range("E66").Formula="=+DCF!C78"
+$ws.Range("E67").Formula="=+DCF!C80"
+$ws.Range("E68").Formula="=+E59/E66"
+$ws.Range("E69").Formula="=+E68/E67-1"
+$ws.Range("E56:E64").NumberFormat='$#,##0'; $ws.Range("E66").NumberFormat='#,##0'; $ws.Range("E67:E68").NumberFormat='$#,##0.00'; $ws.Range("E69").NumberFormat='0.0%'
+$ws.Range("D57:D58").NumberFormat='0.0%'
+$ws.Range("E56:E69").HorizontalAlignment=-4108; $ws.Range("D57:D58").HorizontalAlignment=-4108
+$ws.Range("E59").Font.Bold=$true; $ws.Range("E68:E69").Font.Bold=$true; $ws.Range("B55:E55").Interior.Color=15921906
+$ws.Range("B69:E69").Interior.Color=15921906
+
+# sensitivity: upside vs WACC (columns) and average operating margin (rows)
+$ws.Range("G55").Value2="Upside / Downside Sensitivity"; $ws.Range("G55").Font.Bold=$true
+$ws.Range("G56").Value2="Margin \ WACC"; $ws.Range("G56").Font.Bold=$true
+$ws.Range("J56").Formula='=+$C$6'; $ws.Range("I56").Formula="=+J56-1%"; $ws.Range("H56").Formula="=+I56-1%"; $ws.Range("K56").Formula="=+J56+1%"; $ws.Range("L56").Formula="=+K56+1%"
+$ws.Range("G59").Formula='=+$H$19'; $ws.Range("G58").Formula="=+G59-1%"; $ws.Range("G57").Formula="=+G58-1%"; $ws.Range("G60").Formula="=+G59+1%"; $ws.Range("G61").Formula="=+G60+1%"
+foreach($r in 57..61){ foreach($c in "H","I","J","K","L"){
+  $ws.Range("$c$r").Formula="=+((`$H`$14*`$G$r*(1-${CM}`$L`$306))/$c`$56-`$E`$62-`$E`$63+`$E`$64)/`$E`$66/`$E`$67-1" } }
+$ws.Range("H56:L56").NumberFormat='0.0%'; $ws.Range("G57:G61").NumberFormat='0.0%'; $ws.Range("H57:L61").NumberFormat='0.0%'
+$ws.Range("G55:L61").HorizontalAlignment=-4108
+$ws.Range("H56:L56").Font.Bold=$true; $ws.Range("G57:G61").Font.Bold=$true
+$ws.Range("H56:L56").Borders.Item(9).LineStyle=1; $ws.Range("H56:L56").Borders.Item(9).Color=13332572
+$ws.Range("J59").Interior.Color=15921906
+$ws.Columns("G").ColumnWidth=18
+$xl.Calculate()
+$o=@()
+$o+="WACC="+$ws.Range("C6").Text+" date="+$ws.Range("C7").Text+" tax="+$ws.Range("C8").Text
+foreach($r in 13,14,15,16,17,18,19,20,21,22,24,25,26,27,28,29,31,34,37,38,39,41,42,46,47,48,50,51){ $l=@(); foreach($c in "C","D","E","F","G","H"){ $l+=$ws.Range("$c$r").Text }; $o+=("$r "+$ws.Range("B$r").Text+": "+($l -join " | ")) }
+$o+="H52 CAGR="+$ws.Range("H52").Text
+foreach($r in 56..69){ $o+=("$r "+$ws.Range("B$r").Text+": D="+$ws.Range("D$r").Text+" E="+$ws.Range("E$r").Text) }
+foreach($r in 56..61){ $l=@(); foreach($c in "G","H","I","J","K","L"){ $l+=$ws.Range("$c$r").Text }; $o+=("sens $r| "+($l -join " | ")) }
+$o

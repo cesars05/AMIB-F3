@@ -1,0 +1,76 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $cm=$wb.Worksheets.Item("Consolidated Model")
+$er=$wb.Worksheets.Item("Expected Returns"); $d=$wb.Worksheets.Item("DCF")
+$xl.Calculation=-4105
+if([string]$as.Range("J74").Text -ne ""){ throw "ABORTO: el modulo de venta esta encendido" }
+
+# localizar filas de Expected Returns por etiqueta
+$MAP=@{}
+for($i=1;$i -le 70;$i++){
+  $lab=([string]$er.Cells.Item($i,2).Text).Trim()
+  if($lab -eq "Gross Money Multiple (MoIC)"){ $MAP["moic"]=$i }
+  if($lab -eq "IRR"){ $MAP["irr"]=$i }
+  if($lab -eq "Total Dividends Received"){ $MAP["divTot"]=$i }
+  if($lab -eq "Exit Equity Value"){ $MAP["eqX"]=$i }
+  if($lab -eq "(-) Net Debt at Exit"){ $MAP["ndX"]=$i }
+}
+foreach($k in "moic","irr","divTot","eqX","ndX"){ if(-not $MAP.ContainsKey($k)){ throw ("ABORTO: falta fila "+$k) } }
+
+$guarda=[string]$cm.Range("L199").Formula
+if($guarda -ne '=-IFERROR(MAX(L268-L270,0),0)'){ throw ("ABORTO: r199 no tiene la formula esperada: "+$guarda) }
+
+function Foto($t){
+  Write-Output ""
+  Write-Output ("---- "+$t+" ----")
+  $h="  "+"".PadRight(32)
+  for($c=11;$c -le 17;$c++){ $h+=([string]$cm.Cells.Item(9,$c).Text).PadLeft(10) }
+  Write-Output $h
+  foreach($x in @(@(198,"Dividendo ordinario"),@(199,"Dividendo extraordinario"),@(126,"Caja"),@(253,"Deuda total"))){
+    $r=[int]$x[0]; $v=""
+    for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(10) }
+    Write-Output ("  "+([string]$x[1]).PadRight(32)+$v)
+  }
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string][math]::Round(([double]$cm.Cells.Item(253,$c).Value2-[double]$cm.Cells.Item(126,$c).Value2),0)).PadLeft(10) }
+  Write-Output ("  "+"Deuda neta".PadRight(32)+$v)
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string][math]::Round((([double]$cm.Cells.Item(253,$c).Value2-[double]$cm.Cells.Item(126,$c).Value2)/[double]$cm.Cells.Item(53,$c).Value2),2)+"x").PadLeft(10) }
+  Write-Output ("  "+"Deuda neta / EBITDA".PadRight(32)+$v)
+  Write-Output ("  Expected Returns: dividendos "+[string]$er.Cells.Item($MAP["divTot"],3).Text+"   equity salida "+[string]$er.Cells.Item($MAP["eqX"],3).Text+"   MoIC "+[string]$er.Cells.Item($MAP["moic"],3).Text+"   IRR "+[string]$er.Cells.Item($MAP["irr"],3).Text)
+  Write-Output ("  DCF "+[string]$d.Range("E41").Text+"   check balance FY2032 "+[string]$cm.Range("Q168").Text+"   check caja "+[string]$cm.Range("Q215").Text)
+}
+
+Foto "A) COMO ESTA HOY: barre todo el exceso de caja como dividendo extraordinario"
+
+# --- prueba: solo se reparte lo que venga de una venta; el resto se acumula ---
+$xl.Calculation=-4135
+$cm.Range("L199").Formula="=-L378"
+$cm.Range("L199:Q199").FillRight()
+$xl.Calculation=-4105; $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+Foto "B) PRUEBA: sin barrido; la caja se acumula (solo se reparte el producto de una venta)"
+
+# --- restaurar ---
+$xl.Calculation=-4135
+$cm.Range("L199").Formula=$guarda
+$cm.Range("L199:Q199").FillRight()
+$xl.Calculation=-4105; $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ""
+Write-Output ("RESTAURADO: r199 L = "+[string]$cm.Range("L199").Formula+"   Q = "+[string]$cm.Range("Q199").Formula)
+Write-Output ("  IRR "+[string]$er.Cells.Item($MAP["irr"],3).Text+"   DCF "+[string]$d.Range("E41").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary","Expected Returns"){
+  $s=$wb.Worksheets.Item($nm); $e=0
+  try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

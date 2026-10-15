@@ -1,0 +1,77 @@
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
+p = r'C:\Users\cesar\Downloads\PE\08_Proyecto_Final\PLAN_V2_PROMPT_Y_WORKFLOW.md'
+t = open(p, encoding='utf-8').read()
+
+
+def rep(old, new):
+    global t
+    n = t.count(old)
+    if n < 1:
+        print("NOT FOUND:", old[:80])
+        return
+    if n > 1:
+        print("MULTI", n, old[:80])
+    t = t.replace(old, new)
+
+
+rep("1. **Empresas que fallan:** Uriel/BRM (0.25x), FAZT (0.5x por preferencia de liquidación; depende de utilización y subsidios, ticket chico frente al capex) y S2G Energy (0.5x; la más pequeña y con más condiciones FICAP). Son las de menos \"Cumple\" en `Criterios`.",
+    "1. **Empresas que fallan: Uriel/BRM, FAZT y S2G Energy no generan retorno (0.0x, pérdida total del capital invertido).** Uriel: biogás de rellenos con riesgo regulatorio y cliente único. FAZT: carga de vehículos eléctricos que depende de utilización y subsidios, con ticket chico frente al capex. S2G: la más pequeña y con más condiciones FICAP. Son las de menos \"Cumple\" en `Criterios`. Alternativa que se deja como sensibilidad: recuperación parcial (Uriel 0.25x, FAZT 0.5x, S2G 0.5x, vía preferencia de liquidación 1x), que da ≈US$167M de salidas.")
+rep("2. **Orden de magnitud esperado** (guía, se recalcula): salidas ≈US$165 a 170M, ≈1.65x neto, TIR neta ≈11 a 12%, carry 0 en base.",
+    "2. **Orden de magnitud esperado** (guía, se recalcula con el calendario nuevo): con las 3 fallas en 0.0x, las cinco empresas restantes aportan ≈US$158M de salidas, ≈1.58x neto para el LP, TIR neta ≈10 a 11% y carry 0 (no se alcanza el 2.16x sobre lo comprometido que activa el carry).")
+rep("Uriel 0.25x, FAZT 0.5x, S2G 0.5x con override y fundamento;",
+    "Uriel/BRM, FAZT y S2G en 0.0x con override y fundamento (la recuperación parcial 0.25x, 0.5x y 0.5x queda como sensibilidad);")
+rep("4. Las 8 empresas entran en los años 1 a 3 (follow-on en años 3 a 5; salidas en años 6 a 9); el caso base incluye 3 fallas (Uriel/BRM, FAZT, S2G).",
+    "4. Las 8 empresas entran en los años 1 a 3 (follow-on en años 3 a 5; salidas en años 6 a 9); el caso base incluye 3 empresas que no generan retorno, 0.0x (Uriel/BRM, FAZT, S2G).")
+rep("1. ¿Confirmamos las 3 empresas que fallan (Uriel/BRM, FAZT, S2G)? *Por defecto sí; se cambian en una celda.*",
+    "1. ~~¿Qué empresas fallan?~~ **Resuelto:** Uriel/BRM, FAZT y S2G no generan retorno (0.0x); la recuperación parcial queda como sensibilidad.")
+rep("2. ¿Portada procedural (recomendada) o con IA? *Por defecto procedural, más 2 variantes de IA para comparar si se quiere.*",
+    "2. ~~¿Portada con código o con IA?~~ **Resuelto en 9.1:** fondo generado con IA (como la de Halliburton) con el prompt adaptado, mejorado a 4K, más montaje FEMSA; respaldo con código si la IA no cumple.")
+rep("3. ¿Se mantiene el orden de las láminas con Equipo en la lámina 5 (fusionado con \"por qué este equipo\")? *Por defecto sí; la guía lo pone en la 9 y se puede mover sin rehacer.*",
+    "3. ~~¿Equipo fusionado con \"por qué este equipo\"?~~ **Resuelto por el equipo: van separadas** (láminas 5 y 6); para cumplir el tope de 15, \"Llamadas de capital\" y \"Roadmap\" se funden en la lámina 8.")
+rep("Lámina 7 y anexo E; mención en lám. 6", "Lámina 8 y anexo E; mención en lám. 7")
+rep("| Lámina 6 (diagrama del vehículo) |", "| Lámina 7 (diagrama del vehículo) |")
+rep("| Portada y lámina 5 |", "| Portada y láminas 5 y 6 |")
+rep("PowerPoint (lámina 7 y anexo E)", "PowerPoint (lámina 8 y anexo E)")
+
+# tabla 9.2: filas 5 a 8
+s = t.index("| 5 | **Equipo y por qué este equipo**")
+e = t.index("| 9 | **A dónde va cada dólar**")
+new_rows = (
+    "| 5 | **Por qué este equipo** | 1 La idea | Tarjetas + tc:10 | 3 razones concretas y verificables con cifra o hecho (gobierno del fondo, acceso al sector, experiencia en inversión); matriz \"lo que tenemos / lo que cubrimos\" con mitigaciones del primer fondo (LPAC, key man, aportación del GP de al menos 2%, co-inversión) | Equipo, términos |\n"
+    "| 6 | **Equipo** | | Tarjetas | 6 tarjetas con foto circular, rol y credencial verificable; organigrama de responsabilidades por parte del fondo (inversiones, operación, relación con inversionistas, números); espacio de foto de equipo | Equipo |\n"
+    "| 7 | **Cómo funciona: vehículo, términos y cascada** | 2 El fondo | Shibaura 5 + tc:8, tc:24 | Diagrama del vehículo (LPs, fideicomiso, GP, 8 empresas con porcentajes); bloques Vehículo, Términos, Cascada; chevrones de los 4 escalones con cifras | `Hoja2_Distribucion` |\n"
+    "| 8 | **Roadmap a 10 años y llamadas de capital** | 2 El fondo | tc:18 + Ryerson 7 | Carretera con 7 pines (año 0 primer cierre; año 1 tres entradas; año 2 tres entradas; año 3 dos entradas y primeros follow-on; años 4 y 5 follow-on y fin del periodo de inversión con cambio de comisión; años 6 a 9 salidas; año 10 liquidación); debajo, columnas apiladas de 10 años (inversión, fees, gastos, distribuciones) con el tramo proyectado enmarcado; panel angosto con mínimos y máximos de cada llamada (monto 5% a 25%, aviso 10 días hábiles, 4 llamadas por año, tope 100%) | `Hoja1_Portafolio`, `Curva_J`, `Llamadas_Capital` |\n"
+)
+t = t[:s] + new_rows + t[e:]
+
+# portada 9.1
+a = t.index("### 9.1 Portada")
+b = t.index("### 9.2 Estructura")
+new91 = """### 9.1 Portada (diseño FEMSA, fondo estilo Halliburton, en verdes)
+
+**Cómo se hizo la de Halliburton** (revisado en `USD x ITESM`: `07_Template_Analysis/STYLE_GUIDE.md` sección 8, `08_Assets/ASSET_CATALOG.md`, `09_Deck_Build/build_deck.py`):
+1. **El fondo es una imagen generada con IA** a partir del prompt que pegó el equipo (los metadatos de `cover_original.jpg` la marcan como generada por algoritmo). Tamaño original 2048x1152, pixelada.
+2. **Mejora a 4K:** limpieza de ruido, escalado x1.875 con Lanczos a 3840x2160, afilado y grano fino (`cover_4k.png` y `cover_4k.jpg`; versión ligera `cover_qhd.jpg` de 2560x1440 para incrustar).
+3. **Análisis de zonas:** la mitad izquierda es rojo plano (#8B1318) y es la **zona segura de texto** (x hasta 7.2 pulgadas); las cintas diagonales ocupan x desde 7.5; la cuña gris clara abajo a la derecha (x desde 9.5, y desde 4.5) nunca lleva texto blanco.
+4. **Montaje en PowerPoint (python-pptx):** imagen a pantalla completa de 13.333x7.5 enviada al fondo; logo blanco de la empresa arriba a la izquierda; logos de las universidades en fila con línea vertical; texto blanco solo en la zona segura (kicker en mayúsculas, título Arial 40 a 44, subtítulo 22, descriptor, regla fina, bloque de equipo en dos grupos, fecha). El cierre reutiliza la misma imagen.
+5. Lo que **no** se hizo: el fondo no se dibujó con código ni salió de una plantilla; fue imagen con IA más montaje.
+
+**Portada de FEMSA** (`USD x ITESM\\06_Templates\\M&A FEMSA.pptx`, lámina 1; render en `07_Template_Analysis/renders/M_A_FEMSA/slide_01.png`): fondo de un color con haces de líneas paralelas finas que forman bucles y se cruzan (más intensos a la derecha y abajo, cada línea en un tono apenas distinto), título blanco bold grande abajo-izquierda del centro, fecha en cursiva, **lista de integrantes en cursiva blanca** y **logo blanco arriba a la derecha**.
+
+**Decisión para Aurex: se repite el método de Halliburton y se coloca con el diseño de FEMSA.**
+1. **Generar el fondo con IA** (herramienta `generate_image` de Canva o de Gamma, ya conectadas; se cargan y se prueban 3 variantes) con el prompt de abajo, que es el de Halliburton cambiado a verde y a energía distribuida. Pedir 16:9 y el mayor tamaño disponible.
+2. **Elegir la mejor** con estos criterios: izquierda y centro limpios, sin texto ni logos generados, verde dominante, líneas finas visibles, sin círculos como motivo principal, sin paneles ni turbinas literales.
+3. **Mejorar a 4K** con el mismo proceso (limpieza de ruido, Lanczos, afilado, grano) y generar la versión ligera; guardar como `assets/portada/aurex_cover_4k.jpg` y `aurex_cover_qhd.jpg`.
+4. **Recolor si hace falta:** ajustar el tono hacia `#0B3D2E` (dominante), `#1B7F4B` (bandas) y lima `#8BC53F` solo en líneas finas.
+5. **Mapear zonas seguras** (zona plana para el texto y zonas donde no va blanco) y fijar los límites de texto.
+6. **Capa FEMSA sobre la imagen (opcional):** si el fondo queda muy plano, dibujar haces de líneas paralelas como formas vectoriales translúcidas a la derecha, para acercarse al look de FEMSA.
+7. **Respaldo si la IA no cumple tras 3 intentos:** generar el fondo con código (numpy y PIL a 3840x2160: haces de líneas con opacidad variable, 2 o 3 bandas verdes translúcidas, gradiente sutil) con el mismo montaje.
+8. **Montaje con `house.py`** en el orden de FEMSA: imagen a pantalla completa; logo Aurex blanco arriba a la derecha; **título "Aurex Capital" en Arial bold 40 blanco** abajo a la izquierda del centro; subtítulo con la frase del fondo en cursiva; **6 integrantes con su rol en cursiva blanca** debajo; fecha; pie "Capital Privado y Capital Emprendedor, Tec de Monterrey". La misma imagen se reutiliza en el cierre.
+
+**Prompt de imagen (adaptado del de Halliburton):** *Premium 16:9 corporate presentation cover background for an energy-transition private equity fund. Dominant deep forest green (#0B3D2E) with medium green (#1B7F4B) for selected structural elements, dark green-black tones for shadows and secondary layers, and subtle faded white, soft gray and desaturated gray-green elements that look slightly faded, translucent and integrated into the background, never overpowering the green. A few tiny accents of lime (#8BC53F) only in the thinnest lines. Abstract geometric forms inspired by power transmission lines, solar irradiance contours and energy flow: several thin, precisely spaced parallel lines that curve and intersect organically, forming elegant flowing bundles, combined with two or three bold smooth translucent green bands that create depth and movement. Keep the left and central area relatively clean with generous negative space for a presentation title; concentrate the visual complexity toward the right and lower-right. Subtle transparency, overlapping layers and tonal variation. Sophisticated, minimal, executive level, like a Fortune 500 or investment banking cover. No text, no logo, no people, no photographs, no solar panels, no wind turbines, no literal imagery. Avoid generic tech patterns, circles as the main motif, glossy effects, neon colors, strong gradients, excessive white. Clean premium vector style, 16:9 widescreen.*
+
+"""
+t = t[:a] + new91 + t[b:]
+open(p, 'w', encoding='utf-8').write(t)
+print("done")

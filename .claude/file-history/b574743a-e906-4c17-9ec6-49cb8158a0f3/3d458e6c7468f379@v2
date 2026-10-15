@@ -1,0 +1,68 @@
+import sys, json, datetime
+sys.path.insert(0, ".")
+import openpyxl
+from openpyxl.chart import LineChart, BarChart, Reference, Series
+from openpyxl.chart.label import DataLabelList
+from openpyxl.utils import get_column_letter as L
+from openpyxl.worksheet.formula import ArrayFormula
+from xlkit import *
+from model_config import CFG
+
+SRC = r"C:\Users\cesar\Downloads\PE\08_Proyecto_Final\modelo_financiero\PF_Modelo_AurexCapital_v2.xlsx"
+OUT = sys.argv[1] if len(sys.argv) > 1 else "v3_raw.xlsx"
+
+src = openpyxl.load_workbook(SRC)
+wb = openpyxl.Workbook(); wb.remove(wb.active)
+
+# ---------- 1) copiar hojas existentes (desplazadas a B2) y aplicar formato ----------
+keep = ["Hoja1_Portafolio", "Hoja2_Distribucion", "1_Comparables", "2_Simulacion", "3_Precios", "4_Rendimientos"]
+sheets = {}
+for name in keep:
+    d = wb.create_sheet(name)
+    copy_sheet_shifted(src[name], d)
+    sheets[name] = d
+    for row in d.iter_rows():
+        for c in row:
+            restyle_cell(c)
+    set_sheet(d, tab=VERDE_ENERGIA if name.startswith("Hoja") else "7FB89A")
+    post_fix(d)
+
+# ---------- helpers ----------
+def put(ws, ref, val, style=None, nf=None, bold=False, italic=False, align=None, wrap=False):
+    c = ws[ref]; c.value = val
+    if style == "in": input_font(c, bold)
+    elif style == "link": link_font(c, bold)
+    elif style == "hdr": header_style(c, align or "center")
+    elif style == "sec": section_style(c)
+    elif style == "title": title_style(c, 14)
+    elif style == "note": note_style(c)
+    elif style == "tot": calc_font(c, True); c.border = Border(top=THIN)
+    else: calc_font(c, bold, italic)
+    if nf: c.number_format = nf
+    if align or wrap:
+        c.alignment = Alignment(horizontal=align, vertical="center" if wrap else None, wrap_text=wrap)
+    return c
+
+NF_NUM = '#,##0.00_);\\(#,##0.00\\);\\-_)'
+NF_NUM1 = '#,##0.0_);\\(#,##0.0\\);\\-_)'
+NF_X = '0.00\\x'
+NF_PCT = '0.0%'
+
+H1 = sheets["Hoja1_Portafolio"]; H2 = sheets["Hoja2_Distribucion"]
+
+empresas = CFG['empresas']; n = len(empresas)
+exec(open('build_escenarios.py',encoding='utf-8').read())
+# ---------- 3) Hoja1: selector y multiplos ligados ----------
+put(H1, "B15", "Conjunto de múltiplos (1 Equipo · 2 Monte Carlo · 3 Calibrado)")
+put(H1, "C15", CFG["conjunto_en_uso"], "in", "0", align="center")
+put(H1, "D15", '=INDEX({"Equipo (v1)","Monte Carlo P50 (v2)","Calibrado 2026"},1,C15)', "calc", bold=True)
+for i in range(n):
+    r = 18 + i
+    c = H1[f"L{r}"]; c.value = f"=Escenarios!G{6+i}"; link_font(c); c.number_format = NF_X
+    c.alignment = Alignment(horizontal="right")
+# textos de valor estimado y vertical
+for i, e in enumerate(empresas):
+    H1[f"C{18+i}"].value = e["valor_est"]
+    H1[f"B{18+i}"].value = e["nombre"]
+
+exec(open('build_v3_tail.py',encoding='utf-8').read())

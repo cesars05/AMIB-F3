@@ -1,0 +1,31 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 15;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 900 } }; return "??" }
+$wb=$null; $s=$null
+for($t=0;$t -lt 40;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $x=$w.Worksheets.Item("SOTP"); if($x -ne $null){ $wb=$w; $s=$x } } }
+  }catch{}
+  if($s -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+Write-Output ("Libro: "+[string]$wb.Name)
+Write-Output ""
+Write-Output "=== columnas K/L/M de TODOS los bloques, tal como estan AHORA ==="
+for($r=7;$r -le 90;$r++){
+  $line=""
+  for($c=11;$c -le 13;$c++){
+    $t=[string](T { $s.Cells.Item($r,$c).Text })
+    if($t.Trim() -ne ""){ $line+=("["+[char](64+$c)+$r+"="+$t+"] ") }
+  }
+  if($line.Trim() -ne ""){ Write-Output ("  "+$line) }
+}
+Write-Output ""
+Write-Output "=== fila 7 (mi toggle) y encabezados de bloque ==="
+foreach($r in 7,9,29,49,69){ Write-Output ("  B"+$r+" = ["+[string](T { $s.Cells.Item($r,2).Text })+"]   C"+$r+" = ["+[string](T { $s.Cells.Item($r,3).Text })+"]") }
+Write-Output ""
+Write-Output "=== summary: formulas de TV y sus insumos ==="
+foreach($r in 92,96,100,104){
+  Write-Output ("  D"+$r+" = "+[string](T { $s.Range("D"+$r).Formula }))
+}
+Write-Output ""
+Write-Output "=== factores de descuento (para ver a que WACC apuntan) ==="
+foreach($r in 25,45,65,85){ Write-Output ("  C"+$r+" = "+[string](T { $s.Range("C"+$r).Formula })) }

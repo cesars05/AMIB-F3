@@ -1,0 +1,56 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+$sm=T { $wb.Worksheets.Item("Segment Model") }
+$q='"'
+$emp=$q+$q
+if([string](T { $sm.Range("C74").Text }) -notmatch "Segment ROIC"){ throw "ABORTO: C74 no es el bloque ROIC" }
+if([string](T { $sm.Range("E75").Formula }) -notmatch "AVERAGE"){ throw "ABORTO: E75 ya no usa AVERAGE" }
+Write-Output ("ANTES:  WM FY25="+[string](T { $sm.Range("J75").Text })+"  FY26="+[string](T { $sm.Range("K75").Text })+"   BE FY25="+[string](T { $sm.Range("J76").Text })+"  FY26="+[string](T { $sm.Range("K76").Text }))
+$xl.Calculation=-4135
+$seg=@{}
+$seg[75]=@(21,81,90)
+$seg[76]=@(22,82,91)
+$seg[77]=@(23,83,92)
+$seg[78]=@(24,84,93)
+foreach($r in ($seg.Keys | Sort-Object)){
+  $s=$seg[$r]
+  $f="=+IFERROR(IF(D"+$s[1]+"=0,"+$emp+",D"+$s[0]+"*(1-'Consolidated Model'!D86)/(D"+$s[1]+"-D"+$s[2]+")),"+$emp+")"
+  T { $sm.Cells.Item($r,4).Formula=$f } | Out-Null
+  T { $sm.Range("D"+$r+":Q"+$r).FillRight() } | Out-Null
+  T { $sm.Range("D"+$r+":Q"+$r).NumberFormat="0.0%" } | Out-Null
+}
+T { $sm.Range("C74").Value2="Segment ROIC (NOPAT / closing capital employed)" } | Out-Null
+T { $sm.Range("C79").Value2="Capital employed = segment assets less segment liabilities at the year end (per segmental note, incl. allocated goodwill); NOPAT at the Group effective tax rate." } | Out-Null
+$xl.Calculation=-4105
+T { $xl.CalculateFullRebuild() } | Out-Null
+T { $xl.CalculateFullRebuild() } | Out-Null
+$wb.Save()
+Write-Output "cambiado a capital empleado de cierre"
+Write-Output ""
+$h="  "+"".PadRight(26)
+for($c=4;$c -le 14;$c++){ $h+=([string](T { $sm.Cells.Item(9,$c).Text })).PadLeft(9) }
+Write-Output $h
+foreach($r in 74,75,76,77,78){
+  $lab=[string](T { $sm.Cells.Item($r,3).Text }); if($lab.Length -gt 25){ $lab=$lab.Substring(0,25) }
+  $v=""
+  for($c=4;$c -le 14;$c++){ $v+=([string](T { $sm.Cells.Item($r,$c).Text })).PadLeft(9) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(26)+$v)
+}
+Write-Output ""
+Write-Output ("  D75 frm= "+[string](T { $sm.Range("D75").Formula }))
+Write-Output ("  K75 frm= "+[string](T { $sm.Range("K75").Formula }))
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=T { $wb.Worksheets.Item($nm) }
+  $e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

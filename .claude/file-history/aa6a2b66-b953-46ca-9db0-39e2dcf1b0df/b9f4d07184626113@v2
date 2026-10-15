@@ -1,0 +1,52 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t = $null; foreach ($w in $xl.Workbooks) { if ($w.Name -eq '20260922_SETSA Transportes.xlsx') { $t = $w } }
+if (-not $t) { throw 'libro no encontrado' }
+$m = $t.Worksheets.Item('Modelo SETSA')
+$t.SaveCopyAs("$PSScriptRoot\backup_antes_capinv.xlsx")
+$o = [char]0xF3; $i_ = [char]0xED; $a = [char]0xE1
+function RowX([string]$lab, [int]$from = 1) { for ($r = $from; $r -le 600; $r++) { if ([string]$m.Cells.Item($r, 3).Value2 -ceq $lab) { return $r } }; throw "No encontrado: $lab" }
+function RowL([string]$nd, [int]$from = 1) { for ($r = $from; $r -le 600; $r++) { if (([string]$m.Cells.Item($r, 3).Value2).Contains($nd)) { return $r } }; throw "No encontrado: $nd" }
+$cols = 'D','E','F','G','H','I'
+
+# 1) supuesto: efectivo operativo mínimo (% de ingresos) debajo de Tasa IVA
+$rIVA = RowX 'Tasa IVA'
+$m.Rows.Item($rIVA + 1).Insert() | Out-Null
+$m.Rows.Item($rIVA).Copy() | Out-Null; $m.Rows.Item($rIVA + 1).PasteSpecial(-4122) | Out-Null; $xl.CutCopyMode = $false
+$m.Cells.Item($rIVA + 1, 3).Value2 = "Efectivo Operativo M${i_}nimo (% de Ingresos)"
+$m.Cells.Item($rIVA + 1, 4).Value2 = 0.02
+$m.Cells.Item($rIVA + 1, 4).NumberFormat = '0.0%'
+"supuesto en fila " + ($rIVA + 1)
+
+# 2) fila 'Efectivo No Operativo' arriba de Capital Invertido
+$rIC = RowL 'Capital Invertido'
+$m.Rows.Item($rIC).Insert() | Out-Null
+$m.Rows.Item($rIC + 1).Copy() | Out-Null; $m.Rows.Item($rIC).PasteSpecial(-4122) | Out-Null; $xl.CutCopyMode = $false
+$rENO = $rIC; $rIC = $rIC + 1
+$m.Cells.Item($rENO, 3).Value2 = 'Efectivo No Operativo (Efectivo - Efectivo Operativo)'
+$m.Cells.Item($rIC, 3).Value2 = 'Capital Invertido (Capital Contable Ajustado + Deuda Financiera - Efectivo No Operativo)'
+
+# 3) referencias (después de insertar)
+$rCash = RowX 'Efectivo y Bancos'
+$rRev  = RowX 'Ingresos Totales'
+$rDeuH = RowX 'Deuda e Intereses'
+$rDF   = RowX 'Deuda Financiera' $rDeuH
+$rEqA  = RowX 'Capital Contable Ajustado'
+$rMin  = RowL 'Efectivo Operativo M'
+$MIN = "`$D`$$rMin"
+foreach ($c in $cols) {
+    $m.Range("$c$rENO").Formula = "=MAX(0,$c$rCash-$MIN*$c$rRev*12/$c`$11)"
+    $m.Range("$c$rIC").Formula  = "=$c$rEqA+$c$rDF-$c$rENO"
+}
+# columna J (promedio 21-25) para la fila nueva
+$m.Range("J$rENO").Formula = "=IFERROR(AVERAGE(D$($rENO):H$rENO),`"`")"
+$m.Range("J$rENO").NumberFormat = $m.Range("J$rIC").NumberFormat
+$m.Range("J$rENO").HorizontalAlignment = -4108; $m.Range("J$rENO").Font.Color = 0
+
+$xl.CalculateFull()
+$err = 0; foreach ($ws in $t.Worksheets) { foreach ($c in $ws.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $err++; "ERR " + $ws.Name + "!" + $c.Address($false,$false) } } }
+"errores=$err"
+$rROI = RowX 'ROIC (%)'
+foreach ($r in ($rCash), $rENO, $rIC, $rROI) { ([string]$m.Cells.Item($r,3).Value2).PadRight(90).Substring(0,60) + (('D','E','F','G','H','I','J' | ForEach-Object { $m.Range("$_$r").Text.PadLeft(14) }) -join '') }
+"formula H IC: " + $m.Range("H$rIC").Formula + " | ENO: " + $m.Range("H$rENO").Formula
+$t.Save(); "guardado=" + $t.Saved

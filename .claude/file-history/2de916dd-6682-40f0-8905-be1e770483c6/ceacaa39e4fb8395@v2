@@ -1,0 +1,31 @@
+import openpyxl, pandas as pd, glob
+
+def load(f, sheet):
+    ws = openpyxl.load_workbook(f, read_only=True, data_only=True)[sheet]
+    rows = list(ws.iter_rows(values_only=True))
+    h = next(i for i, r in enumerate(rows) if r and 'Region' in [str(x).strip() if x else '' for x in r])
+    hdr = [str(x).strip() if x is not None else f'c{j}' for j, x in enumerate(rows[h])]
+    df = pd.DataFrame([r for r in rows[h + 1:] if any(v is not None for v in r)], columns=hdr)
+    return df
+
+def files():
+    out = {}
+    for f in sorted(glob.glob('eu_*.xlsx')):
+        ms = load(f, 'Market Sizes')
+        out[ms['Country'].dropna().iloc[0]] = f
+    return out
+
+if __name__ == '__main__':
+    pd.set_option('display.width', 250); pd.set_option('display.max_columns', 40)
+    for c, f in files().items():
+        ms = load(f, 'Market Sizes')
+        print('#####', c, f, list(ms.columns))
+        top = ms[ms['Hierarchy level'].astype(str) == '1']
+        print(top.groupby(['Data Type', 'Unit', 'Current/Constant', 'Currency Conversion']).size().to_string())
+        up = load(f, 'Market Size Unit Price')
+        print('  unit price cols', list(up.columns))
+        print(up[up['Hierarchy level'].astype(str) == '1'].groupby(['Unit Price', 'Data Type', 'Currency Conversion']).size().to_string())
+        cs = load(f, 'Company Share NBO')
+        print('  share cols', list(cs.columns))
+        b = cs[cs['National Brand Owner'].astype(str).str.contains('Bimbo') & (cs['Hierarchy level'].astype(str) == '1')]
+        print(b.groupby(['National Brand Owner', 'Data Type', 'Unit', 'Currency Conversion']).size().to_string())

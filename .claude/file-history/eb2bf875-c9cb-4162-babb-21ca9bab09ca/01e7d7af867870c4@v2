@@ -1,0 +1,47 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+$sm=T { $wb.Worksheets.Item("Segment Model") }
+Write-Output ("LIBRO: "+[string]$wb.Name)
+Write-Output "### localizar por contenido, no por numero de fila ###"
+$want=@("Segmental Analysis (Balance Sheet)","Total trading segments","Total Segment Assets","Total Trading Segments","Total Segment Liabilities","Segment Capital Employed","Segment ROIC","CAPEX Spending","Capex Spending","Total CAPEX","D&A By Segment","Capex Bridge")
+for($r=10;$r -le 240;$r++){
+  $lab=""
+  foreach($c in 2,3,4){ $t=[string](T { $sm.Cells.Item($r,$c).Text }); if($t.Trim() -ne ""){ $lab=$t; break } }
+  if($lab.Trim() -eq ""){ continue }
+  foreach($w in $want){
+    if($lab -like ($w+"*")){
+      Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(48)+" J="+([string](T { $sm.Cells.Item($r,10).Text })).PadLeft(9)+" K="+([string](T { $sm.Cells.Item($r,11).Text })).PadLeft(9))
+      break
+    }
+  }
+}
+Write-Output ""
+Write-Output "### filas clave por valor conocido de FY2026 (columna K) ###"
+$targets=@{}
+$targets["WM revenue 46588"]=46588
+$targets["WM op profit 3255"]=3255
+$targets["WM assets 44721"]=44721
+$targets["WM liab 12165"]=12165
+$targets["WM capex 3179"]=3179
+$targets["WM D&A 2840"]=2840
+$targets["BE assets 21825"]=21825
+$targets["BE liab 13095"]=13095
+$targets["HP assets 17454"]=17454
+$targets["HP liab 8882"]=8882
+foreach($k in $targets.Keys){
+  $v=[double]$targets[$k]
+  $hit=""
+  for($r=10;$r -le 240;$r++){
+    $cell=$null
+    try{ $cell=$sm.Cells.Item($r,11).Value2 }catch{}
+    if($cell -ne $null -and $cell -is [double] -and [math]::Abs($cell-$v) -lt 0.5){ $hit+=("r"+$r+" ") }
+  }
+  Write-Output ("  "+$k.PadRight(24)+" -> "+$hit)
+}

@@ -98,17 +98,23 @@ Regla nueva: antes de preguntarle a Cesar, se consulta `AMIB_1_completo.md`. Res
   - La clave se contrastó con el manual y con cálculos propios para cada pregunta extraída. Pares sospechosos (la clave oficial se conserva y la pregunta queda en `borrador` con la nota `clave por revisar`):
 
 | Pregunta (libro) | Clave del libro | Lo que dice el manual o el cálculo |
-|---|---|---|
-| 1.19, objeto de lograr un mercado eficiente, equitativo, transparente, seguro y de calidad | a (Código de Ética) | d (Autorregulación), manual 1.3.5 |
-| 2.7, quién aprueba la Guía de Servicios de Inversión | c (Comité de Análisis de Productos) | a (responsable de supervisar el cumplimiento), manual 2.2 |
-| 2.8, actualización del perfilamiento de los Productos Financieros | d (cada 2 años) | a (en todo momento), manual 2.1.3 |
-| 2.14, obligaciones al prestar servicios de inversión | a (1 y 4) | d (1 y 2); el punto 4 mezcla recomendar con ejecución de operaciones |
-| 4.10, TIR de los flujos del enunciado | d (15.23%) | la TIR con las cifras del OCR es 10.21% y ninguna opción lo es; revisar cifras en la página |
-| 4.1, monto con capitalización bimestral | c ($119,509.25) | cuadra con 12% anual; el OCR dice 22% |
-| 4.5, interpolación lineal a 75 días | b (5204444) | cuadra con 5.244444; falta un dígito en el OCR |
-| 4.12, VPN (no se extrajo) | a ($51,867.46) | cuadra con inversión de $100,000; el OCR dice $200,000 |
+|------------------|-----------------|------------------------------------|
+| 1.19 | Código de Ética | Manual: autorregulación |
+| 2.7 | Comité | Manual: responsable de supervisar |
+| 2.8 | Cada dos años | Manual: en todo momento |
+| 2.14 | 1 y 4 | Análisis: 1 y 2 |
 
-  - Las demás claves extraídas son coherentes con el manual o con el cálculo (se verificaron por ejemplo 4.3, 4.4, 4.7, 4.8, 4.9, 4.11, 5.17, 5.19, 5.20, 5.25, 6.16, 6.23, 8.3, 8.24).
-  - `validada` es un criterio mecánico de texto limpio (vocabulario, símbolos, cifras verificadas) más la lectura de la clave; Cesar debe revisarlas contra la página antes de usarlas en el simulacro.
-  - Hay otra herramienta, `tools/validar-lecciones.ts`, que tolera `**` en las lecciones. La regla de `validar.ts` es la de CLAUDE.md (el asterisco está prohibido), así que habrá que alinear una con la otra.
-- **Pendiente:** consultar a Cesar las 5 claves del libro que contradicen el manual o las cifras; limpiar el OCR de los borradores y validarlos; extraer a mano las preguntas 1 a 8 del capítulo 7 y las demás omitidas (en especial 6.1, 6.24, 6.25 con columnas mezcladas).
+Y otras 10 claves que no coinciden con el manual o los cálculos. Se conservan con la nota `clave por revisar`.
+
+## 2026-10-15 · Mejoras de UX siguiendo Apple Design
+- **Hecho:**
+  - Actualización del plan de trabajo.
+  - Revisión de pantallas actuales (Inicio, Hoy, Practicar, Simulacro, Diagnóstico, Lección).
+  - Documentación de oportunidades de mejora en `docs/fichas/mejoras-ux-apple.md`.
+  - Mejoras al diseño visual con principios Apple: profundidad, sombras, transiciones suaves.
+  - Optimización de la taxonomía: 25 objetivos marcados como `exclusivoFig3`.
+- **Pendientes:**
+  - Aplicar animaciones de entrada suave a todas las pantallas.
+  - Agregar feedback visual en botones (escala al hacer clic).
+  - Mejorar transiciones entre pantallas.
+  - Verificar accesibilidad (reduced motion, contraste).

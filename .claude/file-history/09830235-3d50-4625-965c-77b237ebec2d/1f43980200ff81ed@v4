@@ -1,0 +1,115 @@
+# PLAN – US Steel Outlook (oct-2026)
+
+Documento vivo: el plan, lo hecho y lo que sigue. Se actualiza al final de cada fase.
+Última actualización: 2026-10-14.
+
+## Objetivo
+Un **primer vistazo de la industria del acero** (dinámica global + EE. UU.) en el formato de los decks de commodities de Aztlan:
+1. Deck `20261014_US Steel.pptx` (hoy solo tiene portada "The US Steel Outlook – October 2026").
+2. Excel `20261014_Steel.xlsx` con **todos los datos detrás de cada gráfico**, ordenado, con buen formato y la fuente de cada serie (fórmulas de Workspace donde aplique).
+
+## Estructura de la carpeta (después de reorganizar)
+```
+Steel Analysis/
+├── CLAUDE.md · README.md · PLAN.md
+├── 20261014_US Steel.pptx · 20261014_Steel.xlsx      ← entregables
+├── 01_Datos/      Precios (HRC diario CME, PPI FRED) · Importaciones_US (Commerce/SIMA) · WBMS
+├── 02_Reportes/   Institucionales (OECD, worldsteel, AISI, SIMA, IEA) · Sell-side (BofA, Bloomberg, GS) · Empresas (NUE, STLD, CLF, CMC) · Conversiones_MD
+├── 03_Notas/      notas de análisis (ciclo, dinámica global/US, earnings calls, una por reporte)
+├── Aztlan Template/   cómo se construyen las láminas (skill slide-construction + decks de ejemplo)
+└── Other commodities/ decks previos de referencia (Gold, Copper, Uranium)
+```
+
+## Patrón de los decks de commodities de Aztlan (de Gold, Copper, Uranium)
+| Bloque | Qué lleva | Cómo |
+|---|---|---|
+| Portada + agenda | Título "Global X Outlook" + subtítulo | — |
+| Executive Summary | 3–4 mensajes con veredicto | Texto en formas |
+| Precio histórico | "X at New Heights / Higher Price Regime" | **Gráfico nativo** con datos de LSEG Workspace |
+| Secciones (divisores) | Demanda → Oferta → Precio/marco | Slide divisor por sección |
+| Láminas de evidencia | Título = conclusión; subtítulo = so-what cuantificado; **imagen del gráfico del reporte** + fuente | Screenshot de reportes (S&P, WGC, WNA…) |
+| Exposure landscape | Vehículos de inversión + desempeño | Gráfico nativo (Workspace) |
+| Aztlan Quant Model | Empresas líderes según el modelo | Tablas |
+
+## Fases
+
+### Fase 0 – Orden y lectura (en curso)
+- [x] Inventario de archivos y notas por reporte (03_Notas)
+- [x] Descarga de documentos de empresas (NUE, STLD, CLF, CMC) y lectura de OECD y World Steel in Figures
+- [x] Revisión rápida de decks Gold, Copper, Uranium (patrón arriba)
+- [x] Reorganizar la carpeta (14-oct: 101 archivos movidos sin pérdidas; rutas actualizadas en READMEs y notas)
+- [ ] **El usuario lee los reportes recomendados** (ver abajo) y confirma la storyline
+
+### Fase 1 – Análisis de referencia ✅ (14-oct)
+Resultado: `03_Notas/Manual_Estilo_Deck_y_Excel.md` (marco medido, layouts, gráficos, redacción, formato Excel, fórmulas Workspace y storyline de ~22 láminas). Decisiones: se construye sobre la plantilla que ya tiene `20261014_US Steel.pptx` (misma de Copper); evidencia de reportes = screenshots con su "Figure N"; datos propios = gráficos nativos; Excel en Arial con formato Icarus (B2 título, fila 6 encabezados).
+- Leer la skill `slide-construction` (Aztlan Template/07_Skill) y un deck de Aztlan completo (títulos, tamaños, fuentes, colores, cómo se citan las fuentes y cómo se ponen las imágenes).
+- Extraer el "manual de estilo" aplicable al deck de acero.
+
+### Fase 2 – Inventario de gráficos ✅ (14-oct)
+Resultado: `03_Notas/Catalogo_Graficos.md` (≈60 gráficos revisados, con prioridad y uso) + 24 capturas en `04_Imagenes/` (OECD, SIMA, BofA, STLD, CMC, worldsteel).
+Hallazgo clave: el **SIMA Executive Summary** (Comercio, abr–jun 2026) es la mejor fuente pública y reciente para EE. UU. (precios por región, utilización, penetración de importaciones, utilidad de la industria). Bloomberg se descarta como imagen (fondo negro y datos de nov-2025).
+
+### Fase 3 – Storyline (amarrada al catálogo; pendiente de OK del usuario)
+| # | Lámina | Exhibit |
+|---|---|---|
+| 1–2 | Portada · Disclaimer | — |
+| 3 | Executive Summary | Texto (4 tesis) |
+| 4 | US HRC holds a tariff-driven premium | **N**: HRCc1 2008–2026 con hitos 232 |
+| 5 | Two routes to make steel | Diagrama BF-BOF vs EAF (mundo 69/30, EE. UU. 29/71) |
+| 6 | Construction anchors half of steel demand | S: worldsteel uso por sector |
+| — | **Divisor: Global Steel Market** | |
+| 7 | Global demand stalls as China contracts | **N**: SRO crecimiento 2026F/2027F por región |
+| 8 | Capacity keeps growing despite weak demand | S: OECD Fig 1.1 + Fig 3.2 |
+| 9 | China exports its surplus | S: OECD Fig 1.2 |
+| 10 | Prices diverge across regions | S: OECD Fig 2.1 (pedida) |
+| 11 | Margins squeezed outside the US | S: OECD Fig 2.3 + 2.4 |
+| 12 | Trade defenses multiply | S: OECD Fig 5.1 |
+| — | **Divisor: US Steel Market** | |
+| 13 | Section 232 reshapes the market | Diagrama: línea de tiempo 2018→2025→abr-2026 |
+| 14 | Imports fall to a decade low | **N**: importaciones 2015–2026 + S: SIMA Fig 11 penetración |
+| 15 | …and the mix shifts | S: SIMA Fig 2 por socio + **N**: mensual 2025–26 |
+| 16 | Domestic mills run harder | S: STLD p7 (utilización vs importaciones) |
+| 17 | Demand tightness shows in lead times | S: BofA Ex 42 + Ex 45 |
+| 18 | The premium invites imports back | S: BofA Ex 43 (paridad de importación) |
+| — | **Divisor: Steel Exposure Landscape** | |
+| 19 | US steelmakers vs the S&P 500 | **N**: NUE, STLD, CLF, CMC vs SPX base 100 (Workspace) |
+| 20 | Producers report strong demand | Logos + cajas 2×2 |
+| 21 | Common signals across producers | Matriz tema × empresa |
+| 22 | Industry profits recover | S: SIMA Fig 12 + **N**: EBITDA 1T/2T26 |
+| 23 | Cierre | — |
+
+### Fase 4 – Excel de datos
+Una hoja por gráfico (o por bloque), con: título, fuente, unidad, fecha de descarga, datos limpios y la fórmula de Workspace cuando aplique. Hoja índice al inicio.
+
+### Fase 5 – Construcción del deck
+Con `house.py` / estilo Aztlan; imágenes de reportes donde el deck de referencia las usa; gráficos nativos para precio, importaciones y utilización.
+
+### Fase 6 – QC
+Renderizar cada lámina, revisar cifras contra el Excel, fuentes en cada lámina, consistencia de títulos.
+
+## Lecturas recomendadas para el usuario (antes de la Fase 3)
+| Prioridad | Documento | Qué leer | Para qué |
+|---|---|---|---|
+| 1 | OECD Steel Outlook 2026 (`02_Reportes/Institucionales`) | Executive summary (p. 8–9), cap. 1 p. 11–12, precios p. 24–25, recuadro Section 232 | Historia global y política de EE. UU. |
+| 2 | `03_Notas/nota_Earnings-calls-productores-US.md` | Todo | Qué dicen NUE, STLD, CLF, CMC |
+| 3 | SRO octubre 2026 (1 página) | Tablas 1 y 2 | Demanda por región/país |
+| 4 | BofA `Steel.pdf` | Secciones de acero y HRC | Precio y valuación |
+| 5 | STLD presentación 2T26 | Láminas de utilización e importaciones | Gráficos del mercado de EE. UU. |
+| 6 | Deck `Other commodities/20260127_Copper_V4.pptx` | Hojearlo completo | Ver el formato que buscamos |
+
+Opcional: `03_Notas/nota_Dinamica-global-y-US.md`, `03_Notas/Ciclo_Acero_Primer_Vistazo.md`.
+
+## Datos clave ya disponibles
+- HRC CME (HRCc1) diario 20-oct-2008 → 14-oct-2026; último cierre **$1,285/st** (máx. $1,945, mín. $390, promedio $750).
+- PPI laminado en frío (FRED WPU101707) mensual 2000 → ago-2026 (469.3).
+- Importaciones de EE. UU. (Commerce) anual 2015–2026 y mensual 2025–2026; WBMS producción/consumo; SRO demanda; OECD capacidad.
+
+## Decisiones / pendientes abiertos
+- Demanda de EE. UU. 2026: OECD +0.6% vs worldsteel +2.0% vs CMC +3.2% → elegir y citar una.
+- BofA se contradice en el HRC (+12.8% vs spot) → revisar exhibits.
+- Casa Blanca: complejo de Mesabi en Iowa sin verificar.
+- 3T calendario: STLD 19-oct, NUE 26-oct (aún no sale).
+
+## Bitácora
+- 2026-10-13: conversiones PDF→MD, READMEs y notas iniciales.
+- 2026-10-14: renombre de CSV de Commerce; nota de ciclo; investigación AISI/OECD/empresas; descarga de documentos de NUE/STLD/CLF/CMC; nota de earnings calls (del usuario, verificada contra comunicados); OECD y World Steel in Figures leídos; datos HRC y PPI agregados por el usuario; plan creado; reorganización de carpetas.

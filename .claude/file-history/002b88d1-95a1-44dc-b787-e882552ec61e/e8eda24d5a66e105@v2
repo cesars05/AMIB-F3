@@ -1,0 +1,28 @@
+<section id="usecases" data-transition="fade" style="background:#12131A; color:#F5F6FA; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px 128px 160px; display:flex; flex-direction:column; gap:56px">
+  <div style="display:flex; flex-direction:column; gap:16px">
+    <p style="font-family:'Space Grotesk', Arial, sans-serif; font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#A78BFA">Casos de uso</p>
+    <h2 style="font-family:'Space Grotesk', Arial, sans-serif; font-size:60px; font-weight:700; line-height:1.1">¿Quién lo usa y para qué?</h2>
+  </div>
+  <div style="display:flex; flex-direction:row; gap:40px; flex:1">
+    <div style="flex:1; background:#1C1E2B; border:1px solid #2A2D3D; border-radius:24px; padding:48px; display:flex; flex-direction:column; gap:20px">
+      <h3 style="font-size:34px; font-weight:600; color:#F5F6FA">Usuarios principales</h3>
+      <ul style="font-size:27px; line-height:1.6; color:#C7CBDA">
+        <li>Coleccionistas de NFTs y cripto-entusiastas</li>
+        <li>Creadores y desarrolladores (SDK propio)</li>
+        <li>Marcas y empresas con presencia digital</li>
+        <li>Organizadores de eventos</li>
+      </ul>
+    </div>
+    <div style="flex:1; background:#1C1E2B; border:1px solid #2A2D3D; border-radius:24px; padding:48px; display:flex; flex-direction:column; gap:20px">
+      <h3 style="font-size:34px; font-weight:600; color:#F5F6FA">Usos en la vida real</h3>
+      <ul style="font-size:27px; line-height:1.6; color:#C7CBDA">
+        <li>Metaverse Fashion Week (abr. 2025, 47+ marcas)</li>
+        <li>Ferias de empleo: Career Quest 2025</li>
+        <li>Alquiler y monetización de terrenos</li>
+        <li>Galerías de arte, conciertos, eventos</li>
+      </ul>
+    </div>
+  </div>
+  <p style="position:absolute; left:128px; bottom:64px; font-size:24px; color:#8A90A6">Decentraland · Equipo 10</p>
+  <p style="position:absolute; right:128px; bottom:64px; font-size:24px; color:#8A90A6">05</p>
+</section>

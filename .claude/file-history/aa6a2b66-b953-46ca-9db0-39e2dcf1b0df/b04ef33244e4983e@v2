@@ -1,0 +1,18 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t = $null; foreach ($w in $xl.Workbooks) { if ($w.Name -eq '20260922_SETSA Transportes.xlsx') { $t = $w } }
+if (-not $t) { throw 'libro no encontrado' }
+$tx = $t.Worksheets.Item('Transacciones Precedentes')
+$m  = $t.Worksheets.Item('Modelo SETSA')
+if ([string]$m.Range('C42').Value2 -ne 'EBITDA Ajustado') { throw 'Modelo C42 no es EBITDA Ajustado' }
+if ([string]$m.Range('F13').Text -ne '2023A' -or [string]$m.Range('H13').Text -ne '2025A') { throw 'columnas de anos inesperadas' }
+$r = 0; for ($i = 40; $i -le 60; $i++) { if (([string]$tx.Cells.Item($i,3).Value2).StartsWith('TEV / (EBITDA Ajustado - Capex')) { $r = $i } }
+if ($r -eq 0) { throw 'no encontre la fila' }
+$tx.Range("C$r").Value2 = 'TEV / EBITDA Ajustado Promedio 2023' + [char]0x2013 + '25'
+$tx.Range("F$r").Formula = "=F40/AVERAGE('Modelo SETSA'!F42:H42)"
+$xl.Calculate()
+$err = 0; foreach ($c in $tx.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $err++ } }
+"errores=$err"
+"EBITDA aj 2023/2024/2025: " + $m.Range('F42').Text + ' / ' + $m.Range('G42').Text + ' / ' + $m.Range('H42').Text
+for ($i = 48; $i -le 54; $i++) { "$i | " + $tx.Cells.Item($i,3).Value2 + " | " + $tx.Range("F$i").Formula + " = " + $tx.Range("F$i").Text }
+$t.Save(); "guardado=" + $t.Saved

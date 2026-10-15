@@ -1,0 +1,50 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t = $null; foreach ($w in $xl.Workbooks) { if ($w.Name -eq '20260922_SETSA Transportes.xlsx') { $t = $w } }
+$t.SaveCopyAs("$PSScriptRoot\backup_antes_limpieza.xlsx")
+$m  = $t.Worksheets.Item('Modelo SETSA')
+$tx = $t.Worksheets.Item('Transacciones Precedentes')
+$cv = $t.Worksheets.Item('Cover')
+$o = [char]0xF3; $u = [char]0xFA; $a = [char]0xE1
+$log = @()
+function SetIf($ws, $addr, $expected, $new) {
+    $cur = [string]$ws.Range($addr).Value2
+    if ($cur.Trim() -eq $expected) { $ws.Range($addr).Value2 = $new; $script:log += "$($ws.Name)!$addr : '$cur' -> '$new'" }
+    else { $script:log += "SIN CAMBIO $($ws.Name)!$addr (tiene '$cur')" }
+}
+# --- Transacciones: restos del template y consistencia TEV ---
+SetIf $tx 'B27' 'Water Management Divestiture' 'Supuestos para la sensibilidad'
+SetIf $tx 'B28' 'Múltiplo EV / EBITDA' ("M${u}ltiplo TEV / EBITDA")
+SetIf $tx 'K32' 'Múltiplo EV / EBITDA' ("M${u}ltiplo TEV / EBITDA")
+SetIf $tx 'G31' 'Upside / Downside Sensitivity' 'Sensibilidad: valor del capital (MXN)'
+SetIf $tx 'G34' 'Recuperación de Cartera' ("Recuperaci${o}n de cartera")
+SetIf $tx 'B44' 'Valor del capital (100%)' 'Valor del capital (MXN millones)'
+# alturas de fila uniformes en la tabla de transacciones
+for ($r = 12; $r -le 30; $r++) { if ($tx.Rows.Item($r).RowHeight -gt 15 -and $tx.Rows.Item($r).RowHeight -lt 20) { $tx.Rows.Item($r).RowHeight = 15 } }
+
+# --- Modelo: etiquetas ---
+SetIf $m 'C70' 'Aumento / (disminución) en acreedores largo plazo' ("Aumento / (disminuci${o}n) en acreedores diversos de largo plazo")
+$m.Range('C151').Value2 = ([string]$m.Range('C151').Value2).Trim()
+# colores: vínculo a otra hoja en verde, total de acreedores en negro
+$m.Range('D215:I215').Font.Color = 5287936       # verde 00B050
+$m.Range('D294:G294').Font.Color = 0
+# fuentes Calibri -> Arial
+$n = 0
+foreach ($ws in $m, $tx) { foreach ($c in $ws.UsedRange.Cells) { if ($c.Font.Name -eq 'Calibri' -and [string]$c.Formula -ne '') { $c.Font.Name = 'Arial'; $n++ } } }
+$log += "celdas Calibri -> Arial: $n"
+
+# --- Cover: quitar datos de Alumasc ---
+$b10 = $cv.Range('B10')
+if ($b10.HasArray) { $b10.CurrentArray.ClearContents() | Out-Null } else { $b10.ClearContents() | Out-Null }
+$cv.Range('B10').Value2 = 'SETSA Transportes, S.A. de C.V.'
+$cv.Range('B12').Formula = '=B10 & " - Modelo Financiero"'
+$cv.Range('B17').Value2 = 'Privada'
+$cv.Range('C17').Value2 = '<-- Empresa privada (no cotiza en bolsa)'
+$log += "Cover: titulo = " + $cv.Range('B12').Text
+
+$xl.CalculateFull()
+$err = 0
+foreach ($ws in $t.Worksheets) { foreach ($c in $ws.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $err++; "ERR " + $ws.Name + "!" + $c.Address($false,$false) } } }
+$log += "errores=$err"
+$log
+$t.Save(); "guardado=" + $t.Saved

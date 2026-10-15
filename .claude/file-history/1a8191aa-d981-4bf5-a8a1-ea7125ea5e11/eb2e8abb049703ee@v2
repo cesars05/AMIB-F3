@@ -1,0 +1,577 @@
+const path = require("path");
+const pptxgen = require("pptxgenjs");
+const React = require("react");
+const RDS = require("react-dom/server");
+const sharp = require("sharp");
+const fa = require("react-icons/fa");
+const { applyTheme } = require("C:/Users/cesar/AppData/Roaming/Claude/local-agent-mode-sessions/skills-plugin/c841ebdf-2138-4744-b422-6e56ee0dbe11/982c8385-2696-4376-9875-8cc504ed2d83/skills/pptx/scripts/apply_theme.js");
+
+const ROOT = path.resolve(__dirname, "..");
+const IMG = (f) => path.join(ROOT, "imagenes", f);
+const OUT = path.join(ROOT, "e-rupee_CBDC_Equipo10_Actividad3.pptx");
+
+// ---------- palette (e₹ logo: navy + saffron + green) ----------
+const NAVY = "14208F";
+const DEEP = "070F3F";
+const SAFF = "FF6A1F";
+const GREEN = "056B3A";
+const PALE = "EFF1FB";
+const INK = "0B1236";
+const MUTED = "5A6491";
+const WHITE = "FFFFFF";
+const H = "Cambria";
+const B = "Calibri";
+
+const THEME = {
+  name: "e-rupee",
+  headFontFace: H,
+  bodyFontFace: B,
+  colors: {
+    dk1: INK, lt1: WHITE, dk2: NAVY, lt2: PALE,
+    accent1: SAFF, accent2: GREEN, accent3: NAVY, accent4: "C9A227", accent5: MUTED, accent6: "8A93C4",
+    hlink: NAVY, folHlink: MUTED,
+  },
+};
+
+async function icon(name, color) {
+  const Comp = fa[name];
+  if (!Comp) throw new Error("icon missing " + name);
+  const svg = RDS.renderToStaticMarkup(React.createElement(Comp, { color: "#" + color, size: "256" }));
+  const buf = await sharp(Buffer.from(svg)).resize(256, 256, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer();
+  return "image/png;base64," + buf.toString("base64");
+}
+
+const sh = () => ({ type: "outer", color: "000000", opacity: 0.12, blur: 8, offset: 2, angle: 90 });
+
+(async () => {
+  const pres = new pptxgen();
+  pres.layout = "LAYOUT_WIDE"; // 13.33 x 7.5
+  pres.theme = { headFontFace: H, bodyFontFace: B };
+  pres.title = "e₹ (Rupia Digital) – Reserve Bank of India";
+  pres.author = "Equipo 10";
+  pres.subject = "Actividad 3: Tipos de Criptomonedas";
+
+  // ---------- layouts ----------
+  pres.defineSlideMaster({
+    title: "CONTENT",
+    background: { color: WHITE },
+    objects: [
+      { text: { text: "e₹ · Rupia Digital del RBI  |  Equipo 10  |  Actividad 3: Tipos de Criptomonedas", options: { x: 0.6, y: 7.0, w: 9, h: 0.3, fontFace: B, fontSize: 10, color: MUTED, margin: 0 } } },
+      { placeholder: { options: { name: "title", type: "title", x: 0.6, y: 0.8, w: 12.1, h: 0.85, fontFace: H, fontSize: 34, bold: true, color: NAVY, valign: "top", align: "left", margin: 0 }, text: "" } },
+    ],
+    slideNumber: { x: 12.1, y: 7.0, w: 0.63, h: 0.3, fontFace: B, fontSize: 10, color: MUTED, align: "right" },
+  });
+  pres.defineSlideMaster({
+    title: "DARK",
+    background: { color: DEEP },
+    objects: [
+      { text: { text: "e₹ · Rupia Digital del RBI  |  Equipo 10  |  Actividad 3: Tipos de Criptomonedas", options: { x: 0.6, y: 7.0, w: 9, h: 0.3, fontFace: B, fontSize: 10, color: "8A93C4", margin: 0 } } },
+      { placeholder: { options: { name: "title", type: "title", x: 0.6, y: 0.8, w: 12.1, h: 0.85, fontFace: H, fontSize: 34, bold: true, color: WHITE, valign: "top", align: "left", margin: 0 }, text: "" } },
+    ],
+    slideNumber: { x: 12.1, y: 7.0, w: 0.63, h: 0.3, fontFace: B, fontSize: 10, color: "8A93C4", align: "right" },
+  });
+  pres.defineSlideMaster({ title: "COVER", background: { color: DEEP } });
+
+  // ---------- icons ----------
+  const I = {};
+  const want = {
+    landmark: ["FaLandmark", WHITE], landmarkN: ["FaLandmark", NAVY],
+    mobile: ["FaMobileAlt", WHITE], users: ["FaUsers", WHITE], usersN: ["FaUsers", NAVY],
+    shield: ["FaShieldAlt", WHITE], bolt: ["FaBolt", WHITE], boltN: ["FaBolt", NAVY],
+    coins: ["FaCoins", WHITE], target: ["FaBullseye", WHITE], file: ["FaFileContract", WHITE],
+    link: ["FaLink", WHITE], layers: ["FaLayerGroup", WHITE], cog: ["FaCogs", WHITE],
+    cogN: ["FaCogs", NAVY], qr: ["FaQrcode", WHITE], seed: ["FaSeedling", WHITE],
+    building: ["FaUniversity", WHITE], buildingN: ["FaUniversity", NAVY], wifi: ["FaWifi", WHITE],
+    lock: ["FaLock", WHITE], flag: ["FaFlagCheckered", WHITE], hand: ["FaHandHoldingUsd", WHITE],
+    wallet: ["FaWallet", WHITE], balance: ["FaBalanceScale", WHITE], rupee: ["FaRupeeSign", WHITE],
+    clock: ["FaClock", WHITE], ban: ["FaBan", WHITE], check: ["FaCheck", WHITE], times: ["FaTimes", SAFF],
+    list: ["FaListUl", WHITE], chart: ["FaChartLine", WHITE], key: ["FaKey", WHITE], arrows: ["FaExchangeAlt", WHITE],
+    question: ["FaQuestion", WHITE], store: ["FaStore", WHITE], sim: ["FaSimCard", WHITE], infinity: ["FaInfinity", WHITE],
+    plug: ["FaPlug", WHITE], cube: ["FaCube", WHITE], code: ["FaCodeBranch", WHITE],
+  };
+  for (const [k, [n, c]] of Object.entries(want)) I[k] = await icon(n, c);
+
+  // ---------- helpers ----------
+  const kicker = (s, t) => s.addText(t, { x: 0.6, y: 0.42, w: 9, h: 0.3, fontFace: B, fontSize: 13, bold: true, color: SAFF, charSpacing: 3, margin: 0, isTextBox: true, objectName: "Kicker" });
+  const card = (s, x, y, w, h, fill, name) => s.addShape(pres.ShapeType.roundRect, { x, y, w, h, rectRadius: 0.12, fill: { color: fill }, line: { color: fill, width: 0 }, shadow: fill === WHITE ? sh() : undefined, objectName: name || "Card" });
+  const circle = (s, ic, x, y, d, fill) => {
+    s.addShape(pres.ShapeType.ellipse, { x, y, w: d, h: d, fill: { color: fill }, line: { color: fill, width: 0 }, objectName: "IconCircle" });
+    const p = d * 0.28;
+    s.addImage({ data: ic, x: x + p, y: y + p, w: d - 2 * p, h: d - 2 * p, altText: "icono" });
+  };
+  const txt = (s, t, o) => s.addText(t, Object.assign({ fontFace: B, fontSize: 14, color: INK, margin: 0, valign: "top", isTextBox: true }, o));
+  const dots = (s, x, y, d = 0.16, gap = 0.1) => {
+    [SAFF, WHITE, GREEN].forEach((c, i) => s.addShape(pres.ShapeType.ellipse, { x: x + i * (d + gap), y, w: d, h: d, fill: { color: c }, line: { color: c === WHITE ? "C9CEEA" : c, width: 0.75 }, objectName: "TricolorDot" }));
+  };
+  let cur = "Portada";
+  const sec = (t) => { cur = t; pres.addSection({ title: t }); };
+  const content = (kick, title, notes, layout = "CONTENT") => {
+    const s = pres.addSlide({ masterName: layout, sectionTitle: cur });
+    kicker(s, kick);
+    s.addText(title, { placeholder: "title" });
+    if (notes) s.addNotes(notes);
+    return s;
+  };
+
+  // =====================================================================
+  // 1. PORTADA
+  // =====================================================================
+  {
+    sec("Portada");
+    const s = pres.addSlide({ masterName: "COVER", sectionTitle: cur });
+    s.addImage({ path: IMG("rbi_edificio_mumbai.jpg"), x: 0, y: 0, w: 4.4, h: 7.5, sizing: { type: "cover", w: 4.4, h: 7.5 }, altText: "Torre del Reserve Bank of India en Mumbai" });
+    s.addShape(pres.ShapeType.rect, { x: 0, y: 0, w: 4.4, h: 7.5, fill: { color: DEEP, transparency: 35 }, line: { color: DEEP, width: 0 }, objectName: "Overlay" });
+    card(s, 5.1, 0.7, 2.7, 1.75, WHITE, "LogoCard");
+    s.addImage({ path: IMG("digital_rupee_logo.png"), x: 5.4, y: 0.85, w: 2.1, h: 1.4, altText: "Logo oficial del e₹" });
+    card(s, 8.1, 0.7, 3.0, 1.75, WHITE, "RBICard");
+    s.addImage({ path: IMG("rbi_logo.png"), x: 8.3, y: 1.18, w: 2.6, h: 0.9, altText: "Logo Reserve Bank of India" });
+    dots(s, 5.1, 3.0);
+    txt(s, "ACTIVIDAD 3  ·  TIPOS DE CRIPTOMONEDAS", { x: 5.1, y: 3.3, w: 7.6, h: 0.35, fontSize: 14, bold: true, color: SAFF, charSpacing: 3 });
+    txt(s, "e₹  La Rupia Digital", { x: 5.1, y: 3.75, w: 7.8, h: 1.1, fontFace: H, fontSize: 54, bold: true, color: WHITE });
+    txt(s, "Reserve Bank of India: la moneda digital de banco central (CBDC) de la India", { x: 5.1, y: 4.95, w: 7.4, h: 0.9, fontSize: 22, color: "D6DAF2" });
+    ["CBDC", "Infraestructura institucional", "Retail + Wholesale"].forEach((t, i) => {
+      const w = [1.2, 3.1, 2.3][i]; const x = [5.1, 6.45, 9.7][i];
+      s.addShape(pres.ShapeType.roundRect, { x, y: 6.05, w, h: 0.45, rectRadius: 0.22, fill: { color: i === 0 ? SAFF : DEEP }, line: { color: i === 0 ? SAFF : "8A93C4", width: 1 }, objectName: "Chip" });
+      txt(s, t, { x, y: 6.05, w, h: 0.45, align: "center", valign: "middle", fontSize: 14, bold: true, color: WHITE });
+    });
+    txt(s, "Equipo 10", { x: 5.1, y: 6.85, w: 4, h: 0.3, fontSize: 14, bold: true, color: WHITE });
+    s.addNotes("Presentación del Equipo 10: el e₹ (rupia digital) del Reserve Bank of India. Es una CBDC: moneda digital de banco central. Vamos a responder las 5 preguntas de la actividad: descripción, identificación técnica, clasificación, market cap y casos de uso.");
+  }
+
+  // =====================================================================
+  // 2. QUÉ VAMOS A RESPONDER
+  // =====================================================================
+  {
+    sec("Introducción");
+    const s = content("INTRODUCCIÓN", "Cinco preguntas, un proyecto",
+      "Estas son las cinco preguntas que pide la actividad. Adelantamos la idea central: el e₹ NO es una criptomoneda privada; es dinero de banco central en formato digital.");
+    const items = [
+      ["1", "Descripción", "¿Qué es, quién lo impulsa y para qué existe?", "landmark"],
+      ["2", "Identificación técnica", "¿Coin o token? ¿Layer? ¿Consenso?", "cog"],
+      ["3", "Clasificación", "¿Qué tipo de cripto o infraestructura es?", "layers"],
+      ["4", "Market cap", "¿Tiene? ¿Por qué sí o por qué no?", "chart"],
+      ["5", "Casos de uso", "Usuarios, velocidad, costos y respaldo", "bolt"],
+    ];
+    items.forEach(([n, t, d, ic], i) => {
+      const x = 0.6 + i * 2.47;
+      card(s, x, 1.95, 2.2, 3.1, PALE, "QuestionCard");
+      circle(s, I[ic], x + 0.25, 2.2, 0.8, NAVY);
+      txt(s, n, { x: x + 1.2, y: 2.2, w: 0.8, h: 0.8, fontFace: H, fontSize: 40, bold: true, color: SAFF, align: "right", valign: "middle" });
+      txt(s, t, { x: x + 0.25, y: 3.3, w: 1.75, h: 0.7, fontSize: 18, bold: true, color: NAVY });
+      txt(s, d, { x: x + 0.25, y: 4.0, w: 1.75, h: 0.95, fontSize: 14, color: INK });
+    });
+    card(s, 0.6, 5.4, 12.12, 1.25, NAVY, "Thesis");
+    txt(s, [
+      { text: "En una frase:  ", options: { bold: true, color: SAFF } },
+      { text: "el e₹ es la rupia en formato digital, emitida por el banco central de la India. No es una coin ni un token cripto privado: es una CBDC.", options: { color: WHITE } },
+    ], { x: 0.95, y: 5.4, w: 11.4, h: 1.25, fontSize: 20, valign: "middle" });
+  }
+
+  // =====================================================================
+  // 3. DESCRIPCIÓN
+  // =====================================================================
+  {
+    sec("1 · Descripción");
+    const s = content("1 · DESCRIPCIÓN DEL PROYECTO", "¿Qué es el e₹?",
+      "El e₹ o rupia digital es la forma digital de la rupia india. Lo emite el Reserve Bank of India, está a la par con el efectivo y es moneda de curso legal. Es una iniciativa gubernamental: se anunció en el Presupuesto de la Unión del 1 de febrero de 2022. Su objetivo en el ecosistema cripto: dar los beneficios de una moneda digital sin los riesgos de las criptomonedas privadas; complementa, no reemplaza, al efectivo y a los pagos actuales. Fuentes: FAQ del RBI y Factsheet del Ministerio de Finanzas (PIB).");
+    const rows = [
+      ["landmark", "¿Qué es?", "La versión digital de la rupia (₹), emitida por el RBI. Está a la par con el efectivo, es de curso legal y es pasivo del banco central."],
+      ["flag", "¿Quién la impulsa?", "Iniciativa gubernamental, no privada ni comunitaria. Anunciada en el Presupuesto de la Unión (1-feb-2022) y emitida por el RBI."],
+      ["target", "¿Para qué existe?", "Dar los usos de las cripto privadas sin sus riesgos, abaratar el manejo de efectivo e impulsar inclusión financiera. Complementa, no reemplaza."],
+    ];
+    rows.forEach(([ic, h, d], i) => {
+      const y = 1.9 + i * 1.62;
+      circle(s, I[ic], 0.6, y, 0.75, NAVY);
+      txt(s, h, { x: 1.6, y, w: 5.2, h: 0.4, fontSize: 18, bold: true, color: NAVY });
+      txt(s, d, { x: 1.6, y: y + 0.42, w: 5.3, h: 1.1, fontSize: 14 });
+    });
+    card(s, 7.35, 1.8, 5.37, 4.75, PALE, "ImageCard");
+    s.addImage({ path: IMG("digital_rupee_notas.png"), x: 7.55, y: 1.95, w: 4.97, h: 3.89, altText: "Diseño de billetes y monedas e₹" });
+    txt(s, "El e₹ se emite en las mismas denominaciones que el efectivo.", { x: 7.55, y: 5.9, w: 4.97, h: 0.55, fontSize: 12, color: MUTED });
+  }
+
+  // =====================================================================
+  // 4. LÍNEA DE TIEMPO
+  // =====================================================================
+  {
+    const s = content("1 · DESCRIPCIÓN DEL PROYECTO", "Del anuncio al piloto nacional",
+      "Línea de tiempo con fuentes oficiales. Feb-2022: Presupuesto de la Unión anuncia la rupia digital. 1-nov-2022: piloto mayorista. 1-dic-2022: piloto minorista en 4 ciudades con 4 bancos. Sep-2023: 13 bancos, 26 ubicaciones y más de 1.75 millones de usuarios y comercios (PIB). Feb-2026: piloto de subsidio alimentario programable en Puducherry (PIB). Oct-2026: el FAQ del RBI reporta 19 bancos con wallets y 16 participantes mayoristas, y un sandbox CAT.");
+    const ev = [
+      ["FEB 2022", "Anuncio", "El Presupuesto de la Unión anuncia la Rupia Digital"],
+      ["1 NOV 2022", "Piloto mayorista", "e₹-W para bonos del Gobierno, con 9 bancos"],
+      ["1 DIC 2022", "Piloto minorista", "e₹-R en 4 ciudades y 4 bancos, grupo cerrado"],
+      ["SEP 2023", "Se expande", "13 bancos, 26 ubicaciones y +1.75 M de usuarios y comercios"],
+      ["FEB 2026", "Subsidios", "Piloto de ayuda alimentaria programable en Puducherry"],
+      ["OCT 2026", "Hoy", "19 bancos con wallets y 16 participantes mayoristas"],
+    ];
+    s.addShape(pres.ShapeType.line, { x: 1.55, y: 3.15, w: 10.2, h: 0, line: { color: "C9CEEA", width: 3 }, objectName: "TimelineLine" });
+    ev.forEach(([d, t, x], i) => {
+      const cx = 1.55 + i * 2.04;
+      const last = i === ev.length - 1;
+      txt(s, d, { x: cx - 0.95, y: 2.2, w: 1.9, h: 0.4, fontFace: H, fontSize: 18, bold: true, color: last ? SAFF : NAVY, align: "center" });
+      s.addShape(pres.ShapeType.ellipse, { x: cx - 0.2, y: 2.95, w: 0.4, h: 0.4, fill: { color: last ? SAFF : NAVY }, line: { color: WHITE, width: 3 }, objectName: "TimelineNode" });
+      card(s, cx - 0.97, 3.75, 1.94, 2.7, last ? NAVY : PALE, "TimelineCard");
+      txt(s, t, { x: cx - 0.82, y: 3.9, w: 1.65, h: 0.4, fontSize: 16, bold: true, color: last ? SAFF : NAVY });
+      txt(s, x, { x: cx - 0.82, y: 4.35, w: 1.65, h: 2.0, fontSize: 14, color: last ? WHITE : INK });
+    });
+  }
+
+  // =====================================================================
+  // 5. IDENTIFICACIÓN TÉCNICA
+  // =====================================================================
+  {
+    sec("2 · Identificación técnica");
+    const s = content("2 · IDENTIFICACIÓN TÉCNICA", "Ni coin ni token cripto: un token del banco central",
+      "Respuesta corta: es más cercano a un token, porque el RBI lo define como 'un token digital que representa moneda de curso legal'. No es una coin porque no tiene una blockchain pública propia. Según el Gobierno de la India (PIB), el piloto minorista tiene componentes basados en blockchain, pero el RBI no publica el nombre de una red ni un mecanismo de consenso; por eso decimos que no usa PoW ni PoS públicos (es una inferencia de su arquitectura centralizada). No aplica la clasificación Layer 1 / Layer 2: es infraestructura institucional.");
+    const cards = [
+      ["key", "¿Coin o token?", "Más cercano a un token: el RBI lo define como “un token digital que representa moneda de curso legal”. No es una coin: no tiene blockchain pública propia."],
+      ["link", "¿En qué red opera?", "En la plataforma CBDC del RBI, no sobre Ethereum ni otra cadena pública. Según el Gobierno, el piloto minorista tiene componentes basados en blockchain."],
+      ["layers", "¿Layer 1, Layer 2 o app?", "Ninguna: no es una red pública. Es infraestructura institucional: una capa de liquidación en dinero de banco central, con wallets de bancos encima."],
+      ["shield", "¿Qué consenso usa?", "No usa PoW ni PoS (inferencia: el RBI no publica un consenso). Emite y valida de forma centralizada: la confianza viene del banco central, no de mineros."],
+    ];
+    cards.forEach(([ic, h, d], i) => {
+      const x = 0.6 + (i % 2) * 6.17, y = 1.85 + Math.floor(i / 2) * 2.5;
+      card(s, x, y, 5.95, 2.3, PALE, "TechCard");
+      circle(s, I[ic], x + 0.3, y + 0.28, 0.65, NAVY);
+      txt(s, h, { x: x + 1.15, y: y + 0.28, w: 4.6, h: 0.65, fontSize: 20, bold: true, color: NAVY, valign: "middle" });
+      txt(s, d, { x: x + 0.3, y: y + 1.1, w: 5.4, h: 1.1, fontSize: 14 });
+    });
+  }
+
+  // =====================================================================
+  // 6. MODELO DE DOS NIVELES
+  // =====================================================================
+  {
+    const s = content("2 · IDENTIFICACIÓN TÉCNICA", "Así funciona: modelo de dos niveles",
+      "El RBI crea el e₹ y lo emite electrónicamente a bancos y no bancos, igual que con el efectivo físico. Esos intermediarios abren las wallets y atienden a usuarios y comercios. El e₹ se emite en las mismas denominaciones que el efectivo, se puede convertir a depósitos bancarios y no paga interés.");
+    const boxes = [
+      ["landmark", "Banco central (RBI)", "Crea el e₹ y lo emite electrónicamente a bancos y no bancos. Es pasivo del RBI.", NAVY, WHITE, WHITE],
+      ["building", "Bancos y no bancos", "19 bancos ofrecen wallets: incorporan clientes y comercios.", PALE, NAVY, INK],
+      ["mobile", "Usuarios y comercios", "Pagan P2P o P2M escaneando un QR CBDC o un QR UPI desde la wallet.", PALE, NAVY, INK],
+    ];
+    boxes.forEach(([ic, t, d, fill, tc, bc], i) => {
+      const x = 0.6 + i * 4.35;
+      card(s, x, 1.95, 3.4, 2.5, fill, "FlowBox");
+      circle(s, I[ic], x + 0.3, 2.2, 0.7, i === 0 ? SAFF : NAVY);
+      txt(s, t, { x: x + 1.15, y: 2.2, w: 2.15, h: 0.7, fontSize: 18, bold: true, color: tc, valign: "middle" });
+      txt(s, d, { x: x + 0.3, y: 3.1, w: 2.85, h: 1.25, fontSize: 14, color: bc });
+      if (i < 2) s.addShape(pres.ShapeType.rightArrow, { x: x + 3.55, y: 2.9, w: 0.6, h: 0.55, fill: { color: SAFF }, line: { color: SAFF, width: 0 }, objectName: "Arrow" });
+    });
+    const mini = [
+      ["coins", "Mismas denominaciones", "Billetes y monedas digitales, con cambio automático."],
+      ["arrows", "Convertible 1 a 1", "Se pasa a efectivo o a depósitos bancarios sin pérdida de valor."],
+      ["ban", "Sin interés", "Como el efectivo: el saldo de la wallet no genera intereses."],
+    ];
+    mini.forEach(([ic, t, d], i) => {
+      const x = 0.6 + i * 4.11;
+      card(s, x, 4.8, 3.9, 1.85, WHITE, "MiniCard");
+      circle(s, I[ic], x + 0.3, 5.05, 0.6, GREEN);
+      txt(s, t, { x: x + 1.05, y: 5.05, w: 2.7, h: 0.6, fontSize: 16, bold: true, color: NAVY, valign: "middle" });
+      txt(s, d, { x: x + 0.3, y: 5.8, w: 3.35, h: 0.8, fontSize: 14 });
+    });
+  }
+
+  // =====================================================================
+  // 7. CLASIFICACIÓN
+  // =====================================================================
+  {
+    sec("3 · Clasificación");
+    const s = content("3 · CLASIFICACIÓN", "Es una CBDC y una infraestructura institucional",
+      "Pertenece a tres categorías: CBDC (moneda digital de banco central, curso legal por la sección 26 de la Ley del RBI de 1934), infraestructura institucional (la opera el RBI y la distribuyen los bancos) y efectivo digital (token al portador, mismas denominaciones, sin interés). No es stablecoin: la emite un banco central y es la moneda misma, no un activo que la replica. Tampoco es meme coin, governance o utility token, DAO, NFT ni Layer 1 público.");
+    const yes = [
+      ["CBDC", SAFF, "Moneda de curso legal emitida por el banco central en forma digital (sección 26, Ley del RBI de 1934)."],
+      ["Infraestructura institucional", NAVY, "Capa de liquidación operada por el RBI y distribuida por bancos; no hay red abierta."],
+      ["Efectivo digital", GREEN, "Token tipo “al portador” como un billete: misma denominación y sin interés."],
+    ];
+    yes.forEach(([t, c, d], i) => {
+      const y = 1.85 + i * 1.62;
+      card(s, 0.6, y, 6.9, 1.45, PALE, "YesCard");
+      s.addShape(pres.ShapeType.roundRect, { x: 0.85, y: y + 0.2, w: 2.75, h: 0.5, rectRadius: 0.25, fill: { color: c }, line: { color: c, width: 0 }, objectName: "Badge" });
+      txt(s, t, { x: 0.85, y: y + 0.2, w: 2.75, h: 0.5, fontSize: 15, bold: true, color: WHITE, align: "center", valign: "middle" });
+      circle(s, I.check, 6.7, y + 0.18, 0.55, c);
+      txt(s, d, { x: 0.85, y: y + 0.82, w: 6.4, h: 0.6, fontSize: 14 });
+    });
+    card(s, 7.8, 1.85, 4.92, 4.7, NAVY, "NoCard");
+    txt(s, "No pertenece a…", { x: 8.05, y: 2.0, w: 4.4, h: 0.45, fontFace: H, fontSize: 20, bold: true, color: WHITE });
+    const no = [
+      ["Stablecoin", "es la moneda misma, no un activo que la replica"],
+      ["Meme coin", "sin especulación: valor fijo ₹1 = 1 e₹"],
+      ["Governance / utility token", "no da votos ni acceso a un protocolo"],
+      ["DAO", "lo gobierna el RBI, no una comunidad"],
+      ["NFT", "es fungible: un e₹ vale igual que otro"],
+      ["Layer 1 público", "no hay cadena abierta ni validadores"],
+    ];
+    no.forEach(([t, d], i) => {
+      const y = 2.55 + i * 0.66;
+      txt(s, "✕", { x: 8.05, y, w: 0.35, h: 0.55, fontSize: 16, bold: true, color: SAFF });
+      txt(s, [{ text: t + ": ", options: { bold: true, color: WHITE } }, { text: d, options: { color: "D6DAF2" } }], { x: 8.45, y, w: 4.05, h: 0.62, fontSize: 14 });
+    });
+  }
+
+  // =====================================================================
+  // 8. RETAIL VS WHOLESALE
+  // =====================================================================
+  {
+    const s = content("3 · CLASIFICACIÓN", "Dos versiones: retail (e₹-R) y wholesale (e₹-W)",
+      "El e₹ tiene dos formas. La minorista (e₹-R) es para el público y es token-based, como el efectivo. La mayorista (e₹-W) es para instituciones financieras y se contempla basada en cuentas. El e₹-W tiene 4 casos de uso: liquidación de bonos del Gobierno, préstamos interbancarios (call money), certificados de depósito tokenizados y bonos corporativos tokenizados, con 16 participantes según el FAQ del RBI.");
+    const cols = [
+      ["e₹-R  Retail", SAFF, "mobile", [
+        ["PARA QUIÉN", "Público general y comercios"],
+        ["FORMA", "Token al portador, como el efectivo"],
+        ["USOS", "Pagos P2P y P2M con QR; subsidios programables"],
+        ["PARTICIPANTES", "19 bancos con wallets"],
+        ["ARRANQUE", "Piloto desde el 1-dic-2022"],
+      ]],
+      ["e₹-W  Wholesale", NAVY, "building", [
+        ["PARA QUIÉN", "Bancos e instituciones financieras"],
+        ["FORMA", "Basado en cuentas (account-based)"],
+        ["USOS", "Bonos del Gobierno, call money, certificados de depósito y bonos corporativos"],
+        ["PARTICIPANTES", "16 bancos y no bancos"],
+        ["ARRANQUE", "Piloto desde el 1-nov-2022"],
+      ]],
+    ];
+    cols.forEach(([h, c, ic, rows], i) => {
+      const x = 0.6 + i * 6.17;
+      card(s, x, 1.85, 5.95, 4.85, PALE, "VersionCard");
+      s.addShape(pres.ShapeType.roundRect, { x, y: 1.85, w: 5.95, h: 0.85, rectRadius: 0.12, fill: { color: c }, line: { color: c, width: 0 }, objectName: "VersionHeader" });
+      circle(s, I[ic], x + 0.25, 1.97, 0.6, i === 0 ? DEEP : SAFF);
+      txt(s, h, { x: x + 1.05, y: 1.85, w: 4.6, h: 0.85, fontFace: H, fontSize: 24, bold: true, color: WHITE, valign: "middle" });
+      rows.forEach(([l, v], j) => {
+        const y = 2.9 + j * 0.76;
+        txt(s, l, { x: x + 0.3, y, w: 1.6, h: 0.65, fontSize: 12, bold: true, color: MUTED, charSpacing: 1 });
+        txt(s, v, { x: x + 1.9, y, w: 3.8, h: 0.72, fontSize: 14, color: INK });
+      });
+    });
+  }
+
+  // =====================================================================
+  // 9. MARKET CAP
+  // =====================================================================
+  {
+    sec("4 · Market cap");
+    const s = content("4 · MARKET CAP Y DATOS FINANCIEROS", "El e₹ no tiene market cap",
+      "El e₹ no tiene market cap porque no cotiza en ningún mercado y su valor no depende de oferta y demanda: 1 e₹ siempre equivale a 1 rupia. Es un pasivo del RBI, y su cantidad la determina el banco central. Por eso no aparece en rankings de tipo CoinMarketCap o CoinGecko. La métrica que sí existe es el e₹ en circulación, que el RBI reporta en su Annual Report (capítulo Currency Management). La última cifra oficial que pudimos verificar es de marzo de 2023: e₹-R 5.70 crore y e₹-W 10.69 crore. Para cifras más recientes hay que consultar el Annual Report 2025-26.");
+    card(s, 0.6, 1.85, 4.9, 4.85, NAVY, "BigCard");
+    txt(s, "MARKET CAP", { x: 0.95, y: 2.1, w: 4.2, h: 0.35, fontSize: 13, bold: true, color: SAFF, charSpacing: 3 });
+    txt(s, "No aplica", { x: 0.95, y: 2.5, w: 4.2, h: 0.9, fontFace: H, fontSize: 48, bold: true, color: WHITE });
+    txt(s, "Precio", { x: 0.95, y: 3.65, w: 4.2, h: 0.3, fontSize: 13, bold: true, color: "8A93C4", charSpacing: 2 });
+    txt(s, "₹1 = 1 e₹, siempre a la par", { x: 0.95, y: 3.95, w: 4.2, h: 0.4, fontSize: 18, color: WHITE });
+    txt(s, "Ranking global", { x: 0.95, y: 4.65, w: 4.2, h: 0.3, fontSize: 13, bold: true, color: "8A93C4", charSpacing: 2 });
+    txt(s, "Fuera de rankings: no cotiza, así que no tiene posición", { x: 0.95, y: 4.95, w: 4.2, h: 0.9, fontSize: 18, color: WHITE });
+    const why = [
+      ["store", "No se negocia en mercado", "Su valor no lo fijan oferta y demanda, sino el banco central."],
+      ["landmark", "Es un pasivo del RBI", "Se emite 1 a 1 con la rupia física; el RBI define cuánto circula."],
+      ["infinity", "No tiene supply ni capitalización", "La métrica relevante es el e₹ en circulación."],
+    ];
+    why.forEach(([ic, t, d], i) => {
+      const y = 1.85 + i * 1.12;
+      circle(s, I[ic], 5.9, y + 0.08, 0.65, NAVY);
+      txt(s, t, { x: 6.8, y, w: 5.9, h: 0.4, fontSize: 18, bold: true, color: NAVY });
+      txt(s, d, { x: 6.8, y: y + 0.42, w: 5.9, h: 0.6, fontSize: 14 });
+    });
+    card(s, 5.9, 5.3, 6.82, 1.4, PALE, "CirculationCard");
+    txt(s, [
+      { text: "e₹ en circulación (RBI): ", options: { bold: true, color: NAVY } },
+      { text: "e₹-R ₹5.70 crore y e₹-W ₹10.69 crore al 31-mar-2023, la última cifra oficial verificada. ", options: {} },
+      { text: "1 crore = 10 millones. Cifras más recientes: Annual Report 2025-26 del RBI.", options: { color: MUTED } },
+    ], { x: 6.15, y: 5.4, w: 6.35, h: 1.2, fontSize: 14, valign: "middle" });
+  }
+
+  // =====================================================================
+  // 10. CASOS DE USO
+  // =====================================================================
+  {
+    sec("5 · Casos de uso");
+    const s = content("5 · CASOS DE USO", "¿Para qué se usa realmente?",
+      "Cuatro usos reales documentados por el RBI y el Gobierno: pagos entre personas y a comercios con QR; subsidios programables (ayuda alimentaria en Puducherry, con reglas como vencimiento, geolocalización o tipo de comercio); liquidación mayorista de bonos, call money, certificados de depósito y bonos corporativos; y reserva de valor en la wallet. Usuarios principales: ciudadanos y comercios de los bancos piloto, beneficiarios de subsidios (DBT), empresas y bancos.");
+    const uses = [
+      ["qr", "Pagos del día a día", "Persona a persona y a comercios, escaneando un QR CBDC o un QR UPI desde la wallet.", SAFF],
+      ["hand", "Subsidios programables", "El gobierno acredita ayudas con reglas: vencimiento, geolocalización o tipo de comercio. Ej.: alimentos en Puducherry.", NAVY],
+      ["building", "Liquidación mayorista", "Bonos del Gobierno, préstamos interbancarios, certificados de depósito y bonos corporativos.", NAVY],
+      ["wallet", "Reserva de valor", "Se puede retirar del banco y guardar en la wallet, como efectivo digital.", GREEN],
+    ];
+    uses.forEach(([ic, t, d, c], i) => {
+      const x = 0.6 + i * 3.09;
+      card(s, x, 1.85, 2.85, 3.55, PALE, "UseCard");
+      circle(s, I[ic], x + 0.3, 2.1, 0.85, c);
+      txt(s, t, { x: x + 0.3, y: 3.1, w: 2.3, h: 0.7, fontSize: 18, bold: true, color: NAVY });
+      txt(s, d, { x: x + 0.3, y: 3.85, w: 2.3, h: 1.5, fontSize: 14 });
+    });
+    card(s, 0.6, 5.7, 12.12, 0.95, NAVY, "UsersBand");
+    txt(s, "USUARIOS PRINCIPALES", { x: 0.9, y: 5.7, w: 2.6, h: 0.95, fontSize: 13, bold: true, color: SAFF, charSpacing: 2, valign: "middle" });
+    txt(s, "Ciudadanos y comercios  ·  Beneficiarios de subsidios (DBT)  ·  Empresas  ·  Bancos e instituciones", { x: 3.5, y: 5.7, w: 9.0, h: 0.95, fontSize: 16, color: WHITE, valign: "middle" });
+  }
+
+  // =====================================================================
+  // 11. PARTICULARIDADES
+  // =====================================================================
+  {
+    const s = content("5 · PARTICULARIDADES", "¿Qué lo hace diferente?",
+      "Comparación con UPI según el FAQ del RBI: el e₹ es una forma digital de la rupia y UPI es un medio de pago. Además de pagar, el e₹ sirve como reserva de valor. Los pagos entre dos wallets con QR CBDC se liquidan al instante sin pasar por cuentas bancarias; si se escanea un QR de UPI, la liquidación sigue los plazos de UPI. Rasgos únicos: es moneda de curso legal, es programable, tiene las mismas denominaciones que el efectivo con cambio automático, la wallet se recupera con el número o SIM, y no requiere saldo mínimo ni paga interés.");
+    // table
+    const x0 = 0.6, cw = [1.75, 2.75, 2.75], rh = [0.6, 1.2, 1.2, 1.4];
+    const hdr = ["", "e₹", "UPI"];
+    let cx = x0;
+    hdr.forEach((h, i) => {
+      if (i > 0) {
+        s.addShape(pres.ShapeType.roundRect, { x: cx + 0.04, y: 1.85, w: cw[i] - 0.08, h: rh[0], rectRadius: 0.1, fill: { color: i === 1 ? NAVY : MUTED }, line: { color: i === 1 ? NAVY : MUTED, width: 0 }, objectName: "TableHead" });
+        txt(s, h, { x: cx + 0.04, y: 1.85, w: cw[i] - 0.08, h: rh[0], fontFace: H, fontSize: 20, bold: true, color: WHITE, align: "center", valign: "middle" });
+      }
+      cx += cw[i];
+    });
+    const trs = [
+      ["Qué es", "Forma digital de la rupia", "Un medio de pago"],
+      ["Guarda valor", "Sí: se conserva en la wallet", "No: es un canal para mover dinero"],
+      ["Liquidación", "Instantánea entre wallets, sin pasar por cuentas bancarias", "Según los plazos de liquidación de UPI"],
+    ];
+    let y = 1.85 + rh[0] + 0.1;
+    trs.forEach((r, ri) => {
+      const h = rh[ri + 1];
+      card(s, x0, y, 7.25, h - 0.1, PALE, "TableRow");
+      let xx = x0;
+      r.forEach((c, ci) => {
+        txt(s, c, { x: xx + 0.15, y, w: cw[ci] - 0.3, h: h - 0.1, fontSize: ci === 0 ? 14 : 14, bold: ci === 0, color: ci === 0 ? NAVY : INK, valign: "middle" });
+        xx += cw[ci];
+      });
+      y += h;
+    });
+    txt(s, "Hoy conviven: la wallet e₹ también puede escanear QR de UPI.", { x: 0.6, y: 6.35, w: 7.25, h: 0.4, fontSize: 14, bold: true, color: GREEN });
+    // unique traits
+    card(s, 8.2, 1.85, 4.52, 4.85, NAVY, "TraitsCard");
+    txt(s, "Rasgos únicos", { x: 8.5, y: 2.0, w: 3.9, h: 0.5, fontFace: H, fontSize: 22, bold: true, color: WHITE });
+    const tr = ["Moneda de curso legal, no un activo", "Programable: vencimiento, geolocalización y comercio", "Mismas denominaciones y cambio automático", "Wallet recuperable con tu número o SIM", "Sin saldo mínimo y sin interés"];
+    txt(s, tr.map((t, i) => ({ text: t, options: { bullet: { indent: 18 }, breakLine: i < tr.length - 1, paraSpaceAfter: 8 } })), { x: 8.5, y: 2.65, w: 3.95, h: 3.9, fontSize: 15, color: WHITE });
+  }
+
+  // =====================================================================
+  // 12. VELOCIDAD Y COSTOS
+  // =====================================================================
+  {
+    const s = content("5 · VELOCIDAD Y COSTOS", "Rápido, disponible siempre y sin comisiones",
+      "Según el FAQ del RBI: el e₹ se puede cargar o redimir entre la cuenta bancaria y la wallet las 24 horas, los 7 días de la semana; los pagos entre wallets con QR CBDC se liquidan al instante; y no hay cargos ni comisiones por usar el e₹ o sus wallets. No hay saldo mínimo. Si se paga con un QR de UPI, la liquidación sigue los plazos de UPI. Las fuentes oficiales consultadas no dan cifras de transacciones por segundo (TPS), así que no lo comparamos en TPS con redes públicas.");
+    const st = [
+      ["24×7", "Disponibilidad", "Carga y redención entre cuenta y wallet, a cualquier hora y día.", "clock"],
+      ["Instantánea", "Liquidación", "Pagos entre dos wallets con QR CBDC, sin pasar por cuentas bancarias.", "bolt"],
+      ["₹0", "Costo de uso", "Sin cargos ni comisiones por usar el e₹ o sus wallets; sin saldo mínimo.", "ban"],
+    ];
+    st.forEach(([big, t, d, ic], i) => {
+      const x = 0.6 + i * 4.11;
+      card(s, x, 1.85, 3.9, 3.6, i === 1 ? NAVY : PALE, "StatCard");
+      const dark = i === 1;
+      circle(s, I[ic], x + 0.3, 2.1, 0.65, dark ? SAFF : NAVY);
+      txt(s, big, { x: x + 0.3, y: 2.9, w: 3.4, h: 1.0, fontFace: H, fontSize: i === 1 ? 40 : 54, bold: true, color: dark ? WHITE : NAVY, valign: "middle" });
+      txt(s, t, { x: x + 0.3, y: 3.95, w: 3.4, h: 0.4, fontSize: 18, bold: true, color: dark ? SAFF : SAFF });
+      txt(s, d, { x: x + 0.3, y: 4.4, w: 3.35, h: 1.0, fontSize: 14, color: dark ? WHITE : INK });
+    });
+    card(s, 0.6, 5.7, 12.12, 1.0, PALE, "NoteCard");
+    txt(s, [
+      { text: "Ojo:  ", options: { bold: true, color: SAFF } },
+      { text: "si se paga escaneando un QR de UPI, la liquidación sigue los plazos de UPI. Las fuentes oficiales no dan cifras de TPS (transacciones por segundo).", options: { color: INK } },
+    ], { x: 0.9, y: 5.7, w: 11.5, h: 1.0, fontSize: 15, valign: "middle" });
+  }
+
+  // =====================================================================
+  // 13. COMUNIDAD Y RESPALDO
+  // =====================================================================
+  {
+    const s = content("5 · COMUNIDAD Y RESPALDO", "No tiene comunidad cripto: tiene respaldo del Estado",
+      "El respaldo del e₹ es institucional, no comunitario. 19 bancos ofrecen wallets según el FAQ del RBI (oct-2026), el piloto mayorista tiene 16 participantes, y en septiembre de 2023 el PIB reportó más de 1.75 millones de usuarios y comercios. Legalmente, la sección 26 de la Ley del RBI (1934) lo hace moneda de curso legal garantizada por el Gobierno central.");
+    const stats = [["19", "bancos con wallets e₹ (RBI, oct-2026)"], ["16", "participantes en el piloto mayorista"], ["+1.75 M", "usuarios y comercios (PIB, sep-2023)"]];
+    stats.forEach(([n, l], i) => {
+      const y = 1.85 + i * 1.5;
+      card(s, 0.6, y, 4.1, 1.35, NAVY, "StatBlock");
+      txt(s, n, { x: 0.85, y, w: 1.9, h: 1.35, fontFace: H, fontSize: 40, bold: true, color: SAFF, valign: "middle" });
+      txt(s, l, { x: 2.7, y, w: 1.9, h: 1.35, fontSize: 14, color: WHITE, valign: "middle" });
+    });
+    card(s, 5.0, 1.85, 7.72, 4.35, PALE, "BanksCard");
+    txt(s, "Bancos que ofrecen wallets e₹", { x: 5.3, y: 1.98, w: 7.0, h: 0.45, fontFace: H, fontSize: 20, bold: true, color: NAVY });
+    const banks = ["Axis Bank", "Bank of Baroda", "Bank of India", "Bank of Maharashtra", "Canara Bank", "Federal Bank", "HDFC Bank", "ICICI Bank", "IDBI Bank", "IDFC First Bank", "Indian Bank", "IndusInd Bank", "Karnataka Bank", "Kotak Mahindra Bank", "Punjab National Bank", "State Bank of India", "UCO Bank", "Union Bank of India", "Yes Bank"];
+    banks.forEach((b, i) => {
+      const col = i % 3, row = Math.floor(i / 3);
+      const x = 5.3 + col * 2.4, y = 2.58 + row * 0.5;
+      s.addShape(pres.ShapeType.roundRect, { x, y, w: 2.3, h: 0.42, rectRadius: 0.2, fill: { color: WHITE }, line: { color: "C9CEEA", width: 0.75 }, objectName: "BankPill" });
+      txt(s, b, { x, y, w: 2.3, h: 0.42, fontSize: 13, color: INK, align: "center", valign: "middle" });
+    });
+    card(s, 0.6, 6.3, 12.12, 0.55, GREEN, "LegalBand");
+    txt(s, "Respaldo legal: sección 26 de la Ley del RBI (1934): curso legal, garantizado por el Gobierno central.", { x: 0.9, y: 6.3, w: 11.6, h: 0.55, fontSize: 15, bold: true, color: WHITE, valign: "middle" });
+  }
+
+  // =====================================================================
+  // 14. RETOS
+  // =====================================================================
+  {
+    const s = content("5 · LÍMITES Y RETOS", "Sigue siendo un piloto con retos por resolver",
+      "El propio FAQ del RBI aclara que los pilotos son un despliegue controlado y de escala limitada para probar tecnología, arquitectura, escalabilidad y aceptación. Retos que reconoce el Gobierno: conectividad (82.5 crore de unos 140 crore de habitantes tenían internet en 2022), por eso el modo offline sigue en exploración, y ciberseguridad. La idea del RBI es complementar, no reemplazar, a las formas actuales de dinero.");
+    card(s, 0.6, 1.85, 4.4, 4.85, NAVY, "QuoteCard");
+    dots(s, 0.95, 2.15);
+    txt(s, "Complementar, no reemplazar", { x: 0.95, y: 2.65, w: 3.7, h: 1.8, fontFace: H, fontSize: 32, bold: true, color: WHITE });
+    txt(s, "El Gobierno plantea la CBDC como un canal adicional de pago, junto con UPI, NEFT, RTGS y el efectivo.", { x: 0.95, y: 4.6, w: 3.7, h: 1.8, fontSize: 16, color: "D6DAF2" });
+    const items = [
+      ["wifi", "Conectividad", "De unos 140 crore de habitantes, 82.5 crore tenían internet (2022)."],
+      ["plug", "Modo offline en exploración", "El RBI aún evalúa soluciones para pagar sin conexión."],
+      ["lock", "Ciberseguridad", "Exige criptografía fuerte al crear y mover los tokens."],
+      ["flag", "Todavía es piloto", "Despliegue controlado y de escala limitada para probar la tecnología."],
+    ];
+    items.forEach(([ic, t, d], i) => {
+      const y = 1.85 + i * 1.24;
+      card(s, 5.3, y, 7.42, 1.12, PALE, "ChallengeRow");
+      circle(s, I[ic], 5.55, y + 0.22, 0.68, i < 3 ? NAVY : SAFF);
+      txt(s, t, { x: 6.5, y: y + 0.12, w: 6.0, h: 0.4, fontSize: 18, bold: true, color: NAVY });
+      txt(s, d, { x: 6.5, y: y + 0.56, w: 6.0, h: 0.5, fontSize: 14 });
+    });
+  }
+
+  // =====================================================================
+  // 15. CONCLUSIONES
+  // =====================================================================
+  {
+    sec("Conclusiones");
+    const s = content("CONCLUSIONES", "El e₹ en cinco respuestas",
+      "Resumen final: 1) Es la rupia digital, iniciativa gubernamental del RBI. 2) Técnicamente es un token del banco central sobre su propia infraestructura, sin PoW ni PoS públicos. 3) Se clasifica como CBDC e infraestructura institucional. 4) No tiene market cap. 5) Se usa para pagos QR, subsidios programables y liquidación mayorista; es instantáneo y sin comisiones, con 19 bancos.", "DARK");
+    const rs = [
+      ["Descripción", "Rupia digital del RBI: iniciativa gubernamental, pasivo del banco central y a la par con el efectivo."],
+      ["Técnica", "Token del banco central sobre su propia plataforma (con componentes blockchain). Sin PoW ni PoS públicos."],
+      ["Clasificación", "CBDC (retail y wholesale), infraestructura institucional y efectivo digital programable."],
+      ["Market cap", "No tiene: no cotiza y vale ₹1 = 1 e₹. Se mide por e₹ en circulación."],
+      ["Uso", "Pagos con QR, subsidios programables y liquidación mayorista: instantáneo, sin comisiones, con 19 bancos."],
+    ];
+    rs.forEach(([q, a], i) => {
+      const y = 1.85 + i * 0.97;
+      s.addShape(pres.ShapeType.roundRect, { x: 0.6, y, w: 12.12, h: 0.85, rectRadius: 0.12, fill: { color: "121C6B" }, line: { color: "121C6B", width: 0 }, objectName: "SummaryRow" });
+      s.addShape(pres.ShapeType.ellipse, { x: 0.85, y: y + 0.15, w: 0.55, h: 0.55, fill: { color: SAFF }, line: { color: SAFF, width: 0 }, objectName: "NumCircle" });
+      txt(s, String(i + 1), { x: 0.85, y: y + 0.15, w: 0.55, h: 0.55, fontFace: H, fontSize: 20, bold: true, color: WHITE, align: "center", valign: "middle" });
+      txt(s, q, { x: 1.65, y, w: 2.1, h: 0.85, fontSize: 16, bold: true, color: SAFF, valign: "middle" });
+      txt(s, a, { x: 3.75, y, w: 8.8, h: 0.85, fontSize: 15, color: WHITE, valign: "middle" });
+    });
+  }
+
+  // =====================================================================
+  // 16. FUENTES
+  // =====================================================================
+  {
+    sec("Fuentes");
+    const s = content("FUENTES", "Fuentes oficiales e imágenes",
+      "Solo se usaron fuentes oficiales del Reserve Bank of India y del Gobierno de la India (PIB / Ministerio de Finanzas). Las imágenes vienen de Wikimedia Commons.");
+    txt(s, "FUENTES OFICIALES", { x: 0.6, y: 1.8, w: 7, h: 0.3, fontSize: 13, bold: true, color: NAVY, charSpacing: 2 });
+    const src = [
+      "RBI – Digital Rupee (e₹) FAQs, actualizado el 1-oct-2026. rbidocs.rbi.org.in/rdocs/faqs/PDFs/DIGITALRUPEE09012025.PDF",
+      "Ministerio de Finanzas / PIB – Factsheet: Central Bank Digital Currency (Digital Rupee, e₹), 1-dic-2022. static.pib.gov.in/WriteReadData/specificdocs/documents/2022/dec/doc2022121139201.pdf",
+      "PIB – Respuesta en Lok Sabha: el piloto minorista tiene componentes basados en blockchain. pib.gov.in (PRID 1882883)",
+      "PIB – CBDC: e₹-R es un token digital que representa moneda de curso legal. pib.gov.in (PRID 1896721)",
+      "PIB – Digital Rupee (13 bancos, 26 ubicaciones, +1.75 M usuarios y comercios, 2023). pib.gov.in (PRID 1954933)",
+      "PIB – Piloto de moneda alimentaria CBDC para DBT/PMGKAY en Puducherry. pib.gov.in (PRID 2233186)",
+      "RBI – Annual Report, capítulo Currency Management (e₹ en circulación). rbi.org.in",
+    ];
+    txt(s, src.map((t, i) => ({ text: t, options: { bullet: { indent: 16 }, breakLine: i < src.length - 1, paraSpaceAfter: 5 } })), { x: 0.6, y: 2.15, w: 12.1, h: 3.3, fontSize: 12, color: INK });
+    txt(s, "IMÁGENES (WIKIMEDIA COMMONS)", { x: 0.6, y: 5.5, w: 7, h: 0.3, fontSize: 13, bold: true, color: NAVY, charSpacing: 2 });
+    const img = [
+      "Logo e₹ y diseño de billetes: “Digital Rupee.svg” y “Digital Rupee.png”. Logo del RBI: “Reserve Bank of India logo.svg” (dominio público).",
+      "Foto de portada: “Tower and building of Reserve Bank of India, Mumbai 03.jpg”, de Pinakpani, licencia CC BY-SA 4.0.",
+    ];
+    txt(s, img.map((t, i) => ({ text: t, options: { bullet: { indent: 16 }, breakLine: i < img.length - 1, paraSpaceAfter: 5 } })), { x: 0.6, y: 5.85, w: 12.1, h: 1.0, fontSize: 12, color: INK });
+  }
+
+  await pres.writeFile({ fileName: OUT });
+  await applyTheme(OUT, THEME);
+  console.log("written", OUT);
+})().catch((e) => { console.error(e); process.exit(1); });

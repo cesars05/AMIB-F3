@@ -1,0 +1,344 @@
+# Build "AZTD Names.xlsx" in a private Excel instance (Workspace add-in loaded)
+import shutil, json, pickle, time, os, sys
+import win32com.client as w
+S=os.path.dirname(os.path.abspath(__file__))
+SRC=os.path.join(S,"univ.xlsx"); WORK=os.path.join(S,"AZTD Names.xlsx")
+FINAL=r"C:\Users\cesar\OneDrive\Desktop\AZTD Peers\AZTD Names.xlsx"
+def log(*a): print(*a,flush=True)
+def bgr(h): h=h.lstrip("#"); return int(h[4:6]+h[2:4]+h[0:2],16)
+shutil.copy(SRC,WORK)
+N=json.load(open(os.path.join(S,"names_top5.json"))); FW=pickle.load(open(os.path.join(S,"deck_fundw.pkl"),"rb"))
+QN=pickle.load(open(os.path.join(S,"deck_rt.pkl"),"rb"))
+def col(L): return (ord(L[0])-64) if len(L)==1 else (ord(L[0])-64)*26+ord(L[1])-64
+NM={r[0]:r[col('D')-3] for r in QN["rows"]}
+SECS=["Materials","Financials","Consumer Discretionary","Utilities"]
+SCOL={"Materials":"42825D","Financials":"2E75B6","Consumer Discretionary":"8E6BBF","Utilities":"C9A000"}
+def tint(h,f=0.82):
+    r,g,b=int(h[0:2],16),int(h[2:4],16),int(h[4:6],16); return "%02X%02X%02X"%(int(r+(255-r)*f),int(g+(255-g)*f),int(b+(255-b)*f))
+rics=[]
+for s in SECS:
+    for d in N[s]:
+        if d["ric"] not in rics: rics.append(d["ric"])
+
+import pywintypes
+BUSY=(-2147418111,-2147417846,-2146777998)
+def _retry(fn):
+    for i in range(600):
+        try: return fn()
+        except pywintypes.com_error as e:
+            code=e.args[0]; inner=e.args[2][5] if (len(e.args)>2 and e.args[2] and len(e.args[2])>5) else None
+            if code in BUSY or inner in BUSY: time.sleep(1); continue
+            raise
+    raise RuntimeError("Excel busy too long")
+def _unwrap(v): return object.__getattribute__(v,"_o") if isinstance(v,P) else v
+def _wrap(v):
+    if hasattr(v,"_oleobj_"): return P(v)
+    if callable(v): return lambda *a,**k: _wrap(_retry(lambda: v(*[_unwrap(x) for x in a],**{kk:_unwrap(vv) for kk,vv in k.items()})))
+    return v
+class P:
+    def __init__(self,o): object.__setattr__(self,"_o",o)
+    def __getattr__(self,n): return _wrap(_retry(lambda: getattr(object.__getattribute__(self,"_o"),n)))
+    def __setattr__(self,n,v): _retry(lambda: setattr(object.__getattribute__(self,"_o"),n,_unwrap(v)))
+    def __call__(self,*a,**k): return _wrap(_retry(lambda: object.__getattribute__(self,"_o")(*[_unwrap(x) for x in a],**{kk:_unwrap(vv) for kk,vv in k.items()})))
+    def __iter__(self):
+        o=object.__getattribute__(self,"_o"); n=_retry(lambda: o.Count)
+        for i in range(1,n+1): yield _wrap(_retry(lambda: o(i)))
+x=P(w.DispatchEx("Excel.Application")); x.Visible=False; x.DisplayAlerts=False; x.ScreenUpdating=False
+_tmp=x.Workbooks.Add(); x.Calculation=-4135
+import atexit
+def _cleanup():
+    try:
+        for i in range(x.Workbooks.Count,0,-1): x.Workbooks(i).Close(False)
+    except Exception: pass
+    try: x.Quit()
+    except Exception: pass
+atexit.register(_cleanup)
+wb=x.Workbooks.Open(WORK,UpdateLinks=0)
+x.Calculation=-4135
+_tmp.Close(False); time.sleep(5)
+FONT="Aptos Narrow"
+def hdrfmt(rg,h=None):
+    rg.Interior.Color=bgr("002060"); rg.Font.Color=0xFFFFFF; rg.Font.Bold=True; rg.WrapText=True; rg.HorizontalAlignment=-4108; rg.VerticalAlignment=-4108
+def sheet_reset(ws):
+    ws.Cells.Clear(); ws.Cells.FormatConditions.Delete(); ws.Cells.Font.Name=FONT; ws.Cells.Font.Size=11
+    for co in list(ws.ChartObjects()): pass
+
+# ================= Data =================
+ws=wb.Worksheets("Data"); sheet_reset(ws)
+ws.Range("B2").Value="Data - Workspace fields for the top 5 names"; ws.Range("B2").Font.Bold=True; ws.Range("B2").Font.Size=14
+ws.Range("B3").Value="Live TR formulas, one spilled call per field (do not paste over the spills). Market cap in USD millions; EPS 2025A actual and 2028E mean estimate (absolute fiscal years)."
+ws.Range("B3").Font.Italic=True; ws.Range("B3").Font.Color=bgr("7F7F7F")
+hdr=["RIC","Name","Currency","Mkt Cap (USD M)","YTD (%)","3MO (%)","Net Debt / EBITDA","Fwd PE","Dividend Yield (%)","GICS Sector","ROE (%)","Net Margin LTM (%)","Price","52W High","EPS 2025A","EPS 2028E","Revenue FY1E","Revenue FY3E","# Analysts","HQ Country"]
+fields=[None,("TR.CommonName",""),("TR.PriceClose.currency",""),("TR.CompanyMarketCapitalization","Scale=6 Curn=USD"),("PCTCHG_YTD",""),("TR.TotalReturn3Mo",""),
+        ("TR.F.NetDebtToEBITDATTM",""),("TR.FwdPtoEPSSmartEst","Period=FY1"),("TR.DividendYield",""),("TR.GICSSector",""),("TR.F.ReturnAvgTotEqPctTTM",""),
+        ("TR.PCNetMarginPct","Period=LTM"),("TR.PriceClose",""),("TR.Price52WeekHigh",""),("TR.EPSActValue","Period=FY2025"),("TR.EPSMean","Period=FY2028"),
+        ("TR.RevenueMeanEstimate","Period=FY1"),("TR.RevenueMeanEstimate","Period=FY3"),("TR.NumberOfAnalysts",""),("TR.HeadquartersCountry","")]
+r0=5; last=r0+len(rics)-1
+ws.Range(ws.Cells(4,2),ws.Cells(4,1+len(hdr))).Value=[hdr]; hdrfmt(ws.Range(ws.Cells(4,2),ws.Cells(4,1+len(hdr)))); ws.Rows(4).RowHeight=32
+ws.Range(f"B{r0}:B{last}").Value=[[v] for v in rics]
+for j,f in enumerate(fields):
+    if f is None: continue
+    fld,par=f; ws.Cells(r0,2+j).Formula=(f'=TR($B${r0}:$B${last},"{fld}","{par}")' if par else f'=TR($B${r0}:$B${last},"{fld}")')
+ws.Range(f"B{r0}:U{last}").HorizontalAlignment=-4108; ws.Range(f"C{r0}:C{last}").HorizontalAlignment=-4131
+for c,wd in zip("ABCDEFGHIJKLMNOPQRSTU",[2,12,34,9,13,9,9,11,9,10,22,9,10,10,10,10,10,14,14,10,22]): ws.Columns(c).ColumnWidth=wd
+DR=f"$B${r0}:$B${last}"
+def D(c,ric="$C{r}"): return f"XLOOKUP({ric},Data!{DR},Data!${c}${r0}:${c}${last})"
+log("data ok")
+
+# ================= Weights =================
+wsw=wb.Worksheets.Add(After=wb.Worksheets("Data")); wsw.Name="Weights"; sheet_reset(wsw)
+wsw.Range("B2").Value="Top 5 holdings of each ETF by sector (weights as of 31-Aug-26)"; wsw.Range("B2").Font.Bold=True; wsw.Range("B2").Font.Size=14
+wsw.Range("B3").Value="Source: fund holdings 31-Aug-26 (AZTD - Top Holdings Peers_v5.xlsx, tabs 'AZTD Data' ... 'DFIS Data'). Values."
+wsw.Range("B3").Font.Italic=True; wsw.Range("B3").Font.Color=bgr("7F7F7F")
+wsw.Range("B5:G5").Value=[["Sector","ETF","Rank","RIC","Company","Weight in ETF"]]; hdrfmt(wsw.Range("B5:G5"))
+WROWS=[]
+for s in SECS:
+    rk={}
+    for d in N[s]:
+        rk[d["etf"]]=rk.get(d["etf"],0)+1; WROWS.append([s,d["etf"],rk[d["etf"]],d["ric"],d["name"],d["w"]])
+wsw.Range(f"B6:G{5+len(WROWS)}").Value=WROWS
+wsw.Range(f"G6:G{5+len(WROWS)}").NumberFormat="0.00%"; wsw.Range(f"C6:G{5+len(WROWS)}").HorizontalAlignment=-4108; wsw.Range(f"F6:F{5+len(WROWS)}").HorizontalAlignment=-4131
+for c,wd in zip("ABCDEFG",[2,24,8,7,12,40,13]): wsw.Columns(c).ColumnWidth=wd
+
+# ================= Criteria =================
+wsc=wb.Worksheets.Add(Before=wb.Worksheets(1)); wsc.Name="Criteria"; sheet_reset(wsc)
+wsc.Range("B2").Value="Aztlan screen - quant proxy (edit the yellow cells)"; wsc.Range("B2").Font.Bold=True; wsc.Range("B2").Font.Size=14
+wsc.Range("B3").Value="Automates the measurable part of the 7-point Aztlan screen. Catalyst, results that moved the stock and niche moat are judged in the Opinion column of 'Analysis'."
+wsc.Range("B3").Font.Italic=True; wsc.Range("B3").Font.Color=bgr("7F7F7F")
+crit=[["#","Criterion","Threshold","Rule"],
+ [1,"SMID market cap - min (USD M)",1000,"Market cap between min and max"],
+ ["","SMID market cap - max (USD M)",30000,""],
+ [2,"Leverage - max Net Debt / EBITDA",3,"Net debt / EBITDA <= max (net cash passes; not applied to Financials)"],
+ [3,"Quant - min Model 1.1",0.7,"Model 1.1 >= min"],
+ [4,"Momentum - max distance to 52W high",0.15,"Price within x% of the 52-week high ..."],
+ ["","Momentum - max YTD (not parabolic)",0.8,"... and YTD below this level"],
+ [5,"Valuation - Fwd PE vs sector median",1,"Fwd PE > 0 and <= sector median (top 5 names) x this factor"],
+ [6,"Coverage - max # analysts",10,"Fewer analysts than this = informational edge"],
+ [7,"Trend - min Model 1.1 slope",0,"6M slope of Model 1.1 above this level"],
+ ["","Min score to pass (of 7)",5,"Pass = SMID + leverage + Model 1.1 met, score >= this, no exclusion flag"]]
+wsc.Range(f"B5:E{4+len(crit)}").Value=crit; hdrfmt(wsc.Range("B5:E5"))
+wsc.Range(f"D6:D{4+len(crit)}").Interior.Color=bgr("FFF2CC"); wsc.Range(f"B6:D{4+len(crit)}").HorizontalAlignment=-4108; wsc.Range(f"C6:C{4+len(crit)}").HorizontalAlignment=-4131
+for a,fmt in (("D6:D7","#,##0"),("D8","0.0x"),("D9","0.00"),("D10:D11","0%"),("D12","0.0x"),("D13","0"),("D14","0.00"),("D15","0")): wsc.Range(a).NumberFormat=fmt
+for nm,a in (("cMcapMin","D6"),("cMcapMax","D7"),("cLev","D8"),("cModel","D9"),("cHigh","D10"),("cYTD","D11"),("cPE","D12"),("cCov","D13"),("cSlope","D14"),("cPass","D15")):
+    wb.Names.Add(Name=nm,RefersTo=f"=Criteria!${a[0]}${a[1:]}")
+wsc.Range("B18").Value="Exclusions (Aztlan default: gambling, tobacco, weapons; >30% of the business in Israel, Saudi Arabia or emerging markets)"; wsc.Range("B18").Font.Bold=True
+ex=[["RIC","Company","Reason"],["LTMC.MI","Lottomatica Group SpA","Gambling"],["ENLT.TA","Enlight Renewable Energy","Israel"],["HARL.TA","Harel Insurance Investments","Israel"],
+    ["CLIS.TA","Clal Insurance Enterprises","Israel"],["BGEO.L","Lion Finance Group PLC","Georgia (EM)"]]
+wsc.Range(f"B19:D{18+len(ex)}").Value=ex; hdrfmt(wsc.Range("B19:D19"))
+wsc.Range("B20:D35").Interior.Color=bgr("FFF2CC"); wsc.Range("B20:D35").HorizontalAlignment=-4131
+wb.Names.Add(Name="exRIC",RefersTo="=Criteria!$B$20:$B$35"); wb.Names.Add(Name="exWhy",RefersTo="=Criteria!$D$20:$D$35")
+wsc.Range("F18").Value="Emerging-market HQ (auto flag)"; wsc.Range("F18").Font.Bold=True
+em=["Israel","Saudi Arabia","China","Hong Kong","India","Brazil","Mexico","South Africa","Turkey","Indonesia","Thailand","Malaysia","Philippines","Chile","Peru","Colombia","Argentina","Egypt","Poland","Greece","Georgia","Kazakhstan","Qatar","United Arab Emirates","Kuwait","Vietnam","Russia","Nigeria","Taiwan","Korea"]
+wsc.Range(f"F19:F{18+len(em)}").Value=[[v] for v in em]; wsc.Range("F19:F55").Interior.Color=bgr("FFF2CC")
+wb.Names.Add(Name="emList",RefersTo="=Criteria!$F$19:$F$55")
+for c,wd in zip("ABCDEF",[2,10,40,12,70,26]): wsc.Columns(c).ColumnWidth=wd
+log("criteria ok")
+
+# ================= AZTD Holdings =================
+wsa=wb.Worksheets("AZTD Holdings"); wsa.Range("B3:D200").ClearContents()
+az=sorted(FW["AZTD"].items(),key=lambda t:-t[1])
+wsa.Range(f"B3:D{2+len(az)}").Value=[[NM.get(r,r),wt,r] for r,wt in az]; wsa.Range("B2").Value="Company (AZTD holding, 31-Aug-26)"
+
+# ================= Top 5 by ETF =================
+wt=wb.Worksheets("Peers"); wt.Name="Top 5 by ETF"; sheet_reset(wt)
+T="'Top 5 by ETF'"
+wt.Range("B2").Value="Top 5 Holdings by ETF - Materials, Financials, Consumer Discretionary, Utilities"; wt.Range("B2").Font.Bold=True; wt.Range("B2").Font.Size=14
+wt.Range("B3").Value="Top 5 names of each ETF in the sector by weight (31-Aug-26). Green / red = better / worse than the sector average of these names. Score and Aztlan fit use the thresholds in 'Criteria'."
+wt.Range("B3").Font.Italic=True; wt.Range("B3").Font.Color=bgr("7F7F7F")
+H=["Company","RIC","ETF","Wt in ETF","HQ Country","Mkt Cap (USD M)","YTD","3MO","% vs 52W High","ROE","Net Margin LTM","Net Debt / EBITDA","Fwd PE","EPS CAGR 25A-28E","Rev CAGR Next 2Y","# Analysts","Model 1.1","Stability Score","Slope","Flag",
+   "SMID","Lev.","M1.1","Mom.","Val.","Cov.","Slope","Score","Aztlan fit"]
+HR=5
+wt.Range(wt.Cells(HR,2),wt.Cells(HR,1+len(H))).Value=[H]; hdrfmt(wt.Range(wt.Cells(HR,2),wt.Cells(HR,1+len(H)))); wt.Rows(HR).RowHeight=32
+wt.Range(wt.Cells(HR-1,22),wt.Cells(HR-1,28)).Merge(); wt.Cells(HR-1,22).Value="Aztlan criteria (1 = met)"; wt.Cells(HR-1,22).HorizontalAlignment=-4108; wt.Cells(HR-1,22).Font.Bold=True
+r=HR+2; blocks=[]
+GREEN_F,GREEN_T,RED_F,RED_T=bgr("C6EFCE"),bgr("006100"),bgr("FFC7CE"),bgr("9C0006")
+for s in SECS:
+    gh=wt.Range(f"B{r}:AD{r}"); gh.Interior.Color=bgr(tint(SCOL[s])); gh.Font.Bold=True
+    wt.Range(f"B{r}").Value=s; wt.Range(f"B{r}").Font.Color=bgr(SCOL[s]); wt.Range(f"B{r}").Font.Size=12
+    r+=1; first=r
+    for d in N[s]:
+        R=r
+        wt.Range(f"C{R}").Value=d["ric"]; wt.Range(f"D{R}").Value=d["etf"]; wt.Range(f"E{R}").Value=d["w"]
+        f={}
+        f["B"]=f'=IFERROR({D("C").format(r=R)},"{d["name"]}")'
+        f["F"]=f'=IFERROR({D("U").format(r=R)},"n/a")'
+        f["G"]=f'=IFERROR(1*{D("E").format(r=R)},"n/a")'
+        f["H"]=f'=IFERROR({D("F").format(r=R)}/100,"n/a")'
+        f["I"]=f'=IFERROR({D("G").format(r=R)}/100,"n/a")'
+        f["J"]=f'=IFERROR({D("N").format(r=R)}/{D("O").format(r=R)}-1,"n/a")'
+        f["K"]=f'=IFERROR({D("L").format(r=R)}/100,"n/a")'
+        f["L"]=f'=IFERROR({D("M").format(r=R)}/100,"n/a")'
+        f["M"]=f'=IFERROR(1*{D("H").format(r=R)},"n/a")'
+        f["N"]=f'=IFERROR(1*{D("I").format(r=R)},"n/a")'
+        f["O"]=f'=IFERROR(IF(AND({D("P").format(r=R)}>0,{D("Q").format(r=R)}>0),({D("Q").format(r=R)}/{D("P").format(r=R)})^(1/3)-1,"n/a"),"n/a")'
+        f["P"]=f'=IFERROR(({D("S").format(r=R)}/{D("R").format(r=R)})^(1/2)-1,"n/a")'
+        f["Q"]=f'=IFERROR(1*{D("T").format(r=R)},"n/a")'
+        f["R"]=f"=IFERROR(VALUE(XLOOKUP($C{R},'Quant Model'!$B:$B,'Quant Model'!$H:$H)),\"n/a\")"
+        f["S"]=f"=IFERROR(VALUE(XLOOKUP($C{R},'Quant Model'!$B:$B,'Quant Model'!$N:$N)),\"n/a\")"
+        f["T"]=f"=IFERROR(VALUE(XLOOKUP($C{R},'Quant Model'!$B:$B,'Quant Model'!$J:$J)),\"n/a\")"
+        f["U"]=f'=IFERROR(XLOOKUP($C{R},exRIC,exWhy),IF(SUMPRODUCT(--(emList<>""),--ISNUMBER(SEARCH(emList,$F{R})))>0,"EM HQ",""))'
+        f["V"]=f"=IF(ISNUMBER($G{R}),--AND($G{R}>=cMcapMin,$G{R}<=cMcapMax),0)"
+        f["W"]=("=1" if s=="Financials" else f"=IF(ISNUMBER($M{R}),--($M{R}<=cLev),0)")
+        f["X"]=f"=IF(ISNUMBER($R{R}),--($R{R}>=cModel),0)"
+        f["Y"]=f"=IF(AND(ISNUMBER($J{R}),ISNUMBER($H{R})),--AND($J{R}>=-cHigh,$H{R}<=cYTD),0)"
+        f["AA"]=f"=IF(ISNUMBER($Q{R}),--($Q{R}<cCov),0)"
+        f["AB"]=f"=IF(ISNUMBER($T{R}),--($T{R}>cSlope),0)"
+        f["AC"]=f"=SUM($V{R}:$AB{R})"
+        f["AD"]=f'=IF($U{R}<>"","Excluded",IF(AND($V{R}=1,$W{R}=1,$X{R}=1,$AC{R}>=cPass),"Yes","No"))'
+        for c_,fm in f.items(): wt.Range(f"{c_}{R}").Formula=fm
+        if d["etf"]=="AZTD": wt.Range(f"B{R}:AD{R}").Interior.Color=bgr("F2F2F2"); wt.Range(f"B{R}:D{R}").Font.Bold=True
+        r+=1
+    lastr=r-1; avg=r
+    wt.Range(f"B{avg}").Value=f"Sector average ({s}, top 5 names)"
+    for c_ in "GHIJKLMNOPQRST": wt.Range(f"{c_}{avg}").Formula=f"=IFERROR(AVERAGE({c_}{first}:{c_}{lastr}),\"n/a\")"
+    wt.Range(f"AE{avg}").Formula2=f"=IFERROR(MEDIAN(IF(ISNUMBER(N{first}:N{lastr}),IF(N{first}:N{lastr}>0,N{first}:N{lastr}))),\"n/a\")"
+    wt.Range(f"AE{avg}").Font.Color=bgr("BFBFBF"); wt.Range(f"AF{avg}").Value="<- median Fwd PE (valuation test)"; wt.Range(f"AF{avg}").Font.Color=bgr("BFBFBF"); wt.Range(f"AF{avg}").Font.Size=9
+    for R in range(first,lastr+1): wt.Range(f"Z{R}").Formula=f"=IF(AND(ISNUMBER($N{R}),ISNUMBER($AE${avg})),IF($N{R}>0,--($N{R}<=cPE*$AE${avg}),0),0)"
+    a=wt.Range(f"B{avg}:AD{avg}"); a.Font.Bold=True; a.Font.Italic=True
+    b=a.Borders(8); b.LineStyle=1; b.Weight=2; b.Color=0
+    # conditional formats vs average
+    for c_ in "HIJKLOPRST":
+        rg=wt.Range(f"{c_}{first}:{c_}{lastr}")
+        f1=rg.FormatConditions.Add(2,None,f"=AND(ISNUMBER({c_}{first}),ISNUMBER(${c_}${avg}),{c_}{first}>${c_}${avg})"); f1.Interior.Color=GREEN_F; f1.Font.Color=GREEN_T
+        f2=rg.FormatConditions.Add(2,None,f"=AND(ISNUMBER({c_}{first}),ISNUMBER(${c_}${avg}),{c_}{first}<${c_}${avg})"); f2.Interior.Color=RED_F; f2.Font.Color=RED_T
+    for c_ in "MNQ":
+        rg=wt.Range(f"{c_}{first}:{c_}{lastr}")
+        f1=rg.FormatConditions.Add(2,None,f"=AND(ISNUMBER({c_}{first}),ISNUMBER(${c_}${avg}),{c_}{first}<${c_}${avg})"); f1.Interior.Color=GREEN_F; f1.Font.Color=GREEN_T
+        f2=rg.FormatConditions.Add(2,None,f"=AND(ISNUMBER({c_}{first}),ISNUMBER(${c_}${avg}),{c_}{first}>${c_}${avg})"); f2.Interior.Color=RED_F; f2.Font.Color=RED_T
+    blocks.append((s,first,lastr,avg)); r=avg+2
+LASTROW=r
+rg=wt.Range(f"B{HR+1}:AD{LASTROW}")
+for c_,fmt in (("E","0.0%"),("G","#,##0"),("H","0.0%"),("I","0.0%"),("J","0.0%"),("K","0.0%"),("L","0.0%"),("M",'0.0"x"'),("N",'0.0"x"'),("O","0.0%"),("P","0.0%"),("Q","0"),("R","0.00"),("S","0.00"),("T","0.000"),("AC",'0"/7"')):
+    wt.Range(f"{c_}{HR+1}:{c_}{LASTROW}").NumberFormat=fmt
+wt.Range(f"V{HR+1}:AB{LASTROW}").NumberFormat='[=1]"✓";[=0]"✗";General'
+wt.Range(f"C{HR+1}:AD{LASTROW}").HorizontalAlignment=-4108
+fr=wt.Range(f"V{HR+1}:AB{LASTROW}")
+c1=fr.FormatConditions.Add(1,3,"=1"); c1.Font.Color=GREEN_T
+c2=fr.FormatConditions.Add(1,3,"=0"); c2.Font.Color=bgr("BFBFBF")
+fit=wt.Range(f"AD{HR+1}:AD{LASTROW}")
+y1=fit.FormatConditions.Add(1,3,'="Yes"'); y1.Interior.Color=GREEN_F; y1.Font.Color=GREEN_T; y1.Font.Bold=True
+y2=fit.FormatConditions.Add(1,3,'="Excluded"'); y2.Font.Color=bgr("9C0006"); y2.Font.Italic=True
+fl=wt.Range(f"U{HR+1}:U{LASTROW}"); fl.Font.Color=bgr("9C0006"); fl.Font.Italic=True
+for c_,wd in zip(["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF"],
+                 [2,34,12,7,8,16,11,8,8,9,8,9,9,8,10,10,9,8,9,8,11,5.5,5.5,5.5,5.5,5.5,5.5,5.5,7,10,8,26]): wt.Columns(c_).ColumnWidth=wd
+wt.Rows(f"{HR+1}:{LASTROW}").RowHeight=15
+log("top5 ok",blocks)
+
+# ================= Analysis =================
+wa=wb.Worksheets("Analysis"); sheet_reset(wa)
+wa.Range("B2").Value="Analysis - names that pass the Aztlan screen (live; updates when 'Top 5 by ETF' or 'Criteria' change)"; wa.Range("B2").Font.Bold=True; wa.Range("B2").Font.Size=14
+AH=["Company","RIC","Description","Recent Context","Sector","Held by","Currency","Market Cap (USD M)","YTD","3MO","ROE","Net Margin LTM","Net Debt / EBITDA","Fwd PE","EPS CAGR 25A-28E","Rev CAGR Next 2Y","# Analysts","Model 1.1","Slope","Score","AZTD","Opinion"]
+wa.Range(wa.Cells(3,2),wa.Cells(3,1+len(AH))).Value=[AH]; hdrfmt(wa.Range(wa.Cells(3,2),wa.Cells(3,1+len(AH)))); wa.Rows(3).RowHeight=32
+TR_=f"{T}!$C${HR+1}:$C${LASTROW}"
+def TC(c): return f"{T}!${c}${HR+1}:${c}${LASTROW}"
+wa.Range("C4").Formula2=(f"=LET(r,{TC('C')},f,{TC('AD')},s,{TC('AC')},m,{TC('R')},u,IFERROR(UNIQUE(FILTER(HSTACK(r,s,m),f=\"Yes\")),\"\"),"
+                        f"IFERROR(TAKE(SORTBY(u,INDEX(u,,2),-1,INDEX(u,,3),-1),,1),\"\"))")
+NA=40
+for i in range(NA):
+    R=4+i; g=f'IF(OR($C{R}="",ISERROR($C{R})),"",'
+    def L(c): return f"XLOOKUP($C{R},{TC('C')},{TC(c)})"
+    fm={"B":f"={g}{L('B')})","D":f'={g}TR($C{R},"TR.BusinessSummary"))',"E":f'={g}"n/d - to complete")',
+        "F":f"={g}XLOOKUP($C{R},Weights!$E:$E,Weights!$B:$B))","G":f'={g}TEXTJOIN("/",TRUE,FILTER({TC("D")},{TC("C")}=$C{R})))',
+        "H":f'={g}{D("D",ric=f"$C{R}")})',"I":f"={g}{L('G')})","J":f"={g}{L('H')})","K":f"={g}{L('I')})","L":f"={g}{L('K')})","M":f"={g}{L('L')})",
+        "N":f"={g}{L('M')})","O":f"={g}{L('N')})","P":f"={g}{L('O')})","Q":f"={g}{L('P')})","R":f"={g}{L('Q')})","S":f"={g}{L('R')})","T":f"={g}{L('T')})",
+        "U":f"={g}{L('AC')})","V":f"={g}IFERROR(XLOOKUP($C{R},'AZTD Holdings'!$D:$D,'AZTD Holdings'!$C:$C),\"No\"))",
+        "W":f'={g}IF($U{R}>=6,"Interesting company, adequate for a deep dive",IF($U{R}>=5,"Attractive but open questions","Keep on watchlist")))'}
+    for c_,f_ in fm.items(): wa.Range(f"{c_}{R}").Formula2=f_
+rr=f"B4:W{3+NA}"
+for c_,fmt in (("I","$#,##0"),("J","0.0%"),("K","0.0%"),("L","0.0%"),("M","0.0%"),("N",'0.0"x"'),("O",'0.0"x"'),("P","0.0%"),("Q","0.0%"),("R","0"),("S","0.00"),("T","0.000"),("U",'0"/7"'),("V","0.0%")):
+    wa.Range(f"{c_}4:{c_}{3+NA}").NumberFormat=fmt
+wa.Range(rr).VerticalAlignment=-4108; wa.Range(f"C4:C{3+NA}").HorizontalAlignment=-4108; wa.Range(f"F4:V{3+NA}").HorizontalAlignment=-4108
+wa.Range(f"D4:E{3+NA}").WrapText=True; wa.Range(f"D4:E{3+NA}").Font.Size=9; wa.Range(f"D4:E{3+NA}").HorizontalAlignment=-4131
+wa.Range(f"B4:B{3+NA}").Font.Bold=True; wa.Range(f"B4:B{3+NA}").WrapText=True
+op=wa.Range(f"W4:W{3+NA}"); op.WrapText=True
+o1=op.FormatConditions.Add(2,None,'=LEFT($W4,11)="Interesting"'); o1.Interior.Color=bgr("C6EFCE")
+o2=op.FormatConditions.Add(2,None,'=LEFT($W4,10)="Attractive"'); o2.Interior.Color=bgr("FFEB9C")
+for R in range(4,4+NA):
+    bb=wa.Range(f"B{R}:W{R}").Borders(9); bb.LineStyle=1; bb.Color=bgr("D9D9D9")
+for c_,wd in zip("ABCDEFGHIJKLMNOPQRSTUVW",[2,24,11,70,30,16,14,8,11,8,8,8,9,9,8,10,10,8,8,8,7,8,26]): wa.Columns(c_).ColumnWidth=wd
+log("analysis ok")
+
+# ================= Graph =================
+wg=wb.Worksheets("Graphc"); wg.Name="Graph"
+co=wg.ChartObjects(1); ch=co.Chart
+G0=52
+wg.Range(f"B{G0-2}").Value="Chart data (top 5 names of each ETF, unique per sector). X = EPS CAGR 2025A-2028E, Y = Model 1.1, size = market cap; n/a points are not plotted."
+wg.Range(f"B{G0-2}").Font.Italic=True; wg.Range(f"B{G0-2}").Font.Color=bgr("7F7F7F")
+wg.Range(f"B{G0-1}:I{G0-1}").Value=[["Sector","RIC","Company","EPS CAGR 25A-28E","Model 1.1","Mkt Cap (USD M)","Label","AZTD"]]; hdrfmt(wg.Range(f"B{G0-1}:I{G0-1}"))
+gr=G0; SER=[]
+for s in SECS:
+    seen=[]
+    for d in N[s]:
+        if d["ric"] not in seen: seen.append(d["ric"])
+    st=gr
+    for ric in seen:
+        R=gr
+        wg.Range(f"B{R}").Value=s; wg.Range(f"C{R}").Value=ric
+        wg.Range(f"D{R}").Formula=f"=XLOOKUP($C{R},{TC('C')},{TC('B')})"
+        wg.Range(f"E{R}").Formula=f"=IFERROR(IF(ISNUMBER(XLOOKUP($C{R},{TC('C')},{TC('O')})),XLOOKUP($C{R},{TC('C')},{TC('O')}),NA()),NA())"
+        wg.Range(f"F{R}").Formula=f"=IFERROR(IF(ISNUMBER(XLOOKUP($C{R},{TC('C')},{TC('R')})),XLOOKUP($C{R},{TC('C')},{TC('R')}),NA()),NA())"
+        wg.Range(f"G{R}").Formula=f"=IFERROR(XLOOKUP($C{R},{TC('C')},{TC('G')}),NA())"
+        wg.Range(f"H{R}").Formula=f'=$D{R}&CHAR(10)&IFERROR("$"&TEXT($G{R}/1000,"0.0")&"B","")'
+        wg.Range(f"I{R}").Formula=f'=IF(ISNUMBER(XLOOKUP($C{R},\'AZTD Holdings\'!$D:$D,\'AZTD Holdings\'!$C:$C)),"Yes","")'
+        gr+=1
+    SER.append((s,st,gr-1))
+wg.Range(f"E{G0}:E{gr}").NumberFormat="0.0%"; wg.Range(f"F{G0}:F{gr}").NumberFormat="0.00"; wg.Range(f"G{G0}:G{gr}").NumberFormat="#,##0"
+for c_,wd in zip("BCDEFGHI",[22,12,34,14,10,14,30,7]): wg.Columns(c_).ColumnWidth=wd
+# re-point series (keeps template gradient style)
+while ch.SeriesCollection().Count>len(SER): ch.SeriesCollection(ch.SeriesCollection().Count).Delete()
+for i,(s,a,b) in enumerate(SER,1):
+    se=ch.SeriesCollection(i)
+    se.Formula=f'=SERIES("{s}",Graph!$E${a}:$E${b},Graph!$F${a}:$F${b},{i},Graph!$G${a}:$G${b})'
+ch.Axes(1).HasTitle=True; ch.Axes(1).AxisTitle.Text="EPS CAGR 2025A-2028E"
+ch.Axes(2).HasTitle=True; ch.Axes(2).AxisTitle.Text="Model 1.1"
+ch.Axes(1).TickLabels.NumberFormat="0%"; ch.Axes(2).TickLabels.NumberFormat="0.0"
+ch.Axes(2).MinimumScale=0; ch.Axes(2).MaximumScale=1.05; ch.Axes(2).MajorUnit=0.1
+log("graph series ok",SER)
+x.ScreenUpdating=True
+x.Calculation=-4105
+# wait for TR
+t=time.time()
+while time.time()-t<420:
+    time.sleep(8)
+    v=wb.Worksheets("Data").Range(f"C{r0}:U{last}").Value
+    pend=sum(1 for row in v for c in row if isinstance(c,str) and ("Retriev" in c or "Not Signed" in c))
+    if pend==0 and v[0][0] not in (None,""): break
+log("TR done in",round(time.time()-t),"pending",pend)
+x.Calculate(); time.sleep(5)
+for i in range(30):
+    if x.CalculationState==0: break
+    time.sleep(3)
+# point labels from cells, bold AZTD
+for i,(s,a,b) in enumerate(SER,1):
+    se=ch.SeriesCollection(i); se.HasDataLabels=True
+    for k in range(b-a+1):
+        R=a+k; pt=se.Points(k+1)
+        try:
+            dl=pt.DataLabel; dl.Formula=f"=Graph!$H${R}"; dl.Position=-4152; dl.Font.Size=8; dl.Font.Name="Arial"
+            dl.Font.Bold = (wg.Range(f"I{R}").Value=="Yes")
+        except Exception as e: log("label err",R,e)
+# axis X range from data
+xs=[c[0] for c in wg.Range(f"E{G0}:E{gr-1}").Value if isinstance(c[0],float)]
+log("x values",len(xs),"of",gr-G0, "min/max", min(xs) if xs else None, max(xs) if xs else None)
+pickle.dump(dict(xs=xs,G0=G0,gr=gr,SER=SER,blocks=blocks,LASTROW=LASTROW),open(os.path.join(S,"names_meta.pkl"),"wb"))
+# order tabs
+order=["Criteria","Top 5 by ETF","Analysis","Graph","Data","Weights","Quant Model","AZTD Holdings"]
+for nme in reversed(order): wb.Worksheets(nme).Move(Before=wb.Worksheets(1))
+for nme in order:
+    wb.Worksheets(nme).Activate(); x.ActiveWindow.DisplayGridlines=False; x.ActiveWindow.Zoom=85
+wb.Worksheets("Top 5 by ETF").Activate()
+wb.Save()
+log("saved work copy")
+# quick dump for QA
+vals=wb.Worksheets("Top 5 by ETF").Range(f"B{HR+1}:AD{LASTROW}").Value
+pickle.dump([[c if not hasattr(c,'year') else str(c) for c in row] for row in vals],open(os.path.join(S,"names_top5_vals.pkl"),"wb"))
+an=wb.Worksheets("Analysis").Range(f"B4:W{3+NA}").Value
+pickle.dump([[c if not hasattr(c,'year') else str(c) for c in row] for row in an],open(os.path.join(S,"names_analysis_vals.pkl"),"wb"))
+for nme in ["Top 5 by ETF","Analysis","Graph","Criteria"]:
+    sh=wb.Worksheets(nme)
+    try:
+        sh.PageSetup.Zoom=False; sh.PageSetup.FitToPagesWide=1; sh.PageSetup.FitToPagesTall=False; sh.PageSetup.Orientation=2
+    except Exception: pass
+    sh.ExportAsFixedFormat(0,os.path.join(S,"uv",f"names_{nme.replace(' ','_')}.pdf"))
+wb.Close(True); x.Quit()
+log("done")

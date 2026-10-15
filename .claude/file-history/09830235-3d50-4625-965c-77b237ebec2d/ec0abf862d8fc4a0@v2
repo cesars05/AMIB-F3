@@ -1,0 +1,15 @@
+---
+name: deck-screenshots-and-native-charts
+description: "In Aztlan commodity/sector decks, use screenshots of report figures (and render screenshots to check slides); use native charts and text only sometimes"
+metadata:
+  node_type: memory
+  type: feedback
+  originSessionId: 09830235-3d50-4625-965c-77b237ebec2d
+  modified: 2026-10-14T18:43:02.695Z
+---
+
+When building or checking slides, use screenshots: paste figures from third-party reports (OECD, S&P, worldsteel…) as images with their "Figure N", units and source, and render each slide to PNG to check it. Sometimes use native charts and plain text instead — mainly for Aztlan's own data (price history from LSEG Workspace, imports, company results, returns vs S&P 500).
+
+**Why:** That's how the house commodity decks (Copper_V4, Gold, Uranium) are built; the user corrected the slide-construction skill's old "never screenshots" rule (skill edited 2026-10-14 to add images.md rule 8).
+
+**How to apply:** For each evidence slide, pick the best report figure and screenshot it; build native charts only for in-house data series. Always render and look at slides before saying they're done. Related: [[aztlan-commodity-deck-format]]

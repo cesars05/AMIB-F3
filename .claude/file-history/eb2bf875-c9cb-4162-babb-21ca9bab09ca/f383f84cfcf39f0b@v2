@@ -1,0 +1,26 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 30;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 900 } }; return "" }
+$xl=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); break }catch{ Start-Sleep -Milliseconds 900 } }
+$wb=$null
+foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("Segment Beta") }
+Write-Output ("Libro: "+$wb.Name+"   UsedRange="+[string](T { $s.UsedRange.Address(0,0) }))
+Write-Output ""
+Write-Output "=== columna | ancho | oculta | r10 | r11 | r12(ALUG) | formula r15 ==="
+for($c=1;$c -le 34;$c++){
+  $col=[string](T { $s.Cells.Item(1,$c).EntireColumn.Address(0,0) }) -replace ":.*",""
+  $col=$col -replace '\$',''
+  $w=[string](T { $s.Columns.Item($c).ColumnWidth })
+  $h=[string](T { $s.Columns.Item($c).Hidden })
+  $r10=[string](T { $s.Cells.Item(10,$c).Text })
+  $r11=([string](T { $s.Cells.Item(11,$c).Text })) -replace "`n"," "
+  $v12=[string](T { $s.Cells.Item(12,$c).Text })
+  $f15=[string](T { $s.Cells.Item(15,$c).Formula })
+  if(($r10+$r11+$v12+$f15).Trim() -ne ""){
+    $a=$r10; if($a.Length -gt 28){ $a=$a.Substring(0,28) }
+    $b=$r11; if($b.Length -gt 26){ $b=$b.Substring(0,26) }
+    $d=$f15; if($d.Length -gt 50){ $d=$d.Substring(0,50) }
+    Write-Output ("  "+$col.PadRight(4)+" w="+$w.PadRight(7)+" hid="+$h.PadRight(6)+" | "+$a.PadRight(29)+" | "+$b.PadRight(27)+" | "+$v12.PadRight(12)+" | "+$d)
+  }
+}

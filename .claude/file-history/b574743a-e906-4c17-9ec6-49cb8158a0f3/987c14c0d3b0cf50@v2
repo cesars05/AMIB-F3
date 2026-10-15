@@ -1,0 +1,113 @@
+import re
+from docx import Document
+from docx.shared import Pt, Cm, RGBColor, Emu
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.table import WD_TABLE_ALIGNMENT
+from docx.oxml.ns import qn
+from docx.oxml import OxmlElement
+
+VERDE = RGBColor(0x0B, 0x3D, 0x2E)
+VERDE2 = RGBColor(0x1B, 0x7F, 0x4B)
+GRIS = RGBColor(0x59, 0x59, 0x59)
+
+def new_doc(margins_cm=2.2, base_pt=10.5):
+    d = Document()
+    s = d.sections[0]
+    s.page_width = Cm(21.59); s.page_height = Cm(27.94)  # carta
+    s.left_margin = s.right_margin = Cm(margins_cm); s.top_margin = Cm(2.0); s.bottom_margin = Cm(1.9)
+    st = d.styles["Normal"]; st.font.name = "Calibri"; st.font.size = Pt(base_pt)
+    st.element.rPr.rFonts.set(qn("w:eastAsia"), "Calibri")
+    st.paragraph_format.space_after = Pt(4); st.paragraph_format.line_spacing = 1.08
+    return d
+
+def _shade(cell, hex_):
+    tcPr = cell._tc.get_or_add_tcPr()
+    shd = OxmlElement("w:shd"); shd.set(qn("w:val"), "clear"); shd.set(qn("w:color"), "auto"); shd.set(qn("w:fill"), hex_)
+    tcPr.append(shd)
+
+def _borders(cell, **kw):
+    tcPr = cell._tc.get_or_add_tcPr()
+    b = OxmlElement("w:tcBorders")
+    for edge in ("top", "left", "bottom", "right"):
+        v = kw.get(edge)
+        e = OxmlElement(f"w:{edge}")
+        if v:
+            e.set(qn("w:val"), "single"); e.set(qn("w:sz"), str(v[0])); e.set(qn("w:color"), v[1])
+        else:
+            e.set(qn("w:val"), "nil")
+        b.append(e)
+    tcPr.append(b)
+
+def runs(p, text, size=None, color=None, italic=False):
+    """Markup: **negrita**, __cursiva__"""
+    parts = re.split(r"(\*\*.+?\*\*|__.+?__)", text)
+    for part in parts:
+        if not part: continue
+        if part.startswith("**"):
+            r = p.add_run(part[2:-2]); r.bold = True
+        elif part.startswith("__"):
+            r = p.add_run(part[2:-2]); r.italic = True
+        else:
+            r = p.add_run(part)
+        if size: r.font.size = Pt(size)
+        if color is not None: r.font.color.rgb = color
+        if italic: r.italic = True
+    return p
+
+def h1(d, text):
+    p = d.add_paragraph(); p.paragraph_format.space_before = Pt(10); p.paragraph_format.space_after = Pt(3)
+    p.paragraph_format.keep_with_next = True
+    r = p.add_run(text); r.bold = True; r.font.size = Pt(12.5); r.font.color.rgb = VERDE
+    pPr = p._p.get_or_add_pPr(); pb = OxmlElement("w:pBdr"); bt = OxmlElement("w:bottom")
+    bt.set(qn("w:val"), "single"); bt.set(qn("w:sz"), "6"); bt.set(qn("w:space"), "1"); bt.set(qn("w:color"), "1B7F4B")
+    pb.append(bt); pPr.append(pb)
+    return p
+
+def para(d, text, align="j", size=None, after=4, italic=False, color=None):
+    p = d.add_paragraph(); p.paragraph_format.space_after = Pt(after)
+    p.alignment = {"j": WD_ALIGN_PARAGRAPH.JUSTIFY, "l": WD_ALIGN_PARAGRAPH.LEFT, "c": WD_ALIGN_PARAGRAPH.CENTER}[align]
+    return runs(p, text, size=size, italic=italic, color=color)
+
+def bullet(d, text, size=None):
+    p = d.add_paragraph(style="List Bullet"); p.paragraph_format.space_after = Pt(2)
+    p.paragraph_format.left_indent = Cm(0.6)
+    return runs(p, text, size=size)
+
+def table(d, rows, widths_cm, header=True, size=9, align_num_from=1, bold_last=False, first_col_bold=False):
+    t = d.add_table(rows=len(rows), cols=len(rows[0])); t.alignment = WD_TABLE_ALIGNMENT.CENTER
+    t.autofit = False
+    for i, row in enumerate(rows):
+        for j, val in enumerate(row):
+            c = t.cell(i, j); c.width = Cm(widths_cm[j])
+            c.text = ""
+            p = c.paragraphs[0]; p.paragraph_format.space_after = Pt(1); p.paragraph_format.space_before = Pt(1)
+            runs(p, str(val), size=size)
+            if header and i == 0:
+                _shade(c, "DDEFE3"); _borders(c, bottom=(8, "0B3D2E"))
+                for r in p.runs: r.bold = True
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER if j >= align_num_from else WD_ALIGN_PARAGRAPH.LEFT
+            else:
+                _borders(c, bottom=(2, "BFBFBF"))
+                if j >= align_num_from: p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                if first_col_bold and j == 0:
+                    for r in p.runs: r.bold = True
+            if bold_last and i == len(rows) - 1:
+                for r in p.runs: r.bold = True
+                _borders(c, top=(8, "000000"))
+    d.add_paragraph().paragraph_format.space_after = Pt(2)
+    return t
+
+def footer_pagenum(d, text):
+    s = d.sections[0]
+    f = s.footer.paragraphs[0]; f.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r = f.add_run(text + "  ·  Página "); r.font.size = Pt(8); r.font.color.rgb = GRIS
+    for tag, txt in (("begin", None), (None, "PAGE"), ("end", None)):
+        run = f.add_run(); run.font.size = Pt(8); run.font.color.rgb = GRIS
+        if tag:
+            fc = OxmlElement("w:fldChar"); fc.set(qn("w:fldCharType"), tag); run._r.append(fc)
+        else:
+            it = OxmlElement("w:instrText"); it.set(qn("xml:space"), "preserve"); it.text = txt; run._r.append(it)
+
+def header_text(d, text):
+    h = d.sections[0].header.paragraphs[0]; h.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+    r = h.add_run(text); r.font.size = Pt(8); r.font.color.rgb = GRIS

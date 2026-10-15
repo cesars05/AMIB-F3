@@ -1,0 +1,118 @@
+$ErrorActionPreference="Stop"
+$wb=$null; $xl=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$ns=$wb.Worksheets.Item("Scenarios Summary")
+if([string]$ns.Range("C12").Text -ne "Scenario Returns"){ throw "ABORTO: C12 cambio" }
+$NAVY=5384228
+$SLATE=14070685
+$GREY=8421504
+$xl.ScreenUpdating=$false
+# limpiar graficos previos por si se corre dos veces
+try{ $n=$ns.ChartObjects().Count; for($k=$n;$k -ge 1;$k--){ $ns.ChartObjects().Item($k).Delete() } }catch{}
+
+# ---------- datos del grafico ----------
+$ns.Range("C37").Value2="Asymmetry Chart Data"
+$ns.Range("C37").Font.Bold=$true
+$ns.Range("C38").Value2="Case"
+$ns.Range("D38").Value2="MOIC"
+$ns.Range("C38:D38").Font.Bold=$true
+$ns.Range("C39").Value2="A  ·  Downside"
+$ns.Range("C40").Value2="B  ·  Stagnation"
+$ns.Range("C41").Value2="C  ·  Partial Success"
+$ns.Range("C42").Value2="D  ·  Base"
+$ns.Range("C43").Value2="E  ·  Upside"
+$ns.Range("D39").Formula="=+H14"
+$ns.Range("D40").Formula="=+H15"
+$ns.Range("D41").Formula="=+H16"
+$ns.Range("D42").Formula="=+H17"
+$ns.Range("D43").Formula="=+H18"
+$ns.Range("D39:D43").NumberFormat='0.00"x"'
+# linea de referencia en 1.0x
+$ns.Range("F38").Value2="X (1.0x)"
+$ns.Range("G38").Value2="Y (pos)"
+$ns.Range("F38:G38").Font.Bold=$true
+$ns.Range("F39").Value2=[double]1.0
+$ns.Range("G39").Value2=[double]0.4
+$ns.Range("F40").Value2=[double]1.0
+$ns.Range("G40").Value2=[double]5.6
+$ns.Range("C37:G43").Font.Size=9
+$ns.Range("C37:G43").Font.Color=$GREY
+
+# ---------- crear el grafico ----------
+$anchor=$ns.Range("L12")
+$co=$ns.ChartObjects().Add([double]$anchor.Left,[double]$anchor.Top,[double]560,[double]260)
+$ch=$co.Chart
+$ch.ChartType=57                      # xlBarClustered
+$ch.SetSourceData($ns.Range("C39:D43"))
+$ch.HasTitle=$false
+$ch.HasLegend=$false
+$ch.ChartArea.Font.Name="Arial"
+$ch.ChartArea.Font.Size=9
+$ch.ChartArea.Border.LineStyle=-4142  # sin borde
+$ch.ChartArea.Interior.ColorIndex=-4142
+$ch.PlotArea.Interior.ColorIndex=-4142
+
+# eje de categorias
+$axC=$ch.Axes(1)
+$axC.TickLabels.Font.Name="Arial"
+$axC.TickLabels.Font.Size=9
+$axC.ReversePlotOrder=$true           # A arriba, como el deck
+$axC.MajorTickMark=-4142
+# eje de valores
+$axV=$ch.Axes(2)
+$axV.TickLabels.Font.Name="Arial"
+$axV.TickLabels.Font.Size=9
+$axV.TickLabels.NumberFormat='0.0"x"'
+$axV.HasMajorGridlines=$false
+$axV.MinimumScale=0
+$axV.MaximumScale=3
+$axV.MajorTickMark=-4142
+
+# barras: gris azulado para los casos sin venta, navy para los que la tienen
+$s1=$ch.SeriesCollection().Item(1)
+$s1.Format.Fill.Visible=$true
+$s1.Format.Fill.ForeColor.RGB=$SLATE
+$s1.Points(1).Format.Fill.ForeColor.RGB=$SLATE
+$s1.Points(2).Format.Fill.ForeColor.RGB=$SLATE
+$s1.Points(3).Format.Fill.ForeColor.RGB=$SLATE
+$s1.Points(4).Format.Fill.ForeColor.RGB=$NAVY
+$s1.Points(5).Format.Fill.ForeColor.RGB=$NAVY
+$s1.HasDataLabels=$true
+$s1.DataLabels().NumberFormat='0.00"x"'
+$s1.DataLabels().Font.Name="Arial"
+$s1.DataLabels().Font.Size=9
+$s1.DataLabels().Font.Bold=$true
+$s1.DataLabels().Position=2           # xlLabelPositionOutsideEnd
+
+# linea de referencia en 1.0x
+$s2=$ch.SeriesCollection().NewSeries()
+$s2.ChartType=-4169                   # xlXYScatterLines
+$s2.Name="1.0x"
+$s2.XValues=$ns.Range("F39:F40")
+$s2.Values=$ns.Range("G39:G40")
+$s2.Format.Line.Visible=$true
+$s2.Format.Line.ForeColor.RGB=$GREY
+$s2.Format.Line.Weight=1
+$s2.Format.Line.DashStyle=4           # msoLineDash
+$s2.MarkerStyle=-4142
+$xl.ScreenUpdating=$true
+$wb.Save()
+Write-Output ("grafico creado en 'Scenarios Summary', anclado en L12, "+[string][math]::Round($co.Width,0)+"x"+[string][math]::Round($co.Height,0))
+Write-Output ("  series: "+[string]$ch.SeriesCollection().Count+"   tipo="+[string]$ch.ChartType+"   leyenda="+[string]$ch.HasLegend)
+Write-Output ""
+Write-Output "datos del grafico:"
+for($i=39;$i -le 43;$i++){ Write-Output ("  "+([string]$ns.Cells.Item($i,3).Text).PadRight(26)+([string]$ns.Cells.Item($i,4).Text).PadLeft(9)) }
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Valuation Summary","Expected Returns","Scenarios Summary"){
+  $s=$wb.Worksheets.Item($nm); $e=0
+  try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

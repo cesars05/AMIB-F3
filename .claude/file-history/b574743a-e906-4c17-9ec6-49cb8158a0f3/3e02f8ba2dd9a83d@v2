@@ -1,0 +1,134 @@
+import sys
+sys.path.insert(0, ".")
+from docx_kit import *
+from docx.shared import Pt, Cm
+
+d = new_doc(margins_cm=2.0, base_pt=10)
+header_text(d, "AUREX CAPITAL · Memorándum de Colocación Privada (versión resumida) · Borrador 10-oct-2026")
+footer_pagenum(d, "Documento académico del curso Capital Privado y Capital Emprendedor, Tec de Monterrey · No constituye oferta de valores")
+
+p = d.add_paragraph(); p.paragraph_format.space_after = Pt(0)
+r = p.add_run("AUREX CAPITAL"); r.bold = True; r.font.size = Pt(22); r.font.color.rgb = VERDE
+p = d.add_paragraph(); p.paragraph_format.space_after = Pt(2)
+r = p.add_run("Memorándum de Colocación Privada · Fideicomiso de capital de riesgo · USD $100 millones"); r.font.size = Pt(11.5); r.font.color.rgb = VERDE2; r.bold = True
+para(d, "Equipo #5 · Gpo. 602 · Prof. Francisco Román Rincón Núñez · Monterrey, 10 de octubre de 2026. Cifras en dólares estadounidenses (USD) salvo indicación; las cifras del fondo provienen del archivo PF_Modelo_AurexCapital.xlsx (hojas Summary, Hoja1_Portafolio y Hoja2_Distribucion). Las empresas del portafolio son candidatas de estudio: las estimaciones de valor y de retorno son del equipo, no de las empresas.", align="l", size=8.5, italic=True, color=GRIS)
+
+# 1
+h1(d, "1 · La idea de inversión")
+para(d, "**Tesis (193 caracteres):** Invertimos US$2–10M en empresas mexicanas de energía distribuida y eficiencia con ingresos recurrentes, para escalar solar, baterías y gestión de energía en clientes industriales y comerciales.")
+para(d, "**Qué compramos.** Participaciones minoritarias en 8 empresas mexicanas privadas, en etapa de crecimiento, que ya venden y operan sistemas de energía en sitio (solar, almacenamiento con baterías, microrredes, gestión de energía y carga de vehículos eléctricos) con contratos de arrendamiento, PPA, suscripción o mantenimiento. Tickets iniciales de US$2–10M y follow-on de hasta US$5M, con un tope de 15% del fondo por empresa.")
+para(d, "**Por qué hay hueco.** Según AMEXCAP (1S-2026), las operaciones de Infraestructura y Energía promediaron ≈US$262M (US$7.6 mil millones en 29 transacciones, 2021–1S2026), y las de Growth & LBO ≈US$43M (US$8.2 mil millones en 192). Un cheque de US$2–10M en energía distribuida cae por debajo de ambos. Al mismo tiempo, el sistema eléctrico exige capacidad privada: el PLADESE 2025–2039 (DOF, 17-oct-2025) prevé 5,551 MW de baterías en 2025–2030 y 7,405 MW de renovables privadas; la demanda máxima registró un récord de 54,300 MW el 23-jul-2026.")
+para(d, "**Por qué no lo hace otro.** Aurex no compra activos de generación a escala (eso lo hacen MIP, Macquarie o AINDA con cheques de cientos de millones); compra el negocio operador y su equipo directivo, con asiento en el consejo, en el tramo donde el institucional no llega. **Lo que dejamos fuera** (sección 5) incluye empresas con un cliente mayor a 30% de ventas, dependientes de subsidios, de generación mayorista o con valuación superior a US$100M.")
+
+# 2-3
+h1(d, "2 · Capital que buscan y 3 · Duración")
+table(d, [
+    ["Concepto", "Término propuesto"],
+    ["Capital comprometido objetivo", "**US$100M**; primer cierre a partir de US$40M [propuesta del equipo, por validar]"],
+    ["Inversionistas objetivo", "Family offices, personas de alto patrimonio y corporativos mexicanos, **solo inversionistas calificados o institucionales** (LMV art. 8; umbrales del art. 1 fr. XVI de la CUE). Ticket mínimo por LP: US$1M [propuesta]"],
+    ["Compromiso del GP", "2% del fondo (US$2M), aportación en efectivo y renuncia parcial de comisión; tratamiento fiscal por validar con fiscalista"],
+    ["Duración", "**10 años**: periodo de inversión años 1–5; desinversión años 6–10; extensiones 1+1 (la primera con aprobación del LPAC, la segunda por mayoría de LPs)"],
+    ["Uso del capital", "US$82.0M invertidos en empresas (US$56M iniciales + US$26M follow-on); US$16.15M de comisión de administración; US$1.85M de gastos"],
+], [4.6, 12.8], align_num_from=9, first_col_bold=True)
+
+# 4
+h1(d, "4 · Qué rendimiento prometen")
+para(d, "El retorno es neto de comisiones, gastos y carry. La **TIR neta en USD con calendario real de flujos** es la única tasa que comunicamos; la fórmula simplificada de clase subestima el rendimiento y se conserva solo en el Excel como piso.")
+table(d, [
+    ["Escenario (múltiplos por empresa × factor)", "Bajo ×0.5", "**Base**", "Alto ×1.25"],
+    ["Recupera el portafolio (US$M)", "96.0", "**192.0**", "240.0"],
+    ["Múltiplo bruto sobre lo invertido (US$82M)", "1.17x", "**2.34x**", "2.93x"],
+    ["Total a los LPs (US$M)", "96.0", "**192.0**", "215.9"],
+    ["Carry del GP (US$M)", "0", "**0**", "24.1"],
+    ["Múltiplo neto del LP (MOIC)", "0.96x", "**1.92x**", "2.16x"],
+    ["TIR neta del LP", "−0.9%", "**14.5%**", "17.8%"],
+], [8.2, 3.0, 3.0, 3.2])
+para(d, "**Cómo se construyó el caso base.** Cada empresa tiene un múltiplo calculado con una regla: (1 + crecimiento anual del EBITDA)^años × (1 − dilución por rondas futuras) × (múltiplo de salida ÷ de entrada, nunca mayor a 1.0x). No se supone expansión de múltiplo. El portafolio resulta en 2.34x bruto, con un solo fracaso asumido (Uriel/BRM, 0.25x) y dos empresas por debajo de 2.0x. Como contraste, el equipo conserva dos sensibilidades: sus supuestos iniciales (2.88x bruto) y una simulación de Monte Carlo sobre comparables bursátiles (2.30x); esta última se alimenta de caídas de acciones de EE.UU. y no es un caso base.")
+para(d, "**Referencias.** TIR mediana de los fondos con actividad en México: 16.15% (AMEXCAP, 1S-2026, vintages 1998–2020); TIR neta estimada del Fondo I de AINDA: 15.5% (Techla, sep-2025). Nuestro caso base (14.5%) queda ligeramente por debajo de ambas, de forma deliberada. Frente a CETES a 28 días (6.09%) y la tasa de Banxico (6.50%), ambas en pesos con inflación de 3.45% (sep-2026), la comparación exige ajustar por moneda: nuestras cifras son en dólares. **Lo que no prometemos:** en el escenario Bajo los LPs recuperan 0.96x.")
+
+# 5
+h1(d, "5 · Qué reglas sigue el fondo (y qué no haría)")
+table(d, [
+    ["Regla de exclusión", "Razón"],
+    ["(i) Ningún cliente con más de 30% de las ventas", "El riesgo de concentración no se compensa con crecimiento"],
+    ["(ii) Directivos con experiencia operando en energía", "Sector técnico y regulado: sin ese conocimiento el riesgo de ejecución es demasiado alto"],
+    ["(iii) Sin generación a escala utility que vende al mercado mayorista", "Requiere tickets muy superiores a los del fondo y depende de regulación federal"],
+    ["(iv) Sin dependencia de subsidios o incentivos vigentes", "Un cambio de política puede eliminarlos de un día a otro; buscamos ahorro real de costos"],
+    ["(v) Valuación de entrada no mayor a US$100M", "Con tickets de US$2–10M, una valuación mayor impide influencia real"],
+], [7.4, 10.0], align_num_from=9)
+para(d, "**Reglas adicionales:** máximo 15% del fondo por empresa (≤US$15M); sin apalancamiento a nivel fondo ni compra de control con deuda; al menos 80% del patrimonio en empresas mexicanas no listadas con asiento en consejo; tenencia mínima de 2 años por ticket; efectivo ocioso solo en valores gubernamentales o fondos de deuda (art. 192 LISR). **Aplicación a nuestro pipeline:** la hoja Criterios del modelo califica a cada empresa como Cumple, Condición o No cumple. Verdigris Technologies (California, sin operación en México) se excluyó y fue sustituida por BioEsol; de las 8 empresas, ninguna pasa sin al menos una condición de due diligence (p. ej. Pireos: concentración en el grupo Walmart; Niko: perfil más fintech solar que infraestructura). Esas condiciones son requisito para cerrar la inversión, no formalidades.")
+
+# 6
+h1(d, "6 · Cómo está organizado")
+para(d, "**Vehículo: fideicomiso privado mexicano de capital de riesgo (LISR arts. 192–193; en la práctica, FICAP).** Fiduciario: banco o casa de bolsa. Comité técnico por contrato, con un Comité de Inversión del GP y un LPAC consultivo. Colocación privada, sin oferta pública ni inscripción en el RNV (LMV art. 8, solo calificados). El GP administra mediante una sociedad gestora mexicana por constituir.")
+bullet(d, "**Por qué fideicomiso privado y no CKD, CERPI o Fibra E:** nuestros LPs son privados mexicanos, el control del GP es mayor, no hay revelación pública y se constituye en semanas, no en 6–12 meses. **Costo:** las AFOREs (≈59% del capital comprometido a vehículos levantados en 2021–2025, según AMEXCAP) no pueden comprar un fideicomiso no listado; renunciamos a ese canal y apuntamos a family offices y corporativos, la base que AMEXCAP reconoce como menos desarrollada. Una versión listada es una opción para un Fondo II.")
+bullet(d, "**Requisitos del régimen y riesgo de perderlo:** 80% del patrimonio en sociedades mexicanas no listadas; no vender antes de 2 años; distribuir al menos 80% de los ingresos recibidos dentro de 2 meses del cierre del año; si se incumple, el fideicomiso tributa al 30% como fideicomiso empresarial desde el año siguiente. La distribución anual limita el reciclaje de productos de salida y se concilia con la cascada europea.")
+bullet(d, "**Sin responsabilidad limitada estatutaria:** el fideicomiso no la otorga; se protege con límites de compromiso, indemnización al GP y al fiduciario (con excepciones de dolo y fraude) y la regla de concentración. Las comisiones se cotizan **más IVA**; el modelo no incluye IVA.")
+
+# 7
+h1(d, "7 · Quién lo dirige")
+table(d, [
+    ["Rol", "Integrante", "Responsabilidad", "Credencial verificable"],
+    ["Managing Partner", "Julio César Silva de la Rosa", "Dirige el fondo e integra los documentos", "[PENDIENTE: completar por el equipo]"],
+    ["Socio de inversión", "Roberto Flores", "Origen, due diligence y caso de inversión", "[PENDIENTE]"],
+    ["Socio de operaciones", "Mariana González", "Organización del fondo, reglas y cumplimiento", "[PENDIENTE]"],
+    ["Socio de relación con inversionistas", "Tomás Tapia", "Fundraising y relación con LPs", "[PENDIENTE]"],
+    ["Analistas", "Pablo Belmonte y Miguel Montalvo", "Modelo financiero, mercado y seguimiento del portafolio", "[PENDIENTE]"],
+], [3.6, 4.4, 5.4, 4.0], align_num_from=9, size=8.5)
+para(d, "**Key man:** si dos o más personas clave (Managing Partner y Socio de inversión) dejan el fondo, el periodo de inversión se suspende automáticamente hasta que los LPs decidan si continúan. **Conflictos de interés:** un familiar directo de un integrante es dueño de una empresa del sector de infraestructura energética; ese vínculo se declara a los LPs, la empresa no formará parte del portafolio sin aprobación del LPAC y el integrante se abstendría en cualquier decisión relacionada [PENDIENTE: confirmar con el equipo]. **Terminación:** con causa (fraude, dolo, incumplimiento grave) y sin causa por mayoría calificada de LPs.")
+
+# 8
+h1(d, "8 · Cómo se reparten las ganancias")
+para(d, "Cascada **europea** (todo el fondo): el GP cobra carry hasta que el fondo completo devolvió el capital y el retorno preferente. Los cuatro escalones:")
+table(d, [
+    ["Escalón", "Regla", "Caso Base (US$M)", "Caso Alto (US$M)"],
+    ["1 · Devolución de capital", "100% a los LPs hasta recuperar todo lo aportado (US$100M, incluye comisiones y gastos)", "100.0", "100.0"],
+    ["2 · Retorno preferente", "8% anual compuesto sobre lo comprometido por 10 años (US$115.9M a pagar completo)", "92.0", "115.9"],
+    ["3 · Catch-up del GP", "100% al GP hasta llegar a 20% de la ganancia acumulada", "0", "24.1"],
+    ["4 · Resto 80/20", "80% a los LPs y 20% al GP", "0", "0"],
+    ["Total a los LPs / carry del GP", "", "192.0 / 0", "215.9 / 24.1"],
+], [4.0, 7.8, 2.8, 2.8], align_num_from=2, bold_last=True)
+para(d, "**Comisión de administración:** 2% anual sobre capital comprometido en los años 1–5 y 1.5% sobre capital invertido en los años 6–10 (total US$16.15M en el modelo; más IVA). **Carry:** 20% con catch-up de 100%. **Clawback:** el GP devuelve al final del fondo cualquier carry recibido en exceso; con cascada europea es una verificación final, pero se pacta con garantía de la sociedad gestora y de los socios. **Lo que esto significa:** con hurdle sobre todo el capital comprometido, el GP necesita ≈2.16x bruto sobre lo comprometido para cobrar el primer peso de carry; en el caso Base ganamos solo la comisión. Esa es la alineación que ofrecemos: el GP solo gana por desempeño si los LPs ganan más de 8% compuesto. La comisión cubre el equipo, el due diligence y la presencia en consejos.")
+
+# 9
+h1(d, "9 · Cómo se pide el dinero")
+para(d, "Los LPs comprometen su capital y lo aportan por **llamadas de capital** conforme el fondo invierte o paga gastos; no lo entregan de golpe. Aviso de al menos 10 días hábiles [propuesta]; un LP que no fondea una llamada enfrenta dilución forzada, penalización o venta de su participación. El calendario del modelo (caso Base) es:")
+table(d, [
+    ["Año", "1", "2", "3", "4", "5", "6–10 (por año)"],
+    ["Llamadas (US$M)", "16.2", "32.2", "20.2", "20.2", "4.2", "1.4"],
+], [3.6, 1.9, 1.9, 1.9, 1.9, 1.9, 4.2])
+para(d, "Primeras distribuciones en el año 6; DPI de 0.21x en el año 6, 1.59x en el año 8 y 1.92x al cierre; TVPI de 0.86x en el año 1 (curva J). Cada trimestre el GP reporta a los LPs y al LPAC la valuación de cada empresa con una política escrita y, cuando sea posible, un valuador independiente; los reportes siguen el Estándar AMEXCAP de gobierno corporativo (jul-2026) como referencia.")
+
+# Portafolio y riesgos
+h1(d, "Anexo A · Portafolio objetivo")
+table(d, [
+    ["Empresa", "Qué hace", "Invertido (US$M)", "Salida (año)", "Múltiplo base", "Condición principal"],
+    ["Pireos Power", "Microrredes, solar y BESS C&I", "15", "8", "2.55x", "Concentración Walmart <30%"],
+    ["XC Generation", "Solar C&I, EPC y PPA", "14", "9", "2.69x", "Data room completo"],
+    ["BioEsol", "EaaS: solar + BESS + software", "14", "7", "2.23x", "Métricas operativas; sociedad mexicana"],
+    ["Quartux", "BESS C&I con software", "11", "7", "2.80x", "Solo negocio C&I; cupo junto a AINDA"],
+    ["Niko Energy", "Solar y baterías pyme/residencial", "9", "6", "2.20x", "Experiencia energética del equipo"],
+    ["FAZT", "Carga ultrarrápida de VE", "9", "8", "1.82x", "Contrato Soriana; utilización"],
+    ["S2G Energy", "Gestión de energía (IoT)", "8", "8", "2.17x", "Razón social y concentración"],
+    ["Uriel (BRM)", "Biogás de relleno, 2 plantas de 1 MW", "2", "6", "0.25x", "Caso de pérdida esperada"],
+    ["Total", "", "82", "", "2.34x", ""],
+], [2.9, 4.7, 2.0, 1.6, 1.8, 4.4], align_num_from=2, size=8.2, bold_last=True)
+para(d, "Hechos verificados que ajustaron el diseño (dossiers con fuentes en el proyecto): la valuación de ninguna empresa es pública; Niko levantó US$8M de capital más US$15M de deuda (2025) y su última valuación pública es US$16M post-money (mar-2024); en Quartux AINDA comprometió más de US$50M (cierre 18-mar-2026); Pireos se financió con capital propio; las 31 estaciones de FAZT están en tiendas Soriana.", size=8.5)
+
+h1(d, "Anexo B · Cómo recuperan el dinero")
+para(d, "Las salidas observables en México son: (1) venta estratégica a energéticas o corporativos (p. ej. la venta de Iberdrola México a COX, 2026); (2) venta a fondos de infraestructura (MIP, Macquarie); (3) compra por una Fibra E (Xinfra–Huinalá, 2025); (4) oferta pública (Esentia Energy, nov-2025, a MXN 45 por acción, bajo el rango de precio). **Ninguna de estas operaciones corresponde a empresas de US$2–10M de ticket**, y AMEXCAP reporta apenas ≈US$900M en 111 desinversiones de 2025 a 1S-2026: la salida es el riesgo principal del fondo. Por eso el modelo asume ventas a compradores identificados por empresa (hoja Escenarios), mantiene un hurdle estricto y usa un caso Bajo que pierde 4% del capital. Alternativas si no hay comprador: venta a otro fondo, venta parcial o vehículo de continuación con valuador independiente, siempre con aprobación del LPAC.")
+
+h1(d, "Anexo C · Riesgos principales y mitigantes")
+table(d, [
+    ["Riesgo", "Mitigante"],
+    ["Sin salidas para empresas pequeñas de energía", "Compradores nombrados por empresa; participación en el consejo; vehículo de continuación; extensiones 1+1"],
+    ["Regulatorio: LSE 2025, prevalencia estatal ≥54%, permisos CNE, cambios tarifarios CFE", "Solo C&I distribuido; sin dependencia de subsidios; diversificación en 5 verticales; seguimiento regulatorio trimestral"],
+    ["Concentración de clientes o de anfitrión (Walmart, Soriana)", "Regla de 30% verificada en data room antes de invertir; condiciones contractuales"],
+    ["Pérdida del régimen fiscal FICAP", "Cumplimiento calendarizado (2 años, 80% de patrimonio, distribución a 2 meses); validación con fiscalista"],
+    ["Persona clave y conflicto de interés", "Cláusula key man; declaración y abstención; LPAC con reunión sin el GP"],
+    ["Reforma a la Ley de Inversión Extranjera (filtro >49% en energía) y control de concentraciones (CNA)", "Análisis de umbrales antes de firmar una salida; compradores mexicanos como alternativa"],
+], [7.4, 10.0], align_num_from=9, size=8.5)
+para(d, "**Pendientes de validación con abogado y fiscalista antes de cualquier uso fuera del curso:** vigencia de los arts. 192–193 LISR y las reglas misceláneas 2026; tratamiento fiscal del carry, la renuncia de comisión y el IVA; si los derechos del fideicomiso son valores para efectos de la LMV; calificación de cada LP; cotizaciones de fiduciario, abogados y auditor (el gasto de US$1.85M es un supuesto del modelo).", size=8.5, italic=True, color=GRIS)
+
+d.save(r"C:\Users\cesar\Downloads\PE\08_Proyecto_Final\entregables\PF_Memorandum_AurexCapital.docx")
+print("saved")

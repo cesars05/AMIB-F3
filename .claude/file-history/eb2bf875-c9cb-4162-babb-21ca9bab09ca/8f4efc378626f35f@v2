@@ -1,0 +1,28 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 900 } }; return "??" }
+$xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb=$null; foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("SOTP") }
+Write-Output "=== bloques de assumptions / WACC por segmento (formulas) ==="
+foreach($o in 0,20,40,60){
+  $nom=[string](T { $s.Cells.Item(9+$o,2).Text })
+  Write-Output ("--- "+$nom+"  (offset "+$o+")")
+  foreach($p in @(@(12,13,"g"),@(13,13,"tax"),@(16,13,"WACC"),@(17,13,"D/Cap"),@(18,13,"Ke"),@(19,13,"Kd"))){
+    $r=$p[0]+$o; $c=$p[1]
+    Write-Output ("     M"+$r+" "+([string]$p[2]).PadRight(6)+" = "+([string](T { $s.Cells.Item($r,$c).Text })).PadLeft(9)+"   frm= "+[string](T { $s.Cells.Item($r,$c).Formula }))
+  }
+  foreach($p in @(@(12,"Ke"),@(13,"Rf"),@(14,"ERP"),@(15,"SizeP"),@(16,"Beta"),@(20,"Kd"),@(21,"Rf"),@(22,"Spread"))){
+    $r=$p[0]+$o
+    Write-Output ("     O"+$r+" "+([string]$p[1]).PadRight(6)+" = "+([string](T { $s.Cells.Item($r,15).Text })).PadLeft(9)+"   frm= "+[string](T { $s.Cells.Item($r,15).Formula }))
+  }
+}
+Write-Output ""
+Write-Output "=== factores de descuento ==="
+foreach($r in 25,45,65,85){ Write-Output ("   C"+$r+" = "+[string](T { $s.Range("C"+$r).Formula })) }
+Write-Output ""
+Write-Output "=== summary (formulas col C y D) ==="
+for($r=89;$r -le 112;$r++){
+  $lab=[string](T { $s.Cells.Item($r,2).Text })
+  if($lab.Trim() -eq ""){ continue }
+  Write-Output ("   r"+([string]$r).PadRight(4)+$lab.PadRight(30)+" C= "+([string](T { $s.Range("C"+$r).Formula })).PadRight(28)+" D= "+[string](T { $s.Range("D"+$r).Formula }))
+}

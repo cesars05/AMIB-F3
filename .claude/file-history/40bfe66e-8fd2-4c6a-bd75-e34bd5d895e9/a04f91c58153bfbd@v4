@@ -1,0 +1,913 @@
+# 09 — Insights por reporte
+
+**Documento de trabajo.** Un bloque por fuente, en bullets, para ir acumulando hallazgos.
+Formato: cada bullet trae **el dato**, su **fuente y fecha**, y cuando aplica, **a qué sección de la rúbrica sirve**.
+
+> Convención: 🔴 = verificar antes de usar · 🟢 = listo para citar · 💡 = idea propia / ángulo a desarrollar
+> Los análisis largos viven en `08-ANALISIS-BLOOMBERG-Y-SELL-SIDE.md`. Esto es el banco de datos.
+
+---
+
+## 1. Bimbo Equity Research — Bloomberg Intelligence (Tiago Harduim)
+*21 pp · tesis fechada 13-may-26 · documento extraído 14-sep-26*
+
+### 1.1 Cómo se reparte la utilidad por región — el dato que más sorprende
+
+🟢 **México es un tercio de las ventas y más de la mitad del EBITDA. Norteamérica es lo contrario.**
+
+**Ejercicio 2025 completo** (MXN mn, puentes de consenso de BI):
+
+| Segmento | Ventas | % ventas | EBITDA | **% EBITDA** | Margen |
+|---|---|---|---|---|---|
+| Norteamérica | 190,211 | 42.9% | 17,117 | **29.4%** | 9.0% |
+| **México** | 154,809 | **34.9%** | 31,630 | **54.4%** | **20.4%** |
+| EAA | 54,214 | 12.2% | 5,830 | 10.0% | 10.8% |
+| Latinoamérica | 44,120 | 10.0% | 3,552 | 6.1% | 8.1% |
+| **Suma segmentos** | **443,354** | | **58,129** | | |
+
+**2T26** (mismo patrón, confirma que no es un año raro):
+
+| Segmento | Ventas | % ventas | EBITDA aj. | **% EBITDA** | Margen |
+|---|---|---|---|---|---|
+| Norteamérica | 44,368 | 40.5% | 4,424 | **29.1%** | 10.0% |
+| **México** | 40,279 | **36.8%** | 8,343 | **54.9%** | **20.7%** |
+| EAA | 13,188 | 12.0% | 1,542 | 10.1% | 11.7% |
+| Latinoamérica | 11,620 | 10.6% | 893 | 5.9% | 7.7% |
+
+💡 **La frase para el reporte:** *por cada peso de ventas que aporta, México entrega 1.5 pesos de participación en el EBITDA; Norteamérica entrega 0.72.* Bimbo es, en utilidad, una empresa mexicana con una operación grande y poco rentable en Estados Unidos.
+
+💡 **Consecuencias que conviene desarrollar:**
+- La tesis de Norteamérica es de **margen**, no de ventas. Cada 100 pb de margen en NA valen ~1,900 mn MXN de EBITDA — más que todo el EBITDA de Latinoamérica.
+- Toda la valuación depende desproporcionadamente de **México**, que es el mercado más maduro y con menor crecimiento de categoría.
+- Conecta con el hallazgo de intensidad de activos (`08` §4.3): NA usa **147 plantas** para 42% de ventas; México usa **31** para el mismo ingreso.
+
+*(Reconciliación: los segmentos suman 443,354 contra 426,952 consolidado — 16,402 de eliminaciones intersegmento. EBITDA suma 58,129 contra 59,456 — +1,327 corporativo. Cuadra.)*
+
+### 1.2 Crecimiento de ventas por arriba de inflación — histórico y esperado
+
+🟢 **Lo que el consenso está proyectando, y contra qué:**
+
+| | CAGR consenso 2025-30 | Puntos sobre la inflación de largo plazo | Crecimiento de la categoría (Euromonitor) | **Share requerido** |
+|---|---|---|---|---|
+| **EE.UU.** | **4.8%** | **+2.6 pp** | **2.7%** | **≈2.1 pp/año** |
+| **México** | **5.4%** | **+1.8 pp** | **4.5%** | **≈0.9 pp/año** |
+
+🟢 BI, textual: *"consensus is effectively assuming the company can **resume outgrowing the market** and potentially gaining additional shelf space."*
+
+🟢 **Crecimiento histórico de largo plazo de Bimbo: ~2.8%**, contra Gruma 1.8% y Sigma 10.6%. Margen de utilidad 3.7% vs. Gruma 8.3% y Sigma 4.2%. Payout ~30% vs. Gruma 45% y Sigma 42%. BI: *"keeps Bimbo in the middle of the peer frame."*
+
+💡 **El choque:** el consenso proyecta 4.8% de aquí a 2030 en EE.UU. para una empresa que históricamente crece 2.8% consolidado, en una categoría que crece 2.7%, y cuyo share en EE.UU. **bajó 100 pb desde 2022** (16.7% en 2025).
+
+### 1.3 Tamaño y estructura de los mercados
+
+🟢 **EE.UU. — pan:** US$34.1bn (2025) → **US$39bn (2030)**, CAGR **2.7%**. Gasto per cápita +2.4%/año, población +0.3%/año.
+- **Bimbo 16.7% del valor minorista · marca privada 16.3% · artesanal 34%**
+- La marca privada está **prácticamente empatada con Bimbo**
+
+🟢 **México — pan:** MXN 417bn (2025) → **MXN 520bn (2030)**, CAGR **4.5%**. Per cápita +3.9%/año, población +0.6%/año.
+- **Artesanal 89.3% del valor · Bimbo 9.7%** (plano desde 2022)
+- BI: la oportunidad *"es menos sobre creación de categoría y más sobre **formalización, premiumización y apalancamiento de distribución**"* — *"steady monetization rather than major consumption penetration upside"*
+
+🟢 **Serie histórica EE.UU. (USD bn):** 22 (2011) → 22, 23, 23, 23, 23, 23, 24, 24 (2019) → 26, 28, 31, 32, 33, **34 (2025)** → 35, 36, 37, 38, **39 (2030e)**
+💡 Nota: el salto 2019→2023 (24→33) fue casi todo **inflación**, no volumen. Esa distinción importa para no extrapolar.
+
+🟢 **Serie histórica México (MXN bn):** 165 (2011) → 180, 188, 197, 202, 209, 222, 237, 249 (2019) → 300, 315, 357, 399, 406, **417 (2025)** → 438, 459, 479, 500, **520 (2030e)**
+
+### 1.4 Penetración y consumo per cápita — el mapa de oportunidad
+
+🟢 Cita textual de BI (p. 7):
+
+> *"Bimbo's best long-term growth runway still sits where consumption isn't fully saturated and private label is manageable. **Mexico combines strong bread growth with exceptionally high per-capita consumption of 126.6 kg and only 1% private-label penetration**, making it a **scale-and-pricing market more than a penetration story**. The US is slower at 2.7% growth, but **per-capita consumption is only 22.8 kg and private label is a much larger 16%**, which leaves more room for branded upgrading if execution and consumer spending improves. **Brazil stands out as the fastest-growth market** in our sample, while **Spain looks the most mature**."*
+
+Del gráfico de burbujas (consumo per cápita vs. CAGR 2025-30, tamaño = share de marca privada):
+
+| Mercado | Consumo per cápita | CAGR 25-30 | Marca privada |
+|---|---|---|---|
+| México | ~127 kg | ~5% | **1%** (burbuja mínima) |
+| España | ~45 kg | ~0% | media |
+| Rusia | ~45 kg | ~6.5% | media |
+| Canadá | ~35 kg | ~4% | media |
+| Brasil | ~30 kg | **~9.5%** | mínima |
+| Mundo | ~25 kg | ~6% | media |
+| **EE.UU.** | **~23 kg** | ~2.7% | **16%** (burbuja grande) |
+| China | ~0-5 kg | ~2% | grande |
+
+🔴 **ALERTA IMPORTANTE sobre los 126.6 kg de México.** Ya venía marcado como sospechoso en `08` §6 y **ahora hay confirmación externa de que el dato no es comparable**:
+
+- **BI/Euromonitor: 126.6 kg per cápita** en México
+- **Kantar Worldpanel (vía prensa mexicana): ~33.5 kg per cápita** de pan al año en México
+
+Es una diferencia de **casi 4x**. La explicación más probable: la categoría "bread" de Euromonitor en México **incluye tortilla y pan artesanal de consumo diario**, mientras la medición de Kantar es de pan en sentido estrecho. **No usar los 126.6 kg sin resolver la definición** — si un juez mexicano oye "los mexicanos comen 127 kg de pan al año" y sabe que suena imposible, se pierde credibilidad en el resto. Verificar la definición exacta en Euromonitor (Passport) antes de citarlo.
+
+💡 Si se resuelve, el contraste **México 1% de marca privada vs. EE.UU. 16%** es el mejor dato del párrafo y sí es robusto: explica por qué México es mercado de precio y escala, y EE.UU. de defensa de marca.
+
+### 1.5 Guidance 2026
+
+🟢 **Guía original (presentada con resultados de 2025, recogida por BI 12-may-26):**
+
+| (MXN mn) | 2025 real | Guía FX-neutral | 2026 bajo | 2026 alto |
+|---|---|---|---|---|
+| Ventas | 426,952 | +4% a +6% | 444,030 | 452,569 |
+| EBITDA | 59,456 | +8% a +14% | 64,498 | 68,002 |
+| Margen EBITDA | 13.9% | +60 a +110 pb | **14.5%** | **15.0%** |
+| Capex (USD bn) | 1.2 | 0% a +17% | 1.2 | 1.4 |
+
+🟢 **Guía revisada al alza en el 2T26 (23-jul-26, vía JPM):**
+- Margen EBITDA: **+70 a +120 pb** (desde +60 a +110)
+- **Capex recortado a US$1.0–1.2bn** (desde 1.2–1.4) — abajo del estimado de JPM de US$1.5bn. Management lo atribuye a *"phasing and timing of investments rather than a shift in long-term priorities"*
+- Ventas: sin cambio, crecimiento de un dígito medio en moneda local
+- **Impacto del conflicto con Irán: US$70–90mn.** JPM: la guía *"habría subido 30 pb de no ser por ese efecto"*
+
+🟢 BI sobre la guía: *"Bimbo isn't leaning on a sharp top-line reacceleration alone, it expects a **better conversion of sales into earnings**."* Y: *"consensus isn't fully reflecting how much margin recovery management is already underwriting."*
+
+💡 **Capex a la baja + margen al alza = mejor flujo libre.** Es el argumento alcista más limpio y el que probablemente disparó el upgrade de JPM. Hay que poder contestarlo.
+
+### 1.6 El múltiplo: cotiza caro contra pares, pero en línea consigo mismo
+
+🟢 **Contra su propia historia:** ~**18.08x** P/E forward actual contra un **promedio de cinco años de 18.1x**. Bandas de ±1 desv. est. en **16.59x y 19.67x**. Rango 2021-26: pico ~22-23x (2021-22), piso ~13.5x (2025), hoy de vuelta en la media.
+
+🟢 **Contra pares (pantalla RV de BI, P/E forward, promedio del grupo 14.6x):**
+
+| Empresa | P/E | Prima vs. grupo | Prima histórica | Diferencia | Desv. est. |
+|---|---|---|---|---|---|
+| BRF Global Foods | 69.1x | +375% | +257% | +118% | 1.9 |
+| **Grupo Bimbo** | **18.1x** | **+24%** | **+21%** | **+3%** | **0.2** |
+| Tyson Foods | 15.5x | +7% | +9% | −2% | −0.1 |
+| McCormick | 15.0x | +3% | +61% | −58% | −1.9 |
+| Hormel Foods | 13.7x | −6% | +22% | −28% | −1.4 |
+| Sigma Foods | 12.8x | −12% | +28% | +16% | 0.7 |
+| Gruma | 11.3x | −23% | −15% | −7% | −0.6 |
+| Kraft Heinz | 10.6x | −27% | −26% | 0% | 0.0 |
+| General Mills | 10.3x | −29% | −5% | −24% | −1.5 |
+| JBS NV | 10.1x | −31% | −34% | +3% | 0.4 |
+| Smithfield Foods | 10.1x | −31% | −28% | −2% | +0.3 |
+| **Flowers Foods** | **9.9x** | −32% | +2% | −34% | −1.5 |
+| M Dias Branco | 9.7x | −33% | −29% | −4% | −0.3 |
+| J M Smucker | 9.6x | −34% | −23% | −11% | −0.9 |
+| Grupo Herdez | 9.2x | −37% | −21% | −16% | −1.1 |
+| Camil Alimentos | 8.1x | −45% | −34% | −11% | −0.5 |
+| Minerva | 4.3x | −70% | −49% | −22% | −1.3 |
+
+🟢 BI, textual: *"At about 18x forward P/E currently, Bimbo trades in line with its 18.1x five-year average, so **the stock doesn't look stretched vs. its own history**. Relative valuation is less forgiving: it still sits above the peer-group average near 14.6x and above Sigma at 12.8x and Gruma at 11.3x. We think that premium reflects **scale, category breadth and diversification**, but it also means **rerating upside is more limited than execution upside**."*
+
+💡 **El matiz que vale puntos, y que casi nadie va a ver:** sí, Bimbo cotiza **+24% sobre el grupo** — pero su prima histórica promedio es **+21%**. La diferencia es **+3%, o 0.2 desviaciones estándar**. En términos relativos está *exactamente donde siempre ha estado*. Decir "cotiza caro contra pares" a secas es incompleto y un juez lo puede desarmar; decir "cotiza con su prima histórica normal, ni más ni menos" es la lectura correcta.
+
+💡 **Implicación para la recomendación:** por múltiplo está en su media por los dos métodos. **Si el equipo recomienda algo distinto de HOLD, el argumento no puede ser el múltiplo — tiene que ser que las utilidades futuras están mal estimadas.**
+
+💡 **Flowers Foods a 9.9x** es el comparable más puro de pan en EE.UU. y cotiza **45% abajo de Bimbo.** Vale la pena preguntarse por qué, y si la prima de diversificación de Bimbo está justificada.
+
+### 1.7 Consenso de ventas EE.UU. y México — los puentes
+
+🟢 **Norteamérica (puente de consenso 2026):**
+- 2025 real: ventas **190,211** · EBITDA **17,117** · margen **9.0%**
+- Consenso 2026: ventas **−7% a −2%** (176,767–186,956) · EBITDA **−4% a +2%** (16,466–17,528) · margen **9.3–9.4%**
+- BI: *"The main reason **consensus looks conservative** on Bimbo is North America... It means Bimbo can deliver consolidated upside without needing a dramatic rebound: **North America only has to contract less than consensus** or recover a bit faster on volume and mix."*
+
+💡 **Oportunidad concreta y verificable:** el consenso tiene a NA con margen de 9.3–9.4% para todo 2026, pero **en el 2T26 NA ya iba en 10.0%** (+100 pb) con ventas +1.3% ex-FX. Si el 2S se parece al 1S, el consenso de NA está claramente bajo. **Este es el mejor argumento alcista de toda la carpeta** y hay que pesarlo contra la tesis de costos.
+
+🟢 **México (puente de consenso 2026):**
+- 2025 real: ventas **154,809** · EBITDA **31,630** · margen **20.4%**
+- Consenso 2026: ventas **+3% a +4%** (158,988–161,381) · EBITDA **+1% a +6%** (31,847–33,622) · margen **20.0–20.8%**
+- BI: *"constructive, but not stretched... **Bimbo doesn't need Mexico to overdeliver** for the consolidated guidance to work; Mexico's role is stability."*
+
+🟢 **EAA:** 2025 ventas 54,214 · EBITDA 5,830 · margen 10.8% → 2026: +3% a +13% ventas, +5% a +10% EBITDA, margen 10.5–10.9%
+🟢 **Latinoamérica:** 2025 ventas 44,120 · EBITDA 3,552 · margen 8.1% → 2026: +5% a +7% ventas, 0% a +12% EBITDA, margen 7.7–8.4%
+
+🔴 **Discrepancia interna de BI:** la tabla de "Key Drivers" (p.3) da ventas de México 2025 de **131,151**, mientras el puente de consenso (p.9) da **154,809**. Las ventas trimestrales de México en 2T26 (40,279) anualizadas respaldan la segunda. Usar los puentes y confirmar contra estados financieros.
+
+### 1.8 COGS por debajo de inflación, FX y coberturas — el corazón de la tesis
+
+🟢 **El setup de costos 2026, contra la inflación de cada país:**
+
+| | COGS 2026 | Inflación de referencia | **Spread favorable** |
+|---|---|---|---|
+| **EE.UU.** | **−1.2%** | CPI EE.UU. **3.2%** | **~4.4 pp** |
+| **México** | **−3.7%** | CPI México **4.2%** | **~7.9 pp** |
+
+🟢 BI: *"As long as category demand supports **CPI-linked pricing**, 2026 could be a year in which Bimbo recovers gross margins, even if the commodity picture gets tougher by year-end."* Bimbo **fija precio contra la inflación local**, así que el spread entre COGS e inflación es directamente expansión de margen bruto.
+
+🟢 **Trayectoria trimestral 2026 — y la reversión:**
+- **EE.UU.:** −5.8%, −5.2%, −3.7% hasta 3T, **peor en 4T** (trigo, PET y flete resetean al alza, *"mostly due to Iran war ripple effects"*) → **pico de +10.7% YoY en 2027**
+- **México:** −0.6%, −7.0%, −9.6%, **+2.6% en 4T** → **pico de +17.1% YoY en 2027**
+
+🟢 **Composición de la canasta de costos de México (metodología BI):** **trigo 37% · PET 20% · flete/combustible 9% · aceite de soya 4%**, el resto mano de obra y costos locales ligados a inflación.
+💡 Ese desglose permite construir una **sensibilidad de COGS propia** — es el insumo para los "ratios específicos de la industria" que pide el `Essentials` (`07` §3.6).
+
+🟢 **EL MECANISMO — cita clave, p.14:**
+
+> *"Commodity curves were mixed for 2025, but **will be materially tougher in 2026**. On annual averages, **wheat rises 15.6% in 2026, polyethylene 15.4% and soybean oil 39.9%**, with soybean oil the clearest headwind. **The reason our 2026 tracker still screens favorably is hedging, which creates a lagged pass-through effect to P&L.** The curves don't signal a clean commodity tailwind, but they do leave room for a margin-friendly 2026 because **the hardest part of the reset comes later**."*
+
+🟢 **Las coberturas:** *"Bimbo hedges should be an average of about **nine months forward**, according to our calculations, with major lines such as **wheat, soybean oil, diesel and polyethylene** covered on a **rolling basis**, which should smooth quarterly volatility."*
+
+💡 **Traducción:** el margen de 2026 **no es mejora operativa, es contabilidad de coberturas.** Los precios spot de hoy pegan al P&L en ~9 meses. Es el argumento central de `08` §3.5.
+
+🟢 **FX — el segundo amortiguador temporal:**
+- El consenso espera que el peso **se aprecie a ~17.8/USD desde ~19.2 en 2025**, lo que abarata el costo en pesos de insumos importados
+- Curva USDMXN de BI: −7.6% YoY (2026), luego **+2.4% y +4.5% YoY** hacia 2027-28 → **la apreciación se revierte**
+- 💡 Los dos pilares del alivio de 2026 (coberturas + peso fuerte) **son temporales y ambos revierten en la misma ventana**
+
+🟢 **Matriz de sensibilidad de EBITDA vs. consenso** (USDMXN 17.50–19.20 × EURUSD 1.10–1.20): **upside de 3% a 8% en TODAS las celdas.** Con FX plano año contra año ~7%; bajo supuestos de consenso ~4%.
+- BI: *"consensus isn't merely assuming a difficult translation -- it's still below what management's framework can deliver under fairly ordinary currency conditions... The table therefore argues for **upside optionality, not for a demanding base case**."*
+
+### 1.9 Perfil de la compañía y competencia
+
+🟢 **Mezcla de ventas:** Norteamérica **43%** · México **33%** · EAA **13%** · Latinoamérica **11%**. Red de **39 países**.
+🟢 **Marcas:** México — Bimbo, Wonder, Marinela, Barcel, Tía Rosa. EE.UU. — Arnold, Oroweat, Sara Lee, Entenmann's, Thomas'.
+### 1.9b Mapa de competidores — por mercado y por categoría
+
+🟢 **Cita directa de BI:** *"Competition-wise, **Bimbo's main competitors in the US are Flowers Foods and Irresistible Foods in the fresh bread category and PepsiCo and General Mills in the salty snacks category**. In Mexico, Bimbo is **the market leader competing mainly against artisanal production**."*
+
+**Estados Unidos**
+
+| Categoría | Competidores | Nota |
+|---|---|---|
+| **Pan fresco** | **Flowers Foods** (Nature's Own, Dave's Killer Bread, Wonder en EE.UU.), **Irresistible Foods Group** | Flowers es el comparable más puro: cotiza a **9.9x P/E, 45% abajo de Bimbo** |
+| **Botanas saladas** | **PepsiCo** (Frito-Lay), **General Mills** | Aquí Bimbo tiene solo **3.5% de share** — es el retador, no el líder |
+| **Marca privada** | **16.3% del valor de pan en EE.UU.** — casi empatada con el 16.7% de Bimbo | 💡 **Es el competidor más grande y el que menos se nombra.** Ver §9 |
+| Artesanal / in-store bakery | **34% del valor de la categoría** | El bloque más grande del mercado |
+
+**México**
+
+| Bloque | Quién | Peso |
+|---|---|---|
+| **Producción artesanal** (panaderías, tortillerías) | Fragmentado, informal | **89.3% del valor de la categoría** |
+| **Bimbo** | Líder del pan empaquetado | **9.7% del valor** |
+| Marca privada | Cadenas de autoservicio | **Solo 1% de penetración** |
+
+💡 **El punto clave de México, y es contraintuitivo:** Bimbo **no** compite realmente contra otra marca de pan empaquetado — compite contra **la panadería de la esquina**. Dos de cada tres mexicanos compran su pan en una panadería local pequeña (§11). Eso cambia la naturaleza del foso: no es guerra de marcas, es **formalización de un mercado informal**, y su arma es la red DSD de 55,000 rutas, no la publicidad.
+
+**Comparables de valuación usados por Bloomberg (pantalla RV):** M Dias Branco (Brasil), Grupo Nutresa (Colombia), **Gruma**, Minerva (Brasil).
+
+**Comparables del peer set de P/E, agrupados:**
+- **LatAm:** Gruma, Sigma Foods, Grupo Herdez, M Dias Branco, Camil Alimentos, Minerva, BRF
+- **EE.UU./global:** Flowers Foods, Tyson, Hormel, General Mills, Kraft Heinz, J M Smucker, McCormick, Smithfield, JBS
+
+💡 **Ojo con una distinción que conviene hacer explícita en el reporte:** los *competidores operativos* (Flowers, PepsiCo, artesanal, marca privada) y los *comparables de valuación* (Gruma, Sigma, Kraft Heinz…) **no son el mismo conjunto**. Los reportes flojos los mezclan. Separarlos y decir por qué cada grupo sirve para qué es justo lo que pide `07` §3.3 cuando exige "construir un grupo de comparables" para el análisis competitivo.
+🟢 **Apalancamiento:** BI describe *"midteens Ebitda margins and financial leverage (net debt-to-Ebitda) **below 2x**"*.
+🔴 Pero la empresa reportó **2.5x** Deuda Neta/EBITDA ajustado en el 2T26 (−0.2x vs. dic-25). Definiciones distintas (IFRS-16, EBITDA ajustado vs. reportado). **Usar la cifra de la empresa** y explicar el puente si se cita la otra.
+
+🔴 **EPS diluido del modelo de BI vs. consenso:** 2025: 2.40 vs 2.68 · 2026: **3.12 vs 3.47** · 2027: **2.34 vs 3.89**.
+La brecha de 2027 es de ~40% y sería consistente con que BI ya modela la reversión de costos. **Leído de una tabla renderizada — verificar en MODL antes de citar.**
+
+---
+
+## 2. Circana Tracker (dentro del reporte de BI, sección fechada 19-may-26)
+
+*Datos de escáner de venta al consumidor en EE.UU., semana terminada el **3 de mayo de 2026**.*
+
+### 2.1 La descomposición volumen / precio
+
+🟢 **Variación año contra año, por ventana:**
+
+| | 1 sem | 2 sem | 4 sem | 13 sem | **52 sem** |
+|---|---|---|---|---|---|
+| **Bimbo — Ventas** | 1.2% | 3.8% | 1.2% | −0.7% | **−1.0%** |
+| **Bimbo — Volumen** | −4.5% | −3.8% | −1.6% | **−4.1%** | **−3.0%** |
+| **Bimbo — Precio** | 5.9% | 7.9% | 2.9% | 3.5% | **2.1%** |
+| Gruma — Ventas | −2.4% | 0.7% | −0.1% | −2.1% | −2.3% |
+| Gruma — Volumen | −4.1% | −1.7% | −1.2% | −2.7% | −2.0% |
+| Gruma — Precio | 1.7% | 2.4% | 1.2% | 0.6% | −0.3% |
+| Sigma — Ventas | −5.3% | −3.3% | −2.9% | −1.1% | 0.1% |
+| Sigma — Volumen | −4.8% | −3.3% | −3.3% | −2.3% | −1.7% |
+| Sigma — Precio | −0.5% | 0.0% | 0.5% | 1.3% | 1.8% |
+
+💡 **El dato ancla es la ventana de 52 semanas: volumen −3.0%, precio +2.1%, ventas −1.0%.** Todo el "crecimiento" en EE.UU. es precio, y ni siquiera alcanza para que las ventas no caigan. Una ventana de 52 semanas absorbe ruido y no depende de que calce con ningún trimestre reportado — por eso es la cifra defendible.
+
+💡 **Y los tres — Bimbo, Gruma y Sigma — tienen volumen negativo.** No es un problema de ejecución de Bimbo; es la categoría. Eso a la vez protege a Bimbo (no está perdiendo contra sus pares mexicanos en EE.UU.) y agrava el problema estructural (nadie está creciendo en volumen).
+
+### 2.2 Mezcla de categorías y participación
+
+🟢 **Composición de las ventas rastreadas de Bimbo:**
+- **Pan fresco y bollos: 54%**
+- Botanas saladas: 18%
+- Pastelería y donas: 13%
+- English muffins: 9%
+- Bagels y bialys: 6%
+
+🟢 **Participación de mercado por categoría:**
+- English muffins: **77.4%**
+- Bagels y bialys: **49.8%**
+- Pan fresco y bollos: **22.5%**
+- Pastelería y donas: **15.2%**
+- Botanas saladas: **3.5%**
+
+🟢 **Cambio de participación año contra año:**
+- **Pan fresco y bollos: −25 pb** ← su categoría más grande
+- English muffins: **+60 pb**
+- Botanas saladas: **+31 pb**
+
+🟢 BI: *"the key signal is **stability to modest improvement in the largest categories, not across-the-board gains**."*
+
+🔴 **Tensión con el discurso de la empresa, a manejar con cuidado.** En el 2T26 la administración dijo *"North America gained share in all categories in the U.S."* Los datos de Circana (al 3-may-26) muestran pérdida en pan fresco. **Pero:** los periodos no calzan (2T26 = abril–junio), el dato ya tiene **cuatro meses**, y **Circana solo mide canales minoristas rastreados** (no foodservice, no todo conveniencia/club). No es una contradicción demostrada. **Jalar el corte actual de la terminal — es un chequeo de 10 minutos** y convierte la tensión en hallazgo, o la cierra.
+
+### 2.3 Gruma como referencia cruzada
+
+🟢 Gruma: los alimentos mexicanos son **82% de sus ventas en EE.UU.**; harina/masa y botanas saladas ~8% cada una; pan fresco 2%. Participación de valor dominante de **46.2%, +50 pb** año contra año.
+💡 Útil para el peer set: Gruma **gana** share en su categoría mientras Bimbo **pierde** en la suya. Ese contraste, con las dos cifras al lado, es una figura de una sola línea que dice mucho.
+
+---
+
+## 3. JPMorgan — 2T26 (23-jul-26)
+
+🟢 **Calificación al momento del reporte: Underweight.** Precio Ps59.00. **PT Ps57** (fijado 22-jun-26).
+🟢 **Pero la lectura del trimestre fue positiva:** *"Our First Take: **Positive**."* → estaban bajistas **por valuación y estructura, no por ejecución**.
+
+🟢 **Historial completo de calificaciones (tabla del propio reporte):**
+
+| Fecha | Rating | Precio (Ps) | PT (Ps) |
+|---|---|---|---|
+| 12-oct-23 | N | 79.65 | 92 |
+| 01-nov-23 | N | 73.38 | 86 |
+| 21-ene-24 | N | 84.42 | 88 |
+| 02-abr-24 | N | 77.28 | 74 |
+| **22-abr-24** | **UW** | 69.08 | 65 |
+| 19-mar-25 | UW | 55.90 | 60 |
+| 14-jul-25 | UW | 50.59 | 63 |
+| 18-sep-25 | UW | 65.06 | 60 |
+| 25-nov-25 | UW | 58.56 | 55 |
+| 21-abr-26 | UW | 57.70 | **53** |
+| 22-jun-26 | UW | 58.74 | **57** |
+
+💡 **La narrativa:** JPM bajó a UW en abril 2024 con la acción en Ps69, acompañó la caída hasta Ps50, sostuvo UW con el PT bajando hasta Ps53 (abr-26)… y para el **3 de septiembre de 2026 ya aparece como "N-rated"** en sus notas sectoriales. **Capitularon después del 2T26.**
+🔴 **La nota de upgrade no está en la carpeta. Conseguirla** — el argumento del cambio de opinión es material.
+
+🟢 **Cifras del 2T26 contra estimados de JPM:**
+- Ventas **Ps105,026mn** (+2% vs JPMe; −2% y/y reportado; **+4.5% ex-FX**)
+- EBITDA ajustado **Ps15,113mn** (+1% vs JPMe; **+6.3% ex-FX**), margen **14.4%** (+50 pb)
+- **Utilidad neta mayoritaria Ps2,935mn — 11% por debajo de JPMe** (y 14.4% por debajo de consenso) por **mayores costos de financiamiento y efectos de FX**
+- Norteamérica: **+1.3% ex-FX**, margen **10.0%** (+100 pb), ganancias de share en todas las categorías de EE.UU.
+- México: ventas **+4.7%**, margen **20.7%** (+40 pb), EBITDA **3% arriba de JPMe** por volumen y dilución de gastos. **Apoyado parcialmente por el Mundial**
+- **La mayor sorpresa negativa: LatAm ex-México, por la integración de Wickbold (Brasil)** — margen −160 pb
+- Corporativo/eliminaciones fueron viento en contra (el año pasado fueron a favor)
+
+💡 **El hueco entre EBITDA y utilidad neta es el ángulo más rico aquí.** EBITDA en línea, utilidad neta 14.4% abajo de consenso. Eso es **estructura financiera**, y conecta con la divergencia de múltiplos: Bimbo cotiza a 6.5x EV/EBITDA (prima de 8% sobre pares mexicanos) pero a **20.8x P/E (prima de 37%)**. **Convierte EBITDA en utilidad peor que sus pares.** Construir el puente EBITDA → utilidad neta es material de 20 puntos.
+
+💡 **El Mundial** como apoyo temporal al consumo en México: hay que ajustarlo para no extrapolarlo. Es exactamente el tipo de "evento no recurrente" que el `Essentials` pide identificar.
+
+### 3.1 🟢 Notas de la conferencia telefónica — lo más valioso del documento
+
+**⭐ LA ADMINISTRACIÓN CONFIRMA LA TESIS DE COBERTURAS. Esto cambia el peso del argumento.**
+
+> *"**2027 input-cost risk flagged; hedging provides near-term visibility.** It was highlighted that **hedging has limited the immediate 2026 impact, but the environment looks tougher for 2027 as positions are taken at higher costs (wheat, resins, energy were called out)**."*
+
+💡 **Hasta ahora la tesis de §1.8 era una inferencia de Bloomberg Intelligence. Ahora es lo que dijo la propia empresa en su llamada del 2T26.** Eso la vuelve mucho más difícil de atacar: no es "creemos que el mercado extrapola mal", es "la administración ya avisó que 2027 viene más difícil **porque las nuevas posiciones de cobertura se están tomando a costos más altos**", y nombró exactamente los insumos — **trigo, resinas y energía**. Compárese con los spot al 14-sep-26: trigo +21.8% a un año, polietileno +15.6% en un mes, diésel +53.7% a tres meses (§6). **Todo cuadra.**
+
+🟢 **El capex: la respuesta a "¿recorte por disciplina o por atraso?" es AMBAS, y la empresa lo dijo.**
+
+> *"CapEx guidance cut on timing/phasing. Full-year CapEx was revised down to $1.0–$1.2bn (from $1.2–$1.4bn), framed as **phasing of investments amid evolving volume trends/market conditions**; **some projects were also described as running behind schedule / harder to execute**."*
+
+💡 **Buena pregunta, y el matiz importa mucho.** La administración enmarcó el recorte como *phasing* — neutro o positivo, porque mejora el flujo libre. Pero en la misma llamada admitió que **hay proyectos atrasados y más difíciles de ejecutar de lo esperado**. Son dos historias muy distintas:
+- **Si es phasing:** el capex se difiere y regresa en 2027 → el flujo libre de 2026 está inflado por un gasto que solo se pospuso.
+- **Si es ejecución:** el programa de transformación de EE.UU. —del que depende TODA la tesis de margen de Norteamérica (§1.7)— **va más lento de lo prometido**.
+- **En cualquiera de los dos casos, el "mejor flujo libre" de 2026 es de menor calidad de lo que parece.** Y "evolving volume trends" como justificación es, en realidad, una admisión de que el volumen no está respondiendo.
+
+💡 **Esta es exactamente la clase de lectura de calidad de utilidades que pide el `Essentials`** y una pregunta obligada para el Q&A.
+
+🟢 **El golpe de Irán se quintuplicó y aun así subieron la guía.**
+> *"The inflation hit tied to the Iran/geopolitical situation was described as **higher than previously expected (moving from ~US$15m previously discussed to ~US$70–$90m for the year)**, yet EBITDA margin expansion guidance still increased (implying underlying execution/productivity is offsetting incremental pressure)."*
+
+💡 Doble lectura otra vez: **positiva** (la productividad absorbió 5x más inflación y aun así subieron la guía — ejecución real) o **negativa** (la estimación de un riesgo geopolítico se movió 5x en un trimestre; ¿qué tan confiable es la del año que entra?). **Las dos son defendibles y hay que elegir.**
+
+🟢 **Don Don: el impulso inorgánico se acaba.** *"2Q26 should be the **last quarter** where Don Don still provides an inorganic boost, given the acquisition timing (May 2025)."*
+💡 **Desde 3T26 las comparaciones se vuelven puramente orgánicas.** Con volumen negativo en EE.UU., ese colchón desaparece justo en el trimestre que sale a finales de octubre — el último antes del deadline.
+
+🟢 **Eliminaciones: un swing de Ps380mn.** Las eliminaciones restaron ~**Ps90mn** en 2T26 contra un aporte **positivo de Ps290mn** en 2T25. JPM: *"This shift in eliminations is **the main reason consolidated EBITDA growth lagged the aggregate regional performance**."*
+💡 **Es decir: el EBITDA consolidado creció menos que la suma de las regiones por una partida contable, no operativa.** Hay que identificarla y normalizarla — es material de calidad de utilidades.
+
+🟢 **Debajo de la línea:** Otros gastos **Ps1.0bn (+103% vs JPMe, +24% a/a)**. Costo integral de financiamiento **Ps3.5bn (+9% vs JPMe, +4% a/a)**, reflejando *"**higher energy cost hedges and FX losses**"*, parcialmente compensado por menores intereses.
+💡 **Ojo:** las coberturas de energía ya están costando dinero **abajo de la línea operativa**. Es el mismo fenómeno de §1.8 apareciendo por otra vía.
+
+🟢 **Brasil / Wickbold:** LatAm ex-México vendió **Ps11.6bn (+11% vs JPMe, +8% a/a)** por la adquisición y price/mix favorable, **pero EBITDA Ps893mn (−7% vs JPMe, −10% a/a) con margen contrayéndose 157 pb a 7.7%**, por costos de integración. Management: las sinergias *"**will take time and are being pursued gradually to avoid operational risk**"*.
+💡 **Compraron crecimiento de ventas a costa de margen**, y la propia empresa dice que la recuperación será lenta. En una tesis donde LatAm es solo 6% del EBITDA, no mueve la aguja — pero **sí es un dato sobre la capacidad de integración de la empresa**, justo cuando dicen que quieren hacer más M&A (abajo).
+
+🟢 **China:** *"China branded weakness (EAA mix) — softness in China partially offset elsewhere; **remains a demand/trajectory swing factor**."*
+💡 Refuerza la tensión de §10: el discurso público es de inversión y optimismo en China; en la llamada con analistas es un *swing factor* de debilidad.
+
+🟢 **M&A:** *"M&A activity was described as **light in 1H (only a small Tunisia deal)**, while noting **expectations/hopes to close bolt-on acquisitions in 2H**, subject to timing."*
+💡 **Riesgo a vigilar:** una empresa que está desapalancando (2.5x → objetivo menor), con capex recortado y proyectos atrasados, diciendo que quiere cerrar adquisiciones en el 2S. **Si compran, el desapalancamiento se frena** — y el desapalancamiento es parte del argumento alcista. Además, Wickbold muestra que la integración les está costando margen. **Pregunta para el Q&A.**
+
+🟢 **México — lo que dijo la administración:** consumo *"resilient"*, demanda sostenida pese a que los consumidores aprietan el gasto; **confianza en que los niveles de margen de México son sostenibles** y ambición de largo plazo de seguir mejorándolos. Estrategia: *"balanced price-pack/value proposition, targeted mix, innovation, strong point-of-sale execution, continued distribution network expansion"*. Por canal, **conveniencia destacó**, ayudado por estacionalidad y el Mundial.
+
+🟢 **EE.UU. — a qué atribuyen la recuperación:** *"the turnaround to positive growth and share gains was attributed primarily to **improved commercial execution (including DSD execution)** alongside **disciplined pricing and promotions**."*
+💡 **Contrastar con Numerator (§5bis): penetración cayendo de 43% a 39.6% y frecuencia de 2.9 a 2.7.** La empresa dice "mejor ejecución y ganancia de share"; los datos de panel de hogares dicen que **cada vez menos hogares compran Bimbo, y menos seguido**. Esa es la tensión central del reporte.
+
+---
+
+## 4. JPMorgan — IEPS (03-sep-26 y 09-sep-26)
+
+🟢 **Nota del 3 de septiembre — el riesgo.** México entraba a *"un tercer año consecutivo de escalada del IEPS 'impuesto saludable'"* con el Paquete Económico 2027 por entregarse antes del 8 de septiembre. Se debatían tres medidas:
+1. Cambio del IEPS a alcohol de **ad valorem** (26.5%/30%/53% según graduación) a **cuota por litro de alcohol puro**
+2. **Impuesto inédito a productos altos en sodio** (carnes procesadas, botanas fritas, salsas, sopas instantáneas)
+3. **Subir la tasa de alimentos no básicos de alta densidad calórica del 8% al 20%** (menor convicción)
+
+🟢 JPM identificaba a **Bimbo como el claro perdedor** de la medida 3, y a Sigma de la 2.
+
+🟢 **Nota del 9 de septiembre — la resolución.** El Paquete se entregó y **no incluyó ninguna de las tres**. *"We found **no evidence of a sodium tax, a higher IEPS rate on non-basic high-calorie foods, or changes to the current alcohol-tax framework**... The clearest relief is for OW-rated Sigma Foods... and **N-rated Bimbo**."*
+- El aumento del IEPS total en 2027 es **principalmente por combustibles**, no productos de consumo
+- El paquete se apoya en *"enforcement, tax-base protection, and limits to deductions rather than new consumption taxes"*
+- **Sin aumento real en gasto social** — consistente con un consumo mexicano débil
+
+💡 **Tres cosas para el reporte:**
+1. **Bimbo ya paga 8% de IEPS** sobre alimentos no básicos de alta densidad calórica. Eso es un hecho actual, no un riesgo.
+2. **El riesgo de aumento se descartó el 9 de septiembre de 2026.** Escribir "riesgo de alza del IEPS" sin decirlo es citar un riesgo muerto, y un juez mexicano lo sabrá.
+3. **Pero vuelve cada septiembre.** Es el tercer año consecutivo que se debate. Riesgo regulatorio recurrente **con calendario conocido** — así hay que ponerlo en la matriz.
+
+💡 **Y va en contra de la tesis bajista de corto plazo:** un overhang que se disipa puede provocar rerating al alza justo ahora. Probablemente explica parte del upgrade de JPM.
+
+🟢 El matiz de JPM sobre elasticidad: aunque las marcas fuertes permiten traspasar el impuesto, *"cualquier traspaso llegaría en un momento en que **el ingreso disponible sigue presionado y la elasticidad es elevada**, aumentando el riesgo de **sustitución a la baja** y de debilidad en la demanda."*
+💡 Con el volumen de Bimbo en EE.UU. cayendo 3%, la elasticidad no es un tema abstracto.
+
+---
+
+## 5. Barclays — LatAm Consumer (29-jul-26) y Mexico Coverage Update (04-ago-26)
+
+🟢 **Bimbo: Overweight, PT P$75, sin cambio.** Precio P$61 al 3-ago-26 → **+22% de upside** según Barclays.
+🟢 Bimbo entre las compañías que *"saw either stable or modestly improved earnings assumptions"* tras resultados, junto con Arca Continental, Becle y Sigma. Las revisiones a la baja se concentraron en **Alsea, Gruma, Chedraui y Walmex**.
+🟢 Sin cambios de calificación tras resultados en toda la cobertura.
+
+🟢 **Tabla de comparables mexicanos (al 3-ago-26):**
+
+| Empresa | Precio | PT | Upside | Rating | Cap. (mn) | EV/EBITDA 26 | EV/EBITDA 27 | P/E 26 | P/E 27 | Div. yield 26 | Payout |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| Alsea | 42 | 58 | 39% | OW | 33,368 | 4.7x | 4.5x | 16.2x | 12.3x | 3.0% | 45% |
+| Arca Continental | 196 | 235 | 20% | OW | 332,217 | 7.7x | 7.3x | 16.8x | 15.0x | 4.7% | 80% |
+| Becle | 16 | 16 | 1% | EW | 56,884 | 8.5x | 7.9x | 14.7x | 13.4x | 4.9% | 32% |
+| **Bimbo** | **61** | **75** | **22%** | **OW** | **263,838** | **6.5x** | **6.1x** | **20.8x** | **19.0x** | **1.8%** | **33%** |
+| CEMEX | 12 | 16 | 35% | OW | 17,275 | 6.0x | 5.5x | 14.2x | 11.8x | 1.0% | 15% |
+| Coca-Cola FEMSA | 107 | 122 | 14% | EW | 22,481 | 7.4x | 6.9x | 16.0x | 15.4x | 0.4% | 63% |
+| Liverpool | 105 | 100 | −5% | UW | 140,458 | 5.3x | 4.7x | 6.9x | 6.4x | 2.8% | 19% |
+| FEMSA | 126 | 138 | 10% | EW | 42,915 | 5.9x | 5.1x | 20.7x | 22.6x | 0.3% | 47% |
+| Gruma | 264 | 275 | 4% | UW | 88,752 | 5.9x | 5.7x | 11.3x | 11.0x | 2.1% | 22% |
+| Chedraui | 91 | 105 | 16% | EW | 87,302 | 5.8x | 5.4x | 13.1x | 11.3x | 1.1% | 15% |
+| Kimberly-Clark de México | 40 | 45 | 12% | EW | 119,835 | 8.8x | 8.6x | 15.2x | 14.6x | 5.8% | 93% |
+| **Mediana** | | | 14.0% | | | **6.0x** | **5.7x** | **15.2x** | **13.4x** | 2.1% | 32.7% |
+
+💡 **El hallazgo de esta tabla:** Bimbo cotiza a **6.5x EV/EBITDA** (mediana 6.0x → prima de **8%**) pero a **20.8x P/E** (mediana 15.2x → prima de **37%**). **Esa divergencia es apalancamiento y carga financiera** — y cuadra exactamente con la utilidad neta 14.4% abajo de consenso en el 2T26. Es un ángulo propio, con datos citables, que alimenta Valuation y Financial Analysis a la vez.
+
+💡 **Nota de contexto macro (Barclays):** inflación anual de México se desaceleró a **3.1%** a principios de julio, pero la **subyacente sigue elevada en 3.95%**. Remesas cayendo año contra año en pesos (por apreciación del peso), positivas en dólares. **La economía mexicana rebotó más de lo esperado en 2T26**, apoyada en exportaciones récord.
+
+🔴 **Precisión importante sobre la postura de Barclays:** el sector **Mexico Consumer está en NEUTRAL** (*"We remain Neutral on the Mexico Consumer sector"*). **Bimbo está en Overweight dentro de un sector neutral.** No es lo mismo decir "Barclays es alcista en Bimbo" que "Barclays es alcista en consumo mexicano" — hay que usar la formulación precisa.
+
+🟢 **La tesis sectorial de Barclays, y es la misma conclusión que BI por otro camino:**
+> *"Across our coverage, **productivity and execution rather than demand recovery, have become the primary drivers of earnings growth**... **A common theme was that future earnings growth is increasingly expected to come from operational execution rather than top-line acceleration.** Companies highlighted **productivity programs, procurement initiatives, supply chain efficiencies, automation investments, pricing discipline, and tighter cost controls** as key drivers of profitability."*
+
+💡 **Las tres casas convergen en lo mismo:** BI dice *"rerating upside is more limited than execution upside"*; Barclays dice que el crecimiento vendrá de ejecución y no de demanda; JPM atribuye la recuperación de EE.UU. a ejecución comercial. **Nadie cree que la demanda vaya a rescatar a nadie.** Eso enmarca toda la tesis: la pregunta no es si el mercado crece, es si Bimbo ejecuta.
+
+---
+
+## 5bis. Barclays — Mexico Consumer Coverage Update (04-ago-26): NielsenIQ y Numerator
+
+**Este bloque es datos de terceros sobre el desempeño de Bimbo en EE.UU. — panel de hogares y escáner. Es la evidencia más granular de toda la carpeta.**
+
+### 5bis.1 Mezcla de categorías (NielsenIQ, composición de ventas de junio)
+
+🟢 **Figura 11 — categorías principales de Bimbo dentro de Grocery:**
+
+| Categoría | % |
+|---|---|
+| **BREAD** | **40.7%** |
+| ROLLS AND BUNS | 17.5% |
+| SWEET SNACKS | 17.0% |
+| SALTY SNACKS | 11.4% |
+| BAGELS | 10.0% |
+| OTHERS | 3.5% |
+
+🔴 **No cuadra con la mezcla de Circana que reporta BI (§2.2).** Comparación directa:
+
+| | NielsenIQ (jun-26) | Circana vía BI (may-26) |
+|---|---|---|
+| Pan (+ rolls/buns) | 40.7% + 17.5% = **58.2%** | "Fresh bread and rolls" **54%** |
+| Botanas saladas | **11.4%** | **18%** |
+| Dulce / pastelería | **17.0%** | "Pastry and doughnuts" **13%** |
+| Bagels | **10.0%** | "Bagels and bialys" **6%** |
+| English muffins | *(en "Others"?)* | **9%** |
+
+Son taxonomías y coberturas de canal distintas (NielsenIQ y Circana miden universos de minoristas diferentes). 💡 **Regla práctica: elegir UNA fuente para la gráfica de mezcla de categorías y no mezclarlas nunca en la misma figura.** Si se usan las dos, hay que decir explícitamente que las definiciones difieren.
+
+### 5bis.2 ⭐ Penetración y comportamiento de compra (Numerator) — la mejor evidencia de la carpeta
+
+🟢 **Figura 14 — penetración de pan empaquetado de Bimbo en EE.UU.:**
+
+| Fecha | Penetración |
+|---|---|
+| Jun-24 | **43.0%** |
+| Ago-24 | **43.8%** (pico) |
+| Dic-24 | 42.0% |
+| Feb-25 | 42.8% |
+| Jun-25 – Dic-25 | ~41–42%, deslizándose |
+| Feb-26 | 42.2% (rebote breve) |
+| **Jun-26** | **~39.6%** |
+
+**Caída de ~3.4 puntos porcentuales en dos años — y se acelera brutalmente en 1S26: de 42.2% en febrero a 39.6% en junio, −2.6 pp en cuatro meses.**
+
+🟢 **Figura 15 — comportamiento de compra:**
+
+| | Jun-24 | Jun-26 | Cambio |
+|---|---|---|---|
+| **Frecuencia promedio de compra** | 2.9 veces | **2.7 veces** | **↓** |
+| **Gasto promedio por viaje** | ~$4.38 | **~$4.47** | **↑** |
+
+Y el detalle de calendario: **el gasto por viaje se dispara justo a partir de febrero de 2026** — exactamente cuando la penetración empieza a caer más rápido.
+
+💡 **⭐ ESTA ES LA PIEZA MÁS FUERTE DE TODA LA INVESTIGACIÓN. La firma completa de una franquicia que se está cosechando vía precio:**
+
+> **Menos hogares compran Bimbo** (penetración 43% → 39.6%) · **los que quedan compran menos seguido** (2.9 → 2.7 veces) · **pero pagan más por viaje** ($4.38 → $4.47).
+
+Y es **confirmación independiente** de la descomposición de Circana (§2.1: volumen −3.0%, precio +2.1%): **Numerator es panel de hogares, Circana es escáner de punto de venta. Dos metodologías distintas, dos proveedores distintos, la misma conclusión.** Eso es exactamente lo que da solidez a un hallazgo.
+
+💡 **Y la relación causal tiene fecha:** la aceleración del gasto por viaje (feb-26) coincide con la aceleración de la caída de penetración. **Las alzas de precio están sacando hogares de la franquicia.** Eso cierra el círculo con el CPI > PPI de §9.4 — el consumidor absorbe el alza y responde comprando menos, o dejando de comprar.
+
+💡 **Contraste directo con lo que dijo la administración en la llamada del 2T26:** *"the turnaround to positive growth and share gains was attributed primarily to improved commercial execution... alongside disciplined pricing and promotions."* **Los datos de junio de 2026 —más recientes que el Circana de mayo— muestran la penetración en mínimo de dos años.** Esta es la tensión que hay que poner en el centro del Investment Summary.
+
+### 5bis.3 A dónde se va el share: brand shifting (Numerator, YTD)
+
+🟢 **Pan empaquetado:**
+- **Pierde ventas sobre todo hacia:** **Lewis Brothers Bakeries** (privada, no cubierta) y **marca privada** — **76% y 74%** del brand shifting total YTD, respectivamente
+- **Gana ventas sobre todo de:** **Flowers Foods** (82%) y **Campbell's** (18%)
+
+🟢 **Panadería empaquetada:**
+- Pierde hacia: **Lewis Brothers (25%)** y **marca privada (24%)**
+- Gana de: **Flowers Foods (15%)** y **Campbell's (10%)**
+
+🟢 **Botanas:**
+- Pierde hacia: **marca privada (16%)** y **Frito-Lay (11%)**
+- Gana de: **Bon Appetit Danish (1%)**
+
+🔴 **Nota de método:** en pan empaquetado los porcentajes de pérdida (76% + 74%) suman más de 100%, así que **no son participaciones de un mismo total**. Lo más probable es que midan, por cada competidor, qué proporción de *su* ganancia vino de Bimbo — pero el reporte no lo define. **Antes de citar los porcentajes hay que entender el denominador**; lo que sí es robusto y citable es **la dirección**: pierde contra Lewis Brothers y marca privada, gana contra Flowers Foods y Campbell's.
+
+💡 **Tres lecturas que valen puntos:**
+1. **Bimbo le gana a Flowers Foods y pierde contra marca privada y una panificadora privada regional.** O sea: **gana la batalla de marcas y pierde la de precio.** Eso es exactamente lo que esperarías de una marca premium en un consumidor que busca valor — y es coherente con la prima de precio de marca nacional de §9.3.
+2. **Lewis Brothers Bakeries** aparece como principal ganador y **no lo cubre ningún analista** (es privada). 💡 **Ese es el tipo de competidor que no aparece en ningún reporte de sell-side y que el equipo sí puede investigar** — vale la pena buscar quién es, dónde opera y por qué está ganando. Podría ser un hallazgo diferenciador.
+3. **En botanas el balance es brutal:** pierde 16% a marca privada y 11% a Frito-Lay, y solo gana 1% de una empresa minúscula. **Con 3.5% de share, en la categoría de mayor prima de precio (48%, §9.3), contra PepsiCo. Es la posición más débil del portafolio.**
+
+🟢 **Figuras 20 y 21 — descomposición del cambio de gasto** (pan empaquetado y panadería empaquetada), en tres componentes: **Category Churn · Category Expansion/Contraction · Brand Shifting**, con totales de cambio en gasto y en unidades. Rango de pan empaquetado ~−6% a +1%; panadería empaquetada ~−10% a +1%.
+💡 **Esa descomposición de tres vías es más rica que el split precio/volumen** y permite decir si Bimbo pierde porque la categoría se contrae, porque los hogares rotan, o porque pierde contra marcas. **Vale la pena reconstruirla como figura propia.**
+
+🟢 **Contexto:** *"Bimbo, Gruma y Becle sales declined in May and June, according to NielsenIQ. Numerator data suggests a **mixed performance in U.S. penetration and purchase frequency** for Bimbo and Gruma."*
+
+---
+
+## 6. Bloomberg SPLC — Supply Chain Analysis (capturas, al 14-sep-26)
+
+🟢 **81 proveedores · 49 clientes · 277 instalaciones propias**
+
+🟢 **Concentración de clientes (% de ingresos de Bimbo):** Walmart **15.00%** · Costco 5.57% · Cencosud 2.81% · Kroger 2.16% · FEMSA 1.75% · Soriana 1.65% · Target 1.58% · Sainsbury 1.28% · Chedraui 1.20% · Ahold Delhaize 0.82% · Albertsons 0.79% · La Comer 0.40%
+💡 **Los cuatro grandes minoristas de EE.UU. (Walmart, Costco, Kroger, Target) ≈ 24% de los ingresos.**
+
+🟢 **Concentración de proveedores (% de costos de Bimbo):** Barry Callebaut (cacao) **1.38%** · Beta San Miguel (azúcar) 1.23% · Microsoft 1.21% · Fábrica de Galletas La Moderna 0.89% · Bunge (aceites/granos) 0.82% · DSM-Firmenich 0.38% · Efform (empaque) 0.30%
+💡 **Ningún proveedor supera 1.4% de los costos.**
+
+💡 **LA ASIMETRÍA — Porter con números:**
+- **Poder de compradores: ALTO.** Walmart es **15% de los ingresos de Bimbo**, pero Bimbo es apenas **0.63% de los costos de Walmart**.
+- **Poder de proveedores: BAJO.** 81 proveedores, ninguno arriba de 1.4%.
+- **Pero al revés en México/LatAm:** Bimbo pesa **4.63% en los costos de Soriana**, **4.63% en La Comer**, **5.24% en Cencosud**. Ahí sí tiene poder de precio → **ayuda a explicar por qué el margen de México (20.7%) duplica al de NA (10.0%)**.
+
+🟢 **Precios de insumos al 14-sep-26** (1M / 3M / 1A): Crudo +25.20/+32.74/**+64.22%** · Gasolina +15.68/+31.15/**+80.73%** · Diésel +27.01/**+53.73%**/— · Maíz +3.86/+28.68/**+32.24%** · Trigo +4.71/+17.97/**+21.81%** · Soya +9.37/+15.22/**+20.32%** · Cacao +4.33/**+52.02%**/−13.44% · Polietileno **+15.55%**/+15.16/— · Azúcar +8.17/+26.31/+14.06% · Avena +13.83/+15.76/+10.39% · Gas natural +3.48/−9.06/−26.44%
+💡 **El trigo ya subió 21.81% en el año — más que el +15.6% que BI modelaba para 2026.** La reversión "que venía después" ya empezó.
+
+🟢 **Exposición geográfica:** EE.UU. **42.23%** de ingresos con **147 instalaciones** (53.07%) y 834 de proveedores · México **42.48%** de ingresos con **31 instalaciones** (11.19%) y 28 de proveedores · China 3.56% · Canadá 2.00% · Alemania 1.05% · Japón 0.84% · Reino Unido 0.76% · India 0.73%
+💡 **Mismo ingreso, 4.7x más plantas en EE.UU. que en México.** Explicación estructural del diferencial de margen, y reencuadra la "transformación" de EE.UU. como **reducción de costo fijo**, no historia de crecimiento.
+
+🟢 **Riesgos:** sin proveedores ni clientes sancionados · ningún proveedor en distress · **1 cliente en distress**
+🟢 **Crecimiento de ventas de consenso de clientes clave:** Walmart +5.60% · Costco +9.68% · Kroger +2.41% · **Soriana −2.97%** · Chedraui −0.21% · Albertsons −1.43%
+🟢 **Riesgo crediticio de Bimbo: IG6**, con crecimiento de ventas de consenso de **−0.46%** (en pesos reportados, por traducción de FX)
+🟢 **Desempeño relativo a 3 meses:** Bimbo **−4.52%** · M Dias Branco −9.07% · Grupo Nutresa +0.65% · **Gruma −20.83%** · Minerva +7.94%
+
+---
+
+## 7. Bimbo ESG — Bloomberg Intelligence
+
+🟢 **Score ESG agregado: 5.63** (último), **5.17** en 2024 (último año completo) → **percentil 96** vs. pares de Packaged Food
+🟢 **Por pilar (percentiles): Ambiental 93 · Social 96 · Gobernanza 58**
+🟢 Ponderación de la industria: **E 40% · S 30% · G 30%**
+🟢 Score ambiental **5.39, lidera a sus pares**. Disclosure ambiental **0.65 de 1**. Los temas de mayor peso en la industria son **producto sostenible y gestión de energía**.
+
+🟢 **De las capturas SPLC (pestaña Sustainability):** GHG alcance 1+2 intensidad **69.37** · Riesgo físico **7.21** · Estrés hídrico **42.29** · RepRisk conducta de negocio **BB**
+Comparación de intensidad GHG: Walmart 23.04 · Costco 12.24 · Kroger 41.40 · Sainsbury 16.66 · **Bimbo 69.37**
+
+🟢 **Cadena de suministro:** 13.58% de proveedores con GHG alto vs. pares (11) · 14.81% con riesgo de conducta (12) · 22.22% con estrés hídrico alto (18) · 2.47% rezagados en ESG (2)
+
+💡 **DOS ÁNGULOS ESG QUE VALEN PUNTOS:**
+1. **Gobernanza en percentil 58 contra E en 93 y S en 96.** Apenas sobre la mediana, y G pesa 30%. Es exactamente lo esperable en una empresa de **control familiar (Servitje)** y conecta directo con el análisis de consejo, independencia y sucesión que pide `07` §3.8.
+2. **Excelente score ESG con intensidad de carbono alta** (69.37 vs. 23.04 de Walmart). **Desempeño de divulgación ≠ desempeño ambiental.** Un reporte que señale esa distinción, con los dos números, está haciendo análisis y no relaciones públicas.
+
+---
+
+## 8. Agricultura Regenerativa (comunicado, 09-sep-26)
+
+🟢 **Más de 500,000 hectáreas** bajo prácticas de agricultura regenerativa al cierre de 2025, **+73%** contra las 290,000 de 2024
+🟢 Meta 2050: **100% de los ingredientes clave** de tierras con prácticas regenerativas. Meta 2030: mantener y fortalecer
+🟢 Socios en **Canadá, EE.UU., Brasil, Reino Unido y México**; colabora con el **CIMMYT**. **570+ agricultores capacitados**
+🟢 Contexto FAO: **más del 50% de los suelos agrícolas del mundo están degradados**, y podría llegar a **90% para 2050**
+🟢 En 2025 el programa se formalizó en Brasil y se lanzó el **primer programa en Europa (Reino Unido)**
+
+🟢 **Ficha de la compañía (del mismo comunicado, citable):** presencia en **99 países**, operación directa en **39**, otros 60 vía alianzas · **250 panaderías** · **1,600+ centros de venta** · **55,000+ rutas** (de las mayores redes DSD del mundo) · **152,000+ colaboradores** · ventas anuales **>US$23bn** · BMV y ADR nivel 1 en EE.UU. (**BMBOY**)
+
+💡 Vínculo con la tesis de costos: si el trigo es **37% de la canasta de México** y el programa regenerativo toca trigo y maíz vía CIMMYT, **hay una historia de resiliencia de insumos** — pero hay que ser honesto sobre la escala: 500,000 ha suena grande hasta que se compara con el consumo total de trigo de la empresa. **Buscar ese denominador.**
+
+---
+
+## 9. Industry US — North America Packaged Food 2026 Outlook (Bloomberg Intelligence)
+
+🟢 **Tesis (31-dic-25):** *"Packaged-food companies will need **higher volume** in 2026 to support top- and bottom-line growth. **Weak demand and limited pricing power** could force more deals to spur consumer uptake. The uptake of **GLP-1 drugs** will require companies to shift portfolios, and innovation will be key. **Stabilizing costs are conducive to margin reliability**."*
+
+🟢 **Actualización (09-sep-26):** *"Food producers are **cautious on guidance and their ability to restore organic volume growth**, making **cost control a priority** to protect margins and support profitability."* Y: *"**Competition from peers and private-label brands remains a headwind**, increasing the need for **product differentiation and more efficient value creation**."*
+
+🟢 **Marcador del sector:** el índice de Packaged Foods subió **solo 2% en el año hasta agosto**, contra **+12.3% del S&P 500**. BI atribuye la divergencia a *"softer operating backdrop, including **supply and energy-cost shocks** and weaker consumer confidence"*.
+
+### 9.1 Los tres Key Drivers de BI
+
+| Driver | Semáforo | Qué dice BI | Empresas señaladas |
+|---|---|---|---|
+| **Volume Recovery in Focus** | 🟡 | Los productores insisten en que pueden levantar volumen en el 2S, *"however this may be difficult amid a backdrop of weaker consumer spending"*. Esperar **más marketing y promociones**, y más inversión en innovación | KHC, K, CPB, SJM, KLG |
+| **Working Capital May Increase** | 🟡 | Pueden **subir inventario anticipando disputas comerciales y disrupción de cadena de suministro**. *"This could be a **headwind to cash ratios and cash flow**"* | CPB, GIS, KHC, MKC |
+| **Private Label Eats Up More Share** | 🔴 | La marca privada *"is poised to gain more share"*, apoyada en **inversión de los minoristas en calidad y precio** y en la **demanda de valor** del consumidor. Las categorías con mayor exposición enfrentan **mayor presión de volumen** | KHC, CAG, SJM, CPB |
+
+💡 **Working capital es el driver menos obvio y el más aprovechable.** Si el sector sube inventarios por miedo a aranceles y disrupción, eso **consume caja sin tocar el EBITDA**. Para Bimbo conecta con dos cosas que ya tenemos: (a) el capex recortado a US$1.0–1.2bn que la administración presentó como historia de flujo libre — pero el flujo libre también depende del capital de trabajo; y (b) **Bimbo genera ~Ps. 12 mil millones de flujo libre en el trimestre y está desapalancando**. 💡 **Vale la pena revisar el ciclo de conversión de efectivo de Bimbo (días de inventario, cuentas por cobrar y por pagar) y ver si ya se está estirando.** Si el capex baja pero el capital de trabajo sube, el flujo libre "mejorado" es menos real de lo que parece. Eso es análisis de calidad de utilidades de 20 puntos y **nadie más lo va a mirar**.
+
+### 9.2 🔴 La contradicción de marca privada — buen ojo, y la resolución tiene matiz
+
+**Tenías razón en sospechar.** El mismo documento dice las dos cosas:
+
+| Fuente dentro del reporte | Qué dice |
+|---|---|
+| **Panel de Key Drivers** (sin fecha visible) | *"**Private Label Eats Up More Share** — private label is **poised to gain** more share in the US Food and Beverage market"* |
+| **Sección 9** (25-jun-26) | *"**Big Food Wins Back Ground, Stanching Growth by Private Label**"* |
+| **Sección 11** (25-jun-26) | *"**National Brands' Sales Growth Continues to Outpace Private Label**"* |
+| **Sección 13** (25-jun-26) | *"National brands **increased their share** of food and beverage sales by **0.38 pp to 77.8%** in the 52 weeks through May 17, according to Circana, **as private label penetration fell**"* |
+
+**Los números concretos (25-jun-26):**
+- Marcas nacionales: **+3–4% en 2026**, contra +2.9% en 2025 → **acelerando**
+- Marca privada: **+2–3%**, contra **+3.7% en 2025** → **desacelerando**
+- Marca privada sobre base reportada: **apenas +0–1%**
+
+**La resolución, y aquí está el matiz que importa:** 🔴 **buena parte del "triunfo" de las marcas nacionales es un artefacto de los huevos.**
+
+> BI, textual: *"Private label sales are set to rise just 0-1% on a reported basis, **hampered by deflation for fresh eggs** as supplies normalize from the avian flu disruptions of 2024-25. The category is a **significant drag on private label because it holds 69% of the retail market for fresh eggs**."*
+
+Y sobre el cambio de participación: *"The shift **likely reflects less trading down by consumers as egg prices normalized**."* El mayor movimiento fue en **lácteos**, donde la marca privada perdió **2.54 puntos**.
+
+💡 **Cómo leerlo correctamente:**
+1. **Excluyendo huevos frescos, la marca privada sigue creciendo 2–3%.** El +0–1% reportado está distorsionado por una categoría donde tiene 69% del mercado y donde hubo deflación por normalización de la gripe aviar.
+2. El panel de Key Drivers (visión estructural) y los datos de junio (visión de corto plazo) **no se contradicen de verdad: miden cosas distintas.** La marca privada perdió terreno en 2025-26 por un efecto de mezcla de una sola categoría; la tendencia estructural que BI sigue señalando es de ganancia.
+3. **En pan, que es lo que importa para Bimbo, la marca privada tiene 16.3% del valor contra 16.7% de Bimbo** — prácticamente empatadas. Ahí no hay efecto huevo que valga.
+
+💡 **Ese desmontaje —"el titular dice X, pero X está distorsionado por una categoría, y al ajustarlo dice lo contrario"— es exactamente el tipo de análisis que el `Essentials` de CFA describe como responsabilidad del analista.** Si va bien escrito, vale puntos reales.
+
+🟢 **Bimbo no aparece en ninguna de las listas de empresas expuestas** (KHC, CAG, SJM, CPB). Vale la pena preguntarse por qué: probablemente porque BI cubre a Bimbo desde Consumer Staples LatAm y estas listas son de large caps estadounidenses. **No asumir que Bimbo está a salvo** — con marca privada al 16.3% en su categoría principal, la exposición es alta.
+
+### 9.3 Brecha de precio de marca nacional vs. marca privada (Circana, año hasta 17-may)
+
+🟢 Las marcas nacionales mantienen prima en casi todas las categorías, y **las brechas han estado estables desde 2024**. Marcas de tienda típicamente **20–66% por debajo** de las nacionales:
+
+| Categoría | Prima de la marca nacional |
+|---|---|
+| Lácteos | **66%** |
+| **Botanas saladas** | **48%** |
+| Café | 29% |
+| **Galletas y crackers** | **28%** |
+| Comidas congeladas | 21% |
+| **Dulces** | **−44%** (única categoría donde la marca nacional cotiza con **descuento**, y se amplió 11.7 pp desde 2024) |
+
+🟢 *"though investment by branded food producers such as **General Mills and Kraft Heinz to lower pricing** could narrow the difference"*
+
+💡 **Para Bimbo:** botanas saladas (48% de prima) es donde tiene solo 3.5% de share, y galletas/crackers (28%) es territorio de Marinela. **Una prima de 48% en una categoría donde eres el #4 es frágil** si el consumidor está buscando valor. Y si GIS y KHC bajan precios para cerrar la brecha, la presión se traslada a todos.
+
+### 9.4 CPI vs. PPI — qué son y por qué el dato importa
+
+🟢 Cita de BI (01-jul-26): *"The **Consumer Price Index for food at home** has remained in the low-single digits but **has outpaced the Producer Price Index (PPI)** in recent months, **signaling consumers are taking the brunt of higher food costs**. As produce prices have risen from **food and energy volatility tied to the US-Iran war**, food companies need to remain **selective on pricing** to maintain still-low volume."* BI espera precios minoristas **en el extremo alto del rango de 1–3%** para el año.
+
+**Qué mide cada uno:**
+
+| | **CPI — Consumer Price Index** | **PPI — Producer Price Index** |
+|---|---|---|
+| **Quién lo paga / recibe** | Lo que **paga el consumidor** en el anaquel | Lo que **recibe el productor** al salir de la fábrica |
+| **Punto de la cadena** | Final — precio de venta al público | Intermedio — precio al mayoreo, antes del margen del minorista |
+| **"Food at home"** | Comida comprada en súper para preparar en casa (excluye restaurantes) | Precio que el fabricante de alimentos cobra al minorista |
+| **Quién es Bimbo aquí** | — | **Bimbo vive del lado del PPI.** Le vende a Walmart, no al consumidor final |
+
+💡 **Por qué la brecha importa, y es un dato mejor de lo que parece a primera vista.** Que el **CPI crezca más rápido que el PPI** significa que **el precio al consumidor sube más de lo que sube el precio que recibe el fabricante**. La diferencia se la queda alguien en medio: **el minorista**. Tres consecuencias para Bimbo:
+
+1. **El minorista está capturando el spread, no Bimbo.** Bimbo enfrenta costos de insumos al alza (trigo +21.8%, diésel +53.7%) pero no está trasladando esa inflación al mismo ritmo al que el precio de anaquel sube.
+2. **Conecta directo con la concentración de clientes.** Walmart es 15% de los ingresos de Bimbo y Bimbo apenas 0.63% de los costos de Walmart (§6). **Esa asimetría es precisamente el mecanismo por el cual el minorista se queda el spread.** El CPI > PPI no es un dato macro suelto: es la medición agregada del poder de negociación que ya documentamos.
+3. **Y explica la caída de volumen.** Si el consumidor absorbe el alza *"taking the brunt"*, es el consumidor el que reacciona — y reacciona **comprando menos**. Eso cuadra con el volumen de Bimbo en EE.UU. en **−3.0% a 52 semanas** (§2.1) y con que la marca privada esté empatada con Bimbo en pan.
+
+💡 **La cadena completa, que se puede escribir como un solo párrafo en el reporte:** costos de insumos suben → Bimbo no puede trasladarlos del todo porque Walmart tiene el poder → el minorista sí sube el precio de anaquel → el consumidor paga más → el consumidor compra menos o se va a marca privada → cae el volumen de Bimbo. **Cada eslabón de esa cadena tiene un número y una fuente.** Eso es una tesis de industria, no una descripción.
+
+### 9.5 Precio vs. volumen: el motor se está agotando
+
+🟢 BI (11-may-26), sección *"Packaged-Food Producers May Miss Lofty Volume Target"*:
+
+> *"Most packaged-food producers are cautiously optimistic that they can spur volume growth in 2026, but **gains might remain elusive** amid a backdrop of dampened consumer spending. Pricing and volume mix last year is indicative of the challenging market dynamics, **with only McCormick seeing consistent volume expansion**. **Companies have primarily relied on price hikes to fuel organic-sales growth, but as price increases begin to moderate producers may need to increase investments in innovation and marketing to buoy volume.** An accelerated promotional environment is likely, which **may portend weaker profitability for some**."*
+
+💡 **"Only McCormick seeing consistent volume expansion"** — de todo el sector, una sola empresa. Eso reencuadra el volumen negativo de Bimbo: **no es fracaso de Bimbo, es el estado de la industria.** Sirve para dos cosas opuestas en el reporte y hay que elegir cuál:
+- **Defensa:** Bimbo no lo está haciendo peor que sus pares.
+- **Acusación:** si toda la industria depende de precio y el precio se está moderando, **el crecimiento de 4.8% CAGR que el consenso proyecta para EE.UU. no tiene de dónde salir**.
+
+💡 Y el corolario de margen: *"an accelerated promotional environment is likely"*. **Más promoción = menos margen.** El consenso proyecta expansión de margen al mismo tiempo que BI proyecta más promociones. Otra tensión que el equipo puede explotar.
+
+### 9.6 Fletes: el viento a favor que se acaba
+
+🟢 BI (sección 8): *"Food retailers have largely **benefited from lower freight rates in the past year**, but a **contractual-truckload increase could signal greater margin pressure in 2H**. Truck contractual rates have started to **inflect higher** due to a rising spot market. **Federal mandates, demographics, a recent Supreme Court ruling and bankruptcies will likely drive more capacity out of the market, lifting rates and creating a structural increase in costs**."*
+
+🟢 Los factores que sacan capacidad del mercado: **aplicación más estricta del requisito de dominio del inglés** y **mayor escrutinio a licencias comerciales (CDL) de no domiciliados**, lo que **reduce la oferta de conductores**.
+
+💡 **Esto es material para Bimbo por encima del promedio del sector.** Bimbo opera **55,000+ rutas** — una de las mayores redes DSD del mundo. Su modelo es intensivo en transporte por definición. Y ya tenemos el dato que lo confirma por otro lado: **diésel +27% en un mes y +53.7% en tres meses** al 14-sep-26 (§6).
+
+💡 Nota importante: BI enmarca esto como **"structural increase in costs"**, no cíclico. Si los fletes suben estructuralmente por restricción de oferta de conductores, ese costo **no revierte con el ciclo de commodities** — se queda. Para una empresa cuyo foso es la distribución física, **eso encarece el foso**. Es un riesgo de largo plazo bien fundamentado y con mecanismo claro.
+
+### 9.7 Otros datos del reporte
+
+🟢 **Índice de commodities agrícolas:** BI usa el **Bloomberg Agricultural Spot Index** (maíz, soya, café, azúcar, trigo y algodón) como proxy de la canasta de insumos de los fabricantes de alimentos. 💡 Útil como serie citable para graficar presión de costos.
+🟢 *"Most producers are **hedging critical commodities** to help keep input costs stable, **though as contracts expire, the ability to renew at lower [rates diminishes]**"* — 💡 **BI dice del sector entero exactamente lo que dice de Bimbo con sus coberturas a 9 meses (§1.8).** Es confirmación independiente del mecanismo.
+🟢 Los productores *"are limited in their ability to raise prices to offset costs due to **higher consumer price sensitivity and retailer resistance**"* — 💡 otra vez, resistencia del minorista.
+
+---
+
+## 9bis. Industry Europe — Bloomberg Intelligence
+
+🟢 **Europa:** *"European packaged-food companies need **volume growth, not another pricing round**, to narrow their forward-multiple discount to the Stoxx 600 as 2H cost and demand pressure builds. Nestle, Danone and peers face **a tougher setup than consensus implies**, with **pricing support fading as energy, freight, packaging, fertilizer and soft-commodity inflation returns** and trading down fuels private-label competition."*
+- Estructural: dietas más saludables, **medicamentos para bajar de peso que reducen el apetito**, y expansión de marca privada
+
+💡 **El sector entero está en el mismo aprieto:** el ciclo de precio se agotó, el volumen no responde, los costos vuelven. **Bimbo no es una excepción** — y eso ayuda al reporte, porque permite enmarcar la tesis como un problema de categoría y no como una acusación a la administración.
+
+💡 **GLP-1 es riesgo estructural de largo plazo** que BI menciona en los dos continentes. Para una panificadora es material: menor apetito → menos consumo de carbohidratos. Va en Investment Risks con el matiz de que es difícil de cuantificar — justo lo que el `Essentials` dice que es trabajo del analista.
+
+---
+
+## 10. China Bimbo (China Daily, 06-ago-26)
+
+🟢 Bimbo se declara optimista sobre el mercado chino y **seguirá invirtiendo**, con foco en calidad y seguridad alimentaria y mejoras operativas
+🟢 De SPLC: **China es 3.56% de los ingresos** con **11 instalaciones**
+🟢 Del gráfico de burbujas de BI: China tiene el **consumo per cápita más bajo** de la muestra (~0-5 kg) con **CAGR de ~2%** y **marca privada grande**
+
+💡 **Tensión interesante:** la narrativa corporativa es de expansión en China, pero los datos de BI muestran el mercado **menos atractivo de la muestra** — bajo consumo, bajo crecimiento, alta marca privada. **Vale la pena señalarlo**: es un ejemplo concreto de diferencia entre el discurso de la administración y los datos de industria, y ese tipo de observación es exactamente lo que distingue un reporte de analista de un resumen corporativo.
+
+---
+
+## 11. 💡 IDEA A DESARROLLAR — Ocasión de consumo (daypart)
+
+**De dónde viene:** research de Hongcan (instituto de investigación de catering, China) sobre consumo de panificados:
+- **Desayuno: 68%** de las ocasiones
+- **Té de la tarde: 21%**
+- **Regalo: creciendo** — en 2025 las ventas de panificados de regalo sumaron **80,000 millones de yuanes, +12% año contra año**
+
+### Por qué es un buen ángulo
+
+🟢 **Bimbo NO publica datos de ocasión de consumo.** Revisé sus reportes: usa un marco de **"daily consumption" vs. "occasional consumption"**, pero es una **clasificación nutricional** (Nutriguides, Health Star Rating), no de momento del día. La única mención de ocasión es retórica, en el Sustainable Financing Framework: *"alternatives for **every meal and every other consumption occasion**"*.
+
+💡 **Eso lo convierte en espacio en blanco.** Ningún otro equipo lo va a traer, porque no está en los filings.
+
+### Lo que sí se puede construir desde datos que ya tenemos
+
+💡 **Proxy de ocasión desde la mezcla de categorías de Circana (§2.2):**
+
+| Categoría | % ventas EE.UU. | Ocasión dominante |
+|---|---|---|
+| English muffins | 9% | Desayuno (casi puro) |
+| Bagels y bialys | 6% | Desayuno |
+| Pastelería y donas | 13% | Desayuno / media tarde |
+| Pan fresco y bollos | 54% | Sándwich (comida) / tostada (desayuno) |
+| Botanas saladas | 18% | Tarde / noche |
+
+💡 **≈15% de las ventas rastreadas en EE.UU. son productos casi exclusivamente de desayuno**, y ahí es justo donde Bimbo tiene sus **shares más altos (English muffins 77.4%, bagels 49.8%)** y **donde está ganando participación (+60 pb en muffins)**. Mientras pierde en pan fresco, que es la ocasión más disputada.
+→ **Hipótesis a probar: Bimbo es más fuerte donde la ocasión es más específica y la marca importa más.** Eso es una tesis de posicionamiento competitivo, no una descripción.
+
+💡 Y el 1T26 y 2T26 de Bimbo mencionan **"breakfast" como categoría reportada** en EE.UU. (*"mainstream bread, breakfast, buns and rolls, and salty snacks"*) — o sea la empresa sí segmenta por desayuno internamente aunque no publique el desglose. **Se puede preguntar en la sesión con la empresa.**
+
+### Research externo que sí existe (verificado)
+
+🟢 **México — el más relevante:**
+- **Kantar Worldpanel:** **37% de los hogares mexicanos** consumen pan al menos una vez por semana, con un promedio de **3.3 veces**
+- **PROFECO publicó una "Encuesta sobre los hábitos de consumo de pan de dulce de harina de trigo"** — fuente **pública, gratuita y gubernamental**, ideal para citar ([gob.mx](https://www.gob.mx/profeco/articulos/encuesta-sobre-los-habitos-de-consumo-de-pan-de-dulce-de-harina-de-trigo))
+- **89% busca pan dulce** en las panaderías, **69% bolillo o telera**
+- **2 de cada 3 personas compran pan en panaderías locales pequeñas**; el resto en supermercados, conveniencia o pan empaquetado
+- La mayoría consume pan **en el desayuno acompañado de una bebida caliente**; la pastelería se consume sobre todo en **desayuno o merienda**
+
+💡 **Ese "2 de 3 en panaderías locales" corrobora, desde otro ángulo, el 89.3% de share artesanal de Euromonitor.** Dos fuentes independientes apuntando a lo mismo es mucho más fuerte que una.
+
+🔴 **Y aquí está la alerta de §1.4:** esta misma fuente da el consumo per cápita de México en **~33.5 kg/año**, contra los **126.6 kg** de BI/Euromonitor. **Casi 4x de diferencia.** Confirma que el dato de BI necesita resolverse antes de usarse.
+
+🟢 **Internacional:**
+- [Datassential — Bread in Europe: Trends, Consumer Habits & Market Opportunities 2026](https://datassential.com/resource/european-bread-market-trends-consumer-habits-2026/) — hábitos de consumo por ocasión en Europa
+- [British Baker — Why breakfast is becoming bakery's most strategic occasion](https://bakeryinfo.co.uk/finished-goods-reports/a-meal-of-two-halves-how-health-and-indulgence-are-reshaping-breakfast/714176.article) — el desayuno como la ocasión con mayor oportunidad de extensión de ventas
+- [Délifrance — From breakfast to dinner: how to capture consumption moments](https://delifrance.com/blog/post/from-breakfast-to-dinner-how-to-capture-consumption-moments) — marco de momentos de consumo
+- [Foodservice IP — Breakfast Is Not a Daypart. It Is a Collection of Occasions.](https://foodserviceip.com/breakfast-is-not-a-daypart-it-is-a-collection-of-occasions/)
+- [Progressive Grocer — In-Store Bakery Trends](https://progressivegrocer.com/bread-and-beyond-store-bakery-trends)
+- Académico: [Consumption Habits of Flour Products in Correlation with Current Market Trends (MDPI)](https://www.mdpi.com/2076-3417/15/24/12853) · [Eating habits and preferences for bakery products (Taylor & Francis)](https://www.tandfonline.com/doi/full/10.1080/23311975.2024.2375621)
+
+💡 **Hallazgo transversal de ese research:** el pan es de las pocas categorías que combina **penetración casi universal, alta frecuencia, relevancia en todos los dayparts y conexión emocional**. Y el snacking está creciendo como sustituto del desayuno formal — lo que **abre ocasiones nuevas** pero también **fragmenta** la ocasión tradicional de Bimbo.
+
+### Conexión con la investigación de campo
+
+💡 **Esto es exactamente lo que una encuesta propia al canal puede contestar** (ver `06` §3.6 — Rule 2.5e lo permite explícitamente, y las horas del asesor monitoreando **no cuentan** contra su tope). Preguntas de ocasión en 30–50 puntos de venta: ¿en qué momento del día rota más el producto de Bimbo? ¿qué se lleva la gente en la mañana vs. la tarde? ¿el pan dulce compite con el pan de caja o con el café?
+**Sería evidencia primaria que ningún otro equipo va a tener, sobre una dimensión que ni la empresa publica.**
+
+---
+
+## 12. 🔴 Statista — Buyer Penetration Comparison (captura, actualización sep-26)
+
+🟢 **Top 5 países 2026, en porcentaje:** Noruega **6.2** · Brasil **5.5** · Reino Unido **5.2** · Argentina **5.1** · Dinamarca **4.8**
+🟢 Fuente: **Statista Market Insights**. Serie 2017–2030, con 2026 seleccionado. Escala del mapa de 0 a 8+.
+
+🟢 **RESUELTO.** El archivo que apareció en `Bimbo Research/Statista/` identifica el mercado:
+
+`ecommerce_food_confectionery-snacks_confectionery_preserved-pastry-goods-cakes_worldwide_USD_en.xlsx`
+
+→ Es **eCommerce → Food → Confectionery & Snacks → Preserved pastry goods & cakes, a nivel mundial.** Era, en efecto, una métrica de **canal online**, como sospechaba: en los reportes de eCommerce de Statista, *buyer penetration* es el **% de la población que compra esa categoría por internet**. Por eso el 5–6% y no la penetración casi universal del pan.
+
+💡 **Así que estos números son sobre venta online de pastelería y pasteles de larga vida, no sobre consumo de pan.** Hay que etiquetarlos así siempre que se usen — si se presentan como "penetración de pan" es un error de bulto.
+
+💡 **El ángulo que sí abre, y es bueno:** la fortaleza estructural de Bimbo es el **DSD físico — 55,000 rutas, 1,600 centros de venta**. Ese foso **no se traslada al canal online**: en e-commerce el reparto lo hace el minorista o una plataforma, y la ventaja de Bimbo (llegar a la tiendita, controlar el anaquel, reponer diario) se neutraliza. Si el canal online crece en panificados, **el activo más valioso de Bimbo pierde relevancia relativa**. Es un riesgo de largo plazo con mecanismo claro, y encaja en Investment Risks.
+
+💡 **Y Brasil en el #2 mundial** de penetración online encaja con que BI identifique a **Brasil como el mercado de mayor crecimiento** de su muestra — justo donde Bimbo compró **Wickbold**, cuya integración fue la mayor sorpresa negativa del 2T26.
+
+🟢 **También apareció** `study_id61627_bread-tortilla-and-bakery-industry-in-mexico.pdf/.pptx` — estudio de Statista sobre la industria de **pan, tortilla y panadería en México**. 💡 **Probablemente resuelve el pendiente de los 126.6 kg vs. 33.5 kg per cápita (§1.4)**, porque el hecho de que el título junte "pan, tortilla y panadería" apunta justo a la hipótesis: la categoría amplia incluye tortilla. Sin analizar todavía — avísame si quieres que lo procese.
+
+---
+
+## 📌 NOTAS DE SEGUIMIENTO — investigar a fondo
+
+*Preguntas abiertas que valen su propio bloque de trabajo. Pídeme el recordatorio cuando quieras retomarlas.*
+
+### 📌 N1 — ⭐ Las iniciativas de ejecución operativa de Bimbo: cuáles son y cuánto valen
+
+**De dónde sale:** Barclays (29-jul-26) sobre todo el sector — *"**A common theme was that future earnings growth is increasingly expected to come from operational execution rather than top-line acceleration.** Companies highlighted **productivity programs, procurement initiatives, supply chain efficiencies, automation investments, pricing discipline, and tighter cost controls**."* Y BI dice lo mismo: *"rerating upside is more limited than **execution upside**."*
+
+**Por qué es la pregunta correcta:** si las tres casas coinciden en que el crecimiento de utilidades vendrá de **ejecución y no de demanda**, entonces **toda la tesis de valuación depende de qué tan creíbles sean esas iniciativas** — y eso es lo que nadie ha cuantificado.
+
+**Qué hay que averiguar:**
+- [ ] **Qué es exactamente el "US transformation project"** que BI menciona: *"a multiyear restructuring program focused on improving efficiency through **bakery consolidation, automation, and route optimization**"*. ¿Cuántas panaderías se cierran? ¿Cuántas rutas se optimizan? ¿Qué inversión total?
+- [ ] **Cuál es el ahorro anunciado y el calendario.** ¿Hay una cifra pública de ahorros objetivo? ¿En qué año se captura?
+- [ ] **Cuánto se ha entregado ya.** Norteamérica pasó de 9.0% de margen (2025) a 10.0% (2T26). ¿Cuánto de esa mejora es transformación y cuánto es costos/FX?
+- [ ] **Cruzarlo con los 147 plantas en EE.UU. vs. 31 en México** (§6). Si la transformación es consolidación de panaderías, ese número debería estar bajando. **¿Ha bajado? Rastrear la cuenta de plantas año contra año.**
+- [ ] **Y el contraste crítico:** management admitió que **hay proyectos "behind schedule / harder to execute"** (§3.1) justo cuando recortó capex. **¿Cuáles? ¿El atraso es del programa de transformación?**
+
+**Dónde buscar:** reporte anual 2024 (401 pp, tiene notas), IA25, transcripts de llamadas trimestrales (el Q&A es donde los analistas presionan por cifras), presentaciones a inversionistas / Investor Day si existe.
+
+💡 **Si el equipo logra cuantificar el programa de transformación y compararlo contra lo entregado, tiene una sección de Financial Analysis que ningún otro equipo va a tener.** Es el puente entre "la empresa promete ejecución" y "el consenso paga por ella".
+
+### 📌 N2 — Coberturas 2027: preguntar directamente
+
+**De dónde sale:** llamada del 2T26 — *"hedging has limited the immediate 2026 impact, but **the environment looks tougher for 2027 as positions are taken at higher costs (wheat, resins, energy)**."*
+
+**Preguntas para la sesión con la empresa (si hay follow-up) o para el Q&A de jueces:**
+- [ ] ¿Qué porcentaje de la canasta de 2027 ya está cubierto y a qué nivel contra el spot actual?
+- [ ] ¿La política es realmente rodante a nueve meses, o varía por insumo? (BI lo estima, la empresa no lo ha confirmado públicamente)
+- [ ] ¿Qué pasa con el margen si el trigo se queda donde está hoy (+21.8% a/a) cuando roten las coberturas?
+- [ ] Las coberturas de energía ya están pegando **abajo de la línea operativa** (costo integral de financiamiento +4% a/a por *"higher energy cost hedges and FX losses"*). ¿Cuánto más hay ahí?
+
+### 📌 N3 — Capex: ¿disciplina o atraso?
+
+**Ya parcialmente contestada** (§3.1): la empresa dio **las dos razones** — *phasing* por *"evolving volume trends"* **y** proyectos *"behind schedule / harder to execute"*.
+
+**Lo que falta:**
+- [ ] Identificar **qué proyectos** están atrasados
+- [ ] Verificar si el capex diferido **reaparece en la guía de 2027** (si sí, el flujo libre de 2026 está inflado)
+- [ ] Comparar capex como % de ventas contra historia y contra pares — ¿1.0–1.2bn es sostenible o es subinversión?
+
+### 📌 N4 — M&A: el pipeline de 2H
+
+**De dónde sale:** *"M&A activity was described as light in 1H (**only a small Tunisia deal**), while noting expectations/hopes to **close bolt-on acquisitions in 2H**, subject to timing."*
+
+- [ ] Rastrear si se cerró algo entre julio y hoy (16-sep-26) — y si se cierra antes del 5 de noviembre, **hay que incorporarlo**
+- [ ] Tensión a desarrollar: desapalancamiento (2.5x y bajando) **vs.** apetito de M&A. **No se puede tener las dos cosas**, y el desapalancamiento es parte del argumento alcista
+- [ ] **Wickbold es el precedente:** compraron crecimiento de ventas (+11% vs JPMe) a costa de margen (−157 pb), y la empresa dice que las sinergias *"take time"*. ¿Qué dice eso de su capacidad de integración antes de comprar más?
+
+### 📌 N5 — Lewis Brothers Bakeries: el competidor invisible
+
+**De dónde sale:** §5bis.3 — es a quien Bimbo más le pierde share en pan empaquetado, **y es privada y no la cubre ningún analista**.
+
+- [ ] Quién es, dónde opera, qué marcas tiene, qué escala
+- [ ] Por qué está ganando: ¿precio, canal, geografía, un contrato de marca privada?
+- [ ] 💡 **Ningún reporte de sell-side lo va a analizar precisamente porque no cotiza.** Si el equipo lo investiga bien, es un diferenciador real en Industry & Competitive Positioning.
+
+### 📌 N6 — Ocasión de consumo (ver §11 completo)
+
+- [ ] Procesar el estudio de Statista de **pan, tortilla y panadería en México**
+- [ ] Bajar la encuesta de **PROFECO** sobre hábitos de consumo de pan dulce (fuente pública y gratuita)
+- [ ] Diseñar las preguntas de ocasión para la encuesta al canal
+
+---
+
+## Bandeja de pendientes
+
+**Verificaciones abiertas:**
+- [ ] 🔴 Consumo per cápita México: **126.6 kg (Euromonitor) vs. ~33.5 kg (Kantar)** — resolver la definición
+- [ ] 🔴 Ventas México 2025: **131,151 vs. 154,809** en el mismo documento de BI
+- [ ] 🔴 EPS 2027 del modelo de BI: **2.34 vs. consenso 3.89** — verificar en MODL
+- [ ] 🔴 Deuda neta/EBITDA: **1.94 (BI) vs. 2.5x (empresa)**
+- [x] ~~Identificar el mercado de la pantalla de Statista~~ → **resuelto: eCommerce, pastelería de larga vida, mundial** (§12)
+- [ ] 🔴 Revisar el **ciclo de conversión de efectivo** de Bimbo (días de inventario/cobrar/pagar) — driver de working capital de §9.1
+- [ ] 🔴 Procesar el estudio de Statista de **pan, tortilla y panadería en México** — probablemente cierra el pendiente de per cápita
+- [ ] 🔴 Ticker correcto para el header: BIMBO / BIMBOA / BIMBO A en BMV
+- [ ] 🔴 Conseguir la **nota de upgrade de JPM** (entre 23-jul y 3-sep de 2026)
+- [ ] 🔴 Jalar el **Circana actual** — el dato de share tiene 4 meses
+- [ ] 🔴 Precio de cierre directo de la terminal (el P$55 de `08` §2 es derivado)
+
+**Datos por buscar:**
+- [ ] Consumo total de trigo de Bimbo, para dimensionar las 500,000 ha regenerativas
+- [ ] Desglose price/mix vs. volumen **por segmento** publicado por la empresa (el comunicado solo lo narra)
+- [ ] Transcripts de llamadas trimestrales — el Q&A con analistas
+- [ ] Estructura accionaria y float (control Servitje)
+- [ ] Estados financieros auditados FY2025 con notas

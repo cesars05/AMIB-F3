@@ -1,0 +1,88 @@
+# Market Terminal
+
+Personal markets system for César. Five surfaces, one data engine:
+
+1. **Dashboard** (Bloomberg-style layout, dark/light switch): main chart panel + "what it implies / insight" below it, market-moving news, right-hand ticker column (indices, single stocks, FX, rates, commodities). Market only, no portfolio.
+2. **Decks**: daily 1-2 slide PPTX (market + portfolio) and full 9-10 slide deck every Friday close. Downloadable from the dashboard and exported to `SALIDA_DECKS` (OneDrive).
+3. **Ideas Screener**: refreshed every ~15 days, US / Europe / Japan listings only, bundled Small (<10B) / Mid (<50B) / Large. Deep-dive per name.
+4. **Portfolio**: IBKR statements ingested by dropping files in a folder, performance refreshed every 15 min, constant-FX and MXN view, discreet commissions panel, portfolio insights, Bloomberg-style portfolio page.
+5. **13F tracker**: AI and infrastructure funds with 13F holdings > US$30B, allocation changes quarter over quarter. No politicians.
+
+Full requirements: `BRIEF.md`.
+
+## Layout
+
+- `engine/`: Python data layer (LSEG Workspace via `lseg.data`, matplotlib charts, detector, news). Run scripts from inside `engine/`.
+- `engine/config.py`: the **only** place an absolute path lives. Secrets are read from `.env` via `config.secreto()`.
+- `backend/`: FastAPI (port 8000), ported from Portafolio_Tracker V3: FIFO lots, TWR, money-weighted return, risk, Markowitz.
+- `frontend/`: Next.js (port 3000). Read `frontend/AGENTS.md` first: this Next.js version has breaking changes.
+- `templates/`: `News September.pptx` is the base deck template.
+- `data/`: reserved for generated data. Today the engine still writes `datos_*.json` and PNG folders inside `engine/`, and the portfolio DB lives at `backend/portfolio.db`. All gitignored.
+
+The OneDrive folders `News\Templates\Graphs` and `Portafolio_Tracker` are frozen archives. Do not edit them.
+
+## Data rules (each one cost a wrong result before)
+
+- **An empty result is not proof of missing entitlement.** `=ECI` indicators came back empty because `interval="daily"` was passed to monthly series. Before declaring anything blocked, retry without `interval`/`fields` and search the RIC with `lseg.data.discovery.search()`.
+- **Declare the field explicitly, never a fallback loop.** Rates `=RR` use `MID_YLD_1`, FX/metals `MID_PRICE`, futures/ETFs/indices `TRDPRC_1`, fed funds futures `CF_LAST`. `US3MT=RR` returns a price under one field and a yield under another, silently.
+- **`TR.CompanyMarketCap` needs `parameters={"Curn": "USD"}`**, otherwise Tokyo Electron comes back in JPY and looks 150x NVIDIA.
+- **Units**: crack spread RBOB/HO are $/gal, WTI $/bbl (x42).
+- **Aggregate multiples harmonically**: sum of market value / sum of earnings. Never a weighted average of P/Es.
+- **Decompose price moves multiplicatively**: `r_multiple = (1+r_price)/(1+r_eps) - 1`.
+- **Three portfolio returns never mix**: TWR (the account return), return vs cost per position, market return by period.
+- **The portfolio comes from the IBKR file, never from memory or a skill description.** IBKR CSV sections can carry **more than one Header row**; parse by blocks. `backend/ibkr_parser.read_sections` parses by block and concatenates by column name (fixed 2026-09-24: the Forex block of 'Trades' used to be read with the Stocks header and booked as share trades).
+- **Portfolio cash must reconcile to the statement.** After ingesting the YTD export (2026-09-24), 2026 cash change matches IBKR to the cent (2.8667) but cumulative cash is +0.24 high: the 2025 "FX Translations P&L" row was superseded. Fix in the portfolio phase by anchoring cash to each statement's Summary `Starting Cash`.
+- **Splits come from yfinance in the backend.** CRWD 4:1 and APH 2:1 (2026) are confirmed by LSEG, but ex-dates differ between sources by days to weeks. A buy inside that window would be adjusted wrongly; check both sources when a lot falls in it.
+- **Every `.replace()` patch gets an `assert`.** Two patches once failed silently.
+- **Percentile within a 2Y range is not recent direction.** Check the time series before saying estimates or multiples "fell".
+- **Not in the license** (verified): WSJ, Bloomberg, Dow Jones, Barron's, `.DJI` (use DIA), `.N225`, `.VXN`, `.SKEW`, SOFR futures, `ECON_RLDT` release dates. Fed funds futures `FFc1..FFc6` do work (implied rate = 100 - price).
+- News uses the whitelist in `engine/noticias.py`. Unlisted sources are excluded.
+
+## Output rules
+
+- Deck and dashboard text: **English, Arial, IB/corporate tone, no em-dashes, few colons.**
+- `engine/paleta.md` + `engine/grafico_banquero.py` are the design system. They override the `dataviz` and `frontend-design` skills. Red only for dashed reference lines. Green/red never encode sign. Max 6 series.
+- **The LLM never writes a number.** Numbers come from JSON produced by code. The model (Claude Haiku via `claude -p --model haiku` on César's subscription, no API key) only writes the sentence around injected values.
+- Text jobs call `claude -p` from a neutral directory (not the project root) with no tools, so they skip this CLAUDE.md, task-observer and the GSD hooks. The CLI needs a one-time `/login`.
+- **Pending (2026-09-24):** `claude -p` login did not work yet. Keep the text layer pluggable: every surface must render with numbers and charts only, and gain prose once the LLM step is available.
+- Free and public sources first (SEC EDGAR, Fed, Treasury FiscalData, FRED, Banxico SIE), LSEG for everything else. Be efficient with API calls and compute.
+
+## Working with César
+
+- Conversation in Spanish; code comments in Spanish, deliverables in English.
+- He wants critical pushback and analytical opinion. No position sizing or buy/sell recommendations; he forms his own views.
+- Verify before saying done: run `/verify-before-done` (project skill).
+- The US close is 14:00 CDMX; Workspace is guaranteed open at 16:00 CDMX. Anything that needs LSEG runs after that. Intraday portfolio prices use the free yfinance feed.
+
+## task-observer
+
+Before the first tool call of any session — and before writing or
+proposing a plan, not merely before executing one — invoke the
+task-observer skill AND execute its Session Start Protocol (storage
+check, frontmatter scan, review trigger). Loading the skill and running
+the protocol are separate steps; a session that loads the file and stops
+has activated nothing. Any turn that will involve a tool call counts; do
+not classify the session as "too simple" from its opening message.
+
+Select skills on the DECISION the request is about, not on the artefact it
+arrived as.
+
+After completing each task, check the observation records written this
+session and report a one-line summary (ids and titles, or "none logged
+and why").
+
+Loading a skill is not complete until you have queried the observation
+log for OPEN observations naming it and read their bodies:
+  find "C:/Users/cesar/.claude/task-observer/skill-observations/observation-log" -maxdepth 1 \
+    -name '*.md' -exec grep -l "skill:.*<skill-name>" {} +
+Apply their insights to the current work. Editing a skill file waits for
+the weekly review (César reviews weekly).
+
+The task-observer workspace is:
+  C:/Users/cesar/.claude/task-observer
+Every path derives from that root:
+  C:/Users/cesar/.claude/task-observer/skill-observations/observation-log/
+  C:/Users/cesar/.claude/task-observer/skill-observations/cross-cutting-principles.md
+  C:/Users/cesar/.claude/task-observer/skill-updates/
+  C:/Users/cesar/.claude/task-observer/skill-updates/PENDING.md
+Never resolve any of them from the current working directory.

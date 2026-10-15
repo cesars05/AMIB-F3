@@ -1,0 +1,83 @@
+base = r"C:\Users\cesar\OneDrive\Documentos\Slide Construction\skill\slide-construction\scripts"
+
+
+def patch(fn, pairs):
+    p = base + "\\" + fn
+    s = open(p, encoding="utf-8").read()
+    for old, new in pairs:
+        assert old in s, (fn, old[:70])
+        s = s.replace(old, new)
+    open(p, "w", encoding="utf-8").write(s)
+
+
+patch("house.py", [
+# process chain: smaller text, feedback below the bracket
+('''                      focus_color=None, feedback=(), size=12, row2=None, row_gap=0.32, input_w=None):''',
+ '''                      focus_color=None, feedback=(), size=11, row2=None, row_gap=0.32, input_w=None):'''),
+('''            yb = y + h + 0.1 + 0.12 * depth''', '''            yb = y + h + 0.24 + 0.12 * depth'''),
+# price range: stagger tags that would overlap
+('''        for v, style in marks:
+            fill = S["primary_dark"] if style == "dark" else S["primary"]
+            self.line(s, X(v), y - 0.12, X(v), y + 0.12, color="#000000", width=1.25)
+            self.rect(s, X(v) - 0.42, y - 0.5, 0.84, 0.28, fill=fill, text=fmt.format(v), size=10, color="#FFFFFF",
+                      round_=0.2, shadow=True, inset=0.02)''',
+ '''        last_x, level = -9, 0
+        for v, style in sorted(marks):
+            fill = S["primary_dark"] if style == "dark" else S["primary"]
+            level = level + 1 if X(v) - last_x < 0.9 else 0
+            last_x = X(v)
+            ty = y - 0.5 - 0.36 * level
+            self.line(s, X(v), ty + 0.28, X(v), y + 0.12, color="#000000", width=1.0 if level else 1.25)
+            self.rect(s, X(v) - 0.42, ty, 0.84, 0.28, fill=fill, text=fmt.format(v), size=10, color="#FFFFFF",
+                      round_=0.2, shadow=True, inset=0.02)'''),
+('''            self.callout(s, X(v) - 1.45, y - 1.05, 1.1, 0.26, txt, to=(X(v) - 0.25, y - 0.55), pointer=True, size=9)''',
+ '''            self.callout(s, X(v) - 2.0, y - 1.35, 1.1, 0.26, txt, to=(X(v) - 0.3, y - 0.6), pointer=True, size=9)'''),
+# cylinder: last circle readable, skip blank operators
+('''            self.num_circle(s, sx + sw / 2 + cap / 2 - 0.17, sy + hl * 0.08, i + 1, d=0.34,
+                            fill=S["primary_dark"] if not last else "#FFFFFF", size=12)
+            if last:  # number in brand colour on the white circle
+                pass''',
+ '''            cc = self.num_circle(s, sx + sw / 2 + cap / 2 - 0.17, sy + hl * 0.08, i + 1, d=0.34,
+                                 fill=S["primary_dark"] if not last else "#FFFFFF", size=12)
+            if last:  # brand-coloured number on the white circle
+                for r in cc.text_frame.paragraphs[0].runs:
+                    r.font.color.rgb = rgb(S["primary"])'''),
+('''            for i, op in enumerate(operators):
+                cx = x + (i + 1) * sw + cap * 0.6''', '''            for i, op in enumerate(operators):
+                if not op:
+                    continue
+                cx = x + (i + 1) * sw + cap * 0.6'''),
+# struct box: shrink text to fit short boxes
+('''        txt = [f"**{title}**"] + ([value] if value else [])
+        self.rect(s, x, y, w, h, fill=fill, line=line, line_w=1.0, text=txt, size=size,''',
+ '''        txt = [f"**{title}**"] + ([value] if value else [])
+        if value and h < 0.6:
+            size = min(size, 12)
+        self.rect(s, x, y, w, h, fill=fill, line=line, line_w=1.0, text=txt, size=size,'''),
+])
+
+patch("gallery_structural.py", [
+('''                [["**Cash & equivalents**", "$99,955", "", "**Net debt**", "$74,920", "", "**ND / EBITDA**", "1.02x"],
+                 ["**Returns approved**", "Ps. ~47,000 mm", "", "**ND / EBITDA 2026E**", "1.57x"],
+                 ["**Excess cash**", "Ps. 32,121 mm"],
+                 ["**Proposal**", "Dividends 30%", "Buybacks 70%", "", "**ND / EBITDA**", "2.0x"]], h=1.95, size=11)''',
+ '''                [["**Cash & equivalents**", "$99,955", "**Net debt**", "$74,920", "**ND / EBITDA**", "1.02x"],
+                 ["**Returns approved**", "Ps. ~47,000 mm", "**ND / EBITDA 2026E**", "1.57x"],
+                 ["**Excess cash**", "Ps. 32,121 mm"],
+                 ["**Proposal**", "Dividends 30% / Buybacks 70%", "**ND / EBITDA**", "2.0x"]], h=1.95, size=11)'''),
+('''sd = d.struct_box(s, X0 + 2.55, y + 0.15, 1.8, 0.5, "Series D"''', '''sd = d.struct_box(s, X0 + 2.55, y + 0.05, 1.8, 0.62, "Series D"'''),
+('''d.connect(s, (bu[0], bu[1], 0.4, bu[3]), (bmv[0] + 1.4, bmv[1], 0.4, bmv[3]))''',
+ '''d.connect(s, (bu[0] + 1.2, bu[1], 0.4, bu[3]), (bmv[0] + 1.4, bmv[1], 0.4, bmv[3]))'''),
+('''s = d.content_slide("Five Layers of the Moat", "think-cell 'Pyramid with five layers' (tc:4) with icons recoloured", SRC)
+d.import_elements(s, "tc:4", box=(X0, 1.5, W, 5.1))''',
+ '''s = d.content_slide("Five Layers of the Moat", "think-cell 'Pyramid with five layers' (tc:4) with icons recoloured", SRC)
+d.import_elements(s, "tc:4", box=(X0, 1.5, W, 5.1), texts={
+    0: ["Scale and installed base", "17,000 tools in the field generate recurring service revenue"],
+    1: "A moat is only as strong as its weakest layer",
+    2: ["Intellectual property", "9,100 patents; 6.5x the share of the nearest competitor"],
+    3: ["Customer lock-in", "Recipes are qualified tool by tool; switching costs a full node"],
+    4: ["Data", "Defect libraries improve with every wafer inspected"],
+    5: ["R&D scale", "$1.5bn a year, more than the next three peers combined"],
+    6: ["Service network", "Engineers on site at every major fab"]})'''),
+])
+print("patched")

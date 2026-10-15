@@ -1,0 +1,35 @@
+import io, os
+root = r"G:\.shortcut-targets-by-id\1wYoG0nnC8svaqyBKZ-61uOpLfK_2VHVY\AZTLAN\Research\Company Research\Materials\2_Fuso Chemicals"
+
+def edit(path, pairs):
+    t = io.open(path, encoding="utf-8").read()
+    for old, new in pairs:
+        assert old in t, "NOT FOUND in %s: %s" % (os.path.basename(path), old[:90])
+        t = t.replace(old, new, 1)
+    io.open(path, "w", encoding="utf-8").write(t)
+    print("ok", os.path.basename(path))
+
+edit(os.path.join(root, "Fuso_DeepDive_2026-10-12.md"), [
+    ("Pero el plan de FY03/2027 es el más alto de la historia, 299.0 oku,", "Pero el plan de FY03/2027 es el más alto de la serie publicada (desde FY03/2021), 299.0 oku,"),
+    ("**El segmento tiene un margen de caja enorme, pero la depreciación se come casi la mitad.**", "**El segmento tiene un margen de caja enorme, pero la depreciación se come más de un tercio.**"),
+    ("Antes de depreciación, la utilidad de Electronic Materials fue 60% de sus ventas en FY03/2026; después de depreciación, 38% [I: 250.2 y 159.3 sobre 415.1; Yuho26 P99].", "Antes de depreciación, la utilidad de Electronic Materials fue 60% de sus ventas en FY03/2026; después de depreciación, 38%. La depreciación (90.9) equivale a 36% de la utilidad antes de depreciación (250.2) [I: sobre 415.1; Yuho26 P99]."),
+    ("de un tipo de cambio de ¥150 [D/I: Deck26 P43].", "de un tipo de cambio de ¥150 [D/I: Deck26 P39, P43]."),
+    ("- Sobre el costo de capital invertido: la dirección dice que no volverá a financiar sola la depreciación: pidió a los clientes absorber parte de la inversión futura mediante precios 5-10% más altos [D: Deck26 P36; Dial P5].", "- Sobre el costo de la próxima inversión: la dirección pidió a los clientes absorber parte de ella y para aliviar el aumento de depreciación aplicó alzas de precios de 5-10% [D: Deck26 P36; Dial P5]."),
+    ("4. **El capex de FY03/2027 será récord y lo muestra el primer trimestre:**", "4. **El capex de FY03/2027 sería el más alto de la serie y lo muestra el primer trimestre:**"),
+    ("1. **El plan de FY03/2027 ya contiene un margen de EM (43.9%) superior al margen objetivo de FY03/2031 (41.6%).** Según la guía, la rentabilidad del segmento llega a su pico en FY03/2027 y luego se comprime a medida que entra la depreciación de Kyoto [I: 217.0/494.0 contra 320/770].", "1. **El plan de FY03/2027 ya contiene un margen de EM (43.9%) superior al margen objetivo de FY03/2031 (41.6%).** Los años intermedios no están publicados [ND], pero el plan implica un margen de EM en FY03/2031 por debajo de la guía de FY03/2027, consistente con que la depreciación de Kyoto entra antes que sus ingresos [I: 217.0/494.0 contra 320/770]."),
+    ("[I: Deck26 P11]. El valle fue FY03/2024", "[I: aproximación con Deck26 P11; el flujo de inversión incluye movimientos de depósitos a plazo]. El valle fue FY03/2024"),
+    ("| Acuerdo de precio 5-10% desde FY03/2026 [D] |", "| Acuerdo de precio 5-10% desde FY03/2027 (\"2026年度\" en la nomenclatura de la empresa) [D: Dial P5] |"),
+])
+
+edit(os.path.join(root, "Company", "Fase0_descargas_IR", "_NOTES.md"), [
+    ("5-10% price revision from FY2026", "5-10% price revision from \"FY2026\" (company label, = FY03/2027)"),
+])
+
+edit(os.path.join(root, "Company", "Fase0_descargas_IR", "Prompt_Fuso_DeepDive_v0.1.md"), [
+    ("5-10% from FY2026", "5-10% from \"FY2026\" (company label, = FY03/2027)") if False else ("with customers sharing next-capex cost", "with customers sharing next-capex cost (the price revision starts in the company's \"2026年度\", which is FY03/2027)"),
+    ("in-house production rate target (49% to 75% domestic)", "in-house production rate target (in-house share 71%, 49% domestic plus 22% overseas, against a 75% target; 29% outsourced)"),
+])
+
+edit(os.path.join(root, "Company", "Fase0_descargas_IR", "Prompt_Segment_Analysis_Framework_v0.2.md"), [
+    ("- Workspace \"Guidance\" row can be wrong or stale (Fuso FY Mar-27 net income 19,200 vs company 16,600). Company documents prevail.", "- Workspace \"Guidance\" row can be wrong or stale (Fuso FY Mar-27 net income 19,200 vs company 16,600). Company documents prevail. **Update 12-Oct-2026:** the Q1 FY03/2027 tanshin (7-Aug-2026) itself shows 19,200 (EPS 181.48). The 2,600m gap equals the after-tax value of the 3,694m subsidy booked in Q1, and the H1 forecast moves by the same amount, so 19,200 looks like 16,600 plus the subsidy, not a Workspace error. Confirm with the TDnet notice (not in folder) before labeling either figure wrong."),
+])

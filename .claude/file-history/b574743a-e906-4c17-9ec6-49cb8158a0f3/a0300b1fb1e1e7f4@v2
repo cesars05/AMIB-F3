@@ -1,0 +1,401 @@
+import sys, os
+sys.path.insert(0, r"C:\Users\cesar\Downloads\PE\07_Skill\slide-construction\scripts")
+sys.path.insert(0, ".")
+import openpyxl
+from PIL import Image, ImageDraw, ImageFont
+from house import Deck, make_brand_system
+import imgkit
+
+PE = r"C:\Users\cesar\Downloads\PE\08_Proyecto_Final"
+XL = PE + r"\entregables\PF_Modelo_AurexCapital.xlsx"
+OUT = PE + r"\entregables\PF_Deck_AurexCapital.pptx"
+WORK = os.path.join(PE, "assets", "_deck_tmp"); os.makedirs(WORK, exist_ok=True)
+
+# ---------------- datos del modelo (fuente unica) ----------------
+wb = openpyxl.load_workbook(XL, data_only=True)
+S = wb["Summary"]; H1 = wb["Hoja1_Portafolio"]; E = wb["Escenarios"]; H2 = wb["Hoja2_Distribucion"]
+def sv(r, c): return S[f"{c}{r}"].value
+base = dict(proc=sv(10, "D"), mi=sv(11, "D"), mc=sv(12, "D"), lps=sv(13, "D"), carry=sv(14, "D"), moic=sv(17, "D"), irr=sv(18, "D"))
+bajo = dict(proc=sv(10, "E"), mi=sv(11, "E"), mc=sv(12, "E"), lps=sv(13, "E"), carry=sv(14, "E"), moic=sv(17, "E"), irr=sv(18, "E"))
+alto = dict(proc=sv(10, "F"), mi=sv(11, "F"), mc=sv(12, "F"), lps=sv(13, "F"), carry=sv(14, "F"), moic=sv(17, "F"), irr=sv(18, "F"))
+cols = "DEFGHIJKLM"
+dpi = [sv(27, c) for c in cols]; rvpi = [sv(28, c) for c in cols]; tvpi = [sv(29, c) for c in cols]
+port = []
+for i in range(8):
+    r = 18 + i
+    port.append(dict(nombre=H1[f"B{r}"].value, ini=H1[f"E{r}"].value, fo=H1[f"G{r}"].value or 0, tot=H1[f"I{r}"].value,
+                     sal=H1[f"K{r}"].value, mult=H1[f"L{r}"].value, rec=H1[f"M{r}"].value))
+inv_total = sum(p["tot"] for p in port)
+assert abs(inv_total - 82) < 1e-6
+pct = lambda x: f"{x*100:.1f}%"
+xx = lambda x: f"{x:.2f}x"
+mm = lambda x: f"{x:,.1f}"
+print("base", base); print("alto", alto); print("bajo", bajo)
+
+# ---------------- assets ----------------
+def wordmark(path, dark="#0B3D2E", acc="#8BC53F"):
+    W, Hh = 1100, 400
+    im = Image.new("RGBA", (W, Hh), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+    try:
+        f1 = ImageFont.truetype("arialbd.ttf", 190); f2 = ImageFont.truetype("arial.ttf", 78)
+    except Exception:
+        f1 = f2 = ImageFont.load_default()
+    d.text((10, 30), "AUREX", font=f1, fill=dark)
+    d.text((14, 255), "C A P I T A L", font=f2, fill=acc)
+    d.rectangle((14, 232, 560, 242), fill=acc)
+    im.save(path); return path
+LOGO = wordmark(os.path.join(WORK, "aurex_logo.png"))
+LOGO_W = wordmark(os.path.join(WORK, "aurex_logo_white.png"), dark="#FFFFFF", acc="#8BC53F")
+
+A = PE + r"\assets"
+def first(patterns):
+    import glob
+    for p in patterns:
+        g = glob.glob(p)
+        if g: return g[0]
+    return None
+logos = {
+    "Pireos": first([A + r"\logos\pireos\pireos_logo.png"]),
+    "BioEsol": first([A + r"\logos\bioesol\*.png", A + r"\logos\bioesol\*.webp"]),
+    "FAZT": first([A + r"\logos\fazt\fazt_logo.png"]),
+    "Niko": first([A + r"\logos\niko\niko_logo.webp"]),
+}
+quartux_iso = first([A + r"\logos\quartux\quartux_isotipo_blanco.png"])
+print(logos, quartux_iso)
+
+def autocrop(im):
+    import numpy as np
+    a = np.array(im.convert("RGBA")).astype(int)
+    alpha = a[:, :, 3] > 10
+    nonwhite = (a[:, :, :3].sum(axis=2) < 740) | (alpha & (a[:, :, :3].sum(axis=2) < 740))
+    mask = alpha & nonwhite if alpha.any() else nonwhite
+    if not mask.any():
+        mask = alpha
+    ys, xs = np.where(mask)
+    if len(xs) == 0: return im
+    return im.crop((xs.min(), ys.min(), xs.max() + 1, ys.max() + 1))
+
+def is_light(im):
+    import numpy as np
+    a = np.array(im.convert("RGBA")).astype(int)
+    m = a[:, :, 3] > 10
+    if not m.any(): return False
+    return a[:, :, :3][m].mean() > 215
+
+def tile_logo(src, dst, bg="#FFFFFF", w=700, h=240, pad=0.12):
+    im = Image.open(src).convert("RGBA")
+    if is_light(im): bg = "#0B3D2E"
+    else: im = autocrop(im)
+    bgc = tuple(int(bg[i:i+2], 16) for i in (1, 3, 5)) + (255,)
+    canvas = Image.new("RGBA", (w, h), bgc)
+    maxw, maxh = int(w * (1 - 2 * pad)), int(h * (1 - 2 * pad))
+    im.thumbnail((maxw, maxh), Image.LANCZOS)
+    canvas.alpha_composite(im, ((w - im.width) // 2, (h - im.height) // 2))
+    canvas.convert("RGB").save(dst); return dst
+
+logo_tiles = []
+for k, v in logos.items():
+    if v:
+        try: logo_tiles.append((k, tile_logo(v, os.path.join(WORK, f"logo_{k}.png"))))
+        except Exception as ex: print("logo fail", k, ex)
+if quartux_iso:
+    try: logo_tiles.append(("Quartux", tile_logo(quartux_iso, os.path.join(WORK, "logo_Quartux.png"), bg="#0B3D2E")))
+    except Exception as ex: print("quartux fail", ex)
+
+# ---------------- sistema visual verde ----------------
+SYS = make_brand_system(base="aztlan", primary="#1B7F4B", primary_dark="#0B3D2E", tint1="#DDEFE3", tint2="#B7D98A",
+                        accent="#F2B705", name="aurex")
+DK, PR, T1, LIM, AMB, RED = "#0B3D2E", "#1B7F4B", "#DDEFE3", "#8BC53F", "#F2B705", "#C0392B"
+d = Deck(SYS, logo=LOGO)
+
+# =============== 1 PORTADA ===============
+s = d.cover("Aurex Capital", subtitle="Fondo de crecimiento en energía distribuida · México", date="Comité de LPs · Octubre 2026", logo=LOGO_W)
+d.text(s, 0.62, 5.1, 7.2, 0.8, "Invertimos US$2–10M en empresas mexicanas de energía distribuida y eficiencia con ingresos recurrentes.", size=14, color="#DDEFE3")
+d.text(s, 0.62, 5.75, 7.5, 1.3, ["Julio César Silva de la Rosa · Managing Partner", "Roberto Flores · Socio de inversión · Mariana González · Socio de operaciones", "Tomás Tapia · Relación con inversionistas · Pablo Belmonte y Miguel Montalvo · Analistas"],
+       size=11, italic=True, color="#FFFFFF", anchor="bottom")
+d.text(s, 8.7, 6.75, 4.2, 0.4, "Caso académico del curso de Capital Privado, Tec de Monterrey. No constituye oferta de valores.", size=8, italic=True, color="#B7D98A")
+d.rect(s, 8.7, 1.5, 4.0, 4.2, fill=None, line="#8BC53F", dash="dash", line_w=1.5, text="Espacio para la foto del equipo", size=12, italic=True, color="#DDEFE3")
+
+# =============== 2 RESUMEN EJECUTIVO ===============
+s = d.content_slide("US$100M para escalar energía distribuida en México",
+                    f"8 empresas mexicanas, 10 años y {xx(base['moic'])} neto para el LP en el caso base (TIR neta {pct(base['irr'])})",
+                    source="Fuente: PF_Modelo_AurexCapital.xlsx (Summary). Cifras en USD; estimaciones del equipo.")
+tiles = [("US$100M", "capital comprometido"), ("8", "empresas mexicanas"), ("10 años", "5 de inversión + 5 de salida"),
+         (xx(base["moic"]), "MOIC neto del LP (base)"), (pct(base["irr"]), "TIR neta del LP (base, USD)")]
+x0 = 0.575
+for i, (n, l) in enumerate(tiles):
+    d.kpi_tile(s, x0 + i * 2.5, 1.55, 2.3, 1.25, n, l, fill=(T1 if i < 3 else DK), num_size=28, num_color=(DK if i < 3 else "#FFFFFF"), label_color=(DK if i < 3 else "#FFFFFF"))
+d.text(s, 0.575, 3.05, 6.0, 3.6, [
+    "**La idea**",
+    "- Participaciones minoritarias con asiento en el consejo en 8 empresas que ya venden y operan solar, baterías, microrredes y gestión de energía en clientes industriales y comerciales.",
+    "- Tickets de US$2–10M más follow-on: el tramo donde ni el capital de riesgo ni los fondos de infraestructura llegan.",
+    "**Cómo ganamos**",
+    "- Crecimiento del EBITDA de las empresas, sin contar con expansión de múltiplo; salidas a compradores identificados por empresa."], size=13)
+d.text(s, 6.9, 3.05, 5.9, 3.6, [
+    "**Qué prometemos y qué no**",
+    f"- Caso base: {xx(base['moic'])} neto y {pct(base['irr'])} de TIR; caso bajo: {xx(bajo['moic'])} (pérdida de {abs(bajo['moic']-1)*100:.0f}%).",
+    "- El GP no cobra carry en el caso base: lo gana solo sobre ≈2.16x bruto del capital comprometido.",
+    "**Estructura**",
+    "- Fideicomiso privado de capital de riesgo (LISR 192–193), LPs calificados mexicanos, cascada europea, LPAC y key man.",
+    "- Sin deuda a nivel fondo; máximo 15% por empresa."], size=13)
+
+# =============== 3 LA IDEA / HUECO DE TICKET ===============
+s = d.content_slide("El hueco: cheques de US$2–10M en energía distribuida",
+                    "Las operaciones de infraestructura y energía promedian ≈US$262M; las de growth, ≈US$43M",
+                    source="Fuente: AMEXCAP, Brief Perspective of the private capital industry in Mexico (1H 2026), sec. 3; promedios = monto ÷ número de operaciones, 2021–1S2026 (cálculo propio); Aurex = ticket inicial promedio (US$56M ÷ 8).")
+y = d.block_header(s, 0.575, 1.5, 6.6, "Ticket promedio por operación", "USD millones")
+d.bar_chart(s, 0.575, y, 6.6, 4.3, ["Infraestructura y\nenergía (29 op.)", "Growth & LBO\n(192 op.)", "Aurex Capital\n(ticket inicial)"],
+            [262, 42.7, 7.0], highlight=(2,), color="#A6A6A6", highlight_color=PR, fmt='#,##0.0', label_size=12)
+y2 = d.block_header(s, 7.5, 1.5, 5.3, "Por qué ahora")
+d.text(s, 7.5, y2 + 0.05, 5.3, 4.4, [
+    "- **Capacidad privada que el sistema necesita:** el PLADESE 2025–2039 (DOF) prevé 5,551 MW de baterías en 2025–2030 y 7,405 MW de renovables privadas.",
+    "- **Demanda récord:** 54,300 MW el 23-jul-2026 (gran industria y centros de datos).",
+    "- **Ahorro real:** alzas de 8–12% en tarifas industriales en 2025 (según análisis de Quartux) empujan a generar y almacenar en sitio.",
+    "- **Lo que no hacemos:** comprar activos de generación a escala; eso lo hacen MIP, Macquarie o AINDA con cheques de cientos de millones."], size=12)
+
+# =============== 4 POR QUE ESTE EQUIPO ===============
+s = d.content_slide("Por qué este equipo: tres razones y un límite honesto",
+                    "Primer fondo sin historial: lo compensamos con gobierno verificable, no con adjetivos",
+                    source="Fuente: dossiers del equipo (carpeta fuentes_investigacion); credenciales por completar por cada integrante.")
+cards = [("1 · Pipeline verificado", ["8 empresas investigadas con fuentes y URL; 5 criterios de exclusión aplicados una por una.", "Verdigris se excluyó (California, sin operación en México) y se sustituyó por BioEsol."]),
+         ("2 · Visión desde dentro de un fondo", ["Un integrante trabaja hoy en un fondo de inversión y conoce cómo se evalúan y estructuran operaciones.", "[PENDIENTE: nombre y fondo]"]),
+         ("3 · Red en energía y finanzas", ["Acceso a contactos del sector por familia, trabajo y amistad: vía de acercamiento a empresas antes del mercado abierto.", "[PENDIENTE: 2–3 contactos verificables]"])]
+for i, (t, b) in enumerate(cards):
+    d.card(s, 0.575 + i * 4.15, 1.55, 3.95, 2.9, t, b, size=12, fill=T1)
+d.rect(s, 0.575, 4.7, 12.3, 1.9, fill="#FFFFFF", line=RED, dash="dash", line_w=1.25)
+d.text(s, 0.75, 4.78, 12.0, 1.8, [
+    f"!!El límite!!",
+    "- Es un primer fondo: no hay track record ni salidas propias que mostrar; el LP no puede verificar nuestras decisiones pasadas.",
+    "- **Lo que ofrecemos en su lugar:** hurdle de 8% compuesto sobre todo lo comprometido, carry solo sobre ≈2.16x, LPAC con reunión sin el GP, cláusula key man, declaración de conflictos y asiento en el consejo de cada empresa."], size=12)
+
+# =============== 5 COMO FUNCIONA ===============
+s = d.content_slide("Fideicomiso privado, LPs mexicanos y cascada europea",
+                    "El GP solo cobra carry si el LP gana más de 8% compuesto sobre todo lo comprometido",
+                    source="Fuente: PF_Memorandum_AurexCapital.docx y modelo (Hoja2_Distribucion); LISR arts. 192–193; LMV art. 8. Validar con abogado y fiscalista.")
+d.rect(s, 0.575, 1.6, 3.2, 0.9, fill=T1, line=DK, text="LPs calificados\nfamily offices · HNWI · corporativos", size=11, bold=True)
+d.rect(s, 0.575, 3.0, 3.2, 0.9, fill=DK, text="Fideicomiso privado (FICAP)\nfiduciario: banco o casa de bolsa", size=11, bold=True, color="#FFFFFF")
+d.rect(s, 0.575, 4.4, 3.2, 0.9, fill=T1, line=DK, text="Gestora (GP): Aurex\nComité de Inversión · LPAC", size=11, bold=True)
+d.rect(s, 0.575, 5.7, 3.2, 0.8, fill=PR, text="8 empresas mexicanas\n≥80% del patrimonio · asiento en consejo", size=10, bold=True, color="#FFFFFF")
+for y0, y1 in ((2.5, 3.0), (3.9, 4.4), (5.3, 5.7)):
+    d.line(s, 2.175, y0, 2.175, y1, color=DK, width=2.0, arrow=True)
+d.table(s, 4.2, 1.6, 8.65, [
+    ["Término", "Aurex Capital"],
+    ["Tamaño y duración", "US$100M · 10 años (5+5) · extensiones 1+1"],
+    ["Comisión de administración", "2% sobre comprometido (años 1–5); 1.5% sobre invertido (años 6–10); más IVA"],
+    ["Carry · hurdle · catch-up", "20% · 8% anual compuesto · 100%"],
+    ["Cascada", "Europea (todo el fondo) con clawback"],
+    ["Compromiso del GP", "2% del fondo (efectivo + renuncia parcial de comisión)"],
+    ["Gobierno", "LPAC · key man · remoción con y sin causa · tope 15% por empresa"],
+    ["Uso del capital", "US$82M invertidos · US$16.15M comisión · US$1.85M gastos"]],
+    col_w=[2.6, 6.05], row_h=0.46, size=10.5, text_cols=(0, 1))
+d.conclusion_bar(s, "Las AFOREs no pueden entrar a un fideicomiso no listado: apuntamos a family offices y corporativos, la base menos desarrollada del mercado.", y=5.65, x=4.2, w=8.65, h=0.85, size=11)
+
+# =============== 6 MERCADO Y DIFERENCIA ===============
+s = d.content_slide("México tiene capital, pero no para este ticket",
+                    "US$11.4 mil M invertidos en 2025–1S2026, pero solo ≈US$900M en 111 salidas",
+                    source="Fuente: AMEXCAP, Brief Perspective 1H 2026 (inversión anual, salidas, AFOREs ≈59% del capital comprometido 2021–2025); AINDA vía Techla (30-sep-2025).")
+y = d.block_header(s, 0.575, 1.5, 6.5, "Inversión de capital privado en México", "USD millones")
+d.bar_chart(s, 0.575, y, 6.5, 4.3, ["2019", "2020", "2021", "2022", "2023", "2024", "2025", "1S-26"],
+            [4198, 6082, 11887, 7430, 6214, 7276, 5376, 6028], highlight=(6, 7), color="#A6A6A6", highlight_color=PR, fmt='#,##0', label_size=10)
+y2 = d.block_header(s, 7.4, 1.5, 5.45, "Qué nos hace distintos")
+d.table(s, 7.4, y2 + 0.05, 5.45, [
+    ["", "AINDA II", "Aurex"],
+    ["Tamaño", "US$354M", "US$100M"],
+    ["Vehículo", "CKD/CERPI", "Fideicomiso privado"],
+    ["LPs", "5 AFOREs", "Family offices y corporativos"],
+    ["Ticket típico", "US$50M (Quartux)", "US$2–10M"],
+    ["Foco", "Infraestructura", "Operadores de energía en sitio"]],
+    col_w=[1.3, 1.9, 2.25], row_h=0.42, size=10, text_cols=(0, 1, 2))
+d.text(s, 7.4, 4.7, 5.45, 1.9, [
+    "- **Honestidad:** el hueco puede existir por una razón: las salidas de empresas pequeñas de energía no tienen precedentes públicos en 2025–2026.",
+    "- Nos diferenciamos por tamaño de cheque y por tomar asiento en el consejo, no por tecnología."], size=11)
+
+# =============== 7 A QUIEN LE INVERTIRIAN ===============
+s = d.content_slide("Ocho empresas mexicanas, ninguna sin condiciones",
+                    f"US${inv_total:.0f}M invertidos: de US$2M a US$15M por empresa, con follow-on",
+                    source="Fuente: dossiers por empresa (fuentes_investigacion/); hoja Criterios del modelo. Valuaciones no públicas (n.d.); tickets y múltiplos son supuestos del equipo.")
+cond = {"Pireos Power": "Concentración grupo Walmart <30%", "XC Generation": "Data room: ingresos, backlog, accionistas", "BioEsol": "Métricas operativas; sociedad mexicana",
+        "Quartux": "Solo negocio C&I; cupo junto a AINDA", "Niko Energy": "Experiencia energética del equipo", "FAZT": "Contrato Soriana; utilización",
+        "S2G Energy": "Razón social ('LLC') y concentración", "Uriel Renovables (BRM)": "Caso de pérdida esperada (D3)"}
+what = {"Pireos Power": "Microrredes, solar y BESS industrial", "XC Generation": "Solar C&I: EPC y PPA", "BioEsol": "Energía como servicio (solar + BESS + software)",
+        "Quartux": "Baterías C&I con software de control", "Niko Energy": "Solar y baterías para pyme", "FAZT": "Carga ultrarrápida de vehículos eléctricos",
+        "S2G Energy": "Gestión de energía con sensores IoT", "Uriel Renovables (BRM)": "Biogás de relleno: 2 plantas de 1 MW"}
+rows = [["Empresa", "Qué hace", "Invertido\n(US$M)", "Salida\n(año)", "Condición para invertir"]]
+for p in sorted(port, key=lambda p: -p["tot"]):
+    rows.append([p["nombre"], what[p["nombre"]], f"{p['tot']:.0f}", str(p["sal"]), cond[p["nombre"]]])
+rows.append(["Total", "", f"{inv_total:.0f}", "", ""])
+d.table(s, 0.575, 1.55, 8.3, rows, col_w=[1.9, 2.8, 0.9, 0.7, 2.0], row_h=0.44, size=9.5, bold_rows=(len(rows) - 1,), text_cols=(0, 1, 4))
+# logos
+lx, ly = 9.15, 1.55
+for i, (k, pth) in enumerate(logo_tiles[:6]):
+    s.shapes.add_picture(pth, int((lx + (i % 2) * 1.9) * 914400), int((ly + (i // 2) * 1.5) * 914400), width=int(1.75 * 914400))
+d.text(s, 9.15, 6.1, 3.7, 0.55, "Logos tomados de los sitios oficiales de cada empresa.", size=8, italic=True, color="#7F7F7F")
+
+# =============== 8 CASO DE INVERSION ===============
+s = d.content_slide("Caso de inversión: Pireos Power",
+                    "US$10M + US$5M de follow-on por ≈20% de una empresa autofinanciada desde 2018",
+                    source="Fuente: pireos.com (declarado por la empresa); valuación y términos son supuestos del equipo: Pireos no ha participado en este ejercicio.")
+pi = next(p for p in port if p["nombre"] == "Pireos Power")
+d.header_bar(s, 0.575, 1.5, 3.9, "La empresa")
+d.bullet_box(s, 0.575, 1.82, 3.9, 3.0, [
+    "Microrredes, solar, baterías y O&M para industria y retail; 300+ proyectos (declarado).",
+    "Microrred de Walmart: 5 MWp + 14 MWh + 3.5 MW UPS.",
+    "Crecen con capital propio: sería su primer cheque institucional.",
+    "**Riesgo:** el grupo Walmart podría superar 30% de ventas."], size=10.5, fill="#FFFFFF")
+pimg = first([A + r"\fotos_empresas\pireos\*.jpg"])
+if pimg:
+    im = Image.open(pimg).convert("RGB"); w0, h0 = im.size
+    side = min(w0, h0); box = ((w0 - side) // 2, (h0 - side) // 2, (w0 - side) // 2 + side, (h0 - side) // 2 + side)
+    crop = os.path.join(WORK, "pireos_foto.jpg"); im.crop(box).resize((600, 600)).save(crop)
+    s.shapes.add_picture(crop, int(0.575 * 914400), int(4.95 * 914400), height=int(1.7 * 914400))
+    s.shapes.add_picture(os.path.join(WORK, "logo_Pireos.png"), int(2.5 * 914400), int(5.0 * 914400), width=int(2.0 * 914400))
+d.header_bar(s, 4.7, 1.5, 4.1, "Cuánto, a qué valor, cuánta parte")
+d.table(s, 4.7, 1.9, 4.1, [
+    ["Ronda (supuesto)", "US$M"],
+    ["Valuación pre-money", "40.0"],
+    ["Inversión Aurex (año 2)", "10.0"],
+    ["Valuación post-money", "50.0"],
+    ["Aurex", "20.0%"],
+    ["Pool de opciones (pre-money)", "10.0%"],
+    ["Fundadores actuales", "70.0%"],
+    [f"Follow-on año 4", f"{pi['fo']:.0f}"],
+    ["Total invertido / % del fondo", f"{pi['tot']:.0f} / 15%"]],
+    col_w=[2.9, 1.2], row_h=0.33, size=10, bold_rows=(4, 8), text_cols=(0,))
+d.header_bar(s, 9.05, 1.5, 3.8, "Cómo nos protegemos")
+d.bullet_box(s, 9.05, 1.82, 3.8, 3.0, [
+    "Preferencia de liquidación 1x non-participating.",
+    "Asiento en el consejo y vetos sobre deuda, venta y presupuesto.",
+    "Drag-along y tag-along; vesting de fundadores.",
+    "Condición previa: ningún cliente >30% en data room.",
+    "Diligencia: financiera, fiscal, legal, laboral, operativa y de métricas."], size=10.5, fill="#FFFFFF")
+d.conclusion_bar(s, f"Retorno base: {pi['mult']:.2f}x (US${pi['rec']:.1f}M) en el año {pi['sal']}: crecimiento 20% anual del EBITDA, sin expansión de múltiplo", y=5.1, x=4.7, w=8.15, h=0.65, size=11)
+d.text(s, 4.7, 5.9, 8.15, 0.7, "Si el due diligence muestra concentración >30%, no invertimos o reducimos el ticket con condiciones contractuales: la regla (i) del fondo manda.", size=10.5, italic=True)
+
+# =============== 9 EQUIPO ===============
+s = d.content_slide("Equipo: cinco roles, seis personas",
+                    "Cada integrante defiende una parte propia del fondo; credenciales por completar",
+                    source="Fuente: D2 del equipo (17-ago-2026). Fotos y credenciales verificables por completar por cada integrante.")
+team = [("Julio César Silva", "Managing Partner", "Dirige el fondo y la defensa"), ("Roberto Flores", "Socio de inversión", "Casos de inversión y pipeline"),
+        ("Mariana González", "Socio de operaciones", "Organización, reglas y vehículo"), ("Tomás Tapia", "Relación con inversionistas", "Por qué el LP nos elige"),
+        ("Pablo Belmonte", "Analista", "Modelo financiero y cifras"), ("Miguel Montalvo", "Analista", "Mercado y seguimiento")]
+for i, (n, r, f) in enumerate(team):
+    cx = 0.575 + (i % 3) * 4.15; cy = 1.55 + (i // 3) * 2.45
+    ph = imgkit.placeholder_circle(os.path.join(WORK, f"ph_{i}.png"), label="Foto")
+    s.shapes.add_picture(ph, int(cx * 914400), int(cy * 914400), height=int(1.5 * 914400))
+    d.text(s, cx + 1.65, cy + 0.05, 2.3, 2.1, [f"**{n}**", r, f, "[Credencial verificable por completar]"], size=11)
+d.rect(s, 0.575, 6.2, 12.3, 0.5, fill=T1, text="Key man: si dos personas clave (Managing Partner y Socio de inversión) se van, se suspende el periodo de inversión hasta que los LPs decidan.", size=10.5, bold=True)
+
+# =============== 10 QUE TAN BIEN LES PODRIA IR ===============
+s = d.content_slide(f"Caso base: {xx(base['moic'])} neto y {pct(base['irr'])} de TIR para el LP",
+                    "El carry del GP solo aparece sobre ≈2.16x bruto del capital comprometido",
+                    source="Fuente: PF_Modelo_AurexCapital.xlsx (Summary, Hoja2_Distribucion). TIR neta con calendario real, en USD. Referencias: TIR mediana de fondos en México 16.15% (AMEXCAP 1S-2026); CETES 28 d 6.09% en pesos (Banxico, 8-oct-2026).")
+y = d.block_header(s, 0.575, 1.5, 6.1, "Resultado por escenario", "USD millones; neto de comisiones, gastos y carry")
+d.table(s, 0.575, y + 0.05, 6.1, [
+    ["", "Bajo ×0.5", "Base", "Alto ×1.25"],
+    ["Recupera el portafolio", mm(bajo["proc"]), mm(base["proc"]), mm(alto["proc"])],
+    ["Múltiplo bruto s/ invertido", xx(bajo["mi"]), xx(base["mi"]), xx(alto["mi"])],
+    ["Total a los LPs", mm(bajo["lps"]), mm(base["lps"]), mm(alto["lps"])],
+    ["Carry del GP", mm(bajo["carry"]), mm(base["carry"]), mm(alto["carry"])],
+    ["MOIC neto del LP", xx(bajo["moic"]), xx(base["moic"]), xx(alto["moic"])],
+    ["TIR neta del LP", pct(bajo["irr"]), pct(base["irr"]), pct(alto["irr"])]],
+    col_w=[2.5, 1.2, 1.2, 1.2], row_h=0.38, size=10.5, bold_rows=(5, 6), highlight_cols=(2,), highlight_fill=T1, text_cols=(0,))
+d.text(s, 0.575, 5.2, 6.1, 1.5, [
+    "- Con hurdle sobre todo lo comprometido, el GP necesita ≈2.16x bruto para cobrar el primer peso de carry: en el caso base gana solo la comisión.",
+    f"- Caso bajo: los LPs recuperan {xx(bajo['moic'])}. No prometemos capital protegido.",
+    "- Nuestro caso base queda ligeramente debajo de la TIR mediana del mercado mexicano, a propósito."], size=10.5)
+y2 = d.block_header(s, 7.0, 1.5, 5.85, "Curva J del LP (caso base)", "Veces lo aportado")
+d.line_chart(s, 7.0, y2, 5.85, 4.2, [str(i) for i in range(1, 11)], {"TVPI": [round(v, 2) for v in tvpi], "DPI": [round(v, 2) for v in dpi]},
+             colors=[LIM, DK], subject="DPI", end_labels=False, legend=True, val_fmt='0.0"x"', vmin=0, vmax=2.4)
+
+# =============== 11 COMO RECUPERAN EL DINERO ===============
+s = d.content_slide("Cómo recuperamos el dinero: compradores con nombre",
+                    "Ninguna salida mexicana comparable es de nuestro tamaño: ese es el riesgo principal del fondo",
+                    source="Fuente: dossiers de mercado y de empresa; AMEXCAP 1S-2026 (111 salidas, ≈US$900M); El CEO/BMV (Esentia); pv magazine y Baker McKenzie (COX–Iberdrola México). Compradores: hipótesis del equipo.")
+d.table(s, 0.575, 1.55, 7.2, [
+    ["Empresa", "Año", "Comprador o vía de salida identificada"],
+    ["Pireos Power", "8", "Skysense/Riverstone, AINDA, utilities o el propio grupo cliente"],
+    ["XC Generation", "9", "IPP con apetito C&I, fondos de infraestructura, corporativos eléctricos"],
+    ["BioEsol", "7", "Enlight/ENGIE, Atera, Schneider/Siemens/ABB (software)"],
+    ["Quartux", "7", "AINDA (ya dentro), Riverstone, integradores de baterías"],
+    ["Niko Energy", "6", "Fondos de infraestructura (cartera de SPVs), QED/Picus"],
+    ["FAZT", "8", "Soriana, Factorenergia (28%), energéticas"],
+    ["S2G Energy", "8", "Schneider, Siemens, ABB, Enel X, Engie"],
+    ["Uriel (BRM)", "6", "Grupo Uriel (recompra), host PASA"]],
+    col_w=[1.6, 0.5, 5.1], row_h=0.48, size=9.5, text_cols=(0, 2))
+d.header_bar(s, 8.05, 1.5, 4.8, "Salidas reales en energía (2025–2026)")
+d.bullet_box(s, 8.05, 1.82, 4.8, 3.0, [
+    "**COX compra Iberdrola México** (≈US$4,000M; cierre abr-2026).",
+    "**MIP–Acciona:** ≈US$1,000M por eólicos y solar (anunciado dic-2025).",
+    "**Xinfra Fibra E compra Huinalá** (MXN 5,149M, 2025).",
+    "**IPO de Esentia:** MXN 45 por acción, bajo el rango (nov-2025)."], size=10.5, fill="#FFFFFF")
+d.conclusion_bar(s, "Estas operaciones son 100x más grandes que nuestros tickets: mostramos quién compra, no qué múltiplo esperar.", y=4.95, x=8.05, w=4.8, h=0.85, size=11)
+d.text(s, 0.575, 6.0, 12.3, 0.7, "Si no aparece comprador: venta a otro fondo, venta parcial o vehículo de continuación con valuador independiente y aprobación del LPAC. Tenencia mínima de 2 años por ticket (art. 192 LISR).", size=10.5, italic=True)
+
+# =============== 12 RIESGOS ===============
+s = d.content_slide("Riesgos: seis que importan y qué hacemos",
+                    "El mayor riesgo es la salida; el segundo, la concentración de clientes",
+                    source="Fuente: dossiers de empresa, mercado y legal-fiscal. Pendientes de validar con abogado y fiscalista antes de cualquier uso fuera del curso.")
+d.table(s, 0.575, 1.55, 12.3, [
+    ["Riesgo", "Qué hacemos"],
+    ["Sin salidas públicas para empresas pequeñas de energía", "Compradores nombrados por empresa; consejo; vehículo de continuación; extensiones 1+1"],
+    ["Regulatorio: LSE 2025, ≥54% estatal, permisos CNE, tarifas CFE", "Solo C&I distribuido, sin subsidios; seguimiento regulatorio trimestral"],
+    ["Concentración de clientes o de anfitrión (Walmart, Soriana)", "Regla de 30% verificada en data room antes de invertir"],
+    ["Pérdida del régimen fiscal FICAP", "2 años de tenencia, 80% del patrimonio en empresas mexicanas, distribución a 2 meses; fiscalista"],
+    ["Persona clave y conflicto de interés", "Key man; declaración de conflictos y abstención; LPAC sin el GP"],
+    ["Reforma a inversión extranjera (>49% en energía) y control de concentraciones (CNA)", "Análisis de umbrales antes de firmar; compradores mexicanos como alternativa"]],
+    col_w=[5.6, 6.7], row_h=0.62, size=11, text_cols=(0, 1))
+
+# =============== RESPALDO ===============
+s = d.divider("Respaldo", subtitle="Material para la ronda de preguntas")
+
+s = d.content_slide("Respaldo A · Criterios de exclusión por empresa",
+                    "Cumple / Condición (se verifica antes de invertir) / No cumple",
+                    source="Fuente: hoja Criterios del modelo; dossiers por empresa.")
+X = wb["Criterios"]
+hdr = ["Empresa", "(i) Cliente\n≤30%", "(ii) Directivos\nen energía", "(iii) Sin utility\nmayorista", "(iv) Sin\nsubsidios", "(v) Valuación\n≤US$100M", "FICAP"]
+rows = [hdr]
+for r in range(6, 14):
+    row = [X[f"B{r}"].value]
+    for c in "CDEFGH":
+        v = X[f"{c}{r}"].value or ""
+        row.append(v.split(":")[0])
+    rows.append(row)
+d.table(s, 0.575, 1.55, 12.3, rows, col_w=[2.3, 1.7, 1.7, 1.7, 1.6, 1.7, 1.6], row_h=0.5, size=11, text_cols=(0,), num_align="center")
+d.text(s, 0.575, 6.15, 12.3, 0.5, "Detalle de cada celda en PF_Modelo_AurexCapital.xlsx, hoja Criterios. Verdigris (California) quedó excluida y fue sustituida por BioEsol.", size=10.5, italic=True)
+
+s = d.content_slide("Respaldo B · Cascada europea paso a paso",
+                    "Capital, retorno preferente, catch-up y reparto 80/20",
+                    source="Fuente: PF_Modelo_AurexCapital.xlsx (Hoja2_Distribucion). Hurdle: 8% compuesto sobre US$100M a 10 años = US$115.9M.")
+def h2(r, c): return H2[f"{c}{r}"].value
+d.table(s, 0.575, 1.6, 8.0, [
+    ["Escalón (US$M)", "Bajo", "Base", "Alto"],
+    ["Recupera el portafolio", mm(h2(19, "E")), mm(h2(19, "D")), mm(h2(19, "F"))],
+    ["1 · Devolución de capital", mm(h2(21, "E")), mm(h2(21, "D")), mm(h2(21, "F"))],
+    ["2 · Retorno preferente", mm(h2(23, "E")), mm(h2(23, "D")), mm(h2(23, "F"))],
+    ["3 · Catch-up al GP", mm(h2(26, "E")), mm(h2(26, "D")), mm(h2(26, "F"))],
+    ["4 · Resto al LP (80%)", mm(h2(28, "E")), mm(h2(28, "D")), mm(h2(28, "F"))],
+    ["4 · Resto al GP (20%)", mm(h2(29, "E")), mm(h2(29, "D")), mm(h2(29, "F"))],
+    ["Total a los LPs", mm(h2(32, "E")), mm(h2(32, "D")), mm(h2(32, "F"))],
+    ["Carry del GP", mm(h2(33, "E")), mm(h2(33, "D")), mm(h2(33, "F"))]],
+    col_w=[3.2, 1.6, 1.6, 1.6], row_h=0.45, size=11, bold_rows=(7, 8), text_cols=(0,))
+d.text(s, 9.0, 1.6, 3.85, 4.5, [
+    "**Cómo leerlo**",
+    "- El LP recibe primero todo lo aportado y después su 8% compuesto; solo lo que sobra activa el catch-up del GP.",
+    "- En el caso base el fondo no llega al hurdle completo (US$115.9M): el GP no cobra carry.",
+    "- En el caso alto el catch-up se llena solo en parte."], size=11)
+
+s = d.content_slide("Respaldo C · Las seis preguntas del comité",
+                    "Respuestas preparadas por el equipo; cada integrante puede tener que contestar cualquiera",
+                    source="Fuente: guía del proyecto (sec. 8); cifras del modelo y de los dossiers.")
+d.table(s, 0.575, 1.5, 12.3, [
+    ["Pregunta", "Respuesta corta"],
+    ["1 · ¿Por qué invertir aquí y no en algo más seguro?", f"No prometemos seguridad: base {pct(base['irr'])} neta en USD vs 6.09% de CETES en pesos; el caso bajo devuelve {xx(bajo['moic'])}. Pagamos iliquidez a 10 años con un hurdle de 8% antes de cobrar."],
+    ["2 · ¿Cuántas apuestas tienen que salir bien?", f"El caso base ya supone una pérdida (Uriel, 0.25x) y una empresa bajo 2.0x. Si además fallan por completo tres empresas medianas (Niko, FAZT y S2G), el LP recibiría ≈{(base['proc']-sum(p['rec'] for p in port if p['nombre'] in ('Niko Energy','FAZT','S2G Energy')))/100:.2f}x."],
+    ["3 · ¿Cómo y a quién le venden?", "Hoja Escenarios: comprador nombrado por empresa; ejemplo: Pireos a Skysense/Riverstone o AINDA en el año 8."],
+    ["4 · ¿Qué pasa si se va quien lidera?", "Key man: se suspende el periodo de inversión hasta que los LPs decidan; LPAC y remoción sin causa por mayoría calificada."],
+    ["5 · ¿Qué protege a los inversionistas?", "Cascada europea, clawback, hurdle sobre lo comprometido, preferencia 1x en cada empresa, tope 15%, LPAC y reportes trimestrales."],
+    ["6 · ¿Por qué ustedes y no un fondo con experiencia?", "No tenemos track record; ofrecemos un ticket que esos fondos no hacen (US$2–10M), pipeline verificado, gobierno estricto y alineación: sin carry bajo 2.16x."]],
+    col_w=[4.2, 8.1], row_h=0.78, size=10.5, text_cols=(0, 1))
+
+d.save(OUT)
+print("saved", OUT, "slides", d.n)

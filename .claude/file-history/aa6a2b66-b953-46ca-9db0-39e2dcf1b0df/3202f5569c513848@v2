@@ -1,0 +1,16 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$w = $xl.Workbooks.Item('20260930_SETSA_Posibles_Compradores.xlsx')
+$dash = ' ' + [char]0x2013 + ' '
+foreach ($s in $w.Worksheets) {
+    for ($r = 6; $r -le 60; $r++) {
+        $v = [string]$s.Cells.Item($r, 3).Value2
+        if ($v -like 'Operadores de transporte de personal*') {
+            $n = $v.Replace($dash, ' (')
+            if ($n -ne $v) { $n = $n + ')' }
+            $n = ($n -replace '\s{2,}', ' ').Trim()
+            if ($n -ne $v) { $s.Cells.Item($r, 3).Value2 = $n; $s.Name + " $r : " + $n }
+        }
+    }
+}
+$w.Save(); 'guardado=' + $w.Saved

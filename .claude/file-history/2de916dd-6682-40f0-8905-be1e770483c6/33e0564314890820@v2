@@ -1,0 +1,127 @@
+import time, sys, pywintypes, pandas as pd
+import win32com.client as w
+from eu_load import load, files
+
+BUSY = {-2146777998, -2147418111, -2147417846}
+def retry(fn):
+    for _ in range(120):
+        try: return fn()
+        except pywintypes.com_error as e:
+            codes = {e.hresult} | ({e.excepinfo[5]} if e.excepinfo and len(e.excepinfo) > 5 else set())
+            if codes & BUSY: time.sleep(0.5); continue
+            raise
+    raise RuntimeError('Excel busy')
+
+# competitor shares from Euromonitor (2017-2025)
+YRS = list(range(2017, 2026))
+def shares(ctry, owners):
+    cs = load(files()[ctry], 'Company Share NBO')
+    cs = cs[(cs['Hierarchy level'] == 1) & (cs['Currency Conversion'] == 'Local Currency') & (cs['Data Type'] == 'Retail Value RSP')]
+    out = {}
+    for o in owners:
+        d = {int(r['Year']): float(r['Percent']) for _, r in cs[cs['National Brand Owner'] == o].iterrows()}
+        out[o] = [d.get(y) for y in YRS]
+    return out
+COMP = {'Mexico': shares('Mexico', ['Artisanal', 'Others']), 'USA': shares('USA', ['Private Label', 'Artisanal'])}
+LAB = {'Mexico': [('Artisanal', 'Artisanal Bakeries and Tortillerias Market Share'), ('Others', 'Other Companies Market Share')],
+       'USA': [('Private Label', 'Private Label Market Share'), ('Artisanal', 'Artisanal Bakeries Market Share')]}
+
+xl = w.GetActiveObject('Excel.Application')
+wb = retry(lambda: [xl.Workbooks(i) for i in range(1, xl.Workbooks.Count + 1) if xl.Workbooks(i).Name == 'Bimbo Financial Model_v2.xlsx'][0])
+ws = retry(lambda: wb.Worksheets('Market Growth & Inflation'))
+rgb = lambda h: int(h[0:2], 16) + int(h[2:4], 16) * 256 + int(h[4:6], 16) * 65536
+NAVY, GRAY, INPUT = rgb('05346E'), rgb('595959'), rgb('0000FF')
+lab = lambda r: str(ws.Cells(r, 2).Value or '').strip()
+DC = range(3, 11)
+L = lambda c: ws.Cells(1, c).Address.split('$')[1]
+
+def find(text, start=1, end=260):
+    for r in range(start, end):
+        if lab(r).startswith(text): return r
+    sys.exit('not found: ' + text)
+
+def move(src, dst):                      # move row src so it sits just above row dst
+    ws.Rows(f'{src}:{src}').Cut(); ws.Rows(f'{dst}:{dst}').Insert(Shift=-4121); xl.CutCopyMode = False
+
+def run():
+    # ---------- guards
+    expect = ['Market Size, Retail Value RSP (Current Prices)', 'Market Growth, Nominal', 'Market Size, Constant 2025 Prices',
+              'Market Growth, Real (Volume and Mix)', 'Implied Price Effect (Nominal vs Real)', "Retail Volume ('000 tonnes)", 'Volume Growth',
+              'Price per kg', 'Price per kg Growth', 'Price per kg Growth vs Inflation (pp)', '', '', 'Change in Market Share (pp)']
+    for b in (18, 33):
+        for i, e in enumerate(expect):
+            if e and not lab(b + i).startswith(e): sys.exit(f'layout changed at row {b+i}: {lab(b+i)!r}')
+    # ---------- 1) reorder market blocks (bottom block first so top indices stay valid)
+    for b in (33, 18):
+        move(b + 4, b + 2)          # price effect under nominal growth
+        move(b + 4, b + 3)          # real growth under price effect
+        move(b + 10, b + 13)        # Bimbo retail value after share change
+    # ---------- 2) source rows for competitor shares (insert under each Bimbo share source row)
+    for ctry, title in (('USA', 'Euromonitor, USA'), ('Mexico', 'Euromonitor, Mexico')):
+        t = find(title, 60)
+        sh = find('Bimbo Market Share, NBO', t)
+        ws.Rows(f'{sh + 1}:{sh + 2}').Insert(Shift=-4121)
+        for i, (owner, text) in enumerate(LAB[ctry]):
+            r = sh + 1 + i
+            ws.Cells(r, 2).Value2 = text.replace(' Market Share', ' Share, NBO (%)'); ws.Cells(r, 2).IndentLevel = 1
+            ws.Cells(r, 2).Font.Bold = False; ws.Cells(r, 2).Font.Color = 0
+            for j, c in enumerate(range(3, 12)):
+                v = COMP[ctry][owner][j]
+                if v is not None: ws.Cells(r, c).Value2 = round(v, 4)
+            rg = ws.Range(ws.Cells(r, 3), ws.Cells(r, 11)); rg.Font.Color = INPUT; rg.NumberFormat = '0.00'; rg.Font.Bold = False
+    # ---------- 3) display rows (labels) after Bimbo retail value in each block
+    for ctry, head in (('USA', 'United States (USD mm)'), ('Mexico', 'Mexico (MXN mm)')):
+        h = find(head, 15, 50)
+        bv = find('Grupo Bimbo Retail Value' if ctry == 'Mexico' else 'Bimbo Bakeries USA Retail Value', h)
+        ws.Rows(f'{bv + 1}:{bv + 2}').Insert(Shift=-4121)
+        for i, (owner, text) in enumerate(LAB[ctry]):
+            ws.Cells(bv + 1 + i, 2).Value2 = text
+    # ---------- 4) now that all rows are in place, locate everything by label and write formulas
+    SYR = find('Source Data (2017', 50)
+    out = {}
+    for ctry, head, title in (('Mexico', 'Mexico (MXN mm)', 'Euromonitor, Mexico'), ('USA', 'United States (USD mm)', 'Euromonitor, USA')):
+        h = find(head, 15, 60); t = find(title, SYR)
+        for owner, text in LAB[ctry]:
+            d = find(text, h); s = find(text.replace(' Market Share', ' Share, NBO (%)'), t)
+            ws.Cells(d, 2).IndentLevel = 1
+            for c in DC:
+                ws.Cells(d, c).Formula = f'=INDEX($C${s}:$K${s},MATCH({L(c)}$5,$C${SYR}:$K${SYR},0))/100'
+            rg = ws.Range(ws.Cells(d, 2), ws.Cells(d, 10)); rg.Font.Color = 0; rg.Font.Italic = False; rg.Font.Bold = False
+            rg.Interior.ColorIndex = -4142; rg.Borders(8).LineStyle = -4142; rg.Borders(9).LineStyle = -4142
+            ws.Range(ws.Cells(d, 3), ws.Cells(d, 10)).NumberFormat = '0.0%'
+            out[f'{ctry}:{owner}'] = (d, s)
+    return out
+
+def fmt():
+    # labels and emphasis (principal rows bold)
+    ren = {'Market Growth, Nominal': 'Market Growth (Nominal)', 'Implied Price Effect (Nominal vs Real)': 'o/w Price Effect',
+           'Market Growth, Real (Volume and Mix)': 'o/w Real Growth (Volume and Mix)'}
+    bold_main = ('CPI Cereals & Bakery Products, YoY Change', 'Core Inflation', 'Market Size, Retail Value RSP', 'Market Growth (Nominal)',
+                 'Grupo Bimbo Market Share', 'Bimbo Bakeries USA Market Share', 'Net Sales, Mexico Segment', 'Net Sales, North America (USD mm)',
+                 'Net Sales Growth')
+    last = find('Implied Volume, Mix and Share (vs Market Price)', find('North America (USD mm)', 40, 120))
+    for r in range(5, last + 1):
+        t = lab(r)
+        if t in ren: ws.Cells(r, 2).Value2 = ren[t]; t = ren[t]
+        rg = ws.Range(ws.Cells(r, 2), ws.Cells(r, 10))
+        if t.startswith('o/w'):
+            ws.Cells(r, 2).IndentLevel = 3; rg.Font.Italic = True; rg.Font.Color = GRAY; rg.Font.Bold = False
+        if t.startswith(bold_main):
+            rg.Font.Bold = True; rg.Font.Italic = False; rg.Font.Color = 0
+    # competitor share rows: normal black, share change italic gray already
+    return last
+
+try:
+    retry(lambda: setattr(xl, 'ScreenUpdating', False)); prev = xl.Calculation; retry(lambda: setattr(xl, 'Calculation', -4135))
+    src = retry(run)
+    last = retry(fmt)
+    retry(lambda: setattr(xl, 'Calculation', -4105)); retry(lambda: xl.CalculateFull())
+    try: err = ws.UsedRange.SpecialCells(-4123, 16).Address
+    except Exception: err = None
+    print('errors:', err, '| competitor source rows', src)
+    for r in range(15, last + 1):
+        t = ws.Cells(r, 2).Text
+        if t: print(r, ('B ' if ws.Cells(r, 2).Font.Bold else '  ') + t[:50].ljust(50), [ws.Cells(r, c).Text for c in DC])
+    retry(lambda: wb.Save())
+finally:
+    retry(lambda: setattr(xl, 'ScreenUpdating', True))

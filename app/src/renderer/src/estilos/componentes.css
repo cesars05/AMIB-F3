@@ -98,24 +98,30 @@
 
 /* ═══ Botones y controles ═══ */
 .btn {
-  border: 1px solid var(--linea-fuerte);
+  border: 1px solid var(--linea);
   background: var(--superficie);
   color: var(--texto);
   padding: 9px 16px;
   border-radius: var(--radio);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 14px;
-  transition: transform 100ms var(--ease), background-color var(--duracion) var(--ease), border-color var(--duracion) var(--ease), opacity var(--duracion) var(--ease);
+  font-family: var(--fuente);
+  transition: background-color var(--duracion) var(--ease), border-color var(--duracion) var(--ease), color var(--duracion) var(--ease), box-shadow var(--duracion) var(--ease), transform 150ms var(--ease);
+  box-shadow: var(--shadow-btn);
 }
 .btn:hover:not(:disabled) {
   background: var(--suave);
+  border-color: color-mix(in srgb, var(--linea) 60%, var(--tenue));
+  box-shadow: var(--shadow-btn-hover);
 }
 .btn:active:not(:disabled) {
   transform: scale(0.97);
+  box-shadow: var(--shadow-btn-active);
 }
 .btn:disabled {
   opacity: 0.4;
   cursor: default;
+  box-shadow: none;
 }
 .btn.primario {
   background: var(--primario);
@@ -124,7 +130,14 @@
 }
 .btn.primario:hover:not(:disabled) {
   background: var(--primario);
-  opacity: 0.88;
+  border-color: var(--primario);
+  opacity: 0.92;
+  box-shadow: var(--shadow-btn-primario);
+}
+.btn.primario:active:not(:disabled) {
+  background: var(--primario);
+  border-color: var(--primario);
+  transform: scale(0.97);
 }
 .btn.acento {
   background: var(--acento);
@@ -133,11 +146,21 @@
 }
 .btn.acento:hover:not(:disabled) {
   background: var(--acento);
-  opacity: 0.88;
+  border-color: var(--acento);
+  opacity: 0.92;
+  box-shadow: var(--shadow-btn-acento);
+}
+.btn.acento:active:not(:disabled) {
+  background: var(--acento);
+  border-color: var(--acento);
+  transform: scale(0.97);
 }
 .btn.discreto {
   border-color: var(--linea);
-  font-weight: 600;
+  font-weight: 500;
+}
+.btn.discreto:hover:not(:disabled) {
+  background: var(--suave);
 }
 .btn.pequeno {
   padding: 5px 11px;
@@ -181,12 +204,20 @@
   border-radius: var(--radio-lg);
   padding: 18px;
   min-width: 0;
-  box-shadow: var(--sombra);
+  box-shadow: var(--shadow-card);
+  transition: box-shadow var(--duracion) var(--ease), transform 150ms var(--ease);
+}
+.panel:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+.panel:active {
+  box-shadow: var(--shadow-card-active);
 }
 .panel > h2,
 .panel-titulo {
   margin: 0 0 4px;
   font-size: 16px;
+  font-weight: 600;
 }
 .panel p.sub {
   margin: 0 0 12px;
@@ -290,6 +321,7 @@
   border-radius: var(--radio-lg);
   background: var(--superficie);
   overflow: hidden;
+  box-shadow: var(--shadow-card);
 }
 .kpi {
   padding: 14px 16px;
@@ -297,9 +329,13 @@
   display: grid;
   gap: 4px;
   align-content: start;
+  transition: background-color var(--duracion) var(--ease);
 }
 .kpi:last-child {
   border-right: 0;
+}
+.kpi:hover {
+  background: var(--suave);
 }
 .kpi > span {
   font-size: 12px;
@@ -351,17 +387,22 @@
   gap: 6px;
   align-content: start;
   min-height: 112px;
-  transition: border-color var(--duracion) var(--ease), transform 100ms var(--ease);
+  box-shadow: var(--shadow-card);
+  transition: box-shadow var(--duracion) var(--ease), transform 150ms var(--ease), border-color var(--duracion) var(--ease);
 }
 .seccion:hover:not(:disabled) {
-  border-color: var(--linea-fuerte);
+  border-color: color-mix(in srgb, var(--linea) 70%, var(--tenue));
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
 }
 .seccion:active:not(:disabled) {
   transform: scale(0.985);
+  box-shadow: var(--shadow-card-active);
 }
 .seccion:disabled {
   cursor: default;
   opacity: 0.62;
+  box-shadow: none;
 }
 .seccion strong {
   font-size: 16px;
@@ -373,12 +414,17 @@
 .seccion small {
   color: var(--tenue);
   font-size: 13px;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 .seccion.hoy {
   background: var(--primario);
   color: var(--sobre-primario);
   border-color: var(--primario);
+  box-shadow: var(--shadow-md);
+}
+.seccion.hoy:hover:not(:disabled) {
+  border-color: var(--primario);
+  box-shadow: var(--shadow-lg);
 }
 .seccion.hoy small {
   color: inherit;

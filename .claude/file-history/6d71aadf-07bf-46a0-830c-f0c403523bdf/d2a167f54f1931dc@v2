@@ -1,0 +1,274 @@
+import pickle, time, pywintypes, collections, datetime as dt
+from attach import get_app
+import engine as E
+
+res = pickle.load(open(E.S + "/results.pkl", "rb"))
+app = get_app()
+wb = app.Workbooks("AZTD - Top Holdings Peers_v2.xlsx")
+
+def R(fn, *a, **k):
+    for t in range(120):
+        try:
+            return fn(*a, **k)
+        except pywintypes.com_error as e:
+            if e.args[0] in (-2147418111, -2147417846, -2146777998):
+                time.sleep(1); continue
+            raise
+
+app.ScreenUpdating = False
+app.Calculation = -4135  # manual while writing
+FUNDS, PEERS, G = E.FUNDS, E.PEERS, E.GICS
+SECS = G + [E.OTHER]
+AZ = wb.Worksheets("AZTD")
+TITLE, BAR, BODY, BODYB = AZ.Range("C2"), AZ.Range("C14"), AZ.Range("C15"), AZ.Range("C7")
+
+def fmt_from(src, dst):
+    src.Copy(); dst.PasteSpecial(-4122)
+
+def bar(ws, rng, text=None):
+    fmt_from(BAR, ws.Range(rng))
+    if text is not None:
+        ws.Range(rng).Cells(1, 1).Value = text
+
+def put(ws, addr, rows):
+    n = len(rows); m = max(len(r) for r in rows)
+    rows = [list(r) + [None] * (m - len(r)) for r in rows]
+    ws.Range(addr).Resize(n, m).Value = rows
+
+def get_sheet(name, after):
+    for s in wb.Worksheets:
+        if s.Name == name:
+            app.DisplayAlerts = False; s.Delete(); app.DisplayAlerts = True
+            break
+    ws = wb.Worksheets.Add(After=wb.Worksheets(after))
+    ws.Name = name
+    ws.Cells.Font.Name = "Arial"; ws.Cells.Font.Size = 11
+    app.ActiveWindow.DisplayGridlines = False
+    ws.Columns("A").ColumnWidth = 3
+    return ws
+
+M0, M1 = E.MONTHS[0], E.MONTHS[-1]
+PLAB = "Jan-24 to Aug-26"
+fnd = res["funds"]
+
+# ======================= Attribution Data =======================
+D = get_sheet("Attribution Data", "DFIS Data")
+fmt_from(TITLE, D.Range("C2:N2")); D.Range("C2").Value = "Attribution Data - holdings-based contribution by security"
+D.Range("C3").Value = ("Weights: SEC Form N-PORT quarterly holdings (to Dec-25) + Workspace Derived Holdings monthly (Jan-Aug 26), "
+                       "drifted monthly. Returns: Workspace monthly total return in USD. Contribution = start-of-month weight x return, "
+                       "Carino-linked; period figures annualized (" + PLAB + ", 32 months).")
+D.Range("C3").Font.Italic = True; D.Range("C3").Font.Size = 9; D.Range("C3").Font.Color = 0x7F7F7F
+hdr = ["Fund", "RIC", "Company", "Sector", "Avg Weight " + PLAB, "Contribution " + PLAB + " (ann.)",
+       "Avg Weight YTD-26", "Contribution YTD-26", "Held by AZTD (period)"]
+bar(D, "C5:K5"); put(D, "C5", [hdr])
+held_az = {r["ric"] for r in res["rows"] if r["fund"] == "AZTD" and r["wP"] > 0}
+rows = sorted(res["rows"], key=lambda r: (FUNDS.index(r["fund"]), -r["cP"]))
+data = [[r["fund"], r["ric"], r["name"], r["sector"], r["wP"], r["cP"], r["wY"], r["cY"],
+         "Yes" if r["ric"] in held_az else "No"] for r in rows]
+N = len(data); r0, r1 = 6, 5 + N
+for i in range(0, N, 4000):
+    put(D, f"C{r0+i}", data[i:i+4000])
+D.Range(f"G{r0}:J{r1}").NumberFormat = "0.00%;-0.00%;-"
+D.Range(f"C{r0}:C{r1}").HorizontalAlignment = -4108; D.Range(f"D{r0}:D{r1}").HorizontalAlignment = -4108
+D.Range(f"G{r0}:K{r1}").HorizontalAlignment = -4108
+for c, w in zip("CDEFGHIJK", [8, 13, 40, 24, 16, 18, 14, 16, 12]):
+    D.Columns(c).ColumnWidth = w
+D.Range("C5:K5").WrapText = True; D.Rows(5).RowHeight = 30
+D.Range("C5:K5").HorizontalAlignment = -4108
+rngF, rngS, rngWP, rngCP, rngWY, rngCY = (f"'Attribution Data'!${c}${r0}:${c}${r1}" for c in "CFGHIJ")
+
+# monthly return table (holdings-based vs fund) at the right
+mr = D.Range("M5")
+bar(D, "M5:S5"); put(D, "M5", [["Month"] + [f + " (holdings)" for f in FUNDS]])
+put(D, "M6", [[dt.datetime(m.year, m.month, m.day)] + [fnd[f]["monthly"][str(m)] for f in FUNDS] for m in E.MONTHS])
+D.Range(f"M6:M{5+len(E.MONTHS)}").NumberFormat = "mmm-yy"
+D.Range(f"N6:R{5+len(E.MONTHS)}").NumberFormat = "0.0%"
+D.Range("M5:R5").WrapText = True; D.Range(f"M5:R{5+len(E.MONTHS)}").HorizontalAlignment = -4108
+for c in "MNOPQR": D.Columns(c).ColumnWidth = 12
+D.Range("S5").Value = None
+fmt_from(BAR, D.Range("M5:R5"))
+D.Activate(); D.Range("C6").Select(); app.ActiveWindow.FreezePanes = False
+D.Range("E6").Select(); app.ActiveWindow.FreezePanes = True
+
+# ======================= Attribution =======================
+A = get_sheet("Attribution", "DFIS")
+fmt_from(TITLE, A.Range("C2:P2")); A.Range("C2").Value = "Performance Attribution - AZTD vs Peers"
+A.Range("C3").Value = ("Holdings-based (SEC N-PORT + Workspace Derived Holdings; Workspace returns in USD). "
+                       "Period " + PLAB + " annualized (32 months); YTD = Jan-Aug 26 cumulative. Peer avg = equal-weight AVDV, ISCF, DISV, DFIS.")
+A.Range("C3").Font.Italic = True; A.Range("C3").Font.Size = 9; A.Range("C3").Font.Color = 0x7F7F7F
+A.Columns("B").ColumnWidth = 2
+A.Columns("C").ColumnWidth = 30
+for c in "DEFGHIJKLMNOP": A.Columns(c).ColumnWidth = 12.5
+PCT, PP = "0.0%;-0.0%;-", '+0.00%;-0.00%;-'
+
+# --- 1. Fund performance ---
+r = 5
+bar(A, f"C{r}:J{r}")
+put(A, f"C{r}", [["Fund Performance", "Actual 3Y (SEC, ann.)", "Actual YTD", "Holdings " + PLAB + " (ann.)",
+                  "Holdings YTD", "Holdings cum. " + PLAB, "Avg # holdings", "Return w/o data"]])
+A.Range(f"D{r}:J{r}").WrapText = True; A.Rows(r).RowHeight = 42; A.Range(f"D{r}:J{r}").HorizontalAlignment = -4108
+tabs = {"AZTD": ("AZTD", "K7", "L7"), "AVDV": ("AVDV", "K7", "L7"), "ISCF": ("ISCF", "K7", "L7"),
+        "DISV": ("DISV", "K7", "L7"), "DFIS": ("DFIS", "K7", "L7")}
+for i, f in enumerate(FUNDS):
+    rr = r + 1 + i
+    nh = sum(1 for x in res["rows"] if x["fund"] == f and x["wP"] > 0)
+    avg_n = sum(len([1 for w in E.WEIGHT[f][m].values() if w > 0]) for m in E.MONTHS) / len(E.MONTHS)
+    put(A, f"C{rr}", [[f, f"='{f}'!K7", f"='{f}'!L7", fnd[f]["ann"], fnd[f]["ytd"], fnd[f]["cum"], round(avg_n), fnd[f]["miss"]]])
+rr = r + 6
+put(A, f"C{rr}", [["Peer average"] + [f"=AVERAGE({c}{r+2}:{c}{r+5})" for c in "DEFGHIJ"]])
+put(A, f"C{rr+1}", [["AZTD vs peer average"] + [f"={c}{r+1}-{c}{rr}" for c in "DEFGH"]])
+A.Range(f"D{r+1}:H{rr+1}").NumberFormat = PCT; A.Range(f"J{r+1}:J{rr}").NumberFormat = "0.0%"
+A.Range(f"I{r+1}:I{rr}").NumberFormat = "0"
+A.Range(f"D{r+1}:J{rr+1}").HorizontalAlignment = -4108
+A.Range(f"C{rr}:J{rr}").Borders(8).LineStyle = 1
+A.Range(f"C{rr+1}:J{rr+1}").Font.Bold = True
+A.Range(f"D{rr+1}:H{rr+1}").NumberFormat = '+0.0%;-0.0%;-'
+PERF_ROW = rr + 1
+
+# --- 2/3. Sector contribution ---
+def sector_block(r, title, key, note):
+    bar(A, f"C{r}:L{r}")
+    put(A, f"C{r}", [[title] + FUNDS + ["Peer avg", "AZTD vs peer", "Avg wt AZTD", "Avg wt peers"]])
+    A.Range(f"D{r}:L{r}").WrapText = True; A.Rows(r).RowHeight = 30; A.Range(f"D{r}:L{r}").HorizontalAlignment = -4108
+    cc, wc = ("P", "wP") if key == "P" else ("Y", "wY")
+    ccol, wcol = (rngCP, rngWP) if key == "P" else (rngCY, rngWY)
+    for i, s in enumerate(SECS):
+        rr = r + 1 + i
+        row = [s]
+        for f in FUNDS:
+            row.append(f'=SUMIFS({ccol},{rngF},"{f}",{rngS},$C{rr})')
+        row += [f"=AVERAGE(E{rr}:H{rr})", f"=D{rr}-I{rr}",
+                f'=SUMIFS({wcol},{rngF},"AZTD",{rngS},$C{rr})',
+                '=(' + "+".join(f'SUMIFS({wcol},{rngF},"{p}",{rngS},$C{rr})' for p in PEERS) + f")/{len(PEERS)}"]
+        put(A, f"C{rr}", [row])
+    tr = r + 1 + len(SECS)
+    put(A, f"C{tr}", [["Total (holdings-based)"] + [f"=SUM({c}{r+1}:{c}{tr-1})" for c in "DEFGHIJKL"]])
+    A.Range(f"C{tr}:L{tr}").Font.Bold = True; A.Range(f"C{tr}:L{tr}").Borders(8).LineStyle = 1
+    A.Range(f"D{r+1}:J{tr}").NumberFormat = PP; A.Range(f"K{r+1}:L{tr}").NumberFormat = PCT
+    A.Range(f"D{r+1}:L{tr}").HorizontalAlignment = -4108
+    for i in range(len(SECS)):
+        A.Range(f"C{r+1+i}").Borders(9).LineStyle = 1; A.Range(f"C{r+1+i}").Borders(9).Weight = 1
+    A.Range(f"C{tr+1}").Value = note
+    A.Range(f"C{tr+1}").Font.Italic = True; A.Range(f"C{tr+1}").Font.Size = 9; A.Range(f"C{tr+1}").Font.Color = 0x7F7F7F
+    # colour the gap column
+    fc = A.Range(f"J{r+1}:J{tr-1}").FormatConditions
+    fc.Delete()
+    c1 = fc.Add(1, 5, "=0"); c1.Font.Color = 0x006100; c1.Interior.Color = 0xCEEFC6
+    c2 = fc.Add(1, 6, "=0"); c2.Font.Color = 0x06009C; c2.Interior.Color = 0xCEC7FF
+    return tr
+
+r = PERF_ROW + 3
+SEC_P = r
+tr = sector_block(r, "Sector contribution " + PLAB + " (pp / yr)", "P",
+                  "Contribution = weight x return, linked and annualized; sums to the holdings-based annualized return.")
+r = tr + 3
+SEC_Y = r
+tr = sector_block(r, "Sector contribution YTD-26 (pp)", "Y", "YTD Jan-Aug 26, cumulative.")
+
+# --- 4. Brinson ---
+r = tr + 3
+BR = r
+bar(A, f"C{r}:I{r}")
+put(A, f"C{r}", [["Attribution vs peer average", "Allocation " + PLAB, "Selection " + PLAB, "Total " + PLAB,
+                  "Allocation YTD", "Selection YTD", "Total YTD"]])
+A.Range(f"D{r}:I{r}").WrapText = True; A.Rows(r).RowHeight = 42; A.Range(f"D{r}:I{r}").HorizontalAlignment = -4108
+bP, bY = res["brinson"]["P"], res["brinson"]["Y"]
+lines = SECS + ["Cash & other"]
+for i, s in enumerate(lines):
+    rr = r + 1 + i
+    put(A, f"C{rr}", [[s, bP["alloc"].get(s, 0), bP["sel"].get(s, 0), f"=D{rr}+E{rr}",
+                       bY["alloc"].get(s, 0), bY["sel"].get(s, 0), f"=G{rr}+H{rr}"]])
+    A.Range(f"C{rr}").Borders(9).LineStyle = 1
+tr = r + 1 + len(lines)
+put(A, f"C{tr}", [["Total gap (holdings-based)"] + [f"=SUM({c}{r+1}:{c}{tr-1})" for c in "DEFGHI"]])
+A.Range(f"C{tr}:I{tr}").Font.Bold = True; A.Range(f"C{tr}:I{tr}").Borders(8).LineStyle = 1
+A.Range(f"D{r+1}:I{tr}").NumberFormat = PP; A.Range(f"D{r+1}:I{tr}").HorizontalAlignment = -4108
+A.Range(f"C{tr+1}").Value = ("Allocation = (AZTD sector wt - peer wt) x (peer sector return - peer total). "
+                             "Selection = AZTD wt x (AZTD sector return - peer sector return). Brinson-Fachler, Carino-linked.")
+A.Range(f"C{tr+1}").Font.Italic = True; A.Range(f"C{tr+1}").Font.Size = 9; A.Range(f"C{tr+1}").Font.Color = 0x7F7F7F
+for col in ("F", "I"):
+    fc = A.Range(f"{col}{r+1}:{col}{tr-1}").FormatConditions; fc.Delete()
+    c1 = fc.Add(1, 5, "=0"); c1.Font.Color = 0x006100; c1.Interior.Color = 0xCEEFC6
+    c2 = fc.Add(1, 6, "=0"); c2.Font.Color = 0x06009C; c2.Interior.Color = 0xCEC7FF
+BR_END = tr
+
+# --- 5. AZTD top / bottom names ---
+az = [x for x in res["rows"] if x["fund"] == "AZTD"]
+def top(lst, key, n, rev=True):
+    return sorted([x for x in lst if abs(x[key]) > 0], key=lambda x: x[key], reverse=rev)[:n]
+r = tr + 3
+NAMES = r
+def names_block(r, col, title, lst, key, wkey):
+    c2 = chr(ord(col) + 3)
+    bar(A, f"{col}{r}:{c2}{r}")
+    put(A, f"{col}{r}", [[title, "Sector", "Avg wt", "Contrib."]])
+    A.Range(f"{col}{r}:{c2}{r}").HorizontalAlignment = -4108; A.Range(f"{col}{r}").HorizontalAlignment = -4131
+    for i, x in enumerate(lst):
+        put(A, f"{col}{r+1+i}", [[x["name"], x["sector"], x[wkey], x[key]]])
+    last = r + len(lst)
+    nxt = chr(ord(col) + 1); w = chr(ord(col) + 2)
+    A.Range(f"{w}{r+1}:{w}{last}").NumberFormat = PCT; A.Range(f"{c2}{r+1}:{c2}{last}").NumberFormat = PP
+    A.Range(f"{nxt}{r+1}:{c2}{last}").HorizontalAlignment = -4108
+    A.Range(f"{nxt}{r+1}:{nxt}{last}").Font.Size = 9
+names_block(r, "C", "AZTD top contributors " + PLAB, top(az, "cP", 10), "cP", "wP")
+names_block(r, "H", "AZTD top contributors YTD-26", top(az, "cY", 10), "cY", "wY")
+r2 = r + 13
+names_block(r2, "C", "AZTD largest detractors " + PLAB, top(az, "cP", 10, False), "cP", "wP")
+names_block(r2, "H", "AZTD largest detractors YTD-26", top(az, "cY", 10, False), "cY", "wY")
+
+# --- 6. What AZTD is missing ---
+peer = collections.defaultdict(lambda: dict(cP=0, cY=0, wP=0, wY=0, n=0, name="", sector=""))
+for x in res["rows"]:
+    if x["fund"] in PEERS:
+        p = peer[x["ric"]]
+        for k in ("cP", "cY", "wP", "wY"):
+            p[k] += x[k] / len(PEERS)
+        p["n"] += 1 if x["wP"] > 0 else 0
+        p["name"], p["sector"] = x["name"], x["sector"]
+az_wP = {x["ric"]: x["wP"] for x in az}; az_wY = {x["ric"]: x["wY"] for x in az}
+missP = sorted([dict(v, ric=k) for k, v in peer.items() if az_wP.get(k, 0) == 0], key=lambda v: -v["cP"])[:15]
+missY = sorted([dict(v, ric=k) for k, v in peer.items() if az_wY.get(k, 0) == 0], key=lambda v: -v["cY"])[:15]
+r3 = r2 + 13
+MISS = r3
+names_block(r3, "C", "Top peer contributors not held by AZTD " + PLAB, missP, "cP", "wP")
+names_block(r3, "H", "Top peer contributors not held by AZTD YTD-26", missY, "cY", "wY")
+A.Range(f"C{r3+16}").Value = "Peer composite contribution (equal-weight of the 4 peers); 'Avg wt' = peer composite average weight."
+A.Range(f"C{r3+16}").Font.Italic = True; A.Range(f"C{r3+16}").Font.Size = 9; A.Range(f"C{r3+16}").Font.Color = 0x7F7F7F
+for c, w in (("C", 34), ("H", 34), ("I", 20), ("D", 20)):
+    A.Columns(c).ColumnWidth = w
+
+# --- chart: sector gap ---
+ch = A.ChartObjects().Add(A.Range("N5").Left, A.Range("N5").Top, 520, 330)
+c = ch.Chart; c.ChartType = 57  # bar clustered
+s1 = c.SeriesCollection().NewSeries(); s1.Name = "Allocation (" + PLAB + ")"
+s1.Values = A.Range(f"D{BR+1}:D{BR+len(G)}"); s1.XValues = A.Range(f"C{BR+1}:C{BR+len(G)}")
+s2 = c.SeriesCollection().NewSeries(); s2.Name = "Selection (" + PLAB + ")"
+s2.Values = A.Range(f"E{BR+1}:E{BR+len(G)}"); s2.XValues = A.Range(f"C{BR+1}:C{BR+len(G)}")
+c.HasTitle = True; c.ChartTitle.Text = "AZTD vs peers: where the gap comes from (pp / yr)"
+c.ChartTitle.Font.Size = 12; c.ChartTitle.Font.Bold = True
+c.HasLegend = True; c.Legend.Position = -4107
+c.Axes(2).TickLabels.NumberFormat = "0.0%"
+c.Axes(1).ReversePlotOrder = True
+c.Axes(1).TickLabelPosition = -4134  # low
+s1.Format.Fill.ForeColor.RGB = 0x5E2F1F; s2.Format.Fill.ForeColor.RGB = 0xC9A26B
+ch.Name = "AttributionGapChart"
+
+ch2 = A.ChartObjects().Add(A.Range("N28").Left, A.Range("N28").Top, 520, 330)
+c = ch2.Chart; c.ChartType = 57
+for f, color in (("AZTD", 0x5E2F1F), ("Peer avg", 0xC9A26B)):
+    col = "D" if f == "AZTD" else "I"
+    s = c.SeriesCollection().NewSeries(); s.Name = f
+    s.Values = A.Range(f"{col}{SEC_P+1}:{col}{SEC_P+len(G)}"); s.XValues = A.Range(f"C{SEC_P+1}:C{SEC_P+len(G)}")
+    s.Format.Fill.ForeColor.RGB = color
+c.HasTitle = True; c.ChartTitle.Text = "Sector contribution " + PLAB + " (pp / yr)"
+c.ChartTitle.Font.Size = 12; c.ChartTitle.Font.Bold = True
+c.HasLegend = True; c.Legend.Position = -4107; c.Axes(2).TickLabels.NumberFormat = "0.0%"
+c.Axes(1).ReversePlotOrder = True; c.Axes(1).TickLabelPosition = -4134
+ch2.Name = "SectorContribChart"
+
+A.Activate(); A.Range("A1").Select()
+pickle.dump(dict(SEC_P=SEC_P, SEC_Y=SEC_Y, BR=BR, BR_END=BR_END, PERF_ROW=PERF_ROW, MISS=MISS, NAMES=NAMES,
+                 nsec=len(SECS)), open(E.S + "/layout.pkl", "wb"))
+app.Calculation = -4105
+app.ScreenUpdating = True
+print("written", SEC_P, SEC_Y, BR, NAMES, MISS)

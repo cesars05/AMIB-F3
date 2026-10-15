@@ -1,0 +1,192 @@
+"""Holdings-based contribution & Brinson attribution, AZTD vs peers.
+Weights: SEC N-PORT quarterly (to Dec-25) + Workspace Derived Holdings monthly (Jan-Aug 26).
+Returns: Workspace monthly total return (local) x FX (PriceClose USD / local)."""
+import csv, json, pickle, re, math, collections, datetime as dt
+
+S = r"C:/Users/cesar/AppData/Local/Temp/claude/C--Users-cesar-OneDrive-Desktop-AZTD-Peers/6d71aadf-07bf-46a0-830c-f0c403523bdf/scratchpad"
+NP = r"C:/Users/cesar/OneDrive/Desktop/AZTD Peers/SEC N-PORT/NPORT_holdings_all.csv"
+FUNDS = ["AZTD", "AVDV", "ISCF", "DISV", "DFIS"]
+PEERS = FUNDS[1:]
+GICS = ["Communication Services", "Consumer Discretionary", "Consumer Staples", "Energy", "Financials",
+        "Health Care", "Industrials", "Information Technology", "Materials", "Real Estate", "Utilities"]
+OTHER = "Unclassified"
+
+def eom(y, m):
+    nxt = dt.date(y + (m == 12), m % 12 + 1, 1)
+    return nxt - dt.timedelta(days=1)
+
+MONTHS = []  # month-end dates Jan-24 .. Aug-26
+y, m = 2024, 1
+while (y, m) <= (2026, 8):
+    MONTHS.append(eom(y, m)); m += 1
+    if m == 13: y, m = y + 1, 1
+PREV = {MONTHS[i]: (MONTHS[i - 1] if i else dt.date(2023, 12, 31)) for i in range(len(MONTHS))}
+YTD = [d for d in MONTHS if d.year == 2026]
+
+isin_map = json.load(open(S + "/isin_map.json"))
+ok = lambda x: x and x[0] and x[0] != "NULL" and "Unable" not in str(x[1])
+
+# ---------- returns ----------
+raw = pickle.load(open(S + "/ret_raw.pkl", "rb"))
+RET = {}   # ric -> {month_end: usd return}
+for ric, rows in raw.items():
+    pts = {}
+    for d, r, pu, pl in rows:
+        try:
+            dd = dt.date.fromisoformat(d[:10])
+        except Exception:
+            continue
+        dd = eom(dd.year, dd.month)
+        def num(x):
+            try:
+                x = float(x); return x if math.isfinite(x) else None
+            except Exception:
+                return None
+        pts[dd] = (num(r), num(pu), num(pl))
+    out = {}
+    for d in MONTHS:
+        cur, prv = pts.get(d), pts.get(PREV[d])
+        if not cur or cur[0] is None:
+            continue
+        fx = 1.0
+        if prv and cur[1] and cur[2] and prv[1] and prv[2]:
+            fx = (cur[1] / cur[2]) / (prv[1] / prv[2])
+        r = (1 + cur[0] / 100) * fx - 1
+        if abs(r) > 3:   # guard against bad ticks
+            continue
+        out[d] = r
+    RET[ric] = out
+
+# ---------- security master ----------
+MASTER = {}  # ric -> (name, sector)
+for isin, x in isin_map.items():
+    if ok(x):
+        sec = x[2] if x[2] in GICS else OTHER
+        MASTER[x[0]] = (x[1], sec)
+
+# ---------- snapshots ----------
+SNAP = {f: {} for f in FUNDS}  # fund -> date -> {ric: w}
+UNMAP = {f: collections.defaultdict(float) for f in FUNDS}
+for r in csv.DictReader(open(NP, encoding="utf-8")):
+    if r["cat"] not in ("EC", "EP", "") or r["payoff"] == "Short":
+        continue
+    d = dt.date.fromisoformat(r["date"])
+    if d >= dt.date(2026, 1, 31):
+        continue  # 2026 comes from monthly Derived Holdings
+    x = isin_map.get(r["isin"])
+    w = float(r["pct"])
+    key = x[0] if ok(x) else "UNMAPPED:" + (r["isin"] or r["name"])
+    if not ok(x):
+        MASTER.setdefault(key, (r["name"].replace("&amp;", "&"), OTHER))
+    SNAP[r["fund"]].setdefault(d, collections.defaultdict(float))[key] += w
+
+monthly = pickle.load(open(S + "/monthly2026.pkl", "rb"))
+isin_re = re.compile(r"^[A-Z]{2}[A-Z0-9]{9}\d$")
+for f, (dates, recs) in monthly.items():
+    for ric, name, sector, ws in recs:
+        if ric.startswith("LP") or ("." not in ric and not isin_re.match(ric)):
+            continue  # cash / money market
+        if isin_re.match(ric):
+            x = isin_map.get(ric)
+            key = x[0] if ok(x) else "UNMAPPED:" + ric
+        else:
+            key = ric
+        if key not in MASTER:
+            MASTER[key] = (str(name).title() if name else key, sector if sector in GICS else OTHER)
+        elif MASTER[key][1] == OTHER and sector in GICS:
+            MASTER[key] = (MASTER[key][0], sector)
+        for k, d in enumerate(dates):
+            w = ws[k]
+            if w:
+                dd = d.date() if hasattr(d, "date") else d
+                SNAP[f].setdefault(dd, collections.defaultdict(float))[key] += w
+
+def sector(ric):
+    return MASTER.get(ric, (ric, OTHER))[1]
+
+def name(ric):
+    return MASTER.get(ric, (ric, OTHER))[0]
+
+# ---------- monthly contributions with drift ----------
+CONTRIB = {f: {} for f in FUNDS}   # fund -> month -> {ric: c}
+WEIGHT = {f: {} for f in FUNDS}    # fund -> month -> {ric: w_start}
+HRET = {f: {} for f in FUNDS}      # fund -> month -> holdings return
+MISSING = {f: {} for f in FUNDS}   # weight with no return
+for f in FUNDS:
+    dates = sorted(SNAP[f])
+    cur_w, cur_from = None, None
+    for mth in MONTHS:
+        s = PREV[mth]
+        cand = [d for d in dates if d <= s]
+        if not cand:
+            continue
+        d0 = cand[-1]
+        if d0 != cur_from:            # fresh snapshot: reset weights
+            cur_w = dict(SNAP[f][d0]); cur_from = d0
+            # drift from snapshot date to month start if snapshot is mid-way (never: snapshots are month-ends)
+        c, miss = {}, 0.0
+        for ric, w in cur_w.items():
+            r = RET.get(ric, {}).get(mth)
+            if r is None:
+                r = 0.0; miss += w
+            c[ric] = w * r
+        R = sum(c.values())
+        CONTRIB[f][mth] = c; WEIGHT[f][mth] = dict(cur_w); HRET[f][mth] = R; MISSING[f][mth] = miss
+        # drift weights to next month (cash earns 0)
+        cur_w = {ric: w * (1 + (c[ric] / w if w else 0)) / (1 + R) for ric, w in cur_w.items()}
+
+# ---------- linking helpers ----------
+def carino_k(r):
+    return math.log1p(r) / r if abs(r) > 1e-12 else 1.0
+
+def linked(fund, months):
+    """Carino-linked contribution per ric over months (sums to cumulative holdings return)."""
+    Rs = [HRET[fund][m] for m in months]
+    cum = math.prod(1 + r for r in Rs) - 1
+    K = carino_k(cum)
+    out = collections.defaultdict(float)
+    for m in months:
+        km = carino_k(HRET[fund][m]) / K
+        for ric, c in CONTRIB[fund][m].items():
+            out[ric] += c * km
+    return out, cum
+
+def avg_weight(fund, months):
+    out = collections.defaultdict(float)
+    for m in months:
+        for ric, w in WEIGHT[fund][m].items():
+            out[ric] += w / len(months)
+    return out
+
+def by_sector(d):
+    out = collections.defaultdict(float)
+    for ric, v in d.items():
+        out[sector(ric)] += v
+    return out
+
+def ann(cum, n_months):
+    return (1 + cum) ** (12 / n_months) - 1
+
+# ---------- Brinson vs peer composite (equal-weight of 4 peers) ----------
+def brinson(months):
+    alloc = collections.defaultdict(float); sel = collections.defaultdict(float)
+    RA = [HRET["AZTD"][m] for m in months]
+    RP = [sum(HRET[p][m] for p in PEERS) / len(PEERS) for m in months]
+    cumA = math.prod(1 + r for r in RA) - 1; cumP = math.prod(1 + r for r in RP) - 1
+    Ktot = (math.log1p(cumA) - math.log1p(cumP)) / (cumA - cumP) if abs(cumA - cumP) > 1e-12 else 1 / (1 + cumA)
+    for m, ra, rp in zip(months, RA, RP):
+        km = (math.log1p(ra) - math.log1p(rp)) / (ra - rp) if abs(ra - rp) > 1e-12 else 1 / (1 + ra)
+        k = km / Ktot
+        wa = by_sector(WEIGHT["AZTD"][m]); ca = by_sector(CONTRIB["AZTD"][m])
+        wp = collections.defaultdict(float); cp = collections.defaultdict(float)
+        for p in PEERS:
+            for s_, v in by_sector(WEIGHT[p][m]).items(): wp[s_] += v / len(PEERS)
+            for s_, v in by_sector(CONTRIB[p][m]).items(): cp[s_] += v / len(PEERS)
+        for s_ in set(wa) | set(wp):
+            rps = cp[s_] / wp[s_] if wp[s_] > 1e-9 else 0.0
+            ras = ca[s_] / wa[s_] if wa[s_] > 1e-9 else rps
+            alloc[s_] += (wa[s_] - wp[s_]) * (rps - rp) * k
+            sel[s_] += wa[s_] * (ras - rps) * k
+        cashA = 1 - sum(wa.values()); cashP = 1 - sum(wp.values())
+        alloc["Cash & other"] += (cashA - cashP) * (0 - rp) * k
+    return alloc, sel, cumA, cumP

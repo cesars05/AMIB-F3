@@ -1,0 +1,257 @@
+"""Forward P/E de la cartera: nivel actual contra el rango de 2 anios.
+
+    python generar_pe_cartera.py ["ruta\\estado.csv"]
+
+Salidas en portafolio/:
+    PE_Cartera.png       -- P/E forward de cada posicion sobre su rango de 2A
+    PE_Percentil.png     -- en que percentil de su propio rango esta cada una
+
+POR QUE EL RANGO Y NO SOLO EL NIVEL
+-----------------------------------
+"Micron a 6x y GE Vernova a 39x" no dice cual esta barata. Son industrias con
+multiplos estructuralmente distintos: la memoria siempre cotiza bajo porque es
+ciclica, y un fabricante de turbinas con cartera de pedidos siempre cotiza
+alto. Comparar sus P/E entre si no significa nada.
+
+Lo que si significa algo es comparar cada nombre CONTRA SU PROPIA HISTORIA: si
+GE Vernova promedio 30x en dos anios y hoy esta en 39x, esta cara para lo que
+ella suele valer, sin importar donde este Micron.
+
+EL P/E DE LA CARTERA ES ARMONICO, NO UN PROMEDIO
+------------------------------------------------
+El P/E de un conjunto es (suma de valor de mercado) / (suma de utilidades), no
+el promedio de los P/E individuales. La diferencia no es cosmetica: en el S&P,
+Consumer Discretionary da 24.0x armonico contra 52.6x si se promedia ponderado,
+porque las empresas con utilidad cercana a cero disparan su P/E individual y
+contaminan el promedio. Aqui se reportan los dos para que se vea la brecha.
+"""
+import sys
+sys.path.append(r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs")
+
+import csv
+import json
+import os
+import warnings
+import lseg.data as ld
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+from datetime import datetime, timedelta
+from grafico_banquero import (configurar_estilo_banquero, PALETA,
+                              linea_referencia, ejes_limpios)
+
+warnings.filterwarnings("ignore")
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except (AttributeError, OSError):
+    pass
+
+configurar_estilo_banquero()
+SALIDA = "portafolio"
+os.makedirs(SALIDA, exist_ok=True)
+
+ESTADO = (sys.argv[1] if len(sys.argv) > 1 else
+          r"C:\Users\cesar\Downloads\U18244610_20250915_20260914.csv")
+BOLSA_A_SUFIJO = {"NASDAQ": ".OQ", "NYSE": ".N", "ARCA": ".P", "AMEX": ".A",
+                  "BATS": ".Z", "TSE": ".TO"}
+
+
+def leer_estado(ruta):
+    secciones = {}
+    with open(ruta, encoding="utf-8-sig") as f:
+        for fila in csv.reader(f):
+            if len(fila) < 3:
+                continue
+            sec, tipo = fila[0], fila[1]
+            if tipo == "Header":
+                secciones.setdefault(sec, []).append({"cols": fila[2:], "filas": []})
+            elif tipo == "Data" and secciones.get(sec):
+                secciones[sec][-1]["filas"].append(fila[2:])
+    return secciones
+
+
+def tabla(secciones, nombre, columna=None):
+    bloques = secciones.get(nombre, [])
+    if not bloques:
+        return pd.DataFrame()
+    elegido = bloques[0]
+    if columna:
+        elegido = next((b for b in bloques if columna in b["cols"]), bloques[0])
+    ancho = len(elegido["cols"])
+    filas = [f[:ancho] + [""] * (ancho - len(f)) for f in elegido["filas"]]
+    return pd.DataFrame(filas, columns=elegido["cols"])
+
+
+def num(x):
+    try:
+        return float(str(x).replace(",", ""))
+    except (ValueError, TypeError):
+        return float("nan")
+
+
+print(f"Leyendo {os.path.basename(ESTADO)}...")
+sec = leer_estado(ESTADO)
+pos = tabla(sec, "Open Positions")
+pos = pos[pos["DataDiscriminator"] == "Summary"].copy()
+for c in ("Quantity", "Cost Price", "Close Price", "Value", "Unrealized P/L"):
+    pos[c] = pos[c].map(num)
+pos = pos.dropna(subset=["Value"]).set_index("Symbol")
+
+info = tabla(sec, "Financial Instrument Information")
+bolsas = dict(zip(info["Symbol"], info["Listing Exch"]))
+rics = {s: s + BOLSA_A_SUFIJO.get(bolsas.get(s, ""), ".OQ") for s in pos.index}
+
+ld.open_session()
+hoy = datetime.now()
+fin = hoy.strftime("%Y-%m-%d")
+inicio = (hoy - timedelta(days=365 * 2)).strftime("%Y-%m-%d")
+
+# --- precios vivos: el estado trae el cierre del dia del corte --------------
+print("Precios vivos...")
+vivo = ld.get_data(universe=list(rics.values()), fields=["TR.PriceClose"])
+vivo.columns = ["ric", "precio"]
+precio_vivo = vivo.drop_duplicates("ric").set_index("ric")["precio"]
+
+# --- P/E forward: nivel de hoy y serie de 2 anios --------------------------
+print("P/E forward, 2 anios...")
+serie = ld.get_data(universe=list(rics.values()), fields=["TR.FwdPE"],
+                    parameters={"SDate": inicio, "EDate": fin, "Frq": "W"})
+serie.columns = ["ric", "pe"]
+
+filas = []
+for simbolo, ric in rics.items():
+    s = serie[serie["ric"] == ric]["pe"].map(num).dropna()
+    s = s[(s > 0) & (s < 300)]
+    if len(s) < 20:
+        print(f"  -- {simbolo} sin historia de P/E suficiente")
+        continue
+    actual = float(s.iloc[-1])
+    # Cantidad x precio vivo: el valor del estado es del dia del corte
+    p = float(precio_vivo.get(ric, pos.loc[simbolo, "Close Price"]))
+    valor = float(pos.loc[simbolo, "Quantity"]) * p
+    filas.append(dict(
+        simbolo=simbolo, ric=ric, pe=actual,
+        pe_min=float(s.min()), pe_max=float(s.max()),
+        pe_med=float(s.median()),
+        percentil=float((s < actual).mean() * 100),
+        valor=valor, precio=p,
+        costo=float(pos.loc[simbolo, "Cost Price"]),
+        ret_vs_costo=(p / float(pos.loc[simbolo, "Cost Price"]) - 1) * 100))
+
+df = pd.DataFrame(filas).set_index("simbolo")
+df["peso"] = df["valor"] / df["valor"].sum() * 100
+df = df.sort_values("pe")
+
+# --- P/E de la cartera: armonico y, para contraste, promedio ponderado ------
+w = df["valor"] / df["valor"].sum()
+pe_armonico = float(1 / (w / df["pe"]).sum())
+pe_promedio = float((w * df["pe"]).sum())
+
+# ===========================================================================
+# 1. P/E actual sobre el rango de 2 anios
+# ===========================================================================
+fig, ax = plt.subplots(figsize=(6.20, 3.10), dpi=300)
+y = np.arange(len(df))
+
+# La barra clara es el rango que la accion recorrio en dos anios
+ax.barh(y, df["pe_max"] - df["pe_min"], left=df["pe_min"], height=0.55,
+        color=PALETA["claro"], alpha=0.55, zorder=2)
+ax.scatter(df["pe_med"], y, marker="|", s=110, color=PALETA["medio"],
+           linewidths=1.6, zorder=3)
+ax.scatter(df["pe"], y, s=42, color=PALETA["primario"], zorder=4,
+           edgecolors="white", linewidths=0.8)
+
+# Escala log: los multiplos van de 6x a 154x. En escala lineal CrowdStrike
+# aplasta a los otros doce contra el margen izquierdo y el grafico deja de
+# leerse. En log, una misma distancia es el mismo multiplo relativo, que es
+# como se comparan valuaciones.
+ax.set_xscale("log")
+
+ax.axvline(pe_armonico, color=PALETA["referencia"], linewidth=1.2,
+           linestyle="--", zorder=5)
+ax.text(pe_armonico, -0.65, f" Blended {pe_armonico:.1f}x",
+        color=PALETA["referencia"], fontsize=6.5, fontweight="bold",
+        va="bottom", ha="left", zorder=6)
+
+# La etiqueta va a la derecha del punto, no encima
+for i, (s, r) in enumerate(df.iterrows()):
+    ax.text(r["pe"] * 1.06, i, f"{r['pe']:.0f}x", ha="left", va="center",
+            fontsize=6, fontweight="bold", color=PALETA["primario"], zorder=6)
+
+ax.set_yticks(y)
+ax.set_yticklabels(df.index, fontsize=7.5)
+ax.tick_params(axis="y", length=0, labelcolor=PALETA["texto"])
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+ax.spines["left"].set_visible(False)
+ax.spines["bottom"].set_color(PALETA["eje"])
+ax.tick_params(axis="x", length=3, color=PALETA["eje"], labelsize=7,
+               labelcolor=PALETA["texto"])
+ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:.0f}x"))
+ax.xaxis.set_minor_formatter(mticker.NullFormatter())
+ax.set_xticks([5, 10, 20, 40, 80, 160])
+ax.set_xlim(df["pe_min"].min() * 0.78, df["pe_max"].max() * 1.25)
+ax.set_ylim(-0.9, len(df) - 0.3)
+fig.savefig(f"{SALIDA}/PE_Cartera.png", dpi=300, bbox_inches="tight",
+            pad_inches=0.03)
+plt.close(fig)
+
+# ===========================================================================
+# 2. Percentil dentro de su propio rango de 2 anios
+# ===========================================================================
+d2 = df.sort_values("percentil")
+fig, ax = plt.subplots(figsize=(4.25, 2.90), dpi=300)
+colores = [PALETA["primario"] if v < 50 else PALETA["gris"]
+           for v in d2["percentil"]]
+ax.barh(range(len(d2)), d2["percentil"], color=colores, height=0.70, zorder=3)
+ax.axvline(50, color=PALETA["referencia"], linewidth=1.2, linestyle="--", zorder=4)
+ax.text(50, len(d2) - 0.3, " 2Y median", color=PALETA["referencia"],
+        fontsize=6, fontweight="bold", va="top", ha="left", zorder=5)
+for lado in ("top", "right", "bottom", "left"):
+    ax.spines[lado].set_visible(False)
+ax.set_xticks([])
+ax.set_yticks(range(len(d2)))
+ax.set_yticklabels(d2.index, fontsize=7)
+ax.tick_params(axis="y", length=0, labelcolor=PALETA["texto"])
+ax.invert_yaxis()
+for i, v in enumerate(d2["percentil"]):
+    ax.text(v + 1.5, i, f"{v:.0f}", va="center", ha="left", fontsize=6,
+            fontweight="bold", color=PALETA["texto"])
+ax.set_xlim(0, 112)
+fig.savefig(f"{SALIDA}/PE_Percentil.png", dpi=300, bbox_inches="tight",
+            pad_inches=0.03)
+plt.close(fig)
+
+# ===========================================================================
+resumen = {
+    "fecha": fin,
+    "pe_cartera_armonico": round(pe_armonico, 2),
+    "pe_cartera_promedio_ponderado": round(pe_promedio, 2),
+    "nota_pe": ("El armonico es el correcto: agrega utilidades. El promedio "
+                "ponderado se incluye solo para mostrar la brecha."),
+    "posiciones": {
+        s: {"fwd_pe": round(r["pe"], 1),
+            "pe_min_2a": round(r["pe_min"], 1),
+            "pe_mediana_2a": round(r["pe_med"], 1),
+            "pe_max_2a": round(r["pe_max"], 1),
+            "percentil_2a": round(r["percentil"], 0),
+            "peso_pct": round(r["peso"], 1),
+            "precio": round(r["precio"], 2),
+            "costo": round(r["costo"], 2),
+            "ret_vs_costo_pct": round(r["ret_vs_costo"], 1)}
+        for s, r in df.iterrows()},
+}
+with open("datos_pe_cartera.json", "w", encoding="utf-8") as f:
+    json.dump(resumen, f, indent=2, ensure_ascii=False)
+
+print(f"\n{'Simb':6s} {'Peso':>6s} {'Fwd P/E':>8s} {'min 2A':>8s} {'med 2A':>8s} "
+      f"{'max 2A':>8s} {'pctil':>6s} {'vs costo':>9s}")
+for s, r in df.sort_values("percentil").iterrows():
+    print(f"{s:6s} {r['peso']:5.1f}% {r['pe']:8.1f} {r['pe_min']:8.1f} "
+          f"{r['pe_med']:8.1f} {r['pe_max']:8.1f} {r['percentil']:5.0f} "
+          f"{r['ret_vs_costo']:+8.1f}%")
+print(f"\nP/E de la cartera (armonico):        {pe_armonico:.1f}x")
+print(f"P/E promedio ponderado (incorrecto): {pe_promedio:.1f}x")
+print(f"\nListo: {SALIDA}/PE_Cartera.png, {SALIDA}/PE_Percentil.png")
+ld.close_session()

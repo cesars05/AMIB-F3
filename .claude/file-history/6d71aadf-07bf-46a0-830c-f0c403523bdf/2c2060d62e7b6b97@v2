@@ -1,0 +1,113 @@
+import pickle, time
+from attach import get_app
+import engine as E
+L = pickle.load(open(E.S + "/layout.pkl", "rb"))
+res = pickle.load(open(E.S + "/results.pkl", "rb"))
+app = get_app(); wb = app.Workbooks("AZTD - Top Holdings Peers_v2.xlsx"); wb.Activate()
+S = wb.Worksheets("Summary")
+app.ScreenUpdating = False
+PLAB = "Jan-24 to Aug-26"
+A = "Attribution"
+SP, SY, BR, MISS = L["SEC_P"], L["SEC_Y"], L["BR"], L["MISS"]
+NS = L["nsec"]  # 12 incl Unclassified
+
+def put(addr, rows):
+    n = len(rows); m = max(len(r) for r in rows)
+    rows = [list(r) + [None] * (m - len(r)) for r in rows]
+    S.Range(addr).GetResize(n, m).Value2 = tuple(tuple(r) for r in rows)
+
+# already inserted? (rerun safety)
+if str(S.Range("B15").Value).startswith("Performance by Sector"):
+    S.Rows("15:47").Delete()
+S.Rows("15:47").Insert()
+HDR, BODY = S.Range("B7:L7"), S.Range("B16:L16")   # B16 is now blank row -> use original body below
+BODY = S.Range("B49:L49")   # 'Communication Services' row of Sector Weight block (shifted by 33)
+
+def bar(r, c2="J"):
+    HDR.Copy(); S.Range(f"B{r}:{c2}{r}").PasteSpecial(-4122)
+def body(r1, r2, c2="J"):
+    BODY.Copy(); S.Range(f"B{r1}:{c2}{r2}").PasteSpecial(-4122)
+
+r = 15
+bar(r)
+put(f"B{r}", [["Performance by Sector - contribution (pp)", "AZTD " + PLAB + " (ann.)", "Peer avg (ann.)", "AZTD vs peer (ann.)",
+               "AZTD YTD-26", "Peer avg YTD-26", "AZTD vs peer YTD", "Allocation (ann.)", "Selection (ann.)"]])
+S.Range(f"C{r}:J{r}").WrapText = True; S.Rows(r).RowHeight = 44; S.Range(f"C{r}:J{r}").HorizontalAlignment = -4108
+labels = E.GICS + ["Other / unclassified"]
+body(r + 1, r + NS + 3)
+for i in range(NS):
+    rr = r + 1 + i
+    put(f"B{rr}", [[labels[i], f"='{A}'!D{SP+1+i}", f"='{A}'!I{SP+1+i}", f"=C{rr}-D{rr}",
+                    f"='{A}'!D{SY+1+i}", f"='{A}'!I{SY+1+i}", f"=F{rr}-G{rr}",
+                    f"='{A}'!D{BR+1+i}", f"='{A}'!E{BR+1+i}"]])
+t = r + 1 + NS
+put(f"B{t}", [["Total holdings-based"] + [f"=SUM({c}{r+1}:{c}{t-1})" for c in "CDEFGHIJ"]])
+put(f"B{t+1}", [["Trading, rebalancing & fees (actual - holdings)", f"='{A}'!D{SP+NS+2}", f"='{A}'!I{SP+NS+2}", f"=C{t+1}-D{t+1}",
+                 f"='{A}'!D{SY+NS+2}", f"='{A}'!I{SY+NS+2}", f"=F{t+1}-G{t+1}"]])
+put(f"B{t+2}", [["Fund return (actual)"] + [f"={c}{t}+{c}{t+1}" for c in "CDEFGH"]])
+S.Range(f"C{r+1}:J{t+2}").FormatConditions.Delete()
+S.Range(f"C{r+1}:J{t+2}").NumberFormat = '+0.00%;-0.00%;-'
+S.Range(f"C{r+1}:J{t+2}").HorizontalAlignment = -4108
+S.Range(f"B{t}:J{t}").Borders(8).LineStyle = 1; S.Range(f"B{t}:J{t}").Font.Bold = True
+S.Range(f"B{t+1}:J{t+1}").Font.Italic = True
+S.Range(f"B{t+2}:J{t+2}").Borders(8).LineStyle = 1; S.Range(f"B{t+2}:J{t+2}").Font.Bold = True
+for col in ("E", "H"):
+    fc = S.Range(f"{col}{r+1}:{col}{t+2}").FormatConditions; fc.Delete()
+    c1 = fc.Add(1, 5, "=0"); c1.Font.Color = 0x006100; c1.Interior.Color = 0xCEEFC6
+    c2 = fc.Add(1, 6, "=0"); c2.Font.Color = 0x06009C; c2.Interior.Color = 0xCEC7FF
+note = t + 3
+S.Range(f"B{note}").Value = ("Holdings-based: SEC N-PORT + Workspace Derived Holdings x Workspace USD returns (detail in 'Attribution'). "
+                             "Peer avg = AVDV, ISCF, DISV, DFIS equal-weight.")
+S.Range(f"B{note}").Font.Italic = True; S.Range(f"B{note}").Font.Size = 9; S.Range(f"B{note}").Font.Color = 0x7F7F7F
+
+# --- what AZTD is missing ---
+m = note + 2
+bar(m, "D")
+put(f"B{m}", [["What AZTD is missing - top peer contributors not held (" + PLAB + ")", "Sector", "Contrib. (pp/yr)"]])
+S.Range(f"C{m}:D{m}").HorizontalAlignment = -4108
+body(m + 1, m + 5, "D")
+for i in range(5):
+    put(f"B{m+1+i}", [[f"='{A}'!C{MISS+1+i}", f"='{A}'!D{MISS+1+i}", f"='{A}'!F{MISS+1+i}"]])
+m2 = m + 7
+bar(m2, "D")
+put(f"B{m2}", [["What AZTD is missing - top peer contributors not held (YTD-26)", "Sector", "Contrib. (pp)"]])
+S.Range(f"C{m2}:D{m2}").HorizontalAlignment = -4108
+body(m2 + 1, m2 + 5, "D")
+for i in range(5):
+    put(f"B{m2+1+i}", [[f"='{A}'!C{L['MISS_Y']+1+i}", f"='{A}'!D{L['MISS_Y']+1+i}", f"='{A}'!F{L['MISS_Y']+1+i}"]])
+for rr in list(range(m + 1, m + 6)) + list(range(m2 + 1, m2 + 6)):
+    S.Range(f"C{rr}").HorizontalAlignment = -4108; S.Range(f"C{rr}").Font.Size = 9
+    S.Range(f"D{rr}").NumberFormat = '+0.00%;-0.00%;-'; S.Range(f"D{rr}").HorizontalAlignment = -4108
+S.Columns("C").ColumnWidth = max(S.Columns("C").ColumnWidth, 20)
+app.CutCopyMode = False
+print("summary block rows", r, t + 2, m, m2 + 5)
+
+# --- contribution columns on each Data tab ---
+DATA = "'Attribution Data'"
+nrows = wb.Worksheets("Attribution Data").UsedRange.Rows.Count + 5
+for f in E.FUNDS:
+    ws = wb.Worksheets(f + " Data")
+    hr = None
+    for rr in range(8, 14):
+        if str(ws.Range(f"Z{rr}").Value).strip() == "Rank":
+            hr = rr; break
+    if hr is None:
+        print(f, "no Rank header"); continue
+    last = ws.Cells(ws.Rows.Count, 3).End(-4162).Row
+    ws.Range(f"Z{hr}").Copy(); ws.Range(f"AA{hr}:AB{hr}").PasteSpecial(-4122)
+    ws.Range(f"AA{hr}").Value = "Contribution YTD-26"
+    ws.Range(f"AB{hr}").Value = "Contribution " + PLAB + " (ann.)"
+    ws.Range(f"AA{hr}:AB{hr}").WrapText = True
+    fr = f"{DATA}!$C$6:$C${nrows}"; rc = f"{DATA}!$D$6:$D${nrows}"
+    ws.Range(f"AA{hr+1}:AA{last}").Formula = f'=SUMIFS({DATA}!$J$6:$J${nrows},{fr},"{f}",{rc},$C{hr+1})'
+    ws.Range(f"AB{hr+1}:AB{last}").Formula = f'=SUMIFS({DATA}!$H$6:$H${nrows},{fr},"{f}",{rc},$C{hr+1})'
+    ws.Range(f"AA{hr+1}:AB{last}").NumberFormat = '+0.00%;-0.00%;-'
+    ws.Range(f"AA{hr+1}:AB{last}").HorizontalAlignment = -4108
+    ws.Range(f"AA{hr+1}:AB{last}").Font.Name = "Arial"; ws.Range(f"AA{hr+1}:AB{last}").Font.Size = 11
+    ws.Columns("AA").ColumnWidth = 14; ws.Columns("AB").ColumnWidth = 16
+    # extend banner row above header
+    ws.Range(f"Z{hr-1}").Copy(); ws.Range(f"AA{hr-1}:AB{hr-1}").PasteSpecial(-4122)
+    print(f, "contrib cols rows", hr + 1, last)
+app.CutCopyMode = False
+app.ScreenUpdating = True
+S.Activate(); S.Range("A1").Select()

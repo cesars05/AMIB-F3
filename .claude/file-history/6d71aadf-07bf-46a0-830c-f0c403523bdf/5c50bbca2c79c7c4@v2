@@ -1,0 +1,115 @@
+"""Model 1.1 screen: best-ranked names peers hold (and AZTD doesn't), weak names AZTD holds, quality mix by fund."""
+import pickle
+import engine as E
+from build_live_helpers import *   # noqa
+Lz = pickle.load(open(E.S + "/layout.pkl", "rb"))
+
+def Lc(n):
+    s = ""
+    while n: n, r = divmod(n - 1, 26); s = chr(65 + r) + s
+    return s
+RT = wb.Worksheets("Attr Returns"); A = wb.Worksheets("Attribution"); S = wb.Worksheets("Summary")
+d0, dl = 8, 8 + len(E.META) - 1
+C0 = 91
+Q = "'Quant Model Aug'"
+heads = ["Model 1.1", "6M Slope", "Stability", "Tactical", "Peer avg wt Aug-26", "# peers holding Aug-26", "AZTD wt Aug-26"]
+put(RT, f"{Lc(C0)}7", [heads]); fmt_from(BAR, RT.Range(f"{Lc(C0)}7:{Lc(C0+6)}7")); RT.Range(f"{Lc(C0)}7:{Lc(C0+6)}7").WrapText = True
+for k, col in enumerate(("G", "I", "M", "K")):
+    RT.Range(f"{Lc(C0+k)}{d0}:{Lc(C0+k)}{dl}").Formula = f'=IFERROR(N(INDEX({Q}!${col}:${col},MATCH($C{d0},{Q}!$A:$A,0))),"")'
+dt = {f: f"'{f} Data'" for f in E.FUNDS}
+pw = "+".join(f"SUMIFS({dt[p]}!$O$11:$O$4000,{dt[p]}!$C$11:$C$4000,$C{d0})" for p in E.PEERS)
+RT.Range(f"{Lc(C0+4)}{d0}:{Lc(C0+4)}{dl}").Formula = f"=({pw})/{len(E.PEERS)}"
+pc = "+".join(f"(SUMIFS({dt[p]}!$O$11:$O$4000,{dt[p]}!$C$11:$C$4000,$C{d0})>0)" for p in E.PEERS)
+RT.Range(f"{Lc(C0+5)}{d0}:{Lc(C0+5)}{dl}").Formula = f"={pc}"
+RT.Range(f"{Lc(C0+6)}{d0}:{Lc(C0+6)}{dl}").Formula = f"=SUMIFS({dt['AZTD']}!$O$11:$O$200,{dt['AZTD']}!$C$11:$C$200,$C{d0})"
+RT.Range(f"{Lc(C0)}{d0}:{Lc(C0+3)}{dl}").NumberFormat = "0.00"
+RT.Range(f"{Lc(C0+4)}{d0}:{Lc(C0+4)}{dl}").NumberFormat = "0.00%;-0.00%;-"; RT.Range(f"{Lc(C0+6)}{d0}:{Lc(C0+6)}{dl}").NumberFormat = "0.00%;-0.00%;-"
+for k in range(7): RT.Columns(Lc(C0 + k)).ColumnWidth = 11
+col = lambda c: f"'Attr Returns'!${c}${d0}:${c}${dl}"
+NAME, REG = col("D"), col("H")
+hdr = RT.Range("A7:CZ7").Value[0]
+ci = lambda txt: [k for k, v in enumerate(hdr) if v and str(v).startswith(txt)][0] + 1
+SEC = col(Lc(ci("GICS sector (used)"))); YTD = col(Lc(ci("Return YTD-26"))); R3Y = col(Lc(ci("3Y return (ann")))
+MOD, SLP, STB, TAC, PW, NP, AW = (col(Lc(C0 + k)) for k in range(7))
+
+# ---------------- Attribution: model section ----------------
+r = A.UsedRange.Row + A.UsedRange.Rows.Count + 2
+start = r
+c = A.Range(f"C{r}"); c.Value = "MODEL 1.1 SCREEN - WHAT THE PEERS HOLD THAT RANKS HIGH IN OUR MODEL (Aug-26 holdings)"
+c.Font.Bold = True; c.Font.Size = 12; c.Font.Color = 0x4D2A1F
+A.Range(f"C{r}:N{r}").Borders(9).LineStyle = 1; A.Range(f"C{r}:N{r}").Borders(9).Color = 0x37A5D4; A.Range(f"C{r}:N{r}").Borders(9).Weight = -4138
+r += 2
+LABS = ["Sector", "Region", "Model 1.1", "Stability", "6M Slope", "Tactical", "# peers", "Peer avg wt", "Return YTD-26", "3Y return (ann.)"]
+def block(r, title, cond, sort_col, order, n):
+    fmt_from(BAR, A.Range(f"C{r}:M{r}")); put(A, f"C{r}", [[title] + LABS])
+    A.Range(f"D{r}:M{r}").WrapText = True; A.Range(f"D{r}:M{r}").HorizontalAlignment = -4108; A.Rows(r).RowHeight = 42
+    tbl = f"HSTACK({NAME},{SEC},{REG},{MOD},{STB},{SLP},{TAC},{NP},{PW},{YTD},{R3Y})"
+    fx = f'=IFERROR(TAKE(SORT(FILTER({tbl},{cond}),{sort_col},{order}),{n}),"")'
+    R(lambda: setattr(A.Range(f"C{r+1}"), "Formula2", fx))
+    A.Range(f"F{r+1}:I{r+n}").NumberFormat = "0.00"; A.Range(f"K{r+1}:K{r+n}").NumberFormat = "0.00%"
+    A.Range(f"L{r+1}:M{r+n}").NumberFormat = "0.0%"; A.Range(f"D{r+1}:M{r+n}").HorizontalAlignment = -4108
+    A.Range(f"D{r+1}:E{r+n}").Font.Size = 9
+    fc = A.Range(f"F{r+1}:F{r+n}").FormatConditions; fc.Delete()
+    c1 = fc.Add(1, 7, "=0.7"); c1.Font.Bold = True
+    c2 = fc.Add(1, 8, "=0.4"); c2.Font.Color = 0x0000FF
+    for cc in ("G", "I"):
+        fc = A.Range(f"{cc}{r+1}:{cc}{r+n}").FormatConditions; fc.Delete()
+        c1 = fc.Add(1, 7, "=0.7"); c1.Font.Bold = True
+        c2 = fc.Add(1, 8, "=0.4"); c2.Font.Color = 0x0000FF
+    return r + n + 2
+isnum = f"ISNUMBER({MOD})"
+M1 = r
+r = block(r, "Top 20 by Model 1.1 held by peers, NOT in AZTD", f"{isnum}*({PW}>0)*({AW}=0)", 4, -1, 20)
+M2 = r
+r = block(r, "Top 20 by Model 1.1 held by 2+ peers, NOT in AZTD (consensus)", f"{isnum}*({NP}>=2)*({AW}=0)", 4, -1, 20)
+M3 = r
+fmt_from(BAR, A.Range(f"C{r}:M{r}")); put(A, f"C{r}", [["AZTD holdings with the LOWEST Model 1.1 (Aug-26)", "Sector", "Region", "Model 1.1", "Stability",
+                                                        "6M Slope", "Tactical", "# peers", "AZTD wt", "Return YTD-26", "3Y return (ann.)"]])
+A.Range(f"D{r}:M{r}").WrapText = True; A.Range(f"D{r}:M{r}").HorizontalAlignment = -4108; A.Rows(r).RowHeight = 42
+tbl = f"HSTACK({NAME},{SEC},{REG},{MOD},{STB},{SLP},{TAC},{NP},{AW},{YTD},{R3Y})"
+R(lambda: setattr(A.Range(f"C{r+1}"), "Formula2", f'=IFERROR(TAKE(SORT(FILTER({tbl},{isnum}*({AW}>0)),4,1),10),"")'))
+A.Range(f"F{r+1}:I{r+10}").NumberFormat = "0.00"; A.Range(f"K{r+1}:K{r+10}").NumberFormat = "0.00%"
+A.Range(f"L{r+1}:M{r+10}").NumberFormat = "0.0%"; A.Range(f"D{r+1}:M{r+10}").HorizontalAlignment = -4108; A.Range(f"D{r+1}:E{r+10}").Font.Size = 9
+fc = A.Range(f"F{r+1}:F{r+10}").FormatConditions; fc.Delete(); c2 = fc.Add(1, 8, "=0.4"); c2.Font.Color = 0x0000FF
+r += 12
+# quality mix by fund (weight by Model 1.1 bucket, Aug-26)
+M4 = r
+fmt_from(BAR, A.Range(f"C{r}:J{r}"))
+put(A, f"C{r}", [["Weight by Model 1.1 bucket (Aug-26)", "0.8-1.0", "0.6-0.8", "0.4-0.6", "< 0.4", "Not scored", "Wtd avg Model 1.1", "Wtd avg Stability"]])
+A.Range(f"D{r}:J{r}").HorizontalAlignment = -4108; A.Range(f"D{r}:J{r}").WrapText = True; A.Rows(r).RowHeight = 30
+for i, f in enumerate(E.FUNDS):
+    rr = r + 1 + i; dtab = dt[f]
+    w = f"{dtab}!$O$11:$O$4000"; m = f"{dtab}!$P$11:$P$4000"; s_ = f"{dtab}!$R$11:$R$4000"
+    tot = f"SUM({w})"
+    put(A, f"C{rr}", [[f, f'=SUMIFS({w},{m},">=0.8")/{tot}', f'=SUMIFS({w},{m},">=0.6",{m},"<0.8")/{tot}',
+                       f'=SUMIFS({w},{m},">=0.4",{m},"<0.6")/{tot}', f'=SUMIFS({w},{m},">0",{m},"<0.4")/{tot}',
+                       f"=1-SUM(D{rr}:G{rr})", f'=SUMPRODUCT({w},{m})/SUMIFS({w},{m},">0")', f'=SUMPRODUCT({w},{s_})/SUMIFS({w},{s_},">0")']])
+A.Range(f"D{r+1}:H{r+5}").NumberFormat = "0.0%"; A.Range(f"I{r+1}:J{r+5}").NumberFormat = "0.00"
+A.Range(f"D{r+1}:J{r+5}").HorizontalAlignment = -4108
+note(A, f"C{r+6}", "Scores from 'Quant Model Aug' (31-Aug-26). Bold = score >= 0.70; red = score <= 0.40. Peer holdings = Aug-26 weights in each '<fund> Data' tab.")
+MODEL_END = r + 6
+
+# ---------------- Summary block ----------------
+anchor = None
+for rr in range(15, 200):
+    if str(S.Range(f"B{rr}").Value or "").startswith("Sector Weight"):
+        anchor = rr; break
+S.Rows(f"{anchor}:{anchor+13}").Insert()
+HDR = S.Range("C7")
+fmt_from(HDR, S.Range(f"B{anchor}:I{anchor}"))
+put(S, f"B{anchor}", [["Top Model 1.1 names peers hold that AZTD doesn't (Aug-26)", "Sector", "Model 1.1", "Stability", "6M Slope", "# peers",
+                        "Return YTD-26", "3Y return (ann.)"]])
+S.Range(f"C{anchor}:I{anchor}").WrapText = True; S.Range(f"C{anchor}:I{anchor}").HorizontalAlignment = -4108; S.Rows(anchor).RowHeight = 30
+for i in range(10):
+    rr = anchor + 1 + i; ar = M1 + 1 + i
+    put(S, f"B{rr}", [[f"=Attribution!C{ar}", f"=Attribution!D{ar}", f"=Attribution!F{ar}", f"=Attribution!G{ar}", f"=Attribution!H{ar}",
+                       f"=Attribution!J{ar}", f"=Attribution!L{ar}", f"=Attribution!M{ar}"]])
+S.Range(f"B{anchor+1}:I{anchor+10}").Font.Bold = False; S.Range(f"B{anchor+1}:I{anchor+10}").Interior.Pattern = -4142
+S.Range(f"B{anchor+1}:I{anchor+10}").FormatConditions.Delete()
+S.Range(f"D{anchor+1}:F{anchor+10}").NumberFormat = "0.00"; S.Range(f"G{anchor+1}:G{anchor+10}").NumberFormat = "0"
+S.Range(f"H{anchor+1}:I{anchor+10}").NumberFormat = "0.0%"; S.Range(f"C{anchor+1}:I{anchor+10}").HorizontalAlignment = -4108
+S.Range(f"C{anchor+1}:C{anchor+10}").Font.Size = 9
+note(S, f"B{anchor+11}", "Full screen (top 20, consensus names, weakest AZTD holdings, quality mix by fund) in 'Attribution', section Model 1.1 Screen.")
+app.Calculation = -4105; app.ScreenUpdating = True
+pickle.dump(dict(M1=M1, M2=M2, M3=M3, M4=M4), open(E.S + "/model_layout.pkl", "wb"))
+print("model section", M1, M2, M3, M4)

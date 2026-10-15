@@ -1,0 +1,79 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); if([int]$xl.Workbooks.Count -gt 0){ foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } } } }catch{}; if($wb -ne $null){break}; Start-Sleep -Milliseconds 800 }
+function GetWs($n){ for($i=0;$i -lt 30;$i++){ try{ $x=$wb.Worksheets.Item($n); if($x -ne $null){ return $x } }catch{}; Start-Sleep -Milliseconds 700 }; throw ("no hoja "+$n) }
+$wa=GetWs "Assumptions"; $sm=GetWs "Segment Model"; $cm=GetWs "Consolidated Model"
+$dst=Join-Path "C:\Users\cesar\OneDrive\Desktop\Alumasc & Peers\Alumasc\Financials" ("BACKUP_PRE_REVERTSTRESS_"+(Get-Date -Format "yyyyMMdd_HHmmss")+"_"+$wb.Name)
+$wb.SaveCopyAs($dst)
+Write-Output ("Libro: "+$wb.Name+"   Backup: "+(Split-Path $dst -Leaf))
+
+# ---- guards ----
+if(([string]$cm.Cells.Item(277,3).Text) -notmatch "Debt Stressing"){ throw "r277 no es Debt Stressing" }
+if(([string]$cm.Cells.Item(300,3).Text).Trim() -ne "PP&E"){ throw ("r300 = "+([string]$cm.Cells.Item(300,3).Text)+" - esperaba PP&E tras mis 15 filas") }
+Write-Output "Guards OK"
+
+$xl.Calculation=-4135
+
+# ---- 1. quitar el formato condicional antes de borrar ----
+try{ $cm.Range("D290:Q290").FormatConditions.Delete() }catch{}
+
+# ---- 2. borrar las 15 filas que inserte ----
+$cm.Rows("283:297").Delete()
+Write-Output "  15 filas insertadas eliminadas"
+
+# ---- 3. limpiar y restaurar las etiquetas originales ----
+$cm.Range("D279:S282").Clear()
+$cm.Range("C279:C282").Clear()
+$cm.Cells.Item(279,3).Value2="Covenant"
+$cm.Cells.Item(280,3).Value2="Current Net Debt / EBITDA"
+$cm.Cells.Item(281,3).Value2="Interest Coverage Ratio"
+$cm.Cells.Item(282,3).Value2="Stress"
+$cm.Range("C282").Font.Bold=$true
+$cm.Range("S277").Clear()
+Write-Output "  etiquetas originales restauradas"
+
+# ---- 4. quitar el shock de los margenes por segmento ----
+$segCols=@("K","L","M","N","O","P","Q")
+$asmCols=@("E","F","G","H","I","J","K")
+$segRows=@(57,58,59)
+$topRows=@(31,35,39)
+$botRows=@(33,37,41)
+$Q2=[char]34
+for($j=0;$j -lt 3;$j++){
+  $targetRow=$segRows[$j]; $rTop=$topRows[$j]; $rBot=$botRows[$j]
+  for($i=0;$i -lt 7;$i++){
+    $colS=$segCols[$i]; $colA=$asmCols[$i]
+    $f="=+IFERROR(INDEX(Assumptions!"+$colA+"`$"+$rTop+":"+$colA+"`$"+$rBot+",Assumptions!`$F`$9),"+$Q2+$Q2+")"
+    $sm.Range($colS+$targetRow).Formula=$f
+  }
+}
+Write-Output "  shock removido de los margenes"
+
+# ---- 5. quitar la palanca de Assumptions ----
+$wa.Range("C42:J42").Clear()
+Write-Output "  palanca de Assumptions r42 eliminada"
+
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild()
+$xl.CalculateFullRebuild()
+$xl.CalculateFullRebuild()
+
+Write-Output ""
+Write-Output "=== bloque como quedo ==="
+for($r=276;$r -le 290;$r++){
+  $lab=[string]$cm.Cells.Item($r,3).Text
+  $v=""
+  for($c=4;$c -le 19;$c++){ $t=[string]$cm.Cells.Item($r,$c).Text; if($t.Trim() -ne ""){ $v+=("["+[char](64+$c)+"="+$t+"] ") } }
+  if(($lab+$v).Trim() -ne ""){ Write-Output ("r"+$r+"  "+$lab.PadRight(34)+$v) }
+}
+Write-Output ""
+Write-Output ("  Assumptions r42: ["+[string]$wa.Cells.Item(42,3).Text+"]  F42=["+[string]$wa.Range("F42").Text+"]")
+Write-Output ("  Segment K57 = "+[string]$sm.Range("K57").Formula)
+$tot=0
+foreach($ws in $wb.Worksheets){ if(@("Assumptions","Segment Model","Consolidated Model","DCF","EPV") -contains $ws.Name){ $bc=$null; try{ $bc=$ws.UsedRange.SpecialCells(-4123,16) }catch{ $bc=$null }; if($bc -ne $null){ $n=0; try{$n=[int]$bc.Count}catch{}; if($n -gt 0){ Write-Output ("  !! "+$ws.Name+" "+$n); $tot+=$n } } } }
+Write-Output ("")
+Write-Output ("  Errores: "+$tot)
+Write-Output ("  Balance check: "+((11..17 | ForEach-Object { $i=$_; [string]$cm.Cells.Item(164,$i).Text }) -join " | "))
+Write-Output ("  FY2026 revenue / EBIT: "+[string]$cm.Cells.Item(47,11).Text+"  "+[string]$cm.Cells.Item(56,11).Text)
+$wb.Save()
+Write-Output "guardado"

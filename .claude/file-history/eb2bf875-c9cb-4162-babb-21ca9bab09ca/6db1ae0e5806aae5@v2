@@ -1,0 +1,27 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 900 } }; return "??" }
+$xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb=$null; foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+$sb=T { $wb.Worksheets.Item("Segment Beta") }
+$as=T { $wb.Worksheets.Item("Assumptions") }
+Write-Output "=== Segment Beta: a que apuntan las referencias del SOTP ==="
+foreach($a in "L24","L32","L33","L41","L43","J12","F45","F46","F47","F48"){
+  Write-Output ("   'Segment Beta'!"+$a.PadRight(5)+" = "+([string](T { $sb.Range($a).Text })).PadLeft(8)+"   fila dice: "+[string](T { $sb.Cells.Item([int]($a -replace "[A-Z]",""),4).Text }))
+}
+Write-Output ""
+Write-Output "=== Assumptions: tasa fiscal y inflacion de costos ==="
+foreach($r in 85,86,87,88,89,90,91,109,129,149){
+  $lab=[string](T { $as.Cells.Item($r,3).Text })
+  $e=[string](T { $as.Cells.Item($r,5).Text })
+  if(($lab+$e).Trim() -ne ""){ Write-Output ("   r"+([string]$r).PadRight(4)+$lab.PadRight(44)+" E="+$e) }
+}
+Write-Output ""
+Write-Output "=== busco la fila de inflacion de costos ==="
+for($r=60;$r -le 100;$r++){
+  $lab=[string](T { $as.Cells.Item($r,3).Text })
+  if($lab -match "(?i)inflation|tax"){
+    $v=(4..6 | ForEach-Object { $i=$_; ([string](T { $as.Cells.Item($r,$i).Text })).PadLeft(9) }) -join ""
+    Write-Output ("   r"+([string]$r).PadRight(4)+$lab.PadRight(44)+$v)
+  }
+}
+Write-Output ("   F9 (resolver escenario) = "+[string](T { $as.Range("F9").Text })+"   F10 = "+[string](T { $as.Range("F10").Text }))

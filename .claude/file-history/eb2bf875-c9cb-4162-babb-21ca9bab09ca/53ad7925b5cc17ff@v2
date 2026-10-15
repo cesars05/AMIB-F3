@@ -1,0 +1,133 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$cm=$wb.Worksheets.Item("Consolidated Model")
+$sm=$wb.Worksheets.Item("Segment Model")
+$as=$wb.Worksheets.Item("Assumptions")
+$q='"'; $emp=$q+$q
+
+# ---------- GUARDAS ----------
+if([string]$sm.Range("C35").Text -ne "Water Management"){ throw "ABORTO: SM C35 no es WM (EBITDA)" }
+if([string]$sm.Range("C82").Text -ne "Water Management"){ throw "ABORTO: SM C82 no es WM (activos)" }
+if([string]$sm.Range("C91").Text -ne "Water Management"){ throw "ABORTO: SM C91 no es WM (pasivos)" }
+if([string]$cm.Range("C20").Text -notlike "Restructuring*"){ throw "ABORTO: CM r20 no es la linea no-underlying" }
+if([string]$cm.Range("C194").Text -notlike "Disposal of business*"){ throw "ABORTO: CM r194 cambio" }
+if([string]$cm.Range("C297").Text -notlike "Disposals, acquisitions*"){ throw "ABORTO: CM r297 cambio" }
+if([string]$cm.Range("C176").Text -notlike "*disposal of PP&E*"){ throw "ABORTO: CM r176 cambio" }
+if([string]$cm.Range("C365").Text.Trim() -ne ""){ throw "ABORTO: CM r365 no esta vacia" }
+if([string]$as.Range("H77").Text.Trim() -ne ""){ throw "ABORTO: Assumptions H77 no esta vacia" }
+Write-Output "guardas OK"
+
+$xl.Calculation=-4135
+
+# ---------- 1) input nuevo en Assumptions ----------
+$as.Range("H77").Value2="Transaction costs (% of EV)"
+$as.Range("H77").Font.Italic=$true
+$as.Range("J77").Value2=0.015
+$as.Range("J77").NumberFormat="0.0%"
+$as.Range("J76").Copy() | Out-Null
+$as.Range("J77").PasteSpecial(-4122) | Out-Null
+$xl.CutCopyMode=0
+$as.Range("J77").Value2=0.015
+$as.Range("J77").NumberFormat="0.0%"
+Write-Output "Assumptions J77 = 1.5% (costos de transaccion)"
+
+# ---------- 2) bloque nuevo en Consolidated Model r365-r374 ----------
+$cm.Range("C252:S252").Copy() | Out-Null; $cm.Range("C365:S365").PasteSpecial(-4122) | Out-Null
+foreach($r in 366,367,368,369,370,371,372,373,374){
+  $cm.Range("C253:S253").Copy() | Out-Null; $cm.Range("C"+$r+":S"+$r).PasteSpecial(-4122) | Out-Null
+}
+$xl.CutCopyMode=0
+$cm.Range("C365").Value2="Divestiture / Disposal"
+$cm.Range("D365").Formula="=+D9"
+$cm.Range("D365:Q365").FillRight() | Out-Null
+
+$lab=@{}
+$lab[366]="Exit year flag"
+$lab[367]="Divested segment EBITDA (last full year)"
+$lab[368]="Gross proceeds (EV)"
+$lab[369]="   (-) Transaction costs"
+$lab[370]="Net proceeds"
+$lab[371]="Net book value disposed"
+$lab[372]="Gain / (loss) on disposal, pre-tax"
+$lab[373]="   Memo: working capital released automatically"
+$lab[374]="Fixed assets removed on disposal"
+foreach($r in ($lab.Keys | Sort-Object)){ $cm.Cells.Item($r,3).Value2=$lab[$r] }
+
+$mSeg="MATCH(Assumptions!`$J`$74,'Segment Model'!`$C`$35:`$C`$37,0)"
+$mAst="MATCH(Assumptions!`$J`$74,'Segment Model'!`$C`$82:`$C`$84,0)"
+$mLia="MATCH(Assumptions!`$J`$74,'Segment Model'!`$C`$91:`$C`$93,0)"
+$mRev="MATCH(Assumptions!`$J`$74,'Segment Model'!`$C`$13:`$C`$15,0)"
+
+$cm.Range("L366").Formula="=+IF(AND(Assumptions!`$J`$74<>"+$emp+",VALUE(RIGHT(L`$9,4))=Assumptions!`$J`$75+1),1,0)"
+$cm.Range("L367").Formula="=+IF(L366=1,INDEX('Segment Model'!K`$35:K`$37,"+$mSeg+"),0)"
+$cm.Range("L368").Formula="=+L367*Assumptions!`$J`$76"
+$cm.Range("L369").Formula="=-L368*Assumptions!`$J`$77"
+$cm.Range("L370").Formula="=+L368+L369"
+$cm.Range("L371").Formula="=+IF(L366=1,INDEX('Segment Model'!K`$82:K`$84,"+$mAst+")-INDEX('Segment Model'!K`$91:K`$93,"+$mLia+"),0)"
+$cm.Range("L372").Formula="=+L370-L371"
+$cm.Range("L373").Formula="=+IF(L366=1,INDEX('Segment Model'!K`$13:K`$15,"+$mRev+")*K248,0)"
+$cm.Range("L374").Formula="=+IF(L366=1,L371-L373,0)"
+foreach($r in 366,367,368,369,370,371,372,373,374){ $cm.Range("L"+$r+":Q"+$r).FillRight() | Out-Null }
+$cm.Range("L366:Q366").NumberFormat="0"
+Write-Output "bloque de desinversion escrito en r365-r374"
+
+# ---------- 3) cableado ----------
+$cm.Range("L20").Formula="=+L372"
+$cm.Range("L20:Q20").FillRight() | Out-Null
+$cm.Range("L176").Formula="=-L372"
+$cm.Range("L176:Q176").FillRight() | Out-Null
+$cm.Range("L194").Formula="=+L370"
+$cm.Range("L194:Q194").FillRight() | Out-Null
+$cm.Range("L297").Formula="=-L374"
+$cm.Range("L297:Q297").FillRight() | Out-Null
+Write-Output "cableado: r20 (ganancia), r176 (reversa en flujo), r194 (efectivo), r297 (salida de activo fijo)"
+
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+
+Write-Output ""
+Write-Output "==================== VERIFICACION ===================="
+Write-Output ("            "+"".PadRight(44)+"  FY2029     FY2030     FY2031")
+foreach($r in 366,367,368,369,370,371,372,373,374){
+  $v=""
+  for($c=14;$c -le 16;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(11) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab[$r].PadRight(45)+$v)
+}
+Write-Output ""
+$chk=@{}
+$chk[13]="P&L  Revenue"
+$chk[22]="P&L  Statutory EBIT"
+$chk[28]="P&L  Profit before tax"
+$chk[29]="P&L  Tax expense"
+$chk[32]="P&L  Profit for the year"
+$chk[126]="BS   Cash at bank"
+$chk[140]="BS   TOTAL ASSETS"
+$chk[157]="BS   TOTAL LIABILITIES"
+$chk[165]="BS   TOTAL EQUITY"
+$chk[168]="BS   CHECK (=0)"
+$chk[187]="CF   Net cash from operating"
+$chk[195]="CF   Net cash investing"
+$chk[199]="CF   Extraordinary dividend"
+$chk[206]="CF   Net cash financing"
+$chk[215]="CF   CHECK caja (=0)"
+$chk[253]="DEU  Total Debt"
+$chk[257]="DEU  Net Debt incl leases"
+foreach($r in ($chk.Keys | Sort-Object)){
+  $v=""
+  for($c=14;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(11) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$chk[$r].PadRight(32)+$v)
+}
+Write-Output ""
+$e=0; try{ $e=[int]$cm.UsedRange.SpecialCells(-4123,16).Count }catch{}
+Write-Output ("  errores en Consolidated Model: "+$e)
+$d=$wb.Worksheets.Item("DCF")
+Write-Output ("  DCF precio implicito = "+[string]$d.Range("E41").Text)
+Write-Output ("  DCF EBIT FY2030 (col F) = "+[string]$d.Range("F15").Text+"   <- OJO si trae la ganancia")

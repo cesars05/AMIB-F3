@@ -1,0 +1,34 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t  = $xl.Workbooks.Item('20260922_SETSA Transportes.xlsx')
+$m  = $t.Worksheets.Item('Modelo SETSA')
+function Find-In($ws, [string]$col, [string]$needle, [int]$from = 1) {
+    $v = $ws.Range("$($col)1:$($col)450").Value2
+    for ($r = $from; $r -le 450; $r++) { if (([string]$v[$r, 1]).Contains($needle)) { return $r } }
+    throw "No encontrado: $needle"
+}
+$rDays = Find-In $m 'C' 'por a'
+$ref = "`$D`$$rDays"
+$n = 0
+foreach ($ws in $t.Worksheets) {
+    foreach ($c in $ws.UsedRange.Cells) {
+        $f = [string]$c.Formula
+        if ($f.Contains($ref)) { $c.Formula = $f.Replace($ref, '360'); $n++ }
+    }
+}
+"formulas con 360 fijo: $n"
+$m.Rows.Item($rDays).Delete() | Out-Null
+# fila vacía que dejó el switch dentro de Supuestos
+$rSup = Find-In $m 'C' 'Supuestos'
+$r1 = $rSup + 1
+if ($xl.WorksheetFunction.CountA($m.Rows.Item($r1)) -eq 0) { $m.Rows.Item($r1).Delete() | Out-Null; "fila vacia en Supuestos eliminada" }
+$xl.CalculateFull()
+$err = 0
+foreach ($ws in $t.Worksheets) { foreach ($c in $ws.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $err++; "ERR " + $ws.Name + "!" + $c.Address($false,$false) + " " + $c.Formula } } }
+"errores=$err"
+$rSup = Find-In $m 'C' 'Supuestos'
+for ($r = $rSup; $r -le $rSup + 5; $r++) { "$r " + $m.Cells.Item($r,3).Value2 + " | " + $m.Cells.Item($r,4).Text }
+$rD = Find-In $m 'C' 'DSO: d'; $rP = Find-In $m 'C' 'DPO: d'
+"DSO H: " + $m.Range("H$rD").Formula + " = " + $m.Range("H$rD").Text
+"DPO H: " + $m.Range("H$rP").Formula + " = " + $m.Range("H$rP").Text
+$t.Save(); "guardado=" + $t.Saved

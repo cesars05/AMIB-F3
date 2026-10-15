@@ -1,0 +1,92 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t  = $xl.Workbooks.Item(1)
+if ($t.Name -ne '20260922_SETSA Transportes.xlsx') { throw "libro inesperado: " + $t.Name }
+$m  = $t.Worksheets.Item('Modelo SETSA')
+$t.SaveCopyAs("$PSScriptRoot\backup_antes_dso_simple.xlsx")
+$e = [char]0xE9; $o = [char]0xF3; $ia = [char]0xED; $a = [char]0xE1
+function Row-Exact([string]$lab, [int]$from = 1) {
+    for ($r = $from; $r -le 500; $r++) { if ([string]$m.Cells.Item($r, 3).Value2 -ceq $lab) { return $r } }
+    throw "No encontrado: $lab"
+}
+function Row-Like([string]$needle, [int]$from = 1) {
+    for ($r = $from; $r -le 500; $r++) { if (([string]$m.Cells.Item($r, 3).Value2).Contains($needle)) { return $r } }
+    throw "No encontrado: $needle"
+}
+$cols = 'D','E','F','G','H','I'
+
+# ---------- 1) DSO / DPO sencillos, sin IVA ----------
+$rCli  = Row-Exact 'Clientes'
+$rProv = Row-Exact 'Proveedores'
+$rAcr  = Row-Exact 'Acreedores diversos'
+$rRev  = Row-Like 'Ingresos anualizados'
+$rDSO  = $rRev + 1
+if (-not ([string]$m.Cells.Item($rDSO, 3).Value2).StartsWith('DSO')) { throw 'la fila despues de ingresos anualizados no es DSO' }
+$rDSOp = Row-Like 'DSO sobre cartera promedio'
+$rBase = Row-Like 'Costos y gastos pagados a terceros'
+$rDPO  = Row-Like 'DPO: d'
+foreach ($c in $cols) {
+    $m.Range("$c$rDSO").Formula = "=$c$rCli/$c$rRev*360"
+    if ($c -eq 'D') { $m.Range("D$rDSOp").Formula = "=D$rDSO" }
+    else { $p = [char]([int][char]$c - 1); $m.Range("$c$rDSOp").Formula = "=AVERAGE($p$rCli,$c$rCli)/$c$rRev*360" }
+    $m.Range("$c$rDPO").Formula = "=($c$rProv+$c$rAcr)/$c$rBase*360"
+}
+$m.Cells.Item($rDSO, 3).Value2 = "DSO (clientes / ingresos x 360)"
+$m.Cells.Item($rDSOp, 3).Value2 = "DSO sobre cartera promedio"
+$m.Cells.Item($rDPO, 3).Value2 = "DPO (proveedores y acreedores / costos a terceros x 360)"
+$m.Cells.Item($rDSO, 11).Value2 = "F${o}rmula simple: la cartera incluye IVA, los d${ia}as salen ~16% arriba del dato limpio"
+"DSO H: " + $m.Range("H$rDSO").Formula + " | DPO H: " + $m.Range("H$rDPO").Formula
+
+# ---------- 2) Tablita de acreedores diversos (informativa) ----------
+$rRatio = Row-Like 'Deuda de corto plazo / deuda total'
+$rTot   = Row-Exact 'Total deuda financiera'
+$acr = @(@('Adeudo con socio', 374044.94), @('Agencia VW', 95958.00), @('Agencia VW', 95958.00), @('Agencia VW', 95958.00),
+         @('Agencia Urban', 176128.00), @('Agencia Urban', 176128.00), @('Agencia Urban', 176128.00), @('Otros acreedores', 64844.00))
+$n = 1 + 1 + $acr.Count + 1
+$m.Range("$($rRatio + 1):$($rRatio + $n)").EntireRow.Insert() | Out-Null
+$m.Rows.Item($rTot - 1).Copy($m.Range("$($rRatio + 1):$($rRatio + $n)")) | Out-Null
+$m.Range("C$($rRatio + 1):K$($rRatio + $n)").ClearContents() | Out-Null
+$r = $rRatio + 2
+$m.Cells.Item($r, 3).Value2 = "Acreedores diversos a jun-26 (informativo, no se trata como deuda)"
+$m.Cells.Item($r, 3).Font.Bold = $true; $m.Cells.Item($r, 3).Font.Italic = $false
+$first = $r + 1
+foreach ($x in $acr) {
+    $r++
+    $m.Cells.Item($r, 3).Value2 = $x[0]
+    $m.Cells.Item($r, 4).Value2 = [double]$x[1]; $m.Cells.Item($r, 5).Value2 = 0
+    $m.Range("D$($r):E$($r)").Font.Color = 16711680
+}
+$last = $r
+$r++; $rAT = $r
+$m.Cells.Item($r, 3).Value2 = 'Total acreedores diversos'
+$m.Range("D$r").Formula = "=SUM(D$($first):D$last)"; $m.Range("E$r").Formula = "=SUM(E$($first):E$last)"
+$m.Range("C$($r):G$($r)").Font.Bold = $true; $m.Range("C$($r):G$($r)").Font.Italic = $false
+$m.Range("C$($r):G$($r)").Borders.Item(8).LineStyle = 1
+for ($k = $first; $k -le $rAT; $k++) {
+    $m.Range("F$k").Formula = "=D$k+E$k"
+    $m.Range("G$k").Formula = "=F$k/`$F`$$rAT"; $m.Range("G$k").NumberFormat = '0.0%;\(0.0%\);"-"'
+}
+$m.Cells.Item($first, 11).Value2 = "Parte relacionada: confirmar si se liquida al cierre de la venta"
+$m.Cells.Item($first + 1, 11).Value2 = "Pagos iguales: probable compra de unidades a plazos"
+
+# check al final
+$rChkLP = Row-Like 'Check: deuda LP integraci'
+$m.Rows.Item($rChkLP + 1).Insert() | Out-Null
+$m.Rows.Item($rChkLP).Copy($m.Rows.Item($rChkLP + 1)) | Out-Null
+$m.Cells.Item($rChkLP + 1, 3).Value2 = "Check: acreedores diversos integraci${o}n - balance (jun-26)"
+$rAcr = Row-Exact 'Acreedores diversos'
+$rAT  = Row-Exact 'Total acreedores diversos'
+$m.Range("I$($rChkLP + 1)").Formula = "=ROUND(D$rAT-I$rAcr,0)"
+
+$xl.CalculateFull()
+$err = 0
+foreach ($ws in $t.Worksheets) { foreach ($c in $ws.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $err++; "ERR " + $ws.Name + "!" + $c.Address($false,$false) + " " + $c.Formula } } }
+"errores=$err"
+foreach ($lab in 'DSO (clientes', 'DSO sobre cartera promedio', 'DPO (proveedores', 'Ciclo de conversi', 'Impuesto latente total') {
+    $k = Row-Like $lab; ([string]$m.Cells.Item($k,3).Value2).PadRight(58) + " " + (($cols | ForEach-Object { $m.Range("$_$k").Text }) -join ' | ')
+}
+$rDF = Row-Exact 'Deuda financiera' (Row-Exact 'Deuda e Intereses')
+"Deuda financiera 1S26: " + $m.Range("I$rDF").Text
+$rAT = Row-Exact 'Total acreedores diversos'
+"Total acreedores: " + $m.Range("F$rAT").Text + " | check: " + $m.Range("I$((Row-Like 'Check: acreedores diversos'))").Text
+$t.Save(); "guardado=" + $t.Saved

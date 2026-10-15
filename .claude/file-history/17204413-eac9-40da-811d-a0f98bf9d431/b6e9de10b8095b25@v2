@@ -1,0 +1,95 @@
+"""Fallback de precios por fecha para RICs sin historico entitled."""
+import io
+
+P = r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs\generar_portafolio.py"
+s = io.open(P, encoding="utf-8").read()
+
+viejo = '''faltan = [POSICIONES[r] for r in POSICIONES if r not in series]
+if faltan:
+    print(f"  Sin datos: {', '.join(faltan)}")'''
+
+nuevo = '''# --- Fallback para RICs sin historico entitled --------------------------
+# ORLA.N responde a get_data (precio 9.41, mkt cap 3.3B) pero get_history
+# devuelve vacio: la serie diaria no esta en la licencia, el snapshot si.
+# TR.PriceClose con SDate puntual si funciona, asi que se arman los retornos
+# de periodo pidiendo el cierre en cada fecha base. Alcanza para la matriz y
+# la contribucion; no para la linea diaria de la canasta.
+sin_historico = [r for r in POSICIONES if r not in series]
+ret_puntual = {}
+for ric in sin_historico:
+    try:
+        def cierre(fecha=None):
+            kw = {"parameters": {"SDate": fecha}} if fecha else {}
+            return float(ld.get_data(universe=[ric], fields=["TR.PriceClose"],
+                                     **kw).iloc[0, 1])
+        ult = cierre()
+        # La base de cada periodo es el ultimo habil ANTES del inicio
+        bases = {p: (datetime.strptime(i, "%Y-%m-%d") - timedelta(days=1)
+                     ).strftime("%Y-%m-%d") for p, i in PERIODOS.items()}
+        ret_puntual[POSICIONES[ric]] = {p: (ult / cierre(b) - 1) * 100
+                                        for p, b in bases.items()}
+        print(f"  {POSICIONES[ric]}: sin historico, retornos por fecha puntual")
+    except Exception as e:
+        print(f"  -- {POSICIONES[ric]} tampoco por fecha puntual: {str(e)[:50]}")'''
+
+assert viejo in s
+s = s.replace(viejo, nuevo)
+
+# meter los puntuales en la matriz
+s = s.replace('''df = pd.DataFrame(filas).T[list(PERIODOS)].sort_values("YTD", ascending=False)''',
+              '''filas.update(ret_puntual)
+df = pd.DataFrame(filas).T[list(PERIODOS)].sort_values("YTD", ascending=False)''')
+
+# pesos sobre TODAS las posiciones, no solo las que tienen historico
+viejo_pesos = '''activos = [r for r in POSICIONES if r in series]
+pesos = pd.Series({r: PESOS.get(r, 1 / len(activos)) for r in activos})
+pesos = pesos / pesos.sum()
+etiqueta_peso = "equal weighted" if not PESOS else "actual weights"
+
+precios = pd.DataFrame({r: series[r] for r in activos}).ffill().dropna()'''
+nuevo_pesos = '''# Los pesos se reparten entre TODAS las posiciones, incluidas las que solo
+# tienen retorno puntual: dejarlas fuera inflaria el peso de las demas.
+pesos = pd.Series({r: PESOS.get(r, 1 / len(POSICIONES)) for r in POSICIONES})
+pesos = pesos / pesos.sum()
+etiqueta_peso = "equal weighted" if not PESOS else "actual weights"
+
+# La linea diaria solo puede trazarse con los que tienen serie completa
+activos = [r for r in POSICIONES if r in series]
+pesos_linea = pesos[activos] / pesos[activos].sum()
+precios = pd.DataFrame({r: series[r] for r in activos}).ffill().dropna()'''
+assert viejo_pesos in s
+s = s.replace(viejo_pesos, nuevo_pesos)
+s = s.replace("canasta = (norm * pesos).sum(axis=1)",
+              "canasta = (norm * pesos_linea).sum(axis=1)")
+
+# etiqueta de la linea: decir cuantos nombres cubre
+s = s.replace('''        label=f"Portfolio ({etiqueta_peso})", zorder=4)''',
+              '''        label=(f"Portfolio ({etiqueta_peso}"
+               + (f", {len(activos)}/{len(POSICIONES)} names)" if sin_historico else ")")),
+        zorder=4)''')
+
+# contribucion: desde los retornos YTD de la matriz, asi entran los puntuales
+viejo_contrib = '''contrib = ((norm.iloc[-1] - 100) * pesos).sort_values()
+etiquetas = [POSICIONES[r] for r in contrib.index]'''
+nuevo_contrib = '''# Se calcula desde los retornos YTD de la matriz (no desde la serie diaria)
+# para que entren tambien las posiciones de retorno puntual.
+peso_por_nombre = {POSICIONES[r]: pesos[r] for r in POSICIONES}
+contrib = pd.Series({n: df.loc[n, "YTD"] * peso_por_nombre[n]
+                     for n in df.index}).sort_values()
+etiquetas = list(contrib.index)'''
+assert viejo_contrib in s
+s = s.replace(viejo_contrib, nuevo_contrib)
+
+s = s.replace('''    "contribucion_ytd_pp": {POSICIONES[r]: round(float(v), 2)
+                            for r, v in contrib.items()},''',
+              '''    "contribucion_ytd_pp": {n: round(float(v), 2) for n, v in contrib.items()},
+    "retorno_ytd_ponderado_pct": round(float(contrib.sum()), 2),''')
+
+s = s.replace('''for r, v in contrib.sort_values(ascending=False).items():
+    print(f"  {POSICIONES[r]:14s} {v:+6.2f}")''',
+              '''for n, v in contrib.sort_values(ascending=False).items():
+    print(f"  {n:14s} {v:+6.2f}")
+print(f"  {'TOTAL':14s} {contrib.sum():+6.2f}")''')
+
+io.open(P, "w", encoding="utf-8").write(s)
+print("fallback integrado")

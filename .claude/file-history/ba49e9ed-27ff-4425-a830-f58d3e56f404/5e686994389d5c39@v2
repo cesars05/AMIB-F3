@@ -1,0 +1,198 @@
+"""Financial table slides: fill from live model values (Annual Model / DCF) + implied DCF."""
+import json, re, math
+from lib import *
+import implied as IM
+
+L = json.load(open('live.json'))
+AM = L['Annual Model']; DC = L['DCF']
+
+
+def num(v):
+    try:
+        f = float(v)
+        if math.isnan(f): return None
+        return f
+    except Exception:
+        return None
+
+
+def am(row, col):  # col index 0-based
+    return num(AM[row - 1][col])
+
+
+def dcf(ref):
+    col = ord(ref[0]) - 65; row = int(ref[1:]) - 1
+    return num(DC[row][col])
+
+
+YEARS = list(range(2021, 2029))
+YCOL = {y: 11 + (y - 2021) for y in YEARS}  # L..S
+
+
+def label_row(label, lo, hi, used=()):
+    lab = label.strip().lower()
+    for r in range(lo, hi + 1):
+        v = AM[r - 1][4]
+        if v and str(v).strip().lower() == lab and r not in used:
+            return r
+    for r in range(lo, hi + 1):
+        v = AM[r - 1][4]
+        if v and str(v).strip().lower().startswith(lab[:25]):
+            return r
+    return None
+
+
+def fmt_like(template, v):
+    """Format v using the style of the existing template text."""
+    t = template.replace('\xa0', '').strip()
+    if v is None or (abs(v) < 1e-9 and not t.endswith('x')):
+        return '-'
+    dec = 0
+    m = re.search(r'\.(\d+)', t)
+    if m: dec = len(m.group(1))
+    if t.endswith('%'):
+        return f'{v * 100:,.{dec}f}%'
+    if t.endswith('x'):
+        return f'{v:,.{dec}f}x'
+    if '$' in t:
+        s = f'${abs(v):,.{dec}f}'
+        return '-' + s if v < 0 else s
+    return f'{v:,.{dec}f}'
+
+
+def first_template(table, r, cols):
+    for c in cols:
+        t = table.cell(r, c).text.replace('\xa0', '').strip()
+        if t and t != '-':
+            return t
+    return None
+
+
+def fill_statement(slide, lo, hi, last_cols, extra_headers, default_fmt='$0'):
+    """KLA statements: col0 label, cols1-10 = 10 years, then optional avg/CAGR cols.
+    Remove two estimate years -> 2021..2028; fill from model."""
+    tshape = [s for s in slide.shapes if s.has_table][0]
+    t = tshape.table
+    ncols = len(t.columns)
+    # year cols in template are 1..10; drop 9,10 (2030, 2031)
+    delete_col(t, 10); delete_col(t, 9)
+    ncols = len(t.columns)
+    for k, y in enumerate(YEARS):
+        cell_text(t.cell(0, 1 + k), str(y))
+    for k, h in enumerate(extra_headers):
+        cell_text(t.cell(0, 9 + k), h)
+    used = set()
+    for r in range(1, len(t.rows)):
+        lab = t.cell(r, 0).text
+        if not lab.strip() or lab.strip() == '\xa0':
+            continue
+        mr = label_row(lab, lo, hi, used)
+        if mr is None:
+            continue
+        used.add(mr)
+        rowtpl = first_template(t, r, range(1, ncols)) or default_fmt
+        # section header rows (no numbers) -> skip
+        vals = [am(mr, YCOL[y]) for y in YEARS]
+        if all(v is None for v in vals) and all(am(mr, c) is None for c in last_cols):
+            continue
+        for k, y in enumerate(YEARS):
+            tpl = t.cell(r, 1 + k).text.replace('\xa0', '').strip() or rowtpl
+            if tpl == '-': tpl = rowtpl
+            v = vals[k]
+            txt = fmt_like(tpl, v)
+            if tpl.endswith('%') and v is not None and abs(v) > 10: txt = 'NM'
+            cell_text(t.cell(r, 1 + k), txt)
+        for k, c in enumerate(last_cols):
+            if 9 + k >= ncols: break
+            tpl = t.cell(r, 9 + k).text.replace('\xa0', '').strip()
+            v = am(mr, c)
+            if tpl in ('', '-'):
+                tpl = rowtpl if not rowtpl.startswith('$') else '0.0%'
+            if v is not None and abs(v) > 1e6: v = None  # Excel error codes
+            if extra_headers[k].startswith('CAGR'):
+                txt = '-' if (v is None or abs(v) < 1e-9) else f'{v * 100:.1f}%'
+            else:
+                txt = fmt_like(tpl, v)
+            cell_text(t.cell(r, 9 + k), txt)
+    return t
+
+
+def color_scale(v, lo, mid, hi):
+    """Excel-style 3 colour scale red-yellow-green."""
+    R, Y, G = (0xF8, 0x69, 0x6B), (0xFF, 0xEB, 0x84), (0x63, 0xBE, 0x7B)
+    if v <= mid:
+        f = 0 if mid == lo else (v - lo) / (mid - lo); a, b = R, Y
+    else:
+        f = 1 if hi == mid else (v - mid) / (hi - mid); a, b = Y, G
+    f = max(0, min(1, f))
+    return '%02X%02X%02X' % tuple(int(a[i] + (b[i] - a[i]) * f) for i in range(3))
+
+
+def fill_sens(t, corner, colhdr, rowhdr, grid):
+    cell_text(t.cell(2, 1), corner)
+    for j, v in enumerate(colhdr):
+        cell_text(t.cell(2, 2 + j), f'{v * 100:.1f}%')
+    flat = [x for row in grid for x in row]
+    lo, hi = min(flat), max(flat)
+    mid = sorted(flat)[len(flat) // 2]
+    for i, v in enumerate(rowhdr):
+        cell_text(t.cell(3 + i, 1), f'{v * 100:.1f}%')
+        for j in range(5):
+            x = grid[i][j]
+            cell_text(t.cell(3 + i, 2 + j), f'{x * 100:.1f}%')
+            cell_fill(t.cell(3 + i, 2 + j), color_scale(x, lo, mid, hi))
+
+
+def money(v, d=0):
+    s = f'${abs(v):,.{d}f}'
+    return '-' + s if v < 0 else s
+
+
+def fill_dcf_proj(slide, cols, headers, fy):
+    """cols: list of dicts with keys matching labels. KLA table rows."""
+    t = [s for s in slide.shapes if s.has_table][0].table
+    for k, h in enumerate(headers):
+        cell_text(t.cell(0, 1 + k), h)
+    for k, f in enumerate(fy):
+        cell_text(t.cell(1, 1 + k), f)
+    keymap = {'Sales': ('sales', 'm0'), 'Growth (%)': ('gr', 'p1'), 'EBITDA': ('ebitda', 'm0'), 'EBIT': ('ebit', 'm0'),
+              'Taxes': ('taxes', 'm0'), 'Tax Rate (%)': ('tax', 'p1'), 'NOPAT': ('nopat', 'm0'), '(+) D&A': ('da', 'm0'),
+              '(-) CapEx': ('capex', 'm0'), '(+) / (-) Working Capital Needs': ('wc', 'm0'), 'FCFF': ('fcff', 'm0'),
+              'Present Value FCFF': ('pv', 'm0'), 'Present Value Factor': ('pvf', 'd2'), 'Factor': ('t', 'd2')}
+    margin_seen = 0
+    for r in range(len(t.rows)):
+        lab = t.cell(r, 0).text.strip()
+        if lab == 'Margin (%)':
+            key, f = ('m', 'p1') if margin_seen == 0 else ('em', 'p1'); margin_seen += 1
+        elif lab in keymap:
+            key, f = keymap[lab]
+        else:
+            continue
+        for k, c in enumerate(cols):
+            v = c.get(key)
+            if v is None:
+                txt = '-'
+            elif f == 'm0':
+                txt = money(v)
+            elif f == 'p1':
+                txt = f'{v * 100:.1f}%'
+            else:
+                txt = f'{v:.2f}'
+            cell_text(t.cell(r, 1 + k), txt)
+    return t
+
+
+def fill_dcf_val(slide, d):
+    t = [s for s in slide.shapes if s.has_table][0].table
+    rows = {'Enterprise Value': money(d['ev'], 1), 'Terminal Value': money(d['TV'], 1), 'Equity Value': money(d['eq'], 1),
+            'Debt': money(d['debt'], 1), 'Cash & Equivalents': money(d['cash'], 1), 'Net Debt': money(d['nd'], 1),
+            'Share Count': f"{d['sh']:.2f}", 'Current Stock Price': money(d['px'], 1), 'Implied Stock Price': money(d['ip'], 1),
+            'Upside/Downside': f"{d['up'] * 100:.1f}%"}
+    for r in range(len(t.rows)):
+        lab = t.cell(r, 0).text.strip()
+        if lab in rows:
+            cell_text(t.cell(r, 3), rows[lab])
+        if lab.startswith('1)'):
+            cell_text(t.cell(r, 2), f"{d['pvcf'] / d['ev'] * 100:.1f}%"); cell_text(t.cell(r, 3), money(d['pvcf'], 1))
+        if lab.startswith('2)'):
+            cell_text(t.cell(r, 2), f"{d['pvtv'] / d['ev'] * 100:.1f}%"); cell_text(t.cell(r, 3), money(d['pvtv'], 1))

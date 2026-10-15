@@ -1,0 +1,18 @@
+---
+name: user-role
+description: "User is an equity research analyst for the Aztlan/AZTD fund, screening SMID-cap stocks with LSEG Workspace in Excel"
+metadata:
+  node_type: memory
+  type: user
+  originSessionId: 045e2a0d-f461-461b-9a64-06bdc3a19830
+  modified: 2026-09-24T16:59:47.962Z
+---
+
+Equity research analyst working on the AZTD (Aztlan) fund universe. Works in Spanish in chat, but deliverables written into Excel (AZTD_Universe.xlsx on OneDrive) must be in English.
+
+- Uses LSEG Workspace TR() formulas in Excel, a "Quant Model" tab (Model 1.1 score and Slope per RIC) and an "AZTD Holdings" tab.
+- Screening rules: SMID cap, low coverage, niche moat, exclude names with >30% emerging-market revenue (10-30% is a flag band).
+- Thinks in terms of moat, market share vs peers, margins vs industry, drivers/tailwinds, turnaround, and whether market narrative matches filings.
+- Likes simple concrete examples ("ejemplo sencillo") to understand business models.
+
+Related: [[feedback-research-output]]

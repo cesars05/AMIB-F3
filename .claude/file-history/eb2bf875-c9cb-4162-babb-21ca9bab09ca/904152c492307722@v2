@@ -1,0 +1,39 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 40;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 1200 } }; return "??" }
+$xl=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); break }catch{ Start-Sleep -Milliseconds 900 } }
+$wb=$null; foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("Segment Beta") }
+$xl.Calculation=-4135
+T { $s.Range("C92:N115").Clear() }
+
+$cand=@("KRZ.I","KSP.I","KGP.L","KRX.L","KGSP.I","TONT.L","GFTU.I","GRF.I","WBSV.VI","WIEN.VI","SIKA.S","ETEX.BR","UPM.HE","AALB.AS","IMCD.AS")
+$r=92
+foreach($c in $cand){
+  T { $s.Cells.Item($r,3).Value2=$c }
+  T { $s.Cells.Item($r,4).Formula=("=+TR(`$C"+$r+",D`$10,`"Null=BLANK`")") }
+  T { $s.Cells.Item($r,5).Formula=("=+TR(`$C"+$r+",E`$10,`"Curn=#1 Scale=#2 Null=BLANK`",,`$D`$5,`$D`$6)") }
+  T { $s.Cells.Item($r,7).Formula=("=+TR(`$C"+$r+",G`$10,`"Curn=#1 Scale=#2 Null=BLANK`",,`$D`$5,`$D`$6)") }
+  T { $s.Cells.Item($r,8).Formula=("=+TR(`$C"+$r+",H`$10,`"Curn=#1 Scale=#2 Null=BLANK`",,`$D`$5,`$D`$6)") }
+  T { $s.Cells.Item($r,9).Formula=("=+IFERROR(G"+$r+"/(E"+$r+"-H"+$r+"),0)") }
+  T { $s.Cells.Item($r,10).Formula=("=+TR(`$C"+$r+",J`$10,`"Null=BLANK`")") }
+  T { $s.Cells.Item($r,13).Formula=("=IFERROR(TR(`$C"+$r+",M`$10,`" Null=BLANK`",)*1%,`"`")") }
+  T { $s.Cells.Item($r,11).Formula=("=+IFERROR(J"+$r+"/(1+(1-M"+$r+")*I"+$r+"),`"`")") }
+  $r++
+}
+$xl.Calculation=-4105
+T { $xl.CalculateFullRebuild() }
+Start-Sleep -Seconds 40
+T { $xl.Calculate() }
+Start-Sleep -Seconds 20
+Write-Output ("   "+"RIC".PadRight(11)+"Company".PadRight(32)+"D/E".PadLeft(9)+"Beta".PadLeft(8)+"BetaU".PadLeft(8)+"Tax".PadLeft(9))
+for($r=92;$r -le 106;$r++){
+  $ric=[string](T { $s.Cells.Item($r,3).Text })
+  $nm=[string](T { $s.Cells.Item($r,4).Text }); if($nm.Length -gt 31){ $nm=$nm.Substring(0,31) }
+  $line="   "+$ric.PadRight(11)+$nm.PadRight(32)
+  foreach($c in 9,10,11,13){
+    $v=[string](T { $s.Cells.Item($r,$c).Text }); if($v.Length -gt 9){ $v=$v.Substring(0,9) }
+    $line+=$v.PadLeft(9)
+  }
+  Write-Output $line
+}

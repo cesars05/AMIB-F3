@@ -1,0 +1,38 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 15;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 800 } }; return "??" }
+$xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb=$null; foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("Segment Beta") }
+
+# reparar hardcodes que pudieran quedar del copiado
+$datos=@(12,15,16,17,18,19,20,21,22,23,27,28,29,30,31,35,36,37,38,39,40)
+$tpl=@{4='=+TR($C{R},D$10,"Null=BLANK")';5='=+TR($C{R},E$10,"Curn=#1 Scale=#2 Null=BLANK",,$D$5,$D$6)';6='=+TR($C{R},F$10,"Curn=#1 Scale=#2 Null=BLANK",,$D$5,$D$6)';7='=+TR($C{R},G$10,"Curn=#1 Scale=#2 Null=BLANK",,$D$5,$D$6)';8='=+TR($C{R},H$10,"Curn=#1 Scale=#2 Null=BLANK",,$D$5,$D$6)';10='=+TR($C{R},J$10,"Null=BLANK")';13='=IFERROR(TR($C{R},M$10," Null=BLANK",)*1%,"")'}
+$fix=0
+foreach($r in $datos){ foreach($c in 4,5,6,7,8,10,13){
+  $f=[string](T { $s.Cells.Item($r,$c).Formula })
+  if($f -notmatch "TR\("){ T { $s.Cells.Item($r,$c).Formula=($tpl[$c] -replace "\{R\}",[string]$r) }; $fix++ } } }
+Write-Output ("  celdas hardcodeadas reparadas: "+$fix)
+
+Write-Output ""
+Write-Output "================ RESUMEN ================"
+for($r=43;$r -le 49;$r++){
+  $line=([string](T { $s.Cells.Item($r,4).Text })).PadRight(56)
+  foreach($c in 5,6,7){ $line+=([string](T { $s.Cells.Item($r,$c).Text })).PadLeft(13) }
+  Write-Output ("r"+([string]$r).PadRight(3)+" "+$line+"   "+[string](T { $s.Cells.Item($r,8).Text }))
+}
+Write-Output ""
+Write-Output "=== notas ==="
+for($r=51;$r -le 58;$r++){
+  $t=[string](T { $s.Cells.Item($r,4).Text })
+  if($t.Length -gt 100){ $t=$t.Substring(0,100)+"..." }
+  if($t.Trim() -ne ""){ Write-Output ("  r"+$r+" "+$t) }
+}
+Write-Output ""
+Write-Output "=== nada quedo abajo? ==="
+$sobra=0
+for($r=59;$r -le 120;$r++){ for($c=3;$c -le 14;$c++){ $t=[string](T { $s.Cells.Item($r,$c).Text }); if($t.Trim() -ne ""){ Write-Output ("   !! r"+$r+" c"+$c+" = "+$t); $sobra++ } } }
+if($sobra -eq 0){ Write-Output "   limpio - nada debajo de r58" }
+$e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+Write-Output ("`n  errores: "+$e)
+T { $wb.Save() }
+Write-Output "guardado"

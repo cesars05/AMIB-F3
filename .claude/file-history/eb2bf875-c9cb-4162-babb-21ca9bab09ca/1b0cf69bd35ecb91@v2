@@ -1,0 +1,81 @@
+$ErrorActionPreference="Stop"
+$wb=$null; $xl=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $d=$wb.Worksheets.Item("DCF"); $su=$wb.Worksheets.Item("Summary")
+$cm=$wb.Worksheets.Item("Consolidated Model")
+if([string]$d.Range("I14").Formula -ne "=+AVERAGE(C14:H14)"){ throw ("ABORTO: I14 dice "+[string]$d.Range("I14").Formula) }
+if([string]$as.Range("J74").Text -ne ""){ throw "ABORTO: modulo de venta encendido" }
+if([string]$su.Cells.Item(30,3).Text -ne "Partial Success"){ throw "ABORTO: r30 no es Partial Success" }
+Write-Output "guardas OK"
+$orig=[string]$as.Range("F10").Text
+Write-Output ""
+Write-Output "ANTES:"
+foreach($esc in "Downside","Stagnation","Partial Success"){
+  $as.Range("F10").Value2=$esc
+  $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+  Write-Output ("  "+$esc.PadRight(18)+" margen terminal "+([string]$d.Range("I14").Text).PadLeft(7)+"   TV "+([string]$d.Range("E33").Text).PadLeft(12)+"   DCF "+([string]$d.Range("E41").Text).PadLeft(9))
+}
+
+# ---- el margen terminal toma el ultimo ano, igual que todo lo demas en esa columna ----
+$d.Range("I14").Formula='=LOOKUP(2,1/(C14:H14<>0)*(C14:H14<>""),C14:H14)'
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+Write-Output ""
+Write-Output "DESPUES:"
+foreach($esc in "Downside","Stagnation","Partial Success"){
+  $as.Range("F10").Value2=$esc
+  $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+  Write-Output ("  "+$esc.PadRight(18)+" margen terminal "+([string]$d.Range("I14").Text).PadLeft(7)+"   TV "+([string]$d.Range("E33").Text).PadLeft(12)+"   DCF "+([string]$d.Range("E41").Text).PadLeft(9)+"   margen FY2032 "+[string]$d.Range("H14").Text)
+}
+
+# ---- recapturar el snapshot con los escenarios nuevos ----
+Write-Output ""
+Write-Output "RECAPTURA DEL SNAPSHOT:"
+function Cap($destino){
+  $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+  $a=[double]$d.Range("C23").Value2; $b=[double]$d.Range("D23").Value2; $c=[double]$d.Range("E23").Value2
+  $e=[double]$d.Range("F23").Value2; $f=[double]$d.Range("G23").Value2; $g=[double]$d.Range("H23").Value2
+  $h=[double]$d.Range("I23").Value2
+  $su.Range("F"+$destino).Value2=$a
+  $su.Range("G"+$destino).Value2=$b
+  $su.Range("H"+$destino).Value2=$c
+  $su.Range("I"+$destino).Value2=$e
+  $su.Range("J"+$destino).Value2=$f
+  $su.Range("K"+$destino).Value2=$g
+  $su.Range("L"+$destino).Value2=$h
+  Write-Output ("   r"+$destino+"  "+([string][math]::Round($a,0)).PadLeft(9)+([string][math]::Round($b,0)).PadLeft(9)+([string][math]::Round($c,0)).PadLeft(9)+([string][math]::Round($e,0)).PadLeft(9)+([string][math]::Round($f,0)).PadLeft(9)+([string][math]::Round($g,0)).PadLeft(9)+" | TV "+([string][math]::Round($h,0)).PadLeft(9)+"   DCF "+[string]$d.Range("E41").Text)
+}
+$as.Range("F10").Value2="Downside"
+Cap "32"
+$as.Range("F10").Value2="Stagnation"
+Cap "31"
+$as.Range("F10").Value2="Partial Success"
+Cap "30"
+$as.Range("F10").Value2=$orig
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+
+Write-Output ""
+Write-Output "########## FOOTBALL FIELD ##########"
+Write-Output ("  "+"".PadRight(26)+"Low".PadLeft(10)+"Target".PadLeft(10)+"High".PadLeft(10))
+for($i=14;$i -le 21;$i++){
+  $lab=""
+  foreach($cc in 2,3){ $x=""; try{ $x=[string]$su.Cells.Item($i,$cc).Text }catch{}; if($x.Trim() -ne ""){ $lab=$x; break } }
+  if($lab -eq ""){ continue }
+  Write-Output ("  "+$lab.PadRight(26)+([string]$su.Cells.Item($i,4).Text).PadLeft(10)+([string]$su.Cells.Item($i,5).Text).PadLeft(10)+([string]$su.Cells.Item($i,6).Text).PadLeft(10))
+}
+Write-Output ""
+Write-Output ("  escenario activo: "+[string]$as.Range("F10").Text+"   football field "+[string]$su.Range("E14").Text+"   DCF vivo "+[string]$d.Range("E41").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary","Expected Returns"){
+  $s=$wb.Worksheets.Item($nm); $e2=0
+  try{ $e2=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e2 -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e2) }
+  $tot+=$e2
+}
+Write-Output ("  celdas con error: "+$tot)

@@ -1,0 +1,173 @@
+# Alumasc FY2026 — resultados auditados vs. modelo
+
+Resultados publicados 15-sep-2026 (año cerrado 30-jun-2026).
+Fuente: `Markdown/AR2026_full_year_results_FY-Jun2026.md`, `Markdown/PRES2026_annual_results_presentation.md`
+Modelo: `20260915_Alumasc Financials_v1.xlsx`, columna K = FY2026
+
+---
+
+## 1. La varianza: £0.9m de EBIT, todo en Water Management
+
+| £'000 | Modelo FY26E | Real FY26 | Dif |
+|---|---:|---:|---:|
+| Revenue grupo | 107,103 | **107,117** | +14 |
+| — Water Management | 46,639 | 46,588 | −51 |
+| — Building Envelope | 41,812 | 41,791 | −21 |
+| — Housebuilding Products | 18,652 | 18,738 | +86 |
+| Gross profit | 40,966 | **39,007** | **−1,959** |
+| Gross margin | 38.2% | **36.4%** | −180bps |
+| Net operating expenses | (28,797) | (27,768) | +1,029 |
+| **Underlying operating profit** | **12,169** | **11,239** | **−930** |
+| Underlying operating margin | 11.4% | **10.5%** | −90bps |
+| Net finance costs (underlying) | (1,320) | (1,251) | +69 |
+| **UPBT** | **10,849** | **9,988** | **−861** |
+| Statutory PBT | 10,449 | 9,747 | −702 |
+| ETR underlying | 23.0% | **26.2%** | −3.2pp |
+| Adj. EPS | 23.23p | **20.5p** | −2.7p (−11.7%) |
+| DPS | 11.54p | **11.1p** (mantenido) | −0.44p |
+
+**Cuadra por dos caminos independientes** — no es casualidad aritmética:
+
+- Por segmento: WM −1,269 + BE 0 + HP −60 + central +399 = **−930**
+- Por línea: gross profit −1,959 + opex +1,029 = **−930**
+
+### Underlying operating profit por segmento
+
+| £'000 | Modelo | Real | Dif | Margen real |
+|---|---:|---:|---:|---:|
+| Water Management | 4,524 | **3,255** | **−1,269** | 7.0% (FY25: 14.5%) |
+| Building Envelope | 4,850 | 4,850 | 0 | 11.6% (FY25: 12.7%) |
+| Housebuilding Products | 4,756 | 4,696 | −60 | 25.1% (FY25: 26.0%) |
+| Central no asignado | (1,961) | (1,562) | +399 | |
+
+**El revenue se acertó, el margen no.** Los tres segmentos en ventas quedaron dentro de £86k — pero eso es porque el trading update de julio ya daba ~£107m y los tres crecimientos divisionales. No es precisión de forecast; es información ya publicada.
+
+Lo mismo aplica al "0" de Building Envelope: el modelo asumió revenue plano en exactamente el FY25 (41,812) porque el TU decía "similar to FY25", y el margen coincidió. Es una coincidencia sobre un dato dado, no validación.
+
+**La miss real es Water Management: 7.0% de margen contra 9.7% modelado.** El apalancamiento operativo mordió más fuerte de lo asumido. La compañía lo explica como volumen: parte del cost of sales es fijo, y WM es el negocio más manufacturero del grupo.
+
+---
+
+## 2. Lo que los resultados rompen en el modelo
+
+Ordenado por impacto en la valuación, no por tamaño del error contable.
+
+### 2.1 La WACC de la compañía subió a ~13% — todo el football field queda por debajo
+
+> "well in excess of the Group's weighted average cost of capital, **which the Group estimates to be circa 13%**" — Financial Review, FY26 (FY25: circa 12%)
+
+El modelo descuenta a **10.7%**. El bloque Summary corre esquinas a 12 / 11 / 10%. **La esquina "Low" es la estimación del año pasado y ninguna de las tres llega a la de este año.** El gap es de 230bps contra un número auditado y repetido (también aparece en la prueba de deterioro del goodwill).
+
+Corrida a 13% (leída y restaurada — no dejé el cambio):
+
+| | Low @ 12% | Low @ 13% | Δ |
+|---|---:|---:|---:|
+| DCF Base | 255.6p | **233.7p** | −21.9p |
+| DCF Bear | 210.7p | 191.6p | −19.1p |
+| DCF Stress | 159.4p | 142.3p | −17.1p |
+| EPV | 238.7p | 217.7p | −21.0p |
+| SOTP | 321.7p | 294.3p | −27.4p |
+
+A 13% el caso base toca **233.7p — el precio de mercado (235p)**.
+
+### 2.2 FY2026 es el primer año del período explícito, y ya es un año cerrado
+
+`DCF!C11 = $107,103` = el forecast FY2026. El factor de descuento es **−0.21**, o sea el modelo valúa a ~30-jun-2025 y capitaliza hacia adelante (consistente con `E35`/`E36`, ambos columna J = FY2025 — el bug de años mezclados ya está corregido).
+
+Es defendible, pero ahora hay algo mejor: **FY2026 es auditado**. El FCFF que el modelo tiene en ese año está mal por ~£1.9m:
+
+| £'000 FY2026 | Modelo | Real |
+|---|---:|---:|
+| EBIT × (1−t) | 9,370 (@23.0%) | 8,294 (@26.2%) |
+| (+) D&A | 3,605 | 4,500 |
+| (−) Capex | (4,051) | (2,600) |
+| (−) Δ Working capital | (46) | **(3,600)** |
+| **FCFF** | **8,464** | **~6,600** |
+
+El error grande no es el EBIT: es el **capital de trabajo**, £46k modelado contra £3.6m real de salida. La compañía lo atribuye a timing de embarques CLK (se normaliza en Q1 FY27) y a stock de amortiguamiento por el conflicto en Medio Oriente. O sea es reversible — pero está en el año equivocado del modelo.
+
+**Consecuencia para el Summary:** el snapshot de FCFF en `Summary!N12:V18` no está solo viejo — su primer año ahora es demostrablemente incorrecto. El check de validación en `C28` va a seguir dando 0.0p de diferencia porque compara la fórmula contra el propio DCF; ambos usan el mismo número equivocado.
+
+### 2.3 La tasa impositiva es un error permanente
+
+Modelo 23.0% (2,497/10,849). Real **26.2%** underlying, 24.9% estatutaria, contra 25.0% de tasa UK. La compañía explica el exceso: menos utilidad en jurisdicciones de tasa baja y menor deducción por las aportaciones al plan de pensiones (que bajaron de £1.2m a £0.7m).
+
+El EBIT de FY26 puede revertir. **Una tasa 3pp baja no revierte nunca.** Y está cableada en tres lugares a la vez: el DCF, `SOTP!M13` (23.9%), y el re-levering de betas en la tab Peers.
+
+### 2.4 Capex — el único renglón que corrige a favor
+
+Real **£2.6m = 61% de D&A** (FY25: 66%). Los porcentajes del modelo (4.5% / 0.7% / 7.0% de revenue por segmento) implican ~£3.7m, y el DCF arranca en £4,051 creciendo. **El modelo sobrestima capex ~£1.1–1.4m al año y por tanto subestima FCFF.**
+
+Esto también contradice el dato de capex/D&A por segmento que se usó antes (WM 1.02x, BE 1.80x, HP 1.13x): el grupo consolidado real está en **0.61x**. Ahora hay ancla de fuente primaria para el punto #3 de la lista (capex decreciente) — y apunta a que el nivel, no solo la pendiente, está alto.
+
+### 2.5 Puente de deuda neta
+
+| 30-jun-2026 | £'000 |
+|---|---:|
+| Interest bearing loans and borrowings | 13,200 |
+| Lease liability (no corriente 5,672 + corriente 1,903) | 7,575 |
+| (−) Cash at bank | (6,330) |
+| **Net debt incl. leases** | **14,445** |
+| Net bank debt (base de covenants, pre-IFRS 16) | **6,900** |
+
+`DCF!E37` = **12,739** (base FY2025). Si se rueda a FY2026 y se saca FY26 del período explícito, la deuda neta sube **£1,706k ≈ 4.6p por acción**.
+
+Acciones: `DCF!E39` = 36,848 (diluidas FY2025). El FY26 real implica **~36,388** diluidas (7,314 / 20.1p).
+
+### 2.6 Dividendo — el modelo se equivocó de dirección
+
+Modelo **11.54p** (un aumento). La compañía **mantuvo 11.1p**, con cobertura de 1.9x contra objetivo de 2.5–3.0x. Explícitamente: esperan que la recuperación de rentabilidad permita aumentos futuros *restaurando* la cobertura primero.
+
+### 2.7 FY2027: el modelo pide un margen que no está fondeado
+
+Modelo FY27: revenue 111,295 (+3.9%), underlying EBIT **13,869 = 12.5% de margen**, partiendo de una base FY26 que era £930k alta.
+
+Lo que está efectivamente comprometido:
+
+- **+5%** de revenue en los primeros dos meses de FY27 → ~£112.5m
+- **£0.9m** de ahorros de reestructuración remanentes (de £1.3m anualizados, solo £0.4m se realizó en FY26) ≈ **+80bps**
+- Order book +56% a agosto 2026; primeros call-offs de Changi ya recibidos en FY27
+- Integración de Rainwater Products como oportunidad adicional (sin cuantificar)
+
+Eso soporta **~11.4–11.6% de margen**, no 12.5%. A 11.5% sobre £112.5m son **~£12.9m de EBIT** contra los 13,869 del modelo: **un gap de ~£1.0m que hay que cerrar o recortar** en el roll-forward.
+
+---
+
+## 3. Datos nuevos de fuente primaria para el update
+
+| Tema | Dato FY26 | Dónde pega |
+|---|---|---|
+| **WACC de la compañía** | circa **13%** (FY25: 12%) | `DCF!P16`, `SOTP!M16`, esquinas del Summary |
+| **Covenants reportados** | Net debt:EBITDA **0.5x** (<2.5x) · Interest cover **16.9x** (>3.5x) | objetivo de reconciliación del bloque pre-IFRS 16 en r103/r105 |
+| **Facilidad bancaria nueva** (1-sep-2026) | RCF comprometido **£30m** a ago-2029 (+2 extensiones a 2031), acordeón **£20m**, **margen −20bps** | `Kd` — el modelo tiene 6.6% en WACC, 8.64% y 8.5% en otros lados. Tres números incompatibles, y ahora hay evidencia de que el costo **bajó** |
+| **Pensiones** | Superávit IAS 19 **£5.9m** (FY25: £4.8m). Aportaciones **£0.7m/año** desde sep-2025 hasta *low dependency* antes de madurez significativa en **2030** | confirma la instrucción del usuario; el punto #8 de la lista (mitad en 2026-27, cero en 2028) **contradice** lo revelado |
+| **ROIC** | **16.0%** (FY25: 24.9%) | sigue por encima de la WACC, pero el colchón se comprimió de ~13pp a ~3pp |
+| **Net assets** | £43,737k (FY25: £40,986k) | |
+| **FCF** | **£3.3m** (FY25: £6.6m) | |
+| **Conversión de caja** | 103% del underlying operating profit (FY25: 106%) | por encima del objetivo >100% pese a la salida de capital de trabajo |
+| **Order book** | +56% YoY a 31-ago-2026 (WM solo: £9.8m, +81%) | |
+| **Changi (Singapur)** | £2m fase 1 en el order book; fases siguientes **sin licitar**, potencial £10–15m a mediano plazo | no modelar las fases no licitadas |
+| **EPD** | ~34% del revenue del grupo certificado | |
+| **CEO** | Pamela Bingham **despedida** 28-ago-2026 tras investigación independiente. Vijay Thakrar sigue como Executive Chair interino. Sin CEO permanente | descuento de gobernanza / riesgo de ejecución |
+
+---
+
+## 4. Lectura de inversión
+
+**El caso alcista no está roto, pero el año fue peor de lo modelado y la barra de descuento subió.**
+
+Lo que sostiene la tesis:
+
+- Housebuilding Products **+16% de revenue con 25.1% de margen en el peor mercado de construcción de vivienda en casi 20 años**, ganando participación. 11% de CAGR desde Covid contra −2% anual en arranques UK. Es un activo de calidad genuina.
+- Building Envelope mantuvo el nivel récord de FY25 y ganó participación; order book +14%.
+- Order book del grupo +56% y revenue +5% en el arranque de FY27 son señales duras, no narrativa.
+- Balance sano: 0.5x de apalancamiento, facilidad refinanciada más barata y más larga.
+
+Lo que pesa en contra:
+
+- **Water Management es el 43% del revenue y colapsó a 7.0% de margen.** La recuperación depende de self-help (£0.9m ya identificado) y de conversión del order book, no de que el mercado mejore.
+- **La compañía subió su propia WACC a 13%** y su ROIC cayó a 16%. El diferencial ROIC−WACC se comprimió de ~13pp a ~3pp. Ese número mueve un DCF más que cualquier año individual.
+- **No hay CEO.** Despido por conducta tras investigación independiente, sin sucesor anunciado.
+- Dividendo cubierto 1.9x contra objetivo 2.5–3.0x — sin margen para aumentarlo hasta que la rentabilidad regrese.
+
+**Dónde deja la valuación:** a la WACC que la propia compañía publica (13%), el caso base del DCF da **233.7p** contra un precio de 235p. El mercado está descontando aproximadamente el plan de la compañía a su propio costo de capital. El upside ya no viene del descuento — viene de que WM recupere margen, y eso hay que probarlo con los reportes de FY27, no asumirlo.

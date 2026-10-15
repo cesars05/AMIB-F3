@@ -1,0 +1,31 @@
+<section id="community" data-transition="fade" style="background:#12131A; color:#F5F6FA; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px 128px 160px; display:flex; flex-direction:column; gap:44px">
+  <div style="display:flex; flex-direction:column; gap:16px">
+    <p style="font-family:'Space Grotesk', Arial, sans-serif; font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#A78BFA">Comunidad y crecimiento</p>
+    <h2 style="font-family:'Space Grotesk', Arial, sans-serif; font-size:60px; font-weight:700; line-height:1.1">Una comunidad que gobierna</h2>
+  </div>
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:28px; flex:1">
+    <div style="background:#1C1E2B; border:1px solid #2A2D3D; border-radius:24px; padding:32px; display:flex; flex-direction:column; gap:14px">
+      <x-icon name="Chat" style="color:#A78BFA; width:40px; height:40px"></x-icon>
+      <h3 style="font-size:26px; font-weight:600">Discord</h3>
+      <p style="font-size:24px; line-height:1.4; color:#A6ABBD">Servidor oficial de soporte y eventos.</p>
+    </div>
+    <div style="background:#1C1E2B; border:1px solid #2A2D3D; border-radius:24px; padding:32px; display:flex; flex-direction:column; gap:14px">
+      <x-icon name="Globe" style="color:#5EEAD4; width:40px; height:40px"></x-icon>
+      <h3 style="font-size:26px; font-weight:600">X / Twitter</h3>
+      <p style="font-size:24px; line-height:1.4; color:#A6ABBD">@decentraland y @DecentralandDAO.</p>
+    </div>
+    <div style="background:#1C1E2B; border:1px solid #2A2D3D; border-radius:24px; padding:32px; display:flex; flex-direction:column; gap:14px">
+      <x-icon name="Trust" style="color:#A78BFA; width:40px; height:40px"></x-icon>
+      <h3 style="font-size:26px; font-weight:600">Foro DAO</h3>
+      <p style="font-size:24px; line-height:1.4; color:#A6ABBD">forum.decentraland.org: debate y voto de propuestas.</p>
+    </div>
+    <div style="background:#1C1E2B; border:1px solid #2A2D3D; border-radius:24px; padding:32px; display:flex; flex-direction:column; gap:14px">
+      <x-icon name="Users" style="color:#5EEAD4; width:40px; height:40px"></x-icon>
+      <h3 style="font-size:26px; font-weight:600">Squads</h3>
+      <p style="font-size:24px; line-height:1.4; color:#A6ABBD">Grupos de trabajo: comunidad, marketing, infraestructura.</p>
+    </div>
+  </div>
+  <p style="font-size:26px; color:#C7CBDA">Mayor impacto en: moda digital, arte/NFTs, música y reclutamiento Web3.</p>
+  <p style="position:absolute; left:128px; bottom:64px; font-size:24px; color:#8A90A6">Decentraland · Equipo 10</p>
+  <p style="position:absolute; right:128px; bottom:64px; font-size:24px; color:#8A90A6">08</p>
+</section>

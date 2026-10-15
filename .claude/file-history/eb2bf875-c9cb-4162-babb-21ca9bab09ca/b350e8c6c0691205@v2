@@ -1,0 +1,21 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$wb=$null; $su=$null
+for($t=0;$t -lt 40;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $x=$w.Worksheets.Item("Summary"); if($x -ne $null){ $wb=$w; $su=$x } } }
+  }catch{}
+  if($su -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+$so=T { $wb.Worksheets.Item("SOTP") }
+$ep=T { $wb.Worksheets.Item("EPV") }
+Write-Output "=== SOTP summary: donde esta el Enterprise Value ==="
+for($r=100;$r -le 115;$r++){
+  $l=[string](T { $so.Cells.Item($r,2).Text })
+  if($l.Trim() -ne ""){ Write-Output ("  r"+$r+"  "+$l.PadRight(34)+" D= "+[string](T { $so.Cells.Item($r,4).Text })) }
+}
+Write-Output ""
+Write-Output "=== EPV: confirmar que E51 es el Enterprise Value ==="
+foreach($r in 50,51,52,53,54,55,56,57){
+  Write-Output ("  r"+$r+"  "+([string](T { $ep.Cells.Item($r,2).Text })).PadRight(34)+" E= "+[string](T { $ep.Cells.Item($r,5).Text }))
+}

@@ -1,0 +1,359 @@
+"""
+Sistema de diseno para los graficos del reporte semanal.
+
+Una sola fuente de verdad: paleta, tipografia y reglas de uso. Todos los
+generadores importan de aqui. Si un color no esta en PALETA, no va en un
+grafico.
+
+    from grafico_banquero import configurar_estilo_banquero, PALETA, color_signo
+    configurar_estilo_banquero()
+
+-------------------------------------------------------------------------------
+LA PALETA Y CUANDO USAR CADA COLOR
+-------------------------------------------------------------------------------
+
+  Rol             Hex        Uso
+  --------------  ---------  ----------------------------------------------
+  primario        #2D3748    Serie principal. El default de todo grafico
+                             de una sola linea.
+  acento          #D97A29    Segunda serie, SIEMPRE acompanada del
+                             primario. Es el unico color calido, asi que
+                             atrae la vista: usarlo para la serie que
+                             importa, no para "la que sobro".
+                             NUNCA como color de una serie unica: sobre
+                             blanco y a 1.3pt de grosor pierde contraste.
+                             Un panel de una sola linea va en primario.
+  azul_claro      #8FAADC    El acompanante del primario. Navy + azul
+                             claro es EL par de investment banking: barras
+                             apiladas (real yield / breakeven), serie vs su
+                             media movil, LHS vs RHS. Misma familia de color,
+                             asi que se leen como partes de una cosa.
+  claro           #A0AEC0    Tercera serie. Tambien series de contexto que
+                             deben verse sin competir.
+  medio           #4A5568    Cuarta serie. Intermedio entre primario y claro.
+  verde           #4E9B82    Quinta serie. NO significa "positivo".
+  carbon          #595959    Sexta serie. Tambien el color de los ejes.
+  gris            #A6A6A6    Series de relleno, barras negativas, historico
+                             sin protagonismo.
+
+  referencia      #FF0000    SOLO lineas de referencia punteadas: promedios,
+                             el cero, un umbral (PMI=50). Nunca una serie,
+                             nunca una barra, nunca la banda sigma.
+                             Es la convencion de los graficos de Excel
+                             ("2Y Average, 17.49x") y funciona porque el rojo
+                             no aparece en ningun otro lado.
+
+  fondo           #F7FAFC    Sombreados: mes en curso, zonas resaltadas.
+  texto           #2D3748    Titulos.
+  texto_suave     #4A5568    Subtitulos, notas, fuente.
+
+-------------------------------------------------------------------------------
+REGLAS
+-------------------------------------------------------------------------------
+
+1. VERDE Y ROJO NO CODIFICAN SIGNO.
+   Verde/rojo por positivo/negativo es convencion de trading, no de research.
+   En barras se usa color_signo(): primario para positivo, gris para negativo.
+   El signo ya se lee en la direccion de la barra y en la etiqueta; el color
+   solo tiene que jerarquizar.
+
+2. EL ROJO ES EXCLUSIVO DE LAS REFERENCIAS.
+   Si el rojo tambien marcara negativos o la banda sigma, dejaria de leerse
+   como "esta es la linea contra la que comparas". Por eso banda_sigma() usa
+   gris claro, no rojo.
+
+3. DOS PARES CANONICOS, SEGUN LO QUE COMPARAS.
+
+   navy + azul_claro  -> partes de un mismo todo. Descomposiciones (real
+                         yield + breakeven = nominal), un dato y su promedio
+                         movil, barras apiladas. Misma familia: el ojo las
+                         suma.
+   navy + acento      -> dos cosas distintas que compiten. Un sector contra
+                         su indice, dos activos, actual vs consenso. Familias
+                         opuestas: el ojo las separa.
+
+   Elegir mal el par hace que el grafico diga lo contrario de lo que quieres.
+
+4. ORDEN DE SERIES: usar CICLO_COLORES en orden.
+   Esta ordenado por peso visual descendente, asi la primera serie declarada
+   es la que domina. No reordenar por gusto.
+
+5. UN GRAFICO, UN MENSAJE.
+   Mas de 6 series es ilegible con esta paleta. Si hacen falta mas, el
+   grafico esta haciendo dos cosas.
+
+Tipografia: Arial en todo (es la de los graficos de Excel de referencia).
+"""
+
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+# ---------------------------------------------------------------------------
+# Paleta
+# ---------------------------------------------------------------------------
+PALETA = {
+    # --- series, en orden de peso visual ---
+    "primario":    "#2D3748",
+    "acento":      "#D97A29",
+    "azul_claro":  "#8FAADC",
+    "claro":       "#A0AEC0",
+    "medio":       "#4A5568",
+    "verde":       "#4E9B82",
+    "carbon":      "#595959",
+    "gris":        "#A6A6A6",
+
+    # --- roles especiales ---
+    "referencia":  "#FF0000",   # SOLO lineas de referencia punteadas
+    "fondo":       "#F7FAFC",   # sombreados
+    "texto":       "#2D3748",
+    "texto_suave": "#4A5568",
+    "eje":         "#595959",
+
+    # --- alias heredados -------------------------------------------------
+    # Los generadores previos piden estas llaves. Se remapean a la paleta
+    # nueva para no romperlos. En codigo nuevo usar los nombres de arriba.
+    "azul":          "#2D3748",
+    "naranja":       "#D97A29",
+    "celeste":       "#A0AEC0",
+    "gris_azulado":  "#4A5568",
+    "rojo":          "#FF0000",
+    "negro":         "#2D3748",
+    "gris_texto":    "#4A5568",
+}
+
+# Orden de asignacion para graficos multi-serie. Peso visual descendente.
+CICLO_COLORES = ["primario", "acento", "azul_claro", "medio", "verde", "carbon"]
+
+# Margen izquierdo compartido por subplots_adjust y el texto de titulos, para
+# que titulo y subtitulo queden alineados con el eje Y y no con el borde.
+MARGEN_IZQUIERDO = 0.12
+
+
+def configurar_estilo_banquero():
+    """Aplica tipografia, colores de eje y ausencia de grid a todo matplotlib."""
+    mpl.rcParams.update({
+        "font.family": "sans-serif",
+        "font.sans-serif": ["Arial", "Helvetica", "Calibri", "DejaVu Sans"],
+        "font.size": 11,
+        "axes.edgecolor": PALETA["eje"],
+        "axes.linewidth": 1.0,
+        "axes.grid": False,
+        "axes.axisbelow": True,
+        "xtick.color": PALETA["eje"],
+        "ytick.color": PALETA["eje"],
+        "xtick.labelcolor": PALETA["texto"],
+        "ytick.labelcolor": PALETA["texto"],
+        "xtick.labelsize": 11,
+        "ytick.labelsize": 11,
+        "axes.labelsize": 11,
+        "axes.labelcolor": PALETA["texto_suave"],
+        "figure.facecolor": "white",
+        "axes.facecolor": "white",
+        "legend.frameon": False,
+        "legend.fontsize": 10,
+    })
+
+
+def color_signo(valor, positivo="primario", negativo="gris"):
+    """Color de una barra segun su signo -- azul oscuro / gris, NO verde/rojo.
+
+    El signo ya se lee en la direccion de la barra y en la etiqueta. El color
+    solo tiene que jerarquizar: lo positivo pesa, lo negativo se retira.
+    Verde/rojo es convencion de trading y satura un reporte de research.
+    """
+    return PALETA[positivo] if valor >= 0 else PALETA[negativo]
+
+
+def colores_por_signo(valores, positivo="primario", negativo="gris"):
+    """color_signo() aplicado a una secuencia."""
+    return [color_signo(v, positivo, negativo) for v in valores]
+
+
+def crear_grafico_banquero(titulo, subtitulo=None, nota=None, fuente=None,
+                           firma=None, figsize=(9, 5.5)):
+    """Figura con el layout tipico de research: titulo en negritas arriba a la
+    izquierda alineado con el eje Y, subtitulo gris debajo, nota opcional en
+    italicas y fuente al pie. Sin lineas de grid.
+    """
+    fig, ax = plt.subplots(figsize=figsize)
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_color(PALETA["eje"])
+    ax.spines["bottom"].set_color(PALETA["eje"])
+
+    ax.tick_params(axis="x", length=4, color=PALETA["eje"], labelsize=11,
+                   labelcolor=PALETA["texto"])
+    ax.tick_params(axis="y", length=4, color=PALETA["eje"], labelsize=9,
+                   labelcolor=PALETA["texto"])
+
+    fig.text(MARGEN_IZQUIERDO, 0.96, titulo, fontsize=14, fontweight="bold",
+             color=PALETA["texto"], ha="left")
+    y = 0.905
+    if subtitulo:
+        fig.text(MARGEN_IZQUIERDO, y, subtitulo, fontsize=10.5,
+                 color=PALETA["texto_suave"], ha="left")
+        y -= 0.045
+    if nota:
+        fig.text(MARGEN_IZQUIERDO, y, nota, fontsize=9,
+                 color=PALETA["texto_suave"], ha="left", style="italic")
+
+    if fuente:
+        fig.text(MARGEN_IZQUIERDO, 0.02, fuente, fontsize=9,
+                 color=PALETA["texto_suave"], ha="left")
+    if firma:
+        fig.text(0.98, 0.02, firma, fontsize=9, color=PALETA["texto_suave"],
+                 ha="right", fontweight="bold")
+
+    fig.subplots_adjust(top=0.80, bottom=0.14, left=MARGEN_IZQUIERDO, right=0.96)
+    return fig, ax
+
+
+def ejes_limpios(ax, labelsize=6.5):
+    """Solo eje izquierdo e inferior, en gris carbon. El default de los paneles."""
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_color(PALETA["eje"])
+    ax.spines["bottom"].set_color(PALETA["eje"])
+    ax.tick_params(axis="both", length=3, color=PALETA["eje"],
+                   labelsize=labelsize, labelcolor=PALETA["texto"])
+
+
+def banda_sigma(ax, serie, fontsize=5.5, color=None, alpha=0.18, etiqueta=True):
+    """Banda sombreada de +/-1 desviacion estandar sobre TODO el periodo (fija).
+
+    Es fija a proposito: la pregunta de un reporte semanal es "donde estamos
+    parados respecto al rango del anio", y solo una referencia estatica la
+    contesta. Una banda movil tipo Bollinger persigue al precio y esconde
+    justo los rompimientos de rango que interesa senalar.
+
+    En gris claro, no en rojo: el rojo esta reservado para las lineas de
+    referencia. Si la banda tambien fuera roja, competirian.
+
+    OJO: no aplicarla a series con quiebre de regimen. Si la serie salto de
+    un nivel a otro, la media queda a caballo del salto y la banda cubre un
+    rango donde la serie casi no estuvo.
+    """
+    color = color or PALETA["claro"]
+    media, sigma = serie.mean(), serie.std()
+    ax.fill_between(serie.index, media - sigma, media + sigma,
+                    color=color, alpha=alpha, zorder=1)
+    for nivel in (media + sigma, media - sigma):
+        ax.axhline(nivel, color=color, linewidth=0.8, linestyle="--",
+                   alpha=0.9, zorder=2)
+    if etiqueta:
+        ax.text(serie.index[0], media + sigma, " +1σ", color=PALETA["texto_suave"],
+                fontsize=fontsize, va="bottom", ha="left", zorder=3)
+        ax.text(serie.index[0], media - sigma, " −1σ", color=PALETA["texto_suave"],
+                fontsize=fontsize, va="top", ha="left", zorder=3)
+    return media, sigma
+
+
+def linea_referencia(ax, valor, etiqueta=None, fontsize=6, x=None):
+    """Linea de referencia punteada en rojo -- promedio, umbral, cero.
+
+    Este es el unico uso legitimo del rojo en la paleta. Es la convencion de
+    los graficos de Excel de referencia ("2Y Average, 17.49x") y funciona
+    justamente porque el rojo no aparece en ninguna serie.
+
+    Usarla solo cuando la referencia significa algo: un promedio historico
+    contra el que se compara, el 50 de un PMI, el cero de un spread. No como
+    linea de grid disfrazada.
+    """
+    ax.axhline(valor, color=PALETA["referencia"], linewidth=1.2,
+               linestyle="--", zorder=4)
+    if etiqueta:
+        x = x if x is not None else ax.get_xlim()[0]
+        ax.text(x, valor, f" {etiqueta}", color=PALETA["referencia"],
+                fontsize=fontsize, fontweight="bold", va="bottom", ha="left",
+                zorder=5)
+
+
+def resaltar_zona(ax, x_inicio, x_fin, color=None, alpha=1.0):
+    """Sombrea una banda vertical -- el mes en curso, un periodo de interes."""
+    ax.axvspan(x_inicio, x_fin, color=color or PALETA["fondo"], alpha=alpha,
+               zorder=0)
+
+
+def matriz_calor(ax, df, fmt="{:+.1f}%", divergente=True, intensidad=0.95,
+                 fontsize=7, fontsize_encabezado=7, por_columna=True,
+                 factor_negativo=0.45):
+    """Matriz tipo "Style Performance": celdas sombreadas por valor.
+
+    df: DataFrame numerico. El indice son las filas, las columnas los encabezados.
+
+    divergente=True sombrea en navy los positivos y en gris los negativos, con
+    intensidad proporcional al valor absoluto.
+    divergente=False usa una sola rampa navy de menor a mayor.
+
+    factor_negativo acota que tan oscuro llega a pintarse un negativo. Navy y
+    gris son ambos oscuros y desaturados: a intensidad pareja, un navy al 50%
+    y un gris al 70% pesan igual y el signo deja de leerse de un vistazo. Con
+    el gris topado, lo positivo siempre pesa mas, que es justo lo que hacen
+    las tablas de research.
+
+    por_columna=True escala la intensidad DENTRO de cada columna. Es el default
+    porque las columnas suelen ser periodos de magnitud muy distinta: con una
+    escala global, un YTD de +47% deja las columnas de 1W y MTD en blanco y la
+    tabla pierde la mitad de su informacion.
+
+    El texto pasa a blanco cuando la celda es lo bastante oscura, que es lo que
+    hace legible el sombreado fuerte.
+
+    Es el formato correcto cuando el lector necesita COMPARAR muchas celdas
+    entre si (indice x periodo, tamano x estilo). Para una sola dimension, una
+    barra ordenada se lee mejor.
+    """
+    import matplotlib.colors as mcolors
+
+    vals = df.values.astype(float)
+    n_f, n_c = vals.shape
+    if por_columna:
+        topes = [max(abs(vals[:, j][~_nan(vals[:, j])]).max(), 1e-9)
+                 for j in range(n_c)]
+    else:
+        topes = [max(abs(vals[~_nan(vals)]).max(), 1e-9)] * n_c
+
+    rgb_pos = mcolors.to_rgb(PALETA["primario"])
+    rgb_neg = mcolors.to_rgb(PALETA["carbon"])
+
+    ax.set_xlim(0, n_c)
+    ax.set_ylim(0, n_f)
+    ax.invert_yaxis()
+    ax.axis("off")
+
+    for i in range(n_f):
+        for j in range(n_c):
+            v = vals[i, j]
+            if v != v:                       # NaN
+                continue
+            if divergente:
+                positivo = v >= 0
+                base = rgb_pos if positivo else rgb_neg
+                peso = min(abs(v) / topes[j], 1.0) * intensidad
+                if not positivo:
+                    peso *= factor_negativo
+            else:
+                base = rgb_pos
+                peso = min(max(v / topes[j], 0), 1.0) * intensidad
+            # Mezcla contra blanco: peso 0 -> blanco, peso 1 -> color pleno
+            color = tuple(1 - peso * (1 - c) for c in base)
+            ax.add_patch(plt.Rectangle((j, i), 1, 1, facecolor=color,
+                                       edgecolor="white", linewidth=1.2, zorder=1))
+            ax.text(j + 0.5, i + 0.5, fmt.format(v), ha="center", va="center",
+                    fontsize=fontsize, zorder=2,
+                    color="white" if peso > 0.55 else PALETA["texto"],
+                    fontweight="bold" if peso > 0.55 else "normal")
+
+    for j, c in enumerate(df.columns):
+        ax.text(j + 0.5, -0.12, str(c), ha="center", va="bottom",
+                fontsize=fontsize_encabezado, fontweight="bold",
+                color=PALETA["texto"])
+    for i, r in enumerate(df.index):
+        ax.text(-0.12, i + 0.5, str(r), ha="right", va="center",
+                fontsize=fontsize_encabezado, fontweight="bold",
+                color=PALETA["texto"])
+
+
+def _nan(a):
+    return a != a

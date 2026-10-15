@@ -1,0 +1,44 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 15;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 900 } }; return "??" }
+$xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb=$null; foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("SOTP") }
+Write-Output "=== que hay en la columna K de los bloques (no quiero pisarlo) ==="
+for($r=8;$r -le 90;$r++){
+  $t=[string](T { $s.Cells.Item($r,11).Text })
+  if($t.Trim() -ne ""){ Write-Output ("   K"+$r+" = "+$t+"    frm= "+[string](T { $s.Cells.Item($r,11).Formula })) }
+}
+Write-Output ""
+Write-Output "=== celdas libres para el toggle / inputs ==="
+foreach($a in "B7","C7","M10","M21","M22","M23","M41","M42","M43","M61","M62","M63","M81","M82","M83"){
+  $v=[string](T { $s.Range($a).Text })
+  Write-Output ("   "+$a.PadRight(5)+" = ["+$v+"]")
+}
+Write-Output ""
+Write-Output "=== EV/EBITDA de los 20 comparables (zona de trabajo en Segment Beta r120+) ==="
+$sb2=T { $wb.Worksheets.Item("Segment Beta") }
+T { $sb2.Range("C120:H150").Clear() }
+$grp=@(
+ @("GENG.L","WM"),@("HILS.L","WM"),@("MSLH.L","WM"),@("GEBN.S","WM"),@("GF.S","WM"),@("WMS.N","WM"),@("ZWS.N","WM"),@("MWA.N","WM"),@("CNM.N","WM"),
+ @("KSP.I","BE"),@("CSL.N","BE"),@("SIKA.S","BE"),@("AMRZ.N","BE"),@("RPM.N","BE"),
+ @("FAN.L","HP"),@("GENG.L","HP"),@("FORT.L","HP"),@("MAS.N","HP"),@("ROCK.OQ","HP"),@("BLDR.N","HP"))
+$r=120
+foreach($g in $grp){
+  T { $sb2.Cells.Item($r,3).Value2=$g[0] }
+  T { $sb2.Cells.Item($r,4).Value2=$g[1] }
+  T { $sb2.Cells.Item($r,5).Formula=("=+TR(`$C"+$r+",`"TR.EV`",`"Curn=#1 Scale=#2 Null=BLANK`",,`$D`$5,`$D`$6)") }
+  T { $sb2.Cells.Item($r,6).Formula=("=+TR(`$C"+$r+",`"TR.F.EBITDAMargPct`",`"Period=#1 Null=BLANK`",,`$D`$7)") }
+  T { $sb2.Cells.Item($r,7).Formula=("=+TR(`$C"+$r+",`"TR.F.TotRevenue`",`"Curn=#1 Scale=#2 Period=#3 Null=BLANK`",,`$D`$5,`$D`$6,`$D`$7)") }
+  T { $sb2.Cells.Item($r,8).Formula=("=+IFERROR(E"+$r+"/(G"+$r+"*F"+$r+"/100),0)") }
+  $r++
+}
+T { $xl.CalculateFullRebuild() }
+Start-Sleep -Seconds 35
+T { $xl.Calculate() }
+Start-Sleep -Seconds 15
+Write-Output ("   "+"RIC".PadRight(10)+"seg".PadRight(5)+"EV".PadLeft(13)+"mgn%".PadLeft(9)+"Rev".PadLeft(13)+"EV/EBITDA".PadLeft(11))
+for($r=120;$r -le 139;$r++){
+  $line="   "+([string](T { $sb2.Cells.Item($r,3).Text })).PadRight(10)+([string](T { $sb2.Cells.Item($r,4).Text })).PadRight(5)
+  foreach($c in 5,6,7,8){ $v=[string](T { $sb2.Cells.Item($r,$c).Text }); if($v.Length -gt 12){ $v=$v.Substring(0,12) }; $line+=$v.PadLeft(13) }
+  Write-Output $line
+}

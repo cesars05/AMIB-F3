@@ -1,0 +1,132 @@
+# Manual de estilo: deck y Excel del US Steel Outlook
+
+Fase 1 del PLAN. Medido sobre `Other commodities/20260127_Copper_V4.pptx` (39 láminas, renderizadas y medidas con python-pptx), los Excels de `Copper Analysis/` y `Aztlan Template/`, y la skill `slide-construction` (sistema **aztlan**).
+
+## 1. Cómo se construyó el deck de Copper (el proceso que replicamos)
+- **Una o dos fuentes ancla.** Casi todo sale de un solo reporte, S&P Global "Copper in the Age of AI" (está en `Copper Analysis/Reports/`). Se toma su gráfico tal cual (**screenshot con su "Figure N" y su nota de fuente**) y se escribe encima la lectura de Aztlan.
+- **Datos propios de LSEG Workspace** para lo que el reporte no tiene: precio histórico (`Copper_Price History_*.xlsx` → gráfico nativo), desempeño por vehículo (`Copper Companies.xlsx` con fórmulas `TR`/`RDP.Data` → gráfico nativo) y un análisis propio (`Copper Premium.xlsx`).
+- **Cierre de inversión:** "Exposure Landscape" (qué vehículos dan exposición) → desempeño → Aztlan Quant Model.
+- **Para acero:** las anclas serían **OECD Steel Outlook 2026** (global) y **SIMA/AISI + los productores** (EE. UU.); el precio viene de `HRCc1` (CME vía Workspace).
+
+## 2. Orden de las láminas en Copper (estructura a seguir)
+| # | Tipo | Ejemplo en Copper |
+|---|---|---|
+| 1 | Portada (layout `Title`, fondo navy) | "World Copper Outlook" + subtítulo |
+| 2 | Disclaimer (`Disclaimer_1`) | Texto legal fijo |
+| 3 | Executive Summary (`1Chart`) | 4 encabezados en negrita, cada uno con 1–2 bullets |
+| 4 | Precio histórico (`1Chart`) | Línea nativa 2000–2026, valor final etiquetado |
+| 5–6 | Tesis y "qué es el metal" | Brecha oferta-demanda; por qué el cobre es el conductor preferido (cajas + fotos) |
+| 7… | **Divisor de sección** (`Title`, navy) | "Copper Demand", subdivisores "Core Economic", "Energy Transition"… |
+| … | Láminas de evidencia (`General`) | Screenshot del reporte + 2–4 bullets |
+| 22… | Divisor "Copper Supply" | Restricciones de oferta, costos, piso de precio |
+| 31–33 | Divisor "Exposure Landscape" | 4 cajas (vehículos) → gráfico de rendimientos 1Y/3Y/5Y/10Y |
+| 34–36 | "Aztlan Quant Model" | Tablas del modelo |
+| 37 | Cierre (`Closing Slide`) | Logo |
+
+## 3. Marco visual (fijo, viene de la plantilla)
+`20261014_US Steel.pptx` **ya tiene la misma plantilla de Aztlan** que Copper (mismos 13 layouts y tema). Se construye sobre ella.
+| Elemento | Especificación medida |
+|---|---|
+| Lámina | 13.333 × 7.5 in (16:9) |
+| Fuente | **Arial** en todo (tema major y minor) |
+| Colores del tema | navy `#221D55` (accent1) · dorado `#F5C400` (accent2) · gris acero `#7F8FA9` (accent3) · verde `#42825D` (accent4) · gris `#404040` / `#7F7F7F` · navy oscuro `#242852` (dk2) |
+| Regla superior | Línea a y = 0.31 in, de x 0.565 a 12.83 |
+| Logo | Arriba a la derecha, x 10.40 y 0.36 (del layout) |
+| Título | x 0.575 y 0.533, ancho 9.83, **28 pt**, negro, Title Case, 1 línea |
+| Subtítulo | y 0.989, **16 pt**, color navy (accent1), una oración |
+| Área de contenido | x 0.575–12.877, y ≈1.45–6.75 |
+| Source | Placeholder inferior y 6.951, **10 pt itálica**, centrado; nombre del reporte + **hipervínculo** al documento |
+| Número de página | Abajo a la derecha, 11 pt |
+| Pie fijo | "Aztlan Equity Management, LLC / Global Small and Mid Cap Stock-Picking Specialists / Copyright", gris claro, abajo a la izquierda |
+| Divisores | Layout `Title`: fondo navy, logo grande, sección en blanco (~28–32 pt) y subsección debajo |
+
+## 4. Layouts de contenido más usados en Copper
+1. **Texto izquierda + imagen derecha** (el más común): bullets x 0.575 w ≈5.0 · imagen x 6.88 w 6.0 (o x 5.88 w 7.0), una línea fina arriba de la imagen.
+2. **Texto arriba a todo lo ancho + imagen abajo-izquierda (w 8.5) + bullets a la derecha (w 3.25).**
+3. **Texto arriba + dos imágenes lado a lado** (p. ej. figuras 45 y 46).
+4. **Gráfico nativo a todo lo ancho** (precio y rendimientos): x 0.58–0.65, w 12.0–12.3, h ≈4.8.
+5. **Cajas con encabezado navy** (`Performance Edge` / `Durability`…), con texto debajo y foto del producto a la derecha.
+6. **Tablas de modelo** con encabezado navy y celdas con semáforo verde, amarillo y rojo.
+
+## 5. Gráficos
+**Screenshots de reportes** (lo dicta el estilo de la casa y lo pidió el usuario). La skill prefiere gráficos nativos, pero en estos decks la evidencia del reporte va como imagen.
+- Se recorta la figura completa con su "Figure N. …", sus unidades, su nota y su fuente, sin borde.
+- Ancho de 6.0 a 8.5 in, con resolución de 140 dpi o más (en la práctica, capturas de 1,000 a 1,200 px de ancho).
+- 1 imagen por lámina (máximo 2).
+
+**Gráficos nativos** (datos propios en el Excel):
+- **Línea de precio:** color navy, 2.25 pt; ejes a 9 pt; formato `"$"#,##0`; sin título interno.
+- **Unidad:** se escribe arriba a la izquierda, 10 pt itálica (p. ej. "US$/st").
+- **Etiqueta final:** el último valor se etiqueta (p. ej. "$5.93").
+- **Barras:** sin eje de valores, data labels de 9–10 pt y leyenda abajo.
+- **Colores de barras:** dorado = el sujeto (el commodity), navy, gris acero y verde para el resto.
+- **Línea de referencia:** punteada roja (como el "consensus price" en Copper).
+- **Cajas de dato destacado:** banda navy con texto blanco y valor al lado ("Current Copper Price | $5.87/lb").
+
+## 6. Redacción
+- **Título** = conclusión breve en Title Case, de 4 a 8 palabras ("Copper Enters a Higher Price Regime", "Smelters Become the Bottleneck").
+- **Subtítulo** = el porqué, con número si se puede ("Demand is rising faster than supply, creating a growing gap into 2040").
+- **Bullets:** de 2 a 4, 14 pt, justificados, viñeta "•", con **la frase clave en negrita**. Cada bullet trae un dato y su consecuencia.
+- **Executive Summary:** 4 bloques. Cada bloque tiene un encabezado en negrita que es una tesis y 1–2 bullets con datos.
+- **Qué decir y qué no:** solo lo que se encontró y lo que implica. No se escriben huecos ni "no se encontró". Los datos dudosos o contradictorios se quedan fuera de la lámina.
+- **Idioma:** inglés, igual que los decks de referencia.
+
+## 7. Excel: formato (basado en el Icarus Tracker, adaptado)
+| Elemento | Regla |
+|---|---|
+| Fuente | **Arial 10** en todo (Icarus usa Calibri; aquí se cambia a Arial) |
+| Columna A | Margen angosto (ancho ≈4.8) |
+| **B2** | Título del libro en negrita ("US Steel Outlook – Data") |
+| **B3** | Nombre de la hoja o gráfico en negrita |
+| **B4** | Fuente y unidad (itálica gris) |
+| **Fila 6** | Encabezados de la tabla: negrita con relleno de color |
+| Fila 7 en adelante | Datos |
+| Cuadrícula | Apagada; zoom 95% |
+| Color de fuente | **Azul** = dato capturado a mano o pegado; **negro** = fórmula (convención Icarus) |
+| Formatos | Fechas `d-mmm-yy`; miles `#,##0`; precios `"$"#,##0`; porcentajes `0.0%` |
+| Paleta acero | Encabezado relleno `#DCE3EA` (gris acero claro) con texto navy `#221D55`; título navy; dorado `#F5C400` solo para resaltar la serie sujeto |
+| Primera hoja | **Índice**: hoja → lámina del deck → fuente → fecha de actualización |
+| Una hoja por gráfico | El nombre de la hoja coincide con la lámina (p. ej. `S04_HRC_Price`) |
+
+**Fórmulas de Workspace** (de `Copper Companies.xlsx`):
+- Rendimientos:
+  - `=IFERROR(IF(_xll.TR($B5,"TR.TotalReturn1YrCrossAsset")="NULL","",_xll.TR(...)*1%),"")`
+  - Para 3, 5 y 10 años se anualiza con `=POWER(1+…,1/3)-1`.
+- Precios históricos:
+  - `=_xll.RDP.Data(RIC,"TR.PriceClose","SDate=… EDate=… Frq=D")`
+- Datos puntuales:
+  - `=_xll.RDP.Data($B5,C$2,,C5)`, con el campo en la fila 2.
+- Las fórmulas solo calculan con Workspace abierto. En el Excel van **las fórmulas y los valores** (pegados como respaldo) para que el deck no dependa de refrescar.
+
+## 8. Storyline propuesta para acero (Global → EE. UU.)
+Primer vistazo: ~22 láminas (Copper tiene 39).
+
+| # | Lámina (título tentativo) | Contenido | Formato | Fuente |
+|---|---|---|---|---|
+| 1 | The US Steel Outlook | Portada | — | — |
+| 2 | Disclaimer | — | — | — |
+| 3 | Executive Summary | 4 tesis: sobreoferta global · protección de EE. UU. · demanda selectiva · productores en alza de utilidades | Texto | Todas |
+| 4 | US Steel Prices Hold a Tariff-Driven Premium | HRC 2008–2026, último $1,285/st, hitos del 232 marcados | **Nativo** | CME `HRCc1` (Workspace) |
+| 5 | Two Routes to Make Steel | BF-BOF (mineral + carbón) vs EAF (chatarra/DRI); mundo 69/30%, EE. UU. 29/71% | **Diagrama con formas** | worldsteel |
+| — | **Divisor: Global Steel Market** | | | |
+| 6 | Global Demand Stalls as China Contracts | Demanda 2025–27 por región | Nativo (barras) o tabla | worldsteel SRO oct-26 |
+| 7 | Capacity Keeps Growing Despite Weak Demand | Exceso de capacidad 640 → 745 Mt | Screenshot Fig. 1.1 | OECD |
+| 8 | China Exports Its Surplus | Exportaciones récord 131 Mt | Screenshot Fig. 1.2 | OECD |
+| 9 | Steel Prices Diverge Across Regions | HRC EE. UU. > 2× China | **Screenshot Fig. 2.1** (pedida) | OECD |
+| 10 | Raw Materials Squeeze Global Margins | Mineral +9%, carbón +17% | Screenshot Fig. 2.3 | OECD |
+| 11 | Trade Defenses Multiply | ~400 medidas AD/CVD; EE. UU. 77 | Screenshot | OECD |
+| — | **Divisor: US Steel Market** | | | |
+| 12 | Section 232 Reshapes the US Market | Línea de tiempo 2018 → 2025 → abr-2026 | **Diagrama** | OECD, Proclamaciones |
+| 13 | Imports Fall to a Decade Low | Importaciones 2015–2026 | **Nativo** | Commerce (SIMA) |
+| 14 | …but Are Rebounding in 2026 | Mensual ene-25 → sep-26; Corea +54%, Canadá -35% | **Nativo** | Commerce / AISI |
+| 15 | Domestic Mills Run Harder | Utilización e importaciones/consumo | Screenshot | STLD 2T26 |
+| 16 | Demand Is Selective | Centros de datos, energía e infraestructura vs vivienda y agro | Formas / bullets | Llamadas, SRO |
+| 17 | New Capacity Tests the Cycle | Proyectos (Nucor WV 3 Mt, Gary #14, Big River 2, CMC WV) | Tabla/diagrama | Empresas, BofA |
+| 18 | Margins Over Scrap Widen | Spread de metal / precio de varilla | Screenshot | CMC 3T FY26 / Bloomberg |
+| — | **Divisor: Steel Exposure Landscape** | | | |
+| 19 | US Steel Producers at a Glance | NUE, STLD, CLF, CMC: modelo, capacidad, mensajes clave | Cajas | Empresas |
+| 20 | Earnings Inflect With Prices | EBITDA 1T → 2T26 por empresa | **Nativo** | Comunicados |
+| 21 | Steel Exposure Performance | Rendimientos 1Y/3Y/5Y/10Y: HRC, SLX, NUE, STLD, CLF, CMC | **Nativo** (fórmulas Workspace) | LSEG Workspace |
+| 22 | Cierre | | | |
+
+La Fase 2 (catálogo de gráficos) confirma qué figura exacta va en cada lámina y si hay una mejor.

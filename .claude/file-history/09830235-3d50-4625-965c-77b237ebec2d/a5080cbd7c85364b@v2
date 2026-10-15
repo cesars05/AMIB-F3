@@ -1,0 +1,71 @@
+# Nota: Dinámica global y de EE. UU. (OECD Steel Outlook 2026 + World Steel in Figures 2026 + Casa Blanca)
+
+**Fuentes (todas en `Reports/` salvo la última):**
+- `99ab9b0c-en.pdf` = **OECD Steel Outlook 2026** (aprobado por el Steel Committee el 12-may-2026; datos de precios a ene-2026). Licencia CC BY 4.0 → se puede citar y reusar gráficos con atribución.
+- `World-Steel-in-Figures-2026 (1).pdf` = worldsteel, **World Steel in Figures 2026** (cifras de 2025; tablas, poca narrativa).
+- Comunicado de la Casa Blanca (oct-2026): ver sección 4. **Es propaganda oficial, no dato independiente.**
+
+Siglas nuevas: **GFSEC** = Global Forum on Steel Excess Capacity (foro de la OCDE para coordinar acción contra la sobrecapacidad). **AD/CVD** = antidumping / derechos compensatorios. **BOF** = horno de oxígeno básico (acero integrado, mineral + carbón). **EAF** = horno de arco eléctrico (chatarra). **DRI** = hierro de reducción directa.
+
+## 1. Dinámica global (lo que explica el ciclo)
+
+| Dato | Valor | Fuente |
+|---|---|---|
+| Capacidad global de acero 2025 | 2,445 Mt, récord (4 años de alza) | OECD (vía resumen Comité, mar-26) |
+| Exceso de capacidad | **640 Mt (2025) → 745 Mt (2028)**; en 2028 sería 319 Mt más que toda la producción OCDE | OECD |
+| Adiciones planificadas 2026–28 | hasta 138.8 Mt (+5.7%); China hasta 38.6 Mt (la mayor expansión nacional), India +31.8 Mt | OECD |
+| Demanda global | solo ~+0.9% anual hasta 2030 (+34 Mt en 2026–28) | OECD |
+| Utilización global | 76% (2025) → ≤74% (2028) | OECD |
+| China | 54% del exceso de capacidad (3T25); **exportó récord 131 Mt en 2025** (+153% vs 2020, ~14% de su producción) | OECD |
+| Subsidios | la empresa china mediana recibe **15x** más subsidio (relativo a activos) que la mediana de otros países | OECD |
+| Producción mundial de acero crudo | **1,849 Mt en 2025** (1,887 en 2024; máximo 1,963 en 2021) | WSIF |
+| Proceso | 69.4% BOF, 30.3% EAF (mundo) | WSIF |
+| Comercio | China exporta 133.6 Mt (worldsteel; OECD dice 131); mayor importador neto: UE (16.8 Mt neto) y EE. UU. (13.9 Mt neto) | WSIF |
+| Materias primas 2025 | mineral de hierro +9%, carbón coquizable +17%, chatarra +2%; **margen acero–materias primas cae desde primavera-25** | OECD |
+| Trade measures | ~400 AD/CVD activas; 75 investigaciones nuevas en 2025; evidencia de elusión (exportaciones chinas a ASEAN y de ASEAN a OCDE suben tras AD/CVD; semiterminados chinos a SE Asia +300%) | OECD |
+| Chatarra | 42 países restringen sus exportaciones → "materia prima estratégica" | OECD |
+
+**Lectura:** el mundo está en un ciclo de **sobreoferta estructural**, con China exportando lo que no absorbe su mercado. La respuesta de los gobiernos es proteccionista (EE. UU., UE, Canadá, México, Brasil, India). Efecto clave: **los precios divergieron regionalmente** → en ene-2026 el HRC en EE. UU. costaba **más del doble** que en China, y en la UE 50% más. Los futuros esperaban que esas diferencias persistan.
+
+## 2. Dinámica de EE. UU.
+
+| Dato | Valor | Fuente |
+|---|---|---|
+| Producción de acero crudo 2025 | 81.9 Mt (71.3% EAF, 28.7% BOF); OECD: +3.1% en 2025, +0.7% en 2026 | WSIF / OECD |
+| Demanda | OECD: +0.7% (2025), **+0.6% (2026)**. SRO de worldsteel (oct-26): **+2.0%**, 92.7 Mt | OECD / SRO |
+| Utilización | ~85% en plantas de lámina (2025, Kallanish); AISI: 80% el 18-abr-26; hoy 77.8% semanal y 79.0% acumulado | OECD / AISI |
+| Importaciones | EE. UU. es el **2.º importador del mundo (23.9 Mt)**, importador neto 13.9 Mt (WSIF, 2025) | WSIF |
+| Políticas | EE. UU. tiene **77 medidas AD/CVD** vigentes (la mayor cifra; Canadá 64, Australia 46) | OECD |
+| Fuentes de demanda nueva | centros de datos, energía, infraestructura pública, manufactura, y potencialmente **astilleros** (Plan de Acción Marítimo, feb-26: placa y perfiles estructurales) | OECD |
+
+**Cambios en Section 232 (arancel por seguridad nacional) — clave para entender los precios:**
+- 2025: se eliminaron exenciones y exclusiones generales; se amplió la lista de derivados; en **jun-2025 el arancel subió a 50%** (Reino Unido se quedó en 25%).
+- **Abr-2026 (proclamación):** (1) artículos hechos casi enteramente de acero pagan 50% **sobre su valor total**; (2) derivados "sustancialmente de acero" pagan 25% sobre valor total; (3) cierto equipo industrial y eléctrico intensivo en metal paga **15% hasta 2027**; (4) productos hechos fuera con acero 100% estadounidense pagan **10%**; (5) productos con ≤15% de acero **salen del 232**. Refuerza aduanas contra trasbordo y subvaluación.
+- Esto concuerda con lo que dijo Nucor ("derivados pagan sobre valor total") y con la pregunta del analista sobre una tasa reducida de 10%: **esa tasa ya existe para productos con acero 100% de EE. UU.**
+
+**Tensión a explicar en la presentación:** OECD (mayo) ve demanda de EE. UU. casi plana (+0.6%), worldsteel (octubre) +2.0%, y las acereras hablan de demanda sólida. La mejora de utilidades parece venir más de **precio/margen por protección** que de volumen de demanda.
+
+## 3. Cómo encaja con las otras fuentes
+- Datos de AISI/Comercio (importaciones -8.5% en lo que va del año, pero rebotando desde dic-25) → el arancel funciona, pero Corea/Vietnam/México suben (ver nota de ciclo).
+- Las acereras (NUE, STLD, CLF, CMC) describen exactamente este entorno: menos importaciones, precios al alza, inventarios bajos.
+- Riesgo de ciclo: oferta nueva en EE. UU. (West Virginia de Nucor y de CMC, Gary Works #14) + elusión vía terceros países + exceso global de 640→745 Mt.
+
+## 4. Casa Blanca, "President Trump Is Putting American Industry, Jobs, and Paychecks Back on the Map" (oct-2026)
+[whitehouse.gov](https://whitehouse.gov/releases/2026/10/president-trump-is-putting-american-industry-jobs-and-paychecks-back-on-the-map)
+- **Acero:** respalda un complejo "mine-to-mill" de **$15 mil M en Iowa**, por Mesabi Metallics, con 1,750 empleos permanentes y hasta 6,000 de construcción, "el mayor jamás construido en EE. UU." Sin capacidad, sede exacta ni calendario en el texto. Atribuye el proyecto a los aranceles al acero.
+- Otros anuncios (no acero): astillero Arsenal-2 (Anduril, Maryland; ~3,100 empleos, $3.7 mil M privados + hasta $2.9 mil M de la Marina); paquete energético coreano de hasta $200 mil M; $19 mil M de Becton Dickinson; $1 mil M de AstraZeneca en Massachusetts.
+- **Cautela:** todas son cifras y proyecciones del gobierno, no verificadas. Un complejo "en Iowa" de Mesabi Metallics llama la atención (la empresa se asocia con Minnesota): **verificar con la empresa/prensa antes de usar**. Si se concreta, sería oferta nueva de largo plazo, y al estar pensado para mineral doméstico es relevante para la cadena (mineral → DRI → acero).
+- Útil para la lámina de "política industrial", no como dato de mercado.
+
+## 5. Gráficos aprovechables (para la presentación)
+- OECD Fig. 1.1: exceso de capacidad global 2019–2028 (la mejor sola).
+- OECD Fig. 2.1 y 2.2: precios HRC y rebar, EE. UU. vs UE vs China (divergencia).
+- OECD Fig. 3.2: utilización global cayendo.
+- OECD Fig. 2.3: materias primas.
+- WSIF: producción mundial 2000–2025, producción por proceso, comercio por región.
+
+## 6. Preguntas abiertas
+1. ¿Mesabi/Iowa es real y cuándo? (Comunicado sin calendario.)
+2. Reconciliar demanda de EE. UU.: OECD +0.6% vs SRO +2.0% vs "+3.2% consumo aparente" citado por CMC.
+3. OECD: datos de precios a ene-2026; falta actualizarlos (HRC hoy >$1,250/st según BofA).
+4. ¿Se completó el marco del GFSEC (meta jun-2026)? Sin confirmar.

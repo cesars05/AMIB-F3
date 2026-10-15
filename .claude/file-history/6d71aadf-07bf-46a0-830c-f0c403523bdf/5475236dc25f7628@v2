@@ -1,0 +1,100 @@
+import time, pywintypes
+from attach import get_app
+def R(fn):
+    for i in range(600):
+        try: return fn()
+        except pywintypes.com_error as e:
+            if e.args[0] in (-2147418111,-2147417846,-2146777998): time.sleep(2); continue
+            raise
+def bgr(h): h=h.lstrip("#"); return int(h[4:6]+h[2:4]+h[0:2],16)
+app=get_app(); wb=app.Workbooks("AZTD - Top Holdings Peers_v4.xlsx"); app.Calculation=-4135; app.ScreenUpdating=False
+names=[s.Name for s in wb.Worksheets]
+if "Selection Main" in names:
+    ws=wb.Worksheets("Selection Main"); ws.Cells.Clear(); ws.Cells.FormatConditions.Delete()
+    for co in list(ws.ChartObjects()): co.Delete()
+else:
+    ws=wb.Worksheets.Add(After=wb.Worksheets("Charts 2024-2026")); ws.Name="Selection Main"
+ws.Activate(); app.ActiveWindow.DisplayGridlines=False
+ws.Cells.Font.Name="Arial"; ws.Cells.Font.Size=10
+NAVY,NAVYT,LT=bgr("002060"),bgr("242852"),bgr("DAE9F8")
+ws.Columns("A").ColumnWidth=2; ws.Columns("B").ColumnWidth=2
+ws.Range("C2:V2").Interior.Color=NAVYT; ws.Range("C2").Value="Selection Main - AZTD names vs the peers' best names, by sector"
+ws.Range("C2").Font.Size=30; ws.Range("C2").Font.Color=0xFFFFFF; ws.Rows(2).RowHeight=37.5
+ws.Range("C3").Value="Left: the AZTD names in the sector, worst contributors first. Right: the peers' best names in the same sector (ranked by the peers' contribution), whether or not AZTD held them. Change the period in the yellow cell."
+ws.Range("C3").Font.Italic=True; ws.Range("C3").Font.Color=bgr("7F7F7F")
+ws.Range("C5").Value="Period"; ws.Range("C5").Font.Bold=True
+ws.Range("D5").Value="2024-2026 (annualized)"; ws.Range("D5:F5").Interior.Color=bgr("FFF2CC"); ws.Range("D5").Font.Bold=True
+ws.Range("D5").Validation.Delete(); ws.Range("D5").Validation.Add(3,1,1,"2024-2026 (annualized),2025,YTD-26")
+ws.Range("G5").Formula='=MATCH($D$5,{"2024-2026 (annualized)","2025","YTD-26"},0)'; ws.Range("G5").Font.Color=bgr("BFBFBF")
+ws.Range("H5").Value="<- helper (period index)"; ws.Range("H5").Font.Color=bgr("BFBFBF"); ws.Range("H5").Font.Italic=True
+ws.Range("C6").Value="Return = stock return over the period (while held for AZTD names, cumulative); 3Y return annualized; scores from 'Quant Model Aug'."
+ws.Range("C6").Font.Italic=True; ws.Range("C6").Font.Color=bgr("7F7F7F")
+IDX="$G$5"
+HDs="'Attr Holdings'"; RTs="'Attr Returns'"
+def hr(c): return HDs+"!$"+c+"$8:$"+c+"$281"
+def rr(c): return RTs+"!$"+c+"$8:$"+c+"$5422"
+AP=wb.Worksheets("Attribution 2024-2026"); AY=wb.Worksheets("Attribution YTD")
+s25=[r for r in range(100,260) if str(AP.Range("C"+str(r)).Value).startswith("Sector contribution 2025")][0]
+def hitrow(ws_,sw): return [r for r in range(50,300) if str(ws_.Range("C"+str(r)).Value).startswith(sw)]
+hp=hitrow(AP,"HIT RATE OF AZTD PICKS -")[0]+2
+h25=hitrow(AP,"HIT RATE OF AZTD PICKS 2025")[0]+2
+hy=hitrow(AY,"HIT RATE")[0]+2
+sy=[r for r in range(1,40) if str(AY.Range("C"+str(r)).Value).startswith("Sector contribution")][0]
+print("tables",s25,hp,h25,hy,sy)
+P="'Attribution 2024-2026'"; Y="'Attribution YTD'"
+def tbl(col,sec,sh,r1,r2):
+    return "INDEX("+sh+"!$"+col+"$"+str(r1)+":$"+col+"$"+str(r2)+",MATCH("+sec+","+sh+"!$C$"+str(r1)+":$C$"+str(r2)+",0))"
+sp_=[r for r in range(1,60) if str(AP.Range("C"+str(r)).Value).startswith("Sector contribution - annualized")][0]
+def look(col,sec):
+    return "CHOOSE("+IDX+","+tbl(col,sec,P,sp_+1,sp_+12)+","+tbl(col,sec,P,s25+1,s25+12)+","+tbl(col,sec,Y,sy+1,sy+12)+")"
+def hit(col,sec):
+    return "CHOOSE("+IDX+","+tbl(col,sec,P,hp+1,hp+11)+","+tbl(col,sec,P,h25+1,h25+11)+","+tbl(col,sec,Y,hy+1,hy+11)+")"
+SECS=["Communication Services","Consumer Discretionary","Consumer Staples","Energy","Financials","Health Care","Industrials","Information Technology","Materials","Real Estate","Utilities"]
+leftH=["AZTD names (worst first)","Avg wt","Contribution","Return while held","3Y return","Model 1.1","Stability","6M Slope"]
+rightH=["Peers' best names","Peer avg wt","Peer contrib.","Return","3Y return","Model 1.1","Stability","6M Slope","# peers","AZTD held?","Other Aztlan strategies"]
+START=8; BLK=19
+for i,s in enumerate(SECS):
+    r=START+i*BLK
+    g=ws.Range("C"+str(r)+":V"+str(r)); g.Interior.Color=NAVY; g.Font.Color=0xFFFFFF; g.Font.Bold=True; ws.Rows(r).RowHeight=20
+    ws.Range("C"+str(r)).Value=s; ws.Range("C"+str(r)).Font.Size=12
+    sec="$C$"+str(r)
+    f=('="AZTD wt "&TEXT('+look("K",sec)+',"0.0%")&" vs peers "&TEXT('+look("L",sec)+',"0.0%")&"   |   contribution vs peers "&TEXT('+look("J",sec)+',"+0.00%;-0.00%")'
+       '&"   |   return "&IFERROR(TEXT('+look("M",sec)+',"0.0%"),"n/a")&" vs "&IFERROR(TEXT('+look("N",sec)+',"0.0%"),"n/a")'
+       '&"   |   hit rate "&IFERROR(TEXT('+hit("F",sec)+',"0%"),"n/a")&" (names) / "&IFERROR(TEXT('+hit("G",sec)+',"0%"),"n/a")&" (weighted)"')
+    ws.Range("E"+str(r)).Formula=f
+    h=r+1
+    ws.Range("C"+str(h)).GetResize(1,8).Value=[leftH]; ws.Range("L"+str(h)).GetResize(1,11).Value=[rightH]
+    for a,b in (("C","J"),("L","V")):
+        g=ws.Range(a+str(h)+":"+b+str(h)); g.Interior.Color=LT; g.Font.Bold=True; g.WrapText=True; g.VerticalAlignment=-4108; g.HorizontalAlignment=-4108
+    ws.Range("C"+str(h)).HorizontalAlignment=-4131; ws.Range("L"+str(h)).HorizontalAlignment=-4131; ws.Rows(h).RowHeight=30
+    nm,se=hr("E"),hr("F")
+    wt="CHOOSE("+IDX+","+hr("DF")+","+hr("DL")+","+hr("DH")+")"
+    ct="CHOOSE("+IDX+","+hr("DG")+","+hr("DM")+","+hr("DI")+")"
+    rt="CHOOSE("+IDX+","+hr("DO")+","+hr("DW")+","+hr("DS")+")"
+    key=hr("D")
+    def xl(c): return "XLOOKUP("+key+","+rr("C")+","+rr(c)+",\"\")"
+    left=('=IFERROR(TAKE(SORT(FILTER(HSTACK('+nm+','+wt+','+ct+','+rt+','+hr("DK")+','+xl("CM")+','+xl("CO")+','+xl("CN")+'),('+hr("C")+'="AZTD")*('+se+'='+sec+')*('+wt+'>0)),3,1),15),"")')
+    R(lambda: setattr(ws.Range("C"+str(h+1)),"Formula2",left))
+    pw="CHOOSE("+IDX+","+rr("BZ")+","+rr("DB")+","+rr("CA")+")"
+    pc="CHOOSE("+IDX+","+rr("BX")+","+rr("DA")+","+rr("BY")+")"
+    pr="CHOOSE("+IDX+","+rr("DE")+","+rr("DC")+","+rr("CF")+")"
+    pn="CHOOSE("+IDX+","+rr("CD")+","+rr("DD")+","+rr("CD")+")"
+    held='IF(CHOOSE('+IDX+','+rr("CB")+','+rr("CZ")+','+rr("CC")+')>0,"Yes","No")'
+    right=('=IFERROR(TAKE(SORT(FILTER(HSTACK('+rr("D")+','+pw+','+pc+','+pr+','+rr("CI")+','+rr("CM")+','+rr("CO")+','+rr("CN")+','+pn+','+held+','+rr("CV")+'),('+rr("CK")+'='+sec+')*('+pc+'<>0)),3,-1),15),"")')
+    R(lambda: setattr(ws.Range("L"+str(h+1)),"Formula2",right))
+    b1,b2=h+1,h+15
+    def nf(c1,c2,fmt): ws.Range(c1+str(b1)+":"+c2+str(b2)).NumberFormat=fmt
+    nf("D","D","0.0%"); nf("E","E","+0.00%;-0.00%;-"); nf("F","G","0.0%"); nf("H","J","0.00")
+    nf("M","M","0.0%"); nf("N","N","+0.00%;-0.00%;-"); nf("O","P","0.0%"); nf("Q","S","0.00"); nf("T","T","0")
+    ws.Range("D"+str(b1)+":J"+str(b2)).HorizontalAlignment=-4108; ws.Range("M"+str(b1)+":V"+str(b2)).HorizontalAlignment=-4108
+    for a,b in (("C","J"),("L","V")):
+        bb=ws.Range(a+str(b1)+":"+b+str(b2)).Borders(9); bb.LineStyle=1; bb.Color=bgr("D9D9D9")
+    ws.Rows(str(h+1)+":"+str(b2+2)).RowHeight=16.5
+    for cr in ("E"+str(b1)+":E"+str(b2),"N"+str(b1)+":N"+str(b2)):
+        g=ws.Range(cr); g.FormatConditions.Delete(); tl=cr.split(":")[0]
+        f1=g.FormatConditions.Add(2,None,"=AND(ISNUMBER("+tl+"),"+tl+">0)"); f1.Interior.Color=bgr("BDD7EE"); f1.Font.Color=bgr("1F3864")
+        f2=g.FormatConditions.Add(2,None,"=AND(ISNUMBER("+tl+"),"+tl+"<0)"); f2.Interior.Color=bgr("F8CBAD"); f2.Font.Color=bgr("843C0C")
+for c,w in zip("CDEFGHIJKLMNOPQRSTUV",[36,10,12,13,10,10,10,10,3,36,11,12,11,10,10,10,10,8,11,24]): ws.Columns(c).ColumnWidth=w
+ws.Tab.Color=bgr("1F3864")
+app.ScreenUpdating=True
+print("built")

@@ -1,0 +1,79 @@
+import json, os, re, sys, time, urllib.request
+
+ROOT = r"C:\Users\cesar\OneDrive\Desktop\AZTD_Filings"
+UA = {"User-Agent": "AZTD-Research research@aztd-research.org", "Accept-Encoding": "identity"}
+
+def get(url):
+    for attempt in range(3):
+        try:
+            req = urllib.request.Request(url, headers=UA)
+            with urllib.request.urlopen(req, timeout=60) as r:
+                data = r.read()
+            time.sleep(0.25)
+            return data
+        except Exception as e:
+            print(f"  retry {attempt+1} {url}: {e}")
+            time.sleep(2)
+    raise RuntimeError(url)
+
+tickers = json.loads(get("https://www.sec.gov/files/company_tickers.json"))
+by_ticker = {v["ticker"]: v["cik_str"] for v in tickers.values()}
+
+COMPANIES = {
+    "ARW": ["ARW"], "VSXY": ["VSXY", "VSCO"], "FET": ["FET"], "GCT": ["GCT"],
+    "PTEN": ["PTEN"], "CAMT": ["CAMT"], "ITRN": ["ITRN"],
+}
+FOREIGN = {"CAMT", "ITRN"}
+
+def save(folder, name, cik, acc, doc):
+    acc_nd = acc.replace("-", "")
+    base = f"https://www.sec.gov/Archives/edgar/data/{cik}/{acc_nd}/"
+    html = get(base + doc).decode("utf-8", errors="replace")
+    html = re.sub(r"(<head[^>]*>)", r'\1<base href="' + base + '">', html, count=1, flags=re.I)
+    if "<base " not in html[:5000].lower():
+        html = f'<base href="{base}">' + html
+    path = os.path.join(folder, name + ".htm")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(html)
+    print(f"  saved {name}.htm")
+
+def exhibit99(cik, acc):
+    acc_nd = acc.replace("-", "")
+    idx = json.loads(get(f"https://www.sec.gov/Archives/edgar/data/{cik}/{acc_nd}/index.json"))
+    names = [i["name"] for i in idx["directory"]["item"]]
+    cands = [n for n in names if re.search(r"ex[-_]?99", n, re.I) and n.lower().endswith((".htm", ".html"))]
+    return cands[0] if cands else None
+
+for key, syms in COMPANIES.items():
+    cik = next((by_ticker[s] for s in syms if s in by_ticker), None)
+    if cik is None:
+        print(f"{key}: CIK not found"); continue
+    folder = os.path.join(ROOT, key); os.makedirs(folder, exist_ok=True)
+    sub = json.loads(get(f"https://data.sec.gov/submissions/CIK{int(cik):010d}.json"))
+    rec = sub["filings"]["recent"]
+    rows = list(zip(rec["form"], rec["accessionNumber"], rec["primaryDocument"], rec["filingDate"], rec.get("items", [""] * len(rec["form"]))))
+    print(f"{key} ({sub['name']}, CIK {cik}) latest filing {rows[0][3]}")
+
+    if key in FOREIGN:
+        annual = [r for r in rows if r[0] == "20-F"][:1]
+        for f, acc, doc, d, _ in annual:
+            save(folder, f"20-F_{d}", cik, acc, doc)
+        n = 0
+        for f, acc, doc, d, _ in rows:
+            if f != "6-K" or n >= 4:
+                continue
+            ex = exhibit99(cik, acc)
+            if ex:
+                save(folder, f"6-K_{d}", cik, acc, ex); n += 1
+    else:
+        for f, acc, doc, d, _ in [r for r in rows if r[0] == "10-K"][:1]:
+            save(folder, f"10-K_{d}", cik, acc, doc)
+        for f, acc, doc, d, _ in [r for r in rows if r[0] == "10-Q"][:3]:
+            save(folder, f"10-Q_{d}", cik, acc, doc)
+        n = 0
+        for f, acc, doc, d, items in rows:
+            if f == "8-K" and "2.02" in (items or "") and n < 2:
+                ex = exhibit99(cik, acc)
+                if ex:
+                    save(folder, f"8-K_earnings_{d}", cik, acc, ex); n += 1
+print("DONE")

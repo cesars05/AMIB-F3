@@ -1,0 +1,41 @@
+"""Campos de estimados de ingresos, para el CAGR del bubble chart."""
+import lseg.data as ld
+import warnings; warnings.filterwarnings("ignore")
+import pandas as pd
+pd.set_option("display.width", 220, "display.max_columns", 20)
+ld.open_session()
+
+P = ["NVDA.OQ", "AVGO.OQ", "VRT.N", "GEV.N", "MU.OQ"]
+
+print("=== Estimados de ingresos por anio fiscal ===")
+for campos in (["TR.RevenueMean"],
+               ["TR.Revenue"],
+               ["TR.RevenueMean", "TR.RevenueMean.fperiod"],
+               ["TR.RevenueSmartEst"],
+               ["TR.EBITDAMean"],
+               ["TR.NetProfitMean"]):
+    try:
+        d = ld.get_data(universe=P[:2], fields=campos)
+        print(f"  OK  {campos}\n{d.to_string(index=False)}")
+    except Exception as e:
+        print(f"  --  {campos}: {str(e)[:100]}")
+
+print("\n=== Con FPeriod (FY1..FY3) ===")
+for per in ("FY1", "FY2", "FY3"):
+    try:
+        d = ld.get_data(universe=P, fields=["TR.RevenueMean"],
+                        parameters={"Period": per})
+        d.columns = ["ric", f"rev_{per}"]
+        print(f"  {per}: " + ", ".join(f"{r.ric}={r[1]/1e9:,.1f}B"
+              for r in d.itertuples() if pd.notna(r[2])))
+    except Exception as e:
+        print(f"  {per}: -- {str(e)[:90]}")
+
+print("\n=== Market cap + FwdPE juntos ===")
+try:
+    d = ld.get_data(universe=P, fields=["TR.CommonName", "TR.FwdPE",
+                                        "TR.CompanyMarketCap"])
+    print(d.to_string(index=False))
+except Exception as e:
+    print("  --", str(e)[:150])
+ld.close_session()

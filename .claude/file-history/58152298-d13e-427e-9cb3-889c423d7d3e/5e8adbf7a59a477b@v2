@@ -1,0 +1,59 @@
+"""Dividend rows in the IRR cashflow tables show the real pay date (+ status in the label);
+Summary purchase rows use the tab code (OR, PZB, ...)."""
+import sys, datetime as dt
+import openpyxl
+from openpyxl.formatting.rule import FormulaRule
+from openpyxl.styles.differential import DifferentialStyle
+from openpyxl.styles.numbers import NumberFormat
+from openpyxl.formatting.rule import Rule
+
+src, dst = sys.argv[1], sys.argv[2]
+test_val = sys.argv[3] if len(sys.argv) > 3 else None
+wb = openpyxl.load_workbook(src)
+TABS = ["OR", "PZB", "JL", "EZB", "JCZB"]
+VAL = "Inputs!$C$6"
+PAY = {"3Q26": "D", "4Q26": "G"}   # pay-date column per quarter on Inputs (rows 19-22)
+
+
+def na_rule(ws, rng, first_cell):
+    # show "n.a." instead of a date when the dividend has not been declared (cell still holds a valid date for XIRR)
+    dxf = DifferentialStyle(numFmt=NumberFormat(numFmtId=200, formatCode='"n.a."'))
+    rule = Rule(type="expression", dxf=dxf, formula=[f'ISNUMBER(SEARCH("not declared",{first_cell}))'])
+    ws.conditional_formatting.add(rng, rule)
+
+
+def div_rows(ws, r0, fallback):
+    r = r0
+    for q in ("3Q26", "4Q26"):
+        for k in range(4):
+            pay = f"Inputs!${PAY[q]}${19+k}"
+            ws[f"C{r}"].value = (f'=IF({pay}="","{q} Div (not declared)",'
+                                 f'IF({pay}>{VAL},"{q} Div (pending)","{q} Dividend"))')
+            ws[f"D{r}"].value = f'=IF({pay}="",{fallback},{pay})'
+            r += 1
+    na_rule(ws, f"D{r0}:D{r-1}", f"$C{r0}")
+
+
+# investor tabs: dividend rows 52-59, fallback = investment date
+for t in TABS:
+    ws = wb[t]
+    assert ws["C52"].value.startswith("3Q26") or "Dividend" in str(ws["C52"].value), t
+    div_rows(ws, 52, "$C$7")
+    ws["B65"].value = "Dividends show their pay date; pending or not-declared ones are 0 and do not count until paid. Total = Whole Dollar Profit."
+
+# Summary: purchase rows 35-39 -> tab codes; dividend rows 40-47, fallback = first investment date
+sm = wb["Summary"]
+for k, t in enumerate(TABS):
+    assert str(sm[f"B{35+k}"].value) == f"=+{t}!B3", sm[f"B{35+k}"].value
+    sm[f"B{35+k}"].value = t
+div_rows(sm, 40, "$D$35")
+sm["B53"].value = "Purchases stay first (earliest date first). Pending or not-declared dividends are 0 and do not count until paid."
+
+if test_val:
+    ip = wb["Inputs"]
+    ip["C6"].value = dt.date.fromisoformat(test_val)
+    for k, px in enumerate([15.35, 11.98, 12.41, 12.51]): ip[f"D{11+k}"].value = px
+    for k in range(4): ip[f"D{26+k}"].value = 0
+wb.calculation.fullCalcOnLoad = True
+wb.save(dst)
+print("saved", dst)

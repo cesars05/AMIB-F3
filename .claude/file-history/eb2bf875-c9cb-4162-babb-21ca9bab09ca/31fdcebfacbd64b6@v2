@@ -1,0 +1,138 @@
+﻿$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions")
+$cm=$wb.Worksheets.Item("Consolidated Model")
+$sm=$wb.Worksheets.Item("Segment Model")
+Write-Output ("LIBRO: "+[string]$wb.Name)
+$prev=[string]$as.Range("J74").Text
+if([string]$as.Range("J74").Text.Trim() -ne ""){ $as.Range("J74").ClearContents() }
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ("Modulo de venta APAGADO (estaba en '"+$prev+"'). Auditando el caso base.")
+Write-Output ""
+
+# ============ A) CONSISTENCIA DE FORMULAS EN LA PROYECCION (L..Q) ============
+function Norm($f,$colLetter){
+  if($f -eq "" -or -not $f.StartsWith("=")){ return $f }
+  $pat='(?<![A-Za-z0-9_$])'+$colLetter+'(\$?)(\d+)'
+  return ($f -replace $pat, '@$1$2')
+}
+function AuditRows($sh,$nm,$r1,$r2){
+  Write-Output ("### "+$nm+": filas con formula INCONSISTENTE entre FY2027 y FY2032 ###")
+  $cols=@{12="L";13="M";14="N";15="O";16="P";17="Q"}
+  $n=0
+  for($r=$r1;$r -le $r2;$r++){
+    $base=""; $baseCol=""
+    $bad=@()
+    foreach($c in 12,13,14,15,16,17){
+      $f=""
+      try{ $f=[string]$sh.Cells.Item($r,$c).Formula }catch{}
+      if($f -eq ""){ continue }
+      $nf=Norm $f $cols[$c]
+      if($base -eq ""){ $base=$nf; $baseCol=$cols[$c]; continue }
+      if($nf -ne $base){ $bad+=($cols[$c]) }
+    }
+    if($bad.Count -gt 0){
+      $lab=""
+      foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$sh.Cells.Item($r,$cc).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+      if($lab.Length -gt 40){ $lab=$lab.Substring(0,40) }
+      Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(41)+" difieren: "+($bad -join ","))
+      $n++
+    }
+  }
+  if($n -eq 0){ Write-Output "  (ninguna)" }
+  Write-Output ""
+}
+AuditRows $sm "SEGMENT MODEL" 10 235
+AuditRows $cm "CONSOLIDATED MODEL" 10 380
+
+# ============ B) CONSTANTES DURAS EN LA PROYECCION ============
+function AuditHard($sh,$nm,$r1,$r2){
+  Write-Output ("### "+$nm+": valores DUROS en columnas de proyeccion (L..Q) ###")
+  $n=0
+  for($r=$r1;$r -le $r2;$r++){
+    $hard=@()
+    $cols=@{12="L";13="M";14="N";15="O";16="P";17="Q"}
+    foreach($c in 12,13,14,15,16,17){
+      $f=""
+      try{ $f=[string]$sh.Cells.Item($r,$c).Formula }catch{}
+      if($f -eq ""){ continue }
+      if(-not $f.StartsWith("=")){
+        $v=$null; try{ $v=$sh.Cells.Item($r,$c).Value2 }catch{}
+        if($v -ne $null -and $v -is [double] -and $v -ne 0){ $hard+=($cols[$c]+"="+[string]$v) }
+      }
+    }
+    if($hard.Count -gt 0){
+      $lab=""
+      foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$sh.Cells.Item($r,$cc).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+      if($lab.Length -gt 38){ $lab=$lab.Substring(0,38) }
+      Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(39)+" "+($hard -join "  "))
+      $n++
+    }
+  }
+  if($n -eq 0){ Write-Output "  (ninguno distinto de cero)" }
+  Write-Output ""
+}
+AuditHard $cm "CONSOLIDATED MODEL" 10 380
+
+# ============ C) SIGNOS SOSPECHOSOS ============
+Write-Output "### Signos: filas que deberian ser positivas y no lo son (L..Q) ###"
+$pos=@{}
+$pos[54]="CM Depreciation"
+$pos[55]="CM Amortisation"
+$pos[133]="CM PP&E propio"
+$pos[134]="CM PP&E ROU"
+$pos[135]="CM Goodwill"
+$pos[136]="CM Other intangibles"
+$pos[53]="CM Adj. EBITDA"
+$pos[64]="CM Adj. Net Income"
+foreach($r in ($pos.Keys | Sort-Object)){
+  $bad=@()
+  $cols=@{12="L";13="M";14="N";15="O";16="P";17="Q"}
+  foreach($c in 12,13,14,15,16,17){
+    $v=$null; try{ $v=$cm.Cells.Item($r,$c).Value2 }catch{}
+    if($v -ne $null -and $v -is [double] -and $v -lt 0){ $bad+=($cols[$c]+"="+[string][math]::Round($v,0)) }
+  }
+  if($bad.Count -gt 0){ Write-Output ("  r"+([string]$r).PadRight(4)+$pos[$r].PadRight(24)+" NEGATIVO en: "+($bad -join "  ")) }
+}
+Write-Output ""
+Write-Output "### Trayectorias clave del CASO BASE ###"
+$tr=@{}
+$tr[13]="Revenue"
+$tr[53]="Adj. EBITDA"
+$tr[54]="  (+) Depreciation"
+$tr[55]="  (+) Amortisation"
+$tr[56]="Adj. Operating Profit"
+$tr[62]="  Tax expense"
+$tr[63]="  Tax on non-underlying"
+$tr[64]="Adj. Net Income"
+$tr[70]="Adj. EPS (p)"
+$tr[168]="CHECK balance"
+$tr[215]="CHECK caja"
+$h="  "+"".PadRight(26)
+for($c=11;$c -le 17;$c++){ $h+=([string]$cm.Cells.Item(9,$c).Text).PadLeft(10) }
+Write-Output $h
+foreach($r in ($tr.Keys | Sort-Object)){
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(10) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$tr[$r].PadRight(23)+$v)
+}
+Write-Output ""
+$d=$wb.Worksheets.Item("DCF")
+Write-Output ("  DCF = "+[string]$d.Range("E41").Text+"   SOTP = "+[string]$wb.Worksheets.Item("SOTP").Range("D112").Text+"   EPV = "+[string]$wb.Worksheets.Item("EPV").Range("E61").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=$wb.Worksheets.Item($nm)
+  $e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)
+

@@ -1,0 +1,89 @@
+﻿$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions")
+$cm=$wb.Worksheets.Item("Consolidated Model")
+$d =$wb.Worksheets.Item("DCF")
+$dcfAntes=[string]$d.Range("E41").Text
+
+$rMar=0
+for($r=20;$r -le 80;$r++){
+  $t=""; try{ $t=[string]$as.Cells.Item($r,3).Text }catch{}
+  if($t -like "Segmental Operating Margin by Year*"){ $rMar=$r; break }
+}
+if($rMar -eq 0){ throw "ABORTO: no encontre el bloque de margenes" }
+if([string]$as.Cells.Item($rMar+4,4).Text -ne "Base"){ throw "ABORTO: estructura del bloque cambio" }
+if([string]$as.Cells.Item($rMar,5).Text -ne "FY2027"){ throw "ABORTO: columna E no es FY2027" }
+if([string]$as.Cells.Item($rMar,7).Text -ne "FY2029"){ throw "ABORTO: columna G no es FY2029" }
+Write-Output ("bloque de margenes en r"+$rMar+" - guardas OK")
+
+$xl.Calculation=-4135
+#                FY27    FY28    FY29(pico) FY30   FY31    FY32(terminal)
+$baseWM=@(0.110, 0.123, 0.135, 0.133, 0.132, 0.130)
+$baseBE=@(0.118, 0.120, 0.122, 0.121, 0.121, 0.120)
+$baseHP=@(0.253, 0.248, 0.242, 0.241, 0.239, 0.238)
+for($i=0;$i -lt 6;$i++){
+  $col=5+$i
+  $as.Cells.Item($rMar+4,$col).Value2=$baseWM[$i]
+  $as.Cells.Item($rMar+3,$col).Value2=($baseWM[$i]-0.015)
+  $as.Cells.Item($rMar+2,$col).Value2=($baseWM[$i]-0.030)
+  $as.Cells.Item($rMar+8,$col).Value2=$baseBE[$i]
+  $as.Cells.Item($rMar+7,$col).Value2=($baseBE[$i]-0.015)
+  $as.Cells.Item($rMar+6,$col).Value2=($baseBE[$i]-0.030)
+  $as.Cells.Item($rMar+12,$col).Value2=$baseHP[$i]
+  $as.Cells.Item($rMar+11,$col).Value2=($baseHP[$i]-0.015)
+  $as.Cells.Item($rMar+10,$col).Value2=($baseHP[$i]-0.030)
+}
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output "margenes: pico FY2029 al nivel record, normalizando despues"
+Write-Output ""
+$h="  "+"".PadRight(24)
+for($c=5;$c -le 10;$c++){ $h+=([string]$as.Cells.Item($rMar,$c).Text).PadLeft(9) }
+Write-Output $h
+foreach($g in @(@(2,"WM Stress"),@(3,"WM Bear"),@(4,"WM Base"),@(6,"BE Stress"),@(7,"BE Bear"),@(8,"BE Base"),@(10,"HP Stress"),@(11,"HP Bear"),@(12,"HP Base"))){
+  $r=$rMar+[int]$g[0]
+  $v=""
+  for($c=5;$c -le 10;$c++){ $v+=([string]$as.Cells.Item($r,$c).Text).PadLeft(9) }
+  Write-Output ("  "+([string]$g[1]).PadRight(24)+$v)
+}
+Write-Output ""
+$h2="  "+"".PadRight(28)
+for($c=11;$c -le 17;$c++){ $h2+=([string]$cm.Cells.Item(9,$c).Text).PadLeft(9) }
+Write-Output $h2
+foreach($x in @(@(13,"Revenue"),@(56,"Adj. Operating Profit"),@(53,"Adj. EBITDA"),@(70,"Adj. EPS (p)"))){
+  $r=[int]$x[0]
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(9) }
+  Write-Output ("  "+([string]$x[1]).PadRight(28)+$v)
+}
+$vE=""; $vB=""
+for($c=11;$c -le 17;$c++){
+  $e=[double]$cm.Cells.Item(56,$c).Value2
+  $b=[double]$cm.Cells.Item(53,$c).Value2
+  $rv=[double]$cm.Cells.Item(13,$c).Value2
+  $vE+=([string][math]::Round($e/$rv*100,1)+"%").PadLeft(9)
+  $vB+=([string][math]::Round($b/$rv*100,1)+"%").PadLeft(9)
+}
+Write-Output ("  "+"Margen EBIT".PadRight(28)+$vE)
+Write-Output ("  "+"Margen EBITDA".PadRight(28)+$vB)
+Write-Output ("  "+"record historico".PadRight(28)+"EBIT 14.9% (FY2022)   EBITDA 17.2% (FY2025)")
+Write-Output ""
+Write-Output ("  DCF antes = "+$dcfAntes+"   ahora = "+[string]$d.Range("E41").Text+"  ("+[string]$d.Range("E42").Text+")")
+Write-Output ("  SOTP = "+[string]$wb.Worksheets.Item("SOTP").Range("D112").Text+"   EPV = "+[string]$wb.Worksheets.Item("EPV").Range("E61").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=$wb.Worksheets.Item($nm)
+  $e2=0; try{ $e2=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e2 -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e2) }
+  $tot+=$e2
+}
+Write-Output ("  celdas con error: "+$tot)
+

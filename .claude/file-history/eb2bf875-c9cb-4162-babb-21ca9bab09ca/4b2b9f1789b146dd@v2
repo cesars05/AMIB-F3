@@ -1,0 +1,116 @@
+$ErrorActionPreference="Stop"
+function Try1($__sb){ for($__k=0;$__k -lt 15;$__k++){ try{ return & $__sb }catch{ if($_.Exception.Message -match "0x80010001|RPC_E_CALL|Call was rejected|0x800AC472"){ Start-Sleep -Milliseconds 700 } else { throw } } }; throw "exhausted" }
+$wb=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); if([int]$xl.Workbooks.Count -gt 0){ foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } } } }catch{}; if($wb -ne $null){break}; Start-Sleep -Milliseconds 800 }
+function GetWs($n){ for($i=0;$i -lt 30;$i++){ try{ $x=$wb.Worksheets.Item($n); if($x -ne $null){ return $x } }catch{}; Start-Sleep -Milliseconds 700 }; throw ("no hoja "+$n) }
+$cm=GetWs "Consolidated Model"
+$dst=Join-Path "C:\Users\cesar\OneDrive\Desktop\Alumasc & Peers\Alumasc\Financials" ("BACKUP_PRE_CLEAN_"+(Get-Date -Format "yyyyMMdd_HHmmss")+"_"+$wb.Name)
+Try1 { $wb.SaveCopyAs($dst) } | Out-Null
+Write-Output ("Libro: "+$wb.Name+"   Backup: "+(Split-Path $dst -Leaf))
+
+if((([string](Try1 { $cm.Cells.Item(277,3).Text })) -notmatch "Debt Stressing")){ throw "r277 movida" }
+if((([string](Try1 { $cm.Cells.Item(290,3).Text })) -notmatch "breach")){ throw "r290 no es la fila de breach" }
+$sFree=$true
+for($r=277;$r -le 298;$r++){ if((([string](Try1 { $cm.Cells.Item($r,19).Text })).Trim()) -ne ""){ $sFree=$false } }
+if(-not $sFree){ throw "la columna S no esta libre en el bloque" }
+Write-Output "Guards OK - columna S libre"
+
+$BLUE=16711680
+$RED=255
+$GREY=8421504
+$Q=[char]34
+$PCT="#,##0.0%;(#,##0.0%);"+$Q+"--"+$Q
+$NUM="#,##0;(#,##0);"+$Q+"--"+$Q
+$MUL="0.00"+$Q+"x"+$Q+";(0.00"+$Q+"x"+$Q+");"+$Q+"--"+$Q
+
+Try1 { $xl.Calculation=-4135 } | Out-Null
+
+# ---------- 1. limpiar todo el bloque de datos, dejar solo etiquetas ----------
+Try1 { $cm.Range("D279:S297").ClearContents() } | Out-Null
+
+# ---------- 2. columna S = inputs y resumen ----------
+Try1 { $cm.Range("S277").Value2="Input / summary" } | Out-Null
+Try1 { $cm.Range("S277").Font.Bold=$true } | Out-Null
+Try1 { $cm.Range("S277").HorizontalAlignment=-4108 } | Out-Null
+Try1 { $cm.Range("S280").Value2=[double]2.5 } | Out-Null
+Try1 { $cm.Range("S281").Value2=[double]3.5 } | Out-Null
+Try1 { $cm.Range("S282").Value2=[double]25000 } | Out-Null
+Try1 { $cm.Range("S280:S281").NumberFormat=$MUL } | Out-Null
+Try1 { $cm.Range("S282").NumberFormat=$NUM } | Out-Null
+Try1 { $cm.Range("S280:S282").Font.Color=$BLUE } | Out-Null
+Try1 { $cm.Range("S280:S282").HorizontalAlignment=-4108 } | Out-Null
+
+# ---------- 3. las tres filas de covenant leen del mismo input ----------
+$allCols=@("D","E","F","G","H","I","J","K","L","M","N","O","P","Q")
+foreach($cL in $allCols){
+  Try1 { $cm.Range($cL+"280").Formula="=`$S`$280" } | Out-Null
+  Try1 { $cm.Range($cL+"281").Formula="=`$S`$281" } | Out-Null
+  Try1 { $cm.Range($cL+"282").Formula="=`$S`$282" } | Out-Null
+  Try1 { $cm.Range($cL+"280:"+$cL+"281").NumberFormat=$MUL } | Out-Null
+  Try1 { $cm.Range($cL+"282").NumberFormat=$NUM } | Out-Null
+  Try1 { $cm.Range($cL+"280:"+$cL+"282").Font.Color=$GREY } | Out-Null
+}
+
+# ---------- 4. ratios ----------
+foreach($cL in $allCols){
+  Try1 { $cm.Range($cL+"285").Formula=("=+IFERROR("+$cL+"251,"+$Q+$Q+")") } | Out-Null
+  Try1 { $cm.Range($cL+"286").Formula=("=+IFERROR("+$cL+"285/"+$cL+"53,"+$Q+$Q+")") } | Out-Null
+  Try1 { $cm.Range($cL+"287").Formula=("=+IFERROR("+$cL+"53/"+$cL+"260,"+$Q+$Q+")") } | Out-Null
+  Try1 { $cm.Range($cL+"288").Formula=("=+IFERROR(MAX("+$cL+"147,0),"+$Q+$Q+")") } | Out-Null
+  Try1 { $cm.Range($cL+"289").Formula=("=+IFERROR("+$cL+"282-"+$cL+"288,"+$Q+$Q+")") } | Out-Null
+  Try1 { $cm.Range($cL+"290").Formula=("=+IFERROR(IF(OR("+$cL+"286>"+$cL+"280,"+$cL+"287<"+$cL+"281,"+$cL+"288>"+$cL+"282),"+$Q+"BREACH"+$Q+","+$Q+"ok"+$Q+"),"+$Q+$Q+")") } | Out-Null
+  Try1 { $cm.Range($cL+"285").NumberFormat=$NUM } | Out-Null
+  Try1 { $cm.Range($cL+"286:"+$cL+"287").NumberFormat=$MUL } | Out-Null
+  Try1 { $cm.Range($cL+"288:"+$cL+"289").NumberFormat=$NUM } | Out-Null
+  Try1 { $cm.Range($cL+"290").HorizontalAlignment=-4108 } | Out-Null
+}
+
+# ---------- 5. resumen de stress, todo en S ----------
+Try1 { $cm.Range("S293").Formula="=+Assumptions!`$F`$42" } | Out-Null
+Try1 { $cm.Range("S293").NumberFormat=$PCT } | Out-Null
+Try1 { $cm.Range("S293").Font.Color=$RED } | Out-Null
+Try1 { $cm.Range("S294").Formula=("=+IFERROR(MAX(K286:Q286),"+$Q+$Q+")") } | Out-Null
+Try1 { $cm.Range("S295").Formula=("=+IFERROR(MIN(K287:Q287),"+$Q+$Q+")") } | Out-Null
+Try1 { $cm.Range("S294:S295").NumberFormat=$MUL } | Out-Null
+Try1 { $cm.Range("S296").Formula=("=+IFERROR(MAX(K288:Q288),"+$Q+$Q+")") } | Out-Null
+Try1 { $cm.Range("S296").NumberFormat=$NUM } | Out-Null
+Try1 { $cm.Range("S297").Formula=("=+IFERROR(IF(COUNTIF(K290:Q290,"+$Q+"BREACH"+$Q+")=0,"+$Q+"none"+$Q+",INDEX(K`$277:Q`$277,MATCH("+$Q+"BREACH"+$Q+",K290:Q290,0))),"+$Q+$Q+")") } | Out-Null
+Try1 { $cm.Range("S293:S297").HorizontalAlignment=-4108 } | Out-Null
+Try1 { $cm.Range("S294:S297").Font.Bold=$true } | Out-Null
+
+# ---------- 6. nota sobre comparabilidad historica ----------
+Try1 { $cm.Range("C291").Value2="    FY2019-FY2020 ratios include Levolux and are not comparable" } | Out-Null
+Try1 { $cm.Range("C291").Font.Italic=$true } | Out-Null
+Try1 { $cm.Range("C291").Font.Color=$GREY } | Out-Null
+Try1 { $cm.Range("C283").Value2="    Covenants measured on net BANK debt, excluding lease liabilities (per FY2025 Annual Report)" } | Out-Null
+Try1 { $cm.Range("C283").Font.Italic=$true } | Out-Null
+Try1 { $cm.Range("C283").Font.Color=$GREY } | Out-Null
+
+# ---------- 7. formato condicional: BREACH en rojo ----------
+$rng=Try1 { $cm.Range("D290:Q290") }
+Try1 { $rng.FormatConditions.Delete() } | Out-Null
+$fc=Try1 { $rng.FormatConditions.Add(1,3,"="+$Q+"BREACH"+$Q) }
+Try1 { $fc.Font.Color=$RED } | Out-Null
+Try1 { $fc.Font.Bold=$true } | Out-Null
+Try1 { $fc.Interior.Color=13551615 } | Out-Null
+
+Try1 { $xl.Calculation=-4105 } | Out-Null
+Try1 { $xl.CalculateFullRebuild() } | Out-Null
+Try1 { $xl.CalculateFullRebuild() } | Out-Null
+Try1 { $xl.CalculateFullRebuild() } | Out-Null
+
+Write-Output ""
+Write-Output ("        "+"".PadRight(46)+((4..17 | ForEach-Object { $i=$_; ([string](Try1 { $cm.Cells.Item(277,$i).Text })).PadLeft(8) }) -join "")+"      S")
+for($r=277;$r -le 297;$r++){
+  $lab=[string](Try1 { $cm.Cells.Item($r,3).Text })
+  $v=(4..17 | ForEach-Object { $i=$_; ([string](Try1 { $cm.Cells.Item($r,$i).Text })).PadLeft(8) }) -join ""
+  $s=[string](Try1 { $cm.Cells.Item($r,19).Text })
+  if(($lab+$v+$s).Trim() -ne ""){ Write-Output ("r"+$r+"  "+$lab.PadRight(46)+$v+"  "+$s.PadLeft(8)) }
+}
+$tot=0
+foreach($ws in $wb.Worksheets){ if(@("Assumptions","Segment Model","Consolidated Model","DCF","EPV") -contains $ws.Name){ $bc=$null; try{ $bc=$ws.UsedRange.SpecialCells(-4123,16) }catch{ $bc=$null }; if($bc -ne $null){ $n=0; try{$n=[int]$bc.Count}catch{}; if($n -gt 0){ Write-Output ("  !! "+$ws.Name+" "+$n); $tot+=$n } } } }
+Write-Output ("")
+Write-Output ("  Errores: "+$tot)
+Write-Output ("  Balance check: "+((11..17 | ForEach-Object { $i=$_; [string](Try1 { $cm.Cells.Item(164,$i).Text }) }) -join " | "))
+Try1 { $wb.Save() } | Out-Null
+Write-Output "guardado"

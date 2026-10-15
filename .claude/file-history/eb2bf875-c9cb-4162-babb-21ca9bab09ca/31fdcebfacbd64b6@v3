@@ -1,0 +1,46 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$er=$wb.Worksheets.Item("Expected Returns")
+$cm=$wb.Worksheets.Item("Consolidated Model")
+$LT=@{1="A";2="B";3="C";4="D";5="E";6="F";7="G";8="H";9="I";10="J";11="K";12="L";13="M";14="N";15="O";16="P";17="Q";18="R";19="S"}
+
+Write-Output "=== EXPECTED RETURNS: direccion exacta de cada celda con contenido ==="
+for($r=1;$r -le 54;$r++){
+  foreach($c in 1..22){
+    $t=""
+    try{ $t=[string]$er.Cells.Item($r,$c).Text }catch{}
+    if($t.Trim() -ne ""){ Write-Output ("  "+$LT[$c]+$r+" = '"+$t+"'") }
+  }
+}
+Write-Output ""
+Write-Output "=== EXPECTED RETURNS: anchos de columna ==="
+$w=""
+foreach($c in 1..14){ $w+=($LT[$c]+"="+[string][math]::Round([double]$er.Columns.Item($c).ColumnWidth,1)+"  ") }
+Write-Output ("  "+$w)
+Write-Output ""
+Write-Output "=== CONSOLIDATED MODEL: bloque 355..374 (etiquetas + formula col L) ==="
+for($r=355;$r -le 374;$r++){
+  $lab=""
+  foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$cm.Cells.Item($r,$cc).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  $fk=""; $fl=""
+  try{ $fk=[string]$cm.Cells.Item($r,11).Formula }catch{}
+  try{ $fl=[string]$cm.Cells.Item($r,12).Formula }catch{}
+  Write-Output ("r"+([string]$r).PadRight(4)+$lab.PadRight(40)+" K='"+$fk+"'")
+  if($fl -ne ""){ Write-Output ("      L='"+$fl+"'") }
+}
+Write-Output ""
+Write-Output "=== CONSOLIDATED MODEL: filas de cableado ==="
+foreach($r in 19,20,22,29,53,56,62,63,64,133,134,135,136,168,176,183,185,194,199,215,248,249,297,298){
+  $lab=""
+  foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$cm.Cells.Item($r,$cc).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  $fl=""; try{ $fl=[string]$cm.Cells.Item($r,12).Formula }catch{}
+  if($fl.Length -gt 150){ $fl=$fl.Substring(0,150)+"..." }
+  Write-Output ("r"+([string]$r).PadRight(4)+$lab.PadRight(38)+" L="+$fl)
+}

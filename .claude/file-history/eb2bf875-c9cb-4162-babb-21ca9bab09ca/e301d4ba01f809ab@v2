@@ -1,0 +1,76 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $cm=$wb.Worksheets.Item("Consolidated Model")
+$sm=$wb.Worksheets.Item("Segment Model"); $d=$wb.Worksheets.Item("DCF")
+$su=$wb.Worksheets.Item("Summary"); $so=$wb.Worksheets.Item("SOTP"); $ep=$wb.Worksheets.Item("EPV")
+Write-Output ("LIBRO: "+[string]$wb.Name+"   modulo de venta: '"+[string]$as.Range("J74").Text+"'")
+Write-Output ""
+$L=@{12="L";13="M";14="N";15="O";16="P";17="Q"}
+Write-Output "### 1) Consistencia de formulas en la proyeccion (R1C1) ###"
+foreach($pr in @(@($sm,"SEGMENT MODEL",10,235),@($cm,"CONSOLIDATED MODEL",10,380))){
+  $sh=$pr[0]; $nm=[string]$pr[1]; $n=0
+  for($r=[int]$pr[2];$r -le [int]$pr[3];$r++){
+    $base=""; $bad=@()
+    foreach($c in 12,13,14,15,16,17){
+      $f=""; try{ $f=[string]$sh.Cells.Item($r,$c).FormulaR1C1 }catch{}
+      if($f -eq ""){ continue }
+      if($base -eq ""){ $base=$f; continue }
+      if($f -ne $base){ $bad+=([string]$L[$c]) }
+    }
+    if($bad.Count -gt 0){
+      $lab=""
+      foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$sh.Cells.Item($r,$cc).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+      if($lab.Length -gt 36){ $lab=$lab.Substring(0,36) }
+      $v=""; try{ $v=[string]$sh.Cells.Item($r,12).Text }catch{}
+      Write-Output ("  "+$nm.Substring(0,2)+" r"+([string]$r).PadRight(4)+$lab.PadRight(37)+" L="+$v.PadLeft(9))
+      $n++
+    }
+  }
+  Write-Output ("  -> "+$nm+": "+$n)
+}
+Write-Output ""
+Write-Output "### 2) Snapshot del Summary vs DCF vivo ###"
+$s1=""; $s2=""
+for($c=4;$c -le 9;$c++){ $s1+=([string]$su.Cells.Item(30,$c).Text).PadLeft(10) }
+for($c=3;$c -le 8;$c++){ $s2+=([string]$d.Cells.Item(23,$c).Text).PadLeft(10) }
+Write-Output ("  snapshot Base r30: "+$s1)
+Write-Output ("  DCF vivo    r23  : "+$s2)
+Write-Output ("  football field:  DCF Base "+[string]$su.Range("D14").Text+" / "+[string]$su.Range("E14").Text+" / "+[string]$su.Range("F14").Text+"   contra DCF real "+[string]$d.Range("E41").Text)
+Write-Output ""
+Write-Output "### 3) r63 y otras celdas pendientes ###"
+Write-Output ("  CM r63 (tax on non-underlying) FY2027..FY2032: "+([string]$cm.Range("L63").Text)+" "+([string]$cm.Range("M63").Text)+" "+([string]$cm.Range("N63").Text)+" "+([string]$cm.Range("O63").Text)+" "+([string]$cm.Range("P63").Text)+" "+([string]$cm.Range("Q63").Text))
+Write-Output ("  DCF P16 WACC = "+[string]$d.Range("P16").Text+"   P13 tasa = "+[string]$d.Range("P13").Text+"   R20 Kd = "+[string]$d.Range("R20").Text)
+$rB=0
+for($r=70;$r -le 100;$r++){ $t=""; try{ $t=[string]$as.Cells.Item($r,3).Text }catch{}; if($t -like "Bank interest rate*"){ $rB=$r; break } }
+if($rB -gt 0){ Write-Output ("  Assumptions tasa bancaria r"+$rB+": "+([string]$as.Cells.Item($rB,4).Text)+" / "+([string]$as.Cells.Item($rB,5).Text)+" / "+([string]$as.Cells.Item($rB,6).Text)) }
+$rD=0
+for($r=70;$r -le 100;$r++){ $t=""; try{ $t=[string]$as.Cells.Item($r,3).Text }catch{}; if($t -like "Dividend per share growth*"){ $rD=$r; break } }
+if($rD -gt 0){ Write-Output ("  Assumptions crecim. dividendo r"+$rD+": "+([string]$as.Cells.Item($rD,4).Text)+" / "+([string]$as.Cells.Item($rD,5).Text)+" / "+([string]$as.Cells.Item($rD,6).Text)) }
+Write-Output ""
+Write-Output "### 4) Por segmento: activos, capex, depreciacion, ROIC ###"
+$h="  "+"".PadRight(30)
+for($c=11;$c -le 17;$c++){ $h+=([string]$sm.Cells.Item(9,$c).Text).PadLeft(9) }
+Write-Output $h
+foreach($x in @(@(82,"WM activos"),@(83,"BE activos"),@(84,"HP activos"),@(133,"WM capex"),@(134,"BE capex"),@(135,"HP capex"),@(143,"WM deprec."),@(144,"BE deprec."),@(145,"HP deprec."),@(75,"WM ROIC"),@(76,"BE ROIC"),@(77,"HP ROIC"))){
+  $r=[int]$x[0]
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$sm.Cells.Item($r,$c).Text).PadLeft(9) }
+  Write-Output ("  "+([string]$x[1]).PadRight(30)+$v)
+}
+Write-Output ""
+Write-Output ("  DCF "+[string]$d.Range("E41").Text+"   SOTP "+[string]$so.Range("D112").Text+"   EPV "+[string]$ep.Range("E61").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=$wb.Worksheets.Item($nm)
+  $e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

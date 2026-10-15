@@ -1,0 +1,20 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 30;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 1000 } }; return "??" }
+$xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb=$null; foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+$sb=$null
+for($i=0;$i -lt 30;$i++){ try{ $sb=$wb.Worksheets.Item("Segment Beta"); if($sb -ne $null){ break } }catch{ Start-Sleep -Milliseconds 1000 } }
+Write-Output "=== Segment Beta: filas de promedio y resumen ==="
+for($r=20;$r -le 50;$r++){
+  $lab=[string](T { $sb.Cells.Item($r,4).Text })
+  if($lab -notmatch "(?i)average|segment|memo|water|building|housebuilding"){ continue }
+  $k=[string](T { $sb.Cells.Item($r,11).Text }); $l=[string](T { $sb.Cells.Item($r,12).Text })
+  $e=[string](T { $sb.Cells.Item($r,5).Text }); $f=[string](T { $sb.Cells.Item($r,6).Text }); $g=[string](T { $sb.Cells.Item($r,7).Text })
+  if($lab.Length -gt 46){ $lab=$lab.Substring(0,46) }
+  Write-Output ("   r"+([string]$r).PadRight(4)+$lab.PadRight(48)+"K="+$k.PadLeft(8)+" L="+$l.PadLeft(8)+"   E="+$e.PadLeft(8)+" F="+$f.PadLeft(8)+" G="+$g.PadLeft(8))
+}
+Write-Output ""
+Write-Output "=== lo que el SOTP referencia hoy ==="
+foreach($a in "L24","L33","L43","J12"){
+  Write-Output ("   'Segment Beta'!"+$a.PadRight(5)+" = "+[string](T { $sb.Range($a).Text }))
+}

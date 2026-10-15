@@ -1,0 +1,43 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+$sm=T { $wb.Worksheets.Item("Segment Model") }
+# localizar la etiqueta por contenido, no por numero de fila
+$rLbl=0
+for($r=180;$r -le 240;$r++){
+  $t=[string](T { $sm.Cells.Item($r,3).Text })
+  if($t -like "Growth capital intensity*"){ $rLbl=$r; break }
+}
+if($rLbl -eq 0){ throw "ABORTO: no se encontro la etiqueta de intensidad" }
+Write-Output ("etiqueta encontrada en r"+$rLbl)
+Write-Output ("ANTES: "+[string](T { $sm.Cells.Item($rLbl,3).Text }))
+$xl.Calculation=-4135
+T { $sm.Cells.Item($rLbl,3).Value2="Growth capital intensity - net new capital per GBP 1 of incremental revenue, FY2022-FY2026 (5 years)" } | Out-Null
+$xl.Calculation=-4105
+T { $xl.CalculateFullRebuild() } | Out-Null
+$wb.Save()
+Write-Output ("DESPUES: "+[string](T { $sm.Cells.Item($rLbl,3).Text }))
+Write-Output ""
+Write-Output "### bloque completo ###"
+for($r=$rLbl;$r -le $rLbl+7;$r++){
+  $lab=[string](T { $sm.Cells.Item($r,3).Text })
+  if($lab.Trim() -eq ""){ continue }
+  if($lab.Length -gt 50){ $lab=$lab.Substring(0,50) }
+  $v=""
+  for($c=4;$c -le 8;$c++){ $v+=([string](T { $sm.Cells.Item($r,$c).Text })).PadLeft(13) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(51)+$v)
+}
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=T { $wb.Worksheets.Item($nm) }
+  $e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

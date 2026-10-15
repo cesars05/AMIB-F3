@@ -1,0 +1,84 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$sm=$wb.Worksheets.Item("Segment Model"); $cm=$wb.Worksheets.Item("Consolidated Model")
+$as=$wb.Worksheets.Item("Assumptions")
+
+Write-Output "################ HISTORICO (FY2019 - FY2026) ################"
+$h="  "+"".PadRight(30)
+for($c=4;$c -le 11;$c++){ $h+=([string]$sm.Cells.Item(9,$c).Text).PadLeft(9) }
+Write-Output ($h+"    prom5y")
+function Hist($sh,$r,$lab){
+  $v=""; $s=0.0; $n=0
+  for($c=4;$c -le 11;$c++){
+    $v+=([string]$sh.Cells.Item($r,$c).Text).PadLeft(9)
+    if($c -ge 7){ $x=0.0; try{ $x=[double]$sh.Cells.Item($r,$c).Value2 }catch{}; if($x -ne 0){ $s+=$x; $n++ } }
+  }
+  $p=""
+  if($n -gt 0){ $p=([string][math]::Round($s/$n*100,1)+"%") }
+  Write-Output ("  "+$lab.PadRight(30)+$v+$p.PadLeft(10))
+}
+Write-Output "-- crecimiento de ingresos --"
+Hist $sm 45 "Grupo"
+Hist $sm 46 "Water Management"
+Hist $sm 47 "Building Envelope"
+Hist $sm 48 "Housebuilding"
+Write-Output "-- margen operativo por segmento --"
+Hist $sm 57 "Water Management"
+Hist $sm 58 "Building Envelope"
+Hist $sm 59 "Housebuilding"
+Hist $sm 61 "Costos centrales % ingresos"
+Write-Output "-- capex PP&E % de ingresos del segmento --"
+Hist $sm 166 "Water Management"
+Hist $sm 167 "Building Envelope"
+Hist $sm 168 "Housebuilding"
+Write-Output "-- D&A % de ingresos del segmento --"
+Hist $sm 193 "Water Management"
+Hist $sm 194 "Building Envelope"
+Hist $sm 195 "Housebuilding"
+Write-Output "-- retorno sobre activos del segmento --"
+Hist $sm 103 "Water Management"
+Hist $sm 104 "Building Envelope"
+Hist $sm 105 "Housebuilding"
+Write-Output "-- capital de trabajo (dias) --"
+Hist $cm 120 "AR days"
+Hist $cm 121 "Inventory days"
+Hist $cm 122 "AP days"
+Write-Output "-- margen bruto --"
+Hist $cm 79 "Gross margin"
+
+Write-Output ""
+Write-Output "################ INPUTS ACTUALES ################"
+Write-Output ""
+Write-Output "--- crecimiento y margen por ano (E..J = FY2027..FY2032) ---"
+$h2="  "+"".PadRight(38)
+for($c=5;$c -le 10;$c++){ $h2+=([string]$as.Cells.Item(15,$c).Text).PadLeft(9) }
+Write-Output $h2
+foreach($b in @(@(15,"CRECIMIENTO DE INGRESOS"),@(29,"MARGEN OPERATIVO"))){
+  Write-Output ("  === "+[string]$b[1]+" ===")
+  $r0=[int]$b[0]
+  foreach($off in 2,3,4,6,7,8,10,11,12){
+    $r=$r0+$off
+    $seg=[string]$as.Cells.Item($r,3).Text
+    $esc=[string]$as.Cells.Item($r,4).Text
+    if($seg -ne ""){ Write-Output ("  "+$seg) }
+    $v=""
+    for($c=5;$c -le 10;$c++){ $v+=([string]$as.Cells.Item($r,$c).Text).PadLeft(9) }
+    Write-Output ("    "+$esc.PadRight(36)+$v)
+  }
+}
+Write-Output ""
+Write-Output "--- drivers por escenario (D=Downside, E=Stagnation, F=Partial) ---"
+Write-Output ("  "+"".PadRight(40)+"Downside".PadLeft(12)+"Stagnation".PadLeft(12)+"Partial".PadLeft(12))
+foreach($r in 47,48,49,52,53,54,57,58,59,62,63,64,67,74,75,78,79,80,83,84,85,86,89,90,91,92){
+  $lab=[string]$as.Cells.Item($r,3).Text
+  if($lab.Trim() -eq ""){ continue }
+  if($lab.Length -gt 39){ $lab=$lab.Substring(0,39) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(36)+([string]$as.Cells.Item($r,4).Text).PadLeft(12)+([string]$as.Cells.Item($r,5).Text).PadLeft(12)+([string]$as.Cells.Item($r,6).Text).PadLeft(12))
+}

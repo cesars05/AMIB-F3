@@ -1,0 +1,83 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $d=$wb.Worksheets.Item("DCF")
+$er=$wb.Worksheets.Item("Expected Returns"); $cm=$wb.Worksheets.Item("Consolidated Model")
+if([string]$as.Range("J74").Text -ne ""){ throw "ABORTO: el modulo esta encendido" }
+$xl.Calculation=-4105
+
+Write-Output "###### CHECK 1: el ano terminal del DCF (columna I) vs el ultimo ano (columna H) ######"
+Write-Output "  Si alguna celda I difiere de su H, el ano terminal es una quimera."
+function TV($t){
+  Write-Output ""
+  Write-Output ("  --- "+$t+" ---")
+  Write-Output ("  fila                      G(FY2031)       H(FY2032)     I(Terminal)   coincide I=H?")
+  foreach($x in @(@(11,"Sales"),@(13,"Adj. EBITDA"),@(15,"EBIT"),@(17,"Taxes"),@(20,"D&A"),@(21,"CapEx"),@(22,"Working capital"),@(23,"FCFF"))){
+    $r=[int]$x[0]
+    $g=[double]$d.Cells.Item($r,7).Value2
+    $h=[double]$d.Cells.Item($r,8).Value2
+    $i=[double]$d.Cells.Item($r,9).Value2
+    $ok="SI"
+    if([math]::Abs($i-$h) -gt 1){ $ok="<<< NO" }
+    if($r -eq 13 -or $r -eq 15 -or $r -eq 23){ $ok="(derivada)" }
+    Write-Output ("  "+([string]$x[1]).PadRight(22)+([string][math]::Round($g,0)).PadLeft(14)+([string][math]::Round($h,0)).PadLeft(16)+([string][math]::Round($i,0)).PadLeft(16)+"   "+$ok)
+  }
+  Write-Output ("  DCF = "+[string]$d.Range("E41").Text)
+}
+TV "MODULO APAGADO (referencia)"
+
+$xl.Calculation=-4135
+$as.Range("J74").Value2="Water Management"; $as.Range("J76").Value2=[double]7.9
+foreach($y in 2029,2030){
+  $as.Range("J75").Value2=[double]$y
+  $xl.Calculation=-4105; $xl.CalculateFullRebuild()
+  TV ("VENTA WM, ultimo ano completo FY"+[string]$y)
+  $xl.Calculation=-4135
+}
+$as.Range("J75").Value2=[double]2029
+$as.Range("J74").ClearContents()
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+
+Write-Output ""
+Write-Output "###### CHECK 2: el ano de salida de Expected Returns realmente manda ######"
+Write-Output "  (modulo apagado; se varia C21)"
+Write-Output "  C21   EBITDA salida   Net debt   Equity salida   p/accion   col. donde cae la salida   IRR"
+foreach($y in 2028,2029,2030,2031,2032){
+  $er.Range("C21").Value2=[double]$y
+  $xl.CalculateFullRebuild()
+  $col="ninguna"
+  foreach($c in 4,5,6,7,8,9){
+    if([math]::Abs([double]$er.Cells.Item(47,$c).Value2) -gt 1){ $col=[string]$er.Cells.Item(42,$c).Text }
+  }
+  Write-Output ("  "+[string]$y+([string]$er.Range("C31").Text).PadLeft(14)+([string]$er.Range("C34").Text).PadLeft(12)+([string]$er.Range("C35").Text).PadLeft(15)+([string]$er.Range("C36").Text).PadLeft(12)+$col.PadLeft(24)+([string]$er.Range("C54").Text).PadLeft(9))
+}
+Write-Output ""
+Write-Output "  contraste con el Consolidated Model (EBITDA r53, deuda neta r253-r126):"
+$v1=""; $v2=""
+foreach($c in 12,13,14,15,16,17){
+  $v1+=([string]$cm.Cells.Item(53,$c).Text).PadLeft(11)
+  $v2+=([string][math]::Round(([double]$cm.Cells.Item(253,$c).Value2-[double]$cm.Cells.Item(126,$c).Value2),0)).PadLeft(11)
+}
+Write-Output ("  Adj. EBITDA       "+$v1)
+Write-Output ("  Deuda neta        "+$v2)
+
+$er.Range("C21").Value2=[double]2032
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ""
+Write-Output ("RESTAURADO: C21="+[string]$er.Range("C21").Text+"   J74='"+[string]$as.Range("J74").Text+"'   DCF "+[string]$d.Range("E41").Text+"   IRR "+[string]$er.Range("C54").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary","Expected Returns"){
+  $s=$wb.Worksheets.Item($nm); $e=0
+  try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

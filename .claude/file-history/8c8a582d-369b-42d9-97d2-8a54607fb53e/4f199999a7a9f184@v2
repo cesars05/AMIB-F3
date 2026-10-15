@@ -1,0 +1,112 @@
+# FACT BASE — Halliburton × Kuwait (Team 9)
+Rule for the deck: **no number goes on a slide unless it has an ID here.** Put the ID in the slide notes. Units: USD millions unless stated. "Src" = path under project root (md has the `[FIG-NNN]` links to the figure PDFs). Status: ✅ verified against primary doc in folder · ⚠️ conflict/definition issue · ❓ not in folder (came from Team 9 deck/web — must be re-sourced before use).
+
+## A. Halliburton — operating & financial
+| ID | Fact | Value | Src | Status |
+|---|---|---|---|---|
+| H01 | FY2025 total revenue | 22,184 (FY24 22,944; FY23 23,018; FY22 20,297; FY21 15,295) | `04_Bloomberg_Data/Class3…/HAL_Financials_2018-2027.md`; Q1'26 Seg/Geo table | ✅ |
+| H02 | FY2025 revenue by region | North America 9,066 (40.9%) · Latin America 3,935 · Europe/Africa/CIS 3,351 · **Middle East/Asia 5,832 (26.3%)** | Seg/Geo table `02_Company_Filings/HAL_Q1-2026_Segment-Geography-Table.md`; BBG financials | ✅ |
+| H03 | ME/Asia revenue history | 2021 3,843 · 2022 4,812 · 2023 5,678 · 2024 6,104 · 2025 5,832 | BBG financials | ✅ |
+| H04 | ME/Asia consensus | FY2026E **5,015** (−14.0% vs 2025) · FY2027E 5,823 (+16.1%) | BBG financials (Consensus) | ✅ |
+| H05 | ME/Asia actual 2026 | Q1'26 1,318 · Q2'26 **1,298** (−2% QoQ; −10.7% YoY vs 1,454) · H1'26 **2,616 vs 2,964** (−11.7%) | `HAL_Q2-2026_Earnings-Release.md` p.11–12 | ✅ |
+| H05b | ME/Asia revenue by quarter | Q1'24 1,421 · Q2'24 1,498 · Q3'24 1,536 · Q4'24 1,649 · Q1'25 1,510 · Q2'25 1,454 · Q3'25 1,412 · Q4'25 1,456 · Q1'26 1,318 · Q2'26 1,298 (sums check: FY24 6,104 ✓, FY25 5,832 ✓) | `HAL_Q1-2026_Segment-Geography-Table` (fig-001) + IR deck slide 25 (fig-053) | ✅ (Q1/Q2'24 from IR deck table, consistent with FY sum) |
+| H06 | Q2'26 headline | Revenue 5,714 (+6% QoQ) · operating income 778 (14%; adj. 12%) · net income 534 ($0.64; adj. $0.55) · CFO 824 · FCF 668 · buyback ≈200 · dividend $0.17/q | Earnings release p.1–2 | ✅ |
+| H07 | Q2'26 ME/Asia driver text | "lower activity across multiple product service lines in **Kuwait, Iraq, and Qatar** as a result of the ongoing geopolitical conflict" | Earnings release p.3; call transcript | ✅ |
+| H08 | Balance sheet 31-Dec-2025 | Cash 2,206 · LT debt 7,158 · current maturities 0 · **total borrowings 7,158** · total equity 10,505 · total assets 25,010 | `HAL_Q2-2026_10-Q.md` (BS) | ✅ |
+| H09 | Balance sheet 30-Jun-2026 | Cash 2,048 · LT debt 7,071 · current maturities 90 · **total borrowings 7,161** · equity 11,052 · op. lease liabilities 287 (current) + 751 | 10-Q BS | ✅ |
+| H10 | Leverage (borrowings only) | 31-Dec-25: **Debt/Capital 40.5%** (7,158 / 17,663), Debt/Equity 68.1%, net debt 4,952 · 30-Jun-26: Debt/Capital 39.3%, D/E 64.8%, net debt 5,113 | derived from H08/H09 | ✅ derived |
+| H11 | Bloomberg total debt (incl. leases) | FY2025 **8,316** (ST 344 + LT 7,972); Debt/Capital (BBG) **44.18%**; Debt/Equity (BBG) **79.16%**; Net debt/EBITDA 1.63x; EBITDA 3,753; EBIT 2,260; interest expense 440 | BBG Credit analysis screenshot (`Class2…/Debt/Credit analysis.png`) | ⚠️ definition |
+| H12 | Bloomberg DRSK inputs 2026:Q2 | Total debt **8,399** (LT 8,022 + ST 377); **Debt/Equity 74.2%**; EBIT/interest 7.5x; market cap 29,859; vol 36.3%; 5Y model CDS 69.0 bp vs market CDS 41.8 bp; 1Y default prob 0.0135% (IG4) | `Class2…/Risk/Bloomberg Default Risk.png` (as of 11-Sep-2026) | ⚠️ definition |
+| H13 | Bloomberg MIPD | 1Y PD **2.14%**; implied LGD 74.74%; implied 1Y CDS 161.48 bp (energy avg 68.53); Moody's A3 · S&P BBB+ · Fitch WD | `Class2…/Risk/MIPD.png` (14-Sep-2026) | ⚠️ model difference |
+| H14 | Debt maturity (par, as of 30-Jun-2026) | 2026: 0 · **2027: 90** · 2028: 0 · 2029: 0 · **2030: 1,000** · beyond 2030: **6,132** | `HAL_Q2-2026_IR-Presentation.md` slide 26 (figs 056–057) | ✅ |
+| H15 | Cash-flow performance | OCF / FCF: 2022 2,242/1,431 · 2023 3,458/2,274 · 2024 3,865/2,646 · 2025 2,926/1,857 · Q2'26 TTM 2,750/1,942 | IR deck slide 26 fig-056 | ✅ |
+| H16 | Interest expense, net | Q2'26 83 · H1'26 165 · (BBG FY25 440) | Earnings release | ✅ |
+| H17 | Debt composition | **$7.2bn fixed-rate long-term debt at 31-Dec-2025 and 31-Dec-2024**; derivatives (forwards, options, interest-rate swaps) have "not material" fair value; derivatives not used for trading. *"No swaps outstanding" and the $81M FX sensitivity (Team 9) are NOT confirmed — do not use.* | HAL FY2025 10-K, Item 7A / Note 16 (SEC EDGAR search excerpt; full text not saved locally — EDGAR blocks scripted download) | ✅ ($7.2bn fixed) · ❓ (no swaps; $81M) |
+| H18 | Market snapshot | Price 35.01 (14-Sep-26, −2.32% d/d); 36.07 (11-Sep); market cap 29.2bn; 52w 21.46–43.59; dividend yield 1.94%; beta 0.75; employees 46,000; 833.1M shares | `Class2…/Perfil Halliburton.png`; Act3 report | ✅ |
+| H19 | Corporate facts | Founded 1919 · HQ Houston · >70 countries · 12 research centers · 145 nationalities | IR deck slide 5 (fig 003) | ✅ |
+| H20 | Market position | 3rd-largest OFS (behind SLB, Baker Hughes); NA = 41% of 2025 revenue (47% in 2022); ME/Asia largest overseas market 26%; 1-yr fwd EV/EBITDA ≈ 9x (slight discount); net leverage 1.2x (Q2'26) | `03_SellSide_Research/BI_HAL_Equity-Outlook…md` | ✅ |
+| H21 | KOC agreement | **22-Jul-2026:** Kuwait Oil awarded HAL a multi-year agreement to support development of the **Ahmadi Innovation Valley** (R&D center; digital/AI for full-field lifecycle) | `04_Bloomberg_Data/News_and_Forecast/HALLIBURTON/Halliburton Awarded Developmen` (figure PNG; md has no text) | ✅ |
+| H22 | Offshore drilling contracts "in KWD" | "multi-year integrated offshore drilling contracts denominated in KWD" | Act3 report p.5 / Team 9 slide 3 ("case materials") | ❓ not in folder — **the whole FX thesis depends on it** |
+| H23 | Local workforce | **"In 2025, 91% of our workforce and 85% of management were on local terms in the countries where they work."** And "No other country accounted for more than 10% of our consolidated revenue" (besides the US) | HAL FY2025 10-K, Item 1 (https://www.sec.gov/Archives/edgar/data/45012/000004501226000015/hal-20251231.htm) | ✅ |
+| H24 | Bloomberg Intelligence estimates vs consensus, 2026E / 2027E / 2028E | **BI:** revenue 22,406 / 23,723 / 25,103 · adj. EBIT 3,030 / 3,426 / 3,876 · adj. EPS 2.46 / 2.93 / 3.43 · FCF 1,916 / 2,172 / 2,659 — **Consensus:** revenue 22,390 / 23,591 / 24,635 · adj. EBIT 2,904 / 3,462 / 3,904 · EPS 2.35 / 2.87 / 3.39 · FCF 1,820 / 2,191 / 2,628 | BI report fig-002 (`08_Assets/charts_extracted/BI_HAL…/FIG-002.png`) | ✅ |
+| H25 | Adjusted ROCE (HAL vs peers) | HAL adj. ROCE 2022 15% · 2023 19% · 2024 17% · 2025 13% · Q2'26 TTM 13%; HAL reported ROCE 12 / 18 / 16 / 9 / 11%; peer-group adj. ROCE (SLB+BKR) 9 / 12 / 14 / 12 / 11% | IR deck Q2-26 slides 26 & 28 (fig-055, fig-058) | ✅ |
+| H26 | Capex discipline | Capex as % of revenue: 2009-14 **11.4%** → 2015-19 **7.2%** → 2020-present **5–6%** | IR deck slide 16 (fig-039) | ✅ |
+| H27 | 2Q26 revenue mix | North America 40% · ME/Asia 23% · Latin America 19% · Europe/Africa 18% (Q2'26 total 5,714) | IR deck slide 24 (fig-052); release | ✅ |
+| H28 | Management guidance quotes | Jeff Miller (21-Jul-26): "I see demand growth for our services and technology in every region we serve"; Q1 call: activity most impacted in "Qatar, UAE, Saudi Arabia … and the land markets in Iraq and Kuwait" | Q2/Q1 earnings release & call transcripts (`02_Company_Filings`) | ✅ |
+
+## B. Kuwait — macro, sovereign
+| ID | Fact | Value | Src | Status |
+|---|---|---|---|---|
+| K01 | Nominal GDP 2025 | **USD 157.2 bn** (2024: 160.9); GDP/capita USD 32,312 (2024: 32,856) | BBG via `Excel clase 3` sheets "Nominal GDP…" | ✅ — **Act3 report's "KWD 157,209M ≈ USD 510.9bn" is wrong** (formula multiplied USD by 3.25) |
+| K02 | Real GDP (KWD bn) | 2024 40.80 (2023 41.41) | Excel "Real GDP by Expenditure" | ✅ |
+| K03 | Trade | Q1'26 balance **KWD 1,768.5M** (Q1'25 2,549.3M; Q4'23 3,565.5M); exports 4,502.8 (oil 4,054.1 ≈ 90%); imports 2,734.3 | Excel "trial balance/Exports/Imports" | ✅ |
+| K04 | Inflation | CPI y/y **2.19%** Jun-26 (May 2.49%); food 5.55% | Act3 report (Excel "consumer prices") | ✅ (verify sheet) |
+| K05 | Policy rate | CBK discount rate **3.50%** (cut to 3.75% Sep-25, then 3.50% Dec-25; held) | CBK main-indicators page / press releases (web; not saved locally) | ✅ |
+| K06 | Kuwait rates (MUFG 23-Jul-26) | 3M interbank **3.56%** (YTD 0.00 bp); Kuwait 2027 3.5% bond yield 4.541% (G-spread 49.8 bp) | `03_SellSide_Research/MUFG_…` p.3 (fig 004–006) | ✅ |
+| K07 | KIBOR curve (CBK, **23-Sep-2026**) | ON 2.6250 · 1W 3.3125 · 1M 3.4375 · **3M 3.6875** · 6M 3.8750 · 1Y 4.0625 (Team 9 used 30-Sep quotes: 3M 3.625, 6M 3.8125, 1Y 4.00 — different date; pick one and cite the date) | https://www.cbk.gov.kw/en/monetary-policy/market-operations/main-indicators (web) | ✅ (date-specific) |
+| K08 | **Sovereign issuance** | Kuwait raised **USD 6 bn**, 3-tranche (3/5/10Y), orders ≈14.8 bn, spreads **T+70–85 bp** after tightening 25 bp; first return to intl. markets late-2025 after 8 years | MUFG Middle East Daily 23-Jul-26 | ✅ |
+| K09 | Rating & outlook | Fitch affirmed Kuwait **AA-, Stable (Aug-2026)**; sovereign net foreign assets/GDP highest among all Fitch-rated sovereigns (expected to exceed 10× the AA-median in 2026); Fitch expects crude output to average **2m b/d in FY26** (FY to Mar-2027) before recovering in FY27; Hormuz dependence; weaker governance than peers | Fitch press release via Zawya/Arab News/Kuwait Times (web; not saved locally) | ✅ rating/outlook/output · ❓ "668% of GDP / 6.7×" and "govt debt 2.9% → 38% of GDP by FY28" (Team 9 figures) |
+| K10 | Governance | Parliament suspended 10-May-2024; WGI political stability 70.9 (2024) | Team 9 (WGI, Atlantic Council) | ❓ |
+| K11 | Conflict | US/Israel–Iran conflict from **28-Feb-2026**; partial Hormuz closure; Kuwaiti oil output down up to 70% Mar–May-26; strikes on Kuwait refineries (Mina al-Ahmadi/Abdullah, 19-Mar & 3-Apr), KOC offshore platform drone strike 12-Jul, power & desalination plants (UBS 17-Jul); partial recovery of exports from Aug/Sep | Act3 report; `03_SellSide…/UBS_…Hormuz-Tracker-Day139…md` | ✅ (UBS) / ❓ (70%) |
+| K12 | Kuwait mortgage law (context, Track B real estate) | Cabinet approved draft mortgage decree-law (23-Sep-26): rate 6% (2% over KIBOR 5Y), 25-yr, DBR 50%; backlog 103,000 homes; 195,700 by 2036 w/o law; pop. 4.85M (1.55M nationals) | `03_SellSide_Research/Goldman_NBK…md` fig 001–002 | ✅ |
+| K13 | GCC stocks 23-Jul | Kuwait index 10,101, YTD +16.25% | MUFG fig-003 | ✅ |
+
+## C. FX & rates
+| ID | Fact | Value | Src | Status |
+|---|---|---|---|---|
+| X01 | KWD/USD spot (USD per 1 KWD) | **3.2541** (18-Sep-2026, Yahoo); 52w range **3.2221 (Jul-26) – 3.2857 (Nov/Dec-25, Jan-26)** → width 1.97% | `04_Bloomberg_Data/Class3…/KWD_USD Yahoo.png`; Hist Data 1 | ✅ |
+| X02 | Monthly history | 73 monthly closes Oct-2020 → Sep-2026 transcribed: min 3.2336, max 3.3306 (Aug-2021) | `08_Assets/data/kwd_usd_monthly_close.csv` | ✅ transcribed from screenshots |
+| X03 | Change May-25 → 18-Sep-26 | **−0.37%** (3.2663 → 3.2541) | X02 | ✅ (Team 9's −0.49% uses Google Finance dates — see C-conflicts) |
+| X04 | Regime | Pegged to undisclosed basket (USD-dominated) since 2007 | Act3; Team 9 | ❓ cite CBK |
+| X05 | USD/KWD 1-yr forward points | Rate column **−152.33** (daily +10.02, YTD +21.88), units as printed by MUFG; 1Y USD/BHD +180 | MUFG fig-004–006 (exchange rates table) | ⚠️ units/convention to confirm with Bloomberg FXFA |
+| X06 | USD benchmark | SOFR 3.75%; US 10Y 4.662%; German 10Y 3.170% (23-Jul-26) | MUFG fig-004–006 | ✅ |
+| X07 | Oil | Brent ≈ **USD 96/b**, WTI > 88 (23-Jul); WTI ≈ 91.50 (4-Sep); Bessent sees $40–50 post-war; Brent net-long 261,435 (wk to 1-Sep, highest since May); US diesel record $5.85/gal | MUFG; Bloomberg 4-Sep news (`News_OIL`, `Forecast`) | ✅ |
+| X08 | Brent history | 2025 avg Brent 69.10 / WTI 65.46; Brent peak 103 in Mar-26 (Team 9) | Act3 p.4; Team 9 | ❓ EIA |
+
+## D. Track B (ITESM) context facts
+| ID | Fact | Value | Src |
+|---|---|---|---|
+| B01 | Stablecoins | USDT ≈ $184bn (−$3bn H1-26, first shrink since 2022); USDC ≈ $72bn; Bessent target $3tn by 2030 vs ≈$7tn T-bills outstanding; "Int'l banks plan a stablecoin"; OpenPayd enters US | `News_Crypto/Stablecoin Retreat…`, `NOTICIAS STABLECOINS.png` |
+| B02 | Hedge-fund / CTA oil positioning | Simplify CTA ETF ($1.6bn): 42% of risk in Brent + 33% diesel; hedge funds net-long Brent 261,435 | `Forecast/*.pdf` |
+| B03 | ESG scores (HAL) | Bloomberg ESG **5.00 (Leading vs oilfield-services peers)**; E 3.07 (40% weight) · S 5.93 · G 7.09; GHG mgmt 0.00 (lagging); MSCI BBB; S&P ESG rank 97 | `Class2…/ESG/ESG SCORES.png`, `Halliburton ESG OVERVIEW.png` |
+| B04 | Climate | Scope 1+2 4.4 Mt CO2e (2025); no SBTi, no net-zero, no transition plan; Climate alignment score 2.50/10; NGFS Delayed Transition: revenue **−45.95% by 2050** (peer avg −44.23%); 100% revenue fossil (oil) | ESG CT_ screenshots |
+| B05 | Physical/water | Asset damage rate 21% (2030); 27 of 168 assets high-risk; **63 assets (35%) in high water-stress areas**; water withdrawal 1.68M m³; no green/social/sustainability-linked debt outstanding | ESG Physical/Nature screenshots |
+| B06 | Real-estate context | Goldman K12 (Kuwait mortgage law) | `Goldman_NBK…` |
+| B07 | Capex/ROCE | 2024 capex 1,442 (BBG), total revenue 22,944 | CT_ Rev and Capex.png |
+
+## E. Conflict & error log (resolve before using)
+| # | Where | Problem | Resolution |
+|---|---|---|---|
+| E1 | Team 9 slide 20 | "Total debt USD 8,399M; **Debt/Capital 74.2%**" | 74.2% is Bloomberg **Debt/Equity** on a debt measure that includes operating leases (DRSK, 2026:Q2: ST 377 = 90 current maturities + 287 current lease exactly; LT 8,022 ≈ 7,071 + 751 + ~200). Borrowings-only Debt/Capital = **40.5% (YE25) / 39.3% (Q2-26)**. Use H10; show H11/H12 only as "Bloomberg definition incl. leases". Team 9 slide 7 (40.5%) is right; slide 20 is wrong. |
+| E2 | Team 9 slide 7 vs 20 | Same deck states 40.5% and 74.2% as "debt-to-capital" | same as E1; notes on slide 7 already say 8,399/74.2% "cannot be reconciled" |
+| E3 | Act3 report p.2 | Nominal GDP "KWD 157,209M ≈ USD 510.9bn" | Excel formula `=D10*$H$4` multiplies USD bn by 3.25. Correct: **USD 157.2bn** (≈ KWD 48.4bn). Team 9 slide 15 correct (USD 157bn). Do not reuse Act3 text. |
+| E4 | Act3 p.3 | "KWD/USD 3.2531 (≈0.3073 USD/KWD)" | Yahoo shows **3.2541**; "0.3073" is KWD per USD (inverse) — wrongly labelled USD/KWD. Use 3.2541 and "1 KWD = USD 3.25; USD 1 = KWD 0.3073". |
+| E5 | Act3 p.2 | Growth "+5.86% (2022)" shown beside 2025 stats | stale period — drop or label correctly |
+| E6 | Team 9 slide 11 | Latest 3.2383 (28-Sep, Google Finance); −0.49% | Yahoo 3.2541 (18-Sep). A 0.5% move in 10 days is ~25% of the entire 16-month range → verify spot on Bloomberg (FXFA/BFIX) for the deck date; keep one source. |
+| E7 | Team 9 slide 12/Act3 | EBIT/interest **7.5x** | 7.5x is the DRSK T12M input (interest 390.6). BBG FY2025 EBIT/interest = **5.14x** (EBIT 2,260 / interest expense 440); EBITDA/interest 8.53x. Label the metric & date. |
+| E8 | Team 9 slide 13 | "Fitch forecast for 2026 (668% of GDP)" | consistent with "6.7x" (NFA ≈ 668% of GDP) but the label is truncated — rewrite "Net sovereign foreign assets ≈ 668% of GDP (Fitch, 2026F)". |
+| E9 | Team 9 slide 16–17 | Slide titled "SECTION 03 · Sources" + empty "Sources" slide in the middle of the deck; slides 20–21 are Section-1 content placed at the end; slide numbers (5…9, 7, 8) inconsistent | rebuild order from STORYLINE (no reuse of format). |
+| E10 | PD estimates | DRSK 1Y PD 0.0135% vs MIPD 2.14% (market-implied) | Different models (fundamental vs market-implied incl. risk premium). Quote as range "0.01%–2.1%" **with model names**. |
+| E11 | Proposal docx | "3 USD + 3 ITESM = 6" in §2 table (header says 7), §5 says "3 USD and 4 ITESM", cover lists **4 USD + 3 TEC = 7**; points table totals 110 | Use the 7 names on the cover; ask professor on points (see OPEN_QUESTIONS). |
+| E12 | Q1-26 files | `HAL - Q1 2026.pdf` is the **10-Q**, `(1)` is the press release; Q2 reversed | renamed (see `00_INDEX.md`). |
+| E13 | `Screenshot analisis ESG.png` | Shows **IBM**, not Halliburton | Excluded from HAL analysis. |
+| E14 | Bloomberg ESG PNGs in `HALLIBURTON/` | Spanish-language duplicates of the Class-2 ESG screenshots | Use English originals; keep Spanish as backup. |
+
+## F. FINA 405 project specification (`01_Brief/FINA405_Project_v3.md`) — what each section requires
+| ID | Requirement | Exact text / formula |
+|---|---|---|
+| P01 | Role & teams | CFO of a US-listed multinational evaluating expansion; teams of 3 USD + 3 TEC (cover of Team 9 lists 4+3) |
+| P02 | Global assumptions | No credit risk; firm borrows/lends at risk-free (government) spot rates; **all rates annual with semiannual compounding**; market data per country provided later; live scenario in final presentation; research must be cited |
+| P03 | §1 Company | Business overview; 3 years audited financials (Yahoo/Bloomberg): growth, margins, Debt/Equity, Net debt/EBITDA, share of revenues and costs in local currency; **≥ 5 ratios vs peers**; market share + **3–5 competitors**; industry overview (growth, cyclicality, capital intensity, regulation); FX (net payer/receiver), interest-rate, inflation risks linked to §3–7 |
+| P04 | §2 Country | Inflation + central-bank target; exchange-rate regime; interest-rate structure (short vs long); political/sovereign risk; 5-year forward-looking risks |
+| P05 | §3 FRA | (a) payment 1–2 yrs from now; (b) receipt 3–5 yrs from now; Scenario-0 curve → **12×24 FRA and 36×60 FRA**; show accumulation factors (semiannual); interpret as borrowing cost / lending return / hedged exposure and vs spot |
+| P06 | §4 Bond | **5-year fixed-rate bond, local currency, face value = USD 100M converted at Scenario-0 spot, 4% annual coupon paid semiannually**; (a) fair value by discounting semiannual flows at local yields; (b) YTM implied by market pricing |
+| P07 | §5 Forwards | IRP: **F_t = S₀ × (1 + i_quote/2)^{2t} / (1 + i_base/2)^{2t}** with F_t = local currency per USD, i_quote = domestic, i_base = US; t = 0.5, 1.0, … **5.0**; (a) hedge coupons and principal to lock USD value; (b) mechanics; (c) advantages/limitations vs **options and money-market hedges** |
+| P08 | §6 IRS | Expect declining rates; swap structure (notional, fixed paid, floating received e.g. TIIE 6M / EURIBOR 6M, maturity, frequency vs coupon); effective cost of debt after swap with both legs; **IRS contract is in the Excel file (not provided yet)** |
+| P09 | Assignment — Kuwait | Group 9: Kuwait, KWD, Halliburton (HAL): "Major oilfield services contracts with Kuwait Oil Company (KOC); **KWD/USD peg makes interest rate risk the primary concern**" |
+| P10 | §7 New conditions | Scenario 1Y (provided later): FX update, new curve, FRA 12×24 profit/loss, new forwards 0.5…4.0 yrs, hedge performance |
+| P11 | §8 Recommendation | (a) table of 3 strategies: unhedged fixed bond, fixed bond + FX forward, floating bond after IRS — all-in USD cost, risks retained, hedging effectiveness; (b) 2–3 paragraph recommendation linked to §1, §2 and §3–7 |
+| P12 | Consequence for the deck | The KWD exposure in §4–5 exists **by construction** (the bond is issued in KWD against a USD functional currency) — it does not depend on whether KOC contracts are KWD-denominated (H22); KWD receipts only matter as a *natural hedge* |
+
+## G. Online sources checked 2026-10-02 (not saved locally — cite as web)
+SEC EDGAR HAL FY2025 10-K · CBK main-indicators page and press releases · Fitch Kuwait affirmation (Aug-2026) as reported by Zawya, Arab News, Kuwait Times, Asharq Al-Awsat · EDGAR refused scripted download (HTTP 403 without declared contact) — save the 10-K PDF manually from https://ir.halliburton.com if full-text citation is needed.

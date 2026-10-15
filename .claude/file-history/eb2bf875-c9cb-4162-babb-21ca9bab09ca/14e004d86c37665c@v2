@@ -1,0 +1,48 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+$cm=$wb.Worksheets.Item("Consolidated Model")
+$sm=$wb.Worksheets.Item("Segment Model")
+Write-Output "### Activos no circulantes: FY2029 / FY2030 / FY2031 ###"
+foreach($r in 133,134,135,136,137,138,139){
+  $lab=""
+  foreach($c in 2,3,4){ $t=""; try{ $t=[string]$cm.Cells.Item($r,$c).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  if($lab.Length -gt 40){ $lab=$lab.Substring(0,40) }
+  $v=""
+  for($c=14;$c -le 16;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(11) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(41)+$v)
+}
+Write-Output ""
+Write-Output "### Rollo de PP&E ###"
+foreach($r in 294,295,296,297,298){
+  $lab=""
+  foreach($c in 2,3,4){ $t=""; try{ $t=[string]$cm.Cells.Item($r,$c).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  if($lab.Length -gt 40){ $lab=$lab.Substring(0,40) }
+  $v=""
+  for($c=14;$c -le 16;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(11) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(41)+$v)
+}
+Write-Output ""
+Write-Output "### Depreciacion por segmento (Segment Model) ###"
+foreach($r in 142,143,144,145,150,151,152,153){
+  $lab=""
+  foreach($c in 2,3,4){ $t=""; try{ $t=[string]$sm.Cells.Item($r,$c).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  if($lab.Length -gt 36){ $lab=$lab.Substring(0,36) }
+  $v=""
+  for($c=14;$c -le 16;$c++){ $v+=([string]$sm.Cells.Item($r,$c).Text).PadLeft(11) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(37)+$v+"   frm(O)= "+[string]$sm.Cells.Item($r,15).Formula)
+}
+Write-Output ""
+Write-Output ("  Suma usada por CM r54 = SUM('Segment Model'!O143:O145) = "+[string]$cm.Range("O54").Text)
+Write-Output ("  Suma usada por CM r55 = SUM('Segment Model'!O151:O153)+O19 = "+[string]$cm.Range("O55").Text)
+Write-Output ""
+Write-Output "### Verificacion sin el modulo: r63 historico ###"
+foreach($c in 9,10,11){
+  $col=[char](64+$c)
+  Write-Output ("  "+$col+"63 = "+([string]$cm.Cells.Item(63,$c).Text).PadLeft(9)+"   "+$col+"21 = "+([string]$cm.Cells.Item(21,$c).Text).PadLeft(9)+"   "+$col+"64 = "+([string]$cm.Cells.Item(64,$c).Text).PadLeft(9))
+}

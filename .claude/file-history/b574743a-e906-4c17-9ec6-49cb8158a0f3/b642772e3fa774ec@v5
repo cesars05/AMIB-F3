@@ -1,0 +1,14 @@
+---
+name: aurex-pf-deadline-and-state
+description: Estado del proyecto final Aurex Capital (V2 del 11-oct-2026), carpeta, cifras canónicas y pendientes del equipo
+metadata:
+  type: project
+---
+
+Proyecto final "Comité de LPs" (Capital Privado, Tec de Monterrey, Prof. Francisco Román Rincón): fondo ficticio AUREX CAPITAL (US$100M, México, energía distribuida). Memo y Excel vencían el domingo 11-oct-2026 11:59 pm; fecha de deck/defensa sin confirmar (11-oct o 14-15 oct).
+
+**V2 (11-oct-2026):** entregables en `08_Proyecto_Final/entregables/V2_11oct/` (xlsx, docx, pptx, PDF). Caso base: 8 empresas entran en años 1 a 3, 3 fallan (Uriel/BRM 0.0x, FAZT 0.5x, S2G 0.3x), TIR neta 17.9% y MOIC neto 2.26x calibrados a objetivo ~18% (supuesto agresivo, con casos Conservador 1.82x/12.5% y Bajo 1.29x/5.2%). Excel es fuente única; `sync_check.py` compara los tres archivos. Deck: 15 láminas de contenido + portada + cierre + anexos.
+
+**Why:** el usuario pidió ejecutar el plan `PLAN_V2_PROMPT_Y_WORKFLOW.md` (investigación, Excel, Word, PPT) con datos de gobierno verificados, sin textos de pendiente y sin guiones largos.
+
+**How to apply:** regenerar con scripts de `modelo_financiero/_builder/` (build_v3.py, recalc_save.ps1, build_memo.py, build_deck_v2.py). Pendientes del equipo en `08_Proyecto_Final/faltantes/FALTA.py`. Los archivos Office en `entregables/` pueden estar bloqueados si el usuario los tiene abiertos: escribir a V2_11oct y avisar. Imagen de portada: Canva solo dio miniatura; el usuario debe bajar la completa a `assets/portada/aurex_cover_canva.jpg`. Reglas de estilo: sin em/en dashes, sin "pendiente" en entregables, gráficos con ≥5 categorías, usar la skill slide-construction y think-cell.

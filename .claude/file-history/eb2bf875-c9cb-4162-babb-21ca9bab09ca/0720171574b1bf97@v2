@@ -1,0 +1,24 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 40;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 1200 } }; return "??" }
+$xl=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); break }catch{ Start-Sleep -Milliseconds 900 } }
+Write-Output "=== libros abiertos ==="
+foreach($w in $xl.Workbooks){ Write-Output ("   ["+[string]$w.Name+"]   ruta: "+[string]$w.Path) }
+$wb=$null
+foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+if($wb -eq $null){ throw "no hay libro Alumasc abierto" }
+Write-Output ("`nObjetivo: "+[string]$wb.Name)
+$hojas=@(); foreach($h in $wb.Worksheets){ $hojas+=$h.Name }
+Write-Output ("Hojas: "+($hojas -join " | "))
+$s=T { $wb.Worksheets.Item("Segment Beta") }
+Write-Output ("`nUsedRange Segment Beta = "+[string](T { $s.UsedRange.Address(0,0) }))
+Write-Output "`n=== contenido actual de las zonas de trabajo ==="
+for($r=55;$r -le 110;$r++){
+  $ric=[string](T { $s.Cells.Item($r,3).Text })
+  $nm=[string](T { $s.Cells.Item($r,4).Text })
+  $nota=[string](T { $s.Cells.Item($r,14).Text })
+  if(($ric+$nm+$nota).Trim() -ne ""){
+    if($nm.Length -gt 32){ $nm=$nm.Substring(0,32) }
+    Write-Output ("   r"+([string]$r).PadRight(4)+$ric.PadRight(11)+$nm.PadRight(34)+"betaU="+([string](T { $s.Cells.Item($r,11).Text })).PadLeft(9)+"   "+$nota)
+  }
+}

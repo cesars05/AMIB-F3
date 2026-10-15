@@ -1,0 +1,83 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$w = $xl.Workbooks.Item('20260930_SETSA_Posibles_Compradores.xlsx')
+$w.SaveCopyAs("$PSScriptRoot\backup_compradores_antes_formato.xlsx")
+$ref = $w.Worksheets.Item('Compradores Prioritarios')
+
+# formato de referencia: seccion Coahuila (fila 7) y fila con banda (fila 9)
+if (-not ([string]$ref.Range('C7').Value2 -like '*Coahuila*')) { throw 'C7 no es la seccion Coahuila' }
+$secFill = $ref.Range('C7').Interior.Color
+$secFont = $ref.Range('C7').Font.Color
+$secSize = $ref.Range('C7').Font.Size
+$secH = $ref.Rows.Item(7).RowHeight
+$bandFill = $ref.Range('C9').Interior.Color
+"ref: secFill=$secFill secFont=$secFont size=$secSize h=$secH band=$bandFill"
+
+$AFF = @('Alta', 'Media-Alta', 'Media', 'Baja-Media', 'Baja')
+$famil = 0
+
+foreach ($s in $w.Worksheets) {
+    # ultima fila con datos (afinidad en J)
+    $lastData = 0
+    for ($r = 6; $r -le 120; $r++) { if ($AFF -contains [string]$s.Cells.Item($r, 10).Value2) { $lastData = $r } }
+
+    # 1) quitar "(familiar)" en Tipo
+    for ($r = 6; $r -le $lastData; $r++) {
+        $v = [string]$s.Cells.Item($r, 4).Value2
+        if ($v -match 'familiar') { $s.Cells.Item($r, 4).Value2 = ($v -replace '\s*\(familiar\)', '').Trim(); $famil++ }
+        elseif ($v -ne $v.Trim()) { $s.Cells.Item($r, 4).Value2 = $v.Trim() }
+    }
+
+    # 2) fila vacia (alto 15) antes de cada seccion, salvo la primera
+    $secs = @(); for ($r = 6; $r -le $lastData; $r++) { if ([string]$s.Cells.Item($r, 3).Value2 -ne '' -and [string]$s.Cells.Item($r, 10).Value2 -eq '') { $secs += $r } }
+    for ($i = $secs.Count - 1; $i -ge 1; $i--) {
+        $r = $secs[$i]
+        if ([string]$s.Cells.Item($r - 1, 3).Value2 -ne '') {
+            $s.Rows.Item($r).Insert() | Out-Null
+            $s.Rows.Item($r).ClearFormats() | Out-Null
+            $s.Rows.Item($r).RowHeight = 15
+        }
+    }
+
+    # recalcular
+    $lastData = 0
+    for ($r = 6; $r -le 120; $r++) { if ($AFF -contains [string]$s.Cells.Item($r, 10).Value2) { $lastData = $r } }
+    $k = 0
+    for ($r = 6; $r -le $lastData; $r++) {
+        $name = [string]$s.Cells.Item($r, 3).Value2
+        if ($name -eq '') { continue }
+        $rg = $s.Range("C$($r):K$($r)")
+        if ([string]$s.Cells.Item($r, 10).Value2 -eq '') {
+            # 3) encabezado de seccion como Coahuila
+            $rg.Interior.Color = $secFill
+            $rg.Font.Name = 'Arial'; $rg.Font.Size = $secSize; $rg.Font.Bold = $false; $rg.Font.Color = $secFont
+            $s.Cells.Item($r, 3).Font.Bold = $true
+            $rg.VerticalAlignment = -4108
+            $b = $rg.Borders.Item(9); $b.LineStyle = 1; $b.Weight = 2; $b.Color = 0
+            $s.Rows.Item($r).RowHeight = $secH
+            $k = 0
+        } else {
+            # 4) banda azul alterna (J conserva su color de afinidad)
+            foreach ($c in 3, 4, 5, 6, 7, 8, 9, 11) {
+                if ($k % 2) { $s.Cells.Item($r, $c).Interior.Color = $bandFill } else { $s.Cells.Item($r, $c).Interior.Pattern = -4142 }
+            }
+            $k++
+        }
+    }
+}
+
+# 5) titulo de "Todos" con el mismo estilo que el de Prioritarios
+$t = $w.Worksheets.Item('Todos los Posibles Compradores')
+$t.Range('C2').Value2 = 'SETSA Transportes: Todos los Posibles Compradores'
+$t.Range('C2').Font.Size = $ref.Range('C2').Font.Size
+$ref.Range('C2').Value2 = ([string]$ref.Range('C2').Value2).Trim()
+
+"familiar quitados=$famil"
+foreach ($s in $w.Worksheets) {
+    "== " + $s.Name
+    for ($r = 2; $r -le 60; $r++) {
+        $n = [string]$s.Cells.Item($r, 3).Value2
+        if ($n -ne '' -or $r -lt 50) { "$r h=" + $s.Rows.Item($r).RowHeight + " | " + $n.Substring(0, [Math]::Min(40, $n.Length)) + " | " + $s.Cells.Item($r, 4).Text + " | fill=" + $s.Cells.Item($r, 3).Interior.Color }
+    }
+}
+$w.Save(); 'guardado=' + $w.Saved

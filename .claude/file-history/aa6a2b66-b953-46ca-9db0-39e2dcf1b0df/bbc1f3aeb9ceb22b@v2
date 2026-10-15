@@ -1,0 +1,53 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t  = $xl.Workbooks.Item('20260922_SETSA Transportes.xlsx')
+$tx = $t.Worksheets.Item('Transacciones Precedentes')
+$t.SaveCopyAs("$PSScriptRoot\backup_antes_mediana.xlsx")
+$u = [char]0xFA; $o = [char]0xF3
+
+function Find-B([string]$needle, [int]$from = 1) {
+    $v = $tx.Range('B1:B200').Value2
+    for ($r = $from; $r -le 200; $r++) { if (([string]$v[$r, 1]).Contains($needle)) { return $r } }
+    throw "No encontrado: $needle"
+}
+$rHdr  = Find-B 'Valuaci' 20                       # barra navy del bloque
+$rPondS= Find-B 'Ponderaci' $rHdr
+$rM1   = Find-B 'ltiplo de las transacciones' $rHdr
+$rEV1  = Find-B 'Valor empresa' $rM1
+$rM2h  = Find-B 'todo 2' $rEV1
+$rPond = Find-B 'Valor empresa ponderado' $rM2h
+$rLast = Find-B 'Referencia: TEV / EBITDA' $rPond
+
+# 1) todo lo que apuntaba al valor ponderado ahora apunta al valor por EBITDA
+foreach ($r in ($rPond + 1)..$rLast) {
+    foreach ($c in 'E','F','G') {
+        $f = [string]$tx.Range("$c$r").Formula
+        if ($f.StartsWith('=')) { $tx.Range("$c$r").Formula = $f.Replace("$c$rPond", "$c$rEV1") }
+    }
+}
+# 2) borrar método 2 + ponderado (de abajo hacia arriba) y el supuesto de ponderación
+$tx.Range("$($rM2h):$($rPond)").EntireRow.Delete() | Out-Null
+$tx.Rows.Item($rPondS).Delete() | Out-Null
+
+# 3) una sola columna: mediana (F)
+$rLast = Find-B 'Referencia: TEV / EBITDA' $rHdr
+$tx.Range("E$($rHdr + 1):E$rLast").Clear() | Out-Null
+$tx.Range("G$($rHdr + 1):G$rLast").Clear() | Out-Null
+$tx.Range("E$rHdr").Value2 = $null
+$tx.Range("G$rHdr").Value2 = $null
+$tx.Range("F$rHdr").Value2 = 'Mediana'
+
+# 4) etiquetas
+$r = Find-B 'todo 1' $rHdr;  $tx.Range("B$r").Value2 = "Valuaci${o}n por TEV / EBITDA (100%)"
+$r = Find-B 'ltiplo de las transacciones' $rHdr; $tx.Range("B$r").Value2 = "M${u}ltiplo TEV / EBITDA de las transacciones (mediana)"
+$r = Find-B 'Valor empresa' $r; $tx.Range("B$r").Value2 = 'Valor empresa (TEV)'
+
+$xl.CalculateFull()
+$n = 0
+foreach ($c in $tx.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $n++; "ERR " + $c.Address($false,$false) + " " + $c.Formula } }
+"errores=$n"
+for ($r = $rHdr; $r -le $rLast; $r++) {
+    $l = [string]$tx.Cells.Item($r, 2).Value2
+    if ($l -ne '') { "$r $l | E=" + $tx.Cells.Item($r,5).Text + " | F=" + $tx.Cells.Item($r,6).Text + " [" + $tx.Cells.Item($r,6).Formula + "] | G=" + $tx.Cells.Item($r,7).Text }
+}
+$t.Save(); "guardado=" + $t.Saved

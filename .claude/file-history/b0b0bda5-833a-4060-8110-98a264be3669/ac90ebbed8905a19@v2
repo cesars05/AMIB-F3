@@ -1,0 +1,80 @@
+---
+name: slide-construction
+description: >-
+  House playbook for building IB-, research- and strategy-grade PowerPoint slides the way Aztlan,
+  FEMSA team decks and banks (Goldman, BofA, Barclays, Credit Suisse, Jefferies, Morgan Stanley) present them.
+  Covers measured grid and typography, how each house presents each topic (company overview, peers, valuation,
+  DCF, capital allocation, debt, process), which shapes and boxes they use, when images earn a place, native
+  chart recipes (stacked+CAGR, waterfall, football field, tornado, heat map) via house.py, a render loop and
+  deck QC. Use whenever the user asks to build, restyle, review or QC slides, decks, pitch books or a chart in
+  PowerPoint, or asks how a bank would present something, even without saying "skill".
+---
+
+# Slide Construction (house playbook)
+
+Esta skill dice **cómo se presenta** (estructura, formas, gráficas, tipografía), no qué se dice. El contenido viene del usuario o de otras skills (company-overview, earnings-summary). Para mecánica general de .pptx (leer, editar plantillas) usa también la skill `pptx`.
+
+**Raíz del proyecto (PROJECT):** `C:\Users\cesar\OneDrive\Documentos\Slide Construction` — plantillas en `PROJECT\06_Templates`, análisis en `PROJECT\07_Template_Analysis`. Todas las rutas `07_Template_Analysis/...` de las referencias son relativas a PROJECT. Medido en .pptx; aproximado en los PDF escaneados de bancos.
+
+Copia canónica de la skill: `PROJECT\skill\slide-construction` (editar ahí y volver a copiar a `~/.claude/skills/slide-construction`).
+
+## Workflow
+
+1. **Elige el sistema de estilo** (`references/style-systems.md`): `aztlan` (research / stock pitch / performance — default), `femsa` (deck de equipo para una empresa cliente, con nombres en portada), `ib_navy` (board book / valuación tipo banco), `ms_clean` (corporativo / IR, una idea por slide), o `make_brand_system(...)` con los colores del logo del cliente. Un solo marco por deck. Si el usuario no lo dice y no es obvio, pregunta en una línea.
+2. **Arma el storyline** con la estructura por tipo de deck (`references/slide-catalog.md` §0). Cada slide = 1 mensaje. Escribe primero títulos + so-what de todo el deck y revisa que se lean como historia.
+3. **Escoge el layout de cada slide** desde el catálogo por tema (§1–13) o desde la tabla "si quiero mostrar X → opción 1/2/3" (§14). Aplica la rotación (`references/rotation-qc.md` §1): ≤ 2 slides seguidos de la misma familia, nunca el mismo layout dos veces seguidas (salvo módulos seriados 1/4…4/4).
+4. **Construye con `scripts/house.py`** (formas y gráficas nativas, editables). Orden de lectura dentro del slide (`references/grid-typography.md` §3): título → so-what → encabezado → exhibit → anotación → evidencia → conclusión → source.
+   - **Plantilla real (preferido cuando existe):** `Deck("aztlan", template=PROJECT+r"\06_Templates\AZTD vs Peers_v6.pptx", layout="General")` o `Deck("femsa", template=PROJECT+r"\06_Templates\M&A FEMSA.pptx", layout="Section Header")`. Usa master, regla, logo y placeholders reales; `cover()`, `divider()` y `closing()` usan el layout de portada de la plantilla (arte FEMSA / navy Aztlan). Subtítulo y source que no tengan placeholder se dibujan como textbox. Nombres de layout duplicados se resuelven al de contenido; también acepta índice (`layout=2`).
+   - `content_slide()` imprime WARNING si el título no cabe en una línea — acórtalo, no reduzcas la letra.
+   - Gráficas: sigue `references/charts.md` — sin gridlines ni eje de valores en barras, data labels, sujeto en acento y resto neutro, header fuera de la gráfica, máx. 3 anotaciones. **Nunca** pegues screenshots como gráfica.
+   - Imágenes solo si identifican o explican (`references/images.md`).
+5. **Renderiza y mira cada slide**: `powershell -ExecutionPolicy Bypass -File scripts/render.ps1 -Src deck.pptx -Out renders`. Lee los PNG (hojas 2×2 para ir rápido) y corrige overlaps, textos cortados, etiquetas encimadas, colores. No declares terminado sin haber visto el render.
+6. **QC** (`references/rotation-qc.md` §2): `extract_text.py` → `extract_numbers.py --check`, luego datos vs narrativa, lenguaje y checklist visual. Reporta Crítico / Importante / Menor; si no hay críticos, dilo explícitamente.
+
+## Quick start (python-pptx)
+
+```python
+import sys; sys.path.insert(0, r"C:\Users\cesar\.claude\skills\slide-construction\scripts")
+from house import Deck, make_brand_system
+d = Deck("aztlan", footer_left="Aztlan Equity Management, LLC")      # or Deck("femsa") / Deck(make_brand_system("femsa", primary="#CC0000", ...))
+d.cover("KLA Corporation (KLAC.O)", date="August 2026")
+s = d.content_slide("Revenue Compounds at 12% as Services Scale",            # claim (Aztlan) / topic (banks)
+                    "FY21-FY27E CAGR 11.8%; services rise from 24% to 38% of revenue",   # so-what with numbers
+                    source="Company filings; LSEG Workspace")
+y = d.block_header(s, 0.575, 1.472, 7.6, "Revenue by Segment", "Amounts in USD millions")
+d.stacked_columns(s, 0.575, y, 7.6, 6.75 - y, cats, {"Products": [...], "Services": [...]},
+                  forecast_from=5, cagr=(0, 6))
+y2 = d.block_header(s, 8.45, 1.472, 4.43, "Key Takeaways")
+d.text(s, 8.45, y2, 4.43, 4.5, ["- **Lead-in:** support with ^^key number^^", "- !!Risk clause!!"], size=12)
+d.save("out.pptx")
+```
+Markup en textos: `- ` bullet, `  - ` sub-bullet, `**bold**`, `^^bold color primario^^`, `!!bold rojo (riesgo)!!`, `__bold acento__`.
+Componentes: `header_bar, block_header, label_block, bullet_box, card, kpi_tile, banner, conclusion_bar, dashed_box, theme_frame, pill, metric_oval, num_circle, arrow_tag, phase_pentagon, chevron_row, side_tab, callout, operator, legend_items, numbered_rows, table, heatmap_table`.
+Gráficas: `stacked_columns, bar_chart, paired_bars, diverging_bars, line_chart, waterfall, football_field, tornado, donut`.
+`scripts/gallery.py <aztlan|femsa|ib_navy|ms_clean|brand> out.pptx [template.pptx] [layout]` genera 19 slides con todos los arquetipos — úsalo como catálogo visual y como prueba después de tocar `house.py`. Renders de referencia en `assets/`.
+
+## Reglas que no se negocian
+- Grid y marco idénticos en todos los slides; solo cambia el área de contenido (x 0.575–12.877, y 1.446–6.78 en Aztlan).
+- Título: Aztlan = oración con veredicto ("Tema: veredicto", ≤ 1 línea a 28 pt); bancos = tema + el mensaje en banner/subtítulo. Subtítulo = so-what **cuantificado**.
+- Una familia tipográfica; ≤ 3 tamaños en el cuerpo; nada < 8 pt.
+- Un color de acento por slide; sujeto resaltado, peers neutros; rojo solo para riesgo/negativo o cajas punteadas de "mira aquí".
+- Source en cada slide con datos. Números consistentes en todo el deck.
+- Formas nativas editables; sin 3-D, gradientes ni clip-art; sombras solo en sistema FEMSA.
+- Cuando el usuario pida "más claro": menos texto, KPI tiles o una sola gráfica grande con un callout (MS / opción 1 de §14). Cuando pida "más IB": barras de encabezado, tablas con mediana, cajas punteadas, football field, notas numeradas.
+
+## Límites conocidos (dilo si aplica)
+- Sin receta aún: línea de precio con eventos anotados (BARC-N p8 / JEF p4 / ALLOC s6) — constrúyela con `line_chart` + `callout(to=...)` + `dashed_box`; cilindros 3-D de ALLOC s8 (usa `waterfall`); gantt/calendario; mapas.
+- Specs de bancos vienen de PDFs escaneados: posiciones y colores aproximados.
+- En `football_field`, si un precio de referencia cae sobre el inicio de una barra, la etiqueta low puede encimarse con la línea punteada: mueve la línea o acorta la etiqueta.
+
+## Referencias (lee la que aplique)
+| Archivo | Cuándo |
+|---|---|
+| `references/style-systems.md` | elegir sistema; cómo presenta cada banco; formas firma (BofA, GS, Barclays…); swap de marca |
+| `references/grid-typography.md` | coordenadas, columnas, tamaños de letra, orden de lectura ("qué va después de las boxes") |
+| `references/slide-catalog.md` | variantes por tema con fuentes y recetas; estructura por tipo de deck; tabla mensaje → layout |
+| `references/shapes-components.md` | formas y componentes con medidas y la función de `house.py` que los dibuja |
+| `references/charts.md` | parámetros medidos de gráficas, recetas, anotaciones, qué no hacer |
+| `references/images.md` | cuándo y para qué usar imágenes, logos, íconos, screenshots |
+| `references/rotation-qc.md` | rotación de layouts + QC del deck (reporte por severidad) |
+Material fuente: `07_Template_Analysis/IB_REVIEW_NOTES.md` (notas deck por deck), `LAYOUT_LIBRARY.md` (zonas medidas por layout ID), `specs/*.md`, `forensics/*.json`, renders en `renders/` y `renders_ib/`. Para medir un deck nuevo: `python scripts/deck_forensics.py deck.pptx --summary`.

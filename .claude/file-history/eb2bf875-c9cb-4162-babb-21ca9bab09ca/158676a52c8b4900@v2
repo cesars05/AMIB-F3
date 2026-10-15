@@ -1,0 +1,128 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+$sm=T { $wb.Worksheets.Item("Segment Model") }
+$q='"'
+$emp=$q+$q
+if([double](T { $sm.Range("K132").Value2 }) -ne 3179){ throw "ABORTO: K132 no es 3179" }
+if([double](T { $sm.Range("K30").Value2 }) -ne 2840){ throw "ABORTO: K30 no es 2840" }
+if([string](T { $sm.Range("C202").Text }).Trim() -ne ""){ throw "ABORTO: C202 ya tiene contenido" }
+Write-Output "guardas OK"
+$paso="inicio"
+try{
+  $xl.Calculation=-4135
+  $paso="formato encabezado"
+  T { $sm.Range("C100:S100").Copy() } | Out-Null
+  T { $sm.Range("C202:S202").PasteSpecial(-4122) } | Out-Null
+  $paso="formato subtitulos"
+  foreach($r in 203,209,215,221){
+    T { $sm.Range("C101:S101").Copy() } | Out-Null
+    T { $sm.Range("C"+$r+":S"+$r).PasteSpecial(-4122) } | Out-Null
+  }
+  $paso="formato filas de dato"
+  foreach($r in 204,205,206,207,210,211,212,213,216,217,218,219){
+    T { $sm.Range("C116:S116").Copy() } | Out-Null
+    T { $sm.Range("C"+$r+":S"+$r).PasteSpecial(-4122) } | Out-Null
+  }
+  $xl.CutCopyMode=0
+
+  $paso="titulos"
+  T { $sm.Range("C202").Value2="Capex Bridge: Maintenance vs Growth" } | Out-Null
+  T { $sm.Range("D202").Formula="=+D12" } | Out-Null
+  T { $sm.Range("D202:Q202").FillRight() } | Out-Null
+  T { $sm.Range("C203").Value2="Maintenance capex (= depreciation & amortisation)" } | Out-Null
+  T { $sm.Range("C209").Value2="Growth capex (= total capex less D&A)" } | Out-Null
+
+  $paso="filas de mantenimiento y crecimiento"
+  $cap=@{}
+  $cap[204]=@("Water Management",30,132)
+  $cap[205]=@("Building Envelope",31,133)
+  $cap[206]=@("Housebuilding Products",32,134)
+  foreach($r in ($cap.Keys | Sort-Object)){
+    $s=$cap[$r]
+    T { $sm.Cells.Item($r,3).Value2=[string]$s[0] } | Out-Null
+    T { $sm.Cells.Item($r,4).Formula="=+IFERROR(D"+$s[1]+","+$emp+")" } | Out-Null
+    T { $sm.Range("D"+$r+":Q"+$r).FillRight() } | Out-Null
+    $g=$r+6
+    T { $sm.Cells.Item($g,3).Value2=[string]$s[0] } | Out-Null
+    T { $sm.Cells.Item($g,4).Formula="=+IFERROR(D"+$s[2]+"-D"+$s[1]+","+$emp+")" } | Out-Null
+    T { $sm.Range("D"+$g+":Q"+$g).FillRight() } | Out-Null
+  }
+  $paso="totales"
+  T { $sm.Range("C207").Value2="Total Trading Segments" } | Out-Null
+  T { $sm.Range("D207").Formula="=SUM(D204:D206)" } | Out-Null
+  T { $sm.Range("D207:Q207").FillRight() } | Out-Null
+  T { $sm.Range("C213").Value2="Total Trading Segments" } | Out-Null
+  T { $sm.Range("D213").Formula="=SUM(D210:D212)" } | Out-Null
+  T { $sm.Range("D213:Q213").FillRight() } | Out-Null
+
+  $paso="intensidad de capital"
+  T { $sm.Range("C215").Value2="Growth capital intensity - capex FY2022-FY2026 vs revenue growth FY2021-FY2026" } | Out-Null
+  $hdr=@("Cumulative capex","Cumulative D&A","Net new capital","Revenue growth","Intensity")
+  for($i=0;$i -lt 5;$i++){
+    T { $sm.Cells.Item(216,4+$i).Value2=$hdr[$i] } | Out-Null
+    T { $sm.Cells.Item(216,4+$i).Font.Bold=$true } | Out-Null
+  }
+  $int=@{}
+  $int[217]=@("Water Management",132,30,13)
+  $int[218]=@("Building Envelope",133,31,14)
+  $int[219]=@("Housebuilding Products",134,32,15)
+  foreach($r in ($int.Keys | Sort-Object)){
+    $s=$int[$r]
+    T { $sm.Cells.Item($r,3).Value2=[string]$s[0] } | Out-Null
+    T { $sm.Cells.Item($r,4).Formula="=SUM(G"+$s[1]+":K"+$s[1]+")" } | Out-Null
+    T { $sm.Cells.Item($r,5).Formula="=SUM(G"+$s[2]+":K"+$s[2]+")" } | Out-Null
+    T { $sm.Cells.Item($r,6).Formula="=+D"+$r+"-E"+$r } | Out-Null
+    T { $sm.Cells.Item($r,7).Formula="=+K"+$s[3]+"-F"+$s[3] } | Out-Null
+    T { $sm.Cells.Item($r,8).Formula="=+IFERROR(F"+$r+"/G"+$r+","+$emp+")" } | Out-Null
+    T { $sm.Range("H"+$r).NumberFormat="0.0%" } | Out-Null
+    T { $sm.Range("I"+$r+":Q"+$r).ClearContents() } | Out-Null
+  }
+  T { $sm.Range("C221").Value2="Intensity = net new capital (capex less D&A) per GBP 1 of incremental revenue. Capex is accrual basis incl. right-of-use additions, consistent with the DCF." } | Out-Null
+  $paso="OK"
+}
+catch{
+  $xl.Calculation=-4105
+  $xl.ScreenUpdating=$true
+  Write-Output ("FALLO en el paso: "+$paso)
+  Write-Output ("mensaje: "+$_.Exception.Message)
+  exit 1
+}
+$xl.Calculation=-4105
+$xl.ScreenUpdating=$true
+T { $xl.CalculateFullRebuild() } | Out-Null
+T { $xl.CalculateFullRebuild() } | Out-Null
+$wb.Save()
+Write-Output "bloque de capex escrito"
+Write-Output ""
+$h="  "+"".PadRight(26)
+for($c=6;$c -le 14;$c++){ $h+=([string](T { $sm.Cells.Item(9,$c).Text })).PadLeft(9) }
+Write-Output $h
+foreach($r in 202,203,204,205,206,207,209,210,211,212,213){
+  $lab=[string](T { $sm.Cells.Item($r,3).Text }); if($lab.Length -gt 25){ $lab=$lab.Substring(0,25) }
+  $v=""
+  for($c=6;$c -le 14;$c++){ $v+=([string](T { $sm.Cells.Item($r,$c).Text })).PadLeft(9) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(26)+$v)
+}
+Write-Output ""
+Write-Output ("  "+"".PadRight(26)+"Capex ac.".PadLeft(12)+"D&A ac.".PadLeft(12)+"Cap.neto".PadLeft(12)+"D Ingr.".PadLeft(12)+"Intens.".PadLeft(12))
+foreach($r in 217,218,219){
+  $lab=[string](T { $sm.Cells.Item($r,3).Text }); if($lab.Length -gt 25){ $lab=$lab.Substring(0,25) }
+  $v=""
+  for($c=4;$c -le 8;$c++){ $v+=([string](T { $sm.Cells.Item($r,$c).Text })).PadLeft(12) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(26)+$v)
+}
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=T { $wb.Worksheets.Item($nm) }
+  $e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

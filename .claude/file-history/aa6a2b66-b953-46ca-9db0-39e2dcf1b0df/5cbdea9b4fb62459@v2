@@ -1,0 +1,42 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t  = $xl.Workbooks.Item(1)
+if ($t.Name -ne '20260922_SETSA Transportes.xlsx') { throw "libro inesperado: " + $t.Name }
+$m  = $t.Worksheets.Item('Modelo SETSA')
+$e = [char]0xE9; $o = [char]0xF3; $ia = [char]0xED; $a = [char]0xE1
+function Row-Exact([string]$lab, [int]$from = 1) {
+    for ($r = $from; $r -le 450; $r++) { if ([string]$m.Cells.Item($r, 3).Value2 -ceq $lab) { return $r } }
+    throw "No encontrado: $lab"
+}
+function Row-Like([string]$needle, [int]$from = 1) {
+    for ($r = $from; $r -le 450; $r++) { if (([string]$m.Cells.Item($r, 3).Value2).Contains($needle)) { return $r } }
+    throw "No encontrado: $needle"
+}
+# 1) gastos financieros: anualizar en la misma fila (1S26 x 12/6)
+$rGF  = Row-Like 'Gastos financieros del periodo'
+"antes I: " + $m.Range("I$rGF").Formula
+foreach ($c in 'D','E','F','G','H','I') { $m.Range("$c$rGF").Formula = "=-$c" + "34*12/$c`$11" }
+$m.Cells.Item($rGF, 3).Value2 = 'Gastos financieros (anualizados)'
+$m.Cells.Item($rGF, 11).Value2 = '1S26 x 12/6 para comparar contra deuda y EBITDA anualizados'
+if ([string]$m.Cells.Item(34, 3).Value2 -notlike '*Gastos financieros*') { throw 'fila 34 no es gastos financieros' }
+# 2) etiqueta sobrante dentro de la integración de deuda
+$rTot = Row-Exact 'Total deuda financiera'
+if ([string]$m.Cells.Item($rTot + 1, 3).Value2 -eq ('Deuda de largo plazo ' + [char]0xFA + 'nicamente')) { $m.Range("C$($rTot + 1):K$($rTot + 1)").ClearContents() | Out-Null; "etiqueta sobrante borrada" }
+# 3) nota de Afirme (se perdio el monto)
+$rAf = Row-Exact 'Afirme' ($rTot + 1)
+$m.Cells.Item($rAf, 11).Value2 = "Incluye cr${e}dito de 8.0 M 100% de corto plazo (revolvente)"
+# 4) nota del ciclo de conversión
+$rCCC = Row-Like 'Ciclo de conversi'
+$m.Cells.Item($rCCC, 11).Value2 = "Positivo: SETSA financia a sus clientes; a proveedores les paga pr${a}cticamente de contado"
+# 5) flujo: nombre consistente para deuda de largo plazo
+$rLPcf = Row-Like 'en CxP largo plazo'
+$m.Cells.Item($rLPcf, 3).Value2 = "Aumento / (disminuci${o}n) en deuda financiera de largo plazo"
+$xl.CalculateFull()
+$err = 0
+foreach ($ws in $t.Worksheets) { foreach ($c in $ws.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $err++; "ERR " + $ws.Name + "!" + $c.Address($false,$false) } } }
+"errores=$err"
+$rTasa = Row-Like 'Tasa de inter'
+"tasa implicita: 2023=" + $m.Range("F$rTasa").Text + " 2024=" + $m.Range("G$rTasa").Text + " 2025=" + $m.Range("H$rTasa").Text + " 1S26=" + $m.Range("I$rTasa").Text
+$rCov = Row-Like 'EBIT / intereses'
+"EBIT/intereses: 2024=" + $m.Range("G$rCov").Text + " 2025=" + $m.Range("H$rCov").Text + " 1S26=" + $m.Range("I$rCov").Text
+$t.Save(); "guardado=" + $t.Saved

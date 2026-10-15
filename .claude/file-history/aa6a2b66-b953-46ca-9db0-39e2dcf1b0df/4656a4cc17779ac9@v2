@@ -1,0 +1,19 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t = $null; foreach ($w in $xl.Workbooks) { if ($w.Name -eq '20260922_SETSA Transportes.xlsx') { $t = $w } }
+$m = $t.Worksheets.Item('Modelo SETSA')
+$lab162 = [string]$m.Cells.Item(162, 3).Value2
+$lab333 = [string]$m.Cells.Item(333, 3).Value2
+if (-not $lab162.StartsWith('Capital Invertido (Capital Contable Ajustado + Deuda')) { throw "fila 162 inesperada: $lab162" }
+if (-not $lab333.StartsWith('Efectivo Operativo M')) { throw "fila 333 inesperada: $lab333" }
+if ($xl.WorksheetFunction.CountA($m.Rows.Item(161)) -ne 0) { throw 'fila 161 no esta vacia' }
+# de abajo hacia arriba
+$m.Rows.Item(333).Delete() | Out-Null
+$m.Cells.Item(162, 3).Value2 = 'Retorno sobre Capital Invertido'
+$m.Rows.Item(161).Delete() | Out-Null
+$xl.CalculateFull()
+for ($r = 158; $r -le 166; $r++) { "$r | " + $m.Cells.Item($r,3).Value2 + " | H=" + $m.Cells.Item($r,8).Formula + " = " + $m.Cells.Item($r,8).Text }
+for ($r = 326; $r -le 334; $r++) { "$r | " + $m.Cells.Item($r,3).Value2 + " | D=" + $m.Cells.Item($r,4).Text }
+$err = 0; foreach ($ws in $t.Worksheets) { foreach ($c in $ws.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $err++; "ERR " + $ws.Name + "!" + $c.Address($false,$false) } } }
+"errores=$err"
+$t.Save(); "guardado=" + $t.Saved

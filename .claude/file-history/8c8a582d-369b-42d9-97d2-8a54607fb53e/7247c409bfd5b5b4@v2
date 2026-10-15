@@ -1,0 +1,59 @@
+"""Extract one firm object from the professor's FINA405 dashboard HTML (ALL_DATA JS blob) and save raw JS + parsed charts.
+Usage: python extract_dashboard.py <html> <TICKER> <outdir>"""
+import re, json, sys, os
+
+def extract(t, ticker):
+    i = t.index('"%s":{' % ticker)
+    j = i + len(ticker) + 3
+    depth = 0; k = j; instr = None; esc = False
+    while k < len(t):
+        c = t[k]
+        if instr:
+            if esc: esc = False
+            elif c == "\\": esc = True
+            elif c == instr: instr = None
+        else:
+            if c in "\"`'": instr = c
+            elif c == "{": depth += 1
+            elif c == "}":
+                depth -= 1
+                if depth == 0: break
+        k += 1
+    return t[j:k + 1]
+
+def split_top(blob):
+    """Return dict of top-level key -> raw text (depth 1 keys)."""
+    out = {}; depth = 0; instr = None; esc = False; key = None; start = None; k = 0
+    keybuf = ""
+    i = 0
+    while i < len(blob):
+        c = blob[i]
+        if instr:
+            if esc: esc = False
+            elif c == "\\": esc = True
+            elif c == instr: instr = None
+        else:
+            if c in "\"`'":
+                instr = c
+                if depth == 1 and key is None and c == '"':
+                    m = re.match(r'"(\w+)"\s*:', blob[i:])
+                    if m: key = m.group(1); start = i + m.end();
+            elif c in "{[": depth += 1
+            elif c in "}]":
+                depth -= 1
+            elif c == "," and depth == 1 and key is not None:
+                out[key] = blob[start:i].strip(); key = None
+        i += 1
+    if key is not None: out[key] = blob[start:len(blob) - 1].strip()
+    return out
+
+if __name__ == "__main__":
+    html, ticker, outdir = sys.argv[1:4]
+    os.makedirs(outdir, exist_ok=True)
+    t = open(html, encoding="utf-8", errors="replace").read()
+    blob = extract(t, ticker)
+    open(os.path.join(outdir, ticker + "_raw.js"), "w", encoding="utf-8").write(blob)
+    top = split_top(blob)
+    print({k: len(v) for k, v in top.items()})
+    for k, v in top.items():
+        open(os.path.join(outdir, f"{ticker}_{k}.txt"), "w", encoding="utf-8").write(v)

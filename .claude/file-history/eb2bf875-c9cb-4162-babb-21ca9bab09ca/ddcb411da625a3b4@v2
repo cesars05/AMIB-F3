@@ -1,0 +1,115 @@
+$ErrorActionPreference="Stop"
+$wb=$null; $xl=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $sm=$wb.Worksheets.Item("Segment Model")
+$cm=$wb.Worksheets.Item("Consolidated Model"); $d=$wb.Worksheets.Item("DCF")
+$su=$wb.Worksheets.Item("Summary"); $so=$wb.Worksheets.Item("SOTP"); $ep=$wb.Worksheets.Item("EPV")
+$COL=@{12="L";13="M";14="N";15="O";16="P";17="Q"}
+function Lab($sh,$i){ foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$sh.Cells.Item($i,$cc).Text }catch{}; if($t.Trim() -ne ""){ return $t } }; return "" }
+
+Write-Output ("LIBRO "+[string]$wb.Name+"   venta='"+[string]$as.Range("J74").Text+"'   sweep='"+[string]$as.Range("J80").Text+"'   escenario="+[string]$as.Range("F10").Text+"   iterativo="+[string]$xl.Iteration)
+Write-Output ""
+Write-Output "=========== A) Consistencia de formulas en la proyeccion L..Q ==========="
+foreach($pr in @(@($sm,"SM",10,237),@($cm,"CM",10,380))){
+  $sh=$pr[0]; $nm=[string]$pr[1]; $bad=0
+  for($i=[int]$pr[2];$i -le [int]$pr[3];$i++){
+    $base=""; $dif=@()
+    foreach($c in 12,13,14,15,16,17){
+      $f=""; try{ $f=[string]$sh.Cells.Item($i,$c).FormulaR1C1 }catch{}
+      if($f -eq ""){ continue }
+      if($base -eq ""){ $base=$f; continue }
+      if($f -ne $base){ $dif+=([string]$COL[$c]) }
+    }
+    if($dif.Count -gt 0){
+      $lab=Lab $sh $i
+      if($lab.Length -gt 44){ $lab=$lab.Substring(0,44) }
+      Write-Output ("  "+$nm+" r"+([string]$i).PadRight(5)+$lab.PadRight(45)+" difieren: "+($dif -join ","))
+      $bad++
+    }
+  }
+  Write-Output ("  -> "+$nm+": "+$bad+" filas inconsistentes")
+}
+Write-Output ""
+Write-Output "=========== B) Numeros duros en la proyeccion L..Q ==========="
+foreach($pr in @(@($sm,"SM",10,237),@($cm,"CM",10,380))){
+  $sh=$pr[0]; $nm=[string]$pr[1]; $n=0
+  for($i=[int]$pr[2];$i -le [int]$pr[3];$i++){
+    $duras=@()
+    foreach($c in 12,13,14,15,16,17){
+      $f=""; try{ $f=[string]$sh.Cells.Item($i,$c).Formula }catch{}
+      if($f -eq "" -or $f.StartsWith("=")){ continue }
+      $x=0.0
+      if([double]::TryParse($f,[ref]$x)){ if($x -ne 0){ $duras+=([string]$COL[$c]+"="+$f) } }
+    }
+    if($duras.Count -gt 0){
+      $lab=Lab $sh $i
+      if($lab.Length -gt 40){ $lab=$lab.Substring(0,40) }
+      Write-Output ("  "+$nm+" r"+([string]$i).PadRight(5)+$lab.PadRight(41)+" "+($duras -join "  "))
+      $n++
+    }
+  }
+  Write-Output ("  -> "+$nm+": "+$n+" filas con numeros duros")
+}
+Write-Output ""
+Write-Output "=========== C) Checks internos, todos los anos ==========="
+foreach($x in @(@(168,"Balance"),@(215,"Caja"))){
+  $r=[int]$x[0]; $v=""; $peor=0.0
+  for($c=4;$c -le 17;$c++){
+    $vv=0.0; try{ $vv=[double]$cm.Cells.Item($r,$c).Value2 }catch{}
+    if([math]::Abs($vv) -gt [math]::Abs($peor)){ $peor=$vv }
+    $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(8)
+  }
+  Write-Output ("  "+([string]$x[1]).PadRight(10)+$v+"    |peor|="+[string][math]::Round([math]::Abs($peor),2))
+}
+Write-Output ""
+Write-Output "=========== D) Coherencia entre hojas ==========="
+$difs=0
+for($c=11;$c -le 17;$c++){
+  $a=[double]$cm.Cells.Item(13,$c).Value2; $b=[double]$sm.Cells.Item(16,$c).Value2
+  if([math]::Abs($a-$b) -gt 1){ Write-Output ("  CM r13 vs SM r16 col "+$COL[$c]+": "+[string][math]::Round($a,0)+" vs "+[string][math]::Round($b,0)); $difs++ }
+}
+for($i=0;$i -lt 6;$i++){
+  $a=[double]$su.Cells.Item(41,(6+$i)).Value2; $b=[double]$cm.Cells.Item(13,(12+$i)).Value2
+  if([math]::Abs($a-$b) -gt 1){ Write-Output ("  Summary r41 vs CM r13 ("+[string]$su.Cells.Item(37,(6+$i)).Text+"): "+[string][math]::Round($a,0)+" vs "+[string][math]::Round($b,0)); $difs++ }
+}
+for($i=0;$i -lt 6;$i++){
+  $a=[double]$d.Cells.Item(13,(3+$i)).Value2; $b=[double]$cm.Cells.Item(53,(12+$i)).Value2
+  if([math]::Abs($a-$b) -gt 1){ Write-Output ("  DCF EBITDA vs CM r53 col "+[string](3+$i)+": "+[string][math]::Round($a,0)+" vs "+[string][math]::Round($b,0)); $difs++ }
+}
+for($i=0;$i -lt 6;$i++){
+  $a=[double]$d.Cells.Item(11,(3+$i)).Value2; $b=[double]$cm.Cells.Item(47,(12+$i)).Value2
+  if([math]::Abs($a-$b) -gt 1){ Write-Output ("  DCF Sales r11 vs CM r47 col "+[string](3+$i)+": "+[string][math]::Round($a,0)+" vs "+[string][math]::Round($b,0)); $difs++ }
+}
+Write-Output ("  -> "+$difs+" discrepancias")
+Write-Output ""
+Write-Output "=========== E) Snapshot del Summary vs DCF vivo ==========="
+$s1=""; $s2=""
+for($c=4;$c -le 11;$c++){ $s1+=([string]$su.Cells.Item(30,$c).Text).PadLeft(10) }
+for($c=3;$c -le 9;$c++){ $s2+=([string]$d.Cells.Item(23,$c).Text).PadLeft(10) }
+Write-Output ("  Summary r30 Base : "+$s1)
+Write-Output ("  DCF r23 FCFF vivo: "+$s2)
+Write-Output ("  Summary r34 factor: "+[string]$su.Range("F34").Text+" "+[string]$su.Range("G34").Text+" "+[string]$su.Range("H34").Text+"   |   DCF r26 factor: "+[string]$d.Range("C26").Text+" "+[string]$d.Range("D26").Text+" "+[string]$d.Range("E26").Text)
+Write-Output ""
+Write-Output "=========== F) Costo de deuda y WACC ==========="
+Write-Output ("  DCF  WACC="+[string]$d.Range("P16").Text+"  Ke="+[string]$d.Range("P18").Text+"  Kd="+[string]$d.Range("P19").Text+"  peso deuda="+[string]$d.Range("P17").Text+"  g="+[string]$d.Range("P12").Text)
+Write-Output ("  Assumptions r85 tasa bancaria: Stress "+[string]$as.Range("D85").Text+"  Bear "+[string]$as.Range("E85").Text+"  Base "+[string]$as.Range("F85").Text)
+$v=""
+for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item(265,$c).Text).PadLeft(9) }
+Write-Output ("  CM r265 tasa efectiva pagada:"+$v)
+Write-Output ""
+Write-Output "=========== G) Salidas ==========="
+Write-Output ("  DCF "+[string]$d.Range("E41").Text+" ("+[string]$d.Range("E42").Text+")   SOTP "+[string]$so.Range("D112").Text+"   EPV "+[string]$ep.Range("E61").Text+"   precio "+[string]$d.Range("E40").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary","Expected Returns"){
+  $s=$wb.Worksheets.Item($nm); $e=0
+  try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

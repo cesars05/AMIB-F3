@@ -1,0 +1,92 @@
+# ---------- 2) Hoja Escenarios: multiplos por empresa (3 conjuntos) + calibracion por regla ----------
+E = wb.create_sheet("Escenarios")
+set_sheet(E, tab=LIMA, widths={"B": 26, "C": 28, "D": 11, "E": 12, "F": 12, "G": 11, "H": 9, "I": 11, "J": 10, "K": 12, "L": 10, "M": 70, "N": 58})
+put(E, "B2", "Aurex Capital - Múltiplos de salida por empresa", "title")
+put(E, "B3", "Tres conjuntos de supuestos; el conjunto en uso se elige en Hoja1_Portafolio (celda C15) y alimenta toda la cascada.", "note")
+put(E, "B4", "Regla del caso calibrado: múltiplo = (1 + crecimiento anual del EBITDA)^años × (1 − dilución por rondas futuras) × (múltiplo de salida ÷ múltiplo de entrada). Sin expansión de múltiplo (cociente ≤ 1.0x). Un valor en 'Override' sustituye a la fórmula.", "note")
+hdrs = ["Empresa", "Vertical", "Equipo\n(v1)", "Monte Carlo\nP50 (v2)", "Calibrado\n2026 (base)", "Múltiplo\nen uso", "Años en\nportafolio", "Crec. anual\nEBITDA", "Dilución\nfutura", "Múltiplo\nsalida ÷ entrada", "Override",
+        "Fundamento del caso calibrado (evidencia y riesgo)", "Comprador / vía de salida identificada"]
+for i, h in enumerate(hdrs):
+    c = E.cell(row=5, column=2 + i); c.value = h
+    header_style(c, "left" if i in (0, 1, 11, 12) else "center")
+E.row_dimensions[5].height = 42
+r0, r1 = 6, 5 + n
+for i, e in enumerate(empresas):
+    r = r0 + i; h = 18 + i
+    put(E, f"B{r}", f"=Hoja1_Portafolio!B{h}", "link"); put(E, f"C{r}", f"=Hoja1_Portafolio!C{h}", "link")
+    E[f"B{r}"].alignment = Alignment(vertical="center"); E[f"C{r}"].alignment = Alignment(vertical="center", wrap_text=True)
+    put(E, f"D{r}", e["m_equipo"], "in", NF_X, align="center")
+    if e.get("mc_row") is None:
+        put(E, f"E{r}", f"=F{r}", None, NF_X, align="center")
+    else:
+        put(E, f"E{r}", f"='2_Simulacion'!L{8+e['mc_row']}", "link", NF_X, align="center")
+    put(E, f"F{r}", f'=IF(L{r}="",(1+I{r})^H{r}*(1-J{r})*K{r},L{r})', None, NF_X, bold=True, align="center")
+    put(E, f"G{r}", f"=INDEX(D{r}:F{r},1,Hoja1_Portafolio!$C$15)", None, NF_X, bold=True, align="center")
+    put(E, f"H{r}", f"=Hoja1_Portafolio!K{h}-Hoja1_Portafolio!F{h}", "calc", "0", align="center")
+    put(E, f"I{r}", e["g"], "in", "0.0%", align="center"); put(E, f"J{r}", e["dil"], "in", "0%", align="center")
+    put(E, f"K{r}", e["ratio"], "in", "0.00x", align="center")
+    c = put(E, f"L{r}", e.get("override"), "in", NF_X, align="center")
+    put(E, f"M{r}", e["fundamento"]); put(E, f"N{r}", e["salida"])
+    for col in "MN":
+        E[f"{col}{r}"].alignment = Alignment(wrap_text=True, vertical="center")
+    E.row_dimensions[r].height = 54
+rt = r1 + 1
+put(E, f"B{rt}", "Portafolio (ponderado por capital invertido)", "tot")
+for col in "CDEFGHIJKLMN":
+    E[f"{col}{rt}"].border = Border(top=THIN)
+for col in "DEFG":
+    put(E, f"{col}{rt}", f"=SUMPRODUCT({col}{r0}:{col}{r1},Hoja1_Portafolio!$I$18:$I$25)/SUM(Hoja1_Portafolio!$I$18:$I$25)", None, NF_X, bold=True, align="center")
+    E[f"{col}{rt}"].border = Border(top=THIN)
+put(E, f"B{rt+2}", "Conjunto en uso:", bold=True)
+put(E, f"C{rt+2}", '=INDEX({"Equipo (v1)","Monte Carlo P50 (v2)","Calibrado 2026 (base)"},1,Hoja1_Portafolio!$C$15)', bold=True)
+rc = rt + 6
+put(E, f"B{rc-1}", "Cascada europea por conjunto de múltiplos (caso base, sin factor de escenario)", "sec")
+for col in "CDEFGH": E[f"{col}{rc-1}"].border = Border(bottom=THIN_G)
+labels = ["Concepto (USD mm)", "", "Equipo\n(v1)", "Monte Carlo\nP50 (v2)", "Calibrado\n2026 (base)"]
+for i, h in enumerate(labels):
+    c = E.cell(row=rc, column=2 + i); c.value = h; header_style(c, "center" if i > 1 else "left")
+E.row_dimensions[rc].height = 30
+rows = [
+ ("Recupera el portafolio (proceeds)", lambda col: f"=SUMPRODUCT({col}{r0}:{col}{r1},Hoja1_Portafolio!$I$18:$I$25)", NF_NUM1),
+ ("Múltiplo bruto sobre capital invertido", lambda col: f"={col}{rc+1}/Hoja1_Portafolio!$C$12", NF_X),
+ ("Múltiplo bruto sobre capital comprometido", lambda col: f"={col}{rc+1}/Hoja1_Portafolio!$C$6", NF_X),
+ ("Escalón 1 · devolución de capital", lambda col: f"=MIN({col}{rc+1},Hoja1_Portafolio!$C$6)", NF_NUM1),
+ ("Escalón 2 · retorno preferente", lambda col: f"=MIN({col}{rc+1}-{col}{rc+4},Hoja2_Distribucion!$C$11)", NF_NUM1),
+ ("Escalón 3 · catch-up al GP", lambda col: f"=MIN(({col}{rc+1}-{col}{rc+4}-{col}{rc+5})*Hoja2_Distribucion!$C$10,{col}{rc+5}*Hoja2_Distribucion!$C$9/(1-Hoja2_Distribucion!$C$9))", NF_NUM1),
+ ("Escalón 4 · remanente 80/20", lambda col: f"={col}{rc+1}-{col}{rc+4}-{col}{rc+5}-{col}{rc+6}", NF_NUM1),
+ ("TOTAL A LOS LPs", lambda col: f"={col}{rc+4}+{col}{rc+5}+{col}{rc+7}*(1-Hoja2_Distribucion!$C$9)", NF_NUM1),
+ ("CARRY DEL GP", lambda col: f"={col}{rc+6}+{col}{rc+7}*Hoja2_Distribucion!$C$9", NF_NUM1),
+ ("Múltiplo neto de los LPs", lambda col: f"={col}{rc+8}/Hoja1_Portafolio!$C$6", NF_X),
+ ("Verificación: LPs + GP = proceeds", lambda col: f'=IF(ROUND({col}{rc+8}+{col}{rc+9}-{col}{rc+1},6)=0,"OK","REVISAR")', None),
+]
+for i, (lab, fn, nf) in enumerate(rows):
+    r = rc + 1 + i
+    bd = lab.startswith(("TOTAL", "CARRY", "Múltiplo neto"))
+    put(E, f"B{r}", lab, bold=bd)
+    for col in "DEF":
+        put(E, f"{col}{r}", fn(col), None, nf, bold=bd, align="center")
+put(E, f"B{rc+13}", "Lectura: el GP solo cobra carry cuando el portafolio recupera ≈2.16x el capital comprometido (hurdle compuesto 8% por 10 años sobre todo lo comprometido, convención del profesor).", "note")
+put(E, f"B{rc+14}", "El conjunto v2 (Monte Carlo) se alimenta de caídas de acciones cotizadas de EE.UU.; es una sensibilidad, no un caso base: no mide múltiplos de salida de empresas mexicanas privadas.", "note")
+put(E, f"B{rc+15}", "Referencias de contraste (ver hoja Fuentes): TIR mediana de fondos con actividad en México 16.15% (AMEXCAP 1S-2026); TIR neta estimada AINDA I 15.5% (Techla, sep-2025).", "note")
+
+# ---------- 2b) Criterios de exclusion y elegibilidad FICAP ----------
+X = wb.create_sheet("Criterios")
+set_sheet(X, tab=LIMA, widths={"B": 26, "C": 24, "D": 24, "E": 24, "F": 24, "G": 24, "H": 24, "I": 22})
+put(X, "B2", "Aurex Capital - Criterios de exclusión y elegibilidad por empresa", "title")
+put(X, "B3", "Cada celda: Cumple / Condición (se verifica en data room antes de invertir) / No cumple. Fuente: dossiers de empresa en fuentes_investigacion/ y art. 192 LISR. Validar con abogado.", "note")
+xh = ["Empresa", "(i) Ningún cliente\n>30% de ventas", "(ii) Directivos con\nexperiencia en energía", "(iii) Sin generación\nutility mayorista", "(iv) Sin dependencia\nde subsidios", "(v) Valuación\n≤ USD $100M", "FICAP: mexicana,\nno listada", "Dictamen"]
+for i, h in enumerate(xh):
+    c = X.cell(row=5, column=2 + i); c.value = h; header_style(c, "center" if i else "left")
+X.row_dimensions[5].height = 42
+for i, e in enumerate(empresas):
+    r = 6 + i
+    put(X, f"B{r}", f"=Hoja1_Portafolio!B{18+i}", "link", bold=True); X[f"B{r}"].alignment = Alignment(vertical="center")
+    for j, v in enumerate(e["crit"]):
+        c = X.cell(row=r, column=3 + j); c.value = v; calc_font(c)
+        c.alignment = Alignment(wrap_text=True, vertical="center", horizontal="center")
+        tag = v.split(":")[0].strip().lower()
+        if tag.startswith("no cumple"): c.fill = PatternFill("solid", fgColor="F6D5D1")
+        elif tag.startswith("condición") or tag.startswith("condicion"): c.fill = PatternFill("solid", fgColor="FBEFC5")
+        elif tag.startswith("cumple"): c.fill = PatternFill("solid", fgColor=LIMA_SUAVE)
+    X.row_dimensions[r].height = 78
+put(X, f"B{6+n+1}", "Candidatas descartadas del pipeline original (D3): Verdigris Technologies (empresa de California; sin operación documentada en México; no elegible FICAP) · Solar Inc. y Energypro Mx (valor de $0.5–1M, demasiado pequeñas para tickets de $2M+).", "note")

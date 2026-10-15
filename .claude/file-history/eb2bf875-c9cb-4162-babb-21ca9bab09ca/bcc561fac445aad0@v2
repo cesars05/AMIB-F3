@@ -1,0 +1,78 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+$sm=T { $wb.Worksheets.Item("Segment Model") }
+$q='"'
+$emp=$q+$q
+
+# ---- localizar las filas POR VALOR, no por numero memorizado ----
+function FindRow($col,$val){
+  for($r=10;$r -le 240;$r++){
+    $v=$null
+    try{ $v=$sm.Cells.Item($r,$col).Value2 }catch{}
+    if($v -ne $null -and $v -is [double] -and [math]::Abs($v-$val) -lt 0.5){ return $r }
+  }
+  return 0
+}
+$rWMa=FindRow 11 44721;  $rBEa=FindRow 11 21825;  $rHPa=FindRow 11 17454
+$rWMl=FindRow 11 12165;  $rBEl=FindRow 11 13095;  $rHPl=FindRow 11 8882
+$rWMp=FindRow 11 3255
+Write-Output ("mapa detectado: activos WM/BE/HP = r"+$rWMa+"/r"+$rBEa+"/r"+$rHPa+"   pasivos = r"+$rWMl+"/r"+$rBEl+"/r"+$rHPl+"   utilidad WM = r"+$rWMp)
+if($rWMa -eq 0 -or $rBEa -eq 0 -or $rHPa -eq 0 -or $rWMl -eq 0 -or $rBEl -eq 0 -or $rHPl -eq 0){ throw "ABORTO: no se localizaron todas las filas" }
+if($rBEa -ne $rWMa+1 -or $rHPa -ne $rWMa+2){ throw "ABORTO: los activos por segmento no son consecutivos" }
+if($rBEl -ne $rWMl+1 -or $rHPl -ne $rWMl+2){ throw "ABORTO: los pasivos por segmento no son consecutivos" }
+if($rWMp -ne 21){ throw ("ABORTO: la utilidad operativa de WM no esta en r21, esta en r"+$rWMp) }
+$rTa=$rWMa+3   # total trading segments (activos)
+$rTl=$rWMl+3   # total trading segments (pasivos)
+if([string](T { $sm.Range("C74").Text }) -notmatch "Segment ROIC"){ throw "ABORTO: C74 no es el bloque ROIC" }
+Write-Output "guardas OK"
+
+$xl.Calculation=-4135
+$seg=@{}
+$seg[75]=@(21,$rWMa,$rWMl)
+$seg[76]=@(22,$rBEa,$rBEl)
+$seg[77]=@(23,$rHPa,$rHPl)
+$seg[78]=@(24,$rTa,$rTl)
+foreach($r in ($seg.Keys | Sort-Object)){
+  $s=$seg[$r]
+  $f="=+IFERROR(IF(D"+$s[1]+"=0,"+$emp+",D"+$s[0]+"*(1-'Consolidated Model'!D86)/(D"+$s[1]+"-D"+$s[2]+")),"+$emp+")"
+  T { $sm.Cells.Item($r,4).Formula=$f } | Out-Null
+  T { $sm.Range("D"+$r+":Q"+$r).FillRight() } | Out-Null
+  T { $sm.Range("D"+$r+":Q"+$r).NumberFormat="0.0%" } | Out-Null
+}
+$xl.Calculation=-4105
+T { $xl.CalculateFullRebuild() } | Out-Null
+T { $xl.CalculateFullRebuild() } | Out-Null
+$wb.Save()
+Write-Output "ROIC recalculado con el mapa actual"
+Write-Output ""
+$h="  "+"".PadRight(26)
+for($c=6;$c -le 14;$c++){ $h+=([string](T { $sm.Cells.Item(9,$c).Text })).PadLeft(9) }
+Write-Output $h
+foreach($r in 75,76,77,78){
+  $lab=[string](T { $sm.Cells.Item($r,3).Text }); if($lab.Length -gt 25){ $lab=$lab.Substring(0,25) }
+  $v=""
+  for($c=6;$c -le 14;$c++){ $v+=([string](T { $sm.Cells.Item($r,$c).Text })).PadLeft(9) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(26)+$v)
+}
+Write-Output ""
+Write-Output ("  K75 frm= "+[string](T { $sm.Range("K75").Formula }))
+Write-Output ""
+Write-Output "  --- control manual FY2026 ---"
+$ce=[double](T { $sm.Cells.Item($rWMa,11).Value2 })-[double](T { $sm.Cells.Item($rWMl,11).Value2 })
+$tx=[double](T { $wb.Worksheets.Item("Consolidated Model").Range("K86").Value2 })
+Write-Output ("  WM: utilidad 3255 x (1-"+[string][math]::Round($tx*100,1)+"%) / capital empleado "+[string][math]::Round($ce,0)+" = "+[string][math]::Round(3255*(1-$tx)/$ce*100,1)+"%")
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=T { $wb.Worksheets.Item($nm) }
+  $e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

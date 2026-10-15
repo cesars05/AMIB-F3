@@ -1,0 +1,39 @@
+# Resumen para revisión del equipo: Aurex Capital V2 (11-oct-2026)
+
+**Lee esto primero.** Los tres entregables de la V2 están en `entregables/` (Excel, memorándum y deck, ya sincronizados) y una copia idéntica con los PDF del memorándum y del deck en `entregables/V2_11oct/`. La versión anterior (10-oct) quedó en `99_Archivo/entregables_v1_10oct/`.
+
+## 1 · Cifras del caso base (Excel `Summary`; iguales en Word y deck)
+| | Bajo (x0.5) | **Base** | Alto (x1.10) |
+|---|---|---|---|
+| Salidas del portafolio (US$M) | 129.0 | **258.0** | 283.8 |
+| Total a los LPs (US$M) | 129.0 | **226.4** | 247.1 |
+| Carry del GP (US$M) | 0 | **31.6** | 36.8 |
+| MOIC neto del LP | 1.29x | **2.26x** | 2.47x |
+| **TIR neta del LP (calendario real, USD)** | 5.2% | **17.9%** | 19.9% |
+
+Otros casos (hoja `Football_Field`): Conservador 1.82x y 12.5%; sin fallas 2.47x y 20.2%; salida un año tarde 14.7%; estrés con 5 de 8 fallando 1.33x y 6.7%. La TIR que se comunica es la **neta con fechas**; la simplificada de clase (8.5%) queda como piso en `Hoja2`.
+
+## 2 · Qué cambió (en Excel, Word y PowerPoint)
+- **Entradas escalonadas:** Pireos, Quartux y Niko en el año 1; XC, BioEsol y FAZT en el año 2; S2G y Uriel/BRM en el año 3. Follow-on años 3 a 5; salidas años 6 a 9. Invertido: US$82M (56 + 26).
+- **3 de 8 fallan:** Uriel/BRM 0.0x, FAZT 0.5x, S2G 0.3x.
+- **TIR objetivo de ≈18%:** las otras 5 (Pireos, XC, BioEsol, Quartux, Niko) se calibraron con crecimiento de EBITDA de 24.5% a 32.5% anual, dilución de 5% a 12% y múltiplo de salida 5% a 10% menor al de entrada, lo que da **3.3x a 4.4x** en cada una. **Es un supuesto agresivo del fondo, calibrado al objetivo, no un pronóstico**: la mediana de fondos en México es 16.15% (AMEXCAP) y el caso Conservador (12.5%) y el Bajo (5.2%) se muestran con el mismo peso. Está documentado empresa por empresa en `Escenarios`.
+- **Llamadas de capital:** hoja nueva `Llamadas_Capital` con mínimos y máximos (cada llamada de 1% a 25% del compromiso; aviso de 10 días hábiles; máximo 4 al año; primer cierre US$40M; compromiso por LP de US$1M a 20%). Cambié el mínimo por llamada de 5% (que propuse en el plan) a **1%**, porque en los años 6 a 10 solo se llaman US$1.4M al año. 69% del capital se llama en los años 1 a 3.
+- **Datos de gobierno verificados (2026):** hojas `Mercado_Gobierno` (tabla única) y `Proyectos_Region`; MXN 1.168 billones de inversión sexenal (Presidencia, 7-oct-2026), 32,475 MW del plan, 5,551 MW de baterías y 7,405 MW de particulares (PLADESE, DOF), 5,190 MW de generación distribuida (CNE). Contradicciones resueltas en `fuentes_investigacion/gobierno_oportunidad_2026.md` (los tres 54%, 2,216 vs 5,551 MW de baterías, 38,000 vs 32,475 MW).
+- **Football field** (hoja `Football_Field`): 14 casos con la cascada completa por caso; alimenta la lámina 14.
+- **Deck:** portada estilo FEMSA con fondo de Canva; agenda, resumen ejecutivo, oportunidad de gobierno, tesis literal, equipo en dos láminas, vehículo, llamadas de capital, roadmap (think-cell), uso de cada dólar (waterfall), 8 empresas, caso Pireos, football field con MOIC y TIR más tornado, salidas, riesgos y protecciones: **15 láminas de contenido**, cierre y 7 de anexo.
+- **Word:** 6 páginas (4 de cuerpo y anexos A a E), con anexo D (llamadas de capital) y anexo E (presencia por estado).
+- Sin guiones largos ni textos de pendiente en los tres archivos (lo verifica `modelo_financiero/_builder/sync_check.py`: todo OK).
+
+## 3 · Lo que no quedó como lo pediste o hay que saber
+- **Portada:** la herramienta de Canva solo devolvió una **miniatura de 199x112**; el fondo es esa miniatura ampliada con una capa de líneas finas. Para usar la imagen completa: descárgala de Canva, guárdala como `assets/portada/aurex_cover_canva.jpg` y corre `build_deck_v2.py`.
+- **Roadmap:** la plantilla think-cell trae 4 pines (no 7); son 4 etapas con una tabla de 10 años debajo.
+- **Mapas de México:** no se dibujaron; el deck usa barras por región (PLADESE) y por estado (CNE) y el memo una tabla por estado.
+- **Equipo:** nombres y roles del deck del compañero; **no hay credenciales ni fotos** (círculos vacíos). No se inventó nada.
+- **Valuaciones** de las 8 empresas: estimaciones del fondo (ninguna es pública); la de Pireos (US$40M) se deriva de comparables.
+- **El documento de Pablo (7-oct) y el deck del compañero** usan otros juegos de cifras (2.21x y 1.76x); quedan reemplazados por el Excel nuevo.
+
+## 4 · Lo que solo ustedes pueden resolver
+Ver `faltantes/FALTA.py` (se corre con Python): credenciales y fotos, conflicto de interés familiar (D2), fecha de la defensa (11-oct o 14-15 oct), nombre de archivos y equipo de 6 con el profesor, validación legal y fiscal, la imagen completa de la portada, y el envío (un solo correo del líder a frincon@tec.mx; yo no envié nada).
+
+## 5 · Cómo regenerar
+Scripts en `modelo_financiero/_builder/`: `build_v3.py` (con `model_config.py`, `build_v4_extra.py`) para el Excel; luego `recalc_save.ps1` para calcularlo con Excel; `build_memo.py` y `build_deck_v2.py` leen ese Excel; `sync_check.py` compara los tres. Investigación en `fuentes_investigacion/`; plan completo en `PLAN_V2_PROMPT_Y_WORKFLOW.md`.

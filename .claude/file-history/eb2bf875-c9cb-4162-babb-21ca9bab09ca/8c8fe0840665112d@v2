@@ -1,0 +1,134 @@
+$ErrorActionPreference="Stop"
+$xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb=$null
+foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc.*v3"){ $wb=$w } }
+if($wb -eq $null){ throw "ABORTO: no encuentro el libro v3" }
+$pw=$wb.Worksheets.Item("Payment Waterfall")
+$er=$wb.Worksheets.Item("Expected Returns")
+if([string]$pw.Range("C9").Text -ne "Fund Details (000s)"){ throw ("ABORTO: C9 dice '"+[string]$pw.Range("C9").Text+"'") }
+if([string]$er.Range("C41").Text -ne "Period End Date"){ throw "ABORTO: ER C41 no es Period End Date" }
+if([string]$er.Range("C48").Text -ne "Total Cash Flow to Investor"){ throw "ABORTO: ER C48 cambio" }
+Write-Output "guardas OK"
+$NAVY=5384228; $WHITE=16777215; $GREY=8421504; $BLUE=16711680
+$CENTER=-4108; $LEFT=-4131
+$FN='#,##0;(#,##0);"-"'
+$FP='0.0%;(0.0%);"-"'
+$FX='0.00"x"'
+$xl.ScreenUpdating=$false
+
+# limpiar SOLO contenido, conservando formato de la hoja
+$pw.Range("C9:N90").ClearContents() | Out-Null
+$pw.Range("C9:N90").Font.Name="Arial"
+$pw.Range("C9:N90").Font.Size=11
+$pw.Range("C9:N90").Font.Bold=$false
+$pw.Range("C9:N90").Font.Italic=$false
+$pw.Range("C9:N90").Font.Color=0
+$pw.Range("C9:N90").Interior.ColorIndex=-4142
+
+function Hdr($rng,$txt){
+  $pw.Range($rng).Interior.Color=$NAVY
+  $pw.Range($rng).Font.Color=$WHITE
+  $pw.Range($rng).Font.Bold=$true
+  $pw.Range($rng.Split(':')[0]).Value2=$txt
+}
+
+# ================= A) TERMINOS DEL VEHICULO =================
+Hdr "C9:J9" "Fund Terms"
+$pw.Range("C10").Value2="Total Investment"
+$pw.Range("D10").Formula="=+'Expected Returns'!D18"
+$pw.Range("C11").Value2="Aztlan (GP) Commitment"
+$pw.Range("D11").Value2=[double]0.10
+$pw.Range("C12").Value2="LP Commitment"
+$pw.Range("D12").Formula="=+1-D11"
+$pw.Range("C13").Value2="   GP Capital"
+$pw.Range("D13").Formula="=+D10*D11"
+$pw.Range("C14").Value2="   LP Capital"
+$pw.Range("D14").Formula="=+D10*D12"
+$pw.Range("C15").Value2="Management Fee (per annum, on invested capital)"
+$pw.Range("D15").Value2=[double]0.02
+$pw.Range("C16").Value2="Carried Interest"
+$pw.Range("D16").Value2=[double]0.20
+$pw.Range("C17").Value2="Preferred Return (compounded annually)"
+$pw.Range("D17").Value2=[double]0.08
+$pw.Range("C18").Value2="Catch-up"
+$pw.Range("D18").Value2="Full"
+$pw.Range("C19").Value2="Term (years)"
+$pw.Range("D19").Value2=[double]6
+$pw.Range("C20").Value2="GBP / USD"
+$pw.Range("D20").Formula="=+'Expected Returns'!D20"
+$pw.Range("C21").Value2="Fund operating costs (per annum, USD)"
+$pw.Range("D21").Value2=[double]12320
+$pw.Range("C22").Value2="Setup and legal execution costs (one-off, USD)"
+$pw.Range("D22").Value2=[double]69125
+$pw.Range("D10").NumberFormat=$FN
+$pw.Range("D11:D12").NumberFormat=$FP
+$pw.Range("D13:D14").NumberFormat=$FN
+$pw.Range("D15:D17").NumberFormat=$FP
+$pw.Range("D19").NumberFormat="0"
+$pw.Range("D20").NumberFormat="0.00"
+$pw.Range("D21:D22").NumberFormat=$FN
+$pw.Range("D10:D22").HorizontalAlignment=$CENTER
+foreach($a in "D11","D15","D16","D17","D19","D21","D22"){ $pw.Range($a).Font.Color=$BLUE }
+
+# ================= B) FLUJOS DEL VEHICULO =================
+Hdr "C25:J25" "Vehicle Cash Flows (GBP 000s)"
+$pw.Range("C26").Value2="Period End Date"
+$pw.Range("C27").Value2="Fiscal Year"
+$pw.Range("C28").Value2="Capital Called"
+$pw.Range("C29").Value2="Dividends Received"
+$pw.Range("C30").Value2="Exit Proceeds"
+$pw.Range("C31").Value2="Gross Distributions to the Vehicle"
+$pw.Range("C32").Value2="(-) Management Fee"
+$pw.Range("C33").Value2="(-) Fund Operating Costs"
+$pw.Range("C34").Value2="Net Distributable to Partners"
+$pw.Range("D26").Formula="=+'Expected Returns'!D41"
+$pw.Range("D27").Value2="Entry"
+$pw.Range("D28").Formula="=-'Expected Returns'!D18"
+$pw.Range("D29").Value2=[double]0
+$pw.Range("D30").Value2=[double]0
+$pw.Range("D31").Formula="=+SUM(D29:D30)"
+$pw.Range("D32").Value2=[double]0
+$pw.Range("D33").Value2=[double]0
+$pw.Range("D34").Formula="=+D31+D32+D33"
+$ERC=@{5="E";6="F";7="G";8="H";9="I";10="J"}
+foreach($c in 5,6,7,8,9,10){
+  $x=$ERC[$c]
+  $pw.Range($x+"26").Formula="=+'Expected Returns'!"+$x+"41"
+  $pw.Range($x+"27").Formula="=+'Expected Returns'!"+$x+"42"
+  $pw.Range($x+"28").Value2=[double]0
+  $pw.Range($x+"29").Formula="=+'Expected Returns'!"+$x+"44+'Expected Returns'!"+$x+"45+'Expected Returns'!"+$x+"46"
+  $pw.Range($x+"30").Formula="=+'Expected Returns'!"+$x+"47"
+  $pw.Range($x+"31").Formula="=+SUM("+$x+"29:"+$x+"30)"
+  $pw.Range($x+"32").Formula="=-IF("+$x+"`$27<=`$D`$19+VALUE(RIGHT('Expected Returns'!`$E`$42,4))-1,`$D`$10*`$D`$15,0)"
+  $pw.Range($x+"33").Formula="=-IF("+$x+"`$27<=`$D`$19+VALUE(RIGHT('Expected Returns'!`$E`$42,4))-1,`$D`$21/`$D`$20/1000,0)"
+  $pw.Range($x+"34").Formula="=+"+$x+"31+"+$x+"32+"+$x+"33"
+}
+$pw.Range("K26").Value2="Total"
+$pw.Range("K26").Font.Bold=$true
+foreach($r in 28,29,30,31,32,33,34){ $pw.Range("K"+[string]$r).Formula="=+SUM(D"+[string]$r+":J"+[string]$r+")" }
+$pw.Range("D26:K26").NumberFormat="mmm yyyy"
+$pw.Range("D26").NumberFormat="mmm yyyy"
+$pw.Range("K26").NumberFormat="General"
+$pw.Range("E27:J27").NumberFormat="0"
+$pw.Range("D28:K34").NumberFormat=$FN
+$pw.Range("D26:K34").HorizontalAlignment=$CENTER
+$pw.Range("D26:K27").Font.Bold=$true
+$pw.Range("C31").Font.Bold=$true
+$pw.Range("C34").Font.Bold=$true
+$pw.Range("D34:K34").Font.Bold=$true
+$pw.Range("D34:K34").Borders.Item(8).LineStyle=1
+
+$xl.ScreenUpdating=$true
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output "secciones A y B creadas"
+Write-Output ""
+for($r=9;$r -le 34;$r++){
+  $lab=[string]$pw.Cells.Item($r,3).Text
+  $v=""
+  foreach($c in 4,5,6,7,8,9,10,11){ $v+=([string]$pw.Cells.Item($r,$c).Text).PadLeft(11) }
+  if(($lab+$v).Trim() -ne ""){
+    if($lab.Length -gt 46){ $lab=$lab.Substring(0,46) }
+    Write-Output ("r"+([string]$r).PadRight(4)+$lab.PadRight(47)+$v)
+  }
+}

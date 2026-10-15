@@ -1,0 +1,129 @@
+# Verificación de la v7 contra consenso, Euromonitor y Bloomberg (11-oct-2026)
+
+Las pruebas de escenarios y del interruptor de tipo de cambio se restauraron a su valor original. El único cambio al modelo posterior fue acotar los escenarios (sección 3.6). Estado del modelo: Ps62.75 por acción, +12.2%, HOLD; WACC 10.24%.
+
+## 1. Fuentes usadas
+
+| Fuente | Fecha | Qué aporta |
+|---|---|---|
+| Barclays, "Bimbo 2Q26 First Impressions" (`Bloomberg\Bimbo Bloomberg MD\`, convertido a .md hoy) | 22/23-jul-26 | Estimados 2026E a 2028E (ingresos, EBITDA, EBIT, utilidad, UPA, capex, FCF, apalancamiento). Overweight, precio objetivo Ps75 (alcista Ps85, bajista Ps52). |
+| JPMorgan, "Rewarding Momentum. Upgrading Bimbo to N" (convertido hoy) | 30-jul-26 | Mejora a Neutral, precio objetivo Ps66 (dic-27). Guía de la empresa, comparación contra consenso de Bloomberg, múltiplos. |
+| Bloomberg Intelligence, "Bimbo US Margins, Raised Guidance Lift Setup" (convertido hoy) | 23-jul-26 | Resultados del 2T26 por región en moneda constante, guía elevada. |
+| Bloomberg Intelligence, "Margin Recovery", "Broadest Platform... Returns", JPM "Unexpected CEO Change", BI "Strong Brand", "Diversified Growth" (convertidos hoy) | 2026 | Contexto cualitativo (CEO, payout, márgenes, pares). |
+| Consenso LSEG a 12 meses (`Multiples` fila 13) | oct-26 | Ventas Ps442,205m; EBITDA Ps63,914m (base IFRS 16); EBIT Ps37,765m; utilidad neta Ps15,387m. |
+| Reportes de Euromonitor (Baked Goods, Savoury Snacks, Sweet Biscuits) | 2026 | Narrativa y tasas de crecimiento por mercado. |
+
+Los 8 PDF de Bloomberg que no tenían versión .md se convirtieron a `Bimbo Bloomberg MD\` con el mismo formato que los anteriores (encabezado, página por página): Barclays 2Q26 First Impressions, Bimbo US Margins Raised Guidance, Strong Brand Recognition, Diversified Growth Cushions Soft Demand, Margin Recovery Is Driving Growth, JPM Unexpected CEO Change, JPM Sigma/Bimbo upgrade, y The Broadest Platform Still Sits in the Middle on Returns. Las capturas (`Screenshots\`, JPEG) no se convirtieron.
+
+## 2. Modelo contra los estimados (caso base)
+
+| Ps millones | Modelo 2026E | Barclays 2026E | Dif. | Modelo 2027E | Barclays 2027E | Dif. | Modelo 2028E | Barclays 2028E | Dif. |
+|---|---|---|---|---|---|---|---|---|---|
+| Ingresos | 447,451 | 423,414 | +5.7% | 467,355 | 449,485 | +4.0% | 488,342 | 466,858 | +4.6% |
+| EBITDA ajustado | 65,435 | 61,989 | +5.6% | 67,757 | 64,887 | +4.4% | 72,846 | 67,725 | +7.6% |
+| Margen EBITDA | 14.6% | 14.7% | | 14.5% | 14.4% | | 14.9% | 14.5% | |
+| EBIT | 39,658 | 36,302 | +9.2% | 41,086 | 37,800 | +8.7% | 45,245 | 39,598 | +14.3% |
+| Utilidad neta | 15,191 | 12,889 | +17.9% | 16,439 | 14,170 | +16.0% | 19,306 | 15,336 | +25.9% |
+| UPA (Ps) | 3.55 | 2.98 | +19% | 3.88 | 3.27 | +19% | 4.61 | 3.54 | +30% |
+| Dividendo por acción (Ps) | 1.08 | 1.13 | | 1.44 | 1.24 | | 1.57 | 1.37 | |
+| Capex | 19,755 | 21,913 | −10% | 21,139 | 24,258 | −13% | 22,441 | 25,200 | −11% |
+| Deuda neta / EBITDA | 2.59x | 2.2x | | 2.39x | 1.9x | | 2.08x | 1.8x | |
+
+Contra el consenso LSEG a 12 meses, el equivalente del modelo (25% de 2026E más 75% de 2027E) es: ingresos Ps462,379m (+4.6%), EBITDA Ps67,176m (+5.1%), EBIT Ps40,729m (+7.8%), utilidad neta Ps16,127m (+4.8%).
+
+JPMorgan (30-jul-26) mide su desviación contra el consenso de Bloomberg: 2026E ingresos −1.6%, EBITDA −0.5%, UPA −4.3%; 2027E ingresos −3.1%, EBITDA +0.2%, UPA −7.0%. Sus tasas de crecimiento: ingresos 3%, EBITDA 5% y UPA 13% (CAGR 2026 a 2028); ROIC 10% y ROE 11% en 2026E; apalancamiento 2.8x. El modelo da ingresos 4.5%, EBITDA 5.5% y UPA 14.0% en el mismo periodo.
+
+## 3. Hallazgos
+
+### 3.1 Ingresos de 2026E: el modelo no refleja el efecto de tipo de cambio (importante)
+
+- Los ingresos reportados del 1S26 cayeron 2.8% (Ps205,345m contra Ps211,228m). El 2T26 cayó 2.2% reportado y subió 4.5% a tipo de cambio constante (Barclays y Bloomberg Intelligence): el tipo de cambio restó unos 6.7 puntos.
+- El modelo da Ps447,451m en 2026E (+4.8%). Para llegar ahí, el 2S26 tendría que crecer **+12.0%** contra el 2S25 (Ps242,107m contra Ps216,127m). Barclays proyecta Ps423,414m (−0.8%), lo que implica un 2S26 de +0.9%.
+- Causa: los crecimientos regionales se calculan "a tipo de cambio constante" y se aplican a la base de 2025A en pesos reportados (dólar promedio Ps19.22). El dólar de referencia del modelo es Ps18.19 (2-oct-26). El modelo ya trae un interruptor de ajuste (`Market Growth & Inflation!D111`, hoy en 0) que solo cubre Norteamérica.
+- Prueba (interruptor en 1, luego restaurado): ingresos 2026E Ps436,945m (+2.3%) y valor Ps60.75 por acción (−Ps2.00). Aun así queda por encima de Barclays, porque no ajusta EAA ni Latinoamérica (Barclays marca que el efecto en EAA fue especialmente fuerte).
+- Efecto estimado de alinear 2026E con Barclays (−5.4% en ingresos): entre −Ps2 y −Ps5 por acción, porque la base más baja se arrastra a todos los años.
+
+### 3.2 Crecimiento por región contra el 2T26 en moneda constante
+
+| | Modelo 2026E (tipo de cambio constante) | 2T26 en moneda constante (Bloomberg Intelligence) |
+|---|---|---|
+| Norteamérica | +3.4% | +1.3% |
+| México | +6.1% | +4.7% |
+| EAA | +2.2% | +8.4% |
+| Latinoamérica | +9.7% | +14.1% |
+| Consolidado | +4.8% | +4.5% (guía de la empresa: crecimiento medio de un dígito) |
+
+El total coincide con la guía, pero por regiones el modelo es más optimista en Norteamérica y México y más conservador en EAA y Latinoamérica. EAA y Latinoamérica crecen por adquisiciones e integración (Bonel, Wickbold), que el pronóstico no incluye por decisión del usuario (ver `cambios-v7.md`, sección 3.5).
+
+### 3.3 Márgenes: en línea con la guía y la calle
+
+- 2026E: margen EBITDA 14.62% (+69 pb contra 13.93% en 2025). La guía elevada en julio es +70 a +120 pb, por lo que el modelo queda en el extremo bajo. Barclays 14.7%; consenso a 12 meses 14.45%.
+- Regionales 2026E: Norteamérica 9.8% (el 2T26 marcó 10.0% con EBITDA en moneda constante +12.1%), México 20.9% (2T26: 20.7%).
+- 2027E 14.50% (por el costo extra de reestructura): similar a Barclays (14.4%).
+- 2028E a 2030E sube a 14.9%, 15.2% y 15.4%, por encima de Barclays en 2028E (14.5%). Es la parte que más depende de la mejora de Norteamérica a 11%; en los reportes que revisé no apareció una proyección de ese nivel.
+
+### 3.4 Otros insumos
+
+| Insumo | Modelo | Fuente | Veredicto |
+|---|---|---|---|
+| Capex 2026E | Ps19,755m (US$1.09bn al dólar de Ps18.19) | Guía recortada a US$1.0 a 1.2bn (JPM); Barclays Ps21.9bn | En línea |
+| Capex 2027E a 2030E | 4.5% a 4.7% de ingresos | Historial 5.3% a 8.7% (2022 a 2025) | Inferior al historial; supone que pasó el pico de inversión |
+| Apalancamiento | 2.59x (con arrendamientos) | Empresa 2.5x en el 2T26 (sin IFRS 16); JPM 2.8x; Barclays 2.2x | En el rango. La fila "sin arrendamientos" del motor (2.06x) divide por EBITDA con IFRS 16, así que no es comparable con el 2.5x de la empresa |
+| Dividendo 2026E | Ps1.075 por acción | Propuesta de la asamblea; Barclays Ps1.13 | En línea |
+| Payout | 40% de la utilidad previa | Bloomberg Intelligence: Bimbo paga ~30% contra 45% de Gruma y 42% de Sigma; "asignación de capital más conservadora" | Dentro de lo razonable (2025 real: 40%) |
+| Tasa de impuestos | 33% | Barclays marca un gasto de impuestos mayor al esperado en el 2T26 | En línea |
+| Intereses 2026E | Ps14,161m | Barclays: costo financiero neto de Ps13,646m | En línea |
+| Múltiplo implícito | EV / EBITDA 2026E 6.6x; terminal 6.2x | Barclays 6.4x y ~6.5x histórico; JPM 7.0x | En línea |
+| Precio objetivo | DCF Ps62.75 | Barclays Ps75 (Ps52 a Ps85); JPM Ps66 (dic-27); `Multiples` Ps73.56 | El DCF queda por debajo de ambos |
+
+### 3.5 Euromonitor: narrativa contra las tasas del modelo
+
+| Mercado | Narrativa de Euromonitor | Modelo (2025 a 2030) | Veredicto |
+|---|---|---|---|
+| México, botanas | Valor a precios corrientes +7% anual hasta 2031; Sabritas 51%, Bimbo 22% | 7.3% anual; participación 22.4% | En línea |
+| México, sweet biscuits | Ps115,665m en 2026 (+7%); +6% anual a 2031; PepsiCo 35%, Bimbo 24% | 5.9% anual; 23.8% | En línea |
+| EE.UU., botanas | +4% anual a 2031 (US$91.7bn) | 3.4% anual | Algo conservador |
+| EE.UU., pan | Valor crece pero el volumen es plano o cae; salud y costo moldean la demanda | 3.1% anual, casi todo precio | En línea |
+| Canadá, pan | Valor "pequeño pero estable", volumen plano | ~2.8% anual | En línea |
+| España, pan | Valor limitado y volumen a la baja | ~1.5% anual | En línea |
+| Brasil, pan | Expansión "estable"; inflación de trigo moderada | Mercado +10.0% en 2026 y 8% a 9% después (2025: +4.2%) | Salto de 2026 a revisar: viene de Euromonitor, no de un supuesto del equipo |
+| Colombia, pan | Demanda estable | ~5.3% anual (Bimbo +0.10 pp de participación) | En línea |
+| Reino Unido, pan | Crece en valor constante (premiumización) | EAA +2.2% | En línea |
+| México, pan | El informe no trae una tasa explícita en el texto | 4.6% anual; participación sin cambio | Sin contraste directo |
+
+### 3.6 Escenarios (bajista, base, alcista)
+
+Primera versión (antes de acotar, 11-oct):
+
+| | Bajista | Base | Alcista |
+|---|---|---|---|
+| Valor por acción | Ps32.13 | Ps62.75 | Ps93.71 |
+| Upside contra Ps55.92 | −42.5% | +12.2% | +67.6% |
+
+Esa versión variaba tres cosas a la vez: márgenes EBITDA (±1 pp en cada región), capex (±1 pp de ventas en cada región; `Regional Assumptions` filas 112 a 130) y tasa de impuestos (±1 pp). Los ingresos eran idénticos en los tres casos. Una primera lectura mía omitió el capex; la corrección está en `cambios-v7.md`, paso 11.
+
+Versión acotada (a pedido del usuario, paso 11 de `cambios-v7.md`): márgenes ±0.5 pp, capex ±0.5 pp de ventas, crecimiento de mercado ±1 pp al año por región, impuestos ±1 pp.
+
+| | Bajista | Base | Alcista |
+|---|---|---|---|
+| Valor por acción | Ps42.30 | **Ps62.75** | Ps85.08 |
+| Upside contra Ps55.92 | −24.4% (SELL) | +12.2% (HOLD) | +52.2% (BUY) |
+| Crecimiento de ingresos 2025-30 | 3.57% | 4.57% | 5.57% |
+| Margen EBITDA 2026E / 2030E | 14.10% / 14.91% | 14.62% / 15.43% | 15.14% / 15.95% |
+| Capex / ingresos 2026E / 2030E | 4.93% / 5.26% | 4.42% / 4.74% | 3.90% / 4.22% |
+| Utilidad neta 2030E | Ps20.2bn | Ps24.8bn | Ps29.7bn |
+| Deuda neta / EBITDA 2030E | 2.04x | 1.57x | 1.14x |
+
+El alcista queda en el tope de la guía de margen de 2026E (15.14% contra 15.13%) y el bajista 53 pb por debajo del extremo bajo de la guía (14.63%). Los casos de la calle (Barclays Ps52 a Ps85; JPM Ps66) caen dentro del rango. La participación de mercado sigue fija en "Gain" en los tres casos.
+
+## 4. Conclusiones
+
+1. El mayor desajuste es el tipo de cambio de 2026 (sección 3.1): con el modelo en pesos reportados, los ingresos de 2026E están unos 5% por encima de la calle y del ritmo del 1S26. Es el único hallazgo que podría mover el valor varios pesos y cambiar la lectura de HOLD hacia una brecha mayor con la banda.
+2. Los márgenes, el capex, el dividendo, los intereses, la tasa de impuestos y el apalancamiento están dentro del rango de la guía y de los analistas. Las tasas de mercado coinciden con Euromonitor.
+3. Utilidad neta y UPA del modelo quedan 16% a 26% sobre Barclays porque parten de ingresos más altos (+5%), EBIT más alto (+9% a +14%) y menos acciones por recompras; contra el consenso a 12 meses la diferencia es ~5%.
+4. Los escenarios originales eran demasiado anchos y sin variación de ingresos; ya se acotaron (sección 3.6).
+
+## 5. Decisiones que quedan al usuario
+
+- Activar el ajuste de tipo de cambio de Norteamérica (`D111` = 1) y, si se quiere, extenderlo a EAA y Latinoamérica con sus tipos de cambio de referencia.
+- Si el reporte cita el caso de Norteamérica a 11% como supuesto del equipo, decirlo explícitamente: en los reportes revisados no apareció un margen de ese nivel (la revisión fue por búsqueda de cifras clave, no una lectura completa de cada reporte).

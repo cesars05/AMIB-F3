@@ -1,0 +1,18 @@
+---
+name: feedback-deck-format-and-images
+description: "User's preferences for the HAL/Kuwait deck - format source, images, cover, language, working style"
+metadata:
+  node_type: memory
+  type: feedback
+  originSessionId: 8c8a582d-369b-42d9-97d2-8a54607fb53e
+  modified: 2026-10-02T07:05:37.837Z
+---
+
+- The Team 9 deck's FORMAT is rejected ("no me gustó el formato que hizo el team 9, solo es referencia"); use it for content only. Format must come from the user's own templates (Aztlan equity-research decks, M&A FEMSA team deck) + Think-cell layouts for variety.
+- User places high value on images from the company/reports themselves (IR deck photos, maps, charts); use them, at native quality.
+- Cover and closing use the user's red-wave image (de-pixelated 4K version made); add white Halliburton logo and team member names on the cover.
+- User writes in Spanish; deck default language assumed English (FINA 405 + existing deck) - confirm if they want Spanish.
+- User grants broad file permission in the project folder (rename/move/organize, download extra files) and allows the local tool Cueva.exe (pdf-a-markdown) - run it per file, never on a folder holding its own outputs.
+
+**Why:** explicit user statements during the 2026-10-02 session.
+**How to apply:** keep format decisions anchored to `07_Template_Analysis/STYLE_GUIDE.md`; surface image choices from `08_Assets/ASSET_CATALOG.md`. Related: [[project-hal-kuwait-deck]].

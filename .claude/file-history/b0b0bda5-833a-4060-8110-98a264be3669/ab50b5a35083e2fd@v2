@@ -1,0 +1,145 @@
+import sys
+base = r"C:\Users\cesar\OneDrive\Documentos\Slide Construction\skill\slide-construction\scripts"
+p = base + r"\house.py"
+s = open(p, encoding="utf-8").read()
+
+
+def rep(old, new):
+    global s
+    assert old in s, old[:80]
+    s = s.replace(old, new)
+
+
+rep('''            names = {l.name: l for l in self.prs.slide_layouts}
+            self.template_layout = names.get(layout)
+            self.layouts = names''', '''            self.template_layout = self.find_layout(layout)
+            self.cover_layout = self._find_cover_layout()''')
+rep('''            self.prs = Presentation()
+            self.prs.slide_width, self.prs.slide_height = Inches(13.333), Inches(7.5)
+        self.blank''', '''            self.prs = Presentation()
+            self.prs.slide_width, self.prs.slide_height = Inches(13.333), Inches(7.5)
+            self.cover_layout = None
+        self.blank''')
+rep('''    # ---------------------------------------------------------------- slides
+    def _blank_layout(self):''', '''    # ---------------------------------------------------------------- layouts (template mode)
+    @staticmethod
+    def _title_top(layout):
+        for ph in layout.placeholders:
+            t = str(ph.placeholder_format.type)
+            if "TITLE" in t and "SUB" not in t and "CENTER" not in t and ph.top is not None:
+                return ph.top / 914400
+        return None
+
+    def find_layout(self, spec):
+        """Layout by index, or by name. Duplicate names (two 'Section Header' in M&A FEMSA) resolve to
+        the one whose title sits in the content-slide title zone (top < 1.0 in)."""
+        lays = list(self.prs.slide_layouts)
+        if isinstance(spec, int):
+            return lays[spec]
+        cands = [l for l in lays if l.name == spec]
+        if not cands:
+            return None
+        top_ok = [l for l in cands if (self._title_top(l) or 9) < 1.0]
+        return (top_ok or cands)[0]
+
+    def _find_cover_layout(self):
+        for l in self.prs.slide_layouts:
+            if l.name.lower().startswith("title"):
+                return l
+        return None
+
+    # ---------------------------------------------------------------- slides
+    def _blank_layout(self):''')
+i0 = s.index('        lay = self.layouts.get(layout)')
+i1 = s.index('        else:\n            s = self._new()\n            T = S["title"]')
+s = s[:i0] + '''        lay = (self.find_layout(layout) if layout is not None else self.template_layout) if self.template_layout else None
+        if lay is not None:  # template mode: fill the real placeholders, draw whatever has no placeholder
+            s = self._new(lay)
+            sub_done = src_done = False
+            for ph in list(s.placeholders):
+                t = str(ph.placeholder_format.type)
+                top = (ph.top or 0) / 914400
+                if "TITLE" in t and "SUB" not in t:
+                    ph.text_frame.text = title
+                elif subtitle and not sub_done and ("SUBTITLE" in t or ("BODY" in t and 0.8 <= top <= 1.35)):
+                    ph.text_frame.text = subtitle
+                    sub_done = True
+                elif source and not src_done and ("FOOTER" in t or "BODY" in t) and top > 6.5:
+                    ph.text_frame.text = source
+                    src_done = True
+                else:
+                    ph._element.getparent().remove(ph._element)
+            if subtitle and not sub_done:
+                U = S["subtitle"]
+                self.text(s, U["x"], U["y"], U["w"], U["h"], subtitle, size=U["size"], italic=U["italic"],
+                          color=U["color"], anchor="top", inset=0)
+            if source and not src_done:
+                self.source(s, source)
+''' + s[i1:]
+rep('''        S = self.S
+        s = self._new()
+        if image:
+            pic = s.shapes.add_picture(image, 0, 0, self.prs.slide_width, self.prs.slide_height)''', '''        S = self.S
+        if self.cover_layout is not None and not image:
+            return self._template_cover(title, [subtitle, date], team)
+        s = self._new()
+        if image:
+            s.shapes.add_picture(image, 0, 0, self.prs.slide_width, self.prs.slide_height)''')
+rep('''    def divider(self, title, subtitle=None, number=None):
+        S = self.S
+        s = self._new()''', '''    def _template_cover(self, title, lines, team=None):
+        """Use the template's own cover art (AZTD 'Title', FEMSA 'Title Slide Logo')."""
+        s = self._new(self.cover_layout)
+        texts = [t for t in [title] + list(lines) if t]
+        bodies = list(s.placeholders)
+        for ph, t in zip(bodies, texts):
+            ph.text_frame.text = t
+        for ph in bodies[len(texts):]:
+            ph._element.getparent().remove(ph._element)
+        if len(bodies) < len(texts):  # template without (enough) placeholders -> draw the rest
+            bold = self.S["name"] == "femsa"
+            y = 2.6
+            for k, t in enumerate(texts[len(bodies):]):
+                first = (k == 0 and not bodies)
+                self.text(s, 0.62, y, 9.5, 1.0 if first else 0.5, t, size=40 if first else 24, bold=bold and first,
+                          italic=(not first and bold), color="#FFFFFF", anchor="bottom" if first else "top")
+                y += 1.05 if first else 0.55
+        if team:
+            self.text(s, 0.62, 5.6, 6, 1.4, "\\n".join(team), size=11, italic=True, color="#FFFFFF", anchor="bottom")
+        return s
+
+    def closing(self, line=None):
+        """Closing slide = cover art with logo (+ optional one line)."""
+        if self.cover_layout is not None:
+            return self._template_cover(line or "", [])
+        s = self._new()
+        self.rect(s, 0, 0, 13.333, 7.5, fill=self.S["cover_bg"] if self.S["cover_bg"] != "#FFFFFF" else self.S["primary"])
+        if line:
+            self.text(s, 0.9, 3.0, 11, 0.9, line, size=40, color="#FFFFFF", anchor="bottom")
+        return s
+
+    def divider(self, title, subtitle=None, number=None):
+        S = self.S
+        if self.cover_layout is not None:
+            return self._template_cover(f"{number}  {title}" if number else title, [subtitle])
+        s = self._new()''')
+open(p, "w", encoding="utf-8").write(s)
+
+g = base + r"\gallery.py"
+t = open(g, encoding="utf-8").read()
+t = t.replace('''SRC = "Illustrative data - layout gallery"
+''', '''SRC = "Illustrative data - layout gallery"
+TEMPLATE = sys.argv[3] if len(sys.argv) > 3 else None
+LAYOUT = sys.argv[4] if len(sys.argv) > 4 else "General"
+if SYSTEM == "brand":  # example client-brand swap (Halliburton red) on the Aztlan grid
+    from house import make_brand_system
+    SYSTEM = make_brand_system("aztlan", primary="#8B1318", primary_dark="#630E12", tint1="#B96A73",
+                               tint2="#EAD2D2", accent="#CC0000", name="brand")
+''')
+t = t.replace('d = Deck(SYSTEM, footer_left=', 'd = Deck(SYSTEM, template=TEMPLATE, layout=LAYOUT, footer_left=')
+t = t.replace('if SYSTEM == "aztlan" else None)', 'if (SYSTEM == "aztlan" and not TEMPLATE) else None)')
+t = t.replace('if SYSTEM == "femsa" else None)', 'if d.S["name"] == "femsa" else None)')
+t = t.replace('shadow=(SYSTEM == "femsa")', 'shadow=(d.S["name"] == "femsa")')
+t = t.replace('d.save(OUT)\nprint(', 'd.closing("Thank you")\nd.save(OUT)\nprint(')
+open(g, "w", encoding="utf-8").write(t)
+print("patched")

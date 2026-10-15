@@ -1,0 +1,51 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions")
+$cm=$wb.Worksheets.Item("Consolidated Model")
+$sm=$wb.Worksheets.Item("Segment Model")
+Write-Output ("LIBRO: "+[string]$wb.Name+"   modulo de venta: '"+[string]$as.Range("J74").Text+"'")
+Write-Output ""
+$L=@{12="L";13="M";14="N";15="O";16="P";17="Q"}
+
+function AuditRows($sh,$nm,$r1,$r2){
+  Write-Output ("### "+$nm+" - formula INCONSISTENTE en la proyeccion FY2027-FY2032 ###")
+  $n=0
+  for($r=$r1;$r -le $r2;$r++){
+    $base=""
+    $bad=@()
+    foreach($c in 12,13,14,15,16,17){
+      $f=""
+      try{ $f=[string]$sh.Cells.Item($r,$c).FormulaR1C1 }catch{}
+      if($f -eq ""){ continue }
+      if($base -eq ""){ $base=$f; continue }
+      if($f -ne $base){ $bad+=([string]$L[$c]) }
+    }
+    if($bad.Count -gt 0){
+      $lab=""
+      foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$sh.Cells.Item($r,$cc).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+      if($lab.Length -gt 38){ $lab=$lab.Substring(0,38) }
+      $fa=""; try{ $fa=[string]$sh.Cells.Item($r,12).Formula }catch{}
+      $cd=17
+      foreach($k in 12,13,14,15,16,17){ if([string]$L[$k] -eq [string]$bad[0]){ $cd=$k; break } }
+      $fb=""; try{ $fb=[string]$sh.Cells.Item($r,$cd).Formula }catch{}
+      if($fa.Length -gt 66){ $fa=$fa.Substring(0,66)+".." }
+      if($fb.Length -gt 66){ $fb=$fb.Substring(0,66)+".." }
+      Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(39)+" difiere en "+($bad -join ","))
+      Write-Output ("          L : "+$fa)
+      Write-Output ("          "+$bad[0]+" : "+$fb)
+      $n++
+    }
+  }
+  if($n -eq 0){ Write-Output "  (ninguna)" }
+  Write-Output ("  total: "+$n)
+  Write-Output ""
+}
+AuditRows $sm "SEGMENT MODEL" 10 235
+AuditRows $cm "CONSOLIDATED MODEL" 10 380

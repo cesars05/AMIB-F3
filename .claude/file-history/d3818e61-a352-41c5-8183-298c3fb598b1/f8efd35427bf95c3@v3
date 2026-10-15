@@ -1,0 +1,20 @@
+---
+name: project-bimbo-market-growth-tab
+description: "How the Bimbo Financial Model (now v4) revenue/margin build works across Market Growth & Inflation, Regional Assumptions, Regional and Consolidated Model, plus editing rules"
+metadata:
+  node_type: memory
+  type: project
+  originSessionId: d3818e61-a352-41c5-8183-298c3fb598b1
+  modified: 2026-10-07T04:53:12.549Z
+---
+
+Current file: `Reporte & Presentacion/Bimbo Financial Model_v4.xlsx` (CFA Research Challenge, Bimbo). Year grid D=2018 … K=2025, L:P=2026-2030, Q=CAGR in Market Growth & Inflation (column C = 2017 in the source block).
+- Revenue = Euromonitor market growth (local currency) x Bimbo share. Share change by segment (7 segments: MX baked/snacks, US baked/snacks, Canada, EAA=Spain proxy, LatAm=Brazil proxy) comes from Regional Assumptions block "1b. Market Share by Segment" (Loss/Hold/Gain inputs, selector 0 = follow main scenario Assumptions!C4). Revenue growth spreads were set to 0 so share is the scenario lever.
+- Regional EBITDA margin, D&A % and capex % base rows are blue hardcodes (team assumptions, approved 2026-10-06); consolidated EBITDA ~14.6% in 2026.
+- Working capital: 360 days, average-balance basis (user's choice), which creates a saw-tooth in NWC/FCF.
+- Inflation rows use bread/cereal CPI series (INEGI, IBGE Panificados, INE, BLS); forecast inflation links to Euromonitor price effect.
+
+**Why:** user builds the model for the fund/CFA report and wants inputs blue, simple direct formulas, aligned year columns, and existing formatting respected.
+**How to apply:** edit through Excel COM on the open workbook (never openpyxl), back up with SaveCopyAs first, re-read row positions by label (the user edits concurrently). Never use Range.Replace with `*` or `?` in the search text: Excel treats them as wildcards and mangles formulas.
+
+Related: [[user-role]]

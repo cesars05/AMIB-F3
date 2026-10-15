@@ -1,0 +1,36 @@
+# Resumen para revisión del equipo — Aurex Capital (10-oct-2026)
+
+**Lee esto primero.** Aquí están los entregables en borrador, las decisiones que tomé por ustedes (dijeron "toma los supuestos que mejor se adapten") y lo que solo ustedes pueden resolver.
+
+## 1 · Qué hay en `entregables/`
+| Archivo | Qué es | Estado |
+|---|---|---|
+| `PF_Modelo_AurexCapital.xlsx` | Modelo con formato Icarus en verdes. Hojas requeridas por la guía: `Hoja1_Portafolio` y `Hoja2_Distribucion`. Anexos: `Summary`, `Escenarios`, `Criterios`, `Curva_J`, `1_Comparables`–`4_Rendimientos` (Monte Carlo v2) y `Fuentes`. Todas las verificaciones en OK; valores calculados con Excel. | Borrador completo |
+| `PF_Memorandum_AurexCapital.docx` | PPM resumido, 4 páginas, los 9 puntos de la guía + anexos de portafolio, salidas y riesgos. | Borrador; faltan credenciales |
+| `PF_Deck_AurexCapital.pptx` | 12 láminas + divisor + 3 de respaldo (A criterios, B cascada, C seis preguntas). La guía pide 10–12 hablables; el respaldo está permitido para preguntas. Cifras leídas del Excel. | Borrador; faltan fotos y credenciales |
+Nombres de archivo: la guía muestra `PF Deck NombreDelFondo.pptx` etc. (con espacios o guion bajo). **Confirmar con el profesor el nombre exacto antes de enviar.**
+
+## 2 · Cifras canónicas (Excel `Summary!D10:F18`; memo sec. 4 y 8; deck láminas 2, 5, 10, Respaldo B)
+Base: recupera US$192.0M · 2.34x bruto sobre invertido · LPs US$192.0M · carry US$0 · **MOIC neto 1.92x · TIR neta 14.5%**. Bajo: 0.96x, −0.9%. Alto: 2.16x, 17.8%, carry US$24.1M. Una sola TIR en voz alta: la TIR neta con calendario real, en USD. La TIR simplificada de clase queda solo en `Hoja2`, como piso.
+
+## 3 · Decisiones y supuestos que tomé (cámbienlos si no están de acuerdo)
+1. **Modelo canónico:** ni v1 ni v2. v1 (supuestos del equipo, 3.06x) no tenía respaldo; v2 (Monte Carlo) usa caídas de acciones de EE.UU. y no mide salidas de empresas mexicanas. El caso base ahora usa una regla por empresa: (1+crecimiento EBITDA)^años × (1−dilución) × (múltiplo de salida ÷ entrada ≤ 1.0x). Los crecimientos, diluciones y razones son **supuestos míos**, ajustables en azul en `Escenarios`. v1 y v2 quedan como sensibilidades.
+2. **Portafolio:** Verdigris (California, sin operación en México; no elegible FICAP) se sustituyó por **BioEsol**. Uriel pasó a su filial mexicana **BRM** como la apuesta que fracasa (0.25x). Tickets re-dimensionados a lo que sustentan los dossiers, manteniendo US$82M invertidos: Pireos 15, XC 14, BioEsol 14, Quartux 11, Niko 9, FAZT 9, S2G 8, BRM 2.
+3. **Caso de inversión del deck: Pireos Power** (no Niko). Valuación pre-money US$40M, ticket US$10M por 20%, pool 10%: **supuestos del equipo** (ninguna valuación es pública); Pireos no participó.
+4. **Vehículo:** fideicomiso privado de capital de riesgo (LISR 192–193). Las AFOREs no pueden entrar; se dice explícitamente. Ticket mínimo por LP US$1M, primer cierre desde US$40M y aviso de llamadas de 10 días hábiles son **propuestas mías** sin respaldo del equipo.
+5. **Carry en caso base = 0** (hace falta ≈2.16x bruto sobre comprometido): se presenta como alineación, no como falla.
+6. **Parámetros confirmados por ustedes:** US$100M, México, crecimiento, tickets US$2–10M. La exclusión (v) del D2 ya dice $2–10M. La tesis v3 tiene 193 caracteres.
+7. **Datos:** 2026 de fuentes oficiales cuando existen (AMEXCAP 1S-2026, DOF/PLADESE, Banxico, BMV); lo anterior va etiquetado con año. Dossiers y URL en `../fuentes_investigacion/`.
+
+## 4 · Lo que ustedes deben resolver (no puedo yo)
+- **Credenciales verificables y fotos de los 6 integrantes** (memo sec. 7 y deck lámina 9 llevan `[PENDIENTE]`); **foto del equipo** (hay espacio en la portada).
+- **Conflicto de interés:** D2 dice que un familiar es dueño de una empresa de infraestructura energética. El memo lo declara con abstención; confirmar que ninguna de las 8 empresas es esa y quién es el integrante.
+- **Con el profesor:** fecha del deck y la defensa (la guía repite el 11-oct; D5/clase hablan de 14–15 oct), si un equipo de 6 es válido, nombres exactos de archivo.
+- **Validaciones con abogado/fiscalista** (lista en `../fuentes_investigacion/estructura_legal_fiscal_terminos.md` §G): vigencia de arts. 192–193 LISR y RMF 2026, trato fiscal del carry y la renuncia de comisión, IVA, si los derechos del fideicomiso son valores, costos de formación (el gasto de US$1.85M es solo supuesto).
+- **Enviar:** un solo correo del líder a frincon@tec.mx; yo no envío nada.
+
+## 5 · Qué NO se pudo verificar (aparece como "n.d." o condición, no como hecho)
+Ninguna valuación pública de las 8 empresas; ingresos/EBITDA; estructura exacta de la inversión de AINDA en Quartux; fundadores de Quartux, FAZT y XC; experiencia energética de los fundadores de BioEsol; razón social de S2G ("LLC"); múltiplos de transacciones C&I en México; salidas de empresas pequeñas de energía en 2025–2026; "energía 24% H1-2025" (no aparece en ninguna fuente); umbral de la CUF (80% vs 50%); términos de Ignia/Adobe (solo de clase).
+
+## 6 · Cómo regenerar
+Scripts en `../modelo_financiero/_builder/` (`build_v3.py` + `model_config.py` para el Excel; `build_memo.py`; `build_deck.py`). Se corren con Python 3 y Excel/Word/PowerPoint instalados; el deck lee las cifras del Excel entregado.

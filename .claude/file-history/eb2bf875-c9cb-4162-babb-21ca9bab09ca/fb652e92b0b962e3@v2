@@ -1,0 +1,126 @@
+$ErrorActionPreference="Stop"
+$xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb=$null
+foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc.*v3"){ $wb=$w } }
+if($wb -eq $null){ throw "ABORTO: no encuentro v3" }
+$pw=$wb.Worksheets.Item("Payment Waterfall")
+if([string]$pw.Range("C53").Text -ne "Allocation"){ throw "ABORTO: C53 cambio" }
+$NAVY=5384228; $WHITE=16777215; $GREY=8421504; $BLUE=16711680
+$CENTER=-4108
+$FN='#,##0;(#,##0);"-"'
+$FP='0.0%;(0.0%);"-"'
+$FX='0.00"x"'
+$xl.ScreenUpdating=$false
+function Hdr($rng,$txt){
+  $pw.Range($rng).Interior.Color=$NAVY
+  $pw.Range($rng).Font.Color=$WHITE
+  $pw.Range($rng).Font.Bold=$true
+  $pw.Range($rng.Split(':')[0]).Value2=$txt
+}
+$COLS=@("E","F","G","H","I","J")
+
+# ================= F) REPARTO ANUAL =================
+Hdr "C65:J65" "Annual Allocation (GBP 000s)"
+$pw.Range("C66").Value2="Applied to Tiers 1 and 2"
+$pw.Range("C67").Value2="Excess over Tiers 1 and 2"
+$pw.Range("C68").Value2="(-) GP Catch-up"
+$pw.Range("C69").Value2="Residual to 80 / 20 Split"
+$pw.Range("C70").Value2="Distribution to LP"
+$pw.Range("C71").Value2="Distribution to GP"
+foreach($i in 0,1,2,3,4,5){
+  $x=$COLS[$i]
+  $pw.Range($x+"66").Formula="=-"+$x+"40"
+  $pw.Range($x+"67").Formula="=+"+$x+"34-"+$x+"66"
+  if($i -eq 0){
+    $pw.Range($x+"68").Formula="=+MIN("+$x+"67,`$D`$48)"
+  } else {
+    $prev=$COLS[$i-1]
+    $pw.Range($x+"68").Formula="=+MIN("+$x+"67,MAX(`$D`$48-SUM(`$E68:"+$prev+"68),0))"
+  }
+  $pw.Range($x+"69").Formula="=+"+$x+"67-"+$x+"68"
+  $pw.Range($x+"70").Formula="=+"+$x+"66*`$D`$12+"+$x+"69*(1-`$D`$16)"
+  $pw.Range($x+"71").Formula="=+"+$x+"66*`$D`$11+"+$x+"68+"+$x+"69*`$D`$16"
+}
+foreach($r in 66,67,68,69,70,71){ $pw.Range("K"+[string]$r).Formula="=+SUM(E"+[string]$r+":J"+[string]$r+")" }
+$pw.Range("E66:K71").NumberFormat=$FN
+$pw.Range("E66:K71").HorizontalAlignment=$CENTER
+$pw.Range("C70:C71").Font.Bold=$true
+$pw.Range("E70:K71").Font.Bold=$true
+
+# ================= G) RETORNO AL LP =================
+Hdr "C74:J74" "Returns to the Limited Partner"
+$pw.Range("C75").Value2="LP Capital Invested"
+$pw.Range("D75").Formula="=+D14"
+$pw.Range("C76").Value2="LP Distributions Received"
+$pw.Range("D76").Formula="=+K70"
+$pw.Range("C77").Value2="LP Net Money Multiple"
+$pw.Range("D77").Formula="=+IFERROR(D76/D75,0)"
+$pw.Range("C78").Value2="LP Net IRR"
+$pw.Range("D78").Formula='=+IFERROR(XIRR(D80:J80,$D$26:$J$26),0)'
+$pw.Range("C79").Value2="Target Net IRR to Investors"
+$pw.Range("D79").Value2=[double]0.18
+$pw.Range("C80").Value2="LP Net Cash Flow"
+$pw.Range("D80").Formula="=-D14"
+foreach($i in 0,1,2,3,4,5){ $x=$COLS[$i]; $pw.Range($x+"80").Formula="=+"+$x+"70" }
+$pw.Range("C81").Value2="Meets the target?"
+$pw.Range("D81").Formula='=+IF(D78>=D79,"YES  -  "&TEXT(D78-D79,"0.0%")&" above target","NO  -  "&TEXT(D79-D78,"0.0%")&" below target")'
+$pw.Range("D75:D76").NumberFormat=$FN
+$pw.Range("D77").NumberFormat=$FX
+$pw.Range("D78:D79").NumberFormat=$FP
+$pw.Range("D80:J80").NumberFormat=$FN
+$pw.Range("D75:J81").HorizontalAlignment=$CENTER
+$pw.Range("D81").HorizontalAlignment=-4131
+$pw.Range("C77:C78").Font.Bold=$true
+$pw.Range("D77:D78").Font.Bold=$true
+$pw.Range("D79").Font.Color=$BLUE
+$pw.Range("C80:J80").Font.Color=$GREY
+
+# ================= H) ECONOMIA PARA AZTLAN =================
+Hdr "C84:J84" "Economics to Aztlan (USD)"
+$pw.Range("C85").Value2="Management Fees over the Term"
+$pw.Range("D85").Formula="=-K32*D20*1000"
+$pw.Range("C86").Value2="(-) Fund Operating Costs"
+$pw.Range("C87").Value2="(-) Setup and Legal Execution Costs"
+$pw.Range("C88").Value2="(-) Iguala Memo Cantu"
+$pw.Range("D86").Formula="=+K33*D20*1000"
+$pw.Range("D87").Formula="=-D22"
+$pw.Range("D88").Formula="=-15000*D19"
+$pw.Range("C89").Value2="Net Management Fee Economics"
+$pw.Range("D89").Formula="=+SUM(D85:D88)"
+$pw.Range("C90").Value2="(+) Carried Interest"
+$pw.Range("D90").Formula="=+E61*D20*1000"
+$pw.Range("C91").Value2="Net Proceeds to Aztlan"
+$pw.Range("D91").Formula="=+D89+D90"
+$pw.Range("C93").Value2="Memo:  GP capital invested"
+$pw.Range("D93").Formula="=-D13*D20*1000"
+$pw.Range("C94").Value2="Memo:  GP distributions received"
+$pw.Range("D94").Formula="=+E59*D20*1000"
+$pw.Range("C95").Value2="Memo:  Aztlan total, fees plus carry plus capital"
+$pw.Range("D95").Formula="=+D89+D93+D94"
+$pw.Range("D85:D95").NumberFormat=$FN
+$pw.Range("D85:D95").HorizontalAlignment=$CENTER
+$pw.Range("C89").Font.Bold=$true
+$pw.Range("D89").Font.Bold=$true
+$pw.Range("C91").Font.Bold=$true
+$pw.Range("D91").Font.Bold=$true
+$pw.Range("D91").Borders.Item(8).LineStyle=1
+$pw.Range("C93:D95").Font.Color=$GREY
+$pw.Range("C97").Value2="Waterfall runs live off Expected Returns - it shows whichever case is loaded there. Management fee charged on invested capital; the Terms specify market value, which would be higher."
+$pw.Range("C97").Font.Size=9
+$pw.Range("C97").Font.Italic=$true
+$pw.Range("C97").Font.Color=$GREY
+
+$xl.ScreenUpdating=$true
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output "secciones F, G y H creadas"
+Write-Output ""
+for($r=65;$r -le 95;$r++){
+  $lab=[string]$pw.Cells.Item($r,3).Text
+  $v=""
+  foreach($c in 4,5,6,7,8,9,10,11){ $v+=([string]$pw.Cells.Item($r,$c).Text).PadLeft(12) }
+  if(($lab+$v).Trim() -ne ""){
+    if($lab.Length -gt 46){ $lab=$lab.Substring(0,46) }
+    Write-Output ("r"+([string]$r).PadRight(4)+$lab.PadRight(47)+$v)
+  }
+}

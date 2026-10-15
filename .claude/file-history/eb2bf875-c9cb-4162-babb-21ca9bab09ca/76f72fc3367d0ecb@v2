@@ -1,0 +1,48 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 40;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 1200 } }; return "??" }
+$xl=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); break }catch{ Start-Sleep -Milliseconds 900 } }
+$wb=$null; foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("Segment Beta") }
+
+# limpiar celdas de prueba
+T { $s.Range("C60:H66").Clear() }
+Write-Output "  celdas de prueba eliminadas"
+
+# corregir el encabezado: TR.WACCBeta == TR.BetaFiveYear, no es de 3 anos
+T { $s.Cells.Item(11,10).Value2="Beta 5 Year" }
+Write-Output ("  encabezado col 10 -> "+[string](T { $s.Cells.Item(11,10).Text }))
+
+# nota extra sobre la ventana de la beta
+T { $s.Cells.Item(46,4).Value2="(7)  Beta is LSEG TR.WACCBeta, which returns the same value as TR.BetaFiveYear - a 5-year window, not 3-year.  Genuit's 2.22 is the set's highest and, with only three peers, sets the Water Management median on its own." }
+T { $s.Range("D46").Font.Name="Arial" }
+T { $s.Range("D46").Font.Size=9 }
+T { $s.Range("D46").Font.Italic=$true }
+T { $s.Range("D46").Font.Color=10921638 }
+T { $s.Rows.Item(46).RowHeight=15 }
+
+T { $xl.Calculate() }
+Start-Sleep -Seconds 5
+Write-Output ""
+Write-Output "================ TABLA FINAL ================"
+Write-Output ("      "+"RIC".PadRight(9)+"Company / Section".PadRight(42)+"MktCap".PadLeft(12)+"D/E".PadLeft(9)+"Beta".PadLeft(8)+"BetaU".PadLeft(8)+"BetaRe".PadLeft(9)+"Tax".PadLeft(9))
+for($r=12;$r -le 29;$r++){
+  $ric=[string](T { $s.Cells.Item($r,3).Text }); $nm=[string](T { $s.Cells.Item($r,4).Text })
+  if(($ric+$nm).Trim() -eq ""){ Write-Output ""; continue }
+  if($nm.Length -gt 41){ $nm=$nm.Substring(0,41) }
+  $line="   "+$ric.PadRight(9)+$nm.PadRight(42)
+  foreach($c in 5,9,10,11,12,13){ $line+=([string](T { $s.Cells.Item($r,$c).Text })).PadLeft(9) }
+  Write-Output ("r"+([string]$r).PadRight(3)+$line)
+}
+Write-Output ""
+Write-Output "================ RESUMEN ================"
+for($r=32;$r -le 37;$r++){
+  $line=([string](T { $s.Cells.Item($r,4).Text })).PadRight(40)
+  foreach($c in 5,6,7){ $line+=([string](T { $s.Cells.Item($r,$c).Text })).PadLeft(14) }
+  $line+="   "+[string](T { $s.Cells.Item($r,8).Text })
+  Write-Output ("r"+([string]$r).PadRight(3)+" "+$line)
+}
+$e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+Write-Output ("`n  errores en la hoja: "+$e)
+T { $wb.Save() }
+Write-Output "guardado"

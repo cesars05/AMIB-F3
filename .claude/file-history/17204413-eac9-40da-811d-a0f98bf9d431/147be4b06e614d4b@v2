@@ -1,0 +1,57 @@
+"""Enumera los sourceCode reales del feed, con volumen y ejemplo."""
+import sys, collections, warnings
+warnings.filterwarnings("ignore")
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+import lseg.data as ld
+from lseg.data import news
+
+ld.open_session()
+
+CONSULTAS = [
+    # macro y politica monetaria
+    '"Federal Reserve" AND Language:LEN',
+    '"interest rates" AND Language:LEN',
+    '"European Central Bank" AND Language:LEN',
+    'inflation AND Language:LEN',
+    '"jobs report" AND Language:LEN',
+    # mercados
+    '"stock market" AND Language:LEN',
+    'Treasury AND yields AND Language:LEN',
+    'oil AND OPEC AND Language:LEN',
+    # empresas grandes
+    'R:NVDA.OQ AND Language:LEN',
+    'R:AAPL.OQ AND Language:LEN',
+    'R:MSFT.OQ AND Language:LEN',
+    'R:TSM.N AND Language:LEN',
+    # sectores y temas
+    'semiconductor AND Language:LEN',
+    '"data center" AND Language:LEN',
+    'merger AND acquisition AND Language:LEN',
+    # mexico
+    'Mexico AND Language:LEN',
+    'Banxico AND Language:LEN',
+]
+
+cuenta = collections.Counter()
+ejemplo = {}
+for q in CONSULTAS:
+    try:
+        h = news.get_headlines(q, count=100)
+        for _, r in h.iterrows():
+            sc = str(r.get("sourceCode", "?"))
+            cuenta[sc] += 1
+            if sc not in ejemplo:
+                ejemplo[sc] = str(r.get("headline", ""))[:96]
+        print(f"  ok  {q[:52]:54s} {len(h):4d}")
+    except Exception as e:
+        print(f"  --  {q[:52]:54s} {str(e)[:60]}")
+
+print(f"\n{len(cuenta)} fuentes distintas, {sum(cuenta.values())} titulares\n")
+print(f"{'sourceCode':16s} {'n':>5s}  ejemplo")
+print("-" * 130)
+for sc, n in cuenta.most_common():
+    print(f"{sc:16s} {n:5d}  {ejemplo[sc]}")
+ld.close_session()

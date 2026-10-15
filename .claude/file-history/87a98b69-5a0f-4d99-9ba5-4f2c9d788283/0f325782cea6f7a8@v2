@@ -1,0 +1,92 @@
+T = {}
+T[47] = """Title: Long-term vision of the Fuso Chemical Group
+Company motto: "Limitless progress and creation".
+Management creed: 1. Value trust and put reliability first. 2. Contribute to the nation and society through technology. 3. Build prosperity for employees through the company's success.
+Long-term vision:
+ - Evolve as a global niche-top company
+ - Support the future with FUSO technology
+ - Keep taking on challenges toward new business creation
+ - Deliver "I am glad I met FUSO"."""
+T[48] = """Title: 1. Previous medium-term plan, "FUSO VISION 2025"
+Headline: The previous plan broadly achieved its operating profit target.
+FY2025 results summary (FY ended March 2026):
+ - Operating profit: 188 (plan 190), 100 million yen. Chart bars: FY2020 96; FY2025 actual 188, initial plan 140, revised plan 190.
+ - Net sales: 769 (plan 850), 100 million yen; grew substantially.
+ - Operating profit before depreciation: 297 (plan 300), 100 million yen.
+ - Overseas sales ratio: 55.1% (plan 50%)."""
+T[49] = """Title: 2. New medium-term management plan, overview. "Next Growth 2030" (飛躍2030), plan years FY2026 to FY2030
+Life Science business strategy: strengthen global collaboration; maintain and strengthen stable supply and quality assurance; strengthen core competence (develop new fields); strengthen research and marketing measures.
+Electronic Materials business strategy: stabilize supply and quality; respond to leading-edge requirements; new developments leveraging core technologies; strengthen the foundation.
+Production division: strengthen the stable production system; improve productivity; earn customer trust; strengthen human capital value.
+Four value drivers:
+ - Raise market value: achieve high CAGR; ROIC-based management.
+ - Raise human capital value: execute a talent strategy linked to the plan; raise engagement, etc.
+ - Raise trust value: new Corporate Value Enhancement Committee to drive and monitor progress; executive compensation design linked to the plan.
+ - Raise sustainable value: coexistence with local communities; GHG reduction."""
+T[50] = """Title: 2. New medium-term management plan: FY2030 consolidated targets (unit: 100 million yen)
+Net sales: FY2025 769 -> FY2030 target 1,200 (CAGR 9.3%)
+Operating profit: FY2025 188 -> FY2030 target 360 (CAGR 13.8%)
+Operating profit before depreciation: FY2025 297 -> FY2030 target 567 (CAGR 13.7%)
+Exchange rate assumed in the plan: 1 US dollar = 150 yen.
+ - Expand sales scale by executing growth strategy (more than 1.5 times in five years)
+ - Set an operating margin of 30% as the company-wide goal (operating profit roughly doubles in five years)
+ - Deliver growth and earnings through stable supply, quality and supply responsibility"""
+T[51] = """Title: 2. New medium-term plan: financial targets, non-financial targets, KGI/KPI
+FY2030 KGI: net sales 120.0 billion yen; operating profit 36.0 billion yen; operating profit before depreciation 56.7 billion yen.
+Market value: net sales CAGR 9% or more; ROIC 13% or more; shareholder returns: continue progressive dividends, returns of 20 billion yen or more.
+Human capital value: engagement score up 10% vs FY2025; average annual income up 30% or more vs FY2025.
+Trust value: monitoring system run by the Corporate Value Enhancement Committee.
+Sustainable value: set GHG reduction targets; obtain SBT certification (by 2028).
+All four value improvements lead to achieving the long-term vision."""
+T[52] = """Title: 2. New medium-term plan: major capital investment plan
+Timeline FY2026 to FY2030 (company fiscal years; FY2026 = April 2026 to March 2027):
+ Life Science: Osaka plant, office building and upgrade investment through 2028.
+ R&D: Higashi-Osaka Laboratory (tentative name), under planning.
+ Electronic Materials: Kyoto site, ultra-high-purity colloidal silica, through February 2029, planned investment of 40 billion yen. Kashima site: quality control building through September 2027; upgrade and environmental investments carried out in a planned way.
+ Head office and offices: Tokyo head office relocation, under planning."""
+T[53] = """Title: 3. Growth strategy of the Life Science business
+ - Strengthen global collaboration: establish the FUSO brand globally through integrated operation of the three bases in China, the US and Thailand with Japan.
+ - Strengthen research and marketing measures.
+ - Strengthen core competence: expand sales of FFA products and roll out new food additive formulations globally.
+ - Maintain and strengthen stable supply and quality assurance.
+Performance targets (100 million yen), FY2025 -> FY2030 target:
+ Net sales: 354 -> 430 (CAGR 4.0%)
+ Operating profit: 53 -> 75 (CAGR 7.2%)
+ Operating profit before depreciation: 69 -> 95 (CAGR 6.5%)"""
+T[54] = """Title: 4. Growth strategy of the Electronic Materials business
+ - Stabilize supply and quality: early start-up of the expanded facilities and execution of the next investment; business continuity (BCP) response; make critical processes and the supply chain more resilient.
+ - Respond to leading-edge requirements.
+ - New developments leveraging core technologies.
+ - Strengthen the foundation.
+Performance targets (100 million yen), FY2025 -> FY2030 target:
+ Net sales: 415 -> 770 (CAGR 13.2%)
+ Operating profit: 159 -> 320 (CAGR 15.0%)
+ Operating profit before depreciation: 250 -> 505 (CAGR 15.1%)"""
+T[55] = """Title: 5. Management conscious of the cost of capital and share price
+Current situation:
+ - Market valuation: P/B 2.5x.
+ - Capital efficiency: ROE is above the cost of shareholders' equity; ROIC maintained above 10%.
+ - Actions in the previous plan period: reduced cross-held shares (listed issues from 25 to 1); share buybacks and a stock split.
+Approach:
+ - Focus on early start-up and monetization of completed investments (raise utilization of investments made in the previous plan).
+ - Start building a system that uses ROIC in management decisions (embed capital-efficiency-minded decisions in the organization).
+ - Keep pursuing both sales growth and capital efficiency (balance profitability and invested capital).
+ - Aim for ROIC of 13%."""
+T[56] = """Title: 6. Cash allocation and shareholder returns
+Cash in: operating cash flow of about 164.0 billion yen over the plan period.
+Cash out (in order of priority): growth investment (additional growth investment, Kyoto site capital investment, R&D), then strengthening and renewal investment in existing businesses, debt repayment, shareholder returns.
+Cash allocation: growth investment is given first priority, about 100.0 billion yen in total, including the 40.0 billion yen Kyoto investment and the new Higashi-Osaka R&D base.
+Shareholder return policy: continue the progressive dividend approach; about 20.0 billion yen of returns assumed over the plan period as a guide; additional returns will be considered flexibly.
+Note: about 17.0 billion yen of borrowings are scheduled to be repaid within the plan period."""
+T[57] = """Title: 7. Talent strategy supporting execution of the medium-term plan
+Center: raise human capital value.
+ - Cultivate well-being: support autonomous career development; improve trust in evaluations; etc.
+ - Fill the workforce needed for growth and leaps: focus placement on growth fields; actively invest in talent development; etc.
+ - Produce people who lead sustainable growth and innovation: develop next-generation leaders; highly specialized and global talent."""
+T[58] = """Title: 8. Sustainable value measures in the new medium-term plan
+Aim to obtain SBT (Science Based Targets) certification by FY2028.
+Roadmap: 2026: GHG emissions calculated through Scope 3 (completed during the previous plan period). 2028: set emission reduction targets; obtain SBT certification. 2030: expand response to Scope 3 reductions.
+Note: reduction actions will start step by step with the company's own emissions (Scope 1 and 2)."""
+T[59] = """Section divider: V. Q&A"""
+T[60] = """Closing slide: Thank you very much for joining us today."""
+T[61] = """Blank closing page (page number 61 only)."""

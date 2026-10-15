@@ -1,0 +1,42 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t  = $xl.Workbooks.Item('20260922_SETSA Transportes.xlsx')
+$m  = $t.Worksheets.Item('Modelo SETSA')
+function Find-In($ws, [string]$col, [string]$needle, [int]$from = 1, [switch]$exact) {
+    $v = $ws.Range("$($col)1:$($col)450").Value2
+    for ($r = $from; $r -le 450; $r++) {
+        $s = [string]$v[$r, 1]
+        if ($exact) { if ($s -ceq $needle) { return $r } } elseif ($s.Contains($needle)) { return $r }
+    }
+    throw "No encontrado: $needle"
+}
+# 1) restaurar el subtítulo 'Resumen por acreedor'
+$rTot = Find-In $m 'C' 'Total deuda financiera'
+$rBan = Find-In $m 'C' 'Banorte' ($rTot + 1) -exact
+if ([string]$m.Cells.Item($rBan - 1, 3).Value2 -ne 'Resumen por acreedor') {
+    $m.Rows.Item($rBan).Insert() | Out-Null
+    $m.Rows.Item($rBan + 1).Copy($m.Rows.Item($rBan)) | Out-Null
+    $m.Range("D$($rBan):K$($rBan)").ClearContents() | Out-Null
+    $m.Cells.Item($rBan, 3).Value2 = 'Resumen por acreedor'
+    $m.Cells.Item($rBan, 3).Font.Bold = $true; $m.Cells.Item($rBan, 3).Font.Italic = $false
+    "subtitulo restaurado en fila $rBan"
+}
+# 2) 360 fijo: fila exacta de 'Días por año'
+$rDays = Find-In $m 'C' '(convenci'
+"fila dias: $rDays = " + $m.Cells.Item($rDays,3).Value2 + " | " + $m.Cells.Item($rDays,4).Text
+$ref = "`$D`$$rDays"; $n = 0
+foreach ($ws in $t.Worksheets) { foreach ($c in $ws.UsedRange.Cells) { $f = [string]$c.Formula; if ($f.Contains($ref)) { $c.Formula = $f.Replace($ref, '360'); $n++ } } }
+"formulas con 360 fijo: $n"
+$m.Rows.Item($rDays).Delete() | Out-Null
+$xl.CalculateFull()
+$err = 0
+foreach ($ws in $t.Worksheets) { foreach ($c in $ws.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $err++; "ERR " + $ws.Name + "!" + $c.Address($false,$false) + " " + $c.Formula } } }
+"errores=$err"
+$rSup = Find-In $m 'C' 'Supuestos' -exact
+for ($r = $rSup; $r -le $rSup + 4; $r++) { "$r " + $m.Cells.Item($r,3).Value2 + " | " + $m.Cells.Item($r,4).Text }
+$rD = Find-In $m 'C' 'DSO: d'; $rP = Find-In $m 'C' 'DPO: d'
+"DSO H: " + $m.Range("H$rD").Formula + " = " + $m.Range("H$rD").Text
+"DPO H: " + $m.Range("H$rP").Formula + " = " + $m.Range("H$rP").Text
+$rR = Find-In $m 'C' 'Resumen por acreedor'
+for ($r = $rR - 2; $r -le $rR + 4; $r++) { "$r " + $m.Cells.Item($r,3).Value2 + " | " + $m.Range("F$r").Text }
+$t.Save(); "guardado=" + $t.Saved

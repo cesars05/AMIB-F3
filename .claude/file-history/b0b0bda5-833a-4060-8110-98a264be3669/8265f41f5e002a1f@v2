@@ -1,0 +1,52 @@
+"""Ejemplo: la receta 'cadena de proceso con foco' (KLA s7) adaptada a otro tema -
+cómo fluye el efectivo de FEMSA desde la tienda hasta el accionista. Datos ilustrativos."""
+import sys
+sys.path.insert(0, r"C:\Users\cesar\OneDrive\Documentos\Slide Construction\skill\slide-construction\scripts")
+from house import Deck
+
+T = r"C:\Users\cesar\OneDrive\Documentos\Slide Construction\06_Templates\M&A FEMSA.pptx"
+d = Deck("femsa", template=T, layout="Section Header")
+S = d.S
+X0, W = 0.667, 12.0
+
+s = d.content_slide("Del Ticket en Tienda al Accionista",
+                    "La asignación de capital decide cuánto flujo regresa a la operación y cuánto al accionista",
+                    source="Ilustrativo; estructura basada en reportes anuales de FEMSA")
+
+# 1) Intro (igual que KLA: una línea que dice por qué importa la cadena)
+d.text(s, X0, 1.42, W, 0.45, "- La **holding no genera efectivo propio**: depende de lo que suben sus negocios; por eso la "
+                             "**decisión de asignación** ocurre en un solo punto de la cadena.", size=12)
+
+# 2) Cadena adaptada: 7 pasos (KLA tenía 8), entrada distinta, foco en otra parte de la cadena
+y = 2.45
+b = d.process_chain(s, X0, y, W,
+                    [("OXXO y Proximidad", "input"), ("Ventas", "neutral"), ("EBITDA", "neutral"),
+                     ("Flujo Libre", "focus"), ("Holding FEMSA", "focus"), ("Dividendos y Recompras", "focus"),
+                     ("Accionistas", "end")],
+                    focus=(3, 5), focus_label="Asignación de Capital",
+                    feedback=[(2, 0)],                       # capex: EBITDA reinvertido en nuevas tiendas
+                    row2=[("Coca-Cola FEMSA", "input"), ("Dividendo ~47%", "neutral")], row_gap=0.45)
+# etiqueta del loop de reinversión (nuevo respecto a KLA)
+fx = b[1][0] + 0.15
+d.text(s, fx, y + 0.80, 1.6, 0.22, "Capex: nuevas tiendas", size=9, italic=True, color=S["primary_dark"], inset=0)
+# flecha nueva: el dividendo de KOF sube a la holding (otra fuente de efectivo, segunda fila)
+r = b["r2_1"]
+hx = b[4][0] + b[4][2] * 0.45
+ry = r[1] + r[3] / 2
+d.line(s, r[0] + r[2] + 0.02, ry, hx, ry, color=S["primary_dark"], width=2.0)
+d.line(s, hx, ry, hx, y + 0.78, color=S["primary_dark"], width=2.0, arrow=True)
+d.text(s, hx + 0.08, ry - 0.27, 2.2, 0.22, "Dividendo de subsidiaria", size=9, italic=True, color=S["primary_dark"], inset=0)
+
+# 3) Tarjetas de detalle: 3 en lugar de 2 (una por eslabón del foco)
+cw, gap = 3.75, 0.375
+for i, (t, body) in enumerate([
+        ("Operación", "**Cada tienda nueva consume capex** antes de generar flujo: la reinversión es la "
+                      "**primera llamada** sobre el EBITDA."),
+        ("Holding", "**Concentra el flujo** de OXXO y el dividendo de KOF; aquí se decide "
+                    "**cuánta deuda tomar** y cuánto distribuir."),
+        ("Accionista", "Recibe el excedente vía **dividendo ordinario, extraordinario o recompra**; "
+                       "la mezcla define el **retorno total**.")]):
+    d.detail_card(s, X0 + i * (cw + gap), 4.85, cw, t, body, h_body=1.15, size=11)
+
+d.save(r"C:\Users\cesar\OneDrive\Documentos\Slide Construction\skill\_test\ejemplo_adaptado.pptx")
+print("ok")

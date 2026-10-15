@@ -1,0 +1,120 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 25;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 1000 } else { throw } } }; throw "Excel ocupado" }
+$xl=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); break }catch{ Start-Sleep -Milliseconds 900 } }
+$wb=$null; foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("Segment Beta") }
+$xl.Calculation=-4135
+$NAVY=5384228; $GREY=15921906; $WHITE=16777215; $LGREY=10921638; $Q2=[char]34
+
+# ---------- encabezados de seccion ----------
+$secs=@{14="Water Management";26="Building Envelope";34="Housebuilding Products"}
+foreach($r in $secs.Keys){
+  T { $s.Cells.Item($r,4).Value2=$secs[$r] }
+  T { $s.Range("C"+$r+":N"+$r).Font.Bold=$true }
+  T { $s.Range("C"+$r+":N"+$r).Font.Color=$NAVY }
+  T { $s.Range("C"+$r+":N"+$r).Font.Size=10 }
+  T { $s.Range("C"+$r+":N"+$r).Font.Name="Arial" }
+  T { $s.Rows.Item($r).RowHeight=20 }
+}
+
+# ---------- filas de promedio ----------
+$meds=@(@(24,15,23,"Average - Water Management"),@(32,27,31,"Average - Building Envelope"),@(41,35,40,"Average - Housebuilding Products"))
+foreach($m in $meds){
+  $r=$m[0]; $a=$m[1]; $b=$m[2]
+  T { $s.Cells.Item($r,4).Value2=$m[3] }
+  foreach($c in 9,10,11,13){
+    $cl=[char](64+$c)
+    T { $s.Cells.Item($r,$c).Formula=("=AVERAGE("+$cl+$a+":"+$cl+$b+")") }
+  }
+  T { $s.Cells.Item($r,12).Formula=("=+IFERROR(K"+$r+"*(1+(1-`$M`$12)*`$I`$12),"+$Q2+$Q2+")") }
+  T { $s.Range("C"+$r+":N"+$r).Font.Bold=$true }
+  T { $s.Range("C"+$r+":N"+$r).Font.Color=0 }
+  T { $s.Range("C"+$r+":N"+$r).Font.Size=10 }
+  T { $s.Range("C"+$r+":N"+$r).Font.Name="Arial" }
+  T { $s.Range("C"+$r+":M"+$r).Interior.Color=$GREY }
+  T { $s.Rows.Item($r).RowHeight=20 }
+  foreach($c in 9,10,11,12,13){ T { $s.Cells.Item($r,$c).NumberFormat=[string]$s.Cells.Item(15,$c).NumberFormat } }
+}
+
+# ---------- resumen ----------
+T { $s.Cells.Item(43,4).Value2="Segment Cost of Equity" }
+T { $s.Range("C43:H43").Interior.Color=$NAVY }
+T { $s.Range("C43:H43").Font.Color=$WHITE }
+T { $s.Range("C43:H43").Font.Bold=$true }
+T { $s.Range("C43:H43").Font.Size=11 }
+T { $s.Range("C43:H43").Font.Name="Arial" }
+T { $s.Rows.Item(43).RowHeight=24 }
+$hd=@{4="Segment";5="Unlevered Beta";6="Re-levered Beta";7="Cost of Equity (Ke)";8="Beta source"}
+foreach($c in $hd.Keys){
+  T { $s.Cells.Item(44,$c).Value2=$hd[$c] }
+  T { $s.Cells.Item(44,$c).Font.Bold=$true }
+  T { $s.Cells.Item(44,$c).Font.Name="Arial" }
+  T { $s.Cells.Item(44,$c).Font.Size=10 }
+  T { $s.Cells.Item(44,$c).Interior.Color=$GREY }
+  if($c -ge 5){ T { $s.Cells.Item(44,$c).HorizontalAlignment=-4152 } }
+}
+T { $s.Rows.Item(44).RowHeight=20 }
+$rows=@(@(45,"Water Management",24,"9 peers - UK, Europe and US"),@(46,"Building Envelope",32,"5 peers - roofing and waterproofing"),@(47,"Housebuilding Products",41,"6 peers - UK and US"))
+foreach($x in $rows){
+  $r=$x[0]; $src=$x[2]
+  T { $s.Cells.Item($r,4).Value2=$x[1] }
+  T { $s.Cells.Item($r,5).Formula=("=+K"+$src) }
+  T { $s.Cells.Item($r,6).Formula=("=+L"+$src) }
+  T { $s.Cells.Item($r,7).Formula=("=+DCF!`$R`$13+F"+$r+"*DCF!`$R`$14+DCF!`$R`$15") }
+  T { $s.Cells.Item($r,8).Value2=$x[3] }
+  T { $s.Range("C"+$r+":H"+$r).Font.Name="Arial" }
+  T { $s.Range("C"+$r+":H"+$r).Font.Size=10 }
+  T { $s.Range("C"+$r+":H"+$r).Font.Bold=$false }
+  T { $s.Rows.Item($r).RowHeight=20 }
+  T { $s.Range("E"+$r+":F"+$r).NumberFormat='0.00"x"' }
+  T { $s.Range("G"+$r).NumberFormat="0.00%" }
+  T { $s.Range("H"+$r).Font.Italic=$true }
+  T { $s.Range("H"+$r).Font.Color=$LGREY }
+}
+# memos
+T { $s.Cells.Item(48,4).Value2="Memo: group beta implied bottom-up (weighted by FY2026 segment revenue)" }
+T { $s.Cells.Item(48,5).Formula="=+IFERROR(('Segment Model'!K13*E45+'Segment Model'!K14*E46+'Segment Model'!K15*E47)/'Segment Model'!K16,0)" }
+T { $s.Cells.Item(48,6).Formula="=+IFERROR(E48*(1+(1-`$M`$12)*`$I`$12),0)" }
+T { $s.Cells.Item(48,7).Formula="=+DCF!`$R`$13+F48*DCF!`$R`$14+DCF!`$R`$15" }
+T { $s.Cells.Item(48,8).Value2="Bottom-up cross-check" }
+T { $s.Cells.Item(49,4).Value2="Memo: group beta as used in the DCF" }
+T { $s.Cells.Item(49,6).Formula="=+DCF!`$R`$16" }
+T { $s.Cells.Item(49,7).Formula="=+DCF!`$R`$12" }
+T { $s.Cells.Item(49,8).Value2="Hardcoded in DCF!R16" }
+foreach($r in 48,49){
+  T { $s.Range("C"+$r+":H"+$r).Font.Name="Arial" }
+  T { $s.Range("C"+$r+":H"+$r).Font.Size=10 }
+  T { $s.Range("C"+$r+":H"+$r).Font.Italic=$true }
+  T { $s.Range("C"+$r+":H"+$r).Font.Color=$LGREY }
+  T { $s.Range("E"+$r+":F"+$r).NumberFormat='0.00"x"' }
+  T { $s.Range("G"+$r).NumberFormat="0.00%" }
+  T { $s.Rows.Item($r).RowHeight=20 }
+}
+
+# ---------- notas ----------
+$notas=@(
+ @(51,"Notes"),
+ @(52,"(1)  Unlevered beta = levered beta / (1 + (1 - t) x D/E).  D/E is total debt including leases over market capitalisation net of cash.  Beta is LSEG TR.WACCBeta, a 5-year window (identical output to TR.BetaFiveYear)."),
+ @(53,"(2)  Re-levered at Alumasc's own D/E and tax rate.  One balance sheet, one GBP 25m revolving credit facility cross-guaranteed by all Group companies - there is no segment-level capital structure."),
+ @(54,"(3)  Water Management: UK civils drainage (Genuit, Marshalls), engineered infrastructure products (Hill & Smith), and drainage / piping systems (Geberit, Georg Fischer, Advanced Drainage Systems, Zurn Elkay, Mueller Water, Core & Main).  No listed peer manufactures engineered access covers."),
+ @(55,"(4)  Building Envelope: Kingspan is the only listed company with a dedicated Roofing + Waterproofing division (formed 2022; acquired and delisted Nordic Waterproofing).  Carlisle SynTec, Sika, Amrize (Elevate) and RPM (Tremco) are the other listed membrane and waterproofing manufacturers; GAF and Soprema are private."),
+ @(56,"(5)  Housebuilding Products: Volution and Genuit (Manthorpe) on product, Forterra on the UK housing cycle, plus Masco, Gibraltar (roof ventilation, soffit and fascia) and Builders FirstSource."),
+ @(57,"(6)  Excluded: Owens Corning and Ibstock (reported tax rates of 282% and -243% distort the unlevered beta); Eurocell and Wienerberger (unlevered betas of 0.51 and 0.60 are produced by D/E of 87% and 141%, not by low equity beta); Epwin and Titon (no beta available on AIM); SIG and Travis Perkins (no tax rate); SigmaRoc, Norcros and Michelmersh (no read-across)."),
+ @(58,"(7)  The three segment betas fall within 0.1 of each other.  That spread does not support three separate discount rates - it supports a single group WACC.  Beta is not the axis on which this business differentiates."))
+foreach($n in $notas){
+  T { $s.Cells.Item($n[0],4).Value2=$n[1] }
+  T { $s.Range("D"+$n[0]).Font.Name="Arial" }
+  T { $s.Range("D"+$n[0]).Font.Size=9 }
+  T { $s.Range("D"+$n[0]).Font.Italic=$true }
+  T { $s.Range("D"+$n[0]).Font.Color=$LGREY }
+  T { $s.Rows.Item($n[0]).RowHeight=15 }
+}
+T { $s.Range("D51").Font.Bold=$true }
+T { $s.Range("D51").Font.Color=0 }
+T { $s.Range("D51").Font.Italic=$false }
+
+$xl.Calculation=-4105
+T { $xl.CalculateFullRebuild() }
+$wb.Save()
+Write-Output "etapa 2 lista"

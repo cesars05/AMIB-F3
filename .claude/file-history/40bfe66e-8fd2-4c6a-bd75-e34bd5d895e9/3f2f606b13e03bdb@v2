@@ -1,0 +1,304 @@
+# 06 — Análisis de la carpeta y benchmark de reportes pasados
+
+**Fecha del análisis:** 12 septiembre 2026
+**Alcance:** inventario del estado real de la carpeta + extracción estructural comparada de los 6 reportes en `Reportes Pasados` contra los requisitos de `02-guia-reporte-escrito.md`.
+
+> Este documento **no** repite la rúbrica ni las reglas — eso ya vive en `00`–`05`.
+> Lo que aporta es: (1) qué existe y qué está vacío hoy, (2) qué hicieron
+> concretamente los reportes ganadores en estructura, páginas, figuras y
+> valuación, y (3) dónde está la brecha entre ese benchmark y el punto de
+> partida del equipo.
+
+---
+
+## 1. Estado real de la carpeta
+
+### 1.1 Lo que sí está listo
+
+| Carpeta | Contenido | Estado |
+|---|---|---|
+| `CFA Rules` | 6 PDF/DOCX oficiales + digest propio en 6 MD (`00`–`05`) | **Completo y bien procesado.** El digest ya cubre reglas, rúbrica, presentación, ética/IA y ESG |
+| `Reportes Bimbo` | 11 documentos fuente, todos convertidos a MD | **Sólido para ESG y narrativa. Con hueco en financieros** (ver §5) |
+| `Reportes Pasados` | 6 reportes (3 ganadores globales + 3 locales México), todos en MD | **Completo. Es el activo más subexplotado de la carpeta** |
+
+### 1.2 Lo que está vacío — la carpeta entregable
+
+`Reporte & Presentacion` es, a día de hoy, **contenido cero**. Verificado abriendo los archivos, no solo por tamaño:
+
+| Archivo | Tamaño | Contenido verificado |
+|---|---|---|
+| `Secciones/Company Overview.docx` | 9.4 KB | **Vacío.** Un solo párrafo en blanco. Ya configurado en A4, lo cual es correcto |
+| `Bimbo Financial Model.xlsx` | 6.6 KB | **Vacío.** Una hoja `Sheet1`, **cero celdas**, sin cadenas de texto. No es un placeholder de OneDrive: se copió el archivo real y es un libro en blanco |
+| `Presentación BIMBO.pptx` | 61.5 KB | **2 diapositivas.** La 1 es la portada oficial CFA (con disclaimer y logo, correcta). La 2 está en blanco. Cero tablas, cero gráficas |
+
+Estaba abierto en PowerPoint al momento del análisis, por eso el archivo estaba bloqueado.
+
+**Lectura:** esto es normal y esperado — el kickoff es el **17 de septiembre**, en 5 días. No hay atraso. Pero sí significa que el 100% del contenido se produce en la ventana **17 sep → 5 nov: 7 semanas**, y que ninguna decisión de estructura está tomada todavía. Es el mejor momento para tomarlas, porque el benchmark de §3 dice bastante sobre qué estructura gana.
+
+### 1.3 Coherencia de fechas — verificada, sin conflicto
+
+Revisé esto porque `Reportes Pasados` contiene un archivo llamado "rc-2026-winning-written-report" que a primera vista parecía contradecir que la temporada 2026–2027 apenas arranca. No hay contradicción:
+
+- El reporte de Waterloo "2026" valúa Lightspeed **al 8 de enero de 2026** → es el ganador del ciclo **2025–2026**, que cerró su ronda local en enero de 2026. Correcto que ya exista.
+- Bimbo `2Q26` = trimestre terminado el **30 de junio de 2026**, reportado el **23 de julio de 2026**. Consistente con hoy (12 sep 2026).
+- El `IA25` de Bimbo está sellado `05082026` = publicado agosto 2026, cubriendo el ejercicio 2025. Consistente.
+
+El calendario de `00-MASTER` es correcto tal como está.
+
+**Consecuencia con fecha, y es importante:** el último trimestre publicado hoy es **2Q26**. Bimbo reporta **3Q26 a finales de octubre de 2026** — es decir, **días antes del deadline del 5 de noviembre**. El modelo y el precio objetivo tienen que estar construidos de forma que 3Q26 se pueda incorporar en 48–72 horas sin rehacer nada. Si el modelo se arma cableado a 2Q26, ese reporte llega desactualizado y un grader lo va a notar.
+
+---
+
+## 2. El hallazgo más valioso de la carpeta
+
+`Reportes Pasados` contiene, sin que esté señalado en ningún lado, una **comparación cabeza a cabeza de la misma empresa, en el mismo ciclo**:
+
+| | **Fibra MTY Tec.pdf** | **Report UDLAP.pdf** |
+|---|---|---|
+| Equipo | **Tec de Monterrey, Campus Monterrey** | Universidad de las Américas Puebla |
+| Empresa | Fibra MTY (FMTY14) | Fibra MTY (FMTY14.MX) |
+| Fecha de valuación | 7 noviembre 2024 | 8 noviembre 2024 |
+| Precio actual | MXN 10.58 | MXN 10.50 |
+| Recomendación | BUY | BUY |
+| Precio objetivo | **MXN 14.01 (+32.4%)** | **MXN 12.41 (+18.19%)** |
+| Metodologías | NAV + DDM + Monte Carlo | **DCF + DDM + FFO múltiplos + NAV, ponderadas** |
+| Resultado | — | **Ganador local 2024** |
+
+Es el mismo activo, la misma semana, y el equipo de Campus Monterrey perdió. Eso convierte estos dos PDF en el diagnóstico más directo disponible de qué separa a este campus del primer lugar. Las diferencias concretas en valuación:
+
+**Lo que hizo UDLAP y Campus Monterrey no:**
+
+1. **Cuatro metodologías con ponderación explícita y justificada**, no dos. Valuation vale 20 pts y es el desempate #2.
+2. **Build-up de CAPM documentado paso a paso**: risk-free del Treasury a 10 años, equity risk premium de EE.UU. + prima de riesgo país de México (citando a Damodaran), beta de industria re-apalancada con la estructura de capital de la empresa. WACC 9.99% para el DCF, Ke 8.79% para DDM y FFO — **tasas de descuento distintas según el flujo descontado**, no una sola para todo.
+3. **Refinamientos técnicos que señalan sofisticación al grader**: convención de mitad de periodo para descontar, y ajuste de 2024E para contar solo la fracción restante del año desde la fecha de valuación.
+4. **Trató un comparable atípico de frente**: sub-ponderó Prologis al 40% y dijo por qué, en vez de meterlo a la mediana y dejarlo pasar.
+5. **Un precio objetivo más conservador ganó.** +18% se defiende mejor que +32%. Un upside grande obliga a justificar por qué el mercado se equivoca tanto, y es más fácil que un juez lo desarme.
+
+**Recomendación operativa:** que la persona que arme la sección de Valuation lea estos dos PDF en paralelo, misma sesión, antes de escribir una línea. Es el ejercicio de calibración más barato y de mayor retorno disponible en toda la carpeta.
+
+---
+
+## 3. Benchmark estructural de los 6 reportes
+
+### 3.1 Todos usan el presupuesto completo de 10+10 — sin excepción
+
+Los 6 PDF tienen exactamente **21 páginas**: portada (1) + reporte (10) + apéndice (10).
+
+**Nadie entrega un reporte de 8 páginas.** El máximo es el estándar de facto, no un techo del que se queda corto. Si el equipo entrega 8 páginas de reporte compite con 20% menos de espacio que todos los demás.
+
+Lo mismo aplica al apéndice: 10 páginas, siempre llenas. El apéndice no es un anexo opcional, es donde vive el sustento técnico que no cabe arriba (modelo completo, sensibilidades, Porter, PESTEL, matriz de riesgos, bios del consejo, comparables extendidos).
+
+### 3.2 Asignación real de páginas vs. la sugerida en `02`
+
+Reconstruido desde los marcadores de página de cada documento:
+
+| Sección | Sugerido en `02` | Waterloo '26 | Waterloo '24 | Kozminski | La Comer | UDLAP | Campus MTY |
+|---|---|---|---|---|---|---|---|
+| Investment / Executive Summary | 1.5 | **1.0** | **1.0** | 1.0 | 1.5 | 1.0 | 1.0 |
+| Business Description | 0.75 | 0.5 | 0.5 | 0.5 | 0.8 | 1.0 | 1.0 |
+| Industry + Competitive Positioning | 1.5 | 1.6 | 1.6 | **2.5** | **2.2** | 2.0 | 2.0 |
+| Tesis de inversión numeradas | — | **2.4** | **2.4** | — | 1.0 | — | — |
+| Valuation | 2.0 | **1.0** | 1.4 | 1.5 | **2.0** | 2.0 | 2.0 |
+| Financial Analysis | 2.0 | 1.5 | 1.5 | 1.3 | 1.5 | 1.0 | 1.5 |
+| Investment Risks | 1.25 | 1.0 | 1.0 | 1.0 | 1.0 | **2.5** | 0.9 |
+| ESG | 1.0 | **1.6** | 1.5 | **1.5** | 1.0 | **1.8** | 1.0 |
+
+Tres cosas que salen de aquí:
+
+**(a) ESG recibe más espacio del que sugiere la guía, en 4 de 6 reportes.** Entre 1.5 y 1.8 páginas, no 1.0. Tiene sentido: son 15 puntos, igual que Investment Summary y Risks, y es la sección donde es más fácil sumar porque muchos equipos la tratan como relleno. Con Bimbo esto es una oportunidad grande (ver §5.1).
+
+**(b) Los ganadores globales comprimen Valuation a ~1 página y gastan 2.4 en tesis numeradas.** Waterloo, en ambos años, dedica el doble de espacio a *argumentar por qué el mercado se equivoca* que a *mostrar el cálculo*. El modelo vive en el apéndice; la página del reporte se usa para el argumento. Los reportes mexicanos hacen lo contrario: 2 páginas de mecánica de valuación.
+
+Esto **no** significa recortar Valuation a una página. Valuation vale 20 pts y es desempate #2, y el estilo de Waterloo funciona porque el apéndice carga con la mecánica y la sección de arriba remite a él constantemente. La lectura correcta es: **el cálculo va al apéndice, y la página del reporte se usa para supuestos, ponderación y por qué el resultado es creíble.**
+
+**(c) Business Description: 0.5 páginas en los tres ganadores globales, 1.0 en los tres mexicanos.** Vale 5 puntos. Los reportes mexicanos están gastando el doble de espacio en la sección de menor valor de la rúbrica. Es la corrección más fácil de hacer y libera media página para ESG o para la tesis.
+
+### 3.3 Dos arquitecturas distintas, y la diferencia importa
+
+**Arquitectura A — canónica CFA** (Campus Monterrey, UDLAP, La Comer, Kozminski):
+sigue el orden de la rúbrica. Investment Summary → Business → Industry → Competitive → Financial Analysis → Valuation → Risks → ESG.
+
+**Arquitectura B — tesis primero** (Waterloo 2024 y 2026, **ambos ganadores globales**):
+Executive Summary con **"Investment thesis highlights"** en la misma página → Business → Industry → Competitive → **Investment Summary desplegada como Tesis #1 / #2 / #3 numeradas a lo largo de 2.4 páginas** → Valuation → Financial Analysis → **Risks numerados #1–#4** → ESG.
+
+El rasgo definitorio de B: **los riesgos están numerados para contestar a las tesis.** En Waterloo 2026 la tesis es SELL, y los cuatro riesgos son los escenarios en los que el SELL se equivoca ("Risk #1: Core growth strategy succeeds", "Risk #4: Opportunity of LSPD being acquired"). No es la lista de riesgos del reporte anual reciclada — es exactamente lo que `02` pide cuando dice que los riesgos son juicio del analista, no copia del annual report.
+
+**Recomendación:** adoptar la Arquitectura B, pero conservando los **nombres de sección exactos de la rúbrica** para que el grader ubique cada bloque sin fricción. Es decir: la sección se titula `INVESTMENT SUMMARY` y por dentro contiene Tesis #1/#2/#3.
+
+### 3.4 Densidad de figuras — la restricción que se subestima
+
+| Reporte | Figuras numeradas | Figuras / página |
+|---|---|---|
+| Kozminski (ganador global '25) | **51** | 2.4 |
+| Waterloo '26 (ganador global) | **50** | 2.4 |
+| La Comer (ganador local '25) | 48 | 2.3 |
+| Waterloo '24 (ganador global) | 45 | 2.1 |
+| UDLAP (ganador local '24) | 44 | 2.1 |
+| **Campus Monterrey** | **35** | **1.7** |
+
+El piso competitivo es ~44 figuras en 20 páginas. Campus Monterrey entregó 35 — **un 20% menos de densidad visual que el equipo que le ganó analizando la misma empresa.**
+
+Implicación práctica: **~45–50 figuras hay que planearlas, no improvisarlas.** A 7 semanas son ~7 figuras por semana, cada una con fuente citada (requisito duro del checklist en `02`). Conviene abrir desde ya una lista numerada de figuras con dueño y fuente, y tratarla como un entregable propio. Es el tipo de cosa que se convierte en cuello de botella la última semana.
+
+### 3.5 Cómo los ganadores contestan "¿por qué está mal valuado?"
+
+`02` dice que el grader busca esa respuesta explícita en Investment Summary, pero no muestra cómo se ve una buena. Estas son las tres formas, extraídas de los textos:
+
+**Waterloo 2026 (LSPD, SELL) — tesis de deterioro estructural.** Cada tesis nombra un mecanismo y lo cuantifica:
+
+- *Tesis #2:* las adquisiciones se hicieron a **12.5x EV/Revenue promedio ponderado** y hoy implican **5.4x**, generando **$1.3B en deterioros**. Y el detalle que hace la diferencia: señalan que la empresa **ha redefinido o discontinuado métricas críticas** para esconder el faltante. Eso es exactamente el examen de calidad de utilidades que pide `02`.
+- *Tesis #3:* los márgenes de pagos se comprimen porque el interchange está topado en Europa (Reglamento UE 2015/751) **mientras las cuotas de esquema y procesamiento no lo están** → inflación de costos que pasa directo al costo de ventas. Y la frase: *Lightspeed Capital enmascara la debilidad del negocio de pagos en vez de resolver la causa raíz.*
+
+**La Comer (Tec CCM, ganador local '25) — el mercado no ve la expansión de margen.** Frase central: *"creemos que el mercado subvalúa el potencial de expansión de margen de LaComer, conforme su mezcla de producto sigue desplazándose hacia categorías de mayor valor."* Y lo ancla en un dato duro no obvio: los consumidores A/B y C+ son **21% de la población pero 44% del ingreso nacional**.
+
+**Kozminski (ganador global '25) — validación externa como argumento.** Sustentan la tesis en **entrevistas con 11 expertos de industria, incluyendo un ejecutivo C-suite de un competidor directo**, con el Annex 1 dedicado a eso (nombres confidenciales a petición de los entrevistados).
+
+El patrón común: **un mecanismo nombrado + una cifra que lo ancla + por qué el mercado todavía no lo refleja.** No "la empresa está bien posicionada para crecer".
+
+### 3.6 Sobre las entrevistas de Kozminski — sí es replicable, y es legal
+
+Lo verifiqué contra las reglas antes de recomendarlo, porque parecía chocar con las prohibiciones de contacto. No choca. `01-reglas-oficiales-resumen.md` línea 103:
+
+> **Sí se puede contactar** a clientes, competidores, ex-empleados y proveedores de Bimbo, incluyendo encuestas. Los contactados no deben haber sido profesionales de inversión. Cada integrante debe identificarse como estudiante y revelar su participación en el Challenge.
+
+Las tres condiciones, y hay que cumplir las tres:
+
+1. El contactado **no** puede ser un profesional de inversiones (eso sí está prohibido — líneas 95 y 140).
+2. Cada integrante se identifica como estudiante y revela su participación en el Challenge.
+3. **No aplica a ejecutivos de Bimbo** — esos siguen bloqueados fuera de la sesión informativa y del único follow-up del host (regla de descalificación #5 en `00`).
+
+Es decir: un director de una panificadora competidora es contactable. Un director de Bimbo no.
+
+Y `00-MASTER` agrega el control de proceso: enviar las preguntas al faculty advisor **antes** y que esté presente en la llamada.
+
+**Por qué esto importa mucho para Bimbo:** el canal de distribución de Bimbo es su foso competitivo, y es observable desde afuera. Tienditas de abarrotes, OXXO, autoservicios, operadores de ruta, ex-empleados de ventas, proveedores de harina y empaque. Una encuesta bien hecha a 30–50 puntos de venta sobre frecuencia de reparto, cumplimiento de pedido, espacio en anaquel frente a competidores y comportamiento de precio es **evidencia primaria propia que ningún otro equipo va a tener**, es legal, y es exactamente el tipo de trabajo que distinguió a Kozminski. Se planea ahora o no se hace.
+
+### 3.7 Valuation — métodos, pesos y tasas de los 6
+
+| Reporte | Metodologías y pesos | Tasa | g terminal | Extras |
+|---|---|---|---|---|
+| Waterloo '26 | DCF crecim. terminal **50%** + DCF exit multiple **50%** + Comparables **0%** | CoE 12.8% | 3.0% | Exit 9x; peso cero a relativos **justificado explícitamente** |
+| Waterloo '24 | DCF crecim. terminal + DCF exit multiple + comparables | WACC 8.20% | 2.25% | Exit 9x EV/EBITDA; excluye outliers ATSG y Chorus **y lo anota**; usa Damodaran |
+| Kozminski | DCF (principal) + Relativa + **SOTP** + **DDM** | WACC 9.01% | 0.97% | Monte Carlo, sensibilidad y escenarios; sección **"ESG impact on valuation"** |
+| La Comer | DCF-FCFF **80%** + EV/EBITDA **10%** + P/E **10%** | WACC 12.86% | — | Monte Carlo, bear/bull case |
+| UDLAP | DCF + DDM + FFO múltiplos + NAV, ponderadas | WACC 9.99% / Ke 8.79% | — | CAPM con prima país Damodaran; mitad de periodo; sub-pondera Prologis 40% |
+| Campus MTY | NAV + DDM | WACC 8.7% | — | Monte Carlo, sensibilidad |
+
+Patrones que conviene copiar:
+
+- **Mínimo 3 metodologías; los ganadores usan 3–4.** `02` exige "más de un modelo" — dos es el piso, no el objetivo. Campus Monterrey usó dos.
+- **Las ponderaciones se declaran en tabla y se justifican.** Waterloo 2026 le pone **0%** a comparables y explica por qué (diferencias estructurales frente a los peers). Poner cero y defenderlo puntúa más que meter un múltiplo malo con 20% de peso para llenar el cuadro.
+- **Los outliers del peer set se tratan de frente.** Waterloo excluye dos y lo anota al pie; UDLAP sub-pondera Prologis al 40% y dice por qué. Nunca se esconden en la mediana.
+- **Monte Carlo aparece en 4 de 6** y en ambos ganadores locales mexicanos. En el mercado local es prácticamente esperado.
+- **Kozminski tiene una subsección explícita de impacto de ESG en la valuación.** Eso conecta la sección de 15 pts con la de 20 pts en vez de dejarlas como silos, y es una de las cosas más fáciles de hacer bien con Bimbo (ver §5.1).
+
+### 3.8 Riesgos y ESG
+
+**Riesgos.** Los 6 incluyen matriz probabilidad × impacto. La diferencia de calidad está en dos cosas:
+
+- **Riesgos numerados que responden a las tesis** (los dos Waterloo), no una lista genérica.
+- **Bear/bull case cuantificado sobre el precio objetivo** (Waterloo '26, Kozminski, La Comer). UDLAP le dedica 2.5 páginas a riesgos — el más extenso de los 6, y ganó su local.
+
+**ESG.** Lo que distingue a los mejores:
+
+- **Referencia a marcos y proveedores externos**, no solo al reporte de sostenibilidad de la empresa: SASB, GRI, TCFD, SBTi, CDP, Sustainalytics, MSCI, S&P Global. Kozminski y Waterloo '26 son los más densos aquí.
+- **Emisiones por alcance** (Scope 1/2/3). Waterloo '26 y UDLAP llegan a Scope 3.
+- **Doble materialidad y matriz de materialidad** — UDLAP es el único de los 6 que lo trabaja explícitamente.
+- **Governance con dientes.** Waterloo '26 trata la estructura **dual-class** como tema de gobierno corporativo. Esto es directamente trasladable: Bimbo tiene control familiar (la familia **Servitje** aparece a lo largo del IA25) y eso es un tema de governance real, no un checkbox — nombrar al accionista de control, el consejo, la independencia, la sucesión, y qué implica para un accionista minoritario.
+
+*(Nota metodológica: descarté de este análisis un conteo automático de menciones a "ISS" porque el patrón capturaba también "issue" y "emissions". Los proveedores listados arriba sí están verificados.)*
+
+---
+
+## 4. Requisitos CFA → brecha del equipo, sección por sección
+
+Todo el contenido está en cero, así que la columna útil no es "qué falta" sino **qué bar hay que alcanzar y cuál es el riesgo específico en Bimbo.**
+
+| Sección | Pts | Bar del benchmark | Riesgo específico en Bimbo |
+|---|---|---|---|
+| Business Description | 5 | **0.5 pág.**, densa; economía del negocio, no historia | Bimbo es enorme y diversificada (4 segmentos: México, Norteamérica, EAA, Latinoamérica). Fácil gastar 1.5 páginas describiendo. **Disciplina: media página** |
+| Industry + Competitive Positioning | 10 | 1.6–2.5 pág.; Porter explícito; peer set construido | El peer set es no trivial: competidores globales (Flowers Foods, Aryzta) frente a locales por región. **Construirlo y justificarlo es trabajo aparte** |
+| Investment Summary | 15 | 1–2.4 pág.; 3 tesis numeradas; mecanismo + cifra + por qué el mercado no lo ve | **Es el mayor riesgo de todo el reporte.** Bimbo es una empresa muy cubierta; encontrar un ángulo diferenciado es difícil. Ver §6 |
+| Valuation | 20 | 3–4 metodologías, pesos justificados, mecánica al apéndice | Multimoneda (reporta en MXN, ingresos en USD/EUR); WACC por segmento o consolidado con prima país es una decisión que hay que tomar y defender |
+| Financial Analysis | 20 | 1.0–1.5 pág. arriba, modelo completo al apéndice; **leer las notas** | **Falta la materia prima principal.** Ver §5.2 |
+| Investment Risks | 15 | Numerados contra las tesis, matriz, bear/bull cuantificado | Trigo, energía, FX, consumidor en EE.UU. y México, GLP-1 y tendencias de consumo de pan. Hay material de sobra |
+| ESG | 15 | **1.5–1.8 pág.**; marcos externos; Scope 1/2/3; governance con dientes | **Es la mayor oportunidad de la carpeta.** Ver §5.1 |
+| Formato | — | 10+10 completas, ~45–50 figuras con fuente, portada intacta | La portada del `.pptx` ya está correcta; el `.docx` ya está en A4 |
+
+---
+
+## 5. Materia prima de Bimbo: lo que hay y lo que falta
+
+### 5.1 ESG — está sobre-abastecido, y eso es una ventaja
+
+La carpeta tiene un set de documentos ESG inusualmente completo para una sección de 15 puntos:
+
+- `anexos_tablas_gri-VF-JULIO-ENG` (14 pp) — **tablas GRI**, datos crudos comparables año contra año
+- `ENG_anexos_datos desempeño_VF JULIO` (28 pp) — anexos de datos de desempeño
+- `Management approach to the Sustainability Strategy` (18 pp) y `Descargable_Enfoque_de_gestion` (19 pp)
+- `Grupo Bimbo - Sustainable Financing Framework` (32 pp) — **marco de financiamiento sostenible**
+- `Sustainable Financing Framework 2023 - SPO` (37 pp) — **Second Party Opinion de un tercero independiente**
+
+El SPO es el documento más desaprovechado del conjunto: es una **evaluación externa e independiente** del marco ESG de Bimbo. Citarlo, y sobre todo citar sus salvedades, es cualitativamente distinto a citar el reporte de sostenibilidad de la propia empresa.
+
+Y el marco de financiamiento sostenible abre la puerta a lo que hizo Kozminski: una subsección de **impacto de ESG en la valuación**. Si Bimbo tiene deuda vinculada a métricas de sostenibilidad, entonces el desempeño ESG afecta el costo de deuda, y por lo tanto el WACC, y por lo tanto el precio objetivo. Ese es un puente directo y defendible entre la sección de 15 pts y la de 20 pts, con fuente primaria ya en la carpeta. (Confirmar en el marco y el SPO si en efecto hay instrumentos con cupón ligado a KPIs antes de construir el argumento.)
+
+**Con este material, ESG debería ser la sección más fuerte del reporte, no el relleno del final.**
+
+### 5.2 Financial Analysis — aquí está el hueco real
+
+Lo que hay:
+
+- `grupo-bimbo-Annual-Report-2024` (401 pp) — **contiene el Informe del Auditor Independiente y los estados financieros consolidados con notas.** Este es el activo crítico: es donde vive el examen de calidad de utilidades que `02` exige
+- `IA25_GB_Celebramos_ENG` (181 pp) — reporte anual integrado 2025. **Revisado: no contiene los estados financieros auditados con notas.** Es el documento narrativo
+- Reportes trimestrales: `1Q25`, `1Q26`, `2Q26` (8 pp cada uno)
+
+Lo que falta y hay que bajar:
+
+1. **Estados financieros auditados FY2025 con notas.** Es el hueco más importante. El año base de la valuación debería ser FY2025 o LTM 2Q26, y el `IA25` no trae las notas. Hay que bajar el reporte anual BMV / estados dictaminados 2025.
+2. **Trimestres faltantes: 2Q25, 3Q25, 4Q25.** Sin ellos no se puede construir la serie trimestral ni el puente a LTM. Hay 1Q25, 1Q26 y 2Q26 — faltan tres para cerrar la comparabilidad año contra año.
+3. **3Q26, cuando salga (finales de octubre).** Ver §1.3 — el modelo tiene que estar listo para absorberlo en días.
+4. **Comparables.** Nada de peers en la carpeta. Es insumo tanto de Industry (10 pts) como de Valuation (20 pts).
+5. **Transcripts de earnings calls.** Los reportes trimestrales traen citas de CEO y CFO, pero no el Q&A con analistas — que es donde se ve qué está preguntando el mercado y, por lo tanto, qué está descontando.
+6. **Estructura accionaria y float.** `02` señala explícitamente que liquidez, float y accionistas principales suman y casi nadie los incluye. Con el control familiar Servitje esto es material: un float reducido limita la entrada de institucionales y es un argumento de valuación, no un dato de color.
+
+---
+
+## 6. Riesgo de fondo, que conviene nombrar ahora
+
+Los reportes ganadores de la carpeta valúan **Fibra MTY, La Comer, Dom Development, Cargojet y Lightspeed**: empresas medianas, con cobertura de sell-side limitada, donde es plausible que el mercado se equivoque y un equipo de estudiantes encuentre algo.
+
+**Bimbo no es eso.** Es la panificadora más grande del mundo, con cobertura densa de analistas. La pregunta que `02` dice que el grader busca — *¿por qué está mal valuado?* — es genuinamente más difícil de contestar de forma creíble aquí, porque la respuesta fácil ("el mercado no ve X") es poco verosímil en una empresa tan seguida.
+
+Eso no es un problema del equipo; la empresa la asigna el host y no se elige. Pero cambia dónde está el margen competitivo:
+
+- El ángulo **no** puede ser información que nadie tenga. Va a ser **una interpretación distinta de información que todos tienen** — un supuesto de margen, un horizonte más largo, una lectura del ciclo de trigo, o la transformación en Norteamérica valuada distinto.
+- La **evidencia primaria propia** (§3.6: encuestas al canal de distribución) pasa de ser "algo bonito" a ser la vía principal de diferenciación. Con 16 equipos analizando la misma empresa con las mismas fuentes públicas, el trabajo de campo es lo único que no se puede replicar.
+- Los datos de 2Q26 dan de qué agarrarse: margen de EBITDA ajustado **+50 pb a 14.4%**, Norteamérica **+100 pb a margen de doble dígito**, México **+40 pb a 20.7%**, Deuda Neta/EBITDA bajando a **2.5x**, ROE **+110 pb a 9.9%**, y ~**Ps. 12 mil millones** de flujo libre en el trimestre. La historia de *expansión de margen vía transformación en Norteamérica y desapalancamiento* está ahí y es cuantificable. La pregunta de la tesis es si el mercado ya la tiene en el precio o no — y ahí hay que ser honesto y específico.
+
+---
+
+## 7. Próximos pasos concretos
+
+**Antes del kickoff (17 sep):**
+
+- [ ] Leer en paralelo `Fibra MTY Tec.pdf` y `Report UDLAP.pdf` — la comparación cabeza a cabeza de §2
+- [ ] Decidir arquitectura del reporte: recomendado **Arquitectura B** (§3.3) con nombres de sección de la rúbrica
+- [ ] Preparar preguntas para el host: formato de competencia (staggered A o B), medio de entrega, si habrá industry mentor
+
+**Primera semana post-kickoff:**
+
+- [ ] Bajar los 6 faltantes de §5.2, empezando por los **estados dictaminados FY2025 con notas** y los trimestres 2Q25–4Q25
+- [ ] Abrir la **lista numerada de figuras** con meta de 45–50, dueño y fuente por figura (§3.4)
+- [ ] Definir el peer set y justificarlo por escrito
+- [ ] Diseñar la encuesta al canal de distribución y **enviar las preguntas al faculty advisor antes de la primera llamada** (§3.6)
+- [ ] Abrir las dos bitácoras que exige `00`: horas de asesor y uso de IA
+- [ ] Construir el modelo con año base FY2025 y **estructura que permita insertar 3Q26 sin rehacer nada** (§1.3)
+
+**Restricciones a no perder de vista:**
+
+- 10 páginas de reporte + 10 de apéndice, **completas** (§3.1)
+- Mínimo 3 metodologías de valuación con pesos justificados (§3.7)
+- ESG a 1.5–1.8 páginas, no 1.0 (§3.2)
+- Business Description a 0.5 páginas, no 1.0 (§3.2)
+- 3Q26 sale a finales de octubre; deadline 5 de noviembre

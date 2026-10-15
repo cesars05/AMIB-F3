@@ -1,0 +1,81 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$wb=$null; $su=$null
+for($t=0;$t -lt 40;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $x=$w.Worksheets.Item("Summary"); if($x -ne $null){ $wb=$w; $su=$x } } }
+  }catch{}
+  if($su -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+$d=T { $wb.Worksheets.Item("DCF") }
+$as=T { $wb.Worksheets.Item("Assumptions") }
+$so=T { $wb.Worksheets.Item("SOTP") }
+$ep=T { $wb.Worksheets.Item("EPV") }
+$dst=Join-Path "C:\Users\cesar\OneDrive\Desktop\Alumasc & Peers\Alumasc\Financials" ("BACKUP_PRE_SUMMARY_"+(Get-Date -Format "yyyyMMdd_HHmmss")+"_"+$wb.Name)
+$wb.SaveCopyAs($dst)
+Write-Output ("Libro: "+[string]$wb.Name+"   Backup: "+(Split-Path $dst -Leaf))
+
+$orig=[string](T { $as.Range("F10").Text })
+Write-Output ("Escenario original: "+$orig)
+Write-Output ""
+
+# ---- capturar FCFF y factores de cada escenario ----
+$escen=@("Base Case","Bear Case","Stress Case")
+$cap=@{}
+foreach($e in $escen){
+  T { $as.Range("F10").Value2=$e }
+  T { $xl.CalculateFullRebuild() }
+  T { $xl.CalculateFullRebuild() }
+  T { $xl.CalculateFullRebuild() }
+  $f=@(); $k=@()
+  foreach($c in 3,4,5,6,7,8,9,10){
+    $f+=[double](T { $d.Cells.Item(23,$c).Value2 })
+    $k+=[double](T { $d.Cells.Item(26,$c).Value2 })
+  }
+  $cap[$e]=@{fcff=$f; fact=$k; price=[double](T { $d.Range("E41").Value2 })}
+  Write-Output ("  "+$e.PadRight(13)+" FCFF: "+(($f | ForEach-Object { [string][math]::Round($_,0) }) -join " / ")+"   precio="+[string][math]::Round($cap[$e].price,1)+"p")
+}
+T { $as.Range("F10").Value2=$orig }
+T { $xl.CalculateFullRebuild() }; T { $xl.CalculateFullRebuild() }; T { $xl.CalculateFullRebuild() }
+Write-Output ("  restaurado a: "+[string](T { $as.Range("F10").Text }))
+Write-Output ("  factores (años): "+(($cap["Base Case"].fact | ForEach-Object { [string][math]::Round($_,2) }) -join " / "))
+
+# ---- escribir el snapshot en Summary (col N en adelante) ----
+$xl.Calculation=-4135
+T { $su.Range("N12:V20").Clear() }
+T { $su.Range("N12").Value2="FCFF snapshot por escenario  (DCF r23)" }
+T { $su.Range("N12").Font.Bold=$true }
+$hdr=@("FY1","FY2","FY3","FY4","FY5","FY6","FY7","TV")
+for($i=0;$i -lt 8;$i++){ T { $su.Cells.Item(13,15+$i).Value2=$hdr[$i] }; T { $su.Cells.Item(13,15+$i).Font.Bold=$true } }
+$rowmap=@{"Base Case"=14;"Bear Case"=15;"Stress Case"=16}
+foreach($e in $escen){
+  $r=$rowmap[$e]
+  T { $su.Cells.Item($r,14).Value2=$e }
+  for($i=0;$i -lt 8;$i++){ T { $su.Cells.Item($r,15+$i).Value2=[double]$cap[$e].fcff[$i] } }
+}
+T { $su.Cells.Item(17,14).Value2="Factor (años)" }
+for($i=0;$i -lt 8;$i++){ T { $su.Cells.Item(17,15+$i).Value2=[double]$cap["Base Case"].fact[$i] } }
+T { $su.Cells.Item(18,14).Value2=("Capturado "+(Get-Date -Format "dd-MMM-yyyy HH:mm")+"  -  volver a correr si cambian los supuestos") }
+T { $su.Range("N18").Font.Italic=$true }
+T { $su.Range("N18").Font.Size=9 }
+T { $su.Range("N18").Font.Color=10921638 }
+T { $su.Range("O14:V16").NumberFormat='#,##0;(#,##0)' }
+T { $su.Range("O17:V17").NumberFormat='0.00' }
+$xl.Calculation=-4105
+T { $xl.CalculateFullRebuild() }
+$wb.Save()
+Write-Output ""
+Write-Output "snapshot escrito en Summary N12:V18"
+Write-Output ""
+Write-Output "=== donde estan el precio del SOTP y el EPV ==="
+for($r=100;$r -le 120;$r++){
+  $l=[string](T { $so.Cells.Item($r,2).Text })
+  if($l -match "(?i)implied|equity|share count|current"){ Write-Output ("  SOTP r"+$r+" "+$l.PadRight(32)+" = "+[string](T { $so.Cells.Item($r,4).Text })) }
+}
+for($r=45;$r -le 60;$r++){
+  $l=[string](T { $ep.Cells.Item($r,2).Text })
+  if($l.Trim() -ne ""){
+    $vals=(3..12 | ForEach-Object { $i=$_; [string](T { $ep.Cells.Item($r,$i).Text }) }) -join " | "
+    Write-Output ("  EPV r"+$r+" "+$l.PadRight(34)+" = "+$vals)
+  }
+}

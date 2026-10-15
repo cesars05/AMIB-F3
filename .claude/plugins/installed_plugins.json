@@ -1,0 +1,63 @@
+{
+  "version": 2,
+  "plugins": {
+    "task-observer@local-desktop-app-uploads": [
+      {
+        "scope": "user",
+        "installPath": "C:\\Users\\cesar\\.claude\\plugins\\marketplaces\\local-desktop-app-uploads\\task-observer",
+        "version": "3.3.1",
+        "installedAt": "2026-09-24T23:52:31.728Z",
+        "lastUpdated": "2026-09-24T23:52:31.728Z"
+      }
+    ],
+    "everything-claude-code@local-desktop-app-uploads": [
+      {
+        "scope": "user",
+        "installPath": "C:\\Users\\cesar\\.claude\\plugins\\marketplaces\\local-desktop-app-uploads\\everything-claude-code",
+        "version": "0.0.0",
+        "installedAt": "2026-09-24T23:53:07.143Z",
+        "lastUpdated": "2026-09-24T23:53:07.143Z"
+      }
+    ],
+    "typeui@bergside": [
+      {
+        "scope": "user",
+        "installPath": "C:\\Users\\cesar\\.claude\\plugins\\cache\\bergside\\typeui\\1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-09-25T00:00:53.043Z",
+        "lastUpdated": "2026-09-25T00:00:53.043Z",
+        "gitCommitSha": "2a977f1f6616ae8a5ea84a478ca35601c67f4322"
+      }
+    ],
+    "reflect-mod@claude-reflect-marketplace": [
+      {
+        "scope": "user",
+        "installPath": "C:\\Users\\cesar\\.claude\\plugins\\cache\\claude-reflect-marketplace\\reflect-mod\\3.3.0",
+        "version": "3.3.0",
+        "installedAt": "2026-10-13T20:06:06.974Z",
+        "lastUpdated": "2026-10-13T20:06:06.974Z",
+        "gitCommitSha": "b6c42326903af3dd2bf3772b979730a44d8548ca"
+      }
+    ],
+    "filetree@claude-code-filetree": [
+      {
+        "scope": "user",
+        "installPath": "C:\\Users\\cesar\\.claude\\plugins\\cache\\claude-code-filetree\\filetree\\0.2.25",
+        "version": "0.2.25",
+        "installedAt": "2026-10-13T20:15:31.642Z",
+        "lastUpdated": "2026-10-13T20:15:31.642Z",
+        "gitCommitSha": "42f34d257786d42050898ad8a66da185e1b04230"
+      }
+    ],
+    "savvy-progress@claude-kit": [
+      {
+        "scope": "user",
+        "installPath": "C:\\Users\\cesar\\.claude\\plugins\\cache\\claude-kit\\savvy-progress\\1.2.1",
+        "version": "1.2.1",
+        "installedAt": "2026-10-13T20:15:38.951Z",
+        "lastUpdated": "2026-10-13T20:15:38.951Z",
+        "gitCommitSha": "c871c153ead54ad9547cc717d0f3e5a676c73986"
+      }
+    ]
+  }
+}

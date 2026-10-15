@@ -1,0 +1,23 @@
+# 07 · Skill (guía para construir las láminas)
+
+**Qué es:** una copia local de la skill `slide-construction` ("house playbook" de decks estilo IB / Aztlan / FEMSA / bancos). Dice **cómo se presenta** (grid, tipografía, formas, gráficas, QC), no qué se dice. La misma skill está instalada en `~/.claude/skills/slide-construction` y se invoca con la herramienta Skill; esta carpeta es el respaldo del equipo.
+
+| Ruta | Contenido |
+|---|---|
+| `slide-construction/SKILL.md` | Punto de entrada: workflow (elegir sistema de estilo → storyline → layout por slide → construir con `house.py` → renderizar y mirar cada slide → QC) y reglas no negociables. |
+| `slide-construction/references/` | `style-systems.md` (aztlan, femsa, ib_navy, ms_clean, o marca propia con `make_brand_system`) · `adaptation.md` (leer SIEMPRE: las recetas son gramática, no plantillas) · `slide-catalog.md` · `structural-diagrams.md` · `charts.md` · `thinkcell-library.md` · `shapes-components.md` · `images.md` · `grid-typography.md` · `rotation-qc.md`. |
+| `slide-construction/scripts/` | `house.py` (librería python-pptx: formas y gráficas nativas editables), `render.ps1` (renderiza a PNG con PowerPoint), `extract_text.py` / `extract_numbers.py` (QC), `gallery*.py`. |
+| `slide-construction/assets/` | Galerías de ejemplo (`.pptx` y `.png`) por sistema de estilo. |
+
+## Reglas de la skill que más importan para Aurex
+- 1 mensaje por slide; título = oración con veredicto; subtítulo = so-what **cuantificado**; **source en cada slide con datos**.
+- ≤3 tamaños de letra en el cuerpo; nada <8 pt; un acento por slide; rojo solo para riesgo.
+- **Preferencia del usuario: explicar estructuras con formas** (diagramas) en vez de bullets; slides de solo KPI tiles = rechazado.
+- Gráficas nativas (nunca screenshots); sin 3-D, gradientes ni clip-art.
+- Renderizar y **mirar cada slide** antes de declarar terminado; QC por severidad (Crítico / Importante / Menor).
+- Imágenes solo si identifican o explican (logos, fotos de equipo, producto).
+
+## Alertas
+- Las plantillas reales que la skill menciona (`AZTD vs Peers_v6.pptx`, `M&A FEMSA.pptx`) viven en `C:\Users\cesar\OneDrive\Documentos\Slide Construction\06_Templates` — existen en esta PC, pero **no son de este proyecto**; para Aurex usar `Deck(make_brand_system(...))` con la paleta verde en vez de plantilla de otra firma.
+- Los outputs de prueba que había en `skill/_test/` (≈460 archivos, 27 MB de PNG/PPTX de pruebas) se movieron a `../99_Archivo/skill_test_outputs/` — no se borraron.
+- Requiere PowerPoint instalado (confirmado en esta PC) para `render.ps1`.

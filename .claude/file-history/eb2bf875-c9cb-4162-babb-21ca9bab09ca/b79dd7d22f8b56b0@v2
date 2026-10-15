@@ -1,0 +1,82 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions")
+$sm=$wb.Worksheets.Item("Segment Model")
+$cm=$wb.Worksheets.Item("Consolidated Model")
+$d =$wb.Worksheets.Item("DCF")
+
+# localizar el bloque por etiqueta, no por numero memorizado
+$rBlk=0
+for($r=40;$r -le 80;$r++){
+  $t=""; try{ $t=[string]$as.Cells.Item($r,3).Text }catch{}
+  if($t -like "Depreciation % of Opening Segment*"){ $rBlk=$r; break }
+}
+if($rBlk -eq 0){ throw "ABORTO: no se encontro el bloque de depreciacion" }
+$rWM=$rBlk+1; $rBE=$rBlk+2; $rHP=$rBlk+3
+if([string]$as.Cells.Item($rWM,3).Text -ne "Water Management"){ throw "ABORTO: fila WM no coincide" }
+if([string]$as.Cells.Item($rBE,3).Text -ne "Building Envelope"){ throw "ABORTO: fila BE no coincide" }
+if([string]$as.Cells.Item($rHP,3).Text -ne "Housebuilding Products"){ throw "ABORTO: fila HP no coincide" }
+Write-Output ("bloque encontrado en r"+$rBlk+"  (WM r"+$rWM+", BE r"+$rBE+", HP r"+$rHP+")")
+Write-Output ("ANTES   Stress / Bear / Base")
+foreach($x in @(@($rWM,"WM"),@($rBE,"BE"),@($rHP,"HP"))){
+  $r=[int]$x[0]
+  Write-Output ("  "+[string]$x[1]+"  "+([string]$as.Cells.Item($r,4).Text).PadLeft(8)+([string]$as.Cells.Item($r,5).Text).PadLeft(8)+([string]$as.Cells.Item($r,6).Text).PadLeft(8))
+}
+$dcfAntes=[string]$d.Range("E41").Text
+
+$xl.Calculation=-4135
+# promedio de 3 anios: WM 4.9%  BE 2.4%  HP 7.8%  -- misma tasa en los 3 escenarios
+foreach($c in 4,5,6){
+  $as.Cells.Item($rWM,$c).Value2=0.049
+  $as.Cells.Item($rBE,$c).Value2=0.024
+  $as.Cells.Item($rHP,$c).Value2=0.078
+}
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ""
+Write-Output ("DESPUES Stress / Bear / Base")
+foreach($x in @(@($rWM,"WM"),@($rBE,"BE"),@($rHP,"HP"))){
+  $r=[int]$x[0]
+  Write-Output ("  "+[string]$x[1]+"  "+([string]$as.Cells.Item($r,4).Text).PadLeft(8)+([string]$as.Cells.Item($r,5).Text).PadLeft(8)+([string]$as.Cells.Item($r,6).Text).PadLeft(8))
+}
+Write-Output ""
+Write-Output "### Efecto: depreciacion por segmento ###"
+$h="  "+"".PadRight(26)
+for($c=11;$c -le 17;$c++){ $h+=([string]$sm.Cells.Item(9,$c).Text).PadLeft(9) }
+Write-Output $h
+foreach($r in 143,144,145,146){
+  $lab=[string]$sm.Cells.Item($r,3).Text
+  if($lab.Trim() -eq ""){ $lab=[string]$sm.Cells.Item($r,2).Text }
+  if($lab.Length -gt 25){ $lab=$lab.Substring(0,25) }
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$sm.Cells.Item($r,$c).Text).PadLeft(9) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(26)+$v)
+}
+Write-Output ""
+foreach($r in 53,54,56,81){
+  $lab=""
+  foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$cm.Cells.Item($r,$cc).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  if($lab.Length -gt 25){ $lab=$lab.Substring(0,25) }
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(9) }
+  Write-Output ("  CM r"+([string]$r).PadRight(4)+$lab.PadRight(26)+$v)
+}
+Write-Output ""
+Write-Output ("  DCF antes = "+$dcfAntes+"   DCF ahora = "+[string]$d.Range("E41").Text+"   ("+[string]$d.Range("E42").Text+")")
+Write-Output ("  SOTP = "+[string]$wb.Worksheets.Item("SOTP").Range("D112").Text+"   EPV = "+[string]$wb.Worksheets.Item("EPV").Range("E61").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=$wb.Worksheets.Item($nm)
+  $e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

@@ -1,0 +1,141 @@
+# -*- coding: utf-8 -*-
+"""Limpia y estructura la extraccion cruda del Manual EBSPMV."""
+import re, io, unicodedata
+
+SRC = 'Manual_EBSPMV_raw.md'
+OUT = 'Manual_EBSPMV_completo.md'
+
+raw = io.open(SRC, encoding='utf-8').read()
+
+# 1. quitar front matter y la tabla final de imagenes
+raw = re.sub(r'^---\n.*?\n---\n', '', raw, flags=re.S)
+raw = re.split(r'\n---\n\s*## Extracted Images', raw)[0]
+
+# 2. bloques de imagen -> conservar solo diagramas grandes
+IMG = re.compile(
+    r'!\[\]\(images/(?P<f>[^)]+)\)\s*\n+\s*'
+    r'\*\*\[Image: (?P=f) \((?P<w>\d+)x(?P<h>\d+), (?P<kb>[\d.]+)KB\)\]\*\*')
+
+def img_sub(m):
+    w, h, kb = int(m.group('w')), int(m.group('h')), float(m.group('kb'))
+    if w >= 400 and kb >= 8:               # esquemas reales del manual
+        return '![Esquema del manual](images/%s)' % m.group('f')
+    return ''                               # iconos, sellos, logos, cintillos
+raw = IMG.sub(img_sub, raw)
+raw = re.sub(r'!\[\]\(images/[^)]+\)', '', raw)          # huerfanas
+raw = re.sub(r'\*\*\[Image: [^\]]+\]\*\*', '', raw)
+
+# 3. texto de los diagramas -> bloque citado legible
+def pic_sub(m):
+    body = m.group(1)
+    body = body.replace('<br>', ' ')
+    body = re.sub(r'[\ufffd\u2588]+', '', body)
+    body = re.sub(r'[ \t]+', ' ', body).strip()
+    if not body:
+        return ''
+    return '> **Texto del esquema:** ' + body
+raw = re.sub(r'<!-- Start of picture text -->(.*?)<!-- End of picture text -->',
+             pic_sub, raw, flags=re.S)
+
+lines = raw.split('\n')
+out, page = [], None
+
+RUNNING = re.compile(
+    r'^\s*(M[oó]dulo \d+\s+[ÉE]tica .*|M[oó]dulo \d+\s+C[oó]digo de [ÉE]tica.*|'
+    r'[ÉE]tica Burs[aá]til y Sanas Pr[aá]cticas del Mercado de Valores|'
+    r'Ensayo de examen|Secci[oó]n de respuestas)\s*$')
+WATERMARK = re.compile(r'^\s*(2SXEW|[\ufffd\u2588\s]+)\s*$')
+
+TOP = ('Introducción', 'Objetivos Generales del Curso', 'Ensayo de examen',
+       'Sección de respuestas', 'BIBLIOGRAFÍA')
+LABEL = re.compile(
+    r'^(Qué es|Cuáles son|Para ilustrar|Síntesis|Diferencia de conceptos|'
+    r'Medidas adoptadas|Procedimientos|Principios fundamentales|'
+    r'Pautas de comportamiento|Conservación|Inexistencia)')
+
+def level_for(title):
+    t = title.strip()
+    if re.sub(r'^\*+|\*+$|:$', '', t).strip() in TOP:  return 2
+    if re.match(r'^\*{0,2}M[oó]dulo \d+', t):          return 2
+    if t.startswith('Sub área'):                       return 4
+    if LABEL.match(re.sub(r'^\*+', '', t)):            return 0
+    if re.match(r'^\*{0,2}\d+\.\d+\.\d+', t):          return 4
+    if re.match(r'^\*{0,2}\d+\.\d+(\s|\*|$)', t):      return 3
+    return None
+
+i = 0
+while i < len(lines):
+    ln = lines[i].rstrip()
+    s = ln.strip()
+
+    if not s:
+        out.append(''); i += 1; continue
+    if WATERMARK.match(s):
+        i += 1; continue
+    # numero de pagina suelto -> marcador
+    if re.match(r'^\d{1,3}$', s) and 1 <= int(s) <= 84:
+        nxt = ''
+        for j in range(i+1, min(i+4, len(lines))):
+            if lines[j].strip():
+                nxt = lines[j].strip(); break
+        if RUNNING.match(nxt) or not nxt:
+            page = int(s)
+            out.append(''); out.append('<!-- pag. %d del PDF -->' % page)
+            i += 1; continue
+    if RUNNING.match(s) and not s.startswith('#'):
+        i += 1; continue
+
+    if s.startswith('#'):
+        title = re.sub(r'^#+\s*', '', s).strip()
+        lvl = level_for(title)
+        if lvl == 0:          # rotulo de contenido, no seccion
+            out.append('**' + re.sub(r'\*\*|:$', '', title).strip() + '**')
+            i += 1; continue
+        if lvl is None:
+            # encabezados decorativos (citas, letras A/B sueltas)
+            plain = re.sub(r'^\*+|\*+$', '', title).strip()
+            if re.match(r'^[AB]$', plain):
+                out.append('**Columna %s**' % plain)
+            elif title.startswith('**_') or 'Gabriel Zaid' in title:
+                out.append('> ' + title.replace('#', '').strip())
+            elif re.match(r'^[a-h]\)', plain):
+                out.append('- ' + plain)
+            else:
+                lvl = 3
+                out.append('#' * lvl + ' ' + re.sub(r'\*\*', '', title))
+        else:
+            out.append('#' * lvl + ' ' + re.sub(r'\*\*', '', title).strip())
+        i += 1; continue
+
+    out.append(re.sub(r'[ \t]+$', '', ln))
+    i += 1
+
+body = '\n'.join(out)
+body = re.sub(r'\n{3,}', '\n\n', body)
+body = re.sub(r'(<!-- pag\. \d+ del PDF -->)\n+(<!-- pag)', r'\2', body)
+body = body.strip()
+
+# 4. indice navegable
+toc = ['## Índice', '']
+for m in re.finditer(r'^(#{2,4}) (.+)$', body, flags=re.M):
+    lvl, title = len(m.group(1)), m.group(2).strip()
+    if title == 'Índice':
+        continue
+    anchor = title.lower()
+    anchor = unicodedata.normalize('NFKD', anchor).encode('ascii', 'ignore').decode()
+    anchor = re.sub(r'[^\w\s-]', '', anchor).strip().replace(' ', '-')
+    toc.append('%s- [%s](#%s)' % ('  ' * (lvl - 2), title, anchor))
+toc.append('')
+
+header = [
+    '# Ética Bursátil y Sanas Prácticas del Mercado de Valores',
+    '',
+    '> **Manual oficial AMIB** — figura EBSPMV.',
+    '> Fuente: `Manual EBSPMVweb.pdf` (84 páginas). Texto íntegro del manual;',
+    '> los marcadores `<!-- pag. N del PDF -->` corresponden 1:1 a las páginas del PDF.',
+    '',
+]
+
+io.open(OUT, 'w', encoding='utf-8').write(
+    '\n'.join(header) + '\n'.join(toc) + '\n\n---\n\n' + body + '\n')
+print('OK ->', OUT)

@@ -1,0 +1,99 @@
+import pandas as pd
+import os
+from datetime import datetime
+
+# ==============================================================================
+# BLOOMBERG REPORT GENERATOR
+# ==============================================================================
+# This script reads the quantitative output from ACTINVER_v2.py
+# and injects it into the Bloomberg-style HTML template.
+
+def generate_report():
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    csv_path = os.path.join(script_dir, "v1_reporte_final.csv")
+    html_template_path = os.path.join(script_dir, "Deep_Value_Report_Final.html")
+    html_output_path = os.path.join(script_dir, "Deep_Value_Report_Final.html")
+
+    if not os.path.exists(csv_path):
+        print(f"Error: {csv_path} not found. Please run ACTINVER_v2.py first.")
+        return
+
+    if not os.path.exists(html_template_path):
+        print(f"Error: Template {html_template_path} not found.")
+        return
+
+    # Load Data
+    df = pd.read_csv(csv_path)
+
+    # We want the Top 25 for the Quant Master Ranking
+    top_25 = df.head(25)
+
+    # Construct the HTML rows
+    # Columns in HTML: Rank, Ticker, Market, Last Close, Fwd P/E, Target Price, Upside %, Dist. ATH %, Mom. Index, Status
+    rows_html = []
+    for i, row in top_25.iterrows():
+        rank = i + 1
+        ticker = row['Ticker_YF']
+        market = row['Mercado']
+        last_close = row['Last_Close'] if pd.notna(row['Last_Close']) else "N/A"
+        fwd_pe = row['Forward_PE'] if pd.notna(row['Forward_PE']) else "N/A"
+        target = row['Target_Price'] if pd.notna(row['Target_Price']) else "N/A"
+        upside = row['Upside_%'] if pd.notna(row['Upside_%']) else "N/A"
+        dist_ath = row['Dist_ATH_%'] if pd.notna(row['Dist_ATH_%']) else "N/A"
+        mom_index = row['Mom_Index'] if pd.notna(row['Mom_Index']) else "N/A"
+
+        # Determine Status based on Upside and Momentum
+        status = "Neutral"
+        status_class = ""
+        try:
+            if pd.notna(row['Upside_%']) and row['Upside_%'] > 15:
+            	status = "Strong Buy"
+            	status_class = "val-pos"
+            elif pd.notna(row['Upside_%']) and row['Upside_%'] > 5:
+            	status = "Buy"
+            	status_class = "val-accent"
+            else:
+            	status = "Hold"
+        except:
+            pass
+
+        row_str = f"""
+                    <tr>
+                        <td>{rank}</td>
+                        <td><strong class="val-accent">{ticker}</strong></td>
+                        <td>{market}</td>
+                        <td>{last_close}</td>
+                        <td>{fwd_pe}</td>
+                        <td>{target}</td>
+                        <td>{upside}%</td>
+                        <td>{dist_ath}%</td>
+                        <td>{mom_index}</td>
+                        <td class="{status_class}">{status}</td>
+                    </tr>"""
+        rows_html.append(row_str)
+
+    table_body = "\n".join(rows_html)
+
+    # Read HTML template and replace the placeholder
+    with open(html_template_path, 'r', encoding='utf-8') as f:
+        html_content = f.read()
+
+    placeholder = '<tbody id="ranking-body">\n                    <!-- Data will be populated from v1_reporte_final.csv after running ACTINVER_v2.py -->\n                    <tr><td colspan="10" style="text-align:center; color:var(--bb-orange);">RUN ACTINVER_v2.py TO POPULATE PROFESSIONAL QUANT DATA</td></tr>\n                </tbody>'
+    # Use a more flexible replacement for the body content
+    import re
+    pattern = r'<tbody id="ranking-body">.*?</tbody>'
+    replacement = f'<tbody id="ranking-body">\n{table_body}\n                </tbody>'
+
+    final_html = re.sub(pattern, replacement, html_content, flags=re.DOTALL)
+
+    # Update Date
+    today = datetime.now().strftime("%Y-%m-%d")
+    final_html = final_html.replace("DATE: 2026-10-04", f"DATE: {today}")
+
+    with open(html_output_path, 'w', encoding='utf-8') as f:
+        f.write(final_html)
+
+    print(f"Successfully populated {html_output_path} with real-time quant data.")
+
+if __name__ == "__main__":
+    generate_report()

@@ -1,0 +1,51 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions")
+$cm=$wb.Worksheets.Item("Consolidated Model")
+$d =$wb.Worksheets.Item("DCF")
+$so=$wb.Worksheets.Item("SOTP")
+$ep=$wb.Worksheets.Item("EPV")
+$su=$wb.Worksheets.Item("Summary")
+Write-Output ("LIBRO: "+[string]$wb.Name)
+Write-Output ""
+Write-Output "### Modulo de desinversion ###"
+Write-Output ("  Segmento a vender = '"+[string]$as.Range("J74").Text+"'   Anio = "+[string]$as.Range("J75").Text+"   Multiplo = "+[string]$as.Range("J76").Text+"   Costos tx = "+[string]$as.Range("J77").Text)
+Write-Output ""
+Write-Output "### Los 5 defectos: estado ###"
+Write-Output ("  1. r63 (tax on non-underlying) FY2030 = "+[string]$cm.Range("O63").Text+"   -> Adj Net Income = "+[string]$cm.Range("O64").Text+"   Adj EPS = "+[string]$cm.Range("O70").Text)
+Write-Output ("  2. PP&E neto (r298) FY2030 = "+[string]$cm.Range("O298").Text+"   PP&E propio (r133) = "+[string]$cm.Range("O133").Text+"   Goodwill (r135) = "+[string]$cm.Range("O135").Text)
+Write-Output ("  3. Amort. intangibles adq. (r19) FY2031 = "+[string]$cm.Range("P19").Text)
+Write-Output ("  4. Depreciacion WM FY2030 (SM r143) = "+[string]$wb.Worksheets.Item("Segment Model").Range("O143").Text)
+Write-Output ("  5. Adj. EBITDA FY2030 (r53) = "+[string]$cm.Range("O53").Text)
+Write-Output ""
+Write-Output "### Checks internos ###"
+Write-Output ("  Balance r168:  FY2029="+[string]$cm.Range("N168").Text+"  FY2030="+[string]$cm.Range("O168").Text+"  FY2031="+[string]$cm.Range("P168").Text)
+Write-Output ("  Caja r215:     FY2029="+[string]$cm.Range("N215").Text+"  FY2030="+[string]$cm.Range("O215").Text+"  FY2031="+[string]$cm.Range("P215").Text)
+Write-Output ""
+Write-Output "### Valuacion actual ###"
+Write-Output ("  DCF = "+[string]$d.Range("E41").Text+"   (upside "+[string]$d.Range("E42").Text+")   WACC = "+[string]$d.Range("P16").Text)
+Write-Output ("  SOTP = "+[string]$so.Range("D112").Text+"    EPV = "+[string]$ep.Range("E61").Text)
+Write-Output ("  DCF r15 lee: "+[string]$d.Range("C15").Formula)
+Write-Output ""
+Write-Output "### Summary: snapshot vs DCF vivo ###"
+$s1=""; $s2=""
+for($c=4;$c -le 9;$c++){ $s1+=([string]$su.Cells.Item(30,$c).Text).PadLeft(10) }
+for($c=3;$c -le 8;$c++){ $s2+=([string]$d.Cells.Item(23,$c).Text).PadLeft(10) }
+Write-Output ("  snapshot r30: "+$s1)
+Write-Output ("  DCF vivo r23: "+$s2)
+Write-Output ""
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=$wb.Worksheets.Item($nm)
+  $e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

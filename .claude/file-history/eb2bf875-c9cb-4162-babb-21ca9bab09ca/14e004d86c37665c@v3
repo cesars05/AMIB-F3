@@ -1,0 +1,43 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions")
+$LT=@{1="A";2="B";3="C";4="D";5="E";6="F";7="G";8="H";9="I";10="J";11="K";12="L";13="M";14="N";15="O";16="P";17="Q";18="R";19="S";20="T";21="U";22="V"}
+
+Write-Output "=== ASSUMPTIONS filas 72..97, celda por celda (col G..K) ==="
+for($r=72;$r -le 97;$r++){
+  foreach($c in 7,8,9,10,11){
+    $t=""; $f=""
+    try{ $t=[string]$as.Cells.Item($r,$c).Text; $f=[string]$as.Cells.Item($r,$c).Formula }catch{}
+    if($t.Trim() -ne ""){ Write-Output ("  "+$LT[$c]+$r+"  texto='"+$t+"'   formula='"+$f+"'") }
+  }
+}
+Write-Output ""
+Write-Output "=== EXPECTED RETURNS: contenido completo ==="
+$er=$wb.Worksheets.Item("Expected Returns")
+for($r=1;$r -le 54;$r++){
+  $line=""; $any=$false
+  foreach($c in 1..22){
+    $t=""
+    try{ $t=[string]$er.Cells.Item($r,$c).Text }catch{}
+    if($t.Length -gt 18){ $t=$t.Substring(0,18) }
+    if($t.Trim() -ne ""){ $any=$true }
+    $line+=$t.PadRight(19)
+  }
+  if($any){ Write-Output ("r"+([string]$r).PadRight(4)+$line.TrimEnd()) }
+}
+Write-Output ""
+Write-Output "=== EXPECTED RETURNS: formulas no triviales ==="
+for($r=1;$r -le 54;$r++){
+  foreach($c in 1..22){
+    $f=""
+    try{ $f=[string]$er.Cells.Item($r,$c).Formula }catch{}
+    if($f.StartsWith("=")){ Write-Output ("  "+$LT[$c]+$r+"  "+$f) }
+  }
+}

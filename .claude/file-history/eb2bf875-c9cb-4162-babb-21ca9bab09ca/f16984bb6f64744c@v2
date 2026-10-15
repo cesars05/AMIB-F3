@@ -1,0 +1,22 @@
+$ErrorActionPreference="Stop"
+$xl=$null
+for($t=0;$t -lt 10;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); break }catch{ Start-Sleep -Milliseconds 800 } }
+if($xl -eq $null){ Write-Output "NO PUDE TOMAR EXCEL"; exit 1 }
+try{ Write-Output ("Ready        = "+[string]$xl.Ready) }catch{ Write-Output ("Ready        -> BLOQUEADO: "+$_.Exception.Message); exit 1 }
+try{ Write-Output ("Calculation  = "+[string]$xl.Calculation) }catch{}
+try{ Write-Output ("CalcState    = "+[string]$xl.CalculationState) }catch{}
+try{ Write-Output ("DisplayAlerts= "+[string]$xl.DisplayAlerts) }catch{}
+try{
+  $wb=$null; foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  Write-Output ("Libro        = "+[string]$wb.Name+"   Saved="+[string]$wb.Saved)
+  $s=$wb.Worksheets.Item("Segment Beta")
+  Write-Output ""
+  Write-Output "=== estado actual de las filas de datos ==="
+  foreach($r in 12,15,16,17,18,19,20,21,22,23,24,27,28,29,30,31,32,35,36,37,38,39,40,41){
+    $ric=[string]$s.Cells.Item($r,3).Text
+    $nm=[string]$s.Cells.Item($r,4).Text
+    if($nm.Length -gt 32){ $nm=$nm.Substring(0,32) }
+    $bu=[string]$s.Cells.Item($r,11).Text
+    Write-Output ("  r"+([string]$r).PadRight(4)+$ric.PadRight(10)+$nm.PadRight(34)+"betaU="+$bu.PadLeft(10))
+  }
+}catch{ Write-Output ("ERROR leyendo: "+$_.Exception.Message) }

@@ -1,0 +1,90 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 40;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 1200 } }; throw "Excel ocupado" }
+$xl=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); break }catch{ Start-Sleep -Milliseconds 900 } }
+$wb=$null; foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("Segment Beta") }
+$xl.Calculation=-4135
+$NAVY=5384228; $GREY=15921906; $WHITE=16777215; $LGREY=10921638; $Q2=[char]34
+
+foreach($r in 32,33,34,35,36,37,39,40,41,42,43,44,45){ T { $s.Range("C"+$r+":N"+$r).Clear() } }
+
+# ---------- encabezado del resumen (mismo estilo que r11) ----------
+T { $s.Cells.Item(32,4).Value2="Segment Cost of Equity" }
+T { $s.Range("C32:H32").Interior.Color=$NAVY }
+T { $s.Range("C32:H32").Font.Color=$WHITE }
+T { $s.Range("C32:H32").Font.Bold=$true }
+T { $s.Range("C32:H32").Font.Size=11 }
+T { $s.Range("C32:H32").Font.Name="Arial" }
+T { $s.Rows.Item(32).RowHeight=24 }
+
+$hd=@{4="Segment";5="Unlevered Beta";6="Re-levered Beta";7="Cost of Equity (Ke)";8="Beta source"}
+foreach($c in $hd.Keys){
+  T { $s.Cells.Item(33,$c).Value2=$hd[$c] }
+  T { $s.Cells.Item(33,$c).Font.Bold=$true }
+  T { $s.Cells.Item(33,$c).Font.Name="Arial" }
+  T { $s.Cells.Item(33,$c).Font.Size=10 }
+  T { $s.Cells.Item(33,$c).Interior.Color=$GREY }
+  if($c -ge 5){ T { $s.Cells.Item(33,$c).HorizontalAlignment=-4152 } }
+}
+T { $s.Rows.Item(33).RowHeight=20 }
+
+# ---------- filas del resumen ----------
+$rows=@(
+ @(34,"Water Management",18,"Median of 3 listed peers"),
+ @(35,"Building Envelope",22,"Alumasc Group own beta - no listed comparable"),
+ @(36,"Housebuilding Products",29,"Median of 4 listed peers"))
+foreach($x in $rows){
+  $r=$x[0]; $src=$x[2]
+  T { $s.Cells.Item($r,4).Value2=$x[1] }
+  T { $s.Cells.Item($r,5).Formula=("=+K"+$src) }
+  T { $s.Cells.Item($r,6).Formula=("=+L"+$src) }
+  T { $s.Cells.Item($r,7).Formula=("=+DCF!`$R`$13+F"+$r+"*DCF!`$R`$14+DCF!`$R`$15") }
+  T { $s.Cells.Item($r,8).Value2=$x[3] }
+  T { $s.Range("C"+$r+":H"+$r).Font.Name="Arial" }
+  T { $s.Range("C"+$r+":H"+$r).Font.Size=10 }
+  T { $s.Range("C"+$r+":H"+$r).Font.Bold=$false }
+  T { $s.Rows.Item($r).RowHeight=20 }
+  T { $s.Range("E"+$r+":F"+$r).NumberFormat='0.00"x"' }
+  T { $s.Range("G"+$r).NumberFormat="0.00%" }
+  T { $s.Range("H"+$r).Font.Italic=$true }
+  T { $s.Range("H"+$r).Font.Color=$LGREY }
+}
+# memo del grupo
+T { $s.Cells.Item(37,4).Value2="Memo: Group beta as used in the DCF" }
+T { $s.Cells.Item(37,6).Formula="=+DCF!`$R`$16" }
+T { $s.Cells.Item(37,7).Formula="=+DCF!`$R`$12" }
+T { $s.Cells.Item(37,8).Value2="Hardcoded in DCF!R16" }
+T { $s.Range("C37:H37").Font.Name="Arial" }
+T { $s.Range("C37:H37").Font.Size=10 }
+T { $s.Range("C37:H37").Font.Italic=$true }
+T { $s.Range("C37:H37").Font.Color=$LGREY }
+T { $s.Range("F37").NumberFormat='0.00"x"' }
+T { $s.Range("G37").NumberFormat="0.00%" }
+T { $s.Rows.Item(37).RowHeight=20 }
+
+# ---------- notas ----------
+$notas=@(
+ @(39,"Notes"),
+ @(40,"(1)  Unlevered beta = levered beta / (1 + (1 - t) x D/E).  D/E is total debt including lease liabilities over market capitalisation net of cash."),
+ @(41,"(2)  Re-levered at Alumasc's own D/E (25.4%) and tax rate - a single balance sheet and one credit facility fund all three segments."),
+ @(42,"(3)  Water Management: Genuit (Polypipe Civils / SuDS), Hill & Smith (infrastructure products), Marshalls (civils drainage).  No listed peer manufactures engineered access covers."),
+ @(43,"(4)  Building Envelope: no listed comparable.  The flat-roof waterproofing franchise is uncontested by the UK peer set; genuine competitors are private or foreign-listed."),
+ @(44,"(5)  Housebuilding Products: Volution (light-side, specification-led), Eurocell (roofline), Genuit (Manthorpe), Forterra (UK housing cycle)."),
+ @(45,"(6)  Ibstock, SigmaRoc, Norcros and Michelmersh excluded.  Ibstock's reported tax rate of -243% distorts its unlevered beta; the other three have no read-across to any Alumasc segment."))
+foreach($n in $notas){
+  T { $s.Cells.Item($n[0],4).Value2=$n[1] }
+  T { $s.Range("D"+$n[0]).Font.Name="Arial" }
+  T { $s.Range("D"+$n[0]).Font.Size=9 }
+  T { $s.Range("D"+$n[0]).Font.Italic=$true }
+  T { $s.Range("D"+$n[0]).Font.Color=$LGREY }
+  T { $s.Rows.Item($n[0]).RowHeight=15 }
+}
+T { $s.Range("D39").Font.Bold=$true }
+T { $s.Range("D39").Font.Color=0 }
+T { $s.Range("D39").Font.Italic=$false }
+
+$xl.Calculation=-4105
+T { $xl.Calculate() }
+$wb.Save()
+Write-Output "etapa 3 lista"

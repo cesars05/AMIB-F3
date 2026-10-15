@@ -1,0 +1,686 @@
+"""US Steel Outlook v3 – Aztlan template + slide-construction skill.
+Sections: 01 Global · 02 US · 03 Europe · 04 Asia · 05 Exposure."""
+import sys, json, copy, datetime as dt
+sys.path.insert(0, r"C:\Users\cesar\.claude\skills\slide-construction\scripts")
+import house
+from house import Deck, rgb, C_NS, _set_bullet
+from PIL import Image
+from lxml import etree
+from pptx.util import Inches, Pt
+from pptx.oxml.ns import qn
+from pptx.chart.data import CategoryChartData
+from pptx.enum.chart import XL_CHART_TYPE, XL_LABEL_POSITION, XL_MARKER_STYLE, XL_TICK_MARK
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.text import PP_ALIGN
+
+ROOT, TEMPLATE, DATA_OLD, DATA, OUT = sys.argv[1:6]
+OLD = json.load(open(DATA_OLD)); D3 = json.load(open(DATA))
+IMG = ROOT + "/04_Imagenes/v3/"; IMG0 = ROOT + "/04_Imagenes/"
+NAVY, NAVY2, GOLD, STEEL, GREY, RED = "#221D55", "#242852", "#F5C400", "#7F8FA9", "#7F7F7F", "#FF0000"
+URL = {"oecd": "https://doi.org/10.1787/99ab9b0c-en", "ws": "https://worldsteel.org/data/world-steel-in-figures/",
+       "sro": "https://worldsteel.org/media/press-releases/", "sima": "https://www.trade.gov/steel", "aisi": "https://www.steel.org/industry-data/",
+       "stld": "https://ir.steeldynamics.com/events-presentations/", "cmc": "https://ir.cmc.com/investors/quarterly-results/",
+       "fred": "https://fred.stlouisfed.org/series/WPU101707"}
+
+house.SYSTEMS["aztlan"]["neg"] = RED          # user's convention: pure red for negatives
+d = Deck("aztlan", template=TEMPLATE, layout="General")
+d.S["neg"] = RED
+
+
+# ------------------------------------------------------------------ helpers
+def slide(title, subtitle=None, source=None, link=None):
+    assert source is None or len(source) <= 95, f"source too long ({len(source)}): {source}"
+    if subtitle and len(subtitle) > 92: print(f"WARN subtitle {len(subtitle)}: {subtitle}")
+    s = d.content_slide(title, subtitle, source=source)
+    if source and link:
+        for ph in s.placeholders:
+            if (ph.top or 0) / 914400 > 6.5 and ph.has_text_frame and ph.text_frame.text == source:
+                ph.text_frame.paragraphs[0].runs[0].hyperlink.address = link
+    return s
+
+
+def bul(s, x, y, w, h, lines, size=12, spacing=6):
+    return d.text(s, x, y, w, h, ["- " + l for l in lines], size=size, align="justify", spacing=spacing)
+
+
+def exhibit(s, x, y, w, h, name, title, sub, boxes=(), align="center", img_dir=None):
+    """Aztlan block header written by us + screenshot without its own title, fitted in the box.
+    boxes = [(fx, fy, fw, fh)] fractions of the image -> red dashed focus boxes."""
+    y2 = d.block_header(s, x, y, w, title, sub)
+    W, H = Image.open((img_dir or IMG) + name).size
+    bw, bh = w, y + h - y2 - 0.04
+    iw, ih = (bw, bw * H / W) if bw * H / W <= bh else (bh * W / H, bh)
+    ix = x + (bw - iw) / 2 if align == "center" else x
+    s.shapes.add_picture((img_dir or IMG) + name, Inches(ix), Inches(y2 + 0.02), Inches(iw), Inches(ih))
+    for fx, fy, fw, fh in boxes:
+        d.dashed_box(s, ix + fx * iw, y2 + 0.02 + fy * ih, fw * iw, fh * ih, color=RED, width=1.5)
+    return y2 + 0.02 + ih
+
+
+def chart_base(gf):
+    ch = gf.chart
+    return ch
+
+
+def line_dates(s, x, y, w, h, dates, series, colors, widths, val_fmt, vmin, vmax, major, date_fmt="yyyy", major_unit=("1", "years"),
+               labels_end=True, end_fmt="{:+.0%}", legend=False):
+    cd = CategoryChartData(); cd.categories = dates
+    for n, v in series.items(): cd.add_series(n, v)
+    gf = s.shapes.add_chart(XL_CHART_TYPE.LINE, Inches(x), Inches(y), Inches(w), Inches(h), cd); ch = gf.chart
+    ch.has_title = False; ch.font.name = "Arial"; ch.font.size = Pt(9)
+    ch._chartSpace.find(f"{{{C_NS}}}chart/{{{C_NS}}}autoTitleDeleted").set("val", "1")
+    d._no_fill_chart(ch)
+    for ser, col, wd in zip(ch.plots[0].series, colors, widths):
+        ser.format.line.color.rgb = rgb(col); ser.format.line.width = Pt(wd); ser.smooth = False
+        ser.marker.style = XL_MARKER_STYLE.NONE
+    va = ch.value_axis; va.minimum_scale, va.maximum_scale, va.major_unit = vmin, vmax, major
+    va.has_major_gridlines = True; va.major_gridlines.format.line.color.rgb = rgb("#E6E6E6"); va.major_gridlines.format.line.width = Pt(0.5)
+    va.tick_labels.number_format = val_fmt; va.tick_labels.number_format_is_linked = False; va.tick_labels.font.size = Pt(9)
+    va.format.line.fill.background(); va.major_tick_mark = XL_TICK_MARK.NONE
+    ca = ch.category_axis; ca.tick_labels.font.size = Pt(9); ca.format.line.color.rgb = rgb("#7F7F7F")
+    ca.tick_labels.number_format = date_fmt; ca.tick_labels.number_format_is_linked = False
+    dax = ch._chartSpace.find(f".//{{{C_NS}}}dateAx")
+    if dax is not None:
+        for tag, val in (("majorUnit", major_unit[0]), ("majorTimeUnit", major_unit[1])):
+            e = dax.find(f"{{{C_NS}}}{tag}")
+            if e is None: e = etree.SubElement(dax, f"{{{C_NS}}}{tag}")
+            e.set("val", val)
+    ch.has_legend = legend
+    if legend:
+        from pptx.enum.chart import XL_LEGEND_POSITION
+        ch.legend.position = XL_LEGEND_POSITION.BOTTOM; ch.legend.include_in_layout = False; ch.legend.font.size = Pt(9)
+    if labels_end:
+        for (n, v), ser, col in zip(series.items(), ch.plots[0].series, colors):
+            k = max(i for i, q in enumerate(v) if q is not None)
+            d._custom_label(ser.points[k], f"{n} {end_fmt.format(v[k])}", size=9, bold=True, color=col, pos=XL_LABEL_POSITION.RIGHT)
+    return gf, ch
+
+
+def clustered(s, x, y, w, h, cats, series, colors, fmt, vmin=None, vmax=None, legend=True, label_size=9, gap=80, overlap=-20, horizontal=False,
+              layout=None):
+    kind = XL_CHART_TYPE.BAR_CLUSTERED if horizontal else XL_CHART_TYPE.COLUMN_CLUSTERED
+    if horizontal:
+        cats = cats[::-1]; series = {k: v[::-1] for k, v in series.items()}
+    gf, ch = d._chart(s, kind, x, y, w, h, cats, series)
+    pl = ch.plots[0]; pl.gap_width, pl.overlap = gap, overlap
+    allv = [v for vs in series.values() for v in vs]
+    d._axis_style(ch, vmin=vmin if vmin is not None else min(0, min(allv) * 1.25), vmax=vmax if vmax is not None else max(allv) * 1.2,
+                  label_low=True, cat_size=9)
+    d._plot_layout(ch, *(layout or ((0.22, 0.02, 0.72, 0.86) if horizontal else (0.02, 0.06, 0.96, 0.76 if legend else 0.84))))
+    for ser, col in zip(pl.series, colors):
+        d._fill(ser.format, col)
+        d._labels(ser, size=label_size, fmt=fmt, pos=XL_LABEL_POSITION.OUTSIDE_END)
+    d._legend(ch, legend)
+    return gf, ch
+
+
+def implication(title, sub, cols, source, bar_text):
+    """'What it means' slide: tail bar + 3 boxed columns (ALLOC s16 grammar)."""
+    s = slide(title, sub, source=source)
+    y = d.tail_bar(s, 0.575, 1.6, 12.3, bar_text, h=0.5, fill=NAVY, size=14)
+    cw, gap = 3.95, (12.302 - 3 * 3.95) / 2
+    for k, (head, lines) in enumerate(cols):
+        x = 0.575 + k * (cw + gap)
+        d.rect(s, x, y + 0.25, cw, 0.42, fill=STEEL if k != 1 else NAVY2, text=head, size=13, bold=True, color="#FFFFFF")
+        d.bullet_box(s, x, y + 0.67, cw, 3.1, lines, size=13, line="#A6A6A6")
+    return s
+
+
+# ================================================================== 1-3 cover, disclaimer, agenda
+d.cover("The US Steel Outlook", subtitle="Global Overcapacity, Tariff Protection and the Steel Cycle", date="October 2026")
+d._new(d.find_layout("Disclaimer_1"))
+s = d.agenda(["Global Steel Market: demand, overcapacity and trade", "United States: prices, demand and Section 232",
+              "Europe: weak demand and a new trade wall", "Asia: China's surplus and the next growth markets",
+              "Steel Exposure Landscape: US producers"], title="Agenda")
+
+# ================================================================== 4 executive summary (user format)
+s = slide("Executive Summary", "Global steel is oversupplied, but Section 232 makes the US a protected, premium market")
+tb = s.shapes.add_textbox(Inches(0.575), Inches(1.45), Inches(12.25), Inches(5.35)); tf = tb.text_frame; tf.word_wrap = True
+for side in ("left", "right"): setattr(tf, f"margin_{side}", Inches(0.02))
+ES = [("Global Outlook", "#221D55",
+       "Demand fell for a fourth year (-2.6% in 2025) and grows only ~0.9% a year to 2030, while capacity hit a record 2,445 Mt: !!excess capacity rises from 640 Mt to 745 Mt by 2028!! and utilization slides toward 74%. China holds 54% of that surplus and exported a record 131 Mt in 2025, so prices and margins in unprotected markets stay under pressure."),
+      ("United States", "#0070C0",
+       "^^The 50% Section 232 tariff^^ cut the finished-steel import share from >22% to ~16% and lets US hot-rolled coil trade at **$1,274/st**, more than twice China's price. ^^Data centers, energy and infrastructure^^ keep mills near 80% utilization; !!a >$400/t gap to Asian import parity and new 2026-27 capacity!! are the risks to prices."),
+      ("Europe", "#0E58C4",
+       "!!Demand fell 1.2% in 2025 and German output dropped 8.8%!! on high energy costs and diverted imports. From July 2026 ^^a new import regime (quotas ~47% lower, 50% out-of-quota duty, melt-and-pour) and the carbon border tax^^ aim to rebuild margins."),
+      ("Asia", "#7F8FA9",
+       "!!China's demand fell 6.9% and its exports rose 13.8%!!, much of it rerouted through Southeast Asia. ^^India (+5.1% a year to 2030) and ASEAN^^ lead global growth, but they are also adding blast furnaces, often Chinese-funded, that can export the next surplus."),
+      ("Producers", "#221D55",
+       "^^Record shipments and rising prices lift results^^: since end-2024 Nucor (+117%) and Steel Dynamics (+111%) beat the S&P 500 (+33%), while Cliffs and CMC trail. !!The debate for 2027 is whether new domestic supply and returning imports cap prices.!!")]
+first = True
+for head, col, body in ES:
+    p = tf.paragraphs[0] if first else tf.add_paragraph(); first = False
+    d._fmt_runs(p, head, 16, True, False, col); p.space_before = Pt(6)
+    p = tf.add_paragraph(); p.alignment = PP_ALIGN.JUSTIFY
+    d._fmt_runs(p, body, 13, False, False, "#000000"); _set_bullet(p, "Ø", 0, 13)
+    p._p.get_or_add_pPr().find(qn("a:buFont")).set("typeface", "Wingdings"); p.space_before = Pt(3)
+
+# ================================================================== 5 two routes (diagram)
+s = slide("Two Routes to Make Steel", "The US makes 71% of its steel in scrap-based electric furnaces vs. 30% globally",
+          source="worldsteel, World Steel in Figures 2026; OECD Steel Outlook 2026", link=URL["ws"])
+rows = [("Integrated route: blast furnace + basic oxygen furnace (BF-BOF)", ["Iron ore +\ncoking coal", "Blast furnace\n(pig iron)", "Basic oxygen\nfurnace", "Flat products\n(sheet, plate)"],
+         "US: Cleveland-Cliffs, U.S. Steel (Nippon Steel)", "2.34 t CO2 per t of steel"),
+        ("Mini-mill route: electric arc furnace (EAF)", ["Scrap, DRI or\npig iron", "Electric arc\nfurnace", "Casting &\nrolling", "Long & flat products\n(rebar, beams, sheet)"],
+         "US: Nucor, Steel Dynamics, CMC", "0.69 t CO2 (scrap-based EAF)")]
+for k, (name, steps, players, co2) in enumerate(rows):
+    yy = 1.6 + k * 2.15
+    d.rect(s, 0.575, yy, 7.9, 0.36, fill=NAVY if k == 0 else STEEL, text=name, size=12, bold=True, color="#FFFFFF", align="left", inset=0.1)
+    bx = 0.575
+    for j, st in enumerate(steps):
+        d.rect(s, bx, yy + 0.52, 1.75, 0.9, fill="#F2F2F2", line="#A6A6A6", text=st, size=11)
+        if j < len(steps) - 1: d.line(s, bx + 1.75, yy + 0.97, bx + 2.05, yy + 0.97, color="#404040", width=1.25, arrow=True)
+        bx += 2.05
+    d.text(s, 0.575, yy + 1.5, 5.2, 0.3, players, size=11, italic=True, inset=0)
+    d.text(s, 5.6, yy + 1.5, 2.9, 0.3, co2, size=11, bold=True, color=NAVY, align="right", inset=0)
+bul(s, 0.575, 5.95, 7.9, 0.8, ["**Why it matters for the cycle:** blast furnaces must run continuously and lock in decades of output, so they keep producing in a downturn; EAFs can throttle production with demand and scrap prices, which is why US mini-mills hold margins better."], size=11)
+yh = d.block_header(s, 9.0, 1.55, 3.85, "EAF Share of Crude Steel", "2025, % of production")
+d.bar_chart(s, 9.0, yh, 3.85, 2.5, ["World", "United States"], [30.3, 71.3], highlight=[1], fmt='0.0"%"', label_size=11, gap=70, cat_size=10)
+bul(s, 9.0, yh + 2.6, 3.85, 1.9, ["EAFs melt scrap with electricity: **lower capital cost, flexible output** and ~70% lower emissions.",
+                                  "The US is the **second-largest scrap exporter** (21.4 Mt), securing cheap feedstock for its mills."], size=11)
+
+# ================================================================== 01 GLOBAL
+d.divider("01  Global Steel Market", "Demand, overcapacity and trade")
+
+# 7 steel use by sector
+s = slide("Steel Follows the Construction Cycle", "Building and infrastructure take 52% of 1,718 Mt of steel use; machinery 16% and autos 12%",
+          source="worldsteel, World Steel in Figures 2026", link=URL["ws"])
+bul(s, 0.575, 1.6, 7.3, 5.1, [
+    "**Building and infrastructure use 52% of all steel**, so demand rises and falls with housing starts, public works and interest rates. This is why China's property slump, the world's largest construction market, is the single biggest swing factor for global steel.",
+    "**Mechanical equipment (16%) and automotive (12%)** link the rest of demand to factory investment and vehicle builds; metal products, other transport, electrical equipment and appliances make up the last 20%.",
+    "**The mix explains today's regional split:** markets with public infrastructure, energy and data-center programs (US, India, Gulf) grow, while those tied to housing (China) or weak manufacturing (Germany, France) shrink.",
+    "**Indicators to track the cycle:** construction starts (Dodge Momentum Index), manufacturing PMIs, auto builds and infrastructure outlays."], size=13, spacing=8)
+s.shapes.add_picture(IMG + "WSIF_steel_use_by_sector.png", Inches(8.35), Inches(1.5), height=Inches(5.25))
+
+# 8 demand by region (OECD Table 2.1 screenshot, user's dashed box)
+s = slide("Global Demand Falls for a Fourth Year", "World steel demand fell 2.6% in 2025 to 1,805 Mt and grows only 0.9% a year to 2030",
+          source="OECD (2026), OECD Steel Outlook 2026, Table 2.1", link=URL["oecd"])
+exhibit(s, 0.575, 1.47, 7.4, 5.3, "OECD_T2.1.png", "Steel Demand by Region", "Million tonnes, crude steel equivalent; 2026 and 2030 projections",
+        align="left", boxes=[(0.02, 0.025, 0.96, 0.05), (0.02, 0.765, 0.96, 0.135)])
+bul(s, 8.3, 1.55, 4.55, 5.2, [
+    "**China (-6.9% in 2025)** drove the decline as the property crisis deepened; Beijing dropped its 'three red lines' developer rules in Jan-26, but buyers stay cautious and demand keeps edging down to 818 Mt in 2030.",
+    "**India is the growth engine:** +9.8% in 2025 and +5.1% a year to 209 Mt by 2030 (+46 Mt), on roads, rail and housing; ASEAN adds +3.5% a year.",
+    "**Mature markets barely grow:** USMCA (+0.4% a year) and the EU (+0.7%). For US mills, earnings depend on price and import share, not volume.",
+    "**Downside risk:** the Middle East conflict lifts energy costs and clouds the 2026 recovery the OECD expects (+0.4%)."], size=12)
+
+# 9 capacity outruns demand (two exhibits, Capex slide-5 grammar)
+s = slide("Capacity Keeps Growing While Demand Shrinks", "Excess capacity reaches 640 Mt in 2025 and 745 Mt by 2028, near the peak of the last steel crisis",
+          source="OECD (2026), OECD Steel Outlook 2026, Figures 1.1 and 3.2", link=URL["oecd"])
+yb = exhibit(s, 0.575, 1.47, 5.97, 3.85, "OECD_1.1.png", "Capacity vs. Demand", "Million tonnes, crude steel; 2026-2028 estimated", boxes=[(0.70, 0.08, 0.27, 0.6)])
+bul(s, 0.575, 5.4, 5.97, 1.35, ["**Capacity rose for four straight years to a record 2,445 Mt** while demand fell; up to 139 Mt more is planned for 2026-28 against only 34 Mt of extra demand, so the gap widens."], size=12)
+exhibit(s, 6.903, 1.47, 5.97, 3.85, "OECD_3.2.png", "Global Capacity Utilization", "Crude steel production as % of capacity", boxes=[(0.70, 0.12, 0.27, 0.75)])
+bul(s, 6.903, 5.4, 5.97, 1.35, ["**Utilization fell to 76% in 2025 and slides toward 74%**, below the ~80% the industry needs to earn its cost of capital: mills keep running and sell the surplus abroad at low prices."], size=12)
+
+# 10 how excess capacity spreads (diagram)
+s = slide("How Excess Capacity Reaches Other Markets", "China's surplus travels through four channels; each new tariff pushes it to a weaker market",
+          source="OECD (2026), OECD Steel Outlook 2026, Chapters 1 and 5", link=URL["oecd"])
+src = d.node(s, 0.575, 2.75, 2.35, 1.35, "China surplus\n54% of global excess capacity; exports 131 Mt (+13.8%)", kind="focus", shape="rect", size=11, align="center")
+chs = [("Direct exports", "Hot-rolled coil and flat products at falling prices; 41% of world trade"),
+       ("Transhipment via ASEAN", "Semi-finished exports to SE Asia +300%; 51 cases re-exported to OECD markets"),
+       ("Steel inside goods", "Fasteners, containers, machinery escape steel-only duties"),
+       ("Investment abroad", "~21% of new capacity is cross-border; 86% of Chinese projects are blast furnaces")]
+tgt = []
+for k, (h, t) in enumerate(chs):
+    yy = 1.55 + k * 1.3
+    b = d.node(s, 3.55, yy, 2.0, 1.05, h, kind="neutral", shape="pentagon", size=11, tip=0.25)
+    d.rect(s, 5.7, yy, 2.85, 1.05, fill="#FFFFFF", line="#A6A6A6", text=t, size=10, align="left", inset=0.08)
+    tgt.append(b)
+d.fan(s, src, tgt, trunk_x=3.25)
+mk = d.node(s, 9.0, 1.55, 3.85, 1.2, "Importing markets\nPrices pushed down; local mills lose share and utilization", kind="input", shape="rect", size=11, align="center")
+rsp = d.node(s, 9.0, 3.3, 3.85, 1.2, "Policy response\n395 AD/CVD measures; broad tariffs: US 232 (50%), EU/UK 50% out-of-quota, Mexico 35%, Canada TRQ", kind="focus", shape="rect", size=10, align="center")
+dv = d.node(s, 9.0, 5.05, 3.85, 1.15, "Diversion\nSteel blocked in one market reappears in the next least-protected one", kind="end", shape="rect", size=11, align="center")
+d.merge(s, [(5.7, 1.55 + k * 1.3, 2.85, 1.05) for k in range(4)], mk, trunk_x=8.78)
+d.flow(s, mk, rsp, side_a="bottom", side_b="top"); d.flow(s, rsp, dv, side_a="bottom", side_b="top")
+d.text(s, 0.575, 4.35, 2.35, 2.3, ["**Why it persists:** the median Chinese mill gets 15x more subsidy per dollar of assets than mills elsewhere, and 59 new local programs in 2025 reward output, not closures."], size=10, align="justify")
+
+# 11 China exports (OECD Figure 1.2)
+s = slide("China Now Ships 41% of the World's Exported Steel", "Chinese exports doubled since 2019 to a record 131 Mt as other major regions export less",
+          source="OECD (2026), OECD Steel Outlook 2026, Figure 1.2 and Table 2.3", link=URL["oecd"])
+exhibit(s, 0.575, 1.47, 7.6, 5.3, "OECD_1.2.png", "Steel Exports by Region", "Million tonnes (left); exports as % of production (right), 2019-2025", align="left",
+        boxes=[(0.02, 0.06, 0.47, 0.72)])
+bul(s, 8.55, 1.55, 4.3, 5.2, [
+    "**China +109% since 2019 (131 Mt):** exports are the outlet for output that the property market no longer absorbs; its share of world trade rose from 19% to 41%.",
+    "**Exports now equal ~14% of Chinese output** (about 5% in 2020), while the share exported by Europe and the rest of Asia keeps falling.",
+    "**Everyone else retreats:** Europe's exports are down 53% since 2019 and North America's 20%, as their mills lose third-country markets to cheaper steel.",
+    "**From Jan-26 China requires export licenses** for all mill products, a possible brake if enforced."], size=12)
+
+# 12 prices split (exhibit + KPI mini table)
+s = slide("Steel Prices Split Between Protected and Open Markets", "US hot-rolled band sells at $1,208/t vs. $429/t in China; futures price the gap to persist",
+          source="OECD Steel Outlook 2026 (Kallanish); US Commerce, SIMA (SteelBenchMarker)", link=URL["oecd"])
+exhibit(s, 0.575, 1.47, 7.1, 5.3, "OECD_2.1.png", "Hot-Rolled Coil Prices by Region", "US$ per metric tonne, 2020-Jan 2026", boxes=[(0.62, 0.08, 0.36, 0.5)])
+yh = d.block_header(s, 8.0, 1.47, 4.87, "Hot-Rolled Band, June 2026", "US$ per metric tonne; gap vs. US")
+d.table(s, 8.0, yh + 0.05, 4.87, [["Market", "US$/t", "Gap vs. US"], ["United States", "1,208", "-"], ["Europe", "780", "(428)"], ["World export", "490", "(718)"], ["China", "429", "(779)"]],
+        col_w=[2.0, 1.3, 1.57], row_h=0.3, size=11, header_fill=NAVY, bold_rows=(1,))
+bul(s, 8.0, yh + 1.75, 4.87, 2.9, [
+    "**Tariffs decoupled the US and EU** from world prices in early 2025; open markets (China, Japan, India, Türkiye) stayed near cost.",
+    "**China's rebar collapse pushed its mills into flat products** for export, adding pressure on third markets and keeping world prices low."], size=12)
+
+# 13 margins squeezed (two exhibits)
+s = slide("Raw Materials Squeeze Mill Margins Outside the US", "Iron ore +9% and coking coal +17% in 2025 while steel stalled; margins sit near cycle lows",
+          source="OECD (2026), OECD Steel Outlook 2026, Figures 2.3 and 2.4", link=URL["oecd"])
+exhibit(s, 0.575, 1.47, 5.97, 3.85, "OECD_2.3.png", "Steelmaking Raw Material Prices", "US$ per metric tonne, 2024-Jan 2026")
+bul(s, 0.575, 5.4, 5.97, 1.35, ["**The input basket rose 10% in 2025**, and energy (20-40% of cost) is rising with the Middle East conflict, so the steel-to-input spread has narrowed since spring 2025."], size=12)
+exhibit(s, 6.903, 1.47, 5.97, 3.85, "OECD_2.4.png", "Steel Industry Profitability", "EBITDA / sales, median firm, %", boxes=[(0.83, 0.25, 0.15, 0.55)])
+bul(s, 6.903, 5.4, 5.97, 1.35, ["**Median EBITDA margins fell to ~9-10%** for OECD and non-OECD mills in 2024, while leverage rose; outside protected markets the industry earns too little to fund the energy transition."], size=12)
+
+# 14 trade defenses go broad (native table)
+s = slide("Trade Defenses Shift to Broad Tariff Walls", "395 AD/CVD cases are in force; governments now add country-wide tariffs and quotas",
+          source="OECD (2026), OECD Steel Outlook 2026, Table 5.1 and Figure 5.1", link=URL["oecd"])
+rows = [["Economy", "Measure", "What changed", "Date"]] + [list(r) for r in D3["measures"]]
+d.table(s, 0.575, 1.55, 8.4, rows, col_w=[1.45, 1.9, 4.05, 1.0], row_h=0.48, size=10, header_fill=NAVY, text_cols=(0, 1, 2, 3), band_rows=(1,))
+bul(s, 9.25, 1.55, 3.6, 5.2, [
+    "**Why broad measures:** with 3,500 steel grades, exporters change a coating or process the steel in a third country to fall outside a product-specific duty.",
+    "**Melt-and-pour rules** (US, EU, Canada) follow the steel to its furnace, closing the transhipment route.",
+    "**The US leads with 77 AD/CVD measures**; China is the target of 113.",
+    "**Next:** GFSEC framework for joint action (28 economies, ~70% of imports)."], size=11)
+
+# 15 what it means: global
+implication("What It Means: A Structural Glut, Managed by Tariffs", "Overcapacity is not cyclical; protection decides who earns a margin",
+            [("Supply", ["**Excess capacity rises to 745 Mt by 2028**, led by China, India and SE Asia.", "Blast furnaces lock in decades of output; closures lag new builds."]),
+             ("Prices", ["**Prices split by trade regime:** protected US and EU vs. depressed world prices.", "Raw materials and energy keep margins thin where steel is not protected."]),
+             ("Policy", ["**Trade walls are the new normal** (232, EU/UK quotas, Mexico, Canada).", "Watch circumvention via ASEAN and the GFSEC framework."])],
+            "OECD Steel Outlook 2026; Aztlan", "The global market will stay oversupplied through 2028: regional protection, not demand, sets steel margins")
+
+# ================================================================== 02 US
+d.divider("02  United States", "Prices, demand, Section 232 and imports")
+
+# 17 HRC price (weekly, commodity) – line with events, bands, market statistics
+hw = [(dt.date.fromisoformat(a), b) for a, b in D3["hrc_weekly"] if a >= "2010-01-01"]
+last_d, last_p = hw[-1]; vals = [p for _, p in hw]; avg = sum(vals) / len(vals)
+s = slide("US Steel Prices Hold a Tariff-Driven Premium", f"Midwest hot-rolled coil at ${last_p:,.0f}/st, {last_p/avg-1:.0%} above its 2010-2026 average of ${avg:,.0f}/st",
+          source="CME US Midwest HRC futures (HRCc1), LSEG Datastream. Weekly settlement, US$/short ton")
+yh = d.block_header(s, 0.575, 1.47, 9.3, "US Midwest Hot-Rolled Coil", "US$ per short ton, weekly settlement, 2010-2026")
+cx, cw, chh = 0.575, 9.3, 6.78 - yh
+gf, ch = line_dates(s, cx, yh, cw, chh, [a for a, _ in hw], {"HRC": vals}, [NAVY], [2.0], '"$"#,##0', 0, 2250, 250, labels_end=False, major_unit=("2", "years"))
+fx, fy, fw, fh = 0.075, 0.03, 0.89, 0.86
+d._plot_layout(ch, fx, fy, fw, fh)
+px, py, pw, ph = cx + cw * fx, yh + chh * fy, cw * fw, chh * fh
+X = lambda day: px + pw * (day - hw[0][0]).days / (hw[-1][0] - hw[0][0]).days
+Y = lambda v: py + ph * (1 - v / 2250)
+for a, b, lab in [(dt.date(2018, 3, 8), dt.date(2025, 3, 11), "232 at 25% (with exemptions)"), (dt.date(2025, 3, 12), hw[-1][0], "50%")]:
+    r = d.rect(s, X(a), py, X(b) - X(a), ph, fill="#F2F2F2"); s.shapes._spTree.remove(r._element); s.shapes._spTree.insert(2, r._element)
+    d.text(s, X(a), py + ph - 0.26, X(b) - X(a), 0.22, lab, size=9, italic=True, color=GREY, align="center", inset=0)
+for day, txt, lab_y, side in [(dt.date(2018, 3, 8), "Mar-18: 232 tariff 25%", 1450, "c"), (dt.date(2021, 9, 10), "Sep-21: post-COVID peak", 2150, "r"),
+                              (dt.date(2025, 2, 10), "Feb-25: 25% on all", 1500, "l"), (dt.date(2025, 5, 30), "May-25: 50% announced", 1850, "l")]:
+    i = min(range(len(hw)), key=lambda q: abs((hw[q][0] - day).days)); xx = X(hw[i][0])
+    col = GREY if "peak" in txt else RED
+    d.line(s, xx, Y(lab_y) + 0.03, xx, Y(hw[i][1]) - 0.04, color=col, width=0.75, dash="dash")
+    bx0 = {"c": xx - 1.0, "l": xx - 2.0, "r": xx}[side]
+    d.text(s, bx0, Y(lab_y) - 0.36, 2.0, 0.34, [f"**{txt}**", f"${hw[i][1]:,.0f}/st"], size=8, color=col,
+           align={"c": "center", "l": "right", "r": "left"}[side], inset=0.03, spacing=0)
+d.text(s, px + pw - 0.1, Y(last_p) - 0.12, 0.8, 0.24, f"**${last_p:,.0f}**", size=10, color=NAVY, inset=0)
+yh2 = d.block_header(s, 10.15, 1.47, 2.72, "Market Statistics", f"As of {last_d:%d-%b-%y}")
+stats = [["Last", f"${last_p:,.0f}"], ["vs. 2010-26 avg", f"{last_p/avg-1:+.0%}"], ["52-week high", f"${max(v for a, v in hw if (last_d - a).days <= 365):,.0f}"],
+         ["52-week low", f"${min(v for a, v in hw if (last_d - a).days <= 365):,.0f}"], ["Peak (Aug-21)", f"${max(vals):,.0f}"], ["BofA 2027E", "$975"]]
+d.table(s, 10.15, yh2 + 0.05, 2.72, [["Metric", "US$/st"]] + stats, col_w=[1.62, 1.1], row_h=0.3, size=10, header_fill=NAVY)
+bul(s, 10.15, yh2 + 2.3, 2.72, 2.4, ["**HRC rose ~68% since the Feb-25 proclamation** ($759 to $1,274/st) as imports fell and lead times stretched.", "**BofA sees $975/st in 2027** as new capacity starts."], size=10)
+
+# 18 PPI cold-rolled (native, government data)
+pp = [(dt.date.fromisoformat(a), v) for a, v in D3["ppi"] if a >= "2015-01-01"]
+s = slide("Mill Price Index Confirms the Move", f"Cold-rolled sheet producer prices rose {pp[-1][1]/[v for a, v in pp if a == dt.date(2024, 12, 1)][0]-1:.0%} since Dec-24, to an index of {pp[-1][1]:.0f}",
+          source="US Bureau of Labor Statistics, PPI WPU101707, via FRED", link=URL["fred"])
+yh = d.block_header(s, 0.575, 1.47, 8.2, "PPI: Cold-Rolled Steel Sheet and Strip", "Index, June 1982 = 100, monthly, 2015-Aug 2026")
+gf, ch = line_dates(s, 0.575, yh, 8.2, 6.78 - yh, [a for a, _ in pp], {"PPI": [v for _, v in pp]}, [NAVY], [2.25], "0", 100, 800, 100,
+                    labels_end=False, major_unit=("1", "years"))
+d._custom_label(ch.plots[0].series[0].points[len(pp) - 1], f"{pp[-1][1]:.0f}", size=9, bold=True, color=NAVY, pos=XL_LABEL_POSITION.RIGHT)
+bul(s, 9.15, 1.55, 3.7, 5.2, [
+    "**An official price series, not a futures quote:** the BLS index tracks what mills actually invoice for cold-rolled sheet, the product sold to autos and appliances.",
+    "**It confirms the 2025-26 upturn:** prices bottomed in late 2024 and rose through each tariff step, with a lag of one to two months as contracts reset.",
+    "**Still below the 2021 peak** (shortage-driven), which leaves room before buyers turn to imports at today's 50% tariff."], size=12)
+
+# 19 US demand drivers (boxes D1)
+s = slide("Projects, Not Housing, Drive US Demand", "worldsteel sees US demand +2.0% in 2026 to 92.7 Mt, led by non-residential and energy",
+          source="worldsteel SRO Oct-2026; CMC FQ3-26; company calls; BofA; OECD Steel Outlook 2026", link=URL["sro"])
+cols = [("Non-residential", "Strong", NAVY, ["**Data centers, chip fabs and reshored factories** are steel-heavy: frames, beams and plate.",
+                                              "**Dodge Momentum Index +34% y/y** (May-26): projects in planning point to strong starts into 2027.",
+                                              "**Steel Dynamics' fabrication backlog is ~50% above last year**, extending into 1Q27."]),
+        ("Energy & grid", "Strong", NAVY, ["**Oil & gas, solar and power transmission** need pipe, plate and towers.",
+                                           "**Grid equipment pays only 15% under 232 until 2027**, a policy choice to speed the build-out.",
+                                           "**Pipe makers are already booking 2027 projects**, giving multi-year visibility."]),
+        ("Infrastructure", "Positive", STEEL, ["**More than 50% of IIJA funds are still unspent**, so public works keep flowing in 2026-27.",
+                                               "**Highway and bridge work** supports rebar and structural demand in core states.",
+                                               "**The Feb-26 maritime plan** could add plate demand from US shipyards."]),
+        ("Automotive", "Flat", STEEL, ["**North American vehicle builds are flat in 2026**, so volume growth must come from share.",
+                                       "**Domestic sourcing is rising:** Cliffs' auto shipments hit a two-year high as imports become costlier.",
+                                       "**Autos are ~12% of global steel use** and the main buyer of coated sheet."]),
+        ("Residential", "Weak", "#A6A6A6", ["**High mortgage rates** keep single-family starts low.",
+                                            "**Multifamily holds up better**, supported by a structural housing shortage.",
+                                            "**The biggest drag on rebar volumes;** a rate-cut cycle would be the upside trigger."])]
+cw, gap = 2.3, (12.302 - 5 * 2.3) / 4
+for k, (h, sig, col, lines) in enumerate(cols):
+    x = 0.575 + k * (cw + gap)
+    d.rect(s, x, 1.55, cw, 0.45, fill=col, text=h, size=13, bold=True, color="#FFFFFF")
+    d.rect(s, x, 2.0, cw, 0.35, fill="#F2F2F2", text=f"Signal: {sig}", size=11, bold=True, color=RED if sig == "Weak" else NAVY)
+    d.bullet_box(s, x, 2.35, cw, 2.5, lines, size=11, line="#A6A6A6")
+d.conclusion_bar(s, "Demand is selective, not broad: growth comes from projects (data centers, energy, public works), while housing lags", y=5.0, h=0.5, fill=NAVY, size=13)
+bul(s, 0.575, 5.65, 12.3, 1.1, ["**Why it matters:** project demand favors structural shapes, plate and rebar (Nucor, Steel Dynamics, CMC) and is booked months ahead, so order books give visibility into 2027 even if housing stays weak."], size=12)
+
+# 20 orders strong (two exhibits)
+s = slide("Orders Stay Strong as Lead Times Stretch", "HRC lead times reach ~9.3 weeks; non-residential spending stays high through 2030",
+          source="BofA Global Research, 9-Oct-2026 (CRU, Platts, Dodge)")
+exhibit(s, 0.575, 1.47, 5.97, 3.85, "BofA_42.png", "Lead Times vs. HRC Price", "Weeks (left); US$ per short ton (right)", boxes=[(0.6, 0.02, 0.38, 0.4)])
+bul(s, 0.575, 5.4, 5.97, 1.35, ["**Lead times lengthened from ~5 to ~9 weeks** and move ahead of prices: when buyers must order two months out, mills gain pricing power. Customers also report **persistently low inventories** (Steel Dynamics)."], size=12)
+exhibit(s, 6.903, 1.47, 5.97, 3.85, "BofA_45.png", "US Non-Residential Construction", "Starts and put-in-place spending, US$ bn; y/y %")
+bul(s, 6.903, 5.4, 5.97, 1.35, ["**Spending holds near ~$900bn a year to 2030**, driven by manufacturing, data centers and infrastructure; this is the steel-intensive part of construction (beams, plate, rebar)."], size=12)
+
+# 21 BofA balance (table exhibit)
+s = slide("Domestic Mills Capture the Growth", "BofA expects US steel use to rise to 107 Mst in 2026E while imports fall to 17% of the market",
+          source="BofA Global Research estimates, 9-Oct-2026 (AISI, US Census Bureau, CRU)")
+bul(s, 0.575, 1.5, 12.3, 1.2, ["**Demand up, imports down, output up:** apparent use recovers from 99 Mst (2024) to 107 Mst (2026E) on reshoring, infrastructure and AI capex, while finished imports fall to 18 Mst; domestic production rises to 95 Mst and utilization to ~77%.",
+                               "**The price path is the risk:** BofA's HRC falls from $1,114/st (2026E) to $975 (2027E) as new capacity (+4 Mst) arrives."], size=12)
+exhibit(s, 0.575, 2.85, 12.3, 3.9, "BofA_46.png", "US Steel Supply and Demand Model", "Million short tons; 2026E-2028E BofA estimates", boxes=[(0.775, 0.0, 0.07, 0.9)])
+
+# 22 Section 232 timeline (diagram)
+s = slide("Section 232 Reshapes the US Steel Market", "The tariff doubled to 50% in June 2025 and now applies to the full value of derivatives",
+          source="OECD Steel Outlook 2026, Table 5.1; Presidential Proclamations; AISI", link=URL["oecd"])
+ms = [("8 Mar 2018", "25%", "Section 232 tariff of 25% on most steel; several countries later exempted or under quotas"),
+      ("10 Feb 2025", "25% on all", "Proclamation ends country exemptions and product exclusions (effective 12 Mar 2025)"),
+      ("30 May 2025", "50%", "Trump announces 50% at U.S. Steel's Irvin plant (proclamation 3 Jun, effective 4 Jun; UK 25%)"),
+      ("Apr 2026", "Full value", "50% on the full value of all-steel goods, 25% derivatives, 15% grid equipment to 2027, 10% if US-melted")]
+bw = 2.85; gp = (12.302 - 4 * bw) / 3; ly = 2.5
+d.line(s, 0.575, ly, 12.877, ly, color=NAVY, width=2.0)
+for k, (date, tag, txt) in enumerate(ms):
+    bx = 0.575 + k * (bw + gp); cxk = bx + bw / 2; hot = k == 2
+    d.rect(s, cxk - 0.13, ly - 0.13, 0.26, 0.26, fill=GOLD if hot else NAVY, shape=MSO_SHAPE.OVAL)
+    d.text(s, bx, 1.5, bw, 0.3, date, size=14, bold=True, align="center", inset=0)
+    d.rect(s, cxk - 0.75, 1.87, 1.5, 0.36, fill=GOLD if hot else NAVY, text=tag, size=12, bold=True, color="#000000" if hot else "#FFFFFF", round_=0.3)
+    d.rect(s, bx, 2.85, bw, 1.55, fill="#F2F2F2", line="#A6A6A6", text=txt, size=12, anchor="top", align="left", inset=0.1)
+d.conclusion_bar(s, "Result: finished-steel import share fell from >22% (1Q25) to ~16% (YTD 2026) and mill utilization rose to ~80%", y=4.6, h=0.55, fill=NAVY, size=13)
+bul(s, 0.575, 5.3, 12.3, 1.45, ["**Why it worked better than 2018:** removing exemptions closed the routes through Canada, Mexico and Brazil, and taxing derivatives on full value stops steel from entering inside finished goods.",
+                                "**What to watch:** the annual USMCA review (rules of origin, melt-and-pour) and any carve-outs for allies are the main policy swing factors for 2027."], size=12)
+
+# 23 imports annual (native) + penetration exhibit
+ann = {int(k): v for k, v in OLD["ann"].items()}
+yrs = [y for y in sorted(ann) if y <= 2025]
+cats6 = ["Flat (Carbon and Alloy)", "Semi-Finished (Carbon and Alloy)", "Pipe and Tube (Carbon and Alloy)", "Long (Carbon and Alloy)", "Stainless", "Other (Carbon and Alloy)"]
+short = ["Flat", "Semi-finished", "Pipe & tube", "Long", "Stainless", "Other"]
+t25, t24 = sum(ann[2025].values()), sum(ann[2024].values())
+s = slide("Imports Fall Under the 50% Tariff", f"Imports fell {1 - t25 / t24:.1%} in 2025 to {t25:.1f} Mt and finished-steel penetration reached 15.7% in June 2026",
+          source="US Commerce, Enforcement & Compliance (SIMA, Census); AISI", link=URL["sima"])
+yh = d.block_header(s, 0.575, 1.47, 6.9, "US Steel Mill Imports by Category", "Million metric tons, 2015-2025")
+d.stacked_columns(s, 0.575, yh, 6.9, 6.76 - yh, [str(y) for y in yrs], {sh: [ann[y].get(c, 0) for y in yrs] for sh, c in zip(short, cats6)},
+                  colors=[NAVY, STEEL, "#9DAAC0", GOLD, "#404040", "#D9D9D9"], fmt="0.0", total_fmt="{:,.1f}", label_size=8, inside_labels=False)
+yb = exhibit(s, 7.85, 1.47, 5.0, 3.0, "SIMA_11.png", "Finished-Steel Import Penetration", "% of apparent consumption, excl. semi-finished", boxes=[(0.83, 0.15, 0.15, 0.5)])
+bul(s, 7.85, yb + 0.1, 5.0, 6.76 - yb - 0.1, ["**2025 averaged 18.2%; June 2026 hit 15.7%**, near the series low: every point of share returned to US mills is ~1 Mt of extra domestic output.",
+                                             "**Semi-finished slab (Brazil, Mexico) is the floor:** US rolling mills need it, so it falls less than finished steel."], size=11)
+
+# 24 who still ships (native)
+cty = D3["imports_country"][:8]
+s = slide("Korea Replaces Canada as the Top Supplier", "2026 annualized imports: Canada -51% vs. 2024, South Korea +59% and now #1",
+          source="US Commerce, Enforcement & Compliance (SIMA, Census); 2026 = Jan-Aug x 12/8", link=URL["sima"])
+yh = d.block_header(s, 0.575, 1.47, 7.6, "US Steel Imports by Country of Origin", "Million metric tons; 2026 annualized from January-August")
+gf, ch = clustered(s, 0.575, yh, 7.6, 6.76 - yh, [c[0] for c in cty], {"2024": [c[2] for c in cty], "2025": [c[3] for c in cty], "2026 annualized": [c[4] for c in cty]},
+                   ["#C2D7F6", STEEL, NAVY], "0.0", vmin=0, vmax=7, horizontal=True, gap=40, overlap=-5, legend=True, label_size=8)
+bul(s, 8.55, 1.55, 4.3, 5.2, [
+    "**The old exemption countries lost the most:** Canada, Brazil and Mexico together fall from ~13 Mt (2024) to ~8 Mt annualized, as 2025 removed their quotas and duty-free access.",
+    "**South Korea is the exception:** shipments rose ~59% to ~4 Mt annualized, the #1 origin (+54% YTD per AISI), led by record rebar in July; AISI is asking for action.",
+    "**Vietnam is rising too (+16%)**, consistent with the OECD's transhipment evidence: Chinese semi-finished steel processed in SE Asia.",
+    "**Implication:** the next policy step is likely aimed at specific countries, not the headline rate."], size=12)
+
+# 25 domestic mills run harder (exhibit)
+s = slide("Domestic Mills Run Harder", "AISI utilization averages 79% YTD 2026; mini-mills such as Steel Dynamics run at ~90%",
+          source="Steel Dynamics Q2-26 presentation (AISI, US Commerce); AISI weekly production", link=URL["stld"])
+exhibit(s, 0.575, 1.47, 7.0, 5.3, "STLD_p7_utilization_imports.png", "Utilization vs. Import Share", "Industry and Steel Dynamics utilization; imports as % of apparent consumption", align="left", boxes=[(0.58, 0.02, 0.41, 0.66)])
+bul(s, 7.95, 1.55, 4.9, 5.2, [
+    "**Utilization of ~80% is the pricing-power threshold:** AISI's industry rate averages 79.0% YTD 2026 (77.0% a year ago), with raw steel output +5.3% and shipments +5.4%.",
+    "**Mini-mills run hardest:** Steel Dynamics ran at 90% in Q2-26 vs. ~81% for the industry, because flexible EAFs win the incremental order.",
+    "**Imports fell to ~15-17% of consumption**, the lowest in years; the share lost by imports went straight to domestic order books.",
+    "**Headroom is limited:** above ~85% new orders stretch lead times further, which is where prices are today."], size=12)
+
+# 26 imports rebound in 2026 (native monthly + partner exhibit)
+mon = sorted((dt.date.fromisoformat(k), sum(v.values())) for k, v in OLD["mon"].items())
+s = slide("Imports Rebound in 2026 as the Price Gap Widens", f"Monthly imports climbed from {mon[11][1]:.1f} Mt in Dec-25 to {mon[-1][1]:.1f} Mt in Aug-26 (+25% y/y)",
+          source="US Commerce, Enforcement & Compliance (SIMA, Census; Exec. Summary Apr-Jun 2026)", link=URL["sima"])
+yh = d.block_header(s, 0.575, 1.47, 6.6, "US Monthly Steel Mill Imports", "Million metric tons; 2026 highlighted")
+d.bar_chart(s, 0.575, yh, 6.6, 6.76 - yh, [m.strftime("%b-%y") for m, _ in mon], [v for _, v in mon],
+            highlight=[i for i, (m, _) in enumerate(mon) if m.year == 2026], fmt="0.0", label_size=8, gap=40, cat_size=8)
+yb = exhibit(s, 7.55, 1.47, 5.3, 2.9, "SIMA_2.png", "Imports by Partner, YTD June 2026", "Share of 10.3 Mt total")
+bul(s, 7.55, yb + 0.1, 5.3, 6.76 - yb - 0.1, ["**Imports are recovering from a tariff-shock low:** at $1,274/st the US price pays for the 50% duty from some origins, so volume returns.",
+                                             "**Korea (17.6%), Canada (13.9%) and Brazil (13.3%)** lead; September permits ran 27% above the YTD average."], size=11)
+
+# 27 premium invites imports back (exhibit)
+s = slide("The Price Premium Invites Imports Back", "US HRC trades >$400/st above SE Asian import parity, the key risk for 2027 prices",
+          source="BofA Global Research, 9-Oct-2026 (CRU, Platts); company releases")
+exhibit(s, 0.575, 1.47, 6.0, 5.3, "BofA_43.png", "US HRC vs. Import Parity", "US$ per short ton; landed cost incl. 50% tariff", boxes=[(0.62, 0.0, 0.37, 0.75)])
+bul(s, 6.95, 1.55, 5.9, 5.2, [
+    "**The arbitrage is open:** US HRC at $1,260/st vs. $829/st landed from SE Asia even after the 50% tariff; German parity ($1,237/st) is close to the US price.",
+    "**New domestic supply arrives at the same time:** U.S. Steel restarted Gary Works blast furnace #14 (2.7 Mtpa) in September and Nucor's West Virginia sheet mill (3 Mtpa) ramps into 2027.",
+    "**BofA expects HRC to ease to $975/st in 2027E and $950 in 2028E**, still well above the 2010-24 average but below today's spot.",
+    "**What would extend the cycle:** tighter enforcement on Korea/Vietnam, melt-and-pour rules in the USMCA review, or stronger data-center demand."], size=12)
+
+# 28 what it means: US
+implication("What It Means: A Protected Market Near Its Price Peak", "Policy and project demand support volumes; supply and imports cap prices from 2027",
+            [("Supports", ["**50% tariff + melt-and-pour** keep finished imports near 16%.", "Data centers, energy and IIJA keep order books full into 2027.", "Low customer inventories and ~9-week lead times."]),
+             ("Risks", ["!!>$400/st gap to Asian parity!! is pulling imports back (+25% y/y in Aug).", "!!New supply!!: Gary #14 and Nucor WV add ~5.7 Mtpa.", "USMCA review and possible carve-outs."]),
+             ("Signals to watch", ["Monthly SIMA imports (Korea, Vietnam).", "AISI utilization vs. 80%.", "HRC futures curve and lead times.", "Q3 results: STLD 19-Oct, NUE 26-Oct."])],
+            "Aztlan; sources on previous slides", "US steel earns a tariff premium today; 2027 depends on how fast imports and new capacity close the gap")
+
+# ================================================================== 03 EUROPE
+d.divider("03  Europe", "Weak demand, shrinking mills and a new trade wall")
+
+s = slide("European Demand Struggles to Recover", "EU and UK demand fell 1.2% in 2025; BofA's real-time gauge is negative again in 2026",
+          source="BofA Global Research, 9-Oct-2026 (Bloomberg); OECD Steel Outlook 2026", link=URL["oecd"])
+exhibit(s, 0.575, 1.47, 6.0, 5.3, "BofA_63.png", "Europe Real-Time Steel Demand Indicator", "Year-on-year change by end use, %", boxes=[(0.72, 0.0, 0.27, 0.55)])
+bul(s, 6.95, 1.55, 5.9, 5.2, [
+    "**Industry and construction are both weak:** high energy prices hurt energy-intensive manufacturing, and construction keeps underperforming; BofA calls it an 'air pocket' in the recovery.",
+    "**Germany (-6.1%) and France (-12.6%)** led the 2025 decline; EU-funded infrastructure that supported 2025 fades through 2026.",
+    "**Forecasts disagree on timing:** worldsteel sees -0.3% in 2026 and a 3.1% rebound in 2027; the OECD +1.4% in 2026.",
+    "**Downstream competitiveness is the swing factor:** if European autos and machinery lose share, steel demand follows."], size=12)
+
+eu = [("Türkiye", 38.1, 36.9), ("Germany", 34.1, 37.3), ("Italy", 20.7, 20.0), ("Spain", 11.8, 11.9), ("France", 9.9, 10.8),
+      ("Austria", 7.6, 7.1), ("Belgium", 7.2, 7.1), ("Poland", 7.2, 7.1), ("Netherlands", 6.5, 6.4)]
+s = slide("Europe's Mills Shrink Under Cost and Import Pressure", "EU and UK output fell 2.4% in 2025; Germany, the EU's largest producer, dropped 8.8%",
+          source="worldsteel, World Steel in Figures 2026; OECD Steel Outlook 2026", link=URL["ws"])
+yh = d.block_header(s, 0.575, 1.47, 7.0, "Crude Steel Production, 2025", "Million tonnes; y/y change in brackets")
+gfe, che = d._chart(s, XL_CHART_TYPE.BAR_CLUSTERED, 0.575, yh, 7.0, 6.76 - yh, [c for c, _, _ in eu][::-1], {"2025": [a for _, a, _ in eu][::-1]})
+che.plots[0].gap_width = 45
+d._axis_style(che, vmin=0, vmax=50, cat_size=10, label_low=True); d._plot_layout(che, 0.20, 0.01, 0.66, 0.97)
+sere = che.plots[0].series[0]; d._fill(sere.format, NAVY)
+for k, (c, a, b) in enumerate(eu[::-1]):
+    g = a / b - 1
+    d._fill(sere.points[k].format, RED if g < -0.03 else NAVY)
+    d._custom_label(sere.points[k], f"{a:.1f}  ({g:+.1%})", size=9, bold=False, color="#000000", pos=XL_LABEL_POSITION.OUTSIDE_END)
+d._legend(che, False)
+bul(s, 7.95, 1.55, 4.9, 5.2, [
+    "**Germany -8.8%:** weak demand, high energy costs and imports; Thyssenkrupp is cutting jobs and capacity, and output is expected to stay flat to 2030.",
+    "**Italy (+2.4%) and Türkiye (+2.3%) grew,** helped by a late-2025 rebound and Turkish exports (+12%).",
+    "**Imports filled the gap:** EU27+UK imports rose in 2025 even under the safeguard; semi-finished steel, outside the quotas, made up nearly half of the increase.",
+    "**Diverted steel lands here:** Brazil's shipments to Europe doubled after the US raised tariffs."], size=12)
+
+s = slide("Europe Loses Exports and Absorbs Asian Steel", "European exports fell 53% since 2019; Asian steel gained share in Italy, Türkiye and Spain",
+          source="OECD (2026), OECD Steel Outlook 2026, Figure 2.6 and Table 2.3", link=URL["oecd"])
+exhibit(s, 0.575, 1.47, 7.6, 5.3, "OECD_2.6.png", "Change in Imports by Source and Market", "Million tonnes, 2019-2025", align="left",
+        boxes=[(0.23, 0.48, 0.73, 0.11)])
+bul(s, 8.55, 1.55, 4.3, 5.2, [
+    "**EU27 lost its own neighbors:** EU shipments into France (-4.7 Mt), Germany (-3.1 Mt) and Italy (-1.6 Mt) fell, replaced by ASEAN, Chinese and MENA steel.",
+    "**Europe now exports 26% of its output vs. 47% in 2019** (EU27+UK exports -38.5% to 22.8 Mt), so lost export volume becomes idle capacity at home.",
+    "**Türkiye and Italy are the entry points:** +4.1 Mt and +1.1 Mt from China, +2.4 Mt each from ASEAN.",
+    "**This is exactly what the new trade regime targets.**"], size=12)
+
+s = slide("Europe Builds Its Own Trade Wall", "From July 2026 import quotas fall ~47% and out-of-quota steel pays a 50% duty",
+          source="OECD Steel Outlook 2026, Table 5.1; CMC; US Commerce, SIMA; BofA Global Research", link=URL["oecd"])
+steps = [("Until Jun 2026", "Safeguard", "Country quotas; 25% duty above quota; liberalization cut to 0.1%/yr in 2025"),
+         ("1 Jan 2026", "CBAM", "Carbon border tax enters definitive phase; >€50/t on some long products once fully applied"),
+         ("1 Jul 2026", "New regulation", "Quotas ~47% below 2024; out-of-quota duty 25% to 50%; 'melt and pour' origin rule")]
+bw = 3.85; gp = (12.302 - 3 * bw) / 2; ly = 2.4
+d.line(s, 0.575, ly, 12.877, ly, color=NAVY, width=2.0)
+for k, (dte, tag, txt) in enumerate(steps):
+    bx = 0.575 + k * (bw + gp); cxk = bx + bw / 2; hot = k == 2
+    d.rect(s, cxk - 0.13, ly - 0.13, 0.26, 0.26, fill=GOLD if hot else NAVY, shape=MSO_SHAPE.OVAL)
+    d.text(s, bx, 1.47, bw, 0.3, dte, size=14, bold=True, align="center", inset=0)
+    d.rect(s, cxk - 0.95, 1.8, 1.9, 0.36, fill=GOLD if hot else NAVY, text=tag, size=12, bold=True, color="#000000" if hot else "#FFFFFF", round_=0.3)
+    d.rect(s, bx, 2.7, bw, 1.05, fill="#F2F2F2", line="#A6A6A6", text=txt, size=12, anchor="top", align="left", inset=0.1)
+yh = d.block_header(s, 0.575, 3.95, 12.3, "Hot-Rolled Band Price by Region, June 2026", "US$ per metric tonne")
+for k, (n, v) in enumerate([("United States", 1208), ("Europe", 780), ("China", 429)]):
+    bx = 0.575 + k * (bw + gp)
+    d.rect(s, bx, yh + 0.08, 2.0, 0.5, fill=NAVY if k == 0 else (STEEL if k == 1 else GREY), text=n, size=13, bold=True, color="#FFFFFF")
+    d.rect(s, bx + 2.0, yh + 0.08, 1.85, 0.5, fill="#FFFFFF", line=NAVY, text=f"${v:,}/t", size=15, bold=True)
+bul(s, 0.575, yh + 0.75, 12.3, 1.5, ["**Europe still prices ~$430/t below the US but $350/t above China.** The tighter quotas and CBAM should lift that floor: BofA sees Northern European HRC rising from $836/t (2026E) to $879/t (2027E).",
+                                     "**The UK follows** with quotas 60% lower and a 50% out-of-quota rate, covering FTA partners too, so diverted steel has fewer places to go."], size=12)
+
+implication("What It Means: Europe Copies the US Playbook", "Protection arrives later and from a weaker base; margins should improve from a low starting point",
+            [("Demand", ["!!Weak:!! construction and energy-intensive industry lag; recovery pushed to 2027.", "Germany and France are the weakest markets."]),
+             ("Supply & trade", ["**Quotas -47%, 50% duty and CBAM** shrink import access from Jul-26.", "Exports keep falling: Europe is now a net importer region."]),
+             ("Read-across for the US", ["Steel shut out of Europe and the US looks for the next open market.", "Europe's lower price ($780/t) limits arbitrage into the US from EU mills."])],
+            "Aztlan; OECD Steel Outlook 2026", "Europe is a weak but increasingly protected market: expect better prices, not more volume")
+
+# ================================================================== 04 ASIA
+d.divider("04  Asia", "China's surplus and the next growth markets")
+
+s = slide("China Exports What It Cannot Use", "Demand fell 6.9% in 2025 but output only 4.3%; the surplus went abroad at falling prices",
+          source="OECD (2026), OECD Steel Outlook 2026, Figure 1.2", link=URL["oecd"])
+bul(s, 0.575, 1.55, 5.3, 5.2, [
+    "**The property slump turned Chinese mills into exporters:** demand fell to 831 Mt while production stayed at 961 Mt, a ~130 Mt surplus that only foreign markets could absorb.",
+    "**Volume up, value flat:** Chinese export tonnage doubled since 2019 while export value grew far less, a sign of steep discounting; ASEAN shows the same pattern.",
+    "**Subsidies keep marginal plants open:** the median Chinese mill gets 15x the subsidy of peers elsewhere, and local programs reward output, not closures.",
+    "**What could change it:** export licensing (Jan-26), a stricter 1.5:1 capacity-swap rule and 'anti-involution' policy, if enforced."], size=12)
+exhibit(s, 6.2, 1.47, 6.67, 5.3, "OECD_2.5.png", "Export Volume vs. Export Value", "Index, 2019 = 100; dashed = volume, solid = value", boxes=[(0.6, 0.25, 0.37, 0.45)])
+
+s = slide("India and Southeast Asia Lead Asia's Growth", "To 2030 India's demand grows 5.1% a year and ASEAN output 8.5%; Japan-Korea shrink",
+          source="OECD (2026), OECD Steel Outlook 2026, Tables 2.1-2.2; Aztlan", link=URL["oecd"])
+yh = d.block_header(s, 0.575, 1.47, 7.6, "Demand vs. Production Growth, 2025-2030", "Compound annual growth rate, %")
+clustered(s, 0.575, yh, 7.6, 6.76 - yh, ["China", "Japan & Korea", "India", "ASEAN", "Other Asia"], {"Demand": [-0.3, -0.4, 5.1, 3.5, 1.8], "Production": [-0.6, -1.3, 4.8, 8.5, 0.4]},
+          [NAVY, GOLD], '0.0"%"', vmin=-3, vmax=10)
+bul(s, 8.55, 1.55, 4.3, 5.2, [
+    "**India grows into its capacity:** demand +9.8% in 2025 and 209 Mt by 2030; it added 41 Mt of capacity in 2021-25 and stays a modest net importer, but a 300 Mt capacity target would leave ~90 Mt surplus.",
+    "**ASEAN builds faster than it consumes:** output +8.5% a year vs. demand +3.5%, much of it in Chinese-funded blast furnaces; Vietnam targets 65-70 Mt by 2050.",
+    "**Japan and Korea shrink at home** (demand -5.1% in 2025) and push steel abroad: Korea is now the largest supplier to the US."], size=12)
+
+s = slide("New Capacity Concentrates in Asia", "Asia holds 84 Mt of the 139 Mt planned for 2026-28; China returns as the largest builder",
+          source="OECD (2026), OECD Steel Outlook 2026, Figure 3.3 and Table 3.2", link=URL["oecd"])
+exhibit(s, 0.575, 1.47, 7.6, 5.3, "OECD_3.3.png", "Potential Capacity Additions, 2026-2028", "Million tonnes, by region and furnace type", align="left", boxes=[(0.05, 0.0, 0.1, 0.72)])
+bul(s, 8.55, 1.55, 4.3, 5.2, [
+    "**China plans up to 38.6 Mt** after cutting 11 Mt in 2021-25, the largest national expansion anywhere; whether closures offset it depends on the new 1.5:1 swap rule.",
+    "**India adds up to 31.8 Mt** after +41 Mt in 2021-25; together China and India are 84% of Asia's additions, mostly blast furnaces.",
+    "**Only 47 Mt is underway; 92 Mt is planned**, so the 2028 surplus could be smaller if projects slip, an upside risk to prices.",
+    "**North America adds ~11 Mt, mostly electric furnaces.**"], size=12)
+
+s = slide("Chinese Capital Builds Blast Furnaces Abroad", "~21% of future capacity is cross-border; most is Chinese and 86% uses blast furnaces",
+          source="OECD (2026), OECD Steel Outlook 2026, Figures 3.4 and 3.6", link=URL["oecd"])
+exhibit(s, 0.575, 1.47, 5.97, 3.85, "OECD_3.4.png", "Cross-Border Steel Investments", "By investor and technology, % (left); by host region, Mt (right)")
+bul(s, 0.575, 5.4, 5.97, 1.35, ["**93% of these investments are in Asia**, mostly SE Asia: capacity relocated outside China keeps the surplus in the region and can reach the US and EU without a Chinese origin."], size=12)
+exhibit(s, 6.903, 1.47, 5.97, 3.85, "OECD_3.6.png", "Global Blast Furnace Capacity", "Commissioned vs. withdrawn, Mt", boxes=[(0.08, 0.05, 0.4, 0.55)])
+bul(s, 6.903, 5.4, 5.97, 1.35, ["**New blast furnaces lock in supply for decades:** they must run continuously to be viable, so output stays decoupled from demand signals while advanced economies retire old furnaces."], size=12)
+
+implication("What It Means: Asia Sets the Global Price", "China's surplus and Asian capacity keep world prices low and threaten US imports",
+            [("China", ["!!Demand keeps falling to 2030!!; exports stay the outlet.", "Watch export licensing and capacity-swap enforcement."]),
+             ("India & ASEAN", ["**Real demand growth** (India +5%/yr) but capacity grows faster.", "Chinese-funded furnaces in SE Asia create a new export base."]),
+             ("Japan & Korea", ["Shrinking home demand pushes exports.", "!!Korea is the #1 supplier to the US!! (+54% YTD): a likely target for new US measures."])],
+            "Aztlan; OECD Steel Outlook 2026; AISI", "Asia is where global steel prices are set; its surplus is the ceiling on how long US and EU premiums can last")
+
+# ================================================================== 05 EXPOSURE
+d.divider("05  Steel Exposure Landscape", "US producers")
+
+# 42 cumulative return since 2025 with events
+st = D3["stocks"]
+dates = [dt.date.fromisoformat(a) for a, _, _ in st]
+base = st[0]
+names = ["Nucor", "Steel Dynamics", "Cleveland-Cliffs", "CMC", "S&P 500"]
+series = {}
+for j, n in enumerate(names[:4]):
+    series[n] = [(v[j] / base[1][j] - 1) if v[j] else None for _, v, _ in st]
+series["S&P 500"] = [(sp / base[2] - 1) if sp else None for _, _, sp in st]
+fin = {n: [q for q in v if q is not None][-1] for n, v in series.items()}
+s = slide("Steelmakers Have Beaten the S&P 500 Since 2025", f"Since end-2024 Nucor {fin['Nucor']:+.0%}, Steel Dynamics {fin['Steel Dynamics']:+.0%} vs. S&P 500 {fin['S&P 500']:+.0%}",
+          source="LSEG Datastream (price, P; S&P 500 = S&PCOMP, PI). Cumulative price return")
+yh = d.block_header(s, 0.575, 1.47, 9.4, "Cumulative Share Price Return Since 31-Dec-2024", "%, daily")
+cx, cw, chh = 0.575, 9.4, 6.78 - yh
+gf, ch = line_dates(s, cx, yh, cw, chh, dates, series, [NAVY, GOLD, STEEL, "#9DAAC0", "#404040"], [2.25, 2.25, 1.5, 1.5, 2.0], "0%", -0.5, 1.5, 0.25,
+                    date_fmt="mmm-yy", major_unit=("3", "months"), labels_end=True, end_fmt="{:+.0%}")
+from pptx.enum.chart import XL_TICK_LABEL_POSITION
+ch.category_axis.tick_label_position = XL_TICK_LABEL_POSITION.LOW
+ch.plots[0].series[4].format.line.dash_style = __import__("pptx.enum.dml", fromlist=["MSO_LINE_DASH_STYLE"]).MSO_LINE_DASH_STYLE.DASH
+fx, fy, fw, fh = 0.07, 0.03, 0.75, 0.86
+d._plot_layout(ch, fx, fy, fw, fh)
+px, py, pw, ph = cx + cw * fx, yh + chh * fy, cw * fw, chh * fh
+X = lambda day: px + pw * (day - dates[0]).days / (dates[-1] - dates[0]).days
+for day, txt, yy in [(dt.date(2025, 2, 10), "10-Feb-25\n232 at 25%,\nno exemptions", 0.0), (dt.date(2025, 4, 2), "2-Apr-25\n'Liberation Day'", 0.55),
+                     (dt.date(2025, 5, 30), "30-May-25\nTrump: 50%\non steel", 0.0)]:
+    xx = X(day); col = GREY if "Liberation" in txt else RED
+    d.line(s, xx, py + 0.62, xx, py + ph, color=col, width=1.0, dash="dash")
+    d.text(s, xx - 0.6, py + 0.02 + yy, 1.2, 0.6, txt, size=8, bold=True, color=col, align="center", inset=0, spacing=0)
+yh2 = d.block_header(s, 10.25, 1.47, 2.62, "Return Summary", "Price return, %")
+def ret(j, since):
+    idx = next(i for i, x in enumerate(dates) if x >= since)
+    a = series[names[j]]; b0 = (1 + a[idx]); b1 = 1 + [q for q in a if q is not None][-1]
+    return b1 / b0 - 1
+rows = [["", "Since 2025", "Since 30-May"]] + [[n, f"{fin[n]:+.0%}", f"{ret(j, dt.date(2025, 5, 30)):+.0%}"] for j, n in enumerate(names)]
+d.table(s, 10.25, yh2 + 0.05, 2.62, rows, col_w=[1.02, 0.8, 0.8], row_h=0.3, size=9, header_fill=NAVY, band_rows=(5,))
+bul(s, 10.25, yh2 + 2.0, 2.62, 2.6, ["**EAF mini-mills won:** flexible cost and record volumes.", "**Cliffs lagged:** fixed-price auto contracts and blast-furnace costs delay the benefit to 2027."], size=10)
+
+# 43 producers report strong demand (boxes + logos)
+s = slide("Producers Report Strong Demand", "All four see solid orders, falling imports and rising prices; two ship record volumes",
+          source="Company earnings releases and calls (Q2-2026; CMC fiscal Q3-2026)")
+prod = [("NUE.png", "#006341", "(Reported July 27, 2026)",
+         ["Record **7.1 Mt** shipped and EPS of $5.04; mills ran at **91%** with an average price of $1,145/t (+7% q/q).",
+          "Backlogs near record with visibility into 2027; sees 2026 demand flat to +2%, led by data centers, energy and the border wall."],
+         "Largest US producer: EAF sheet, plate, bars and downstream products"),
+        ("STLD.png", "#C8102E", "(Reported July 20, 2026)",
+         ["Record **3.7 Mt** shipped; adjusted EBITDA of **$921M** (15% margin); steel price of $1,298/t (+14% y/y).",
+          "Guides Q3 EPS of $5.34-5.38 on wider metal spreads and lower scrap; fabrication backlog up ~50% y/y into 1Q27."],
+         "EAF flat and long steel, recycling, aluminum flat-rolled growth"),
+        ("CLF.png", "#00529B", "(Reported July 23, 2026)",
+         ["Adjusted EBITDA tripled to **$286M**; price of $1,124/t (+7% q/q); auto shipments at a two-year high.",
+          "Guides Q3 EBITDA of **~$575M** and a stronger Q4; fixed-price contract resets add ~$500M of EBITDA in 2027."],
+         "Integrated blast-furnace producer; largest supplier to North American autos"),
+        ("CMC.png", "#6FA332", "(Reported June 25, 2026)",
+         ["Fiscal Q3 core EBITDA of **$353.6M** (+79% y/y); rebar consumption +6% while rebar imports fell 13%.",
+          "Guides fiscal Q4 EBITDA up $40-50M q/q; final duties of 200% on Algerian rebar keep ~0.5 Mt out of the market."],
+         "Rebar and construction solutions (US and Poland)")]
+for k, (logo, col, date, bl, expo) in enumerate(prod):
+    gx = 0.575 + (k % 2) * 6.25; gy = 1.5 + (k // 2) * 2.65
+    lw = 1.75
+    W, H = Image.open(IMG0 + "logos/" + logo).size
+    lh = min(0.62, lw * H / W); lwid = lh * W / H
+    s.shapes.add_picture(IMG0 + "logos/" + logo, Inches(gx + (lw - lwid) / 2), Inches(gy + 0.6 - lh / 2), Inches(lwid), Inches(lh))
+    d.text(s, gx - 0.1, gy + 1.05, lw + 0.2, 0.3, date, size=9, italic=True, align="center", inset=0)
+    box = d.bullet_box(s, gx + lw + 0.15, gy, 4.1, 2.05, bl, size=11, line=col); box.line.width = Pt(2.0)
+    d.text(s, gx + lw + 0.15, gy + 2.08, 4.1, 0.4, f"**Exposure:** {expo}", size=9, italic=True, inset=0.02)
+
+# 44 earnings with logos as categories + aligned metrics
+s = slide("Earnings Inflect With Prices", "EBITDA rose 19-201% q/q on higher prices; Cliffs guides another doubling in Q3",
+          source="Company earnings releases (Q1-Q2 2026; CMC fiscal Q2-Q3 2026); Q3 guidance")
+yh = d.block_header(s, 0.575, 1.47, 12.3, "EBITDA, Last Two Reported Quarters", "US$ millions (CMC: fiscal Q2 and Q3; Nucor approximate)")
+gf, ch = clustered(s, 1.9, yh, 10.97, 2.55, ["Nucor", "Steel Dynamics", "Cleveland-Cliffs", "CMC"],
+                   {"Prior quarter": [1500, 700, 95, 297.5], "Last quarter": [2000, 921, 286, 353.6]}, [STEEL, NAVY], "#,##0", vmin=0, vmax=2400, legend=True, gap=90)
+d._plot_layout(ch, 0.0, 0.06, 1.0, 0.70)
+pw = 10.97 / 4
+for k, logo in enumerate(["NUE.png", "STLD.png", "CLF.png", "CMC.png"]):
+    W, H = Image.open(IMG0 + "logos/" + logo).size; lh = 0.38; lw = min(1.6, lh * W / H); lh = lw * H / W
+    s.shapes.add_picture(IMG0 + "logos/" + logo, Inches(1.9 + k * pw + (pw - lw) / 2), Inches(yh + 2.55 + 0.02), Inches(lw), Inches(lh))
+metrics = [("EBITDA q/q", ["+33%", "+32%", "+201%", "+19%"]), ("Price per ton", ["$1,145", "$1,298", "$1,124", "+$236 rebar*"]),
+           ("Shipments", ["7.1 Mt (record)", "3.7 Mt (record)", "4.0 Mt", "-"]), ("Utilization", ["91%", "90%", "-", "Arizona 2 >75%"]),
+           ("Next quarter", ["EPS $5.55-5.65", "EPS $5.34-5.38", "EBITDA ~$575M", "EBITDA +$40-50M"])]
+y0 = yh + 3.0
+for r, (lab, vals) in enumerate(metrics):
+    yy = y0 + r * 0.3
+    d.rect(s, 0.575, yy, 1.25, 0.26, fill=NAVY, text=lab, size=9, bold=True, color="#FFFFFF")
+    for k, v in enumerate(vals):
+        d.rect(s, 1.9 + k * pw + 0.25, yy, pw - 0.5, 0.26, fill="#FFFFFF", line="#A6A6A6", text=v, size=9, bold=(r == 0), dash="dash" if r == 0 else None)
+d.text(s, 0.575, y0 + 1.55, 12.3, 0.22, "*CMC: Fastmarkets rebar price change since Oct-24. Nucor EBITDA approximate from call commentary.", size=8, italic=True, inset=0)
+
+# 45 common signals (matrix)
+s = slide("Common Signals Across Producers", "Imports, prices and demand point the same way; new capacity and costs are the items to watch",
+          source="Company earnings calls and releases (Q1-Q2 2026; CMC fiscal Q2-Q3 2026)")
+rows = [["", "Nucor", "Steel Dynamics", "Cleveland-Cliffs", "CMC"],
+        ["Imports", "Finished import share ~15% (from >22%)", "Asian volumes via 232 to moderate in 2H", "Lowest level since 2009", "Rebar imports -13%; duties up to 200%"],
+        ["Pricing", "$1,145/t, +7% q/q", "$1,298/t, +14% y/y; scrap lower", "$1,124/t; contract lag ~2 months", "Rebar +$236/t since Oct-24"],
+        ["Demand", "Data centers, energy, infrastructure", "Non-residential, energy, solar strong", "Auto shipments at 2-year high", "Bookings highest since FY22"],
+        ["Capacity", "West Virginia sheet mill ramps into 2027", "Mills at 90%; aluminum ramp-up", "Idled plate lines; Dearborn only with auto deals", "Arizona 2 >75%; West Virginia start-up"],
+        ["Watch items", "Start-up costs; USMCA review", "Aluminum losses narrowing", "Energy costs; leverage <2.5x goal", "Weather, outages; Europe imports"]]
+d.table(s, 0.575, 1.55, 12.3, rows, col_w=[1.7, 2.65, 2.65, 2.65, 2.65], row_h=0.66, size=11, header_fill=NAVY, text_cols=(0, 1, 2, 3, 4), band_rows=(1, 3, 5))
+d.conclusion_bar(s, "Read-across: earnings momentum into 2H26; the debate shifts to 2027 supply and the gap to import parity", y=5.75, h=0.5, fill=NAVY, size=13)
+bul(s, 0.575, 6.3, 12.3, 0.45, ["**Most exposed to the price peak:** Cliffs (contract resets help 2027); **most resilient:** EAF producers with downstream backlogs (Nucor, Steel Dynamics, CMC)."], size=11)
+
+# 46 industry profits (exhibit)
+s = slide("Industry Profits Recover With Prices", "US steel industry net income reached ~$2.0bn in Q2-2026, the fifth straight quarterly gain",
+          source="US Commerce, SIMA Executive Summary Apr-Jun 2026 (company websites)", link=URL["sima"])
+exhibit(s, 0.575, 1.47, 7.4, 5.3, "SIMA_12.png", "US Steel Industry Quarterly Net Income", "US$ bn; Carpenter, CMC, Nucor, Cliffs, Steel Dynamics, U.S. Steel", boxes=[(0.80, 0.25, 0.19, 0.55)])
+bul(s, 8.35, 1.55, 4.5, 5.2, [
+    "**Five quarters of rising profits:** Nucor earned $1.2bn in Q2-26, Steel Dynamics $534M, CMC $173M; Cliffs still lost $229M.",
+    "**Still below the 2021-22 peak** (>$5bn a quarter), when shortages pushed HRC near $2,000/st: today's upturn is policy-driven rather than shortage-driven.",
+    "**Q3 guidance points higher:** Nucor EPS $5.55-5.65, Steel Dynamics $5.34-5.38, Cliffs EBITDA ~$575M.",
+    "**What ends it:** imports and new capacity pulling HRC toward BofA's $975/st in 2027."], size=12)
+
+d._new(d.find_layout("Closing Slide"))
+d.save(OUT)
+print("saved", OUT, "slides:", len(d.prs.slides))

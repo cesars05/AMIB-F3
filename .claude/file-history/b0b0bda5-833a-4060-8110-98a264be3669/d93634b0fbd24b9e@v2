@@ -1,0 +1,1278 @@
+"""house.py - build IB / Aztlan / FEMSA-grade slides with native, editable shapes and charts.
+
+    import sys; sys.path.insert(0, r"<skill>/scripts")
+    from house import Deck
+    d = Deck("aztlan")                         # or "femsa", "ib_navy", "ms_clean", make_brand_system(...)
+    # d = Deck("aztlan", template=r"...\\AZTD vs Peers_v6.pptx")   # reuse the real master/logo
+    s = d.content_slide("Revenue Grew 12% on Data-Center Demand",
+                        "FY25 revenue $1.2bn (+12% YoY); services now 38% of mix",
+                        source="Company filings; LSEG Workspace")
+    d.block_header(s, 0.575, 1.47, 5.84, "Revenue by Segment", "Amounts in USD millions")
+    d.stacked_columns(s, 0.575, 2.19, 5.84, 4.5, ["FY22", "FY23", "FY24E"],
+                      {"Products": [600, 650, 700], "Services": [300, 350, 420]},
+                      totals=True, forecast_from=2, cagr=(0, 2))
+    d.save("out.pptx")
+
+Every measurement comes from references/*.md (grid-typography, charts, shapes-components).
+All positions are inches on a 13.333 x 7.5 slide. Colors are '#RRGGBB'.
+Overlays on charts (forecast zone, CAGR arrow, reference lines) are computed from a manual
+plot-area layout + explicit axis scale, so they land exactly where the bars are.
+"""
+from __future__ import annotations
+
+import copy
+import math
+import re
+
+from lxml import etree
+from pptx import Presentation
+from pptx.chart.data import CategoryChartData
+from pptx.dml.color import RGBColor
+from pptx.enum.chart import XL_CHART_TYPE, XL_LABEL_POSITION, XL_LEGEND_POSITION, XL_TICK_LABEL_POSITION
+from pptx.enum.dml import MSO_LINE_DASH_STYLE
+from pptx.enum.shapes import MSO_CONNECTOR, MSO_SHAPE
+from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
+from pptx.oxml.ns import qn
+from pptx.util import Emu, Inches, Pt
+
+C_NS = "http://schemas.openxmlformats.org/drawingml/2006/chart"
+A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main"
+
+# ---------------------------------------------------------------------------
+# Style systems (references/style-systems.md)
+# ---------------------------------------------------------------------------
+_BASE_NEUTRALS = {
+    "ink": "#000000", "ink2": "#404040", "grey7": "#595959", "grey5": "#7F7F7F", "grey3": "#A6A6A6",
+    "grey2": "#D9D9D9", "grey1": "#F2F2F2", "white": "#FFFFFF", "pos": "#42825D", "neg": "#C00000",
+    "dash_red": "#E31B23", "heat_lo": "#F8696B", "heat_mid": "#FFEB84", "heat_hi": "#63BE7B",
+}
+
+SYSTEMS = {
+    # Aztlan analyst house style (measured): Arial, black 28 title, navy 16 subtitle, rule ABOVE title.
+    "aztlan": dict(
+        name="aztlan", font="Arial",
+        title=dict(x=0.575, y=0.533, w=9.827, h=0.454, size=28, bold=False, color="#000000"),
+        subtitle=dict(x=0.575, y=0.989, w=9.827, h=0.286, size=16, italic=False, color="#221D55"),
+        rule=dict(y=0.313, x0=0.565, x1=12.828, color="#002060", w=1.0),
+        source=dict(x=0.575, y=6.951, w=11.7, h=0.3, size=10, italic=True, align="center", color="#000000"),
+        page=dict(x=12.416, y=6.951, w=0.461, h=0.3, size=11, color="#002060"),
+        footer_left=dict(x=0.565, y=6.828, w=4.74, size=8, color="#B2BCCB"),
+        logo=dict(x=10.403, y=0.362, w=2.425, h=0.897),
+        content=dict(x0=0.575, x1=12.877, y0=1.446, y1=6.78),
+        primary="#242852", primary_dark="#221D55", rule_color="#002060", tint1="#7F8FA9", tint2="#C2D7F6",
+        accent="#F5C400", cover_bg="#221D55",
+        series=["#242852", "#F5C400", "#7F8FA9", "#9DAAC0", "#002060", "#A6A6A6"],
+        header_text="#404040",
+    ),
+    # FEMSA / client-brand academic (measured): Helvetica, bold wine 28 title, italic 14 subtitle, rule BELOW.
+    "femsa": dict(
+        name="femsa", font="Helvetica",
+        title=dict(x=0.667, y=0.375, w=10.6, h=0.572, size=28, bold=True, color="#862633"),
+        subtitle=dict(x=0.667, y=0.947, w=10.612, h=0.337, size=14, italic=True, color="#000000"),
+        rule=dict(y=0.936, x0=0.667, x1=12.667, color="#862633", w=1.0),
+        source=dict(x=0.76, y=6.951, w=10.5, h=0.3, size=8, italic=True, align="left", color="#7F7F7F"),
+        page=dict(x=12.206, y=6.951, w=0.461, h=0.3, size=11, color="#7F7F7F"),
+        footer_left=None,
+        logo=dict(x=11.581, y=0.505, w=1.086, h=0.25),
+        content=dict(x0=0.667, x1=12.667, y0=1.40, y1=6.80),
+        primary="#862633", primary_dark="#4E161E", rule_color="#862633", tint1="#B96A73", tint2="#EAD2D2",
+        accent="#9B2C39", cover_bg="#8E2F3C",
+        series=["#862633", "#B96A73", "#7F7F7F", "#EAD2D2", "#4E161E", "#A6A6A6"],
+        header_text="#000000",
+    ),
+    # Generic bank pitch-book frame (GS/BofA/Barclays family): topic title, colour header bars, small source.
+    "ib_navy": dict(
+        name="ib_navy", font="Arial",
+        title=dict(x=0.575, y=0.40, w=10.8, h=0.55, size=24, bold=True, color="#0A1F5C"),
+        subtitle=dict(x=0.575, y=0.92, w=10.8, h=0.32, size=14, italic=False, color="#595959"),
+        rule=dict(y=1.30, x0=0.575, x1=12.877, color="#0A1F5C", w=0.75),
+        source=dict(x=0.575, y=6.92, w=11.0, h=0.35, size=8, italic=True, align="left", color="#404040"),
+        page=dict(x=12.416, y=7.02, w=0.461, h=0.25, size=9, color="#404040"),
+        footer_left=None,
+        logo=dict(x=11.3, y=0.40, w=1.5, h=0.45),
+        content=dict(x0=0.575, x1=12.877, y0=1.45, y1=6.80),
+        primary="#0A1F5C", primary_dark="#032061", rule_color="#0A1F5C", tint1="#0250C4", tint2="#D6E8F7",
+        accent="#F39200", cover_bg="#0A1F5C",
+        series=["#0A1F5C", "#0250C4", "#7F7F7F", "#9DBBE0", "#2CA02C", "#A6A6A6"],
+        header_text="#000000",
+    ),
+    # Morgan Stanley-style corporate/IR: "Bold: claim" title, lots of white, pastel panels.
+    "ms_clean": dict(
+        name="ms_clean", font="Arial",
+        title=dict(x=0.575, y=0.45, w=12.3, h=0.55, size=24, bold=False, color="#000000"),
+        subtitle=dict(x=0.575, y=1.0, w=12.3, h=0.3, size=12, italic=False, color="#595959"),
+        rule=None,
+        source=dict(x=0.575, y=6.86, w=12.3, h=0.2, size=7, italic=False, align="left", color="#595959"),
+        page=dict(x=12.416, y=7.05, w=0.461, h=0.25, size=8, color="#000000"),
+        footer_left=None,
+        logo=None,
+        content=dict(x0=0.575, x1=12.877, y0=1.40, y1=6.75),
+        primary="#0A5AA6", primary_dark="#1F3864", rule_color="#D9D9D9", tint1="#A9D2FB", tint2="#E8EAED",
+        accent="#6633CC", cover_bg="#FFFFFF",
+        series=["#0A5AA6", "#A9D2FB", "#6633CC", "#86E5C1", "#1F3864", "#A6A6A6"],
+        header_text="#000000",
+    ),
+}
+for _s in SYSTEMS.values():
+    for k, v in _BASE_NEUTRALS.items():
+        _s.setdefault(k, v)
+
+
+def make_brand_system(base="aztlan", primary=None, primary_dark=None, tint1=None, tint2=None, accent=None,
+                      font=None, name="brand", title_in_brand_color=None):
+    """Swap brand tokens on top of a measured grid (style-systems.md §D)."""
+    s = copy.deepcopy(SYSTEMS[base])
+    s["name"] = name
+    for k, v in dict(primary=primary, primary_dark=primary_dark, tint1=tint1, tint2=tint2, accent=accent).items():
+        if v:
+            s[k] = v
+    if font:
+        s["font"] = font
+    if primary:
+        s["rule_color"] = primary_dark or primary
+        if s["rule"]:
+            s["rule"]["color"] = s["rule_color"]
+        s["series"] = [s["primary"], s["tint1"], "#7F7F7F", s["tint2"], s["primary_dark"], "#A6A6A6"]
+        s["cover_bg"] = s["primary_dark"]
+        s["subtitle"]["color"] = s["primary_dark"] if base == "aztlan" else s["subtitle"]["color"]
+    if title_in_brand_color or (title_in_brand_color is None and base == "femsa"):
+        s["title"]["color"] = s["primary"]
+    return s
+
+
+# ---------------------------------------------------------------------------
+# low-level helpers
+# ---------------------------------------------------------------------------
+def rgb(h):
+    return RGBColor.from_string(h.lstrip("#").upper())
+
+
+def _lerp_hex(a, b, t):
+    a, b = a.lstrip("#"), b.lstrip("#")
+    ca = [int(a[i:i + 2], 16) for i in (0, 2, 4)]
+    cb = [int(b[i:i + 2], 16) for i in (0, 2, 4)]
+    return "#" + "".join(f"{round(x + (y - x) * t):02X}" for x, y in zip(ca, cb))
+
+
+_MARK = re.compile(r"(\*\*.+?\*\*|\^\^.+?\^\^|!!.+?!!|__.+?__)")
+
+
+def _strip_style(shape):
+    st = shape._element.find(qn("p:style"))
+    if st is not None:
+        shape._element.remove(st)
+
+
+def _set_bullet(p, char, level, size_pt):
+    pPr = p._p.get_or_add_pPr()
+    for tag in ("a:buNone", "a:buChar", "a:buAutoNum", "a:buFont", "a:buSzPct"):
+        for el in pPr.findall(qn(tag)):
+            pPr.remove(el)
+    mar = 0.17 + 0.2 * level
+    pPr.set("marL", str(int(Inches(mar))))
+    pPr.set("indent", str(-int(Inches(0.16))))
+    bf = etree.SubElement(pPr, qn("a:buFont"))
+    bf.set("typeface", "Arial")
+    bc = etree.SubElement(pPr, qn("a:buChar"))
+    bc.set("char", char)
+
+
+def _no_bullet(p):
+    pPr = p._p.get_or_add_pPr()
+    if pPr.find(qn("a:buNone")) is None:
+        etree.SubElement(pPr, qn("a:buNone"))
+
+
+class Deck:
+    """A deck in one style system. Methods draw components on a given slide."""
+
+    def __init__(self, system="aztlan", template=None, layout="General", logo=None, footer_left=None,
+                 page_numbers=True):
+        self.S = SYSTEMS[system] if isinstance(system, str) else system
+        self.template_layout = None
+        if template:
+            self.prs = Presentation(template)
+            sld = self.prs.slides._sldIdLst
+            for sid in list(sld):
+                self.prs.part.drop_rel(sid.rId)
+                sld.remove(sid)
+            self.template_layout = self.find_layout(layout)
+            self.cover_layout = self._find_cover_layout()
+        else:
+            self.prs = Presentation()
+            self.prs.slide_width, self.prs.slide_height = Inches(13.333), Inches(7.5)
+            self.cover_layout = None
+        self.blank = self._blank_layout()
+        self.logo = logo
+        self.footer_left = footer_left
+        self.page_numbers = page_numbers
+        self.n = 0
+
+    # ---------------------------------------------------------------- layouts (template mode)
+    @staticmethod
+    def _title_top(layout):
+        for ph in layout.placeholders:
+            t = str(ph.placeholder_format.type)
+            if "TITLE" in t and "SUB" not in t and "CENTER" not in t and ph.top is not None:
+                return ph.top / 914400
+        return None
+
+    def find_layout(self, spec):
+        """Layout by index, or by name. Duplicate names (two 'Section Header' in M&A FEMSA) resolve to
+        the one whose title sits in the content-slide title zone (top < 1.0 in)."""
+        lays = list(self.prs.slide_layouts)
+        if isinstance(spec, int):
+            return lays[spec]
+        cands = [l for l in lays if l.name == spec]
+        if not cands:
+            return None
+        top_ok = [l for l in cands if (self._title_top(l) or 9) < 1.0]
+        return (top_ok or cands)[0]
+
+    def _find_cover_layout(self):
+        for l in self.prs.slide_layouts:
+            if l.name.lower().startswith("title"):
+                return l
+        return None
+
+    # ---------------------------------------------------------------- slides
+    def _blank_layout(self):
+        for l in self.prs.slide_layouts:
+            if l.name.lower() in ("blank", "en blanco", "default", "closing slide"):
+                return l
+        return self.prs.slide_layouts[len(self.prs.slide_layouts) - 1 if len(self.prs.slide_layouts) < 7 else 6]
+
+    def _new(self, layout=None):
+        s = self.prs.slides.add_slide(layout or self.blank)
+        self.n += 1
+        return s
+
+    def content_slide(self, title, subtitle=None, source=None, layout=None):
+        """Standard frame: title, so-what subtitle, rule, logo, source, page number."""
+        S = self.S
+        est = len(title) * S["title"]["size"] * (0.54 if S["title"]["bold"] else 0.47) / 72
+        if est > S["title"]["w"]:
+            print(f"WARNING slide {self.n + 1}: title ~{est:.1f}in wide > {S['title']['w']}in -> will wrap; shorten it: {title!r}")
+        lay = (self.find_layout(layout) if layout is not None else self.template_layout) if self.template_layout else None
+        if lay is not None:  # template mode: fill the real placeholders, draw whatever has no placeholder
+            s = self._new(lay)
+            sub_done = src_done = False
+            for ph in list(s.placeholders):
+                t = str(ph.placeholder_format.type)
+                top = (ph.top or 0) / 914400
+                if "TITLE" in t and "SUB" not in t:
+                    ph.text_frame.text = title
+                elif subtitle and not sub_done and ("SUBTITLE" in t or ("BODY" in t and 0.8 <= top <= 1.35)):
+                    ph.text_frame.text = subtitle
+                    sub_done = True
+                elif source and not src_done and ("FOOTER" in t or "BODY" in t) and top > 6.5:
+                    ph.text_frame.text = source
+                    src_done = True
+                else:
+                    ph._element.getparent().remove(ph._element)
+            if subtitle and not sub_done:
+                U = S["subtitle"]
+                self.text(s, U["x"], U["y"], U["w"], U["h"], subtitle, size=U["size"], italic=U["italic"],
+                          color=U["color"], anchor="top", inset=0)
+            if source and not src_done:
+                self.source(s, source)
+        else:
+            s = self._new()
+            T = S["title"]
+            self.text(s, T["x"], T["y"], T["w"], T["h"], title, size=T["size"], bold=T["bold"],
+                      color=T["color"], anchor="bottom", wrap=False, inset=0)
+            if subtitle:
+                U = S["subtitle"]
+                self.text(s, U["x"], U["y"], U["w"], U["h"], subtitle, size=U["size"], italic=U["italic"],
+                          color=U["color"], anchor="top", inset=0)
+            if S["rule"]:
+                R = S["rule"]
+                self.line(s, R["x0"], R["y"], R["x1"], R["y"], color=R["color"], width=R["w"])
+            if S["logo"] and self.logo:
+                L = S["logo"]
+                s.shapes.add_picture(self.logo, Inches(L["x"]), Inches(L["y"]), height=Inches(L["h"]))
+            if source:
+                self.source(s, source)
+        if self.page_numbers:
+            P = S["page"]
+            self.text(s, P["x"], P["y"], P["w"], P["h"], str(self.n), size=P["size"], color=P["color"],
+                      align="right", inset=0)
+        if S.get("footer_left") and self.footer_left:
+            F = S["footer_left"]
+            self.text(s, F["x"], F["y"], F["w"], 0.45, self.footer_left, size=F["size"], color=F["color"], inset=0)
+        return s
+
+    def source(self, s, text):
+        Sx = self.S["source"]
+        self.text(s, Sx["x"], Sx["y"], Sx["w"], Sx["h"], text, size=Sx["size"], italic=Sx["italic"],
+                  align=Sx["align"], color=Sx["color"], inset=0)
+
+    def cover(self, title, subtitle=None, date=None, team=None, kicker=None, image=None, logo=None):
+        """Cover: full brand field (or full-bleed image) + title 40 + subtitle/date 24 + team names (FEMSA)."""
+        S = self.S
+        if self.cover_layout is not None and not image:
+            return self._template_cover(title, [subtitle, date], team)
+        s = self._new()
+        if image:
+            s.shapes.add_picture(image, 0, 0, self.prs.slide_width, self.prs.slide_height)
+        else:
+            self.rect(s, 0, 0, 13.333, 7.5, fill=S["cover_bg"])
+        fg = "#FFFFFF" if S["cover_bg"] != "#FFFFFF" or image else "#000000"
+        if logo:
+            s.shapes.add_picture(logo, Inches(0.62), Inches(0.7), height=Inches(0.8))
+        y = 2.6
+        if kicker:
+            self.text(s, 0.62, y - 0.4, 9, 0.35, kicker.upper(), size=14, color=fg)
+        self.text(s, 0.62, y, 9.5, 1.3, title, size=40, bold=(S["name"] == "femsa"), color=fg, anchor="bottom")
+        if subtitle:
+            self.text(s, 0.62, y + 1.35, 9.5, 0.5, subtitle, size=24, italic=(S["name"] == "femsa"), color=fg)
+        if date:
+            self.text(s, 0.62, y + 1.9, 9.5, 0.45, date, size=18 if subtitle else 24, color=fg)
+        if team:
+            self.text(s, 0.62, 5.6, 6, 1.4, "\n".join(team), size=11, italic=True, color=fg, anchor="bottom")
+        return s
+
+    def _template_cover(self, title, lines, team=None):
+        """Use the template's own cover art (AZTD 'Title', FEMSA 'Title Slide Logo')."""
+        s = self._new(self.cover_layout)
+        texts = [t for t in [title] + list(lines) if t]
+        bodies = sorted(s.placeholders, key=lambda ph: ph.top or 0)
+        if bodies and len(texts) > len(bodies):  # e.g. subtitle + date into the template's 2nd box
+            texts = texts[:len(bodies) - 1] + ["\n".join(texts[len(bodies) - 1:])]
+        for ph, t in zip(bodies, texts):
+            ph.text_frame.text = t
+        for ph in bodies[len(texts):]:
+            ph._element.getparent().remove(ph._element)
+        if len(bodies) < len(texts):  # template without (enough) placeholders -> draw the rest
+            bold = self.S["name"] == "femsa"
+            y = 2.6
+            for k, t in enumerate(texts[len(bodies):]):
+                first = (k == 0 and not bodies)
+                self.text(s, 0.62, y, 9.5, 1.0 if first else 0.5, t, size=40 if first else 24, bold=bold and first,
+                          italic=(not first and bold), color="#FFFFFF", anchor="bottom" if first else "top")
+                y += 1.05 if first else 0.55
+        if team:
+            self.text(s, 0.62, 5.6, 6, 1.4, "\n".join(team), size=11, italic=True, color="#FFFFFF", anchor="bottom")
+        return s
+
+    def closing(self, line=None):
+        """Closing slide = cover art with logo (+ optional one line)."""
+        if self.cover_layout is not None:
+            return self._template_cover(line or "", [])
+        s = self._new()
+        self.rect(s, 0, 0, 13.333, 7.5, fill=self.S["cover_bg"] if self.S["cover_bg"] != "#FFFFFF" else self.S["primary"])
+        if line:
+            self.text(s, 0.9, 3.0, 11, 0.9, line, size=40, color="#FFFFFF", anchor="bottom")
+        return s
+
+    def divider(self, title, subtitle=None, number=None):
+        S = self.S
+        if self.cover_layout is not None:
+            return self._template_cover(f"{number}  {title}" if number else title, [subtitle])
+        s = self._new()
+        self.rect(s, 0, 0, 13.333, 7.5, fill=S["cover_bg"] if S["cover_bg"] != "#FFFFFF" else S["primary"])
+        t = f"{number}  {title}" if number else title
+        self.text(s, 0.9, 3.0, 11, 0.9, t, size=40, color="#FFFFFF", anchor="bottom")
+        if subtitle:
+            self.text(s, 0.9, 3.95, 11, 0.5, subtitle, size=24, color="#FFFFFF")
+        return s
+
+    def agenda(self, items, title="Agenda", active=None, roman=True):
+        """FEMSA roman pills + grey bars (measured: pill w0.622, bar x1.679 w10.99 h0.38, step 0.573)."""
+        s = self.content_slide(title)
+        S = self.S
+        nums = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"]
+        y = 1.55
+        for i, it in enumerate(items):
+            on = active is None or active == i
+            self.rect(s, 0.731, y, 0.622, 0.38, fill=S["primary"] if on else S["grey3"], text=nums[i] if roman else str(i + 1),
+                      size=14, bold=True, color="#FFFFFF", align="center", round_=0.12)
+            self.rect(s, 1.679, y, 10.99, 0.38, fill=S["grey1"], text=it, size=14, italic=True,
+                      color="#000000" if on else S["grey5"], align="left", inset=0.12)
+            y += 0.573
+        return s
+
+    def save(self, path):
+        for sl in self.prs.slides:
+            for sh in sl.shapes:
+                if getattr(sh, "has_chart", False) and sh.has_chart:
+                    self._no_invert(sh.chart)
+        self.prs.save(path)
+        return path
+
+    # ---------------------------------------------------------------- text & shapes
+    def _fmt_runs(self, p, text, size, bold, italic, color):
+        S = self.S
+        for part in _MARK.split(text):
+            if not part:
+                continue
+            r = p.add_run()
+            b, c = bold, color
+            if part.startswith("**") and part.endswith("**"):
+                part, b = part[2:-2], True
+            elif part.startswith("^^") and part.endswith("^^"):
+                part, b, c = part[2:-2], True, S["primary"]
+            elif part.startswith("!!") and part.endswith("!!"):
+                part, b, c = part[2:-2], True, S["neg"]
+            elif part.startswith("__") and part.endswith("__"):
+                part, b, c = part[2:-2], True, S["accent"]
+            r.text = part
+            f = r.font
+            f.name, f.size, f.bold, f.italic = S["font"], Pt(size), b, italic
+            f.color.rgb = rgb(c)
+
+    def fill_tf(self, tf, text, size=12, bold=False, italic=False, color="#000000", align="left",
+                anchor="top", wrap=True, inset=0.06, spacing=None, line_spacing=None):
+        """text: str or list[str]. Lines starting with '- ' / '  - ' become bullets (•, then –).
+        Inline markup: **bold**, ^^bold primary^^, !!bold negative!!, __bold accent__."""
+        lines = text if isinstance(text, list) else str(text).split("\n")
+        tf.word_wrap = wrap
+        tf.auto_size = None
+        for side in ("left", "right"):
+            setattr(tf, f"margin_{side}", Inches(inset))
+        tf.margin_top = tf.margin_bottom = Inches(min(inset, 0.04))
+        tf.vertical_anchor = {"top": MSO_ANCHOR.TOP, "middle": MSO_ANCHOR.MIDDLE, "bottom": MSO_ANCHOR.BOTTOM}[anchor]
+        al = {"left": PP_ALIGN.LEFT, "center": PP_ALIGN.CENTER, "right": PP_ALIGN.RIGHT, "justify": PP_ALIGN.JUSTIFY}[align]
+        for i, ln in enumerate(lines):
+            p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
+            p.alignment = al
+            m = re.match(r"^(\s*)- (.*)$", ln)
+            if m:
+                lvl = len(m.group(1)) // 2
+                self._fmt_runs(p, m.group(2), size - (1 if lvl else 0), bold, italic, color)
+                _set_bullet(p, "•" if lvl == 0 else "–", lvl, size)
+                p.space_before = Pt(spacing if spacing is not None else (4 if lvl == 0 else 2))
+            else:
+                self._fmt_runs(p, ln, size, bold, italic, color)
+                if spacing is not None:
+                    p.space_before = Pt(spacing)
+                elif i > 0:
+                    p.space_before = Pt(8)  # section labels ("Catalysts") breathe
+            if line_spacing:
+                p.line_spacing = line_spacing
+        return tf
+
+    def text(self, s, x, y, w, h, text, **kw):
+        tb = s.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(h))
+        self.fill_tf(tb.text_frame, text, **kw)
+        return tb
+
+    def rect(self, s, x, y, w, h, fill=None, line=None, line_w=0.75, dash=None, text=None, round_=None,
+             shape=None, size=12, bold=False, italic=False, color="#000000", align="center", anchor="middle",
+             inset=0.06, rotation=0, shadow=False, vert=None):
+        st = shape or (MSO_SHAPE.ROUNDED_RECTANGLE if round_ else MSO_SHAPE.RECTANGLE)
+        sh = s.shapes.add_shape(st, Inches(x), Inches(y), Inches(w), Inches(h))
+        _strip_style(sh)
+        if round_ is not None and st == MSO_SHAPE.ROUNDED_RECTANGLE:
+            sh.adjustments[0] = round_
+        if fill:
+            sh.fill.solid()
+            sh.fill.fore_color.rgb = rgb(fill)
+        else:
+            sh.fill.background()
+        if line:
+            sh.line.color.rgb = rgb(line)
+            sh.line.width = Pt(line_w)
+            if dash:
+                sh.line.dash_style = {"dash": MSO_LINE_DASH_STYLE.DASH, "sysDash": MSO_LINE_DASH_STYLE.SQUARE_DOT,
+                                      "dot": MSO_LINE_DASH_STYLE.ROUND_DOT, "lgDash": MSO_LINE_DASH_STYLE.LONG_DASH}[dash]
+        else:
+            sh.line.fill.background()
+        if rotation:
+            sh.rotation = rotation
+        if shadow:
+            self._soft_shadow(sh)
+        if text is not None:
+            self.fill_tf(sh.text_frame, text, size=size, bold=bold, italic=italic, color=color, align=align,
+                         anchor=anchor, inset=inset)
+            if vert:
+                sh.text_frame._txBody.find(qn("a:bodyPr")).set("vert", vert)
+        return sh
+
+    def _soft_shadow(self, sh):
+        spPr = sh._element.spPr
+        eff = etree.SubElement(spPr, qn("a:effectLst"))
+        sd = etree.SubElement(eff, qn("a:outerShdw"), blurRad="38100", dist="19050", dir="5400000", algn="t",
+                              rotWithShape="0")
+        c = etree.SubElement(sd, qn("a:srgbClr"), val="000000")
+        etree.SubElement(c, qn("a:alpha"), val="25000")
+
+    def line(self, s, x0, y0, x1, y1, color="#000000", width=1.0, dash=None, arrow=False):
+        c = s.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, Inches(x0), Inches(y0), Inches(x1), Inches(y1))
+        _strip_style(c)
+        c.line.color.rgb = rgb(color)
+        c.line.width = Pt(width)
+        if dash:
+            c.line.dash_style = {"dash": MSO_LINE_DASH_STYLE.DASH, "sysDash": MSO_LINE_DASH_STYLE.SQUARE_DOT,
+                                 "dot": MSO_LINE_DASH_STYLE.ROUND_DOT}[dash]
+        if arrow:
+            ln = c.line._get_or_add_ln()
+            etree.SubElement(ln, qn("a:tailEnd"), type="triangle", w="med", len="med")
+        return c
+
+    # ---------------------------------------------------------------- components (shapes-components.md)
+    def block_header(self, s, x, y, w, title, unit=None):
+        """Aztlan chart header: 16 bold #404040 + 1pt black rule + 12 italic unit line. Returns y where the exhibit starts."""
+        S = self.S
+        if S["name"] in ("ib_navy", "ms_clean"):
+            self.header_bar(s, x, y, w, title)
+            if unit:
+                self.text(s, x, y + 0.36, w, 0.24, unit, size=9, italic=True, color=S["grey7"], inset=0.02)
+                return y + 0.62
+            return y + 0.42
+        self.text(s, x, y, w, 0.347, title, size=16 if S["name"] != "femsa" else 12, bold=True,
+                  color=S["header_text"], anchor="bottom", inset=0)
+        self.line(s, x, y + 0.389, x + w, y + 0.389, color="#000000" if S["name"] != "femsa" else S["grey5"], width=1.0)
+        if unit:
+            self.text(s, x, y + 0.431, w, 0.25, unit, size=12 if S["name"] != "femsa" else 10, italic=True, inset=0)
+            return y + 0.722
+        return y + 0.45
+
+    def header_bar(self, s, x, y, w, text, fill=None, h=0.32, size=11):
+        return self.rect(s, x, y, w, h, fill=fill or self.S["primary"], text=text, size=size, bold=True, color="#FFFFFF")
+
+    def label_block(self, s, x, y, w, h, text, fill=None, size=11, color="#FFFFFF"):
+        return self.rect(s, x, y, w, h, fill=fill or self.S["primary"], text=text, size=size, bold=True, color=color)
+
+    def bullet_box(self, s, x, y, w, h, bullets, size=11, line=None, fill=None, title=None, dash=None):
+        sh = self.rect(s, x, y, w, h, fill=fill, line=line or self.S["grey3"], line_w=0.75, dash=dash)
+        body = ([f"**{title}**"] if title else []) + [b if b.lstrip().startswith("- ") else f"- {b}" for b in bullets]
+        self.fill_tf(sh.text_frame, body, size=size, anchor="top", inset=0.08)
+        return sh
+
+    def card(self, s, x, y, w, h, title, bullets, size=11, fill=None, outline=True):
+        S = self.S
+        self.rect(s, x, y, w, h, fill=fill or S["grey1"], line=S["grey3"] if outline else None)
+        self.text(s, x + 0.1, y + 0.1, w - 0.2, 0.35, title, size=12, bold=True, align="center", anchor="bottom")
+        self.line(s, x + 0.15, y + 0.5, x + w - 0.15, y + 0.5, color=S["grey5"], width=0.75)
+        self.text(s, x + 0.08, y + 0.58, w - 0.16, h - 0.65, [f"- {b}" for b in bullets], size=size)
+
+    def kpi_tile(self, s, x, y, w, h, number, label, fill=None, num_color=None, label_color=None, num_size=32):
+        S = self.S
+        fill = fill or S["grey1"]
+        dark = fill not in (S["grey1"], "#FFFFFF", S["tint2"], "#E8EAED")
+        self.rect(s, x, y, w, h, fill=fill)
+        nc = num_color or ("#FFFFFF" if dark else S["primary"])
+        lc = label_color or ("#FFFFFF" if dark else S["primary"])
+        self.text(s, x, y + h * 0.18, w, h * 0.45, number, size=num_size, bold=True, color=nc, align="center", anchor="bottom")
+        self.text(s, x + 0.1, y + h * 0.63, w - 0.2, h * 0.32, label, size=12, color=lc, align="center", anchor="top")
+
+    def banner(self, s, text, y=None, x=None, w=None, fill="#D9D2CA", size=12, h=0.42, color="#000000"):
+        """BofA taupe takeaway banner (GS variant: fill='#D6E8F7', line navy)."""
+        C = self.S["content"]
+        x = C["x0"] if x is None else x
+        w = (C["x1"] - C["x0"]) if w is None else w
+        y = C["y0"] if y is None else y
+        return self.rect(s, x, y, w, h, fill=fill, text=text, size=size, bold=True, italic=True, color=color)
+
+    def conclusion_bar(self, s, text, y=6.22, x=None, w=None, h=0.55, fill=None, size=12):
+        C = self.S["content"]
+        x = C["x0"] if x is None else x
+        w = (C["x1"] - C["x0"]) if w is None else w
+        return self.rect(s, x, y, w, h, fill=fill or self.S["primary"], text=text, size=size, bold=True,
+                         color="#FFFFFF", round_=0.15)
+
+    def dashed_box(self, s, x, y, w, h, color=None, round_=None, width=1.25):
+        return self.rect(s, x, y, w, h, line=color or self.S["dash_red"], line_w=width, dash="dash", round_=round_)
+
+    def theme_frame(self, s, x, y, w, h, name, color, stats=None, tint=None):
+        """AZTD-style module frame: dashed outline in theme colour + name + tinted stats pill."""
+        self.rect(s, x, y, w, h, line=color, dash="dash", line_w=1.0)
+        self.text(s, x + 0.11, y + 0.08, 3.0, 0.31, name, size=16, bold=True, color=color, inset=0)
+        if stats:
+            self.rect(s, x + 2.97, y + 0.17, 6.36, 0.25, fill=tint or _lerp_hex(color, "#FFFFFF", 0.82), line=color,
+                      line_w=0.5, text=stats, size=9, bold=True)
+
+    def pill(self, s, x, y, w, h, text, fill=None, line=None, size=9, color="#000000", bold=True):
+        return self.rect(s, x, y, w, h, fill=fill or self.S["grey1"], line=line, text=text, size=size, bold=bold,
+                         color=color, round_=0.5)
+
+    def metric_oval(self, s, cx, y, text, w=0.75, h=0.28, size=9):
+        return self.rect(s, cx - w / 2, y, w, h, fill="#FFFFFF", line=self.S["primary"], line_w=1.0, text=text,
+                         size=size, bold=True, shape=MSO_SHAPE.OVAL, inset=0.01)
+
+    def num_circle(self, s, x, y, n, d=0.36, fill=None, size=12):
+        return self.rect(s, x, y, d, d, fill=fill or self.S["primary"], text=str(n), size=size, bold=True,
+                         color="#FFFFFF", shape=MSO_SHAPE.OVAL, inset=0)
+
+    def arrow_tag(self, s, x, y, w, h, text, fill=None, size=11):
+        """Barclays/Jazz horizontal tag (homePlate)."""
+        sh = self.rect(s, x, y, w, h, fill=fill or self.S["primary"], text=text, size=size, bold=True,
+                       color="#FFFFFF", shape=MSO_SHAPE.PENTAGON, align="left", inset=0.1)
+        return sh
+
+    def phase_pentagon(self, s, x, y, w, h, text, fill=None, size=11):
+        """BofA down-pointing pentagon label. Built as a 'down arrow callout'-like pentagon via
+        a rotated homePlate whose text is counter-rotated by vert='horz'."""
+        fill = fill or self.S["primary_dark"]
+        tip = min(0.35, h * 0.25)
+        self.rect(s, x, y, w, h - tip, fill=fill)
+        tri = s.shapes.add_shape(MSO_SHAPE.ISOSCELES_TRIANGLE, Inches(x), Inches(y + h - tip - 0.01), Inches(w), Inches(tip + 0.01))
+        _strip_style(tri)
+        tri.rotation = 180
+        tri.fill.solid()
+        tri.fill.fore_color.rgb = rgb(fill)
+        tri.line.fill.background()
+        self.text(s, x, y, w, h - tip, text, size=size, bold=True, color="#FFFFFF", align="center", anchor="middle")
+
+    def chevron_row(self, s, x, y, w_total, labels, h=0.6, fills=None, size=14, first_pentagon=False, gap=-0.1):
+        n = len(labels)
+        w = (w_total - gap * (n - 1)) / n
+        out = []
+        for i, lab in enumerate(labels):
+            st = MSO_SHAPE.PENTAGON if (i == 0 and first_pentagon) else MSO_SHAPE.CHEVRON
+            f = fills[i] if fills else self.S["accent"] if self.S["name"] == "femsa" else self.S["primary"]
+            out.append(self.rect(s, x + i * (w + gap), y, w, h, fill=f, text=lab, size=size, bold=True,
+                                 color="#FFFFFF", shape=st, inset=0.25))
+        return out, w
+
+    def side_tab(self, s, x, y, w, h, text, fill=None, size=9):
+        return self.rect(s, x, y, w, h, fill=fill or self.S["primary"], text=text, size=size, bold=True,
+                         color="#FFFFFF", vert="vert270", inset=0.02)
+
+    def callout(self, s, x, y, w, h, text, to=None, size=9, fill="#FFFFFF", line=None, pointer=False):
+        S = self.S
+        if pointer:
+            sh = self.rect(s, x, y, w, h, fill="#FFF2B3", line="#404040", line_w=0.5, text=text, size=size,
+                           shape=MSO_SHAPE.RECTANGULAR_CALLOUT)
+            if to:  # aim the wedge
+                sh.adjustments[0] = (to[0] - (x + w / 2)) / w
+                sh.adjustments[1] = (to[1] - (y + h / 2)) / h
+            return sh
+        sh = self.rect(s, x, y, w, h, fill=fill, line=line or S["grey5"], line_w=0.5, text=text, size=size)
+        if to:
+            ax = min(max(to[0], x), x + w)
+            ay = y + h if to[1] > y + h else (y if to[1] < y else y + h / 2)
+            self.line(s, ax, ay, to[0], to[1], color=S["grey5"], width=0.75)
+        return sh
+
+    def operator(self, s, cx, cy, op="+", d=0.32):
+        shp = {"+": MSO_SHAPE.MATH_PLUS, "-": MSO_SHAPE.MATH_MINUS, "=": MSO_SHAPE.MATH_EQUAL, "x": MSO_SHAPE.MATH_MULTIPLY}[op]
+        self.rect(s, cx - d / 2, cy - d / 2, d, d, fill=self.S["grey5"], shape=MSO_SHAPE.OVAL)
+        self.rect(s, cx - d * 0.35, cy - d * 0.35, d * 0.7, d * 0.7, fill="#FFFFFF", shape=shp)
+
+    def legend_items(self, s, x, y, items, size=9, sq=0.16, step=0.24):
+        for i, (label, color) in enumerate(items):
+            self.rect(s, x, y + i * step + 0.03, sq, sq, fill=color)
+            self.text(s, x + sq + 0.06, y + i * step - 0.02, 2.5, 0.24, label, size=size, italic=True, inset=0)
+
+    def numbered_rows(self, s, rows, x=None, y=1.55, w=None, row_h=0.75, step=1.36, size=12):
+        """Jazz/Netflix measured recipe: '#N' black rect -> navy right arrow label -> grey rounded box."""
+        C = self.S["content"]
+        x = C["x0"] if x is None else x
+        w = (C["x1"] - C["x0"]) if w is None else w
+        k = w / 9.083  # measured on a 9.083-in wide row (0.417 -> 9.5)
+        for i, (label, body) in enumerate(rows):
+            yy = y + i * step
+            self.rect(s, x + 2.503 * k, yy, 6.58 * k, row_h, fill="#CCD1D7", text=body, size=size, align="left",
+                      inset=0.1 + 0.6 * k, round_=0.25)
+            self.rect(s, x, yy, 0.67 * k, row_h, fill="#000000", text=f"#{i + 1}", size=size, color="#FFFFFF")
+            self.rect(s, x + 0.67 * k, yy, 2.42 * k, row_h, fill=self.S["primary"], text=label, size=size,
+                      color="#FFFFFF", shape=MSO_SHAPE.RIGHT_ARROW, inset=0.1)
+
+    # ---------------------------------------------------------------- tables
+    def table(self, s, x, y, w, rows, col_w=None, row_h=0.30, size=10, header_rows=1, header_fill=None,
+              zebra=False, bold_rows=(), band_rows=(), band_fill=None, highlight_cols=(), first_col_align="left",
+              num_align="right", font_color="#000000", rule_color="#000000", highlight_fill=None, text_cols=(0,)):
+        """House table: header fill primary + white bold; thin rules top/bottom/under header; numbers right."""
+        S = self.S
+        nr, nc = len(rows), len(rows[0])
+        gf = s.shapes.add_table(nr, nc, Inches(x), Inches(y), Inches(w), Inches(row_h * nr))
+        tbl = gf.table
+        tblPr = tbl._tbl.tblPr
+        for attr in ("firstRow", "bandRow"):
+            tblPr.set(attr, "0")
+        sid = tblPr.find(qn("a:tableStyleId"))
+        if sid is None:
+            sid = etree.SubElement(tblPr, qn("a:tableStyleId"))
+        sid.text = "{2D5ABB26-0587-4C30-8999-92F81FD0307C}"  # No Style, No Grid
+        col_w = col_w or [w / nc] * nc
+        for j, cw in enumerate(col_w):
+            tbl.columns[j].width = Inches(cw)
+        for i in range(nr):
+            tbl.rows[i].height = Inches(row_h)
+            for j in range(nc):
+                c = tbl.cell(i, j)
+                c.margin_left = c.margin_right = Inches(0.05)
+                c.margin_top = c.margin_bottom = Inches(0.01)
+                c.vertical_anchor = MSO_ANCHOR.MIDDLE
+                hdr = i < header_rows
+                fill = None
+                if hdr:
+                    fill = header_fill or S["primary"]
+                elif i in band_rows:
+                    fill = band_fill or S["grey1"]
+                elif j in highlight_cols:
+                    fill = highlight_fill or S["tint2"]
+                elif zebra and (i - header_rows) % 2 == 1:
+                    fill = S["grey1"]
+                if fill:
+                    c.fill.solid()
+                    c.fill.fore_color.rgb = rgb(fill)
+                else:
+                    c.fill.background()
+                if j in text_cols:
+                    al = first_col_align
+                else:
+                    al = "center" if hdr else num_align
+                self.fill_tf(c.text_frame, str(rows[i][j]), size=size, bold=hdr or i in bold_rows,
+                             color="#FFFFFF" if hdr else font_color, align=al, inset=0.04)
+                self._cell_borders(c, top=(i == 0), bottom=(i == header_rows - 1 or i == nr - 1 or i in bold_rows),
+                                   color=rule_color)
+        return gf
+
+    @staticmethod
+    def _cell_borders(c, top=False, bottom=False, color="#000000", w_pt=0.75):
+        tcPr = c._tc.get_or_add_tcPr()
+        for tag, on in (("a:lnL", False), ("a:lnR", False), ("a:lnT", top), ("a:lnB", bottom)):
+            for el in tcPr.findall(qn(tag)):
+                tcPr.remove(el)
+            ln = etree.Element(qn(tag), w=str(int(Pt(w_pt))) if on else "0")
+            if on:
+                sf = etree.SubElement(ln, qn("a:solidFill"))
+                etree.SubElement(sf, qn("a:srgbClr"), val=color.lstrip("#"))
+            else:
+                etree.SubElement(ln, qn("a:noFill"))
+            tcPr.insert(0, ln) if False else tcPr.append(ln)
+        # schema order: lnL lnR lnT lnB ... fill  -> move fills after borders
+        for f in [e for e in tcPr if etree.QName(e).localname in ("solidFill", "noFill")]:
+            tcPr.remove(f)
+            tcPr.append(f)
+
+    def heatmap_table(self, s, x, y, w, row_labels, col_labels, values, fmt="{:.1f}", corner="", base=None,
+                      lo="#F8696B", mid="#FFEB84", hi="#63BE7B", row_h=0.30, size=10, higher_is_better=True):
+        """Sensitivity grid with red->yellow->green fills; base=(i,j) gets a dashed box."""
+        flat = [v for r in values for v in r]
+        vmin, vmax = min(flat), max(flat)
+        rows = [[corner] + col_labels] + [[rl] + [fmt.format(v) for v in r] for rl, r in zip(row_labels, values)]
+        gf = self.table(s, x, y, w, rows, row_h=row_h, size=size, num_align="center", first_col_align="center",
+                        rule_color=self.S["grey5"])
+        tbl = gf.table
+        for i, r in enumerate(values):
+            for j, v in enumerate(r):
+                t = 0.5 if vmax == vmin else (v - vmin) / (vmax - vmin)
+                if not higher_is_better:
+                    t = 1 - t
+                col = _lerp_hex(lo, mid, t * 2) if t < 0.5 else _lerp_hex(mid, hi, (t - 0.5) * 2)
+                c = tbl.cell(i + 1, j + 1)
+                c.fill.solid()
+                c.fill.fore_color.rgb = rgb(col)
+        if base:
+            cw = w / (len(col_labels) + 1)
+            self.dashed_box(s, x + cw * (base[1] + 1) + 0.02, y + row_h * (base[0] + 1) + 0.02, cw - 0.04, row_h - 0.04,
+                            color="#000000", width=1.25)
+        return gf
+
+    # ---------------------------------------------------------------- charts: shared styling
+    def _chart(self, s, kind, x, y, w, h, categories, series: dict, number_format=None):
+        cd = CategoryChartData()
+        cd.categories = categories
+        for name, vals in series.items():
+            cd.add_series(name, vals, number_format=number_format)
+        gf = s.shapes.add_chart(kind, Inches(x), Inches(y), Inches(w), Inches(h), cd)
+        ch = gf.chart
+        ch.has_title = False
+        ch.font.name = self.S["font"]
+        ch.font.size = Pt(9)
+        ch.font.color.rgb = rgb("#000000")
+        cs = ch._chartSpace
+        atd = cs.find(f"{{{C_NS}}}chart/{{{C_NS}}}autoTitleDeleted")
+        if atd is not None:
+            atd.set("val", "1")
+        self._no_fill_chart(ch)
+        return gf, ch
+
+    @staticmethod
+    def _no_fill_chart(ch):
+        cs = ch._chartSpace
+        for parent in (cs, cs.find(f"{{{C_NS}}}chart/{{{C_NS}}}plotArea")):
+            spPr = parent.find(f"{{{C_NS}}}spPr")
+            if spPr is None:
+                spPr = etree.SubElement(parent, f"{{{C_NS}}}spPr")
+                if parent is cs:  # spPr must precede txPr / externalData in chartSpace
+                    for sib in ("txPr", "externalData", "printSettings", "userShapes"):
+                        e = cs.find(f"{{{C_NS}}}{sib}")
+                        if e is not None:
+                            e.addprevious(spPr)
+                            break
+            for e in list(spPr):
+                spPr.remove(e)
+            etree.SubElement(spPr, f"{{{A_NS}}}noFill")
+            ln = etree.SubElement(spPr, f"{{{A_NS}}}ln")
+            etree.SubElement(ln, f"{{{A_NS}}}noFill")
+
+    @staticmethod
+    def _plot_layout(ch, fx, fy, fw, fh):
+        """Manual INNER plot-area layout as fractions of the chart frame (makes overlays exact)."""
+        pa = ch._chartSpace.find(f"{{{C_NS}}}chart/{{{C_NS}}}plotArea")
+        lay = pa.find(f"{{{C_NS}}}layout")
+        if lay is None:
+            lay = etree.Element(f"{{{C_NS}}}layout")
+            pa.insert(0, lay)
+        for e in list(lay):
+            lay.remove(e)
+        ml = etree.SubElement(lay, f"{{{C_NS}}}manualLayout")
+        for tag, val in (("layoutTarget", "inner"), ("xMode", "edge"), ("yMode", "edge"),
+                         ("x", fx), ("y", fy), ("w", fw), ("h", fh)):
+            etree.SubElement(ml, f"{{{C_NS}}}{tag}", val=str(val))
+
+    def _axis_style(self, ch, show_values=False, cat_size=9, val_fmt=None, gridlines=False, vmin=None, vmax=None,
+                    cat_line=True, label_low=False):
+        S = self.S
+        try:
+            ca = ch.category_axis
+            ca.has_major_gridlines = False
+            ca.tick_labels.font.size = Pt(cat_size)
+            ca.tick_labels.font.name = S["font"]
+            ca.format.line.color.rgb = rgb("#7F7F7F" if cat_line else "#FFFFFF")
+            ca.format.line.width = Pt(0.75)
+            from pptx.enum.chart import XL_TICK_MARK
+            ca.major_tick_mark = XL_TICK_MARK.NONE
+            if label_low:
+                ca.tick_label_position = XL_TICK_LABEL_POSITION.LOW
+        except Exception:
+            pass
+        va = ch.value_axis
+        va.has_major_gridlines = gridlines
+        if gridlines:
+            va.major_gridlines.format.line.color.rgb = rgb("#E6E6E6")
+            va.major_gridlines.format.line.width = Pt(0.5)
+        if vmin is not None:
+            va.minimum_scale = vmin
+        if vmax is not None:
+            va.maximum_scale = vmax
+        if val_fmt:
+            va.tick_labels.number_format = val_fmt
+            va.tick_labels.number_format_is_linked = False
+        va.tick_labels.font.size = Pt(9)
+        va.visible = show_values
+        if show_values:
+            va.format.line.fill.background()
+            from pptx.enum.chart import XL_TICK_MARK
+            va.major_tick_mark = XL_TICK_MARK.NONE
+
+    def _legend(self, ch, show, pos="bottom", hide=()):
+        ch.has_legend = show
+        if show:
+            ch.legend.position = {"bottom": XL_LEGEND_POSITION.BOTTOM, "top": XL_LEGEND_POSITION.TOP,
+                                  "right": XL_LEGEND_POSITION.RIGHT}[pos]
+            ch.legend.include_in_layout = False
+            ch.legend.font.size = Pt(9)
+            ch.legend.font.name = self.S["font"]
+            leg = ch._chartSpace.find(f"{{{C_NS}}}chart/{{{C_NS}}}legend")
+            for idx in hide:
+                le = etree.Element(f"{{{C_NS}}}legendEntry")
+                etree.SubElement(le, f"{{{C_NS}}}idx", val=str(idx))
+                etree.SubElement(le, f"{{{C_NS}}}delete", val="1")
+                leg.find(f"{{{C_NS}}}legendPos").addnext(le)
+
+    @staticmethod
+    def _fill(fmt, color):
+        if color is None:
+            fmt.fill.background()
+        else:
+            fmt.fill.solid()
+            fmt.fill.fore_color.rgb = rgb(color)
+        fmt.line.fill.background()
+
+    def _labels(self, series, size=9, bold=False, color="#000000", pos=None, fmt=None):
+        dl = series.data_labels
+        dl.show_value = True
+        dl.font.size = Pt(size)
+        dl.font.bold = bold
+        dl.font.name = self.S["font"]
+        dl.font.color.rgb = rgb(color)
+        if fmt:
+            dl.number_format = fmt
+            dl.number_format_is_linked = False
+        if pos is not None:
+            dl.position = pos
+        return dl
+
+    def _custom_label(self, point, text, size=9, bold=True, color="#000000", pos=None):
+        dl = point.data_label
+        tf = dl.text_frame
+        tf.text = text
+        r = tf.paragraphs[0].runs[0]
+        r.font.size, r.font.bold, r.font.name = Pt(size), bold, self.S["font"]
+        r.font.color.rgb = rgb(color)
+        if pos is not None:
+            dl.position = pos
+        return dl
+
+    @staticmethod
+    def _no_invert(ch):
+        """PowerPoint draws negative bars hollow unless every series AND data point says invertIfNegative=0."""
+        for ser in ch._chartSpace.iter(f"{{{C_NS}}}ser"):
+            parent_tag = etree.QName(ser.getparent()).localname
+            if parent_tag not in ("barChart", "bar3DChart"):
+                continue
+            inv = ser.find(f"{{{C_NS}}}invertIfNegative")
+            if inv is None:
+                inv = etree.Element(f"{{{C_NS}}}invertIfNegative")
+                anchor = ser.find(f"{{{C_NS}}}spPr")
+                if anchor is None:
+                    anchor = ser.find(f"{{{C_NS}}}tx")
+                anchor.addnext(inv)
+            inv.set("val", "0")
+            for dpt in ser.findall(f"{{{C_NS}}}dPt"):
+                if dpt.find(f"{{{C_NS}}}invertIfNegative") is None:
+                    e = etree.Element(f"{{{C_NS}}}invertIfNegative", val="0")
+                    dpt.find(f"{{{C_NS}}}idx").addnext(e)
+
+    @staticmethod
+    def _plot_box(x, y, w, h, fx, fy, fw, fh):
+        return x + w * fx, y + h * fy, w * fw, h * fh
+
+    # ---------------------------------------------------------------- chart recipes (charts.md §3)
+    def stacked_columns(self, s, x, y, w, h, categories, series: dict, colors=None, totals=True, fmt='#,##0',
+                        total_fmt="{:,.0f}", forecast_from=None, forecast_label="Forecast", cagr=None,
+                        legend=True, label_size=9, inside_labels=True, gap=80, vmax=None):
+        """Stacked columns, totals bold on top, optional forecast zone (#F2F2F2) and CAGR bubble+arrow."""
+        S = self.S
+        colors = colors or S["series"]
+        n = len(categories)
+        tot = [sum(v[i] for v in series.values()) for i in range(n)]
+        data = dict(series)
+        if totals:
+            data["_total"] = [0] * n
+        fx, fy, fw, fh = 0.02, 0.12 if (cagr or forecast_from is not None) else 0.06, 0.96, 0.74 if legend else 0.82
+        if forecast_from is not None:  # zone behind the chart (added first -> sits behind)
+            px, py, pw, ph = self._plot_box(x, y, w, h, fx, fy, fw, fh)
+            zx = px + pw * forecast_from / n
+            self.rect(s, zx, y + 0.02, px + pw - zx, py + ph - y - 0.02, fill=S["grey1"])
+            self.text(s, zx, y + 0.02, px + pw - zx, 0.22, forecast_label, size=9, italic=True, color=S["grey5"],
+                      align="center", inset=0)
+        gf, ch = self._chart(s, XL_CHART_TYPE.COLUMN_STACKED, x, y, w, h, categories, data)
+        plot = ch.plots[0]
+        plot.gap_width, plot.overlap = gap, 100
+        vmax = vmax or max(tot) * (1.30 if cagr else 1.12)
+        self._axis_style(ch, vmin=0, vmax=vmax)
+        self._plot_layout(ch, fx, fy, fw, fh)
+        for i, ser in enumerate(plot.series):
+            if ser.name == "_total":
+                self._fill(ser.format, None)
+                for k, p in enumerate(ser.points):
+                    self._custom_label(p, total_fmt.format(tot[k]), size=label_size + 1, bold=True,
+                                       pos=XL_LABEL_POSITION.INSIDE_BASE)
+                continue
+            col = colors[i % len(colors)]
+            self._fill(ser.format, col)
+            if forecast_from is not None:
+                for k in range(forecast_from, n):
+                    p = ser.points[k]
+                    self._fill(p.format, _lerp_hex(col, "#FFFFFF", 0.45))
+            if inside_labels:
+                dark = col.upper() not in ("#F5C400", "#F2F2F2", "#D9D9D9", "#EAD2D2", "#C2D7F6", "#A9D2FB")
+                self._labels(ser, size=label_size, color="#FFFFFF" if dark else "#000000", fmt=fmt,
+                             pos=XL_LABEL_POSITION.CENTER)
+        self._legend(ch, legend and len(series) > 1, hide=[len(series)] if totals else ())
+        if cagr:
+            i0, i1 = cagr
+            px, py, pw, ph = self._plot_box(x, y, w, h, fx, fy, fw, fh)
+            cx = lambda i: px + pw * (i + 0.5) / n
+            ty = lambda i: py + ph * (1 - tot[i] / vmax) - 0.28
+            self.line(s, cx(i0), ty(i0) - 0.05, cx(i1), ty(i1) - 0.05, color=S["grey5"], width=1.0, arrow=True)
+            yrs = i1 - i0
+            g = (tot[i1] / tot[i0]) ** (1 / yrs) - 1 if tot[i0] > 0 and yrs > 0 else 0
+            mx = (cx(i0) + cx(i1)) / 2
+            my = (ty(i0) + ty(i1)) / 2 - 0.30
+            self.rect(s, mx - 0.6, my - 0.14, 1.2, 0.3, fill="#FFFFFF", line=S["grey5"], line_w=0.75,
+                      text=f"CAGR: {g * 100:.1f}%", size=9, bold=True, shape=MSO_SHAPE.OVAL, inset=0)
+        return gf
+
+    def bar_chart(self, s, x, y, w, h, categories, values, horizontal=False, color=None, highlight=(),
+                  highlight_color=None, fmt='#,##0.0', label_size=10, gap=60, target=None, target_label=None,
+                  sort=None, cat_size=9, vmin=None, vmax=None, series_name="Series"):
+        """Single-series bars, colour per point (subject highlighted), optional dashed target line."""
+        S = self.S
+        cats, vals = list(categories), list(values)
+        hl = set(cats[i] for i in highlight)
+        if sort:
+            pairs = sorted(zip(cats, vals), key=lambda t: t[1], reverse=(sort == "desc"))
+            cats, vals = [p[0] for p in pairs], [p[1] for p in pairs]
+        if horizontal:  # bar charts draw bottom-up: reverse so the first item is on top
+            cats, vals = cats[::-1], vals[::-1]
+        kind = XL_CHART_TYPE.BAR_CLUSTERED if horizontal else XL_CHART_TYPE.COLUMN_CLUSTERED
+        gf, ch = self._chart(s, kind, x, y, w, h, cats, {series_name: vals})
+        ch.plots[0].gap_width = gap
+        lo = min(0, min(vals)) if vmin is None else vmin
+        hi = max(vals) * 1.15 if vmax is None else vmax
+        if target is not None:
+            hi = max(hi, target * 1.15)
+        self._axis_style(ch, vmin=lo, vmax=hi, cat_size=cat_size)
+        fx, fy, fw, fh = (0.22, 0.02, 0.70, 0.96) if horizontal else (0.02, 0.08, 0.96, 0.80)
+        self._plot_layout(ch, fx, fy, fw, fh)
+        ser = ch.plots[0].series[0]
+        base = color or S["primary"]
+        self._fill(ser.format, base)
+        for k, c in enumerate(cats):
+            if c in hl:
+                self._fill(ser.points[k].format, highlight_color or S["accent"])
+        self._labels(ser, size=label_size, fmt=fmt, pos=XL_LABEL_POSITION.OUTSIDE_END)
+        self._legend(ch, False)
+        if target is not None:
+            px, py, pw, ph = self._plot_box(x, y, w, h, fx, fy, fw, fh)
+            if horizontal:
+                tx = px + pw * (target - lo) / (hi - lo)
+                self.line(s, tx, py, tx, py + ph, color=S["dash_red"], width=1.25, dash="dash")
+                if target_label:
+                    self.text(s, tx - 0.8, py - 0.25, 1.6, 0.22, target_label, size=9, italic=True,
+                              color=S["dash_red"], align="center", inset=0)
+            else:
+                ty = py + ph * (1 - (target - lo) / (hi - lo))
+                self.line(s, px, ty, px + pw, ty, color=S["dash_red"], width=1.25, dash="dash")
+                if target_label:
+                    self.text(s, px, ty - 0.26, 2.0, 0.22, target_label, size=9, italic=True,
+                              color=S["dash_red"], align="left", inset=0)
+        return gf
+
+    def paired_bars(self, s, x, y, w, h, categories, subject: tuple, peers: tuple, fmt='0.0"%"', label_size=9):
+        """AZTD s5: horizontal subject (gold) vs peers (navy), gap 60 / overlap -15, values outEnd."""
+        S = self.S
+        cats = list(categories)[::-1]
+        data = {subject[0]: list(subject[1])[::-1], peers[0]: list(peers[1])[::-1]}
+        # series order: peers first so the subject sits on top inside each category
+        gf, ch = self._chart(s, XL_CHART_TYPE.BAR_CLUSTERED, x, y, w, h, cats,
+                             {peers[0]: data[peers[0]], subject[0]: data[subject[0]]})
+        plot = ch.plots[0]
+        plot.gap_width, plot.overlap = 60, -15
+        allv = data[subject[0]] + data[peers[0]]
+        self._axis_style(ch, vmin=min(0, min(allv)), vmax=max(allv) * 1.18, cat_size=10)
+        self._plot_layout(ch, 0.22, 0.01, 0.70, 0.88)
+        pser, sser = plot.series
+        self._fill(pser.format, S["primary"])
+        self._fill(sser.format, S["accent"])
+        self._labels(pser, size=label_size, fmt=fmt, pos=XL_LABEL_POSITION.OUTSIDE_END)
+        self._labels(sser, size=label_size, fmt=fmt, pos=XL_LABEL_POSITION.OUTSIDE_END, bold=True)
+        self._legend(ch, True)
+        return gf
+
+    def diverging_bars(self, s, x, y, w, h, categories, values, fmt='+0.0"pp";-0.0"pp";0.0"pp"', sort="asc",
+                       pos_color=None, neg_color=None, label_size=10):
+        """AZTD gap chart: sorted, negatives steel, positives navy, labels with sign, cat labels at the left."""
+        S = self.S
+        pairs = list(zip(categories, values))
+        if sort:
+            pairs.sort(key=lambda t: t[1], reverse=(sort == "desc"))
+        pairs = pairs[::-1]  # first item on top
+        cats, vals = [p[0] for p in pairs], [p[1] for p in pairs]
+        gf, ch = self._chart(s, XL_CHART_TYPE.BAR_CLUSTERED, x, y, w, h, cats, {"Gap": vals})
+        ch.plots[0].gap_width = 60
+        span = max(abs(min(vals)), abs(max(vals)))
+        lo = min(vals) - span * 0.35 if min(vals) < 0 else 0
+        hi = max(vals) + span * 0.35 if max(vals) > 0 else 0
+        self._axis_style(ch, vmin=lo, vmax=hi, cat_size=10, label_low=True)
+        self._plot_layout(ch, 0.25, 0.01, 0.73, 0.98)
+        ser = ch.plots[0].series[0]
+        ser.invert_if_negative = False
+        for k, v in enumerate(vals):
+            self._fill(ser.points[k].format, (neg_color or S["tint1"]) if v < 0 else (pos_color or S["primary"]))
+        self._labels(ser, size=label_size, fmt=fmt, pos=XL_LABEL_POSITION.OUTSIDE_END)
+        self._legend(ch, False)
+        return gf
+
+    def line_chart(self, s, x, y, w, h, categories, series: dict, colors=None, widths=None, subject=None,
+                   end_labels=True, end_fmt="{:,.0f}", val_fmt="#,##0", legend=False, gridlines=True,
+                   vmin=None, vmax=None, dashed=(), cat_size=9, tick_skip=None):
+        """Lines with value axis + light gridlines; subject thick in accent, peers thin; end labels in series colour."""
+        S = self.S
+        colors = colors or S["series"]
+        gf, ch = self._chart(s, XL_CHART_TYPE.LINE, x, y, w, h, categories, series)
+        allv = [v for vs in series.values() for v in vs if v is not None]
+        lo = vmin if vmin is not None else math.floor(min(allv) * 0.95)
+        hi = vmax if vmax is not None else math.ceil(max(allv) * 1.05)
+        self._axis_style(ch, show_values=True, gridlines=gridlines, val_fmt=val_fmt, vmin=lo, vmax=hi, cat_size=cat_size)
+        if tick_skip:
+            ca = ch._chartSpace.find(f".//{{{C_NS}}}catAx")
+            for tag in ("tickLblSkip", "tickMarkSkip"):
+                etree.SubElement(ca, f"{{{C_NS}}}{tag}", val=str(tick_skip))
+        self._plot_layout(ch, 0.07, 0.04, 0.78 if end_labels else 0.90, 0.80 if legend else 0.86)
+        for i, ser in enumerate(ch.plots[0].series):
+            name = ser.name
+            col = (S["accent"] if name == subject else colors[i % len(colors)])
+            wd = (widths or {}).get(name, 2.5 if name == subject else 1.5)
+            ser.format.line.color.rgb = rgb(col)
+            ser.format.line.width = Pt(wd)
+            if name in dashed:
+                ser.format.line.dash_style = MSO_LINE_DASH_STYLE.DASH
+            ser.smooth = False
+            from pptx.enum.chart import XL_MARKER_STYLE
+            ser.marker.style = XL_MARKER_STYLE.NONE
+            if end_labels:
+                vals = series[name]
+                k = max(i for i, v in enumerate(vals) if v is not None)
+                self._custom_label(ser.points[k], f"{name} {end_fmt.format(vals[k])}", size=9, bold=True, color=col,
+                                   pos=XL_LABEL_POSITION.RIGHT)
+        self._legend(ch, legend)
+        return gf
+
+    def waterfall(self, s, x, y, w, h, steps, fmt="{:,.0f}", colors=None, label_size=9, gap=50, logos=None):
+        """steps: [(label, value, 'total'|'delta')]. Base invisible + up (pos) + down (neg) + total (primary)."""
+        S = self.S
+        colors = colors or {"total": S["primary"], "up": S["pos"], "down": S["neg"]}
+        cats, base, up, down, totl, labs = [], [], [], [], [], []
+        run = 0
+        for lab, v, kind in steps:
+            cats.append(lab)
+            if kind == "total":
+                run = v
+                base.append(0); up.append(0); down.append(0); totl.append(v); labs.append(fmt.format(v))
+            elif v >= 0:
+                base.append(run); up.append(v); down.append(0); totl.append(0); labs.append("+" + fmt.format(v))
+                run += v
+            else:
+                run += v
+                base.append(run); up.append(0); down.append(-v); totl.append(0); labs.append("(" + fmt.format(-v) + ")")
+        data = {"_base": base, "Increase": up, "Decrease": down, "Total": totl, "_lab": [0] * len(cats)}
+        gf, ch = self._chart(s, XL_CHART_TYPE.COLUMN_STACKED, x, y, w, h, cats, data)
+        plot = ch.plots[0]
+        plot.gap_width, plot.overlap = gap, 100
+        tops = [b + u + d + t for b, u, d, t in zip(base, up, down, totl)]
+        vmax = max(tops) * 1.15
+        self._axis_style(ch, vmin=0, vmax=vmax, cat_size=9)
+        fx, fy, fw, fh = 0.02, 0.10 if logos else 0.04, 0.96, 0.78 if logos else 0.84
+        self._plot_layout(ch, fx, fy, fw, fh)
+        sb, su, sd, st, sl = plot.series
+        self._fill(sb.format, None)
+        self._fill(su.format, colors["up"])
+        self._fill(sd.format, colors["down"])
+        self._fill(st.format, colors["total"])
+        self._fill(sl.format, None)
+        for k, p in enumerate(sl.points):
+            self._custom_label(p, labs[k], size=label_size, bold=steps[k][2] == "total",
+                               pos=XL_LABEL_POSITION.INSIDE_BASE)
+        self._legend(ch, False)
+        if logos:  # images above each bar (ALLOC s20)
+            px, py, pw, ph = self._plot_box(x, y, w, h, fx, fy, fw, fh)
+            n = len(cats)
+            for k, path in enumerate(logos):
+                if path:
+                    top = py + ph * (1 - tops[k] / vmax)
+                    s.shapes.add_picture(path, Inches(px + pw * (k + 0.5) / n - 0.25), Inches(top - 0.62), height=Inches(0.32))
+        return gf
+
+    def football_field(self, s, x, y, w, h, rows, ref_lines=(), axis=None, fmt="${:,.2f}", label_size=9,
+                       groups=None, bar_h_gap=60, colors=None, axis_fmt='"$"#,##0'):
+        """Horizontal football field (Barclays p15).
+        rows: [(label, low, high, color_key)] color_key in {'main','alt','ref'} or a hex.
+        ref_lines: [(value, label, color)] vertical dashed lines (e.g. unaffected price, offer).
+        groups: [(group label, first_row, last_row, fill)] -> rotated side tabs at the left."""
+        S = self.S
+        palette = {"main": S["primary"], "alt": S["tint1"], "ref": S["grey3"], **(colors or {})}
+        lows = [r[1] for r in rows]
+        highs = [r[2] for r in rows]
+        lo, hi = axis or (math.floor(min(lows + [v for v, *_ in ref_lines]) * 0.9),
+                          math.ceil(max(highs + [v for v, *_ in ref_lines]) * 1.08))
+        cats = [r[0] for r in rows][::-1]
+        off = [r[1] - lo for r in rows][::-1]
+        rng = [r[2] - r[1] for r in rows][::-1]
+        tab_w = 0.32 if groups else 0
+        x_chart = x + tab_w
+        w_chart = w - tab_w
+        gf, ch = self._chart(s, XL_CHART_TYPE.BAR_STACKED, x_chart, y, w_chart, h, cats,
+                             {"_off": off, "Range": rng, "_hi": [0] * len(cats)})
+        plot = ch.plots[0]
+        plot.gap_width, plot.overlap = bar_h_gap, 100
+        # axis shows absolute values: shift by lo through the number format is not possible -> use 0..(hi-lo)
+        self._axis_style(ch, show_values=False, vmin=0, vmax=hi - lo, cat_size=10)
+        fx, fy, fw, fh = 0.36, 0.08, 0.60, 0.80
+        self._plot_layout(ch, fx, fy, fw, fh)
+        so, sr, shi = plot.series
+        self._fill(so.format, None)
+        self._fill(shi.format, None)
+        cols = [r[3] for r in rows][::-1]
+        for k, p in enumerate(sr.points):
+            ck = cols[k]
+            self._fill(p.format, palette.get(ck, ck))
+        lows_r, highs_r = lows[::-1], highs[::-1]
+        for k in range(len(cats)):
+            self._custom_label(so.points[k], fmt.format(lows_r[k]), size=label_size, bold=False,
+                               pos=XL_LABEL_POSITION.INSIDE_END)
+            self._custom_label(shi.points[k], fmt.format(highs_r[k]), size=label_size, bold=False,
+                               pos=XL_LABEL_POSITION.INSIDE_BASE)
+        self._legend(ch, False)
+        px, py, pw, ph = self._plot_box(x_chart, y, w_chart, h, fx, fy, fw, fh)
+        X = lambda v: px + pw * (v - lo) / (hi - lo)
+        # own axis (absolute values) under the plot
+        nt = 5
+        step = (hi - lo) / nt
+        self.line(s, px, py + ph, px + pw, py + ph, color=S["grey5"], width=0.75)
+        for t in range(nt + 1):
+            v = lo + t * step
+            self.text(s, X(v) - 0.45, py + ph + 0.03, 0.9, 0.2, fmt.format(v).replace(".00", ""), size=8,
+                      align="center", color=S["grey7"], inset=0)
+        for v, lab, colr in ref_lines:
+            self.line(s, X(v), py - 0.05, X(v), py + ph, color=colr or S["dash_red"], width=1.25, dash="dash")
+            self.rect(s, X(v) - 0.75, py - 0.33, 1.5, 0.26, fill="#FFFFFF", line=colr or S["dash_red"], line_w=0.75,
+                      dash="dash", text=f"{lab}: {fmt.format(v)}", size=8, bold=True, color=colr or S["dash_red"], inset=0)
+        if groups:
+            n = len(rows)
+            for g_label, a, b, fill in groups:
+                gy = py + ph * a / n
+                gh = ph * (b - a + 1) / n
+                self.side_tab(s, x, gy + 0.02, tab_w - 0.04, gh - 0.04, g_label, fill=fill or S["primary"])
+                if a > 0:
+                    self.line(s, x, gy, px + pw, gy, color=S["grey3"], width=0.75, dash="dash")
+        return gf
+
+    def tornado(self, s, x, y, w, h, rows, base_value, fmt="${:,.2f}", label_size=9):
+        """rows: [(driver label, delta_down (neg), delta_up (pos))] -> BofA/Jefferies tornado around base."""
+        S = self.S
+        rows = rows[::-1]
+        cats = [r[0] for r in rows]
+        dn = [r[1] for r in rows]
+        up = [r[2] for r in rows]
+        gf, ch = self._chart(s, XL_CHART_TYPE.BAR_CLUSTERED, x, y, w, h, cats, {"Downside": dn, "Upside": up})
+        plot = ch.plots[0]
+        plot.gap_width, plot.overlap = 45, 100
+        span = max(max(abs(v) for v in dn), max(abs(v) for v in up)) * 1.45
+        self._axis_style(ch, vmin=-span, vmax=span, cat_size=10, label_low=True, cat_line=False)
+        fx, fy, fw, fh = 0.30, 0.03, 0.68, 0.94
+        self._plot_layout(ch, fx, fy, fw, fh)
+        sd, su = plot.series
+        self._fill(sd.format, S["tint1"])
+        self._fill(su.format, S["primary"])
+        for ser, sign in ((sd, -1), (su, 1)):
+            for k, p in enumerate(ser.points):
+                v = (dn if sign < 0 else up)[k]
+                txt = "" if v == 0 else (f"({fmt.format(abs(v))})" if v < 0 else fmt.format(v))
+                self._custom_label(p, txt or " ", size=label_size, bold=True, pos=XL_LABEL_POSITION.OUTSIDE_END)
+        self._legend(ch, False)
+        px, py, pw, ph = self._plot_box(x, y, w, h, fx, fy, fw, fh)
+        cx = px + pw / 2
+        self.line(s, cx, py - 0.1, cx, py + ph, color=S["grey5"], width=1.0, dash="dash")
+        self.text(s, cx - 1.0, py - 0.34, 2.0, 0.24, f"Base: {fmt.format(base_value)}", size=9, bold=True,
+                  align="center", inset=0)
+        return gf
+
+    def donut(self, s, x, y, d, labels, values, center_text=None, center_label=None, colors=None, hole=60,
+              show_pct=True, legend=True):
+        S = self.S
+        colors = colors or S["series"]
+        gf, ch = self._chart(s, XL_CHART_TYPE.DOUGHNUT, x, y, d, d, labels, {"Mix": values})
+        dc = ch._chartSpace.find(f".//{{{C_NS}}}doughnutChart")
+        hs = dc.find(f"{{{C_NS}}}holeSize")
+        if hs is None:
+            hs = etree.SubElement(dc, f"{{{C_NS}}}holeSize")
+        hs.set("val", str(hole))
+        ser = ch.plots[0].series[0]
+        tot = sum(values)
+        for k, p in enumerate(ser.points):
+            self._fill(p.format, colors[k % len(colors)])
+            p.format.line.color.rgb = rgb("#FFFFFF")
+            p.format.line.width = Pt(1.5)
+            if show_pct:
+                col = colors[k % len(colors)]
+                light = col.upper() in ("#F5C400", "#EAD2D2", "#C2D7F6", "#A9D2FB", "#D9D9D9", "#9DAAC0", "#A6A6A6")
+                self._custom_label(p, f"{values[k] / tot * 100:.0f}%", size=9, bold=True,
+                                   color="#000000" if light else "#FFFFFF")
+        self._plot_layout(ch, 0.08, 0.08 if not legend else 0.04, 0.84, 0.84 if not legend else 0.74)
+        self._legend(ch, legend)
+        if center_text:
+            cy = y + d * (0.04 + 0.37) if legend else y + d / 2
+            self.text(s, x, cy - 0.32, d, 0.4, center_text, size=20, bold=True, color=S["primary"], align="center",
+                      anchor="bottom", inset=0)
+            if center_label:
+                self.text(s, x + d * 0.25, cy + 0.08, d * 0.5, 0.3, center_label, size=9, align="center", inset=0)
+        return gf

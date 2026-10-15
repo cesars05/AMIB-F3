@@ -1,0 +1,119 @@
+"""'Quant History' (data) + 'Model Test' (results): how good has Model 1.1 been in 2026."""
+import csv, glob, os, pickle
+import engine as E
+from build_live_helpers import *   # noqa
+X = pickle.load(open(E.S + "/live_refs.pkl", "rb"))
+def Lc(n):
+    s = ""
+    while n: n, r = divmod(n - 1, 26); s = chr(65 + r) + s
+    return s
+QD = r"C:/Users/cesar/OneDrive/Desktop/AZTD Peers/Quant Model"
+files = {"Jan-26": "data_2026-01-31.csv", "Feb-26": "data_2026-02-28.csv", "Mar-26": "data_2026-03-31.csv",
+         "Apr-26": "data_2026-04-30 (2).csv", "May-26": "data_2026-05-31.csv", "Jun-26": "data_2026-06-30.csv",
+         "Aug-26": "data_2026-08-31 (3).csv"}
+SNAPS = list(files)
+FIELDS = {"Model 1.1": "Model1.1", "Stability": "STABILITYSCORE", "Tactical": "Tactical Score", "6M Slope": "Model1.1 Slope"}
+data = {}; meta = {}
+def num(x):
+    try: return float(x)
+    except Exception: return None
+for lab, fn in files.items():
+    for row in csv.DictReader(open(os.path.join(QD, fn), encoding="utf-8-sig")):
+        ric = row["RIC"]
+        if not ric: continue
+        meta.setdefault(ric, [row["Company"], row["Sector"], row["Region"], num(row.get("MKTCAP$"))])
+        for k, f in FIELDS.items():
+            data.setdefault(ric, {}).setdefault(k, {})[lab] = num(row.get(f))
+rics = sorted(meta); N = len(rics)
+print("quant universe", N, flush=True)
+
+# ---- FX positions on Attr Setup (same layout as build_live)
+b5 = X["b5"]; NM = X["NM"]; b6 = b5 + 9; fx0 = b6 + 4; u0 = fx0 + NM + 3
+ccys = sorted(E.FXT.keys())
+USDPER = f"'Attr Setup'!$D${u0+1}:${Lc(4+len(ccys))}${u0+1+NM}"
+USDHDR = f"'Attr Setup'!$D${u0}:${Lc(4+len(ccys))}${u0}"
+cm0 = u0 + NM + 4
+CCYMAP = f"'Attr Setup'!$C${cm0+1}:$D${cm0+4}"
+RET_MONTHS = ["Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26"]
+RET_IDX = [25, 26, 27, 28, 29, 30, 31]   # index in E.MONTHS (Jan-24 = 0)
+TEST = [("Jan-26", 0), ("Feb-26", 1), ("Mar-26", 2), ("Apr-26", 3), ("May-26", 4), ("Jun-26", 5)]  # score -> next month return
+
+# ======================= Quant History (data) =======================
+QH = sheet("Quant History", "Attr Holdings"); base(QH)
+fmt_from(TITLE, QH.Range("C2:P2")); QH.Range("C2").Value = "Quant History - Model 1.1 month-end scores (2026) and next-month returns"
+note(QH, "C3", "Scores: monthly Quant Model files (folder 'Quant Model'; Jul-26 file missing - it duplicates Aug-26). "
+               "Returns: Workspace TR.TotalReturn per calendar month (live), converted to USD with the FX table in 'Attr Setup'.")
+h, d0 = 7, 8; dl = d0 + N - 1
+c = 3
+put(QH, f"C{h}", [["RIC", "Company", "Sector", "Region (Quant)", "Mkt cap US$m (Jan-26)", "Currency", "FX col"]])
+SC0 = 10  # J
+blocks = {}
+col = SC0
+for k in FIELDS:
+    blocks[k] = col
+    put(QH, f"{Lc(col)}6", [[k]])
+    put(QH, f"{Lc(col)}{h}", [SNAPS])
+    col += len(SNAPS) + 1
+LR0 = col; UR0 = LR0 + len(RET_MONTHS) + 1; CUM = UR0 + len(RET_MONTHS) + 1
+put(QH, f"{Lc(LR0)}6", [["Local total return (%) - TR"]]); put(QH, f"{Lc(UR0)}6", [["USD return"]])
+put(QH, f"{Lc(LR0)}{h}", [RET_MONTHS]); put(QH, f"{Lc(UR0)}{h}", [RET_MONTHS])
+QH.Range(f"{Lc(CUM)}{h}").Value = "Cum. USD return Feb-Aug 26"
+for j, (m, ix) in enumerate(zip(RET_MONTHS, RET_IDX)):
+    QH.Range(f"{Lc(LR0+j)}4").Formula = f"='Attr Setup'!{Lc(X['MC0']+ix)}{X['r0']+1}"
+    QH.Range(f"{Lc(LR0+j)}5").Formula = f"='Attr Setup'!{Lc(X['MC0']+ix)}{X['r0']+2}"
+# helpers: percentile ranks
+PRR0 = CUM + 2
+put(QH, f"{Lc(PRR0)}6", [["Pctl rank of next-month return"]]); put(QH, f"{Lc(PRR0)}{h}", [[m for m in RET_MONTHS[:6]]])
+PR0 = {}; col = PRR0 + 7
+for k in FIELDS:
+    PR0[k] = col
+    put(QH, f"{Lc(col)}6", [[f"Pctl rank {k} (score date)"]]); put(QH, f"{Lc(col)}{h}", [[s for s, _ in TEST]])
+    col += 7
+PRCUM = col
+QH.Range(f"{Lc(PRCUM)}6").Value = "Pctl rank Model 1.1 Jan-26 (cum test)"
+fmt_from(BAR, QH.Range(f"C{h}:{Lc(PRCUM)}{h}")); QH.Range(f"C{h}:{Lc(PRCUM)}{h}").WrapText = True; QH.Rows(h).RowHeight = 30
+QH.Range(f"C6:{Lc(PRCUM)}6").Font.Bold = True
+# data values
+rows = []
+for r in rics:
+    m = meta[r]
+    rows.append([r, m[0], m[1], m[2], m[3]])
+for i in range(0, N, 3000):
+    put(QH, f"C{d0+i}", rows[i:i+3000])
+for k in FIELDS:
+    vals = [[("" if data[r][k].get(s) is None else data[r][k].get(s)) for s in SNAPS] for r in rics]
+    for i in range(0, N, 3000):
+        put(QH, f"{Lc(blocks[k])}{d0+i}", vals[i:i+3000])
+# currency (TR) + FX col
+QH.Range(f"H{d0}").Formula = f'=TR($C${d0}:$C${dl},"TR.PriceClose.currency")'
+QH.Range(f"I{d0}:I{dl}").Formula = f'=IFERROR(MATCH(IFERROR(VLOOKUP(H{d0},{CCYMAP},2,0),H{d0}),{USDHDR},0),1)'
+for j in range(len(RET_MONTHS)):
+    lc = Lc(LR0 + j)
+    QH.Range(f"{lc}{d0}").Formula = f'=TR($C${d0}:$C${dl},"TR.TotalReturn","SDate=#1 EDate=#2",,{lc}$4,{lc}$5)'
+    uc = Lc(UR0 + j); ix = RET_IDX[j]
+    QH.Range(f"{uc}{d0}:{uc}{dl}").Formula = (f'=IF(ISNUMBER({lc}{d0}),(1+{lc}{d0}/100)*INDEX({USDPER},{ix+2},$I{d0})'
+                                              f'/INDEX({USDPER},{ix+1},$I{d0})-1,"")')
+ur = f"{Lc(UR0)}{d0}:{Lc(UR0+6)}{d0}"
+R(lambda: setattr(QH.Range(f"{Lc(CUM)}{d0}:{Lc(CUM)}{dl}"), "Formula2", f'=IF(COUNT({ur})<7,"",PRODUCT(1+{ur})-1)'))
+for j in range(6):
+    uc = Lc(UR0 + j)
+    QH.Range(f"{Lc(PRR0+j)}{d0}:{Lc(PRR0+j)}{dl}").Formula = f'=IF(ISNUMBER({uc}{d0}),PERCENTRANK.INC(${uc}${d0}:${uc}${dl},{uc}{d0}),"")'
+for k in FIELDS:
+    for j, (s, si) in enumerate(TEST):
+        sc = Lc(blocks[k] + si); uc = Lc(UR0 + j)
+        QH.Range(f"{Lc(PR0[k]+j)}{d0}:{Lc(PR0[k]+j)}{dl}").Formula = (
+            f'=IF(AND(ISNUMBER({sc}{d0}),ISNUMBER({uc}{d0})),PERCENTRANK.INC(${sc}${d0}:${sc}${dl},{sc}{d0}),"")')
+jc = Lc(blocks["Model 1.1"])
+QH.Range(f"{Lc(PRCUM)}{d0}:{Lc(PRCUM)}{dl}").Formula = (
+    f'=IF(AND(ISNUMBER({jc}{d0}),ISNUMBER({Lc(CUM)}{d0})),PERCENTRANK.INC(${jc}${d0}:${jc}${dl},{jc}{d0}),"")')
+QH.Range(f"{Lc(SC0)}{d0}:{Lc(LR0-2)}{dl}").NumberFormat = "0.00"
+QH.Range(f"{Lc(LR0)}{d0}:{Lc(LR0+6)}{dl}").NumberFormat = "0.0"
+QH.Range(f"{Lc(UR0)}{d0}:{Lc(CUM)}{dl}").NumberFormat = "0.0%"
+QH.Range(f"{Lc(PRR0)}{d0}:{Lc(PRCUM)}{dl}").NumberFormat = "0.00"
+QH.Range(f"G{d0}:G{dl}").NumberFormat = "#,##0"
+for cc, w in (("C", 12), ("D", 30), ("E", 20), ("F", 10), ("G", 11), ("H", 8), ("I", 6)): QH.Columns(cc).ColumnWidth = w
+QH.Range(f"C{h+1}").Select(); app.ActiveWindow.FreezePanes = False; QH.Range(f"E{d0}").Select(); app.ActiveWindow.FreezePanes = True
+REF = dict(d0=d0, dl=dl, blocks=blocks, LR0=LR0, UR0=UR0, CUM=CUM, PRR0=PRR0, PR0=PR0, PRCUM=PRCUM, N=N)
+pickle.dump(REF, open(E.S + "/quant_refs.pkl", "wb"))
+app.Calculation = -4105
+print("quant history written", REF)

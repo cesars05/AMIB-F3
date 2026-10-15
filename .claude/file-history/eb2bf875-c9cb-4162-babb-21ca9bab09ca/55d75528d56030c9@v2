@@ -1,0 +1,71 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$sm=$null
+for($t=0;$t -lt 20;$t++){ try{ $sm=$wb.Worksheets.Item("Segment Model") }catch{}; if($sm -ne $null){ break }; Start-Sleep -Milliseconds 800 }
+if($sm -eq $null){ throw "ABORTO: hoja no encontrada" }
+$xl.ScreenUpdating=$true
+
+# ---- GUARDAS sobre el mapa ya verificado ----
+if([double]$sm.Range("K133").Value2 -ne 3179){ throw "ABORTO: K133 no es el capex de WM" }
+if([double]$sm.Range("K134").Value2 -ne 796) { throw "ABORTO: K134 no es el capex de BE" }
+if([double]$sm.Range("K135").Value2 -ne 1236){ throw "ABORTO: K135 no es el capex de HP" }
+if([double]$sm.Range("K30").Value2  -ne 2840){ throw "ABORTO: K30 no es el D&A de WM" }
+if([double]$sm.Range("K13").Value2  -ne 46588){ throw "ABORTO: K13 no es el ingreso de WM" }
+if([double]$sm.Range("H13").Value2  -ne 39841){ throw "ABORTO: H13 no es FY2023 de WM" }
+if([string]$sm.Range("C218").Text -ne "Water Management"){ throw "ABORTO: C218 no es Water Management" }
+if([string]$sm.Range("C216").Text -notlike "Growth capital intensity*"){ throw "ABORTO: C216 no es la etiqueta" }
+Write-Output "guardas OK"
+
+$xl.Calculation=-4135
+# columnas: H=FY2023 (base)  I=FY2024  J=FY2025  K=FY2026
+$sm.Range("D218").Formula = "=SUM(I133:K133)"
+$sm.Range("E218").Formula = "=SUM(I30:K30)"
+$sm.Range("F218").Formula = "=+D218-E218"
+$sm.Range("G218").Formula = "=+K13-H13"
+$sm.Range("H218").Formula = '=+IFERROR(F218/G218,"")'
+
+$sm.Range("D219").Formula = "=SUM(I134:K134)"
+$sm.Range("E219").Formula = "=SUM(I31:K31)"
+$sm.Range("F219").Formula = "=+D219-E219"
+$sm.Range("G219").Formula = "=+K14-H14"
+$sm.Range("H219").Formula = '=+IFERROR(F219/G219,"")'
+
+$sm.Range("D220").Formula = "=SUM(I135:K135)"
+$sm.Range("E220").Formula = "=SUM(I32:K32)"
+$sm.Range("F220").Formula = "=+D220-E220"
+$sm.Range("G220").Formula = "=+K15-H15"
+$sm.Range("H220").Formula = '=+IFERROR(F220/G220,"")'
+
+$sm.Range("C216").Value2 = "Growth capital intensity - net new capital per GBP 1 of incremental revenue, FY2024-FY2026 (3 years)"
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild()
+$xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output "aplicado: ventana de 3 anios (base FY2023)"
+Write-Output ""
+Write-Output ("  "+[string]$sm.Range("C216").Text)
+Write-Output ("  "+"".PadRight(26)+"Capex ac.".PadLeft(12)+"D&A ac.".PadLeft(12)+"Cap.neto".PadLeft(12)+"D Ingr.".PadLeft(12)+"Intens.".PadLeft(12))
+foreach($r in 218,219,220){
+  $lab=[string]$sm.Cells.Item($r,3).Text
+  if($lab.Length -gt 25){ $lab=$lab.Substring(0,25) }
+  $v=""
+  for($c=4;$c -le 8;$c++){ $v+=([string]$sm.Cells.Item($r,$c).Text).PadLeft(12) }
+  Write-Output ("  "+$lab.PadRight(26)+$v)
+}
+Write-Output ""
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=$wb.Worksheets.Item($nm)
+  $e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)
+Write-Output ("  Calculation="+[string]$xl.Calculation)

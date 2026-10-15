@@ -1,0 +1,53 @@
+# _NOTES: Company/Fase0_descargas_IR (Fuso Chemical primary documents)
+
+Written 12-Oct-2026 after reading the files. Read this before opening anything here. Conventions: FY03/2026 = Apr-2025 to Mar-2026 = company "2025年度". P = PDF page. "md" = the pdf-to-markdown conversion next to each PDF.
+
+## How to read the files (workflow lessons)
+1. **Filings (yuho, tanshin, interim, notices): the md is reliable text.** Use `grep -n` on the md, then cite P. Page markers inside the md (`<!-- pagina N -->`) equal PDF pages.
+2. **Slide decks: the md is NOT a number source.** Chart values lose their axis labels (example: capex on Q4 deck slide 12 comes out as loose numbers). Render the PDF page to PNG (pymupdf, zoom 1.3) and read the image, or open the bilingual PDF (see below). Use the md only to locate the slide.
+3. **Japanese prevails.** Known translation trap: the English Q4 deck slide 32 says Kyoto new line certification "by the end of Mar.2025". The Japanese says 2025年度末, which is end of FY03/2026 (Mar-2026). The yuho FY03/2026 P33 confirms full operation from end FY03/2026.
+4. **Fiscal-year labels:** "2025年度" = FY03/2026. MTP "2026-2030年度" = FY03/2027 to FY03/2031. "2028年度完成" = FY03/2029. File names such as "Q4 2026" mean the quarter in the FY ending Mar-2026.
+5. **MTP deck: PDF page = printed slide + 1.**
+6. `images/` holds 429 PNG crops made by the converter (logos, chart crops). Do not read them. `*_figuras.pdf` holds one figure per page, in the order of the `[FIG-NNN]` tags in the md.
+
+## File map
+
+| File | What it is | Period / date | Lang | Pages | md quality | Use it for (P) |
+|---|---|---|---|---|---|---|
+| `34f9a5a7...` (.md/.pdf) | **Yuho (有価証券報告書) 69th term** | FY03/2026, filed 19-Jun-2026 | JA | 130 | Good (text) | 5-year table P4; history P7; risks P24-27; MD&A P28-36; R&D P37; **capex by segment P38**; **planned capex table P39 (Kyoto 40,000m, paid 403m)**; customers >10% P30 and P100; D&A policy P75 (declining balance, machinery 4-8 years); bonus metric P60; segment note P98-99; **subsidy subsequent event P104** |
+| `cc1030a6...` | Yuho 68th term | FY03/2025, filed 19-Jun-2025 | JA | 114 | Good | FY03/2025 MD&A P20-28; **Kashima II plan 20,000m P32 and loan funding P29**; initial FY03/2026 plan vs MTP P12-13; capacity 1.5x vs FY2022 P14 |
+| `6c514ffc...` | Interim report (半期報告書) 69th term | Apr-Sep 2025, 7-Nov-2025 | JA | 26 | Good | H1 FY03/2026 detail |
+| `02463db5...` | Shareholder report (株主通信) 69th term | FY03/2026 | JA | 12 | OK (figures embedded) | Management letter: PMP US expansion Jul-2027 |
+| `cf1919ab...` | Shareholder report 68th term | FY03/2025 | JA | 12 | OK | Management letter FY03/2025 |
+| `3825ea4a...` | **Results deck FY03/2026, Japanese original** (twin of the English "Q4 2026" deck in the root) | 15-May-2026 | JA | 61 | Scrambled charts | Slide map = English deck. Benzene slide text is clean here (slide 25) |
+| `Fuso_FY03-2026_Results_Presentation_BILINGUAL_JP-EN.pdf` | Unofficial translation made in an earlier session: JP slide on top, EN text below (value labels transcribed) | 15-May-2026 | JA+EN | 62 | n/a (no md) | **Fastest way to read deck numbers**; text-extractable with pymupdf. It carries the translator note "values read from bars are approximate" |
+| `01_MTP_Next-Growth-2030_plan` | MTP 飛躍2030 (Next Growth 2030) | 15-May-2026 | JA | 27 | Scrambled charts | Targets P5-6; **cash allocation P7 (OCF 1,640 oku; growth 1,000 incl. Kyoto 400; existing 270; debt 170; returns 200)**; segment strategy P10-14; **CMP market chart P15**; **capex timeline P18-19**; R&D center P21 |
+| `02_MTP_press-release_2026-05-11` | TDnet notice of the MTP | 11-May-2026 | JA | 2 | Short | Targets only |
+| `03_Tanshin_FY03-2026` | Earnings release (決算短信) FY03/2026 + FY03/2027 guidance | 11-May-2026 | JA | 24 | Good (tables) | Guidance by line (NI 16,600, EPS 156.90), dividends, BS/CF |
+| `04_Tanshin_Q3_FY03-2026` | Q3 earnings release | 6-Feb-2026 | JA | 16 | Good | 9M: sales 57,928, OP 14,563 |
+| `05_Presentation_Q2_FY03-2026` | Q2 results deck, Japanese | 12-Nov-2025 (file name date) | JA | 49 | Scrambled | Nov-2025 view: **Kashima II timing P33; customers' demand forecast and "AI growth slows FY2027-28" P32; slurry market forecast raised from CAGR 3% to 6% P30; China >10% P31** |
+| `06_Dialogue-QA_FY2025_dialogue2026` | Investor dialogue summary (not a transcript) | FY03/2026 | JA | 6 | Good | Themes analysts press; **P5: customers share next capex, 5-10% price revision from "FY2026" (company label, = FY03/2027)** |
+| `07_FUSO-TOPICS_2026` | Collection of shareholder-report topics 2020-2026 | 2020-2026 | JA | 13 | OK | Project announcements history (capacity 1.5x vs FY2022) |
+| `08_Prev-MTP_FUSO-VISION-2025` | Update of the previous MTP | 11-May-2023 | JA | 5 | Scrambled | Targets 850 / 190 / 300 oku |
+| `09_Forecast-revision_2025-10-31` | Upward revision notice | 31-Oct-2025 | EN | 2 | Good | Why guidance was raised: AI colloidal silica, weaker yen, lower tax rate |
+| `10_AGM-prequestions_2025-06-23` | AGM prior question (photos of directors) | 23-Jun-2025 | JA | 1 | Good | Nothing of value |
+| `11_Q2_FY03-2026_results_2025-10-31` | Q2 earnings release | 31-Oct-2025 | JA | 12 | Good | H1: sales 37,705, OP 9,746 |
+| `12_Integrated-Report_2025_JPN` | Integrated report | FY03/2026 | JA | 74 | Long, tables partly broken | Quartron purity 99.9999% and particle range P20-21; CMP growth logic and risk/opportunity table P23-24; Qingdao processes metallic silicon P44 |
+| `Fuso Chemical - Q1 2027.*` | **English summary of the Q1 FY03/2027 earnings release** (identical to the root file "(1)") | Quarter to 30-Jun-2026, 7-Aug-2026 | EN | 7 | Good (text order partly mixed) | Q1 P&L, BS, CF. **No segment split, no commentary; no Japanese original in folder** |
+| `Fuso Chemical - Corporate presentation - Conference Call Deck.*` | Cost-of-capital / share-price action update (identical to the root file "(1)") | 30-Jun-2026 | EN | 6 | Good | ROIC/ROE/PBR table FY03/2022-2026 (P3), cost of capital 8-9% |
+| `Prompt_Company_Overview_v0.1/v0.2.md` | Phased overview prompt | Oct-2026 | EN | | | Use v0.2 |
+| `Prompt_Segment_Analysis_Framework_v0.1/v0.2.md` | Excel segment-block prompt | Oct-2026 | EN | | | Use v0.2. Note: its section 5 says the Workspace NI guidance of 19,200 is wrong; see "Open conflicts" |
+| `Prompt_Fuso_DeepDive_v0.1.md` | Pre-overview deep-dive prompt | 12-Oct-2026 | EN | | | Questions Q1-Q8 and source map |
+
+## Facts worth knowing before you search
+- **Only customer >10%:** FUJIFILM Electronic Materials Taiwan, 10,675m yen = 13.9% of FY03/2026 sales (12.9% in FY03/2025, below 10% before). Yuho P30/P100. About 26% of Electronic Materials sales [I: 10,675 / 41,515].
+- **No HBM or AI revenue share is disclosed anywhere.** The only HBM mention is the architecture diagram on deck slide 35 (hybrid bonding). TSMC is named once: "Adopted for TSMC N2-generation nodes" (deck slide 30).
+- **No Fuso Q&A transcript is in the folder.** The briefings of 12-Nov-2025 and 15-May-2026 were held for institutional investors (tanshin cover), but the deck divider "Q&A" has no content. Q3 FY03/2026 and Q1 FY03/2027 had no briefing. Use the Dialogue summary (06) for the themes investors press, and the Nissan Chemical / Mitsubishi Chemical Q&A files only for how analysts frame peers.
+- **Benzene is quoted as ENEOS ACP price** (USD/t). FY03/2025 average 996, FY03/2026 average 745, Apr-May 2026 1,130 (deck slide 25).
+- **Depreciation is declining-balance (定率法), machinery 4-8 years** (yuho P75), so each new plant is front-loaded in cost.
+- **Subsidy:** 3,694m yen granted 15-Jun-2026 for the Kyoto new line already built (Oct-2024), booked as extraordinary income in FY03/2027 (yuho P104). It reimburses past capex; it does not fund the 40,000m project.
+
+## Open conflicts and gaps
+- **FY03/2027 net income guidance:** 16,600 (deck and tanshin of 11/15-May-2026, EPS 156.90) vs 19,200 (Q1 tanshin 7-Aug-2026, EPS 181.48, marked "no revision"). The 2,600m gap equals 3,694m x (1 - about 29.6%), in line with the subsidy gain, and the H1 forecast moves by the same 2,600m (7,850 to 10,450). Sales and OP are unchanged. Reading: **consistent with the Aug figure including the subsidy** [I]; the Workspace "guidance" is probably newer, not wrong. A TDnet notice of mid-June to Aug-2026 is not in the folder; fetch it to close this.
+- The model sheet `Fuso Financials` row 93 labels the Q1 FY03/2027 extraordinary income 3,703.86 as "gain on sale of fixed assets". It is **subsidy income** (Q1 tanshin P5).
+- Missing: Japanese Q1 FY03/2027 tanshin; any Q1 segment data; Q&A notes of the 15-May-2026 briefing; yuho FY03/2024 and earlier (needed for FY03/2024 trough explanation: only FY03/2025 comparatives exist here).

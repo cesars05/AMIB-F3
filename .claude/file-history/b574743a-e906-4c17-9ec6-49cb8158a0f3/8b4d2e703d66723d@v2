@@ -1,0 +1,53 @@
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
+p = r'C:\Users\cesar\Downloads\PE\08_Proyecto_Final\modelo_financiero\_builder\build_v4_extra.py'
+t = open(p, encoding='utf-8').read()
+a = t.index('MG = wb.create_sheet("Mercado_Gobierno")')
+b = t.index('PR = wb.create_sheet("Proyectos_Region")')
+new = r'''MG = wb.create_sheet("Mercado_Gobierno")
+set_sheet(MG, tab="7FB89A", widths={"B": 58, "C": 22, "D": 16, "E": 14, "F": 40, "G": 62, "H": 14, "I": 22})
+put(MG, "B2", "Aurex Capital - Mercado y gobierno: tabla única de cifras verificadas", "title")
+put(MG, "B3", "Cada cifra del deck y del memorándum sale de esta tabla (fuente primaria, URL y fecha). Verificación al 11-oct-2026; contradicciones y alcance de cada plan en fuentes_investigacion/gobierno_oportunidad_2026.md.", "note")
+GOV_NAT = [
+ ("Inversión sexenal en electricidad y gasoductos", "MXN 1.168 billones", "hasta 2030", "Presidencia, estrategia del 7-oct-2026", "https://www.gob.mx/presidencia/prensa/presidenta-claudia-sheinbaum-destaca-inversion-historica-de-cerca-de-1-2-billones-de-pesos-en-el-sexenio-para-electricidad-y-gas-natural", "7-oct-2026", "Verificada (oficial)"),
+ ("Generación: privados casi MXN 200,000M, mixtos MXN 452,000M, CFE MXN 142,000M (de MXN 794,000M)", "MXN 794,000M", "hasta 2030", "Presidencia, versión estenográfica 7-oct-2026", "https://www.gob.mx/presidencia/articulos/version-estenografica-conferencia-de-prensa-de-la-presidenta-claudia-sheinbaum-pardo-del-07-de-octubre-de-2026", "7-oct-2026", "Verificada (oficial)"),
+ ("Capacidad nueva del Plan de Fortalecimiento y Expansión: 32,475 MW (CFE 11,896; mixto 13,830; privado 6,750)", "32,475 MW", "2025-2030", "Proyectos México, ficha del plan", "https://www.proyectosmexico.gob.mx/proyectos/plan-de-fortalecimiento-y-expansion-del-sistema-electrico-nacional-generacion/", "jun-2026", "Verificada (oficial)"),
+ ("Cifra presidencial asociada a la inversión del 7-oct-2026", "≈38,000 MW", "hasta 2030", "Presidencia, comunicado del 7-oct-2026", "ídem fila 1", "7-oct-2026", "Verificada como cita; SENER maneja 32,000 MW"),
+ ("Almacenamiento con baterías de todo el SEN: CFE 2,480 MW y privados 3,071 MW", "5,551 MW", "2025-2030", "SENER, PLADESE 2025-2039 (DOF), Tabla 3.5", "https://dof.gob.mx/nota_detalle.php?codigo=5770297&fecha=17/10/2025", "17-oct-2025", "Verificada (oficial)"),
+ ("Almacenamiento con baterías a 2039", "8,647 MW", "2025-2039", "SENER, PLADESE (DOF)", "ídem fila 5", "17-oct-2025", "Verificada (oficial)"),
+ ("Adiciones de capacidad por particulares (renovables, planeación vinculante)", "7,405 MW", "2026-2030", "SENER, PLADESE (DOF), secc. 4.1.3", "ídem fila 5", "17-oct-2025", "Verificada (oficial)"),
+ ("Capacidad instalada del Sistema Eléctrico Nacional", "90,543 MW", "dic-2024", "SENER, PLADESE (DOF)", "ídem fila 5", "17-oct-2025", "Verificada (oficial)"),
+ ("Generación distribuida instalada (600,651 solicitudes menores a 0.7 MW)", "5,189.71 MW", "cierre 2025", "CNE, estadística 2S-2025 (vía pv magazine y descarga)", "https://www.pv-magazine.com/2026/06/03/mexico-supera-en-2025-los-5-gw-solares-en-generacion-distribuida/", "3-jun-2026", "Verificada con matiz (stock, no meta)"),
+ ("Meta de generación distribuida fotovoltaica en 2039 (adiciones de 4,788 MW en 2025-2030)", "14,432 MW", "2039", "SENER, PLADESE (DOF), Tabla 3.3", "ídem fila 5", "17-oct-2025", "Verificada (oficial)"),
+ ("Piso legal de energía inyectada por el Estado (CFE, FONADIN y PEMEX)", "54%", "2026-2030", "Ley del Sector Eléctrico y PLADESE (DOF)", "ídem fila 5", "17-oct-2025", "Verificada (oficial)"),
+ ("Esquema mixto: CFE mínimo 54% y privado 46% por proyecto", "54% / 46%", "2026-2030", "Presidencia (cita) y Expansión (16-feb-2026)", "https://expansion.mx/empresas/2026/02/16/cfe-tendra-54-y-aportara-especie-esquemas-mixtos", "16-feb-2026", "Parcial (prensa)"),
+ ("Fallo mixto de CFE: proyectos adjudicados", "7,411 MW en 37 proyectos", "5-jun-2026", "Von Wobeser; Proyectos México", "fuentes_investigacion/descargas/VonWobeser_CFE-adjudica-esquema-mixto_12jun2026.pdf", "12-jun-2026", "Verificada (despacho y ficha oficial)"),
+ ("I Squared Capital elegida por SHCP para un vehículo de financiamiento eléctrico", "sin monto", "sep-2026", "Bloomberg Línea (fuentes anónimas)", "https://www.bloomberglinea.com/latinoamerica/mexico/i-squared-supera-a-blackrock-para-gestionar-proyecto-energetico-de-mexico/", "15-sep-2026", "Parcial (sin comunicado de SHCP)"),
+ ("FIEMEX (FONADIN y MIP): 13 plantas de Iberdrola, ≈8.5 GW, US$6,200M", "≈8.5 GW", "2024", "Cleary Gottlieb, LAVCA oct-2025", "https://www.clearygottlieb.com/news-and-insights/news-listing/fiemex-in-landmark-1-49-billion-bond-offering", "2024-2026", "Verificada (despachos)"),
+ ("Demanda máxima histórica del sistema", "54,300 MW", "23-jul-2026", "CFE citada por El Financiero", "https://www.elfinanciero.com.mx/economia/2026/07/25/la-demanda-electrica-se-dispara-en-mexico-este-fue-el-dia-que-mayor-gastaron-luz-los-mexicanos/", "25-jul-2026", "Parcial (fuente no primaria)"),
+ ("Deducción inmediata del 100% de equipo de energía renovable (LISR art. 34 fr. XIII; operar 5 años)", "100%", "vigente", "Ley del ISR (Cámara de Diputados)", "https://www.diputados.gob.mx/LeyesBiblio/pdf/LISR.pdf", "texto consolidado", "Verificada (oficial)"),
+ ("Inversión de capital privado en México", "US$5,376M (2025); US$6,028M (1S-2026)", "2025-1S2026", "AMEXCAP, Brief Perspective 1H-2026", "https://amexcap.com/wp-content/uploads/2026/09/Brief-Perspective-2026_ENG.pdf", "sep-2026", "Verificada (gremial)"),
+]
+for i_, h in enumerate(["Cifra", "Valor", "Periodo", "Fuente", "URL", "Fecha", "Estatus"]):
+    c = MG.cell(row=5, column=2 + i_); c.value = h; header_style(c, "left")
+for k_, row_ in enumerate(GOV_NAT):
+    for i_, v in enumerate(row_):
+        c = MG.cell(row=6 + k_, column=2 + i_); c.value = v; calc_font(c); c.alignment = Alignment(wrap_text=True, vertical="top")
+r = 6 + len(GOV_NAT) + 2
+put(MG, f"B{r}", "Oportunidad pública por región y estado (PLADESE, plan y convocatorias)", "sec")
+for col in "CDEFGHI": MG[f"{col}{r}"].border = Border(bottom=THIN_G)
+r += 1
+for i_, h in enumerate(["Región o estado", "Tecnología", "MW", "Horizonte", "Tipo", "Fuente", "URL", "Fecha"]):
+    c = MG.cell(row=r, column=2 + i_); c.value = h; header_style(c, "left")
+reg = read_csv("gobierno_regiones_2026.csv")
+if reg:
+    for k_, row_ in enumerate(reg[1:]):
+        for i_, v in enumerate((row_ + [""] * 8)[:8]):
+            c = MG.cell(row=r + 1 + k_, column=2 + i_)
+            try: c.value = float(v) if i_ == 2 and v not in ("", None) else v
+            except Exception: c.value = v
+            calc_font(c); c.alignment = Alignment(wrap_text=True, vertical="top")
+'''
+t = t[:a] + new + t[b:]
+open(p, 'w', encoding='utf-8').write(t)
+print('ok')

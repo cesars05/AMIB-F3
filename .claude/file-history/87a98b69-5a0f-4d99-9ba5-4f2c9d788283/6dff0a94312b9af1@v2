@@ -1,0 +1,101 @@
+T = {}
+T[17] = """Title: Life Science business, FY2025 overview (cont.)
+FY2025 measures -> FY2025 results
+Expand overseas business: malic acid -> overseas malic acid sales: volume +20% vs prior year
+Expand overseas business: gluconic acids -> overseas gluconic acid sales: volume +10% vs prior year
+Secure domestic share: fruit acids (fumaric acid) -> domestic fumaric acid sales: flat vs prior year
+Secure domestic share: vitamin C -> domestic vitamin C sales: volume -10% vs prior year
+New production system and efficiency: Kashima site -> malic and fumaric acid production: +40% output
+New production system and efficiency: Osaka plant -> seismic reinforcement work completed December 2025
+Expand FFA business (global rollout) -> China: new cases +30%; Thailand: new cases +20%
+(FFA = functional fruit acid formulations)"""
+T[18] = """Title: FY2026 priority measures (Life Science). Fiscal year 2026 = April 2026 to March 2027.
+I. Strengthen global collaboration
+ - Business strategy integrated with overseas subsidiaries
+ - Expand overseas market share of fruit acids
+ - Expand sales of food additive formulations in Asia
+II. Secure domestic share
+ - Secure share of core product groups: citric acid / vitamin C; malic acid / fumaric acid
+III. Review and strengthen FFA products
+ - Build a development system from a global viewpoint
+ - Speedy launch of newly developed products
+ - Strengthen application proposals for food additive formulations
+IV. Strengthen products made in-house within the group
+ - Review products made by outside manufacturers
+ - Capital investment for stable high utilization and efficiency"""
+T[19] = """Title: I. Strengthen global collaboration. Business strategy integrated with overseas subsidiaries
+Map with Fuso Chemical headquarters at the center, linked to three overseas subsidiaries:
+ - China (Qingdao Fuso Refining and Processing Co., Ltd.): expand sales of food additive formulations in Asia; expand sales in the Vietnam market; develop products that meet customer needs.
+ - Thailand (FUSO (THAILAND) CO., LTD.): same Asian formulation and Vietnam-market goals as listed for China/Thailand.
+ - United States (PMP Fermentation Products, Inc.): strengthen gluconic acid production capacity; expand overseas market share of fruit acids.
+ - Japan (headquarters): promote optimal production, development and sales system; stable high utilization of the malic acid plant.
+Bottom: establish the FUSO brand, supported by technology, product strength and supply capability."""
+T[20] = """Title: I. Strengthen global collaboration
+Left: Strengthen malic acid sales in North America and Europe
+Sales strategy:
+ - Raise sales volume with strategic pricing suited to each country's market
+ - Increase volume in North America and Europe; strengthen sales to new customers
+ - Actively develop new uses (agricultural materials, agrochemicals, etc.)
+Chart: overseas malic acid sales volume (metric tons): FY2023 about 9,000; FY2024 about 10,700; FY2025 about 12,500; FY2026 plan about 12,900.
+Right: Strengthen gluconic acid supply and sales system
+PMP standalone results, 2025: net sales about 8.2 billion yen (record high); operating profit about 1.2 billion yen (105% of prior year).
+Higher sales volume: since early 2024, price responses to win back share; volume +7% vs prior year.
+Capacity additions: Dec 2023, main fermenter, ancillary facilities and tanks; July 2027, crystallizers and ancillary facilities (in progress).
+Chart: PMP net sales (100 million yen): FY2023 68; FY2024 79; FY2025 82; FY2026 plan 87."""
+T[21] = """Title: II. Secure domestic share
+Citric acids. Sales strategy:
+ - Win tender cases while watching price trends
+ - Revise prices from time to time in line with raw material trends
+ - Secure volume for major beverage and large-volume detergent makers
+Chart: sales volume and average unit price, indexed to FY2023 = 1.0. Volume rose to about 1.08 in FY2024 and 1.07 in FY2025, and the FY2026 plan is about 1.13. Average unit price fell to about 0.88 and 0.87, and the plan is about 0.92.
+Vitamin C. Sales strategy:
+ - Increase share of high-value-added vitamin C
+ - Win back lost accounts with flexible pricing
+ - Reliably capture tender cases
+Chart: volume about 1.07 in FY2024, 0.94 in FY2025, 0.95 FY2026 plan. Average unit price about 1.14 in FY2024, 1.08 in FY2025 and 1.08 in the plan."""
+T[22] = """Title: II. Secure domestic share
+Malic acids. Sales strategy:
+ - Maintain and increase share among large-volume users
+ - Improve competitiveness by making malate salts in-house
+ - Expand sales of mother-liquor products
+Chart (index FY2023 = 1.0): volume about 1.05 in FY2024, 1.01 in FY2025, plan about 1.05. Average unit price about 0.98 in FY2024, 1.08 in FY2025, plan about 1.11.
+Fumaric acid. Sales strategy:
+ - Maintain share at major customers
+ - Win back large demand sources through flexible pricing
+ - Reliably capture tender cases
+Chart: volume about 1.05 in FY2024, 1.07 in FY2025, plan about 1.05. Average unit price about 1.05 in FY2024, 0.91 in FY2025, plan about 0.99."""
+T[23] = """Title: III. Review and strengthen FFA products
+Build a development system from a global viewpoint:
+ - Strengthen cooperation among Japan, China and Thailand
+ - Improve customer service by expanding the Tokyo Laboratory
+Speedy launch of newly developed products:
+ - Strengthen coordination of development, production and sales
+ - Make maximum use of the group's own facilities
+Strengthen application proposals for food additive formulations:
+ - Expand products made by Qingdao Fuso to the Japanese market
+ - Reliably pick up customer (market) needs
+Map of FFA formulation production and development sites: Tokyo Laboratory (Kanagawa Science Park), Shin-Osaka site, Osaka plant, Qingdao Fuso, Shanghai Food Seasoning Development Center, FUSO (Thailand).
+FFA sales by country: Japan 38%, China 31%, Thailand 25%, other 6%.
+FFA sales by use: quality improver 61%, primary industry 12%, antioxidant 6%, shelf-life extender 3%, sterilizing and cleaning agent 2%, other 16%."""
+T[24] = """Title: IV. Strengthen products made in-house within the group
+Review of externally manufactured items:
+ - Cut cost by making outsourced items within the group. Targets: fruit acid salts and food additive formulations. Candidate sites: Osaka plant, Qingdao Fuso.
+ - Consolidate low-profit and declining items.
+Pie chart, FY2025 sales by source of manufacture: domestic in-house products 49%; overseas group-made products 22%; externally manufactured products 29%. Target: in-house ratio of 75%.
+Capital investment for stable high utilization and efficiency, FY2026 plan:
+ - Osaka plant: new office building (including test laboratory)
+ - Kashima site: tank repair work
+ - PMP: additional crystallizers and ancillary facilities"""
+T[25] = """Title: Note. Impact on the business of the unstable Middle East situation
+Malic acid, fumaric acid, maleic anhydride: disruption of naphtha distribution has caused a price spike and unstable supply of benzene, the main raw material.
+Supply side:
+ - The maleic anhydride plant keeps running until its scheduled shutdown (early May) because raw material was secured
+ - Operation after the shutdown (late June) is uncertain until the last moment because benzene procurement is not assured
+ - Buying maleic anhydride externally to keep malic and fumaric acid plants running is under review
+Price side: if benzene prices stay high, correcting selling prices is a must.
+Citric acid: disruption of sulfur distribution has raised the price of sulfuric acid (a secondary raw material), pushing up purchase prices.
+Gluconic acid and vitamin C: no direct effect from the Middle East at present.
+All items: unstable procurement and higher prices for packaging and other logistics materials.
+Diagram: naphtha -> benzene -> maleic anhydride -> malic acid and fumaric acid.
+Chart: benzene ACP price ($/MT) by month, April 2024 to May 2026: FY2024 average 996 (start 1,070); FY2025 average 745 (low 675 around Jan 2026); April and May 2026 rose to 1,130."""
+T[26] = """Section divider: II. Business overview. Electronic Materials Division"""

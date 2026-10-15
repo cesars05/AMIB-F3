@@ -1,0 +1,16 @@
+{
+  "v": 4,
+  "createdOnFiles": {"v": 1, "at": "2026-09-22T00:00:00Z"},
+  "title": "Decentraland: Análisis del Proyecto",
+  "order": ["cover", "overview", "technology", "tokenomics", "usecases", "comparison", "economics", "community", "risks", "price", "roadmap", "closing"],
+  "sections": {
+    "intro": {"description": "Portada y descripción general: qué es Decentraland y qué problema resuelve", "start": "cover"},
+    "tech": {"description": "Tecnología, tokenomics de MANA y casos de uso", "start": "technology"},
+    "impact": {"description": "Comparación con Web2, modelo económico y comunidad", "start": "comparison"},
+    "outlook": {"description": "Riesgos, precio actual y futuro del proyecto", "start": "risks"}
+  },
+  "faces": {
+    "space-grotesk": {"family": "Space Grotesk", "href": "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"},
+    "ibm-plex-sans": {"family": "IBM Plex Sans", "href": "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"}
+  }
+}

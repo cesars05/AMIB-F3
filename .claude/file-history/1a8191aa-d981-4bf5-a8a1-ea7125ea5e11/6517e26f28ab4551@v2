@@ -1,0 +1,440 @@
+"""Actividad 3 - Tipos de Criptomonedas | Equipo 10: Reserve Bank of India - e₹ (e-rupee).
+Construido con la skill slide-construction (house.py), sistema 'femsa' (deck academico de equipo)
+recoloreado con los tokens del logo oficial del e₹ (navy #000090, azafran #FF671F, verde #046A38).
+Uso:  python generar_presentacion.py
+"""
+import os
+import sys
+
+sys.path.insert(0, r"C:\Users\cesar\.claude\skills\slide-construction\scripts")
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.util import Inches
+
+from house import Deck, SYSTEMS, make_brand_system
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+IMG = lambda f: os.path.join(HERE, "imagenes", f)
+OUT = os.path.join(HERE, "e-rupee_CBDC_Equipo10_Actividad3.pptx")
+
+# ---------------------------------------------------------------- sistema de estilo (brand swap sobre FEMSA)
+S = make_brand_system("femsa", primary="#000090", primary_dark="#00005C", tint1="#8189D0", tint2="#E3E5F7",
+                      accent="#FF671F", font="Arial", name="erupee")
+S["logo"] = dict(x=11.83, y=0.33, w=0.83, h=0.55)
+S["pos"] = "#046A38"
+GREEN, SAFF, NAVY, DEEP = "#046A38", "#FF671F", S["primary"], S["primary_dark"]
+
+d = Deck(S, logo=IMG("digital_rupee_logo.png"))
+
+
+def notes(s, text):
+    s.notes_slide.notes_text_frame.text = text
+
+
+def cols(s, x, y, w, items, h=2.4, size=12, sep=True):
+    """n columnas: cada una con encabezado en negrita color primario y bullets, separadas por reglas finas."""
+    n = len(items)
+    cw = w / n
+    for i, (head, bullets) in enumerate(items):
+        d.text(s, x + i * cw + 0.1, y, cw - 0.2, 0.34, head, size=size + 1, bold=True, color=NAVY, inset=0)
+        d.text(s, x + i * cw + 0.1, y + 0.38, cw - 0.2, h - 0.38, [f"- {b}" for b in bullets], size=size, inset=0)
+        if sep and i > 0:
+            d.line(s, x + i * cw, y, x + i * cw, y + h, color="#7F7F7F", width=0.75)
+
+
+# =====================================================================
+# 1. PORTADA (arte derivado del logo + equipo en itálica abajo-izquierda)
+# =====================================================================
+s = d._new()
+d.rect(s, 0, 0, 13.333, 7.5, fill=S["cover_bg"])
+# arte: las dos barras inclinadas del logo e₹ (azafran / verde)
+d.rect(s, 0.45, 5.05, 3.6, 0.26, fill=SAFF, shape=MSO_SHAPE.PARALLELOGRAM)
+d.rect(s, 0.45, 5.40, 3.6, 0.26, fill=GREEN, shape=MSO_SHAPE.PARALLELOGRAM)
+# panel blanco con logos oficiales
+d.rect(s, 8.55, 0.8, 4.2, 5.9, fill="#FFFFFF", round_=0.04)
+s.shapes.add_picture(IMG("digital_rupee_logo.png"), Inches(9.05), Inches(1.25), width=Inches(3.2))
+d.line(s, 9.05, 4.35, 12.25, 4.35, color="#A6A6A6", width=0.75)
+s.shapes.add_picture(IMG("rbi_logo.png"), Inches(9.05), Inches(4.75), width=Inches(3.2))
+d.text(s, 9.05, 5.95, 3.2, 0.5, "Logos oficiales del e₹ y del Reserve Bank of India", size=9, italic=True,
+       color="#7F7F7F", align="center", inset=0)
+d.text(s, 0.62, 1.75, 7.6, 0.35, "ACTIVIDAD 3  |  TIPOS DE CRIPTOMONEDAS", size=14, bold=True, color=SAFF, inset=0)
+d.text(s, 0.62, 2.15, 7.6, 1.2, "Rupia Digital (e₹)", size=40, bold=True, color="#FFFFFF", anchor="bottom", inset=0)
+d.text(s, 0.62, 3.45, 7.6, 1.1, "Reserve Bank of India: la CBDC de la India", size=24, italic=True, color="#FFFFFF", inset=0)
+d.text(s, 0.62, 4.45, 7.6, 0.4, "Octubre 2026", size=18, color="#FFFFFF", inset=0)
+d.text(s, 0.62, 6.2, 6, 0.8, ["Equipo 10", "Actividad 3: Tipos de Criptomonedas"], size=11, italic=True,
+       color="#FFFFFF", anchor="bottom", inset=0)
+notes(s, "Equipo 10. Proyecto asignado: Reserve Bank of India, e₹ (rupia digital). Es una CBDC, es decir, la moneda "
+         "digital de un banco central. Vamos a responder las cinco preguntas de la actividad.")
+
+# =====================================================================
+# 2. AGENDA
+# =====================================================================
+s = d.agenda(["Descripción del proyecto", "Identificación técnica: ¿coin o token?", "Clasificación",
+              "Market cap y datos financieros", "Casos de uso y particularidades"], title="Agenda")
+d.conclusion_bar(s, "El e₹ es la rupia en formato digital, emitida por el RBI: una CBDC, no una criptomoneda privada.",
+                 y=5.35, h=0.6, size=14)
+notes(s, "Estas son las cinco preguntas de la actividad. La idea central: el e₹ no es una cripto privada, es dinero "
+         "de banco central en formato digital.")
+
+# =====================================================================
+# 3. DESCRIPCION (3 columnas header + caja + imagen de apoyo)
+# =====================================================================
+s = d.content_slide("El e₹ es la rupia en formato digital del RBI",
+                    "Iniciativa gubernamental anunciada el 1-feb-2022; es moneda de curso legal, a la par con el efectivo",
+                    source="Fuente: RBI, FAQ Digital Rupee (oct-2026); Ministerio de Finanzas / PIB, Factsheet CBDC (dic-2022). "
+                           "Imagen: Wikimedia Commons.")
+bw, gx, y0 = 2.45, 0.17, 1.55
+boxes = [
+    ("¿Qué es?", ["Forma digital de la rupia (₹), emitida por el **RBI**",
+                  "A la par con el efectivo: **curso legal** y pasivo del banco central",
+                  "Se guarda en una wallet móvil y se paga con QR"]),
+    ("¿Quién la impulsa?", ["Iniciativa **gubernamental**: ni privada ni comunitaria",
+                            "Anunciada en el Presupuesto de la Unión (1-feb-2022)",
+                            "Piloto mayorista desde el 1-nov-2022; minorista desde el 1-dic-2022"]),
+    ("¿Para qué existe?", ["Dar los usos de las cripto privadas **sin sus riesgos**",
+                           "Reducir el costo de manejar efectivo",
+                           "Impulsar la inclusión financiera y la eficiencia de los pagos"]),
+]
+for i, (h, b) in enumerate(boxes):
+    x = 0.667 + i * (bw + gx)
+    d.header_bar(s, x, y0, bw, h, size=12)
+    d.bullet_box(s, x, y0 + 0.32, bw, 3.3, b, size=14)
+d.rect(s, 8.75, y0, 3.92, 3.62, fill=S["tint2"])
+s.shapes.add_picture(IMG("digital_rupee_notas.png"), Inches(8.85), Inches(y0 + 0.12), width=Inches(3.72))
+d.text(s, 8.85, y0 + 2.95, 3.72, 0.6, "Billetes y monedas e₹: se emite en las mismas denominaciones que el efectivo",
+       size=10, italic=True, color="#595959", inset=0, anchor="bottom")
+d.conclusion_bar(s, "Objetivo: ofrecer dinero digital sin los riesgos de las cripto privadas; complementa al efectivo, "
+                    "no lo reemplaza.", y=5.5, h=0.6, size=13)
+notes(s, "El e₹ es la versión digital de la rupia. Lo emite el Reserve Bank of India, es moneda de curso legal y pasivo "
+         "del banco central. Es una iniciativa del Gobierno de la India, anunciada en el Presupuesto del 1 de febrero "
+         "de 2022. Su objetivo dentro del ecosistema cripto es dar los beneficios del dinero digital sin los riesgos de las "
+         "criptomonedas privadas, y complementar —no reemplazar— a los pagos actuales (Factsheet del Ministerio de Finanzas).")
+
+# =====================================================================
+# 4. EVOLUCION DEL PILOTO (grafica + hitos)
+# =====================================================================
+s = d.content_slide("El piloto minorista pasó de 4 a 19 bancos",
+                    "dic-2022: 4 bancos y 4 ciudades · sep-2023: 13 bancos y 26 ubicaciones · oct-2026: 19 bancos con wallets",
+                    source="Fuente: RBI, FAQ Digital Rupee (oct-2026); Ministerio de Finanzas / PIB, Factsheet (dic-2022); "
+                           "PIB (sep-2023 y feb-2026).")
+y = d.block_header(s, 0.667, 1.47, 5.6, "Bancos con wallets e₹ (piloto minorista)", "Número de bancos")
+d.bar_chart(s, 0.667, y, 5.6, 6.55 - y, ["dic-2022", "sep-2023", "oct-2026"], [4, 13, 19], highlight=[2], fmt="0",
+            label_size=14, cat_size=12, gap=55, vmin=0, vmax=22)
+d.pill(s, 3.95, 2.4, 1.6, 0.3, "×4.75 en ~4 años", fill=S["tint2"], line=NAVY, size=10, color=NAVY)
+y2 = d.block_header(s, 6.9, 1.47, 5.77, "Hitos oficiales")
+hitos = [("1-feb-2022", "El Presupuesto de la Unión anuncia la Rupia Digital"),
+         ("1-nov-2022", "Piloto mayorista (e₹-W): bonos del Gobierno, 9 bancos"),
+         ("1-dic-2022", "Piloto minorista (e₹-R): 4 bancos y 4 ciudades, grupo cerrado"),
+         ("sep-2023", "13 bancos, 26 ubicaciones y +1.75 millones de usuarios y comercios"),
+         ("feb-2026", "Subsidio alimentario programable (PMGKAY) en Puducherry"),
+         ("oct-2026", "19 bancos con wallets; 16 participantes mayoristas; sandbox CAT")]
+for i, (f, t) in enumerate(hitos):
+    yy = y2 + 0.05 + i * 0.7
+    last = i == len(hitos) - 1
+    d.rect(s, 6.9, yy, 1.2, 0.5, fill=SAFF if last else NAVY, text=f, size=11, bold=True, color="#FFFFFF", round_=0.15)
+    d.text(s, 8.22, yy, 4.45, 0.5, t, size=12, anchor="middle", inset=0)
+notes(s, "El proyecto empezó como piloto: el 1 de noviembre de 2022 el mayorista y el 1 de diciembre de 2022 el minorista, "
+         "con 4 bancos en 4 ciudades. En septiembre de 2023 el PIB reportó 13 bancos, 26 ubicaciones y más de 1.75 millones "
+         "de usuarios y comercios. En octubre de 2026 el FAQ del RBI lista 19 bancos con wallets. En febrero de 2026 se lanzó "
+         "un piloto de subsidio alimentario con CBDC programable en Puducherry.")
+
+# =====================================================================
+# 5. TECNICA: ¿coin o token? (arbol de decision + 4 respuestas)
+# =====================================================================
+s = d.content_slide("No es coin ni token de otra red: es una CBDC",
+                    "Token digital que representa moneda de curso legal, emitido por el RBI y no sobre una cadena pública",
+                    source="Fuente: Ministerio de Finanzas / PIB, Factsheet CBDC (dic-2022); PIB, respuesta en Lok Sabha "
+                           "(blockchain); RBI, FAQ (oct-2026). Consenso: inferencia del equipo.")
+n1 = d.node(s, 0.667, 1.85, 3.45, 1.1, "¿Tiene blockchain pública propia? (coin)", kind="input", shape="pentagon", size=12)
+n2 = d.node(s, 4.62, 1.85, 3.45, 1.1, "¿Corre sobre otra blockchain pública? (token cripto)", kind="input",
+            shape="pentagon", size=11)
+n3 = d.node(s, 8.57, 1.85, 4.1, 1.1, "Token digital del RBI en su plataforma CBDC", kind="focus", shape="pentagon", size=12)
+d.flow(s, n1, n2)
+d.flow(s, n2, n3)
+d.text(s, 4.14, 1.5, 0.45, 0.3, "No", size=12, bold=True, color=SAFF, align="center", inset=0)
+d.text(s, 8.09, 1.5, 0.45, 0.3, "No", size=12, bold=True, color=SAFF, align="center", inset=0)
+yb = d.tail_bar(s, 0.667, 3.25, 12.0, "Respuestas a las cuatro preguntas técnicas", fill=NAVY, h=0.42, size=13)
+cols(s, 0.667, yb + 0.15, 12.0, [
+    ("¿Coin o token?", ["Más cercano a un **token**: “token digital que representa moneda de curso legal”",
+                        "No es coin: no tiene blockchain pública propia"]),
+    ("¿En qué red opera?", ["En la plataforma CBDC del **RBI**; no hay red pública abierta",
+                            "Según el Gobierno, el piloto retail tiene componentes basados en blockchain"]),
+    ("¿Layer 1, Layer 2 o app?", ["Ninguna: no es una red pública",
+                                  "Es infraestructura institucional: capa de liquidación en dinero de banco central"]),
+    ("¿Qué consenso usa?", ["El RBI no publica un mecanismo de consenso",
+                            "No usa PoW ni PoS públicos: el RBI emite y valida de forma centralizada"]),
+], h=2.0, size=13)
+d.conclusion_bar(s, "Conclusión técnica: el e₹ es un token del banco central, no una cripto sobre una blockchain pública.", y=6.15, h=0.55, size=13)
+notes(s, "Respuesta corta: más cercano a un token, porque el RBI lo define como 'un token digital que representa moneda de "
+         "curso legal', pero no corre sobre Ethereum ni otra cadena pública. Tampoco es una coin porque no tiene blockchain "
+         "pública propia. El Gobierno informó en el Lok Sabha que el piloto retail tiene componentes basados en blockchain, pero "
+         "el RBI no publica el nombre de una red ni un mecanismo de consenso; por eso decimos que no usa PoW ni PoS públicos "
+         "(inferencia nuestra, porque es una arquitectura centralizada). La clasificación Layer 1/Layer 2 no aplica.")
+
+# =====================================================================
+# 6. CLASIFICACION (matriz con ganadoras punteadas)
+# =====================================================================
+s = d.content_slide("Es una CBDC e infraestructura institucional",
+                    "De 9 categorías evaluadas, el e₹ encaja en 2: CBDC e infraestructura institucional",
+                    source="Fuente: RBI, FAQ Digital Rupee (oct-2026); Ministerio de Finanzas / PIB, Factsheet CBDC (dic-2022); "
+                           "análisis del equipo.")
+rows = [["Categoría", "¿Aplica?", "Por qué"],
+        ["CBDC", "Sí", "Moneda de curso legal emitida por el banco central en forma digital (sección 26, Ley del RBI de 1934)"],
+        ["Infraestructura institucional", "Sí", "La opera el RBI y la distribuyen bancos: no hay red abierta ni validadores públicos"],
+        ["Stablecoin", "No", "Es la propia rupia, no un activo privado que la replica"],
+        ["Meme coin", "No", "Sin especulación: ₹1 = 1 e₹ siempre"],
+        ["Governance token", "No", "No da votos ni derechos sobre un protocolo"],
+        ["Utility token", "No", "No da acceso a una red: es medio de pago y reserva de valor"],
+        ["DAO", "No", "Lo gobierna el RBI, no una comunidad de tenedores"],
+        ["Layer 1", "No", "No es una cadena pública con consenso abierto"],
+        ["NFT", "No", "Es fungible: un e₹ vale igual que otro, con las denominaciones del efectivo"]]
+d.table(s, 0.667, 1.5, 12.0, rows, col_w=[2.7, 1.0, 8.3], row_h=0.43, size=12, band_rows=(1, 2), band_fill=S["tint2"],
+        text_cols=(0, 2), num_align="center")
+d.dashed_box(s, 0.62, 1.93, 12.1, 0.88)
+d.conclusion_bar(s, "El e₹ no es una criptomoneda privada: es dinero de banco central en formato digital.", y=6.05, h=0.55, size=13)
+notes(s, "Evaluamos las categorías que pide la actividad. El e₹ es una CBDC porque es moneda de curso legal emitida por el "
+         "banco central en forma digital, y es infraestructura institucional porque la opera el RBI y la distribuyen los bancos. "
+         "No es stablecoin porque es la propia rupia y no un activo privado que la replica; tampoco es meme coin, governance o utility "
+         "token, DAO, Layer 1 ni NFT.")
+
+# =====================================================================
+# 7. ESTRUCTURA: retail vs wholesale (arbol)
+# =====================================================================
+s = d.content_slide("Dos versiones: e₹-R (público) y e₹-W (bancos)",
+                    "El RBI crea el e₹ y lo emite a bancos y no bancos; ellos lo distribuyen a usuarios y comercios",
+                    source="Fuente: RBI, FAQ Digital Rupee (oct-2026); Ministerio de Finanzas / PIB, Factsheet CBDC (dic-2022).")
+LEG = [("Emisor", DEEP), ("Retail (e₹-R)", NAVY), ("Wholesale (e₹-W)", SAFF)]
+for k, (lab, col) in enumerate(LEG):
+    d.rect(s, 0.667 + k * 2.2, 5.68, 0.16, 0.16, fill=col)
+    d.text(s, 0.89 + k * 2.2, 5.62, 1.9, 0.26, lab, size=10, italic=True, inset=0)
+rbi = d.struct_box(s, 2.75, 1.5, 3.7, 0.65, "Reserve Bank of India", "Crea y emite el e₹", fill=DEEP, line=DEEP)
+r2 = d.struct_box(s, 0.667, 2.6, 3.6, 0.8, "e₹-R Retail", "Token al portador, como el efectivo", fill=NAVY, line=NAVY)
+w2 = d.struct_box(s, 4.95, 2.6, 3.6, 0.8, "e₹-W Wholesale", "Basado en cuentas, para instituciones", fill=SAFF, line=SAFF)
+r3 = d.struct_box(s, 0.667, 3.75, 3.6, 0.7, "19 bancos con wallets", "Bancos y no bancos del piloto", fill=S["tint2"])
+w3 = d.struct_box(s, 4.95, 3.75, 3.6, 0.7, "16 participantes", "Bancos y no bancos", fill="#FFE1D1")
+r4 = d.struct_box(s, 0.667, 4.8, 3.6, 0.7, "Público y comercios", "P2P y P2M con QR CBDC o QR UPI", fill=S["tint2"])
+w4 = d.struct_box(s, 4.95, 4.8, 3.6, 0.7, "4 casos de uso", "Liquidación de bonos y fondos", fill="#FFE1D1")
+for a, b in [(rbi, r2), (rbi, w2), (r2, r3), (w2, w3), (r3, r4), (w3, w4)]:
+    d.connect(s, a, b, color="#1F2937", width=1.25)
+d.rect(s, 8.95, 1.5, 3.72, 4.0, fill=S["grey1"], line=S["grey3"])
+d.text(s, 9.1, 1.6, 3.45, 3.85,
+       ["**Cómo leerlo**",
+        "- **Retail:** token al portador, mismas denominaciones que el efectivo y sin interés",
+        "- **Wholesale:** para instituciones; usa programabilidad y contratos inteligentes",
+        "- Bancos y no bancos incorporan clientes y abren las wallets",
+        "- Convertible a depósitos bancarios",
+        "- Wholesale: bonos del Gobierno, call money, certificados de depósito y bonos corporativos"], size=13, inset=0.02)
+d.conclusion_bar(s, "Retail funciona como efectivo digital; wholesale, como liquidación en dinero de banco central.", y=6.1, h=0.55, size=13)
+notes(s, "El RBI crea el e₹ y lo emite electrónicamente a bancos y no bancos, igual que con el efectivo. Hay dos versiones: la "
+         "retail (e₹-R), token al portador para el público, y la wholesale (e₹-W), para instituciones financieras y basada en cuentas. "
+         "Hoy hay 19 bancos con wallets retail y 16 participantes en el piloto mayorista (FAQ del RBI, oct-2026). Los cuatro casos de uso "
+         "mayoristas son bonos del Gobierno, call money, certificados de depósito tokenizados y bonos corporativos tokenizados.")
+
+# =====================================================================
+# 8. MARKET CAP (ecuacion con operadores + e₹ en circulacion)
+# =====================================================================
+s = d.content_slide("El e₹ no tiene market cap: no cotiza",
+                    "Su valor es fijo (₹1 = 1 e₹) y su emisión la controla el RBI; la métrica relevante es el e₹ en circulación",
+                    source="Fuente: RBI, Annual Report (Currency Management), cifra al 31-mar-2023; RBI, FAQ Digital Rupee (oct-2026).")
+bx = [0.667, 3.52, 6.37]
+d.rect(s, bx[0], 1.55, 2.3, 1.45, fill=S["tint2"], line=NAVY, text=["**Precio**", "₹1 = 1 e₹, fijo"], size=13)
+d.rect(s, bx[1], 1.55, 2.3, 1.45, fill=S["tint2"], line=NAVY, text=["**Cantidad emitida**", "La define el RBI, no el mercado"], size=13)
+d.rect(s, bx[2], 1.55, 2.3, 1.45, fill=NAVY, text=["**Market cap**", "No aplica"], size=14, color="#FFFFFF")
+d.operator(s, 3.3, 2.275, "x")
+d.operator(s, 6.15, 2.275, "=")
+d.header_bar(s, 0.667, 3.35, 8.0, "Por qué no se capitaliza", size=12)
+d.bullet_box(s, 0.667, 3.67, 8.0, 2.18,
+             ["**No se negocia en mercado:** ningún exchange fija su precio con oferta y demanda",
+              "**Es pasivo del RBI:** se emite a la par con la rupia física y es moneda de curso legal (sección 26)",
+              "**Sin ranking:** las plataformas ordenan activos por capitalización de mercado; el e₹ no tiene una, "
+              "así que no tiene posición",
+              "**Qué sí se mide:** el e₹ en circulación, que reporta el RBI en su Annual Report"], size=13)
+y = d.block_header(s, 9.0, 1.47, 3.67, "e₹ en circulación", "₹ crore, 31-mar-2023 (1 crore = 10 millones)")
+d.bar_chart(s, 9.0, y, 3.67, 2.9, ["e₹-W", "e₹-R"], [10.69, 5.70], highlight=[1], fmt="0.00", label_size=12, cat_size=12,
+            vmin=0, vmax=13)
+d.callout(s, 9.0, 5.1, 3.67, 0.75, "Última cifra oficial verificada. La más reciente está en el Annual Report 2025-26 del RBI.",
+          size=10, line=NAVY)
+d.conclusion_bar(s, "Sin precio de mercado no hay market cap: el e₹ se mide por unidades en circulación.", y=6.1, h=0.55, size=13)
+notes(s, "El e₹ no tiene market cap porque no cotiza en ningún mercado: su valor es ₹1 = 1 e₹ y el RBI controla la emisión. Por eso "
+         "tampoco tiene posición en rankings de capitalización. Lo que sí publica el RBI es el e₹ en circulación: al 31 de marzo de 2023 "
+         "eran ₹10.69 crore del mayorista y ₹5.70 crore del retail (1 crore = 10 millones). Es la última cifra oficial que pudimos verificar; "
+         "la más reciente está en el Annual Report 2025-26 del RBI.")
+
+# =====================================================================
+# 9. CASOS DE USO (filas label + bullets, panel de usuarios)
+# =====================================================================
+s = d.content_slide("Pagos, subsidios y liquidación mayorista",
+                    "Cuatro usos documentados por el RBI y el Gobierno; los usuarios van del público a los bancos",
+                    source="Fuente: RBI, FAQ Digital Rupee (oct-2026); PIB (feb-2026), piloto de moneda alimentaria CBDC en Puducherry.")
+usos = [("Pagos del día a día", ["P2P y P2M: se escanea un **QR CBDC** o un **QR UPI** desde la wallet",
+                                 "Entre wallets e₹ se liquida al instante, sin cargos"]),
+        ("Subsidios programables", ["El gobierno acredita ayudas con reglas: vencimiento, geolocalización o tipo de comercio",
+                                    "Ej.: subsidio de alimentos (PMGKAY) en Puducherry"]),
+        ("Liquidación mayorista", ["Bonos del Gobierno, préstamos interbancarios (call money), certificados de depósito y "
+                                   "bonos corporativos"]),
+        ("Reserva de valor", ["Se retira del banco y se guarda en la wallet, como efectivo digital",
+                              "No paga interés"])]
+for i, (lab, b) in enumerate(usos):
+    yy = 1.5 + i * 1.28
+    d.label_block(s, 0.667, yy, 2.0, 1.15, lab, size=13)
+    d.bullet_box(s, 2.67, yy, 6.2, 1.15, b, size=13)
+d.card(s, 9.15, 1.5, 3.52, 4.99, "Usuarios principales",
+       ["**Ciudadanos y comercios** de los bancos piloto",
+        "**Beneficiarios de subsidios (DBT)**, con celular y Aadhaar, sin cuenta de ahorro",
+        "**Empresas**, en casos corporativos programables",
+        "**Bancos y no bancos** (e₹-W: 16 participantes)"], size=13)
+notes(s, "Los usos reales: pagos persona a persona y a comercios con QR; subsidios programables, por ejemplo el subsidio de alimentos en "
+         "Puducherry; liquidación mayorista de bonos y préstamos interbancarios; y reserva de valor en la wallet. Los usuarios son el público "
+         "y los comercios de los bancos piloto, los beneficiarios de subsidios, empresas y bancos.")
+
+# =====================================================================
+# 10. PARTICULARIDADES (e₹ vs UPI)
+# =====================================================================
+s = d.content_slide("Qué lo diferencia: es dinero, no un medio de pago",
+                    "Frente a UPI, el e₹ guarda valor y liquida entre wallets sin pasar por cuentas bancarias",
+                    source="Fuente: RBI, FAQ Digital Rupee (oct-2026), preguntas 2, 15, 17, 19 y 22.")
+rows = [["Rasgo", "e₹", "UPI"],
+        ["Qué es", "Forma digital de la rupia, de curso legal", "Un medio de pago"],
+        ["Reserva de valor", "Sí: se conserva en la wallet", "No: es un canal para mover dinero"],
+        ["Liquidación", "Instantánea entre wallets, sin pasar por cuentas bancarias", "Según los plazos de liquidación de UPI"],
+        ["Pago a comercios", "Con QR CBDC o con QR UPI", "Con QR UPI"]]
+d.table(s, 0.667, 1.5, 7.6, rows, col_w=[1.7, 3.2, 2.7], row_h=0.72, size=12, text_cols=(0, 1, 2), num_align="left",
+        band_rows=(2, 3), band_fill=S["tint2"])
+d.dashed_box(s, 0.62, 2.94, 7.7, 1.44)
+d.header_bar(s, 8.6, 1.5, 4.07, "Rasgos únicos del e₹", size=12)
+d.bullet_box(s, 8.6, 1.82, 4.07, 3.28,
+             ["**Programable:** vencimiento, geolocalización y tipo de comercio",
+              "**Mismas denominaciones** del efectivo, con cambio automático",
+              "**Sin cargos** ni saldo mínimo",
+              "**Sin interés**, como el efectivo",
+              "Wallet **recuperable** con el mismo número o SIM"], size=14)
+d.conclusion_bar(s, "Hoy conviven: la wallet e₹ también puede escanear los QR de UPI.", y=5.6, h=0.55, size=13)
+notes(s, "Según el FAQ del RBI, el e₹ es una forma digital de la rupia y UPI es un medio de pago. Además de pagar, el e₹ sirve como reserva de "
+         "valor. Entre dos wallets con QR CBDC se liquida al instante sin pasar por cuentas bancarias; si se escanea un QR de UPI, la liquidación sigue "
+         "los plazos de UPI. Rasgos únicos: programable, mismas denominaciones con cambio automático, sin cargos, sin interés y wallet recuperable con SIM.")
+
+# =====================================================================
+# 11. VELOCIDAD Y COSTOS (dos rutas de pago)
+# =====================================================================
+s = d.content_slide("Pagos instantáneos, 24×7 y sin comisiones",
+                    "Entre wallets e₹ la liquidación es inmediata; si se paga por UPI, rige el plazo de UPI",
+                    source="Fuente: RBI, FAQ Digital Rupee (oct-2026), preguntas 9, 10, 15 y 19.")
+d.text(s, 0.667, 1.4, 6, 0.3, "Ruta A: QR CBDC", size=12, bold=True, color=NAVY, inset=0)
+d.process_chain(s, 0.667, 1.95, 12.0, [("Pagador: wallet e₹", "input"), ("Escanea QR CBDC", "neutral"),
+                                       ("Liquidación instantánea", "focus"), ("Comercio: wallet e₹", "end")],
+                h=0.75, size=11, focus=(2, 3), focus_label="Sin pasar por cuentas bancarias")
+d.text(s, 0.667, 3.15, 6, 0.3, "Ruta B: QR UPI", size=12, bold=True, color="#595959", inset=0)
+d.process_chain(s, 0.667, 3.5, 12.0, [("Pagador: wallet e₹", "input"), ("Escanea QR UPI", "neutral"),
+                                      ("Liquidación según plazos de UPI", "neutral"), ("Cuenta del comercio", "end")],
+                h=0.75, size=11)
+d.boxed_columns(s, 0.667, 4.65, 12.0, [["**24×7**", "Carga y redención entre cuenta y wallet, a cualquier hora"],
+                                      ["**₹0**", "Sin cargos ni comisiones por usar el e₹ o sus wallets; sin saldo mínimo"],
+                                      ["**Sin cifra de TPS**", "Las fuentes oficiales consultadas no publican transacciones por segundo"]],
+                h=1.3, gap=0.3, size=12)
+d.conclusion_bar(s, "Costo para el usuario: cero. Velocidad: inmediata entre wallets e₹.", y=6.15, h=0.55, size=13)
+notes(s, "Hay dos rutas de pago. En la ruta A, con QR CBDC, la transacción ocurre entre dos wallets e₹ y se liquida de forma instantánea, sin pasar "
+         "por cuentas bancarias. En la ruta B, con QR UPI, la liquidación sigue los plazos de UPI. Carga y redención entre cuenta y wallet funcionan 24×7, "
+         "no hay cargos ni comisiones y no hay saldo mínimo. Las fuentes oficiales no dan transacciones por segundo.")
+
+# =====================================================================
+# 12. COMUNIDAD Y RESPALDO
+# =====================================================================
+s = d.content_slide("Respaldo institucional: 19 bancos y el Gobierno",
+                    "El respaldo es legal (RBI Act, sección 26) y bancario: 19 bancos con wallets y 16 mayoristas",
+                    source="Fuente: RBI, FAQ Digital Rupee (oct-2026), preguntas 18, 21 y 27; PIB (sep-2023).")
+d.header_bar(s, 0.667, 1.5, 4.2, "Respaldo legal", size=12)
+d.bullet_box(s, 0.667, 1.82, 4.2, 2.0,
+             ["**Curso legal** en toda la India, garantizado por el Gobierno central",
+              "**Pasivo del RBI**, no de un privado",
+              "Sin comunidad cripto: no depende de exchanges"], size=13)
+d.header_bar(s, 0.667, 4.05, 4.2, "Escala (PIB, sep-2023)", size=12)
+d.bullet_box(s, 0.667, 4.37, 4.2, 1.3,
+             ["**13 bancos** y **26 ubicaciones**", "**+1.75 millones** de usuarios y comercios"], size=13)
+d.header_bar(s, 5.2, 1.5, 7.47, "19 bancos que ofrecen wallets e₹", size=12)
+bancos = ["Axis Bank", "Bank of Baroda", "Bank of India", "Bank of Maharashtra", "Canara Bank", "Federal Bank", "HDFC Bank",
+          "ICICI Bank", "IDBI Bank", "IDFC First Bank", "Indian Bank", "IndusInd Bank", "Karnataka Bank", "Kotak Mahindra Bank",
+          "Punjab National Bank", "State Bank of India", "UCO Bank", "Union Bank of India", "Yes Bank"]
+for i, b in enumerate(bancos):
+    cx, ry = i % 3, i // 3
+    d.pill(s, 5.2 + cx * 2.5, 1.95 + ry * 0.54, 2.4, 0.42, b, fill=S["tint2"] if i % 2 == 0 else "#FFFFFF", line=NAVY,
+           size=11, color="#000000", bold=False)
+d.conclusion_bar(s, "El e₹ no depende de una comunidad ni de exchanges: depende de bancos y del Estado.", y=6.05, h=0.55, size=13)
+notes(s, "El respaldo del e₹ es institucional, no comunitario. La sección 26 de la Ley del RBI lo hace moneda de curso legal garantizada por el Gobierno "
+         "central. Hoy hay 19 bancos con wallets y el piloto mayorista tiene 16 participantes (FAQ del RBI, oct-2026). En septiembre de 2023 el PIB reportó "
+         "13 bancos, 26 ubicaciones y más de 1.75 millones de usuarios y comercios.")
+
+# =====================================================================
+# 13. LIMITES Y RETOS
+# =====================================================================
+s = d.content_slide("Sigue en piloto y depende de la conectividad",
+                    "82.5 de ~140 crore de habitantes tenían internet (2022); el modo offline sigue en exploración",
+                    source="Fuente: Ministerio de Finanzas / PIB, Factsheet CBDC (dic-2022); RBI, FAQ Digital Rupee (oct-2026), preguntas 7 y 20.")
+cards = [("Conectividad", ["82.5 crore de ~140 crore de habitantes tenían internet (2022)", "Sin conexión, muchos no podrían usarlo"]),
+         ("Offline en exploración", ["El RBI explora distintas soluciones", "Busca la ventaja del efectivo en zonas remotas"]),
+         ("Ciberseguridad", ["Misma exposición a ciberataques que los pagos actuales", "Exige criptografía fuerte al crear y mover tokens"]),
+         ("Escala limitada", ["Los pilotos son un despliegue controlado para probar tecnología y aceptación", "Aún no hay lanzamiento general"])]
+for i, (t, b) in enumerate(cards):
+    x = 0.667 + i * 3.05
+    d.card(s, x, 1.65, 2.9, 3.3, t, b, size=15)
+    d.num_circle(s, x + 0.08, 1.47, i + 1, d=0.36, fill=SAFF if i == 1 else NAVY)
+d.dashed_box(s, 0.667 + 3.05 - 0.05, 1.6, 3.0, 3.4)
+d.conclusion_bar(s, "Complementar, no reemplazar: el e₹ suma un canal junto con UPI, NEFT, RTGS y el efectivo.", y=5.35, h=0.6, size=13)
+notes(s, "Retos que reconoce el propio Gobierno: la conectividad (82.5 crore de unos 140 crore de personas tenían internet en 2022), la ciberseguridad y la "
+         "necesidad de un modo offline, que el RBI todavía explora. El FAQ aclara que los pilotos son un despliegue controlado de escala limitada. La idea es "
+         "complementar, no reemplazar, a las formas actuales de dinero.")
+
+# =====================================================================
+# 14. CONCLUSIONES (progresion -> conclusion)
+# =====================================================================
+s = d.content_slide("El e₹ en cinco respuestas",
+                    "Una CBDC emitida por el RBI: dinero digital de banco central, no una criptomoneda privada",
+                    source="Fuente: RBI, FAQ Digital Rupee (oct-2026); Ministerio de Finanzas / PIB, Factsheet CBDC (dic-2022); análisis del equipo.")
+d.chevron_row(s, 0.667, 1.5, 12.0, ["1 Descripción", "2 Técnica", "3 Clasificación", "4 Market cap", "5 Uso"],
+              h=0.6, fills=d.progression(5, start="#8189D0", end=DEEP), size=12, first_pentagon=True)
+d.boxed_columns(s, 0.667, 2.3, 12.0, [["**Rupia digital del RBI**", "Iniciativa gubernamental, a la par con el efectivo"],
+                                      ["**Token del banco central**", "Sin PoW ni PoS públicos"],
+                                      ["**CBDC**", "e infraestructura institucional"],
+                                      ["**No aplica**", "No cotiza; ₹1 = 1 e₹"],
+                                      ["**Pagos y subsidios**", "QR, programable y sin comisiones"]], h=1.35, gap=0.2, size=11)
+yb = d.tail_bar(s, 0.667, 3.9, 12.0, "Conclusiones", fill=NAVY, h=0.42, size=14)
+cols(s, 0.667, yb + 0.12, 12.0, [
+    ("Qué es", ["CBDC: moneda de curso legal en formato digital", "Retail (e₹-R) para el público; wholesale (e₹-W) para bancos"]),
+    ("Qué no es", ["No es coin, stablecoin ni token de otra red", "No tiene market cap ni ranking: no cotiza"]),
+    ("Qué sigue", ["Sigue en piloto: 19 bancos y 16 participantes mayoristas", "Pendientes: modo offline y mayor escala"]),
+], h=2.0, size=13)
+notes(s, "Resumen: el e₹ es la rupia digital del RBI, una iniciativa gubernamental. Técnicamente es un token del banco central en su propia plataforma, sin "
+         "PoW ni PoS públicos. Se clasifica como CBDC e infraestructura institucional. No tiene market cap. Se usa para pagos con QR, subsidios programables y "
+         "liquidación mayorista, sin comisiones, con 19 bancos. Sigue en piloto.")
+
+# =====================================================================
+# 15. REFERENCIAS
+# =====================================================================
+s = d.content_slide("Referencias", "Solo fuentes oficiales del Reserve Bank of India y del Gobierno de la India")
+refs = ["Reserve Bank of India. (2026, 1 de octubre). *Digital Rupee (e₹): FAQs*. rbidocs.rbi.org.in/rdocs/faqs/PDFs/DIGITALRUPEE09012025.PDF",
+        "Ministerio de Finanzas / Press Information Bureau. (2022, 1 de diciembre). *Central Bank Digital Currency (Digital Rupee, e₹): Factsheet*. "
+        "static.pib.gov.in/WriteReadData/specificdocs/documents/2022/dec/doc2022121139201.pdf",
+        "Press Information Bureau. (2022). *CBDC pilot launched by RBI in retail segment has components based on blockchain technology* (PRID 1882883). pib.gov.in",
+        "Press Information Bureau. (2023). *CBDC: e₹-R is in the form of a digital token that represents legal tender* (PRID 1896721). pib.gov.in",
+        "Press Information Bureau. (2023). *Digital Rupee* (PRID 1954933). pib.gov.in",
+        "Press Information Bureau. (2026). *CBDC-based Digital Food Currency pilot for DBT under PMGKAY in Puducherry* (PRID 2233186). pib.gov.in",
+        "Reserve Bank of India. *Annual Report*, capítulo Currency Management (e₹ en circulación al 31-mar-2023). rbi.org.in",
+        "Imágenes: Wikimedia Commons, “Digital Rupee.svg”, “Digital Rupee.png” y “Reserve Bank of India logo.svg” (dominio público)."]
+d.text(s, 0.667, 1.55, 12.0, 5.0, [f"- {r.replace('*', '')}" for r in refs], size=13, inset=0.02, spacing=11)
+notes(s, "Todas las cifras y definiciones salen de fuentes oficiales: el FAQ del RBI, el Factsheet del Ministerio de Finanzas y comunicados del PIB.")
+
+# =====================================================================
+# 16. CIERRE
+# =====================================================================
+s = d._new()
+d.rect(s, 0, 0, 13.333, 7.5, fill=S["cover_bg"])
+d.rect(s, 0.45, 5.05, 3.6, 0.26, fill=SAFF, shape=MSO_SHAPE.PARALLELOGRAM)
+d.rect(s, 0.45, 5.40, 3.6, 0.26, fill=GREEN, shape=MSO_SHAPE.PARALLELOGRAM)
+d.rect(s, 9.1, 2.0, 3.2, 3.0, fill="#FFFFFF", round_=0.04)
+s.shapes.add_picture(IMG("digital_rupee_logo.png"), Inches(9.45), Inches(2.45), width=Inches(2.5))
+d.text(s, 0.62, 2.9, 8, 1.2, "Gracias", size=40, bold=True, color="#FFFFFF", anchor="bottom", inset=0)
+d.text(s, 0.62, 4.15, 8, 0.5, "Preguntas", size=24, italic=True, color="#FFFFFF", inset=0)
+d.text(s, 0.62, 6.2, 6, 0.8, ["Equipo 10", "Actividad 3: Tipos de Criptomonedas"], size=11, italic=True,
+       color="#FFFFFF", anchor="bottom", inset=0)
+notes(s, "Cierre y preguntas.")
+
+d.save(OUT)
+print("OK", OUT, d.n, "slides")

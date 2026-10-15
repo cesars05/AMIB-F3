@@ -1,0 +1,35 @@
+$excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb = $excel.Workbooks.Item(1)
+$d = $wb.Sheets.Item("Data")
+$a = $wb.Sheets.Item("Analysis")
+
+# Sanity check that both sheets list the same tickers in the same order
+for ($i = 0; $i -lt 9; $i++) {
+    $t1 = $d.Cells.Item(49 + $i, 2).Text; $t2 = $a.Cells.Item(4 + $i, 4).Text
+    if ($t1 -ne $t2) { Write-Output "MISMATCH row $i Data=$t1 Analysis=$t2"; exit 1 }
+}
+
+$d.Cells.Item(48, 17).Value2 = "CAGR 26-28"
+for ($i = 0; $i -lt 9; $i++) {
+    $r = 49 + $i
+    $ticker = $d.Cells.Item($r, 2).Text
+    # Jan/Feb fiscal year-ends: LSEG "2026" is the FY that closed early 2026, so calendar 2026-2028 maps to columns F->H
+    if ($ticker -eq "VSXY.N" -or $ticker -eq "6323.T") { $s = "F$r"; $e = "H$r" } else { $s = "E$r"; $e = "G$r" }
+    $cell = $d.Cells.Item($r, 17)
+    $cell.Formula = "=IFERROR(IF(OR($s=0,$e=0),""n.a."",($e/$s)^(1/2)-1),""n.a."")"
+    $cell.NumberFormat = "0.0%"
+    $cell.HorizontalAlignment = -4108
+    if ($cell.Comment -ne $null) { $cell.Comment.Delete() }
+    if ($ticker -eq "VSXY.N") { $cell.AddComment("FY ends late Jan. Uses FY ending Jan-27 to Jan-29 (cols F to H) to match calendar 2026-2028.") | Out-Null }
+    if ($ticker -eq "6323.T") { $cell.AddComment("FY ends Feb. Uses FY ending Feb-27 to Feb-29 (cols F to H) to match calendar 2026-2028. USD converted.") | Out-Null }
+    if ($ticker -eq "GCT.OQ") { $cell.AddComment("No 2028 consensus estimate available in LSEG.") | Out-Null }
+
+    $ac = $a.Cells.Item(4 + $i, 17)
+    $ac.Formula = "=Data!Q$r"
+    $ac.NumberFormat = "0.0%"
+    $ac.HorizontalAlignment = -4108
+}
+$excel.Calculate()
+for ($i = 0; $i -lt 9; $i++) { Write-Output ("{0}  {1}" -f $a.Cells.Item(4 + $i, 4).Text, $a.Cells.Item(4 + $i, 17).Text) }
+$wb.Save()
+Write-Output "Saved."

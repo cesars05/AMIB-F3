@@ -1,0 +1,370 @@
+"""Detector de movimientos fuera de lo comun.
+
+    python detector.py                # barrido completo
+    python detector.py --grupo AI     # solo un grupo
+    python detector.py --comparar     # muestra por que NO se usa sigma del nivel
+
+Produce datos_detector.json con los hallazgos rankeados, listos para armar los
+bullets del resumen ejecutivo.
+
+-------------------------------------------------------------------------------
+EL PUNTO DE DISENO: SE MIDE EL MOVIMIENTO, NO EL NIVEL
+-------------------------------------------------------------------------------
+El instinto es rankear por "que tan lejos esta el precio de su media del anio"
+(sigma sobre el nivel). Falla, y el propio reporte tiene los contraejemplos:
+
+  - Gold/Oil salto de 80 a 50 en marzo. Su media anual queda a caballo del
+    quiebre, asi que el nivel de HOY esta lejisimos de esa media... y seguira
+    estandolo todas las semanas que quedan del anio.
+  - WTI subio 83.7% YTD. Por sigma del nivel encabezaria el reporte cada
+    semana hasta diciembre, se mueva o no se mueva.
+
+Una serie que tendencio todo el anio tiene un NIVEL anomalo pero MOVIMIENTOS
+perfectamente normales. Rankear por nivel entierra la noticia de esta semana
+bajo la noticia de marzo.
+
+Por eso aqui se calcula el z-score del RETORNO reciente contra la distribucion
+de retornos del mismo horizonte en los ultimos 252 dias. Una serie en
+tendencia tiene retornos semanales corrientes: solo salta cuando de verdad
+hace algo raro. Correr con --comparar para ver las dos listas lado a lado.
+
+Cuatro senales, cada una responde una pregunta distinta:
+
+  z_1d, z_1w   "para ESTA serie, este movimiento es raro?"   (temporal)
+  z_grupo      "se desacoplo de sus pares esta semana?"      (transversal)
+  extremo_52s  "rompio el rango de un anio?"                 (rango)
+  divergencia  "el par que suele ir junto se separo?"        (relacion)
+"""
+import sys
+sys.path.append(r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs")
+
+import argparse
+import json
+import warnings
+import lseg.data as ld
+import numpy as np
+import pandas as pd
+from datetime import datetime, timedelta
+
+warnings.filterwarnings("ignore")
+
+# La consola de Windows usa cp1252 y revienta con la sigma de las razones
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except (AttributeError, OSError):
+    pass
+
+YLD, MID, PRC = "MID_YLD_1", "MID_PRICE", "TRDPRC_1"
+
+# (ric, campo, nombre, grupo). El grupo define contra quien se compara
+# transversalmente, asi que tiene que ser gente de verdad comparable.
+UNIVERSO = [
+    # --- indices ---
+    (".SPX", PRC, "S&P 500", "Indices"), (".NDX", PRC, "Nasdaq 100", "Indices"),
+    (".RUT", PRC, "Russell 2000", "Indices"), ("DIA.P", PRC, "Dow Jones", "Indices"),
+    (".STOXX", PRC, "STOXX Europe", "Indices"), (".GDAXI", PRC, "DAX", "Indices"),
+    (".TOPX", PRC, "TOPIX", "Indices"), (".KS11", PRC, "KOSPI", "Indices"),
+    (".MXX", PRC, "Mexico IPC", "Indices"),
+    # --- sectores ---
+    ("XLK.P", PRC, "Info Tech", "Sectores"), ("XLC.P", PRC, "Comm Services", "Sectores"),
+    ("XLY.P", PRC, "Discretionary", "Sectores"), ("XLI.P", PRC, "Industrials", "Sectores"),
+    ("XLB.P", PRC, "Materials", "Sectores"), ("XLE.P", PRC, "Energy", "Sectores"),
+    ("XLF.P", PRC, "Financials", "Sectores"), ("XLV.P", PRC, "Health Care", "Sectores"),
+    ("XLP.P", PRC, "Staples", "Sectores"), ("XLU.P", PRC, "Utilities", "Sectores"),
+    ("XLRE.P", PRC, "Real Estate", "Sectores"),
+    # --- commodities ---
+    ("CLc1", PRC, "WTI", "Commodities"), ("LCOc1", PRC, "Brent", "Commodities"),
+    ("NGc1", PRC, "Natural gas", "Commodities"), ("HGc1", PRC, "Copper", "Commodities"),
+    ("XAU=", MID, "Gold", "Commodities"), ("XAG=", MID, "Silver", "Commodities"),
+    # --- FX (vs USD) ---
+    ("MXN=", MID, "USD/MXN", "FX"), ("EUR=", MID, "EUR/USD", "FX"),
+    ("JPY=", MID, "USD/JPY", "FX"), ("GBP=", MID, "GBP/USD", "FX"),
+    ("BRL=", MID, "USD/BRL", "FX"), ("KRW=", MID, "USD/KRW", "FX"),
+    ("CAD=", MID, "USD/CAD", "FX"), (".DXY", PRC, "Dollar Index", "FX"),
+    # --- tasas (en nivel de rendimiento) ---
+    ("US2YT=RR", YLD, "US 2Y", "Tasas"), ("US5YT=RR", YLD, "US 5Y", "Tasas"),
+    ("US10YT=RR", YLD, "US 10Y", "Tasas"), ("US30YT=RR", YLD, "US 30Y", "Tasas"),
+    # --- riesgo ---
+    (".VIX", PRC, "VIX", "Riesgo"), (".MOVE", PRC, "MOVE", "Riesgo"),
+    ("HYG.P", PRC, "HYG", "Riesgo"), ("LQD.P", PRC, "LQD", "Riesgo"),
+    # --- AI / semis ---
+    ("NVDA.OQ", PRC, "NVIDIA", "AI"), ("AMD.OQ", PRC, "AMD", "AI"),
+    ("AVGO.OQ", PRC, "Broadcom", "AI"), ("MRVL.OQ", PRC, "Marvell", "AI"),
+    ("MU.OQ", PRC, "Micron", "AI"), ("TSM.N", PRC, "TSMC", "AI"),
+    ("ASML.OQ", PRC, "ASML", "AI"), ("AMAT.OQ", PRC, "Applied Materials", "AI"),
+    ("LRCX.OQ", PRC, "Lam Research", "AI"), ("KLAC.OQ", PRC, "KLA", "AI"),
+    ("ONTO.N", PRC, "Onto Innovation", "AI"), ("ANET.N", PRC, "Arista", "AI"),
+    ("VRT.N", PRC, "Vertiv", "AI"), ("GEV.N", PRC, "GE Vernova", "AI"),
+    ("CLS.N", PRC, "Celestica", "AI"), ("APH.N", PRC, "Amphenol", "AI"),
+    ("ADI.OQ", PRC, "Analog Devices", "AI"), (".SOX", PRC, "SOX Index", "AI"),
+    # --- portafolio (los que no estan arriba) ---
+    ("AMZN.OQ", PRC, "Amazon", "Portafolio"), ("GOOGL.OQ", PRC, "Alphabet", "Portafolio"),
+    ("META.OQ", PRC, "Meta", "Portafolio"), ("CRWD.OQ", PRC, "CrowdStrike", "Portafolio"),
+    ("NEE.N", PRC, "NextEra", "Portafolio"), ("MSFT.OQ", PRC, "Microsoft", "Portafolio"),
+    ("ORCL.N", PRC, "Oracle", "Portafolio"),
+]
+
+# Pares que normalmente se mueven juntos. Cuando se separan, eso ES la noticia.
+PARES = [
+    ("SOX Index", "Nasdaq 100", "semis vs Nasdaq"),
+    ("HYG", "LQD", "credito high yield vs grado de inversion"),
+    ("WTI", "Brent", "diferencial WTI-Brent"),
+    ("Gold", "Silver", "oro vs plata"),
+    ("US 2Y", "US 10Y", "corto vs largo plazo"),
+    ("Russell 2000", "S&P 500", "small caps vs large caps"),
+    ("Alphabet", "Microsoft", "hyperscalers"),
+    ("Micron", "SOX Index", "memoria vs semis"),
+    ("Utilities", "S&P 500", "utilities como proxy de bonos"),
+]
+
+# Umbrales. z de 2 sobre retornos semanales es ~1 semana de cada 40.
+Z_1D, Z_1W, Z_GRUPO, Z_DIVERG = 2.5, 2.0, 1.5, 2.0
+VENTANA = 252
+
+
+def cargar(universo):
+    """Una bajada, agrupando por campo."""
+    por_campo = {}
+    for ric, campo, _, _ in universo:
+        por_campo.setdefault(campo, []).append(ric)
+
+    hoy = datetime.now()
+    inicio = (hoy - timedelta(days=int(VENTANA * 1.6))).strftime("%Y-%m-%d")
+    fin = hoy.strftime("%Y-%m-%d")
+
+    series = {}
+    for campo, rics in por_campo.items():
+        print(f"  {len(rics):2d} RICs con {campo}...")
+        d = ld.get_history(universe=rics, fields=[campo], interval="daily",
+                            start=inicio, end=fin)
+        for ric in rics:
+            try:
+                s = (d[ric][campo] if isinstance(d.columns, pd.MultiIndex)
+                     else (d.iloc[:, 0] if len(rics) == 1 else d[ric]))
+                s = s.astype(float).dropna()
+                if len(s) > 60:
+                    series[ric] = s
+            except Exception:
+                pass
+    return series
+
+
+def z_de_retorno(serie, dias):
+    """z-score del retorno de `dias` contra la distribucion de retornos del
+    MISMO horizonte en la ventana. Mide el movimiento, no el nivel."""
+    ret = serie.pct_change(dias).dropna()
+    if len(ret) < 40:
+        return None, None
+    hist = ret.iloc[-VENTANA:]
+    ultimo = float(hist.iloc[-1])
+    mu, sd = float(hist.mean()), float(hist.std())
+    if sd == 0 or sd != sd:
+        return None, None
+    return (ultimo - mu) / sd, ultimo * 100
+
+
+def analizar(series, universo):
+    meta = {r: (n, g) for r, _, n, g in universo}
+    filas = []
+    for ric, s in series.items():
+        nombre, grupo = meta[ric]
+        z1d, r1d = z_de_retorno(s, 1)
+        z1w, r1w = z_de_retorno(s, 5)
+        if z1w is None:
+            continue
+
+        ventana = s.iloc[-VENTANA:]
+        nivel = float(s.iloc[-1])
+        alto, bajo = float(ventana.max()), float(ventana.min())
+        rango = (nivel - bajo) / (alto - bajo) * 100 if alto > bajo else 50.0
+
+        filas.append(dict(ric=ric, nombre=nombre, grupo=grupo, nivel=nivel,
+                          z_1d=z1d, ret_1d=r1d, z_1w=z1w, ret_1w=r1w,
+                          pct_rango_52s=rango,
+                          nuevo_max=nivel >= alto - 1e-9,
+                          nuevo_min=nivel <= bajo + 1e-9))
+    df = pd.DataFrame(filas)
+
+    # --- transversal: el retorno semanal contra los pares del mismo grupo ---
+    # Un -8% en un nombre cuando todo su grupo cae -8% no es noticia; el mismo
+    # -8% cuando el grupo esta plano si lo es.
+    df["z_grupo"] = np.nan
+    for g, sub in df.groupby("grupo"):
+        if len(sub) < 4:
+            continue
+        mu, sd = sub["ret_1w"].mean(), sub["ret_1w"].std()
+        if sd and sd == sd:
+            df.loc[sub.index, "z_grupo"] = (sub["ret_1w"] - mu) / sd
+    return df
+
+
+def divergencias(df, series):
+    """Pares que suelen ir juntos y esta semana no.
+
+    El diferencial de retornos semanales tiene su propia distribucion
+    historica: dos activos volatiles se separan 3pp cualquier semana, dos
+    estables no. Por eso se saca el z del diferencial contra esa distribucion,
+    en vez de comparar la brecha contra un umbral fijo.
+    """
+    por_nombre = {r["nombre"]: r["ric"] for _, r in df.iterrows()}
+    idx = df.set_index("nombre")
+    out = []
+    for a, b, desc in PARES:
+        if a not in por_nombre or b not in por_nombre:
+            print(f"  (par omitido, falta serie: {a} / {b})")
+            continue
+        sa, sb = series.get(por_nombre[a]), series.get(por_nombre[b])
+        if sa is None or sb is None:
+            continue
+        # Alinear antes de restar: calendarios distintos (KOSPI vs S&P) darian
+        # un diferencial falso si se restan sin reindexar
+        comun = sa.index.intersection(sb.index)
+        if len(comun) < 80:
+            continue
+        ra_s = sa.reindex(comun).pct_change(5).dropna() * 100
+        rb_s = sb.reindex(comun).pct_change(5).dropna() * 100
+        dif = (ra_s - rb_s).iloc[-VENTANA:]
+        if len(dif) < 60 or dif.std() == 0:
+            continue
+        z = float((dif.iloc[-1] - dif.mean()) / dif.std())
+        # Se devuelven TODOS, marcando cual cruza el umbral. Con 9 pares y 2σ
+        # el disparo es ~0.4 veces por semana: si solo se reportaran las
+        # alertas, la seccion estaria vacia casi siempre. El reporte muestra
+        # el top 3 y la alerta se distingue por la bandera.
+        out.append(dict(par=f"{a} vs {b}", descripcion=desc,
+                        ret_a=round(float(ra_s.iloc[-1]), 2),
+                        ret_b=round(float(rb_s.iloc[-1]), 2),
+                        brecha_pp=round(float(dif.iloc[-1]), 2),
+                        z=round(z, 2), alerta=abs(z) >= Z_DIVERG))
+    return sorted(out, key=lambda d: -abs(d["z"]))
+
+
+def hallazgos(df):
+    """Convierte las senales en observaciones con su razon en texto."""
+    out = []
+    for _, r in df.iterrows():
+        razones, score = [], 0.0
+        if abs(r["z_1w"]) >= Z_1W:
+            razones.append(f"movimiento semanal de {r['ret_1w']:+.1f}% "
+                           f"({abs(r['z_1w']):.1f}\u03c3 para esta serie)")
+            score = max(score, abs(r["z_1w"]))
+        if abs(r["z_1d"]) >= Z_1D:
+            razones.append(f"movimiento de un dia de {r['ret_1d']:+.1f}% "
+                           f"({abs(r['z_1d']):.1f}\u03c3)")
+            score = max(score, abs(r["z_1d"]) * 0.8)
+        if pd.notna(r["z_grupo"]) and abs(r["z_grupo"]) >= Z_GRUPO:
+            lado = "arriba de" if r["z_grupo"] > 0 else "abajo de"
+            razones.append(f"{lado} sus pares en {grupo_txt(r['grupo'])} "
+                           f"({abs(r['z_grupo']):.1f}\u03c3 transversal)")
+            score = max(score, abs(r["z_grupo"]))
+        if r["nuevo_max"]:
+            razones.append("nuevo maximo de 52 semanas")
+            score = max(score, 2.0)
+        if r["nuevo_min"]:
+            razones.append("nuevo minimo de 52 semanas")
+            score = max(score, 2.0)
+        if razones:
+            out.append(dict(nombre=r["nombre"], ric=r["ric"], grupo=r["grupo"],
+                            nivel=round(float(r["nivel"]), 2),
+                            ret_1w=round(float(r["ret_1w"]), 2),
+                            z_1w=round(float(r["z_1w"]), 2),
+                            z_grupo=(round(float(r["z_grupo"]), 2)
+                                     if pd.notna(r["z_grupo"]) else None),
+                            pct_rango_52s=round(float(r["pct_rango_52s"]), 0),
+                            score=round(score, 2), razones=razones))
+    return sorted(out, key=lambda d: -d["score"])
+
+
+def grupo_txt(g):
+    return {"Indices": "indices", "Sectores": "sectores", "FX": "divisas",
+            "Tasas": "tasas", "Riesgo": "riesgo", "AI": "AI/semis",
+            "Commodities": "commodities", "Portafolio": "portafolio"}.get(g, g)
+
+
+def comparar(df):
+    """Demuestra por que se mide el movimiento y no el nivel."""
+    print("\n" + "=" * 74)
+    print("POR QUE NO SE RANKEA POR SIGMA DEL NIVEL")
+    print("=" * 74)
+    d = df.copy()
+    d["sigma_nivel"] = (d["pct_rango_52s"] - 50).abs() / 50 * 3   # proxy del nivel
+    izq = d.nlargest(8, "sigma_nivel")[["nombre", "pct_rango_52s", "ret_1w"]]
+    der = d.reindex(d["z_1w"].abs().nlargest(8).index)[["nombre", "z_1w", "ret_1w"]]
+    print(f"\n  {'POR NIVEL (mal)':34s}   {'POR MOVIMIENTO (bien)':34s}")
+    print(f"  {'-'*34}   {'-'*34}")
+    for i in range(8):
+        a = izq.iloc[i]
+        b = der.iloc[i]
+        print(f"  {a['nombre'][:17]:17s} rango {a['pct_rango_52s']:3.0f}% "
+              f"{a['ret_1w']:+6.1f}%   {b['nombre'][:17]:17s} "
+              f"{b['z_1w']:+5.1f}\u03c3 {b['ret_1w']:+6.1f}%")
+    print("\n  La columna izquierda repite los mismos nombres cada semana: un")
+    print("  activo que tendencio todo el anio sigue pegado a su extremo de")
+    print("  rango aunque esta semana no haya hecho nada. La derecha cambia")
+    print("  cuando el mercado cambia, que es lo que debe encabezar el reporte.")
+
+
+def main():
+    ap = argparse.ArgumentParser(description="Detector de movimientos atipicos")
+    ap.add_argument("--grupo", help="limitar a un grupo")
+    ap.add_argument("--comparar", action="store_true",
+                    help="mostrar nivel vs movimiento")
+    ap.add_argument("--top", type=int, default=15)
+    args = ap.parse_args()
+
+    universo = [u for u in UNIVERSO if not args.grupo or u[3] == args.grupo]
+    if not universo:
+        print(f"Grupo desconocido. Opciones: "
+              f"{', '.join(sorted({u[3] for u in UNIVERSO}))}")
+        return
+
+    ld.open_session()
+    print(f"Universo: {len(universo)} series")
+    series = cargar(universo)
+    print(f"  {len(series)} con historia suficiente\n")
+
+    df = analizar(series, universo)
+    encontrados = hallazgos(df)
+    divs = divergencias(df, series)
+
+    print("=" * 74)
+    print(f"HALLAZGOS  ({len(encontrados)} de {len(df)} series)")
+    print("=" * 74)
+    for h in encontrados[:args.top]:
+        print(f"\n  {h['nombre']} ({grupo_txt(h['grupo'])})  ultimo {h['nivel']:,.2f}")
+        for r in h["razones"]:
+            print(f"      - {r}")
+
+    if divs:
+        print("\n" + "=" * 74)
+        n_alerta = sum(1 for d in divs if d["alerta"])
+        print(f"PARES  (top 3 por desacople; {n_alerta} cruzan {Z_DIVERG} sigma)")
+        print("=" * 74)
+        for d in divs[:3]:
+            marca = "  <-- ALERTA" if d["alerta"] else ""
+            print(f"  {d['par']:34s} {d['ret_a']:+6.1f}% vs {d['ret_b']:+6.1f}%"
+                  f"   brecha {d['brecha_pp']:+.1f}pp ({abs(d['z']):.1f}σ){marca}")
+            print(f"      {d['descripcion']}")
+
+    if args.comparar:
+        comparar(df)
+
+    salida = {
+        "generado": datetime.now().isoformat(timespec="seconds"),
+        "series_analizadas": len(df),
+        "umbrales": {"z_1d": Z_1D, "z_1w": Z_1W, "z_grupo": Z_GRUPO,
+                     "ventana_dias": VENTANA},
+        "metodo": ("z-score del RETORNO contra la distribucion de retornos del "
+                   "mismo horizonte, no del nivel contra su media"),
+        "hallazgos": encontrados,
+        "divergencias": divs,
+        "divergencias_en_alerta": [d for d in divs if d["alerta"]],
+    }
+    with open("datos_detector.json", "w", encoding="utf-8") as f:
+        json.dump(salida, f, indent=2, ensure_ascii=False)
+    print(f"\nListo: datos_detector.json ({len(encontrados)} hallazgos)")
+    ld.close_session()
+
+
+if __name__ == "__main__":
+    main()

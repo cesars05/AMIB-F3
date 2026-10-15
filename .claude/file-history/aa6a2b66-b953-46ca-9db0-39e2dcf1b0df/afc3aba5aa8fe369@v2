@@ -1,0 +1,30 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t  = $xl.Workbooks.Item('20260922_SETSA Transportes.xlsx')
+$m  = $t.Worksheets.Item('Modelo SETSA')
+$label = 'D' + [char]0xED + 'as por a' + [char]0xF1 + 'o (convenci' + [char]0xF3 + 'n comercial)'
+$rDays = 0
+for ($r = 1; $r -le 450; $r++) { if ([string]$m.Cells.Item($r, 3).Value2 -ceq $label) { $rDays = $r; break } }
+if ($rDays -eq 0) { throw 'no encontre la fila de dias' }
+"fila dias = $rDays | C=" + $m.Cells.Item($rDays,3).Value2 + " | D=" + $m.Cells.Item($rDays,4).Text
+if ($m.Cells.Item($rDays, 4).Value2 -ne 360) { throw 'la fila encontrada no tiene 360' }
+$ref = "`$D`$$rDays"; $n = 0
+foreach ($ws in $t.Worksheets) { foreach ($c in $ws.UsedRange.Cells) { $f = [string]$c.Formula; if ($f.Contains($ref)) { $c.Formula = $f.Replace($ref, '360'); $n++ } } }
+"formulas con 360 fijo: $n"
+$m.Rows.Item($rDays).Delete() | Out-Null
+
+# separación en blanco antes de 'Activo Fijo y Flotilla'
+$rAF = 0
+for ($r = 1; $r -le 450; $r++) { if ([string]$m.Cells.Item($r, 3).Value2 -ceq 'Activo Fijo y Flotilla') { $rAF = $r; break } }
+if ($xl.WorksheetFunction.CountA($m.Rows.Item($rAF - 1)) -gt 0) { $m.Rows.Item($rAF).Insert() | Out-Null; $m.Rows.Item($rAF).ClearFormats() | Out-Null; $m.Rows.Item($rAF).RowHeight = 15; "separacion restaurada antes de Activo Fijo" }
+
+$xl.CalculateFull()
+$err = 0
+foreach ($ws in $t.Worksheets) { foreach ($c in $ws.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $err++; "ERR " + $ws.Name + "!" + $c.Address($false,$false) + " " + $c.Formula } } }
+"errores=$err"
+for ($r = 1; $r -le 450; $r++) {
+    $l = [string]$m.Cells.Item($r, 3).Value2
+    if ($l.StartsWith('DSO: d') -or $l.StartsWith('DPO: d') -or $l.StartsWith('DSO sobre')) { "$r $l | " + $m.Range("H$r").Formula + " = " + $m.Range("H$r").Text }
+    if ($l -ceq 'Supuestos') { for ($k = $r; $k -le $r + 4; $k++) { "  $k " + $m.Cells.Item($k,3).Value2 + " | " + $m.Cells.Item($k,4).Text } }
+}
+$t.Save(); "guardado=" + $t.Saved

@@ -1,0 +1,124 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$m  = $xl.Workbooks.Item('20260922_SETSA Transportes.xlsx').Worksheets.Item('Modelo SETSA')
+$a = [char]0xE1; $o = [char]0xF3; $e = [char]0xE9
+
+function Col-C { return ,$m.Range('C1:C450').Value2 }
+function Find-Row([string]$needle, [switch]$exact, [int]$from = 1) {
+    $v = Col-C
+    for ($r = $from; $r -le 450; $r++) {
+        $s = [string]$v[$r, 1]
+        if ($exact) { if ($s -ceq $needle) { return $r } }
+        elseif ($s.Contains($needle)) { return $r }
+    }
+    throw "No encontrado: $needle"
+}
+function Move-Rows([int]$r1, [int]$r2, [int]$dest) {   # dest = fila antes de la cual se inserta
+    $m.Range("$($r1):$($r2)").EntireRow.Cut() | Out-Null
+    $m.Rows.Item($dest).Insert() | Out-Null
+}
+$log = @()
+
+# A) Estado de resultados: EBIT -> Gastos fin. -> UAI -> ISR -> Resultado neto, y luego el puente a EBITDA
+$rUAI = Find-Row 'Utilidad Antes de Impuestos'
+$rRN  = Find-Row 'Resultado Neto' -exact
+$rE   = Find-Row 'EBITDA' -exact
+Move-Rows $rUAI $rRN $rE
+$rE = Find-Row 'EBITDA' -exact
+$m.Rows.Item($rE).Insert() | Out-Null
+$log += "A: UAI/ISR/Resultado neto arriba del EBITDA"
+
+# B) Memo de balance ajustado justo debajo del balance
+$rT = Find-Row '(Pasivo + Capital)'
+$m.Cells.Item($rT, 3).Value2 = 'TOTAL PASIVO + CAPITAL'
+$rM = Find-Row 'Memo: balance ajustado'
+Move-Rows $rM ($rM + 3) ($rT + 2)
+$log += "B: memo de balance ajustado debajo del balance"
+
+# C) ROE / ROA dentro de Margenes y Rentabilidad
+$rROE = Find-Row 'ROE ('
+$rNom = Find-Row 'mina total / ingresos'
+Move-Rows $rROE ($rROE + 1) ($rNom + 1)
+$rAn = Find-Row 'Analisis de margenes'
+$m.Cells.Item($rAn, 3).Value2 = "An${a}lisis de m${a}rgenes"
+$log += "C: ROE/ROA en rentabilidad"
+
+# D) Bloque de crecimiento
+$rG = Find-Row 'Crecimiento anual (%)'
+$rC = Find-Row 'Crecimiento' -exact
+Move-Rows $rG $rG ($rC + 1)
+$rG = Find-Row 'Crecimiento anual (%)'
+$m.Cells.Item($rG, 3).Value2 = 'Ingresos (%)'
+$m.Range("$($rG + 1):$($rG + 4)").EntireRow.Insert() | Out-Null
+$m.Rows.Item($rG).Copy($m.Range("$($rG + 1):$($rG + 4)")) | Out-Null
+$rCost = Find-Row 'Costo de Venta y/o Servicio'
+$rSGA  = Find-Row 'Gastos generales total'
+$rEA   = Find-Row 'EBITDA Ajustado' -exact
+$rPay  = Find-Row 'mina total: percepciones'
+$lbl = @('Costo de venta (%)', 'Gastos generales (%)', 'EBITDA ajustado (%)', "N${o}mina total (%)")
+$src = @($rCost, $rSGA, $rEA, $rPay)
+for ($k = 0; $k -lt 4; $k++) {
+    $r = $rG + 1 + $k
+    $m.Cells.Item($r, 3).Value2 = $lbl[$k]
+    $m.Cells.Item($r, 11).Value2 = $null
+    foreach ($c in 'E','F','G','H') {
+        $p = [char]([int][char]$c - 1)
+        $m.Range("$c$r").Formula = "=$c$($src[$k])/$p$($src[$k])-1"
+    }
+    $m.Range("D$r").ClearContents() | Out-Null; $m.Range("I$r").ClearContents() | Out-Null
+}
+$m.Cells.Item($rG, 11).Value2 = '1S26 no comparable (semestre)'
+$log += "D: bloque de crecimiento (ingresos, costos, gastos, EBITDA ajustado, nomina)"
+
+# E) Indicadores Clave -> Liquidez y Solvencia, despues de Activo Fijo
+$rIK = Find-Row 'Indicadores Clave' -exact
+$m.Cells.Item($rIK, 3).Value2 = 'Liquidez y Solvencia'
+$rEnd = Find-Row 'EBITDA ajustado - capex'
+Move-Rows $rIK ($rIK + 4) ($rEnd + 2)
+$log += "E: liquidez y solvencia al final del analisis"
+
+# F) Cartera: concurso / activo total y DSO correcto
+$rCap = Find-Row 'Cartera en concurso / capital contable'
+$rTot = Find-Row "Total 'estimaci"
+$rTA  = Find-Row 'TOTAL ACTIVO' -exact
+$m.Rows.Item($rCap + 1).Insert() | Out-Null
+$m.Rows.Item($rCap).Copy($m.Rows.Item($rCap + 1)) | Out-Null
+$m.Cells.Item($rCap + 1, 3).Value2 = 'Cartera en concurso / activo total'
+foreach ($c in 'D','E','F','G','H','I') {
+    $m.Range("$c$($rCap + 1)").Formula = "=$c$rTot/$c$rTA"
+}
+$m.Cells.Item($rCap, 11).Value2 = "P${e}rdida potencial para el socio: castigarla reduce el capital 1 a 1"
+$m.Cells.Item($rCap + 1, 11).Value2 = "Peso del activo que no genera flujo"
+
+$rRev = Find-Row 'Ingresos anualizados'
+$rDSO = Find-Row 'DSO (cartera con IVA)'
+$rCli = Find-Row 'Clientes' -exact
+$rIVA = Find-Row 'Tasa IVA'
+$iva  = "`$D`$$rIVA"
+$m.Cells.Item($rDSO, 3).Value2 = 'DSO (cartera con IVA / ingresos con IVA)'
+$m.Cells.Item($rDSO + 1, 3).Value2 = 'DSO sobre cartera promedio'
+foreach ($c in 'D','E','F','G','H','I') {
+    $m.Range("$c$rRev").Formula = "=$c" + "14*12/$c" + "`$11"
+    $m.Range("$c$rDSO").Formula = "=$c$rCli/($c$rRev*(1+$iva))*365"
+    if ($c -eq 'D') { $m.Range("D$($rDSO + 1)").Formula = "=D$rDSO" }
+    else {
+        $p = [char]([int][char]$c - 1)
+        $m.Range("$c$($rDSO + 1)").Formula = "=AVERAGE($p$rCli,$c$rCli)/($c$rRev*(1+$iva))*365"
+    }
+}
+$m.Cells.Item($rRev, 11).Value2 = '1S26 anualizado con meses del periodo'
+$m.Cells.Item($rDSO, 11).Value2 = "La cartera incluye IVA: se compara contra ingresos con IVA"
+$m.Cells.Item($rDSO + 1, 11).Value2 = "2021 sin saldo inicial (usa cierre)"
+$log += "F: concurso/activo total y DSO corregido"
+
+# G) Limpieza: una sola fila en blanco entre bloques
+$last = $m.Cells.Item($m.Rows.Count, 3).End(-4162).Row
+$del = 0
+for ($r = $last; $r -gt 12; $r--) {
+    $blank  = $xl.WorksheetFunction.CountA($m.Rows.Item($r)) -eq 0
+    $blankU = $xl.WorksheetFunction.CountA($m.Rows.Item($r - 1)) -eq 0
+    if ($blank -and $blankU) { $m.Rows.Item($r).Delete() | Out-Null; $del++ }
+}
+$log += "G: filas en blanco eliminadas: $del"
+$xl.CutCopyMode = $false
+$log

@@ -1,0 +1,79 @@
+import pickle, time, pywintypes
+import engine as E
+from build_live_helpers import *   # noqa
+HR = pickle.load(open(E.S + "/hit_refs.pkl", "rb"))
+def bgr(h): h = h.lstrip("#"); return int(h[4:6] + h[2:4] + h[0:2], 16)
+SECS = E.GICS
+F, S_, NAME = HR["FUND"], HR["SEC"], HR["NAME"]
+def find(ws, t, col="C"):
+    for r in range(1, 400):
+        if str(ws.Range(f"{col}{r}").Value or "").strip().startswith(t): return r
+def block(ws, mode, colors):
+    held, beat = (HR[0], HR[3]) if mode == "P" else (HR[4], HR[7])
+    W, CC = (HR["WP"], HR["CP"]) if mode == "P" else (HR["WY"], HR["CY"])
+    lab = "Jan-24 to Aug-26" if mode == "P" else "YTD-26"
+    br = find(ws, "Attribution vs peer average - by sector")
+    r = ws.UsedRange.Row + ws.UsedRange.Rows.Count + 2
+    c = ws.Range(f"C{r}"); c.Value = f"HIT RATE OF AZTD PICKS - {lab}: did AZTD's stocks beat the peers' stocks in the same sector?"
+    c.Font.Bold = True; c.Font.Size = 12; c.Font.Color = colors["title"]
+    rg = ws.Range(f"C{r}:L{r}"); rg.Borders(9).LineStyle = 1; rg.Borders(9).Color = colors["line"]; rg.Borders(9).Weight = -4138
+    r += 2; h = r
+    fmt_from(BAR, ws.Range(f"C{h}:L{h}"))
+    put(ws, f"C{h}", [["Sector", "# AZTD names", "# beat peers' sector", "Hit rate (names)", "Hit rate (weighted)",
+                       "Largest contributor", "Its contribution (pp)", "Selection effect (pp)", "AZTD sector return", "Peers sector return"]])
+    ws.Range(f"D{h}:L{h}").WrapText = True; ws.Range(f"D{h}:L{h}").HorizontalAlignment = -4108; ws.Rows(h).RowHeight = 42
+    if colors.get("hdr"): ws.Range(f"C{h}:L{h}").Interior.Color = colors["hdr"]
+    sec_blk = find(ws, "Sector contribution")
+    for i, s in enumerate(SECS):
+        rr = h + 1 + i
+        cond = f'({F}="AZTD")*({S_}=$C{rr})*(N(+{held})>0)'
+        ws.Range(f"C{rr}").Value = s
+        ws.Range(f"D{rr}").Formula = f'=COUNTIFS({F},"AZTD",{S_},$C{rr},{held},">0")'
+        ws.Range(f"E{rr}").Formula = f'=SUMIFS({beat},{F},"AZTD",{S_},$C{rr})'
+        ws.Range(f"F{rr}").Formula = f'=IFERROR(E{rr}/D{rr},"")'
+        R(lambda: setattr(ws.Range(f"G{rr}"), "Formula2", f'=IFERROR(SUM(FILTER({W},({F}="AZTD")*({S_}=$C{rr})*({beat}=1)))/SUMIFS({W},{F},"AZTD",{S_},$C{rr},{held},">0"),"")'))
+        R(lambda: setattr(ws.Range(f"H{rr}"), "Formula2", f'=IFERROR(INDEX(SORTBY(FILTER({NAME},({F}="AZTD")*({S_}=$C{rr})),FILTER({CC},({F}="AZTD")*({S_}=$C{rr})),-1),1),"")'))
+        ws.Range(f"I{rr}").Formula = f'=IF(D{rr}=0,"",MAXIFS({CC},{F},"AZTD",{S_},$C{rr}))'
+        ws.Range(f"J{rr}").Formula = f'=IFERROR(INDEX($E${br+1}:$E${br+12},MATCH($C{rr},$C${br+1}:$C${br+12},0)),"")'
+        ws.Range(f"K{rr}").Formula = f'=IFERROR(INDEX($M${sec_blk+1}:$M${sec_blk+12},MATCH($C{rr},$C${sec_blk+1}:$C${sec_blk+12},0)),"")'
+        ws.Range(f"L{rr}").Formula = f'=IFERROR(INDEX($N${sec_blk+1}:$N${sec_blk+12},MATCH($C{rr},$C${sec_blk+1}:$C${sec_blk+12},0)),"")'
+        ws.Range(f"C{rr}:L{rr}").Borders(9).LineStyle = 1; ws.Range(f"C{rr}:L{rr}").Borders(9).Color = 0xD9D9D9
+    t = h + 1 + len(SECS)
+    put(ws, f"C{t}", [["Total AZTD", f"=SUM(D{h+1}:D{t-1})", f"=SUM(E{h+1}:E{t-1})", f'=IFERROR(E{t}/D{t},"")']])
+    R(lambda: setattr(ws.Range(f"G{t}"), "Formula2", f'=IFERROR(SUM(FILTER({W},({F}="AZTD")*({beat}=1)))/SUMIFS({W},{F},"AZTD",{held},">0"),"")'))
+    ws.Range(f"J{t}").Formula = f"=SUM(J{h+1}:J{t-1})"
+    ws.Range(f"C{t}:L{t}").Font.Bold = True; ws.Range(f"C{t}:L{t}").Borders(8).LineStyle = 1
+    ws.Range(f"D{h+1}:E{t}").NumberFormat = "0"; ws.Range(f"F{h+1}:G{t}").NumberFormat = "0%"; ws.Range(f"I{h+1}:I{t}").NumberFormat = "+0.00%;-0.00%;-"
+    ws.Range(f"J{h+1}:J{t}").NumberFormat = "+0.00%;-0.00%;-"; ws.Range(f"K{h+1}:L{t}").NumberFormat = "0.0%;-0.0%;-"
+    ws.Range(f"D{h+1}:L{t}").HorizontalAlignment = -4108; ws.Range(f"H{h+1}:H{t}").Font.Size = 9; ws.Range(f"H{h+1}:H{t}").HorizontalAlignment = -4131
+    for cc in ("F", "G"):
+        fc = ws.Range(f"{cc}{h+1}:{cc}{t}").FormatConditions; fc.Delete()
+        x1 = fc.Add(1, 5, "=0.5"); x1.Interior.Color = bgr("DDEBF7"); x1.Font.Color = bgr("1F3864")
+        x2 = fc.Add(1, 6, "=0.5"); x2.Interior.Color = bgr("FBE5D6"); x2.Font.Color = bgr("843C0C")
+    note(ws, f"C{t+1}", "A pick 'beats' when the stock's USD return over the months AZTD held it is above the peers' average return in the same GICS sector "
+                        "over those same months. Weighted = by average weight. Compare the largest contributor with the sector total contribution to see if the result depends on one name.")
+    # chart
+    ch = ws.ChartObjects().Add(ws.Range(f"C{t+3}").Left, ws.Range(f"C{t+3}").Top, 520, 300); c = ch.Chart; c.ChartType = 57
+    while c.SeriesCollection().Count: c.SeriesCollection(1).Delete()
+    for nm, cl, col in (("Hit rate (names)", "F", colors["s1"]), ("Hit rate (weighted)", "G", colors["s2"])):
+        s = c.SeriesCollection().NewSeries(); s.Name = nm; s.Values = ws.Range(f"{cl}{h+1}:{cl}{t-1}"); s.XValues = ws.Range(f"C{h+1}:C{t-1}")
+        s.Format.Fill.ForeColor.RGB = col; s.Format.Line.Visible = False
+    c.HasTitle = True; c.ChartTitle.Text = f"Hit rate of AZTD picks by sector, {lab} (50% = coin flip)"
+    tf = c.ChartTitle.Format.TextFrame2.TextRange.Font; tf.Name = "Arial"; tf.Size = 12; tf.Bold = True; tf.Fill.ForeColor.RGB = 0
+    c.ChartArea.Format.Line.ForeColor.RGB = bgr("D9D9D9"); c.ChartArea.Format.Line.Weight = 0.75; c.PlotArea.Format.Line.Visible = False
+    c.ChartArea.Font.Name = "Arial"; c.HasLegend = True; c.Legend.Position = -4160; c.Legend.Font.Size = 9
+    c.Axes(1).ReversePlotOrder = True; c.Axes(1).Crosses = 2; c.Axes(1).MajorTickMark = -4142; c.Axes(1).TickLabels.Font.Size = 9
+    c.Axes(1).Format.Line.ForeColor.RGB = 0
+    ax = c.Axes(2); ax.MinimumScale = 0; ax.MaximumScale = 1; ax.TickLabels.NumberFormat = "0%"; ax.HasMajorGridlines = False
+    ax.Format.Line.Visible = False; ax.MajorTickMark = -4142; ax.TickLabels.Font.Size = 9
+    c.ChartGroups(1).GapWidth = 80; c.ChartGroups(1).Overlap = -27
+    ch.Placement = 3
+    return h
+NAVYP = dict(title=bgr("1F3864"), line=bgr("C9A227"), s1=bgr("1F3864"), s2=bgr("2E75B6"), hdr=None)
+GREENP = dict(title=bgr("1E4D3A"), line=bgr("F5C000"), s1=bgr("3E7B5B"), s2=bgr("F5C000"), hdr=bgr("E2EFDA"))
+import sys
+if "ytd" not in sys.argv: h1 = block(wb.Worksheets("Attribution 2024-2026"), "P", NAVYP)
+else: h1=None
+h2 = block(wb.Worksheets("Attribution YTD"), "Y", GREENP)
+app.Calculation = -4105; app.ScreenUpdating = True
+print("hit blocks", h1, h2)

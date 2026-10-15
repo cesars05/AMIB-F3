@@ -1,0 +1,28 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 40;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 1200 } }; return "??" }
+$xl=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); break }catch{ Start-Sleep -Milliseconds 900 } }
+$wb=$null; foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("Segment Beta") }
+
+# la beta re-apalancada solo tiene sentido en las filas de mediana
+foreach($r in 15,16,17,21,25,26,27,28){ T { $s.Cells.Item($r,12).Clear() } }
+Write-Output "  columna L limpiada en las filas de datos"
+
+T { $xl.Calculate() }
+Start-Sleep -Seconds 15
+T { $xl.Calculate() }
+Start-Sleep -Seconds 10
+
+Write-Output ""
+Write-Output ("   "+"RIC".PadRight(9)+"Company / Section".PadRight(44)+"D/E".PadLeft(9)+"Beta".PadLeft(8)+"BetaU".PadLeft(8)+"BetaRe".PadLeft(9)+"Tax".PadLeft(10))
+for($r=12;$r -le 29;$r++){
+  $ric=[string](T { $s.Cells.Item($r,3).Text }); $nm=[string](T { $s.Cells.Item($r,4).Text })
+  if(($ric+$nm).Trim() -eq ""){ Write-Output ""; continue }
+  if($nm.Length -gt 43){ $nm=$nm.Substring(0,43) }
+  $line="   "+$ric.PadRight(9)+$nm.PadRight(44)
+  foreach($c in 9,10,11,12,13){ $line+=([string](T { $s.Cells.Item($r,$c).Text })).PadLeft(9) }
+  Write-Output ("r"+([string]$r).PadRight(3)+$line)
+}
+T { $wb.Save() }
+Write-Output "`nguardado"

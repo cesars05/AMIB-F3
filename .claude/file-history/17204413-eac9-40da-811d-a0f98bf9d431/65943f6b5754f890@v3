@@ -1,0 +1,328 @@
+"""Portafolio real, leido del Activity Statement de Interactive Brokers.
+
+    python generar_portafolio.py "C:\\Users\\cesar\\Downloads\\U18244610_20250915_20260914.csv"
+
+Salidas en portafolio/:
+    Pesos.png            -- peso de cada posicion sobre el valor de mercado
+    PnL.png              -- P/L no realizado por posicion, en dolares
+    RetornoVsCosto.png   -- retorno de cada posicion contra su costo
+    MatrizPortafolio.png -- retorno de MERCADO por periodo (de Workspace)
+    VsBenchmark.png      -- canasta con pesos actuales vs S&P 500
+
+TRES RETORNOS DISTINTOS, NO CONFUNDIRLOS
+----------------------------------------
+1. TWR del estado: el unico retorno correcto de la CUENTA. Neutraliza los
+   depositos, que aqui pesan muchisimo (774.92 USD depositados sobre un valor
+   inicial de 58.12). Cualquier calculo que ignore eso da un numero inventado.
+2. Retorno vs costo por posicion: cuanto gana o pierde cada posicion contra lo
+   que se pago. Exacto, sale del estado.
+3. Retorno de mercado por periodo: como se movio la ACCION en 1W/MTD/QTD/YTD.
+   Es contexto de mercado, no el P&L de la cuenta: una posicion abierta en
+   julio no capturo el YTD de la accion.
+
+Mezclar los tres da numeros sin sentido.
+
+OJO CON LOS SPLITS: el periodo trae CRWD 4:1 (jul-2026) y APH 2:1 (sep-2026).
+Los precios de Workspace vienen ajustados y el costo del estado tambien, asi
+que ambos lados son comparables.
+"""
+import sys
+sys.path.append(r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs")
+
+import csv
+import json
+import os
+import warnings
+import lseg.data as ld
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+from datetime import datetime, timedelta
+from grafico_banquero import (configurar_estilo_banquero, PALETA, matriz_calor,
+                              linea_referencia, ejes_limpios, colores_por_signo)
+
+warnings.filterwarnings("ignore")
+configurar_estilo_banquero()
+
+SALIDA = "portafolio"
+os.makedirs(SALIDA, exist_ok=True)
+
+ESTADO = (sys.argv[1] if len(sys.argv) > 1 else
+          r"C:\Users\cesar\Downloads\U18244610_20250915_20260914.csv")
+
+# IBKR da el ticker pelon; Workspace necesita el RIC con su bolsa.
+# "Listing Exch" del estado resuelve el sufijo.
+BOLSA_A_SUFIJO = {"NASDAQ": ".OQ", "NYSE": ".N", "ARCA": ".P", "AMEX": ".A",
+                  "BATS": ".Z", "TSE": ".TO"}
+
+
+def leer_estado(ruta):
+    """Parsea el CSV de IBKR: cada fila arranca con seccion y Header/Data.
+
+    Una seccion puede traer VARIOS encabezados. "Net Asset Value", por
+    ejemplo, trae la tabla por clase de activo y despues otro encabezado
+    suelto con el Time Weighted Rate of Return. Por eso cada Header abre un
+    bloque nuevo en vez de sobrescribir al anterior.
+    """
+    secciones = {}
+    with open(ruta, encoding="utf-8-sig") as f:
+        for fila in csv.reader(f):
+            if len(fila) < 3:
+                continue
+            sec, tipo = fila[0], fila[1]
+            if tipo == "Header":
+                secciones.setdefault(sec, []).append({"cols": fila[2:], "filas": []})
+            elif tipo == "Data" and secciones.get(sec):
+                secciones[sec][-1]["filas"].append(fila[2:])
+    return secciones
+
+
+def tabla(secciones, nombre, columna=None):
+    """Devuelve el bloque de la seccion. Si se pasa `columna`, el primero que
+    la contenga; si no, el primero."""
+    bloques = secciones.get(nombre, [])
+    if not bloques:
+        return pd.DataFrame()
+    elegido = bloques[0]
+    if columna:
+        elegido = next((b for b in bloques if columna in b["cols"]), bloques[0])
+    ancho = len(elegido["cols"])
+    filas = [f[:ancho] + [""] * (ancho - len(f)) for f in elegido["filas"]]
+    return pd.DataFrame(filas, columns=elegido["cols"])
+
+
+def filas_de(secciones, nombre):
+    """Todas las filas Data de la seccion, sin importar el bloque."""
+    return [f for b in secciones.get(nombre, []) for f in b["filas"]]
+
+
+def num(x):
+    try:
+        return float(str(x).replace(",", ""))
+    except (ValueError, TypeError):
+        return float("nan")
+
+
+print(f"Leyendo {os.path.basename(ESTADO)}...")
+sec = leer_estado(ESTADO)
+
+periodo = ""
+for f in filas_de(sec, "Statement"):
+    if f[0] == "Period":
+        periodo = f[1]
+
+# --- posiciones abiertas ---------------------------------------------------
+pos = tabla(sec, "Open Positions")
+pos = pos[pos["DataDiscriminator"] == "Summary"].copy()
+for c in ("Quantity", "Cost Price", "Cost Basis", "Close Price", "Value",
+          "Unrealized P/L"):
+    pos[c] = pos[c].map(num)
+pos = pos.dropna(subset=["Value"]).set_index("Symbol")
+
+# --- bolsa y nombre de cada simbolo ----------------------------------------
+info = tabla(sec, "Financial Instrument Information")
+bolsas = dict(zip(info["Symbol"], info["Listing Exch"]))
+nombres = dict(zip(info["Symbol"], info["Description"]))
+rics = {s: s + BOLSA_A_SUFIJO.get(bolsas.get(s, ""), ".OQ") for s in pos.index}
+
+# --- NAV, TWR y flujos -----------------------------------------------------
+nav = tabla(sec, "Net Asset Value", columna="Asset Class")
+total_nav = num(nav[nav["Asset Class"] == "Total"]["Current Total"].iloc[0])
+twr = None
+for f in filas_de(sec, "Net Asset Value"):
+    # El TWR viene en su propio bloque, como unico valor con signo de %
+    if f and str(f[0]).rstrip("%").replace(".", "").replace("-", "").isdigit():
+        twr = num(str(f[0]).rstrip("%"))
+cambio = {f[0]: num(f[1]) for f in filas_de(sec, "Change in NAV")}
+
+valor_mercado = float(pos["Value"].sum())
+pos["peso"] = pos["Value"] / valor_mercado * 100
+pos["ret_vs_costo"] = (pos["Close Price"] / pos["Cost Price"] - 1) * 100
+pos = pos.sort_values("Value", ascending=False)
+
+print(f"  {len(pos)} posiciones, valor de mercado {valor_mercado:,.2f} USD")
+print(f"  NAV {total_nav:,.2f} USD   TWR del periodo {twr:.2f}%")
+
+
+# ===========================================================================
+# Graficos que salen solo del estado
+# ===========================================================================
+def barras_h(valores, etiquetas, archivo, fmt, color_fijo=None):
+    fig, ax = plt.subplots(figsize=(4.25, 2.55), dpi=300)
+    colores = color_fijo or colores_por_signo(valores)
+    ax.barh(range(len(valores)), valores, color=colores, height=0.72, zorder=3)
+    if min(valores) < 0:
+        ax.axvline(0, color=PALETA["eje"], linewidth=0.9, zorder=4)
+    for lado in ("top", "right", "bottom", "left"):
+        ax.spines[lado].set_visible(False)
+    ax.set_xticks([])
+    ax.set_yticks(range(len(valores)))
+    ax.set_yticklabels(etiquetas, fontsize=6.5)
+    ax.tick_params(axis="y", length=0, labelcolor=PALETA["texto"])
+    ax.invert_yaxis()
+
+    rango = max(valores) - min(min(valores), 0)
+    margen = rango * 0.02
+    for y, v in enumerate(valores):
+        ax.text(v + (margen if v >= 0 else -margen), y, fmt.format(v),
+                va="center", ha="left" if v >= 0 else "right", fontsize=6,
+                fontweight="bold", color=PALETA["texto"])
+    ax.set_xlim(min(min(valores), 0) - rango * 0.28, max(valores) + rango * 0.28)
+    fig.savefig(f"{SALIDA}/{archivo}", dpi=300, bbox_inches="tight", pad_inches=0.02)
+    plt.close(fig)
+
+
+barras_h(pos["peso"].values, list(pos.index), "Pesos.png", "{:.1f}%",
+         color_fijo=PALETA["primario"])
+barras_h(pos["Unrealized P/L"].values, list(pos.index), "PnL.png", "{:+.1f}")
+barras_h(pos["ret_vs_costo"].values, list(pos.index), "RetornoVsCosto.png", "{:+.1f}%")
+
+# ===========================================================================
+# Retornos de mercado por periodo (Workspace)
+# ===========================================================================
+print("\nBajando precios de mercado...")
+ld.open_session()
+
+hoy = datetime.now()
+inicio_ytd = f"{hoy.year}-01-01"
+fin = hoy.strftime("%Y-%m-%d")
+trimestre = (hoy.month - 1) // 3 * 3 + 1
+PERIODOS = {
+    "1W":  (hoy - timedelta(days=7)).strftime("%Y-%m-%d"),
+    "MTD": hoy.replace(day=1).strftime("%Y-%m-%d"),
+    "QTD": hoy.replace(month=trimestre, day=1).strftime("%Y-%m-%d"),
+    "YTD": inicio_ytd,
+}
+BENCHMARK = (".SPX", "S&P 500")
+
+
+def valor_base(serie, antes_de):
+    """Ultimo cierre estrictamente anterior al inicio del periodo."""
+    previos = serie[serie.index < antes_de]
+    return previos.iloc[-1] if not previos.empty else serie.iloc[0]
+
+
+universo = list(rics.values()) + [BENCHMARK[0]]
+d = ld.get_history(universe=universo, fields=["TRDPRC_1"], interval="daily",
+                    start=f"{hoy.year - 1}-12-01", end=fin)
+
+series = {}
+for ric in universo:
+    try:
+        s = (d[ric]["TRDPRC_1"] if isinstance(d.columns, pd.MultiIndex)
+             else d[ric]).astype(float).dropna()
+        if len(s) > 5:
+            series[ric] = s
+    except Exception:
+        pass
+
+sin_datos = [s for s, r in rics.items() if r not in series]
+if sin_datos:
+    print(f"  Sin serie: {', '.join(sin_datos)}")
+
+filas = {}
+for simbolo, ric in rics.items():
+    if ric not in series:
+        continue
+    s = series[ric]
+    ult = float(s.iloc[-1])
+    filas[simbolo] = {p: (ult / float(valor_base(s, i)) - 1) * 100
+                      for p, i in PERIODOS.items()}
+
+s_b = series[BENCHMARK[0]]
+ult_b = float(s_b.iloc[-1])
+filas_bmk = {p: (ult_b / float(valor_base(s_b, i)) - 1) * 100
+             for p, i in PERIODOS.items()}
+
+# Ordenada por PESO, no por retorno: en un portafolio lo primero que se lee es
+# donde esta el dinero
+orden = [s for s in pos.index if s in filas]
+df = pd.DataFrame(filas).T.loc[orden, list(PERIODOS)]
+df_bmk = pd.concat([df, pd.DataFrame({BENCHMARK[1]: filas_bmk}).T])
+
+fig, ax = plt.subplots(figsize=(3.05, 0.30 * len(df_bmk) + 0.35), dpi=300)
+matriz_calor(ax, df_bmk)
+fig.savefig(f"{SALIDA}/MatrizPortafolio.png", dpi=300, bbox_inches="tight",
+            pad_inches=0.04)
+plt.close(fig)
+
+# --- canasta con pesos actuales vs benchmark -------------------------------
+# No es el retorno de la cuenta: aplica los pesos de HOY a los precios de todo
+# el anio, cuando varias posiciones se abrieron a mitad del periodo.
+activos = [rics[s] for s in orden]
+pesos = pd.Series({rics[s]: pos.loc[s, "peso"] for s in orden})
+pesos = pesos / pesos.sum()
+
+precios = pd.DataFrame({r: series[r] for r in activos}).ffill().dropna()
+precios = precios[precios.index >= inicio_ytd]
+norm = precios / precios.iloc[0] * 100
+canasta = (norm * pesos).sum(axis=1)
+
+bmk = s_b[s_b.index >= inicio_ytd]
+bmk100 = bmk / bmk.iloc[0] * 100
+
+fig, ax = plt.subplots(figsize=(6.20, 2.90), dpi=300)
+ejes_limpios(ax, labelsize=6.5)
+linea_referencia(ax, 100)
+ax.plot(bmk100.index, bmk100.values, color=PALETA["claro"], linewidth=1.4,
+        label=BENCHMARK[1], zorder=3)
+ax.plot(canasta.index, canasta.values, color=PALETA["primario"], linewidth=1.6,
+        label="Holdings at current weights", zorder=4)
+primeros = canasta.index.to_series().groupby(canasta.index.to_period("M")).first()
+ax.set_xticks(primeros.values)
+ax.set_xticklabels([x.strftime("%b") for x in primeros.index.to_timestamp()])
+ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:.0f}"))
+ax.margins(x=0)
+ax.legend(loc="upper left", frameon=False, fontsize=6.5, handlelength=1.5,
+          borderpad=0.2)
+for serie, color in ((bmk100, PALETA["claro"]), (canasta, PALETA["primario"])):
+    ax.annotate(f"{serie.iloc[-1]:.0f}", xy=(serie.index[-1], serie.iloc[-1]),
+                xytext=(4, 0), textcoords="offset points", va="center", ha="left",
+                fontsize=6.5, fontweight="bold", color=color, annotation_clip=False)
+fig.savefig(f"{SALIDA}/VsBenchmark.png", dpi=300, bbox_inches="tight", pad_inches=0.02)
+plt.close(fig)
+
+# ===========================================================================
+resumen = {
+    "periodo_estado": periodo,
+    "nav_total_usd": round(total_nav, 2),
+    "valor_mercado_usd": round(valor_mercado, 2),
+    "twr_periodo_pct": twr,
+    "nota_twr": ("Unico retorno correcto de la cuenta: neutraliza los "
+                 f"{cambio.get('Deposits & Withdrawals', 0):,.2f} USD depositados."),
+    "depositos_usd": round(cambio.get("Deposits & Withdrawals", 0), 2),
+    "comisiones_usd": round(cambio.get("Commissions", 0), 2),
+    "pl_no_realizado_usd": round(float(pos["Unrealized P/L"].sum()), 2),
+    "nota_canasta": ("La linea VsBenchmark aplica los pesos de hoy a los precios "
+                     "de todo el anio; no es el camino real de la cuenta."),
+    "posiciones": {
+        s: {"nombre": nombres.get(s, s), "ric": rics[s],
+            "cantidad": float(pos.loc[s, "Quantity"]),
+            "costo_prom": round(float(pos.loc[s, "Cost Price"]), 2),
+            "precio": round(float(pos.loc[s, "Close Price"]), 2),
+            "valor_usd": round(float(pos.loc[s, "Value"]), 2),
+            "peso_pct": round(float(pos.loc[s, "peso"]), 2),
+            "pl_usd": round(float(pos.loc[s, "Unrealized P/L"]), 2),
+            "ret_vs_costo_pct": round(float(pos.loc[s, "ret_vs_costo"]), 1),
+            "mercado": {p: round(float(v), 1) for p, v in filas.get(s, {}).items()}}
+        for s in pos.index},
+    "benchmark": {p: round(float(v), 1) for p, v in filas_bmk.items()},
+}
+with open("datos_portafolio.json", "w", encoding="utf-8") as f:
+    json.dump(resumen, f, indent=2, ensure_ascii=False)
+
+print(f"\nPeriodo: {periodo}")
+print(f"{'Simb':6s} {'Peso':>6s} {'Valor':>8s} {'Costo':>9s} {'Precio':>9s} "
+      f"{'P/L':>8s} {'vs costo':>9s}")
+for s in pos.index:
+    r = pos.loc[s]
+    print(f"{s:6s} {r['peso']:5.1f}% {r['Value']:8.2f} {r['Cost Price']:9.2f} "
+          f"{r['Close Price']:9.2f} {r['Unrealized P/L']:+8.2f} "
+          f"{r['ret_vs_costo']:+8.1f}%")
+print(f"{'TOTAL':6s} {'100.0%':>6s} {valor_mercado:8.2f} {'':9s} {'':9s} "
+      f"{pos['Unrealized P/L'].sum():+8.2f}")
+print(f"\nTWR del periodo: {twr:.2f}%   "
+      f"(depositos {cambio.get('Deposits & Withdrawals', 0):,.2f}, "
+      f"comisiones {cambio.get('Commissions', 0):,.2f})")
+print(f"\nListo: {SALIDA}/ (5 graficos), datos_portafolio.json")
+ld.close_session()

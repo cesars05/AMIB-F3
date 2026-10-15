@@ -1,0 +1,30 @@
+# Dumps slide-master and layout shapes (logo, rules, footers, placeholders) with effective formatting + exports PDF for fallback rendering.
+param([Parameter(Mandatory=$true)][string]$Pptx, [Parameter(Mandatory=$true)][string]$OutFile, [string]$PdfOut = '')
+function Rgb($v) { try { if ($v -lt 0) { return $null }; return ('#{0:X2}{1:X2}{2:X2}' -f ($v -band 255), (($v -shr 8) -band 255), (($v -shr 16) -band 255)) } catch { return $null } }
+function In($v) { try { [math]::Round($v / 72.0, 3) } catch { $null } }
+function DumpShapes($shapes) {
+  $out = @()
+  foreach ($sh in $shapes) {
+    $o = [ordered]@{ name = $sh.Name; type = $sh.Type; x = In $sh.Left; y = In $sh.Top; w = In $sh.Width; h = In $sh.Height }
+    try { $o.fill = if ($sh.Fill.Visible) { Rgb $sh.Fill.ForeColor.RGB } else { 'none' } } catch {}
+    try { if ($sh.Line.Visible) { $o.line = Rgb $sh.Line.ForeColor.RGB; $o.line_pt = $sh.Line.Weight } else { $o.line = 'none' } } catch {}
+    try { if ($sh.Type -eq 14) { $o.ph = $sh.PlaceholderFormat.Type } } catch {}
+    try { if ($sh.HasTextFrame -and $sh.TextFrame.HasText) { $r = $sh.TextFrame.TextRange; $t = $r.Text; if ($t.Length -gt 80) { $t = $t.Substring(0,80) }; $o.text = ($t -replace "[\r\n\v]+", ' / '); $o.font = $r.Font.Name; $o.size = $r.Font.Size; $o.bold = [bool]$r.Font.Bold; $o.color = Rgb $r.Font.Color.RGB; $o.align = $r.ParagraphFormat.Alignment; $o.anchor = $sh.TextFrame.VerticalAnchor
+        $o.margins_in = @((In $sh.TextFrame.MarginLeft),(In $sh.TextFrame.MarginTop),(In $sh.TextFrame.MarginRight),(In $sh.TextFrame.MarginBottom)) } } catch {}
+    $out += $o
+  }
+  $out
+}
+$app = New-Object -ComObject PowerPoint.Application
+$pres = $app.Presentations.Open($Pptx, $true, $false, $false)
+$res = [ordered]@{ file = [IO.Path]::GetFileName($Pptx); master = [ordered]@{ shapes = @(DumpShapes $pres.SlideMaster.Shapes) }; layouts = @() }
+try { $res.master.bg = Rgb $pres.SlideMaster.Background.Fill.ForeColor.RGB } catch {}
+foreach ($l in $pres.SlideMaster.CustomLayouts) {
+  $lo = [ordered]@{ name = $l.Name; follow_master_bg = $l.FollowMasterBackground; shapes = @(DumpShapes $l.Shapes) }
+  try { if (-not $l.FollowMasterBackground) { $lo.bg = Rgb $l.Background.Fill.ForeColor.RGB } } catch {}
+  $res.layouts += $lo
+}
+[IO.File]::WriteAllText($OutFile, ($res | ConvertTo-Json -Depth 8), (New-Object Text.UTF8Encoding($false)))
+if ($PdfOut) { try { $pres.SaveAs($PdfOut, 32) } catch { Write-Host "pdf fail" } }
+$pres.Close(); $app.Quit()
+Write-Host "done $Pptx"

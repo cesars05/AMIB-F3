@@ -1,0 +1,17 @@
+---
+name: project-bimbo-model-v7
+description: "Estado y decisiones de la v7 del Bimbo Financial Model (11-oct-2026): cambios aplicados, pendientes, reglas de trabajo"
+metadata:
+  node_type: memory
+  type: project
+  originSessionId: 93e63c1a-d5c7-46f4-aabd-e1eae259166e
+  modified: 2026-10-11T17:38:56.232Z
+---
+
+La v7 (`Reporte & Presentacion\Bimbo Financial Model_v7.xlsx`) es copia de la v6 con cambios registrados paso a paso en `Secciones\Financial Analysis\cambios-v7.md` (fórmulas originales incluidas; no hay respaldos intermedios por decisión del usuario, AutoSave activo). Diagnóstico en `diagnostico-modelo.md`.
+
+Aplicado al 11-oct: impuestos 33% (también en el WACC), participación (México pan 0, Canadá pan 0, Colombia +0.10), margen Norteamérica a 11% en 2030, reestructura como costo extra decreciente (0.4/0.3/0.2/0.1% de ingresos 2027-30, en la línea Corporate & eliminations de `Regional Assumptions` fila 143 con insumos en fila 145), corrección de arrendamientos en `Multiples!Q13`, Sweet Biscuits de México en `Market Growth & Inflation`, motor de deuda e intereses (`Consolidated Model` filas 474-513, entradas en `Assumptions` B112:C119, cálculo iterativo activado), dividendos (DPS 1.075 en 2026, 40% de la utilidad previa después) y recompras (15% de la utilidad previa). Valor por acción del DCF: Ps67.32 al inicio, Ps64.13 hoy (+14.7%, HOLD, banda ±15%).
+
+**Why:** el usuario (analista AZTD) construye el reporte del CFA Research Challenge sobre Bimbo y quiere un modelo preciso pero no complejo; el WACC se deja en vivo (LSEG) y el puente registra WACC y precio en cada paso.
+
+**How to apply:** pendientes: adquisiciones opción B (~Ps1.7bn al año en la línea existente de adquisiciones, falta definir su tratamiento en el DCF y el año terminal), puente final del valor por acción, lista de cifras del reporte y del slide 7 que cambian, y decidir con el usuario la recomendación (el modelo ya no da BUY con la banda de ±15%). Evitar en scripts de PowerShell cadenas o funciones que parezcan comandos de borrado (alias `rd`, `rm`, texto con unidad de disco), el entorno las bloquea. Ver [[project_financial_analysis_section]] y [[feedback_excel_house_style]].

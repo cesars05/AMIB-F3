@@ -1,0 +1,293 @@
+"""'Performance Charts' tab: two sections (Jan-24 to Aug-26, and YTD-26). All chart data are formulas."""
+import pickle, re
+import engine as E
+from build_live_helpers import *   # noqa
+
+Lz = pickle.load(open(E.S + "/layout.pkl", "rb")); X = pickle.load(open(E.S + "/live_refs.pkl", "rb"))
+FUNDS, PEERS, NM = E.FUNDS, E.PEERS, X["NM"]
+PLAB = "Jan-24 to Aug-26"
+NAVY, GOLD, TEAL, RED, PURPLE, BROWN, SLATE, PINK, GREEN, ORANGE, SAGE = (
+    0x4D2A1F, 0x37A5D4, 0x8F9A4A, 0x3E50A9, 0xAE6F6C, 0x50768E, 0x84735E, 0xA05FA6, 0x456E5A, 0x3075C0, 0x9AA98F)
+PAL = [NAVY, GOLD, TEAL, RED, PURPLE, BROWN, SLATE, PINK, GREEN, ORANGE, SAGE, 0x999999]
+FCOL = {"AZTD": NAVY, "AVDV": GOLD, "ISCF": TEAL, "DISV": RED, "DFIS": PURPLE}
+
+def Lc(n):
+    s = ""
+    while n: n, r = divmod(n - 1, 26); s = chr(65 + r) + s
+    return s
+
+CS = sheet("Performance Charts", "Charts"); base(CS)
+CS.Columns("A").ColumnWidth = 2
+fmt_from(TITLE, CS.Range("B2:X2")); CS.Range("B2").Value = "AZTD vs Peers - Performance Charts"
+note(CS, "B3", "All charts read formulas on 'Attribution', 'Attr Setup', 'Attr Holdings' and 'AZTD Data'. Holdings-based = SEC N-PORT + Workspace Derived Holdings; returns in USD (Workspace).")
+
+# ---------------- helper data (far right, formulas) ----------------
+HC = 40  # column AN
+def hput(r, rows): put(CS, f"{Lc(HC)}{r}", rows)
+hr = 5
+CS.Range(f"{Lc(HC)}{hr-1}").Value = "Chart data (formulas)"; CS.Range(f"{Lc(HC)}{hr-1}").Font.Bold = True
+# 1) growth of 100, period (actual)
+g0 = hr
+hput(g0, [["Month"] + FUNDS])
+CS.Range(f"{Lc(HC)}{g0+1}").Formula = "=DATE(2023,12,31)"
+for k in range(len(FUNDS)): CS.Range(f"{Lc(HC+1+k)}{g0+1}").Value = 100
+amr0 = X["b4"] + 1
+for j in range(NM):
+    rr = g0 + 2 + j
+    CS.Range(f"{Lc(HC)}{rr}").Formula = f"='Attr Setup'!{Lc(X['MC0']+j)}{X['r0']}"
+    for k in range(len(FUNDS)):
+        CS.Range(f"{Lc(HC+1+k)}{rr}").Formula = f"={Lc(HC+1+k)}{rr-1}*(1+'Attr Setup'!{Lc(X['MC0']+j)}{amr0+k})"
+CS.Range(f"{Lc(HC)}{g0+1}:{Lc(HC)}{g0+1+NM}").NumberFormat = "mmm-yy"
+G_END = g0 + 1 + NM
+# 2) YTD growth of 100
+y0 = G_END + 3
+hput(y0, [["Month"] + FUNDS])
+CS.Range(f"{Lc(HC)}{y0+1}").Formula = "=DATE(2025,12,31)"
+for k in range(len(FUNDS)): CS.Range(f"{Lc(HC+1+k)}{y0+1}").Value = 100
+for q in range(8):
+    j = NM - 8 + q; rr = y0 + 2 + q
+    CS.Range(f"{Lc(HC)}{rr}").Formula = f"='Attr Setup'!{Lc(X['MC0']+j)}{X['r0']}"
+    for k in range(len(FUNDS)):
+        CS.Range(f"{Lc(HC+1+k)}{rr}").Formula = f"={Lc(HC+1+k)}{rr-1}*(1+'Attr Setup'!{Lc(X['MC0']+j)}{amr0+k})"
+CS.Range(f"{Lc(HC)}{y0+1}:{Lc(HC)}{y0+9}").NumberFormat = "mmm-yy"
+# 3) actual vs holdings by fund
+p0 = y0 + 12
+A = "'Attribution'"
+PR = 5  # perf header row on Attribution
+hput(p0, [["Fund", "Actual (ann.)", "Holdings-based (ann.)", "Actual YTD", "Holdings YTD"]])
+for i, f in enumerate(FUNDS):
+    rr = p0 + 1 + i
+    hput(rr, [[f, f"={A}!D{PR+1+i}", f"={A}!G{PR+1+i}", f"={A}!E{PR+1+i}", f"={A}!H{PR+1+i}"]])
+hput(p0 + 6, [["Peer avg", f"={A}!D{PR+6}", f"={A}!G{PR+6}", f"={A}!E{PR+6}", f"={A}!H{PR+6}"]])
+# 4) gap decomposition
+d0 = p0 + 9
+BR, ns = Lz["BR"], Lz["nsec"]
+bt = BR + ns + 1  # cash row; +1 residual; +2 total
+hput(d0, [["Component", PLAB + " (pp/yr)", "YTD-26 (pp)"]])
+hput(d0 + 1, [["Sector allocation", f"=SUM({A}!D{BR+1}:D{BR+ns})+{A}!D{bt}", f"=SUM({A}!G{BR+1}:G{BR+ns})+{A}!G{bt}"]])
+hput(d0 + 2, [["Stock selection", f"=SUM({A}!E{BR+1}:E{BR+ns})", f"=SUM({A}!H{BR+1}:H{BR+ns})"]])
+hput(d0 + 3, [["Rebalancing, trading & fees", f"={A}!F{bt+1}", f"={A}!I{bt+1}"]])
+hput(d0 + 4, [["Total gap vs peers", f"={A}!F{bt+2}", f"={A}!I{bt+2}"]])
+# 5) allocation over time (AZTD start-of-month weights) by region and by sector
+S0 = 11 + NM + 1
+e0 = 8; el = int(re.findall(r"\$(\d+)$", X["HFUND"])[0])
+ra0 = d0 + 7
+hput(ra0, [["Month"] + E.REGIONS])
+for j in range(NM):
+    rr = ra0 + 1 + j; sc = Lc(S0 + j)
+    CS.Range(f"{Lc(HC)}{rr}").Formula = f"='Attr Setup'!{Lc(X['MC0']+j)}{X['r0']}"
+    for k, g in enumerate(E.REGIONS):
+        CS.Range(f"{Lc(HC+1+k)}{rr}").Formula = (f"=SUMIFS('Attr Holdings'!${sc}${e0}:${sc}${el},{X['HFUND']},\"AZTD\",{X['HREG']},\"{g}\")"
+                                                  f"/SUMIFS('Attr Holdings'!${sc}${e0}:${sc}${el},{X['HFUND']},\"AZTD\")")
+CS.Range(f"{Lc(HC)}{ra0+1}:{Lc(HC)}{ra0+NM}").NumberFormat = "mmm-yy"
+sa0 = ra0 + NM + 3
+SECS = E.GICS
+hput(sa0, [["Month"] + SECS])
+for j in range(NM):
+    rr = sa0 + 1 + j; sc = Lc(S0 + j)
+    CS.Range(f"{Lc(HC)}{rr}").Formula = f"='Attr Setup'!{Lc(X['MC0']+j)}{X['r0']}"
+    for k, g in enumerate(SECS):
+        CS.Range(f"{Lc(HC+1+k)}{rr}").Formula = (f"=SUMIFS('Attr Holdings'!${sc}${e0}:${sc}${el},{X['HFUND']},\"AZTD\",{X['HSEC']},\"{g}\")"
+                                                  f"/SUMIFS('Attr Holdings'!${sc}${e0}:${sc}${el},{X['HFUND']},\"AZTD\")")
+CS.Range(f"{Lc(HC)}{sa0+1}:{Lc(HC)}{sa0+NM}").NumberFormat = "mmm-yy"
+# 6) bubble: AZTD current holdings (Aug-26): Model 1.1 vs YTD return, size = weight
+b0 = sa0 + NM + 3
+hput(b0, [["Company", "Model 1.1", "YTD return", "Aug-26 weight"]])
+AD = "'AZTD Data'"
+R(lambda: setattr(CS.Range(f"{Lc(HC)}{b0+1}"), "Formula2",
+      f"=LET(t,FILTER(HSTACK({AD}!$D$11:$D$200,{AD}!$P$11:$P$200,{AD}!$S$11:$S$200,{AD}!$O$11:$O$200),"
+      f"({AD}!$O$11:$O$200>0)*ISNUMBER({AD}!$S$11:$S$200)*({AD}!$P$11:$P$200>0)),t)"))
+BUB_N = 60
+# 7) Model 1.1 quintile vs avg YTD return (AZTD holdings, Aug-26)
+q0 = b0 + BUB_N + 3
+hput(q0, [["Model 1.1 bucket", "Avg YTD return", "# names"]])
+edges = [(0, 0.2, "0.0-0.2"), (0.2, 0.4, "0.2-0.4"), (0.4, 0.6, "0.4-0.6"), (0.6, 0.8, "0.6-0.8"), (0.8, 1.01, "0.8-1.0")]
+for i, (lo, hi, lab) in enumerate(edges):
+    rr = q0 + 1 + i
+    cond = f'{AD}!$O$11:$O$200,">0",{AD}!$P$11:$P$200,">={lo}",{AD}!$P$11:$P$200,"<{hi}"'
+    hput(rr, [[lab, f"=IFERROR(AVERAGEIFS({AD}!$S$11:$S$200,{cond}),0)", f"=COUNTIFS({cond})"]])
+# 8) active sector weight vs peers (latest month)
+aw0 = q0 + 8
+S = "Summary"
+hput(aw0, [["Sector", "AZTD", "Peer avg", "Active (AZTD - peers)"]])
+sw = None
+for rr in range(40, 140):
+    if str(wb.Worksheets("Summary").Range(f"B{rr}").Value or "").startswith("Sector Weight"):
+        sw = rr; break
+for i, g in enumerate(SECS):
+    rr = aw0 + 1 + i
+    hput(rr, [[g, f"={S}!C{sw+1+i}", f"=AVERAGE({S}!D{sw+1+i}:G{sw+1+i})", f"={Lc(HC+1)}{rr}-{Lc(HC+2)}{rr}"]])
+for rng in (f"{Lc(HC+1)}{ra0+1}:{Lc(HC+len(E.REGIONS))}{ra0+NM}", f"{Lc(HC+1)}{sa0+1}:{Lc(HC+len(SECS))}{sa0+NM}",
+            f"{Lc(HC+1)}{p0+1}:{Lc(HC+4)}{p0+6}", f"{Lc(HC+1)}{d0+1}:{Lc(HC+2)}{d0+4}", f"{Lc(HC+1)}{q0+1}:{Lc(HC+1)}{q0+5}",
+            f"{Lc(HC+1)}{aw0+1}:{Lc(HC+3)}{aw0+len(SECS)}"):
+    CS.Range(rng).NumberFormat = "0.0%"
+CS.Range(f"{Lc(HC+1)}{g0+1}:{Lc(HC+5)}{G_END}").NumberFormat = "0.0"
+CS.Range(f"{Lc(HC+1)}{y0+1}:{Lc(HC+5)}{y0+9}").NumberFormat = "0.0"
+
+# ---------------- chart helpers ----------------
+W, H = 520, 285
+def section(r, text):
+    c = CS.Range(f"B{r}"); c.Value = text; c.Font.Bold = True; c.Font.Size = 13; c.Font.Color = NAVY
+    rg = CS.Range(f"B{r}:X{r}"); rg.Borders(9).LineStyle = 1; rg.Borders(9).Weight = -4138; rg.Borders(9).Color = GOLD
+def style(c, title, legend=True, pct_axis=True, fmt="0%"):
+    c.HasTitle = True; c.ChartTitle.Text = title.upper()
+    c.ChartTitle.Font.Name = "Arial"; c.ChartTitle.Font.Size = 11; c.ChartTitle.Font.Bold = True; c.ChartTitle.Font.Color = NAVY
+    c.ChartArea.Format.Line.Visible = False
+    c.ChartArea.Font.Name = "Arial"; c.ChartArea.Font.Size = 9; c.ChartArea.Font.Color = 0
+    for ax_t in (1, 2):
+        try:
+            ax = c.Axes(ax_t)
+            ax.Format.Line.Visible = True; ax.Format.Line.ForeColor.RGB = 0; ax.Format.Line.Weight = 0.75
+            ax.TickLabels.Font.Color = 0; ax.TickLabels.Font.Name = "Arial"; ax.TickLabels.Font.Size = 9
+        except Exception:
+            pass
+    try:
+        c.Axes(2).HasMajorGridlines = True
+        c.Axes(2).MajorGridlines.Format.Line.ForeColor.RGB = 0xE6E6E6
+        if pct_axis: c.Axes(2).TickLabels.NumberFormat = fmt
+    except Exception:
+        pass
+    c.HasLegend = legend
+    if legend:
+        c.Legend.Position = -4107; c.Legend.Font.Name = "Arial"; c.Legend.Font.Size = 9
+def add_chart(cell, ctype, w=W, h=H):
+    rg = CS.Range(cell)
+    co = CS.ChartObjects().Add(rg.Left, rg.Top, w, h); ch = co.Chart; ch.ChartType = ctype
+    while ch.SeriesCollection().Count: ch.SeriesCollection(1).Delete()
+    return co, ch
+def series(ch, name, vals, cats=None, color=None, line=False):
+    s = ch.SeriesCollection().NewSeries(); s.Name = name; s.Values = CS.Range(vals) if "!" not in vals else wb.Application.Range(vals)
+    if cats: s.XValues = CS.Range(cats) if "!" not in cats else wb.Application.Range(cats)
+    if color is not None:
+        if line:
+            s.Format.Line.ForeColor.RGB = color; s.Format.Line.Weight = 2.0 if name == "AZTD" else 1.5
+        else:
+            s.Format.Fill.ForeColor.RGB = color
+    return s
+def ext(rng):  # reference on another sheet
+    return rng
+def hbar_from_attr(cell, title, name_col_rows, vals_list, colors):
+    co, ch = add_chart(cell, 57)
+    for (nm, vr), col in zip(vals_list, colors):
+        s = ch.SeriesCollection().NewSeries(); s.Name = nm
+        s.Values = wb.Worksheets("Attribution").Range(vr); s.XValues = wb.Worksheets("Attribution").Range(name_col_rows)
+        s.Format.Fill.ForeColor.RGB = col
+    style(ch, title, legend=len(vals_list) > 1, fmt="0.0%")
+    ch.Axes(1).ReversePlotOrder = True; ch.Axes(1).TickLabelPosition = -4134
+    ch.ChartGroups(1).GapWidth = 60
+    return ch
+
+AT = wb.Worksheets("Attribution")
+SP, SY, RP, RY, BRR = Lz["SEC_P"], Lz["SEC_Y"], Lz["REG_P"], Lz["REG_Y"], Lz["BRR"]
+NR = Lz["nreg"]; NMS = Lz["NAMES"]
+
+# ================= SECTION 1: Jan-24 to Aug-26 =================
+section(5, "1. PERFORMANCE JAN-2024 TO AUG-2026")
+col1, col2 = "B", "M"
+r = 7
+# 1a growth of 100
+co, ch = add_chart(f"{col1}{r}", 4)
+for k, f in enumerate(FUNDS):
+    series(ch, f, f"{Lc(HC+1+k)}{g0+1}:{Lc(HC+1+k)}{G_END}", f"{Lc(HC)}{g0+1}:{Lc(HC)}{G_END}", FCOL[f], line=True)
+style(ch, "Growth of 100 - actual total return", fmt="0"); ch.Axes(1).TickLabels.NumberFormat = "mmm-yy"
+# 1b actual vs holdings
+co, ch = add_chart(f"{col2}{r}", 51)
+series(ch, "Actual (ann.)", f"{Lc(HC+1)}{p0+1}:{Lc(HC+1)}{p0+6}", f"{Lc(HC)}{p0+1}:{Lc(HC)}{p0+6}", NAVY)
+series(ch, "Holdings-based (ann.)", f"{Lc(HC+2)}{p0+1}:{Lc(HC+2)}{p0+6}", f"{Lc(HC)}{p0+1}:{Lc(HC)}{p0+6}", GOLD)
+style(ch, "Annualized return: actual vs holdings-based"); ch.ChartGroups(1).GapWidth = 60
+for s in (1, 2):
+    ch.SeriesCollection(s).HasDataLabels = True; ch.SeriesCollection(s).DataLabels().NumberFormat = "0.0%"
+    ch.SeriesCollection(s).DataLabels().Font.Size = 8
+r += 21
+# 1c gap decomposition
+co, ch = add_chart(f"{col1}{r}", 57)
+series(ch, PLAB, f"{Lc(HC+1)}{d0+1}:{Lc(HC+1)}{d0+4}", f"{Lc(HC)}{d0+1}:{Lc(HC)}{d0+4}", NAVY)
+style(ch, "Where the gap vs peers comes from (pp / yr)", legend=False, fmt="0.0%")
+ch.Axes(1).ReversePlotOrder = True; ch.Axes(1).TickLabelPosition = -4134
+ch.SeriesCollection(1).HasDataLabels = True; ch.SeriesCollection(1).DataLabels().NumberFormat = "+0.0%;-0.0%"
+ch.SeriesCollection(1).InvertIfNegative = False; ch.ChartGroups(1).GapWidth = 50
+# 1d sector contribution AZTD vs peers
+hbar_from_attr(f"{col2}{r}", "Sector contribution (pp / yr)", f"C{SP+1}:C{SP+len(E.GICS)}",
+               [("AZTD", f"D{SP+1}:D{SP+len(E.GICS)}"), ("Peer avg", f"I{SP+1}:I{SP+len(E.GICS)}")], [NAVY, GOLD])
+r += 21
+# 1e region contribution
+hbar_from_attr(f"{col1}{r}", "Region contribution (pp / yr)", f"C{RP+1}:C{RP+NR}",
+               [("AZTD", f"D{RP+1}:D{RP+NR}"), ("Peer avg", f"I{RP+1}:I{RP+NR}")], [NAVY, GOLD])
+# 1f attribution by region
+hbar_from_attr(f"{col2}{r}", "Gap vs peers by region: allocation & selection (pp / yr)", f"C{BRR+1}:C{BRR+NR}",
+               [("Allocation", f"D{BRR+1}:D{BRR+NR}"), ("Selection", f"E{BRR+1}:E{BRR+NR}")], [NAVY, GOLD])
+r += 21
+# 1g region allocation over time (stacked area)
+co, ch = add_chart(f"{col1}{r}", 77)
+for k, g in enumerate(E.REGIONS):
+    series(ch, g, f"{Lc(HC+1+k)}{ra0+1}:{Lc(HC+1+k)}{ra0+NM}", f"{Lc(HC)}{ra0+1}:{Lc(HC)}{ra0+NM}", PAL[k])
+style(ch, "AZTD regional allocation (start-of-month weight)"); ch.Axes(1).TickLabels.NumberFormat = "mmm-yy"
+ch.Axes(2).MaximumScale = 1
+# 1h sector allocation over time
+co, ch = add_chart(f"{col2}{r}", 77)
+for k, g in enumerate(SECS):
+    series(ch, g, f"{Lc(HC+1+k)}{sa0+1}:{Lc(HC+1+k)}{sa0+NM}", f"{Lc(HC)}{sa0+1}:{Lc(HC)}{sa0+NM}", PAL[k])
+style(ch, "AZTD sector allocation (start-of-month weight)"); ch.Axes(1).TickLabels.NumberFormat = "mmm-yy"
+ch.Axes(2).MaximumScale = 1
+ch.Legend.Position = -4152
+r += 21
+# 1i top contributors / detractors (period)
+hbar_from_attr(f"{col1}{r}", "AZTD top 10 contributors (pp / yr)", f"C{NMS+1}:C{NMS+10}", [("Contribution", f"F{NMS+1}:F{NMS+10}")], [TEAL])
+hbar_from_attr(f"{col2}{r}", "AZTD largest detractors (pp / yr)", f"C{NMS+25}:C{NMS+34}", [("Contribution", f"F{NMS+25}:F{NMS+34}")], [RED])
+r += 23
+
+# ================= SECTION 2: YTD 2026 =================
+section(r, "2. PERFORMANCE YTD 2026 (JAN-AUG)")
+r += 2
+co, ch = add_chart(f"{col1}{r}", 4)
+for k, f in enumerate(FUNDS):
+    series(ch, f, f"{Lc(HC+1+k)}{y0+1}:{Lc(HC+1+k)}{y0+9}", f"{Lc(HC)}{y0+1}:{Lc(HC)}{y0+9}", FCOL[f], line=True)
+style(ch, "YTD growth of 100 - actual total return", fmt="0"); ch.Axes(1).TickLabels.NumberFormat = "mmm-yy"
+co, ch = add_chart(f"{col2}{r}", 57)
+series(ch, "YTD-26", f"{Lc(HC+2)}{d0+1}:{Lc(HC+2)}{d0+4}", f"{Lc(HC)}{d0+1}:{Lc(HC)}{d0+4}", NAVY)
+style(ch, "YTD gap vs peers: where it comes from (pp)", legend=False, fmt="0.0%")
+ch.Axes(1).ReversePlotOrder = True; ch.Axes(1).TickLabelPosition = -4134
+ch.SeriesCollection(1).HasDataLabels = True; ch.SeriesCollection(1).DataLabels().NumberFormat = "+0.0%;-0.0%"
+ch.ChartGroups(1).GapWidth = 50
+r += 21
+hbar_from_attr(f"{col1}{r}", "Sector contribution YTD-26 (pp)", f"C{SY+1}:C{SY+len(E.GICS)}",
+               [("AZTD", f"D{SY+1}:D{SY+len(E.GICS)}"), ("Peer avg", f"I{SY+1}:I{SY+len(E.GICS)}")], [NAVY, GOLD])
+hbar_from_attr(f"{col2}{r}", "Region contribution YTD-26 (pp)", f"C{RY+1}:C{RY+NR}",
+               [("AZTD", f"D{RY+1}:D{RY+NR}"), ("Peer avg", f"I{RY+1}:I{RY+NR}")], [NAVY, GOLD])
+r += 21
+hbar_from_attr(f"{col1}{r}", "AZTD top 10 contributors YTD-26 (pp)", f"C{NMS+13}:C{NMS+22}", [("Contribution", f"F{NMS+13}:F{NMS+22}")], [TEAL])
+hbar_from_attr(f"{col2}{r}", "AZTD largest detractors YTD-26 (pp)", f"C{NMS+37}:C{NMS+46}", [("Contribution", f"F{NMS+37}:F{NMS+46}")], [RED])
+r += 21
+# bubble
+co, ch = add_chart(f"{col1}{r}", 15)
+s = ch.SeriesCollection().NewSeries(); s.Name = "AZTD holdings (Aug-26)"
+s.XValues = CS.Range(f"{Lc(HC+1)}{b0+1}:{Lc(HC+1)}{b0+BUB_N}"); s.Values = CS.Range(f"{Lc(HC+2)}{b0+1}:{Lc(HC+2)}{b0+BUB_N}")
+s.BubbleSizes = f"='Performance Charts'!${Lc(HC+3)}${b0+1}:${Lc(HC+3)}${b0+BUB_N}"
+s.Format.Fill.ForeColor.RGB = NAVY; s.Format.Fill.Transparency = 0.35
+style(ch, "AZTD holdings: Model 1.1 vs YTD return (bubble = weight)", legend=False)
+ch.Axes(1).TickLabels.NumberFormat = "0.0"; ch.Axes(1).MinimumScale = 0; ch.Axes(1).MaximumScale = 1
+ch.ChartGroups(1).BubbleScale = 40
+ch.Axes(1).HasTitle = True; ch.Axes(1).AxisTitle.Text = "Model 1.1 score"; ch.Axes(2).HasTitle = True; ch.Axes(2).AxisTitle.Text = "YTD return"
+# model buckets
+co, ch = add_chart(f"{col2}{r}", 51)
+series(ch, "Avg YTD return", f"{Lc(HC+1)}{q0+1}:{Lc(HC+1)}{q0+5}", f"{Lc(HC)}{q0+1}:{Lc(HC)}{q0+5}", GOLD)
+style(ch, "Does Model 1.1 work? Avg YTD return by score bucket (AZTD)", legend=False)
+ch.SeriesCollection(1).HasDataLabels = True; ch.SeriesCollection(1).DataLabels().NumberFormat = "0.0%"
+ch.ChartGroups(1).GapWidth = 60
+r += 21
+co, ch = add_chart(f"{col1}{r}", 57)
+series(ch, "Active (AZTD - peers)", f"{Lc(HC+3)}{aw0+1}:{Lc(HC+3)}{aw0+len(SECS)}", f"{Lc(HC)}{aw0+1}:{Lc(HC)}{aw0+len(SECS)}", NAVY)
+style(ch, "Active sector weight vs peer average (latest month)", legend=False, fmt="0.0%")
+ch.Axes(1).ReversePlotOrder = True; ch.Axes(1).TickLabelPosition = -4134
+ch.SeriesCollection(1).HasDataLabels = True; ch.SeriesCollection(1).DataLabels().NumberFormat = "+0.0%;-0.0%"
+ch.SeriesCollection(1).InvertIfNegative = False; ch.ChartGroups(1).GapWidth = 50
+co, ch = add_chart(f"{col2}{r}", 51)
+series(ch, "Actual YTD", f"{Lc(HC+3)}{p0+1}:{Lc(HC+3)}{p0+6}", f"{Lc(HC)}{p0+1}:{Lc(HC)}{p0+6}", NAVY)
+series(ch, "Holdings-based YTD", f"{Lc(HC+4)}{p0+1}:{Lc(HC+4)}{p0+6}", f"{Lc(HC)}{p0+1}:{Lc(HC)}{p0+6}", GOLD)
+style(ch, "YTD-26 return: actual vs holdings-based"); ch.ChartGroups(1).GapWidth = 60
+for s_ in (1, 2):
+    ch.SeriesCollection(s_).HasDataLabels = True; ch.SeriesCollection(s_).DataLabels().NumberFormat = "0.0%"
+    ch.SeriesCollection(s_).DataLabels().Font.Size = 8
+CS.Activate(); CS.Range("A1").Select()
+app.Calculation = -4105; app.ScreenUpdating = True
+print("charts done")

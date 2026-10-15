@@ -1,0 +1,57 @@
+# MASTER PROMPT — build the Team 9 "Halliburton in Kuwait" deck (run with **Opus 5.5**, `claude-opus-5-5`)
+
+> **Resumen (ES):** Esta es la versión mejorada de tu instrucción. Convierte lo que pediste (workflow eficiente, estilo calcado de tus templates, imágenes de la empresa/reportes, portada y cierre con tu imagen, fases 1–5 + capa ITESM) en un encargo ejecutable con rutas, reglas no negociables, criterios de calidad y un ciclo de verificación visual. Todo el análisis previo ya está hecho: este prompt solo construye. Pega el bloque de abajo en una sesión nueva con Opus 5.5, abierta en la carpeta `USD x ITESM`.
+
+---
+
+## ▼ PROMPT (copy from here) ▼
+
+**ROLE.** You are a senior investment-banking presentation designer + corporate-finance analyst building a **client-grade PowerPoint** for FINA 405 (University of San Diego) × Inversiones Alternativas (Tec de Monterrey), **Team 9 — Halliburton (HAL) in Kuwait**. Language: **English**. Output: a native, fully editable `.pptx` (13.333 × 7.5 in) plus a PDF export and an `AUDIT.md`.
+
+**WORKING FOLDER.** `C:\Users\cesar\Downloads\USD x ITESM` (all paths below are relative to it). Do **not** modify `01_Brief`…`06_Templates`; write only to `09_Deck_Build/`.
+
+**READ FIRST (in this order, fully):**
+1. `00_HANDOFF/00_INDEX.md` — what every source is, where its Markdown and figures are.
+2. `00_HANDOFF/STORYLINE.md` — the slide-by-slide plan (titles, subtitles, layouts, data IDs, assets, tiers). **Follow it.** Titles are fixed unless a fact changes.
+3. `00_HANDOFF/FACT_BASE.md` — the **only** allowed source of numbers (IDs H01…, K01…, X01…, B01…) + conflict log §E. ❓ items are not allowed on headline slides.
+4. `07_Template_Analysis/STYLE_GUIDE.md`, `tokens.json`, `LAYOUT_LIBRARY.md` (incl. §G debt-deck layouts from the user's `Deuda FEMSA.pdf`, the closest precedent for Section 4) (+ look at the PNGs it points to in `07_Template_Analysis/renders/<deck>/slide_NN.png` and `contact/*.png`).
+5. `08_Assets/ASSET_CATALOG.md` (images), `04_Bloomberg_Data/IMAGE_ANALYSIS.md`, `03_SellSide_Research/CHART_ANALYSIS.md`.
+6. `01_Brief/FINA405_Project_v3.md` (the assignment: requirements for Sections 1–8) and `00_HANDOFF/OPEN_QUESTIONS.md` — respect every assumption; unresolved ◇INPUT cells stay visibly marked.
+Reference only (content, **not format** — the user dislikes its format): `05_Team9_Reference_Deck/` (md + pptx).
+
+**NON-NEGOTIABLE RULES**
+1. **No invented numbers.** Every figure comes from FACT_BASE (cite the ID in the slide notes) or is derived from IDs with the formula shown. Sections 3–5 are specified exactly in `01_Brief/FINA405_Project_v3.md` (FACT_BASE §F: 5-yr KWD bond, face = USD 100M at Scenario-0 spot, 4% semiannual; FRA 12×24 and 36×60; IRP forwards t = 0.5…5.0), but the **Scenario-0 market data and the IRS Excel are not in the folder**: build those slides as complete, formatted shells with the method, formulas and every known input, mark unknown cells `◇ Scenario-0 Excel`, and list them in `AUDIT.md`. If the Excel has since been added, convert it (`00_HANDOFF/tools/convert_office.py`) and fill the ◇ cells.
+2. **Never write "Debt/Capital 74.2%".** Borrowings-only Debt/Capital = 40.5% (FY25) / 39.3% (Q2-26); 74.2% is Bloomberg *Debt/Equity* incl. leases (FACT_BASE E1). Also fix E3 (Kuwait GDP is USD 157.2 bn), E4 (spot 3.2541; 1 KWD = USD 3.25), E7 (label the EBIT/interest basis).
+3. **Format = the user's templates**, not Team 9's: System-A grid and typography (Arial; title 28 / subtitle 16 / body 14-12-11 / source 10 italic / page no. 11; margins x 0.575–12.877, content y 1.446–6.78; thin top rule at y 0.313), Halliburton palette from `tokens.json`, action-sentence titles, subtitle = quantified so-what, bold lead-in bullets with one accent-colored key claim and at most one red risk clause. Every slide has a `Source:` line (centered, 10 pt italic) and page number. Allowed font sizes: {8, 9, 10, 11, 12, 14, 16, 18, 24, 28, 40}.
+4. **Vary the composition** using `LAYOUT_LIBRARY.md` IDs (≤ 2 consecutive slides from the same family; chart ↔ diagram ↔ text). Use Think-cell-style diagrams (`Thinkcell.pptx` layouts D7) for roadmap, FRA timeline, six-lever Track-B circle, comparison. Build them from native shapes (editable), never as images.
+5. **Charts are native PowerPoint charts** (python-pptx `add_chart`) restyled per STYLE_GUIDE §4 (no gridlines, deleted value axis on bars, gap 80, data labels 9 pt, totals above stacks, bottom legend, grey forecast zone + "Consensus Forecast" label, `E` suffix on estimates). Never paste dark Bloomberg screenshots as charts; rebuild from `FACT_BASE` / `08_Assets/data/*.csv`. Terminal screenshots only as framed exhibits (≤ 1 per section).
+6. **Use the company's and reports' images** (user priority): photos/maps/illustrations from `08_Assets/selected/` per ASSET_CATALOG (respect the 150-dpi max-width rule; crop, never stretch; no borders; ≤ 2 photos per slide). Cite "Halliburton Q2-26 Investor Presentation" in the source line.
+7. **Cover and closing** exactly per STYLE_GUIDE §8: `08_Assets/cover/cover_4k.jpg` full-bleed, **white** HAL logo (`hal_logo_white_transparent.png`), text only in the left safe zone (x ≤ 7.2 in), team names on the cover (USD: Katie von Gillern, Quinn Dutrey, Ana Myers, Eddie Medina · Tec de Monterrey: Diego Martínez Velázquez, Julio César Silva De la Rosa, Alejandro Villanueva del Río). Same image for the closing slide.
+8. **Scope** = Phases 1–5 + Track-B block + integration + appendix, 38 main slides + 5 appendix slides (43 total), **17 [V] slides = the ≤ 12-min video cut** (see STORYLINE). Speaker notes on every slide (60–110 words: claim → evidence IDs → so-what → transition; target seconds in the first line).
+9. Honesty over polish: if a fact is ❓, conflicting, or a chart is unavailable, say so in `AUDIT.md` and on-slide with a small footnote — do not smooth it over.
+
+**HOW TO BUILD (efficient workflow)**
+1. Load skill `anthropic-skills:pptx` (python-pptx patterns) — but override its default styling with `tokens.json`.
+2. In `09_Deck_Build/` create: `build_deck.py` (helpers: `add_title(slide,title,subtitle)`, `add_source`, `add_logo`, `add_kpi_tiles`, `add_bar_chart(...)`, `add_table(...)`, `add_chevrons`, `add_header_boxes`, `add_photo(slide,path,box,crop)` that enforces dpi) reading `tokens.json`; one function per layout ID; one data module `data.py` that loads CSVs/FACT numbers (single source for charts + tables + notes); `HAL_Kuwait_Team9.pptx`.
+3. Build a **blank 16:9 master** with the tokens (top rule, logo, page number, footer-left text) so that content slides contain only content; cover/divider/closing as separate layouts (full-bleed picture + text).
+4. **Render-check loop (mandatory, every batch of ~6 slides):** export PNGs with PowerPoint COM (`00_HANDOFF/tools/ppt_forensics.ps1 -Pptx <deck> -OutDir 09_Deck_Build/render`) → open the PNGs → compare side-by-side with the reference template slide named in the STORYLINE → fix → repeat. Then run `python 09_Deck_Build/qa_check.py 09_Deck_Build/HAL_Kuwait_Team9.pptx` (must show 0 ERR; resolve WARN or justify — calibration: the user's own reference decks score 0 ERR and 8–11 WARN; theme-font runs `+mj-lt` count as Arial) and the forensics JSONL diff (all fonts Arial, sizes ∈ whitelist).
+5. Export PDF (`SaveAs … 32` via COM) and write `09_Deck_Build/AUDIT.md`: slide → facts used (IDs) → open ◇ cells → warnings left → images used with pixel size and effective dpi.
+6. Stop and report: what is done, what is shell/◇, what you need from the user (Scenario-0 Excel + IRS contract, USD/Tec logos, deck language confirmation).
+
+**DEFINITION OF DONE.** (a) 43-slide (38 + 5 appendix) `.pptx` opens without repair; (b) every slide passes STYLE_GUIDE §10; (c) 0 invented numbers; (d) cover/closing use the 4K image + white logo + names; (e) ≥ 12 distinct layout IDs used, no 3 consecutive slides with the same layout; (f) 8+ company/report images used at ≥150 dpi; (g) `AUDIT.md` complete; (h) each ◇ shell lists exactly which project-doc inputs it needs.
+
+**IF BLOCKED.** Do not stop for questions you can resolve from the folder. Ask the user only about items in OPEN_QUESTIONS §A. Put everything else under assumptions in `AUDIT.md`.
+
+## ▲ END PROMPT ▲
+
+---
+### What changed vs. the original instruction (why this version is better)
+| Original | Improved |
+|---|---|
+| "Convert everything to markdown and analyze" | Done and indexed: `00_INDEX.md`; Cueva run per-file (root cause of the `_figuras_figuras…` loop found & fixed); duplicates archived |
+| "Analyze the slides/format of my templates in detail" | Measured with PowerPoint COM: fonts, sizes, colors, positions, margins, chart XML; consolidated in STYLE_GUIDE + tokens.json + per-slide specs + layout IDs |
+| "Use think-cell ideas to avoid same layout" | 33 layout IDs (F/C/T/D/E families) plus 16 think-cell diagram types, with pairing rules |
+| "Use images from company/reports" | Native-res photo library with dpi limits + charts to rebuild; Bloomberg screenshots analysed one by one |
+| "Cover = my image, pixelated" | 4K de-pixelated version + white logo + safe-zone layout; closing reuses it |
+| "Phases 1–5" | Mapped to USD Sections 1–5 + Track B + integration; 17-slide video cut ≤ 12 min; missing project inputs isolated as ◇ shells |
+| (implicit) accuracy | Fact base with IDs; 14 conflicts/errors found in the team's earlier material (e.g., 74.2% "Debt/Capital", USD 510.9bn GDP) |

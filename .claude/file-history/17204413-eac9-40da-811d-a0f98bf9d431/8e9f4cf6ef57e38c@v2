@@ -1,0 +1,121 @@
+"""Migra los generadores a la paleta nueva (sin verde/rojo por signo)."""
+import io, re
+
+BASE = r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs"
+
+
+def leer(f):
+    return io.open(BASE + "\\" + f, encoding="utf-8").read()
+
+
+def escribir(f, s):
+    io.open(BASE + "\\" + f, "w", encoding="utf-8").write(s)
+
+
+# ===========================================================================
+# indicadores.py
+# ===========================================================================
+s = leer("indicadores.py")
+
+# -- import: traer los helpers nuevos
+s = s.replace(
+    "from grafico_banquero import configurar_estilo_banquero, banda_sigma, PALETA",
+    "from grafico_banquero import (configurar_estilo_banquero, banda_sigma, PALETA,\n"
+    "                              colores_por_signo, linea_referencia, ejes_limpios)")
+
+# -- sombreado del mes en curso: #D9D9D9 -> claro con alpha baja
+#    (PALETA["fondo"] #F7FAFC seria invisible sobre blanco)
+s = s.replace('color="#D9D9D9", alpha=0.5, zorder=0',
+              'color=PALETA["claro"], alpha=0.25, zorder=0')
+
+# -- barras macro: verde/rojo -> primario/gris
+viejo = '''        # Verde/rojo segun signo: en un cambio MM el signo es la lectura
+        colores = [PALETA["verde"] if v >= 0 else PALETA["rojo"] for v in s.values]'''
+nuevo = '''        # Azul oscuro / gris, no verde/rojo: el signo ya se lee en la
+        # direccion de la barra, el color solo jerarquiza
+        colores = colores_por_signo(s.values)'''
+assert viejo in s, "barras macro"
+s = s.replace(viejo, nuevo)
+
+# -- linea de referencia de los PMI: gris -> rojo punteado (helper)
+viejo = '''    if cfg.get("referencia") is not None:
+        # Los PMI se leen contra 50: arriba expansion, abajo contraccion
+        ax.axhline(cfg["referencia"], color=PALETA["gris"], linewidth=0.9,
+                   linestyle="--", zorder=2)
+        ax.text(s.index[0], cfg["referencia"], " %g" % cfg["referencia"],
+                color=PALETA["gris"], fontsize=5.5, va="bottom", ha="left")'''
+nuevo = '''    if cfg.get("referencia") is not None:
+        # Los PMI se leen contra 50: arriba expansion, abajo contraccion.
+        # Rojo punteado = la convencion de referencia de la paleta.
+        linea_referencia(ax, cfg["referencia"], "%g" % cfg["referencia"],
+                         fontsize=5.5, x=s.index[0])'''
+assert viejo in s, "ref PMI"
+s = s.replace(viejo, nuevo)
+
+# -- area del spread 2s10s: el cero es una referencia -> rojo punteado
+viejo = '''        # En un spread la referencia relevante es el cero, no la media
+        ax.axhline(0, color=PALETA["eje"], linewidth=0.9, zorder=2)'''
+nuevo = '''        # En un spread la referencia relevante es el cero, no la media
+        linea_referencia(ax, 0)'''
+assert viejo in s, "cero spread"
+s = s.replace(viejo, nuevo)
+
+# -- colores por defecto de los indicadores: remapear a nombres nuevos
+mapa = {'color="azul"': 'color="primario"',
+        'color="naranja"': 'color="acento"',
+        'color="gris_azulado"': 'color="medio"',
+        'color="celeste"': 'color="claro"',
+        'color="rojo"': 'color="carbon"',      # el rojo ya no se usa en series
+        'color="verde"': 'color="verde"'}
+for a, b in mapa.items():
+    s = s.replace(a, b)
+
+escribir("indicadores.py", s)
+print("indicadores.py migrado")
+
+# ===========================================================================
+# generar_sectores.py
+# ===========================================================================
+s = leer("generar_sectores.py")
+s = s.replace("from grafico_banquero import configurar_estilo_banquero, PALETA",
+              "from grafico_banquero import configurar_estilo_banquero, PALETA, colores_por_signo")
+n = len(re.findall(r'PALETA\["verde"\] if v >= 0 else PALETA\["rojo"\]', s))
+s = re.sub(r'\[PALETA\["verde"\] if v >= 0 else PALETA\["rojo"\] for v in (\w+)\]',
+           r'colores_por_signo(\1)', s)
+# etiquetas de texto con color por signo
+s = re.sub(r'color=PALETA\["verde"\] if v >= 0 else PALETA\["rojo"\]',
+           r'color=color_signo(v)', s)
+if "color_signo(v)" in s:
+    s = s.replace("PALETA, colores_por_signo", "PALETA, colores_por_signo, color_signo")
+escribir("generar_sectores.py", s)
+print(f"generar_sectores.py migrado ({n} usos de verde/rojo)")
+
+# ===========================================================================
+# generar_ganadores_perdedores.py
+# ===========================================================================
+s = leer("generar_ganadores_perdedores.py")
+s = s.replace("from grafico_banquero import configurar_estilo_banquero, PALETA",
+              "from grafico_banquero import (configurar_estilo_banquero, PALETA,\n"
+              "                              colores_por_signo, color_signo)")
+s = s.replace('colores = [PALETA["verde"] if v >= 0 else PALETA["rojo"] for v in valores]',
+              'colores = colores_por_signo(valores)')
+s = s.replace('''                color=PALETA["verde"] if v >= 0 else PALETA["rojo"])''',
+              '''                color=color_signo(v))''')
+escribir("generar_ganadores_perdedores.py", s)
+print("generar_ganadores_perdedores.py migrado")
+
+# ===========================================================================
+# generar_macro.py / generar_valuacion.py / generar_curva.py / graficos_ppt
+# solo el sombreado gris
+# ===========================================================================
+for f in ("generar_macro.py", "generar_valuacion.py", "generar_curva.py",
+          "generar_graficos_ppt.py"):
+    try:
+        s = leer(f)
+        antes = s
+        s = s.replace('color="#D9D9D9", alpha=0.5', 'color=PALETA["claro"], alpha=0.25')
+        if s != antes:
+            escribir(f, s)
+            print(f"{f}: sombreado migrado")
+    except FileNotFoundError:
+        print(f"{f}: no existe")

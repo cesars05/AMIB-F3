@@ -1,0 +1,198 @@
+"""Agrega el renderizador del tier macro a indicadores.py."""
+import io
+
+p = r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs\indicadores.py"
+s = io.open(p, encoding="utf-8").read()
+
+render = '''# ---------------------------------------------------------------------------
+# Render del tier macro (barras/lineas mensuales, ventana en meses)
+# ---------------------------------------------------------------------------
+MESES_MACRO = 24
+
+
+def graficar_macro(serie, cfg, archivo):
+    """Ultimos MESES_MACRO meses. Barras para cambios, linea para niveles.
+
+    Sin banda sigma y sin sombreado del mes en curso: ninguno de los dos
+    significa nada sobre ~24 observaciones mensuales de un cambio MM.
+    """
+    corte = serie.index[-1] - pd.DateOffset(months=MESES_MACRO)
+    s = serie[serie.index >= corte]
+    color = PALETA[cfg.get("color", "azul")]
+    fmt = cfg["fmt"]
+
+    fig, ax = plt.subplots(figsize=TAMANO, dpi=300)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_color(PALETA["eje"])
+    ax.spines["bottom"].set_color(PALETA["eje"])
+    ax.tick_params(axis="both", length=3, color=PALETA["eje"],
+                   labelsize=6.5, labelcolor="black")
+
+    if cfg.get("referencia") is not None:
+        # Los PMI se leen contra 50: arriba expansion, abajo contraccion
+        ax.axhline(cfg["referencia"], color=PALETA["gris"], linewidth=0.9,
+                   linestyle="--", zorder=2)
+        ax.text(s.index[0], cfg["referencia"], " %g" % cfg["referencia"],
+                color=PALETA["gris"], fontsize=5.5, va="bottom", ha="left")
+
+    if cfg["forma"] == "barra":
+        # Verde/rojo segun signo: en un cambio MM el signo es la lectura
+        colores = [PALETA["verde"] if v >= 0 else PALETA["rojo"] for v in s.values]
+        ancho = max(10, int(420 / max(len(s), 1)))
+        ax.bar(s.index, s.values, color=colores, width=ancho, zorder=3)
+        ax.axhline(0, color=PALETA["eje"], linewidth=0.9, zorder=4)
+    else:
+        ax.plot(s.index, s.values, color=color, linewidth=1.4, zorder=3)
+
+    # Un tick por observacion satura el eje; se marca ~cada trimestre
+    paso = max(1, len(s) // 8)
+    ticks = list(s.index[::paso])
+    ax.set_xticks(ticks)
+    ax.set_xticklabels([d.strftime("%b-%y") for d in ticks], fontsize=6)
+    ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: fmt.format(v)))
+
+    ax.annotate(fmt.format(s.iloc[-1]), xy=(s.index[-1], s.iloc[-1]),
+                xytext=(4, 0), textcoords="offset points", va="center", ha="left",
+                fontsize=6.5, fontweight="bold", color=PALETA["negro"],
+                annotation_clip=False)
+
+    fig.savefig(archivo, dpi=300, bbox_inches="tight", pad_inches=0.02)
+    plt.close(fig)
+    return s
+
+
+def correr_macro(seleccion):
+    """Bajada + render del tier macro. Devuelve el dict de resultados."""
+    os.makedirs(SALIDA + "/macro", exist_ok=True)
+    resultados, sin_datos = {}, []
+
+    for nombre in seleccion:
+        cfg = MACRO[nombre]
+        try:
+            # SIN interval y SIN fields: son series mensuales, no diarias.
+            # Pasarles interval="daily" devuelve vacio (el bug del barrido viejo).
+            d = ld.get_history(universe=[cfg["ric"]], start="2022-01-01",
+                               end=datetime.now().strftime("%Y-%m-%d"))
+            s = d.iloc[:, 0].astype(float).dropna() * cfg.get("escala", 1)
+        except Exception:
+            s = None
+        if s is None or len(s) < 3:
+            sin_datos.append(nombre)
+            continue
+
+        archivo = SALIDA + "/macro/" + nombre + ".png"
+        graficar_macro(s, cfg, archivo)
+
+        ultimo, prior = float(s.iloc[-1]), float(s.iloc[-2])
+        prom3 = float(s.iloc[-3:].mean())
+        f = cfg["fmt"]
+        # Sin YTD/MTD: el % YTD de un cambio mensual seria el cambio de un cambio
+        resumen = "%s: %s (prior %s; 3m avg %s)" % (
+            s.index[-1].strftime("%b-%y"), f.format(ultimo), f.format(prior), f.format(prom3))
+        resultados[nombre] = {
+            "titulo": cfg["titulo"], "ric": cfg["ric"], "archivo": archivo,
+            "tier": "macro", "last": round(ultimo, 4), "prior": round(prior, 4),
+            "prom_3": round(prom3, 4), "fecha": str(s.index[-1].date()),
+            "resumen": resumen,
+        }
+        print("OK  %-44s %s" % (cfg["titulo"], resumen))
+
+    if sin_datos:
+        print("\\nSin datos (%d): %s" % (len(sin_datos), ", ".join(sin_datos)))
+    return resultados
+
+
+def guardar(resultados):
+    """Merge, no sobrescritura: una corrida con --solo o --tier macro no debe
+    borrar del JSON los indicadores que no pidio. El deck lo lee completo."""
+    acumulado = {}
+    if os.path.exists("datos_indicadores.json"):
+        try:
+            with open("datos_indicadores.json", encoding="utf-8") as f:
+                acumulado = json.load(f)
+        except (ValueError, OSError):
+            acumulado = {}
+    acumulado.update(resultados)
+    with open("datos_indicadores.json", "w", encoding="utf-8") as f:
+        json.dump(acumulado, f, indent=2, ensure_ascii=False)
+
+
+def main():'''
+
+assert s.count("def main():") == 1
+s = s.replace("def main():", render, 1)
+
+# --- seleccion de tiers ---
+viejo_sel = '''    elif args.tier == "all":
+        seleccion = list(INDICADORES)
+    else:
+        t = int(args.tier)
+        seleccion = [n for n, c in INDICADORES.items() if c["tier"] == t]'''
+nuevo_sel = '''    elif args.tier in ("macro", "all"):
+        seleccion = list(INDICADORES) if args.tier == "all" else []
+    else:
+        t = int(args.tier)
+        seleccion = [n for n, c in INDICADORES.items() if c["tier"] == t]
+
+    # El tier macro corre por una via distinta (series mensuales, otro render)
+    if args.solo:
+        sel_macro = [n for n in args.solo if n in MACRO]
+    else:
+        sel_macro = list(MACRO) if args.tier in ("macro", "all") else []'''
+assert viejo_sel in s
+s = s.replace(viejo_sel, nuevo_sel)
+
+s = s.replace('''    if not seleccion:
+        print("Nada que generar.")
+        return''', '''    if not seleccion and not sel_macro:
+        print("Nada que generar.")
+        return''')
+
+viejo_run = '''    print(f"{len(seleccion)} indicadores")
+    series = bajar(rics_necesarios(seleccion), inicio_descarga, fin)
+
+    resultados, sin_datos = {}, []
+    print()'''
+nuevo_run = '''    resultados, sin_datos = {}, []
+
+    if sel_macro:
+        print(f"{len(sel_macro)} indicadores macro (=ECI, mensuales)")
+        resultados.update(correr_macro(sel_macro))
+        print()
+
+    if not seleccion:
+        guardar(resultados)
+        print(f"Listo: {SALIDA}/macro/ ({len(resultados)} graficos), datos_indicadores.json")
+        ld.close_session()
+        return
+
+    print(f"{len(seleccion)} indicadores de mercado")
+    series = bajar(rics_necesarios(seleccion), inicio_descarga, fin)
+    print()'''
+assert viejo_run in s
+s = s.replace(viejo_run, nuevo_run)
+
+viejo_guardar = '''    # Merge, no sobrescritura: una corrida con --solo no debe borrar del JSON
+    # los indicadores que no pidio. El deck lee este archivo completo.
+    acumulado = {}
+    if os.path.exists("datos_indicadores.json"):
+        try:
+            with open("datos_indicadores.json", encoding="utf-8") as f:
+                acumulado = json.load(f)
+        except (ValueError, OSError):
+            acumulado = {}
+    acumulado.update(resultados)
+    with open("datos_indicadores.json", "w", encoding="utf-8") as f:
+        json.dump(acumulado, f, indent=2, ensure_ascii=False)
+
+    print'''
+assert viejo_guardar in s
+s = s.replace(viejo_guardar, '''    guardar(resultados)
+    print''')
+
+s = s.replace('ap.add_argument("--tier", default="1", help="1, 2, 3 o all")',
+              'ap.add_argument("--tier", default="1", help="1, 2, 3, macro o all")')
+
+io.open(p, "w", encoding="utf-8").write(s)
+print("parche aplicado")

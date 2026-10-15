@@ -1,0 +1,37 @@
+import win32com.client as w, sys
+xl = w.GetActiveObject('Excel.Application')
+wb = [xl.Workbooks(i) for i in range(1, xl.Workbooks.Count + 1) if xl.Workbooks(i).Name == 'Bimbo Financial Model_v2.xlsx'][0]
+wc = wb.Worksheets('Consolidated Model')
+lab = lambda r: str(wc.Cells(r, 2).Value or '').strip()
+BLUEFILL = 218 + 228 * 256 + 241 * 65536      # #DAE4F1
+
+if not (lab(372) == 'Unit Economics' and lab(351).startswith('Depreciation & Amortization')
+        and lab(348).startswith('Sustainable Growth') and lab(349) == '' and lab(350) == '' and lab(391).startswith('Other Financials')):
+    sys.exit('layout not as expected, nothing moved')
+
+prev = xl.Calculation
+xl.ScreenUpdating = False
+try:
+    wc.Rows('372:389').Cut()
+    wc.Rows('350:350').Insert(Shift=-4121)        # insert cut rows above current row 350
+    xl.CutCopyMode = False
+    # now: 350 Unit Economics header ... 367 last blank, 368 old border row, 369 D&A header
+    assert lab(350) == 'Unit Economics' and lab(369).startswith('Depreciation & Amortization'), (lab(350), lab(369))
+    last = wc.Cells(350, wc.Columns.Count).End(-4159).Column
+    L = lambda c: wc.Cells(1, c).Address.split('$')[1]
+    wc.Range(f'B349:{L(last)}349').Borders(9).LineStyle = 1          # line above the new header, as elsewhere
+    wc.Range(f'B350:{L(last)}350').Interior.Color = BLUEFILL
+    # old location: 388 Total Adj. EBITDA Adjustments, 389 and 390 both border rows, 391 Other Financials
+    assert lab(388).startswith('Total Adj. EBITDA') and lab(391).startswith('Other Financials'), (lab(388), lab(391))
+    wc.Range(f'B389:{L(last)}389').Borders(9).LineStyle = -4142      # keep a single separator line (row 390)
+    xl.CalculateFull()
+    try:
+        err = wc.UsedRange.SpecialCells(-4123, 16).Address
+    except Exception:
+        err = None
+    print('errors', err)
+    for r in list(range(348, 371)) + list(range(386, 392)):
+        print(r, lab(r)[:36].ljust(36), '| L:', str(wc.Cells(r, 12).Formula)[:34].ljust(34), '|', wc.Cells(r, 12).Text)
+    wb.Save()
+finally:
+    xl.ScreenUpdating = True

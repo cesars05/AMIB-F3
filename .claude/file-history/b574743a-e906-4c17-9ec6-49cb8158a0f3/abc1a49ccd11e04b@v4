@@ -1,0 +1,89 @@
+# 00 · LÉEME + WORKFLOW — Proyecto Final PE · AUREX CAPITAL
+
+> **ACTUALIZACIÓN V2 (11-oct-2026).** Las cifras canónicas de la sección 3 de abajo son de la versión anterior (10-oct). La V2 vigente: caso base con 3 empresas que fallan, entradas en los años 1 a 3, MOIC neto 2.26x y TIR neta 17.9% (Bajo 1.29x y 5.2%; Alto 2.47x y 19.9%). Fuente única: `08_Proyecto_Final/entregables/V2_11oct/PF_Modelo_AurexCapital.xlsx`. Plan y workflow: `08_Proyecto_Final/PLAN_V2_PROMPT_Y_WORKFLOW.md`; resumen: `08_Proyecto_Final/entregables/RESUMEN_PARA_REVISION.md`; pendientes: `08_Proyecto_Final/faltantes/FALTA.py`.
+
+*Creado el 9-oct-2026 · Equipo #5 · Gpo. 602 · Prof. Francisco Román Rincón Núñez (frincon@tec.mx)*
+
+> ## ⏰ Fechas (de la guía, sección 9)
+> **Domingo 11-oct-2026, 11:59 pm → Memorándum (PPM) + Modelo Financiero.** El Deck + presentación en vivo aparece con la misma fecha en la guía, pero D5 y la clase del 7-oct hablan de defensas el 14–15 de octubre → **confirmar con el profesor.**
+> **Orden de trabajo:** 1) cerrar decisiones pendientes → 2) Modelo → 3) Memorándum → 4) Deck → 5) QC cruzado → 6) enviar (un solo correo, del líder).
+
+## 1 · Mapa de carpetas (cada una tiene su `_LEEME.md`)
+| Carpeta | Contenido | Uso |
+|---|---|---|
+| `01_Guia_Proyecto_Final/` | Guía oficial: entregables, rúbrica, láminas sugeridas, preguntas del comité | **Fuente de verdad** |
+| `02_Trabajos_Clase/` | D2 (constitución), D3 (pipeline 10 empresas), D5 (espejo/tesis v2), ejercicio TVPI | Antecedentes del fondo |
+| `03_Presentaciones_Clase/` | Las 6 presentaciones del curso (11 sesiones, 12-ago → 7-oct) | Vocabulario, datos de clase y mapa de cobertura |
+| `04_Excels_Profe/` | Cascada europea/americana, cap table, liquidation preference | Base de la Hoja 2 y del caso de inversión |
+| `05_Informacion_Util/` (+`_notas/`) | 12 reportes externos con notas de lectura | Estructura/términos; **no** datos 2026 |
+| `06_Ejemplos/` | Deck Bold Ventures (31 láms.) y Excel Icarus (formato IB) | **Modelo de presentación y de formato** |
+| `07_Skill/` | Skill `slide-construction` (cómo armar láminas estilo banca) | Guía de construcción del deck |
+| `08_Proyecto_Final/` | Insumos del equipo, versiones del modelo, `entregables/`, `assets/`, `fuentes_investigacion/` | **Lo que se entrega** |
+| `99_Archivo/` | Duplicados y pruebas de la skill (nada borrado) | — |
+
+## 2 · Entregables y nombres
+| Entregable | Formato / extensión | Nombre de trabajo | Nombre exacto de la guía |
+|---|---|---|---|
+| Pitch Deck | .pptx · **10–12 láminas** | `PF_Deck_AurexCapital.pptx` | `PF Deck NombreDelFondo.pptx` |
+| Memorándum de Colocación Privada | .docx o .pdf · **4–6 cuartillas** | `PF_Memorandum_AurexCapital.docx` | `PF Memorandum NombreDelFondo.docx` |
+| Modelo Financiero | .xlsx · **1–2 hojas** (+anexo) | `PF_Modelo_AurexCapital.xlsx` | `PF Modelo NombreDelFondo.xlsx` |
+Confirmar con el profesor si el nombre lleva espacios o guiones bajos (la guía lo muestra con `_ _` en el PDF). Todos en `08_Proyecto_Final/entregables/` al terminar.
+
+## 3 · Cifras oficiales del fondo (modelo `08_Proyecto_Final/entregables/PF_Modelo_AurexCapital.xlsx`, 10-oct-2026)
+**Estado:** el modelo, el memorándum y el deck de borrador existen en `08_Proyecto_Final/entregables/` y usan estas mismas cifras (el deck las lee directo del Excel). El equipo debe revisarlas: ver `08_Proyecto_Final/entregables/RESUMEN_PARA_REVISION.md`.
+**Estructura:** fondo US$100M · 8 empresas mexicanas · US$56M iniciales + US$26M follow-on = **US$82M invertidos** · comisiones US$16.15M · gastos US$1.85M · tope 15% por empresa.
+| Escenario (celdas `Summary!D10:F18`) | Bajo ×0.5 | **Base** | Alto ×1.25 |
+|---|---|---|---|
+| Recupera el portafolio (US$M) | 96.0 | **192.0** | 240.0 |
+| Múltiplo bruto sobre invertido | 1.17x | **2.34x** | 2.93x |
+| A LPs (US$M) | 96.0 | **192.0** | 215.9 |
+| Carry del GP (US$M) | 0 | **0** | 24.1 |
+| MOIC neto del LP | 0.96x | **1.92x** | 2.16x |
+| TIR neta del LP (calendario real, USD) | −0.9% | **14.5%** | 17.8% |
+Una sola TIR en voz alta: la TIR neta con calendario real. Los conjuntos v1 (equipo, 2.88x bruto) y v2 (Monte Carlo, 2.30x) son sensibilidades en la hoja Escenarios; ya no son el caso base.
+
+## 4 · Inconsistencias detectadas entre documentos (para decidir, no se corrigieron en silencio)
+| # | Tema | D2 (17-ago) | D5 (25-ago) | Modelo / Supuestos (7-oct) |
+|---|---|---|---|---|
+| 1 | Tamaño del fondo | $50M | $50M (tabla) | **$100M** |
+| 2 | Geografía | Norteamérica (EE.UU., MX, CA) | corredor industrial México–EE.UU. | **México** |
+| 3 | Ticket | exclusión iii: "$5–10M" · inicial $3.75M prom. | tesis v2: **$1–5M** | tickets $2–10M (+follow-on hasta $15M por empresa) |
+| 4 | Vehículo | — | LP en Delaware | **fideicomiso privado mexicano** (propuesta, sin confirmar) |
+| 5 | Etapa | crecimiento | "Semilla–Serie B, etapa temprana" (tabla D5) y crecimiento en tesis | crecimiento |
+| 6 | Equipo | 6 personas (5 roles + 2 analistas) | 6 | la guía asume 5 → confirmar con el profesor que 6 es válido |
+| 7 | TIR a mencionar | — | — | simplificada vs. con fechas: **decir una sola en voz alta** |
+| 8 | Nº de empresas / verticales | 8 empresas, 5 verticales | — | 8 empresas (Niko, Quartux, Pireos, FAZT, XC, Verdigris, S2G, Uriel) |
+| 9 | Conflicto de interés | familiar dueño de empresa del sector (D2, diferenciador 3) | — | declarar en PPM; no invertir en esa empresa o abstenerse en comité |
+
+## 5 · Reglas de datos (instrucción del usuario)
+1. **Fuentes oficiales mexicanas y recientes (2026).** Evitar 2025 hacia atrás; si no hay alternativa, usarlo **etiquetado con año y fuente** ("dato 2025, CONSAR").
+2. **Toda cifra del deck/PPM lleva fuente y año** (pie de lámina / nota al pie). Los datos de clase (AMEXCAP jul-2026, SRS Acquiom 2026, CONSAR feb-2026, CNBV may-2026) ya son 2026 y citables como "presentado en clase / fuente original".
+3. Cifras de empresas reales (Niko, Quartux, etc.): las **estimaciones de valor son del equipo**, no de las empresas → disclaimer en el deck como Bold ("cifras estimadas por el equipo con base en fuentes públicas").
+4. Imágenes/logos/fotos: solo de sitios oficiales de la empresa o sus comunicados; anotar URL y fecha en `assets/` y recortar (círculo para personas). Deja el espacio de la foto del equipo.
+5. Verificar contradicciones entre notas (ej. Funds Society: 26,696 vs 28,696) antes de citar.
+
+### Fuentes oficiales a consultar (por tema) — *lista de pendientes, aún no descargadas*
+AMEXCAP (reporte/estudio de actividad 2026) · CONSAR (régimen de inversión y datos de SIEFOREs 2026) · CNBV / BMV (CKD, CERPI, Fibra E) · SENER (PRODESEN / Prospectiva), CRE, CENACE, CFE · INEGI y Banxico (macro, tipo de cambio) · Secretaría de Economía (Plan México, nearshoring, IED) · COFECE · y para cada empresa del portafolio: sitio oficial, comunicados y reportes de rondas (Niko, Quartux, Pireos, FAZT, XC, Verdigris, S2G, Uriel).
+
+## 6 · Formato del Excel (pedido por el usuario) — verde de energía + color coding de banca de inversión
+Copiar el layout del **Icarus Returns Tracker** (`06_Ejemplos/`): Calibri 10, cuadrícula oculta, col. A angosta, contenido desde B2, título B2/subtítulo B3, encabezados negrita centrados con relleno claro y borde inferior fino, totales en negrita con borde superior, formatos `#,##0.00_);(#,##0.00)` / `0.0%` / `0.00x`, hoja `Summary` + hojas enlazadas.
+**Color coding IB (no se cambia):** texto **azul `#0000FF`** = entradas/hardcodes · **negro** = fórmulas · **verde `#00B050`** = vínculos a otra hoja. *Los tonos verdes de energía solo se aplican a rellenos, bandas y pestañas — nunca a la fuente de entradas/vínculos, y nunca verde sobre verde.*
+**Paleta verde-energía (propuesta, a validar con el usuario):**
+| Uso | Color | Hex |
+|---|---|---|
+| Pestañas / títulos / barras oscuras | Verde bosque | `#0B3D2E` |
+| Encabezado de sección | Verde energía | `#1B7F4B` |
+| Relleno de encabezado de tabla (equivale al azul `#DAE9F8` de Icarus) | Menta claro | `#DDEFE3` |
+| Acento (resultado clave, solar/energía) | Lima | `#8BC53F` |
+| Acento secundario (puntual) | Ámbar solar | `#F2B705` |
+| Alerta / riesgo | Rojo | `#C0392B` |
+
+## 7 · Workflow / checklist (sigue la sección 10 de la guía)
+**Fase A — Decisiones (hoy):** ☐ versión canónica del modelo (v1 / v2 / ambos como Base y Conservador) · ☐ tamaño/tickets/geografía finales · ☐ vehículo · ☐ tesis v3 ≤200 caracteres · ☐ confirmar fechas y nombres de archivo con el profesor · ☐ confirmar equipo de 6.
+**Fase B — Modelo (`PF_Modelo_AurexCapital.xlsx`, 1–2 hojas + anexo):** ☐ Hoja 1 Portafolio · ☐ Hoja 2 Cascada con escenarios (Base/Bajo/Alto) · ☐ Summary estilo Icarus (flujos fechados, MOIC, TIR; curva J y TVPI/DPI/RVPI por año) · ☐ hoja Fuentes · ☐ formato verde + color coding · ☐ todas las verificaciones en `OK` · ☐ recalcular en Excel y leer valores.
+**Fase C — Memorándum (4–6 págs., 9 puntos de FIG-005):** ☐ idea/tesis · ☐ capital · ☐ duración · ☐ rendimiento (mismo número que el Excel) · ☐ exclusiones con razón · ☐ vehículo y justificación fiscal/AFORE · ☐ equipo (credenciales) · ☐ cascada en palabras simples · ☐ llamadas de capital · ☐ riesgos, key man, LPAC, conflictos, clawback.
+**Fase D — Deck (10–12 láminas; skill `slide-construction`):** ☐ storyline de títulos con veredicto · ☐ lámina 10 = Hoja 2 del Excel · ☐ caso de inversión con cap table/liquidation preference (Niko o Quartux) · ☐ salida con comprador nombrado · ☐ equipo con foto circular + espacio foto de equipo · ☐ logos/imágenes con fuente · ☐ render + QC de cada lámina.
+**Fase E — Ensayo y QC cruzado:** ☐ las 6 preguntas del comité con respuesta (sec. 8 de la guía) · ☐ los 5 hablan (mapear roles: líder = Julio; inversiones = Roberto; operación = Mariana; relación con inversionistas = Tomás; números = Pablo/Miguel) · ☐ las 6 preguntas de "Antes de entregar" contestadas "no" · ☐ un solo correo, enviado por el líder.
+
+## 8 · Herramientas disponibles en esta PC
+Python 3.14 con `openpyxl`, `python-docx`, `pymupdf`, `python-pptx` · Microsoft Excel, PowerPoint y Word instalados (permite recalcular fórmulas y renderizar láminas por COM) · sin LibreOffice/pandoc. Scripts temporales en el scratchpad de la sesión, no en el proyecto.

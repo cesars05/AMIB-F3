@@ -1,0 +1,198 @@
+"""Update 20261014_Steel.xlsx in place for v3 (keeps the user's edits). Exports chart data to JSON."""
+import sys, csv, json, datetime as dt, collections
+import openpyxl
+from openpyxl.styles import Font, PatternFill, Border, Side, Alignment
+from openpyxl.utils import get_column_letter as L
+
+ROOT = sys.argv[1]; OUTJSON = sys.argv[2]
+PATH = ROOT + "/20261014_Steel.xlsx"
+NAVY = "221D55"
+F = lambda **k: Font(name="Arial", size=k.pop("size", 10), **k)
+HDR = PatternFill("solid", fgColor="DCE3EA"); IN = PatternFill("solid", fgColor="FFFFCC"); MED = PatternFill("solid", fgColor="F2F2F2")
+thin = Side(style="thin", color=NAVY)
+BLUE = "0000FF"
+DS = "RowHeader=true;ColHeader=true;DispSeriesDescription=true;YearlyTSFormat=false;QuarterlyTSFormat=false;MonthlyTSFormat=true;Sym=RIC"
+
+wb = openpyxl.load_workbook(PATH)
+wv = openpyxl.load_workbook(PATH, data_only=True)
+out = {}
+
+
+def new_sheet(name, title, source, widths):
+    if name in wb.sheetnames: del wb[name]
+    ws = wb.create_sheet(name)
+    ws.sheet_view.showGridLines = False; ws.sheet_view.zoomScale = 85
+    ws.column_dimensions["A"].width = 3.7
+    for c, w in widths.items(): ws.column_dimensions[c].width = w
+    ws["B2"] = "US Steel Outlook – Data"; ws["B2"].font = F(size=12, bold=True, color=NAVY)
+    ws["B3"] = title; ws["B3"].font = F(bold=True)
+    ws["B4"] = source; ws["B4"].font = F(size=9, italic=True, color="595959")
+    return ws
+
+
+def header(ws, r, c, labels):
+    for i, lab in enumerate(labels):
+        x = ws.cell(r, c + i, lab); x.font = F(bold=True, color=NAVY); x.fill = HDR; x.border = Border(bottom=thin)
+        x.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+
+
+def put(ws, r, c, v, fmt=None, blue=False, bold=False):
+    x = ws.cell(r, c, v); x.font = F(color=BLUE if blue else "000000", bold=bold)
+    if fmt: x.number_format = fmt
+    return x
+
+
+num = lambda s: float(s.replace(",", "."))
+
+# ------------------------------------------------------------- 1) HRC (user's sheet, read only) -> json
+ws = wv["15_HRC_Price"]
+hrc = []
+for r in range(7, ws.max_row + 1):
+    d, p = ws.cell(r, 2).value, ws.cell(r, 3).value
+    if isinstance(d, dt.datetime) and isinstance(p, (int, float)): hrc.append((d.date().isoformat(), float(p)))
+out["hrc_weekly"] = hrc
+# fix event table on the user's sheet (verified dates)
+wsf = wb["15_HRC_Price"]
+ev = [(dt.date(2018, 3, 8), "Mar-18: Sec. 232 tariff of 25% (Proclamation 9705)"),
+      (dt.date(2021, 9, 10), "Sep-21: post-COVID restocking peak"),
+      (dt.date(2025, 2, 10), "10-Feb-25: proclamation restores 25% on all countries (effective 12-Mar)"),
+      (dt.date(2025, 5, 30), "30-May-25: Trump announces 50% at U.S. Steel Irvin plant (effective 4-Jun)"),
+      (dt.date(2026, 4, 1), "Apr-26: 232 reset, tariff on full value of steel derivatives")]
+lastrow = 6 + len(hrc)
+for k, (d, e) in enumerate(ev):
+    put(wsf, 7 + k, 10, d, "dd-mmm-yy", True); put(wsf, 7 + k, 11, e, blue=True)
+    put(wsf, 7 + k, 12, f'=IFERROR(LOOKUP(J{7+k},$B$7:$B${lastrow},$C$7:$C${lastrow}),"")', '"$"#,##0')
+out["hrc_events"] = [(d.isoformat(), e) for d, e in ev]
+
+# ------------------------------------------------------------- 2) Stocks vs S&P: cumulative return since 2025
+ws = wb["33_Stocks_vs_SPX"]; wsv = wv["33_Stocks_vs_SPX"]
+ws["B3"] = "US steelmakers vs S&P 500 – cumulative price return since 31-Dec-2024"
+ws["B4"] = ("Source: LSEG Datastream. Stocks: DSGRID datatype P (price). S&P 500: S&PCOMP datatype PI (price index; "
+            "'.SPX' and datatype P return $$ER E100). Cumulative return = price / price on first date - 1.")
+ws["S6"] = "NUE.N,STLD.OQ,CLF.N,CMC.N"
+ws["G6"] = "S&P 500 (S&PCOMP PI)"; ws["G6"].font = F(bold=True)
+spx_last = max(r for r in range(19, wsv.max_row + 1) if wsv.cell(r, 19).value is not None)
+rows = [r for r in range(7, 607) if wsv.cell(r, 2).value is not None]
+for r in range(7, 607):
+    ws.cell(r, 7).value = (f'=IFERROR(LOOKUP(B{r},$S$19:$S${spx_last},$T$19:$T${spx_last}),"")' if r in rows else None)
+    ws.cell(r, 7).number_format = "#,##0.00"; ws.cell(r, 7).font = F()
+header(ws, 6, 10, ["Date", "Nucor", "Steel Dynamics", "Cleveland-Cliffs", "Commercial Metals", "S&P 500"])
+for r in range(7, 607):
+    for j, col in enumerate("CDEFG"):
+        c = ws.cell(r, 11 + j, f'=IF(OR($B{r}="",{col}{r}=""),"",{col}{r}/{col}$7-1)'); c.number_format = "0.0%"; c.font = F()
+ws["R12"] = "Cumulative return since start"
+for j, nm in enumerate(["Nucor", "Steel Dynamics", "Cleveland-Cliffs", "Commercial Metals", "S&P 500"]):
+    ws.cell(13 + j, 18, nm); c = ws.cell(13 + j, 19, f'=IFERROR(LOOKUP(2,1/({L(11+j)}$7:{L(11+j)}$606<>""),{L(11+j)}$7:{L(11+j)}$606),"")'); c.number_format = "0.0%"
+# event table
+ws["U6"] = "Event"; ws["V6"] = "Date"
+evs = [("Section 232 proclamation: 25% on all countries", dt.date(2025, 2, 10)), ("'Liberation Day' reciprocal tariffs (market-wide)", dt.date(2025, 4, 2)),
+       ("Trump announces 50% steel tariff at U.S. Steel Irvin plant", dt.date(2025, 5, 30)), ("50% tariff effective", dt.date(2025, 6, 4))]
+for k, (e, d) in enumerate(evs):
+    put(ws, 7 + k, 21, e, blue=True); put(ws, 7 + k, 22, d, "dd-mmm-yy", True)
+ws.column_dimensions["U"].width = 46; ws.column_dimensions["V"].width = 12
+# data to json (computed here from cached values)
+spx = {wsv.cell(r, 19).value.date(): wsv.cell(r, 20).value for r in range(19, spx_last + 1)
+       if isinstance(wsv.cell(r, 19).value, dt.datetime) and isinstance(wsv.cell(r, 20).value, (int, float))}
+stk = []
+for r in rows:
+    d = wsv.cell(r, 2).value.date()
+    vals = [wsv.cell(r, c).value for c in range(3, 7)]
+    sp = None
+    for back in range(0, 6):
+        sp = spx.get(d - dt.timedelta(days=back))
+        if sp: break
+    stk.append((d.isoformat(), vals, sp))
+out["stocks"] = stk
+out["stock_events"] = [(d.isoformat(), e) for e, d in evs]
+
+# ------------------------------------------------------------- 3) Imports by country (Commerce)
+agg = collections.defaultdict(float)
+for r in csv.DictReader(open(ROOT + "/01_Datos/Importaciones_US/ITA_imports_by_country_category_year_2015-2026.csv", encoding="utf-8-sig")):
+    agg[(r["Country"], int(r["Year"]))] += num(r["Selected Measure Amount"]) / 1e6
+top = sorted({c for c, _ in agg}, key=lambda c: -agg[(c, 2024)])[:10]
+ws = new_sheet("24_Imports_by_Country", "US steel mill imports by country of origin",
+               "Source: US Department of Commerce, Enforcement & Compliance (SIMA, Census data). Units: million metric tons. 2026 = Jan–Aug; annualized ×12/8.",
+               {"B": 18, "C": 11, "D": 11, "E": 13, "F": 15, "G": 13, "H": 13})
+header(ws, 6, 2, ["Country", "2017", "2024", "2025", "2026 YTD (Aug)", "2026 annualized", "2026A vs 2024"])
+cty = []
+for k, c in enumerate(top):
+    rr = 7 + k
+    put(ws, rr, 2, c); put(ws, rr, 3, agg[(c, 2017)], "0.00", True); put(ws, rr, 4, agg[(c, 2024)], "0.00", True)
+    put(ws, rr, 5, agg[(c, 2025)], "0.00", True); put(ws, rr, 6, agg[(c, 2026)], "0.00", True)
+    put(ws, rr, 7, f"=F{rr}*12/8", "0.00"); put(ws, rr, 8, f"=G{rr}/D{rr}-1", "0%")
+    cty.append((c, agg[(c, 2017)], agg[(c, 2024)], agg[(c, 2025)], agg[(c, 2026)] * 12 / 8))
+out["imports_country"] = cty
+
+# ------------------------------------------------------------- 4) PPI cold-rolled (FRED)
+ppi = [(r["observation_date"], float(r["WPU101707"])) for r in csv.DictReader(open(ROOT + "/01_Datos/Precios/PPI_ColdRolled_Sheet_WPU101707_FRED.csv")) if r["WPU101707"] not in ("", ".")]
+ws = new_sheet("18_PPI_ColdRolled", "PPI: cold-rolled steel sheet and strip (WPU101707)",
+               "Source: US Bureau of Labor Statistics via FRED (WPU101707). Index Jun-1982 = 100, monthly, not seasonally adjusted.", {"B": 12, "C": 12, "D": 12})
+header(ws, 6, 2, ["Month", "Index", "y/y"])
+for k, (d, v) in enumerate(ppi):
+    rr = 7 + k; put(ws, rr, 2, dt.date.fromisoformat(d), "mmm-yy"); put(ws, rr, 3, v, "0.0", True)
+    if k >= 12: put(ws, rr, 4, f"=C{rr}/C{rr-12}-1", "0.0%")
+out["ppi"] = ppi
+
+# ------------------------------------------------------------- 5) OECD tables
+T23 = [("China", [62.7, 52, 64.9, 67.2, 92.6, 115.3, 131.2]), ("Japan and Korea", [63.1, 59.6, 60.5, 57.2, 59.2, 59.2, 57.8]),
+       ("EU27 + United Kingdom", [37.1, 29.6, 29, 25.9, 25.6, 25.1, 22.8]), ("ASEAN", [9.5, 17.3, 23.2, 17.6, 19.7, 23.9, 20.8]),
+       ("Türkiye", [19.7, 18.7, 22.1, 17.6, 12.7, 17, 17.5]), ("North America", [18.1, 17, 21.6, 21.5, 18.7, 18.9, 14.4]),
+       ("Russia", [29.5, 28.7, 32.6, 24.2, 21.6, 12.2, 4.5]), ("India", [13.4, 17.3, 20.4, 12.1, 9.9, 9.7, 9.9]),
+       ("World", [329.5, 309.6, 353.3, 308.3, 327.9, 342.5, 321.2])]
+ws = new_sheet("11_OECD_Exports", "Steel exports by region, 2019-2025",
+               "Source: OECD Steel Outlook 2026, Table 2.3 (ISSB, UN Comtrade, worldsteel). Units: million tonnes; excludes EU27 and ASEAN intra-trade.",
+               {"B": 24, **{L(c): 9 for c in range(3, 12)}})
+yrs = list(range(2019, 2026))
+header(ws, 6, 2, ["Region"] + [str(y) for y in yrs] + ["Share 2025", "2019-25"])
+for k, (n, v) in enumerate(T23):
+    rr = 7 + k; put(ws, rr, 2, n, bold=n == "World")
+    for j, x in enumerate(v): put(ws, rr, 3 + j, x, "0.0", True)
+    put(ws, rr, 10, f"=I{rr}/$I${7+len(T23)-1}", "0.0%"); put(ws, rr, 11, f"=I{rr}/C{rr}-1", "0%")
+out["exports"] = T23
+T31 = [("China", 1146.5, 1135.5, 13.2, 25.4), ("India", 143.9, 185.3, 6.0, 25.8), ("ASEAN", 80.4, 86.0, 0.5, 5.5), ("Japan", 122.4, 113.6, 0, 0),
+       ("European Union", 205.6, 204.7, 5.0, 6.0), ("Other Europe (incl. Türkiye)", 74.7, 75.8, 4.2, 10.3), ("Middle East", 89.0, 96.2, 4.7, 9.4),
+       ("North America", 157.7, 165.2, 5.8, 4.8), ("World", 2414.0, 2445.1, 46.7, 92.1)]
+ws = new_sheet("38_OECD_Capacity", "Steelmaking capacity 2021-2025 and potential additions 2026-2028",
+               "Source: OECD Steel Outlook 2026, Tables 3.1 and 3.2 (OECD Steel Secretariat). Units: million tonnes; Japan additions not reported in Table 3.2 (shown as 0).",
+               {"B": 28, **{L(c): 12 for c in range(3, 9)}})
+header(ws, 6, 2, ["Region", "Capacity 2021", "Capacity 2025", "Change 21-25", "Underway 26-28", "Planned 26-28", "Total additions"])
+for k, (n, a, b, u, p) in enumerate(T31):
+    rr = 7 + k; put(ws, rr, 2, n, bold=n == "World")
+    for j, x in enumerate([a, b]): put(ws, rr, 3 + j, x, "#,##0.0", True)
+    put(ws, rr, 5, f"=D{rr}-C{rr}", "#,##0.0;(#,##0.0)"); put(ws, rr, 6, u, "0.0", True); put(ws, rr, 7, p, "0.0", True); put(ws, rr, 8, f"=F{rr}+G{rr}", "0.0")
+out["capacity"] = T31
+T52 = [("European Union", 22.9, 17.2), ("United States", 21.4, 16.0), ("Türkiye", 19.0, 14.3), ("India", 11.8, 8.8), ("United Kingdom", 7.5, 5.7), ("Japan", 7.0, 5.2), ("Canada", 5.6, 4.2)]
+ws = new_sheet("13_OECD_Scrap", "Largest ferrous scrap exporters, 2025", "Source: OECD Steel Outlook 2026, Table 5.2 (ISSB). Units: million tonnes; % of global scrap exports.", {"B": 20, "C": 12, "D": 12})
+header(ws, 6, 2, ["Exporter", "Mt", "Share"])
+for k, (n, a, b) in enumerate(T52):
+    put(ws, 7 + k, 2, n); put(ws, 7 + k, 3, a, "0.0", True); put(ws, 7 + k, 4, b / 100, "0.0%", True)
+T51 = [("United States", "Section 232", "50% on full value (25% derivatives; 15% grid equipment to 2027; 10% if US-melted steel)", "Jun-25 / Apr-26"),
+       ("European Union", "New TRQ replaces safeguard", "Quotas ~47% below 2024; 50% out-of-quota; melt-and-pour; CBAM definitive", "1-Jul-26 / 1-Jan-26"),
+       ("United Kingdom", "New TRQ", "Quotas 60% lower; 50% out-of-quota; covers FTA partners", "1-Jul-26"),
+       ("Canada", "TRQ + surtax", "Non-FTA quotas cut to 20% of 2024; 50% surtax above quota; 25% on China-melted steel", "Jun-Dec 25"),
+       ("Mexico", "MFN tariff hike", "35% on non-FTA steel (slab excluded)", "1-Jan-26"),
+       ("Brazil", "TRQ extended", "25% on additional sheet, wire products", "Feb-26"),
+       ("India", "Safeguard + standards", "12% safeguard on flat-rolled; BIS quality orders on imports", "2025"),
+       ("China", "Export licensing", "Export permits required for all steel mill products", "1-Jan-26")]
+ws = new_sheet("14_OECD_Trade_Measures", "Broad trade measures on steel, 2025-2026", "Source: OECD Steel Outlook 2026, Table 5.1.", {"B": 16, "C": 26, "D": 70, "E": 18})
+header(ws, 6, 2, ["Economy", "Measure", "Detail", "Date"])
+for k, row in enumerate(T51):
+    for j, x in enumerate(row): put(ws, 7 + k, 2 + j, x, blue=True)
+out["measures"] = T51
+
+# ------------------------------------------------------------- index rebuild
+ix = wb["00_Index"]
+for r in range(7, ix.max_row + 1):
+    for c in range(2, 6): ix.cell(r, c).value = None
+names = [n for n in wb.sheetnames if n != "00_Index"]
+order = sorted(names, key=lambda n: (int(n[:2]) if n[:2].isdigit() else 99, n))
+wb._sheets = [ix] + [wb[n] for n in order]
+header(ix, 6, 2, ["Sheet", "Content", "Source", ""])
+for k, n in enumerate(order):
+    c = ix.cell(7 + k, 2, n); c.hyperlink = f"#'{n}'!A1"; c.font = F(color=NAVY, underline="single")
+    put(ix, 7 + k, 3, wb[n]["B3"].value); put(ix, 7 + k, 4, wb[n]["B4"].value)
+ix["B3"] = "Index: data behind each chart of 20261014_US Steel_v3.pptx (sheet prefix = data block)"
+wb.save(PATH)
+json.dump(out, open(OUTJSON, "w"), default=str)
+print("saved; sheets:", wb.sheetnames)
+print("stocks rows", len(stk), stk[0], stk[-1]); print("hrc", hrc[0], hrc[-1], len(hrc))

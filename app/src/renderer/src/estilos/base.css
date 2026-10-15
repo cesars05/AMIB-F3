@@ -81,7 +81,7 @@ main:focus {
 @keyframes entrar {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -89,7 +89,50 @@ main:focus {
   }
 }
 .entrar {
-  animation: entrar var(--duracion-entrada) var(--ease) both;
+  animation: entrar var(--duracion-entrada) var(--ease-in-out) both;
+}
+
+/* Animación de entrada con profundidad para componentes */
+@keyframes entrada-escala {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.entrada-escala {
+  animation: entrada-escala var(--duracion-entrada) var(--ease-in-out) both;
+}
+
+/* Animación de entrada deslizante desde la derecha */
+@keyframes entrada-deslizar {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.entrada-deslizar {
+  animation: entrada-deslizar var(--duracion-entrada) var(--ease-in-out) both;
+}
+
+/* Animación de fade suave */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.fade-in {
+  animation: fade-in var(--duracion-lenta) var(--ease-in-out) both;
 }
 
 @media (prefers-reduced-motion: reduce) {

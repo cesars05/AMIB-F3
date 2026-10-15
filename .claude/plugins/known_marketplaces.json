@@ -1,0 +1,50 @@
+{
+  "claude-plugins-official": {
+    "source": {
+      "source": "github",
+      "repo": "anthropics/claude-plugins-official"
+    },
+    "installLocation": "C:\\Users\\cesar\\.claude\\plugins\\marketplaces\\claude-plugins-official",
+    "lastUpdated": "2026-10-14T23:45:48.844Z"
+  },
+  "local-desktop-app-uploads": {
+    "source": {
+      "source": "directory",
+      "path": "C:\\Users\\cesar\\.claude\\plugins\\marketplaces\\local-desktop-app-uploads"
+    },
+    "installLocation": "C:\\Users\\cesar\\.claude\\plugins\\marketplaces\\local-desktop-app-uploads",
+    "lastUpdated": "2026-09-24T23:52:31.432Z"
+  },
+  "bergside": {
+    "source": {
+      "source": "github",
+      "repo": "bergside/typeui"
+    },
+    "installLocation": "C:\\Users\\cesar\\.claude\\plugins\\marketplaces\\bergside",
+    "lastUpdated": "2026-09-25T00:00:41.293Z"
+  },
+  "claude-code-filetree": {
+    "source": {
+      "source": "github",
+      "repo": "data-goblin/claude-code-filetree"
+    },
+    "installLocation": "C:\\Users\\cesar\\.claude\\plugins\\marketplaces\\claude-code-filetree",
+    "lastUpdated": "2026-10-13T20:15:31.408Z"
+  },
+  "claude-reflect-marketplace": {
+    "source": {
+      "source": "github",
+      "repo": "bayramannakov/claude-reflect"
+    },
+    "installLocation": "C:\\Users\\cesar\\.claude\\plugins\\marketplaces\\claude-reflect-marketplace",
+    "lastUpdated": "2026-10-13T20:06:05.363Z"
+  },
+  "claude-kit": {
+    "source": {
+      "source": "github",
+      "repo": "johnnyvizz/claude-kit"
+    },
+    "installLocation": "C:\\Users\\cesar\\.claude\\plugins\\marketplaces\\claude-kit",
+    "lastUpdated": "2026-10-13T20:15:38.747Z"
+  }
+}

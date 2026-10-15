@@ -1,0 +1,168 @@
+import win32com.client as w
+x = w.GetActiveObject('Excel.Application')
+wb = [b for b in x.Workbooks if b.Name == '20261007_Ingevity Corp.xlsx'][0]
+ws = wb.Worksheets('Annual Model')
+x.Calculation = -4135
+x.ScreenUpdating = False
+try:
+    assert ws.Range('E240').Value == 'Ratio & Growth Analysis', ws.Range('E240').Value
+    ws.Rows('240:261').Insert()
+    BLUE = 0xFF0000  # BGR
+    NUM = '#,##0.0;(#,##0.0);"-"'
+    TOT = '$#,##0;-$#,##0; "-"'
+    PCT = '0.0%;(0.0%);"-"'
+
+    def style(r, label, indent=0, bold=False, italic=False):
+        c = ws.Range(f'E{r}')
+        c.Value = label
+        c.Font.Name = 'Arial'; c.Font.Size = 11; c.Font.Bold = bold; c.Font.Italic = italic; c.Font.Color = 0
+        c.IndentLevel = indent
+        c.HorizontalAlignment = -4131 if indent else 1
+        rg = ws.Range(f'L{r}:U{r}')
+        rg.Font.Name = 'Arial'; rg.Font.Size = 11; rg.Font.Bold = bold; rg.Font.Italic = italic
+
+    def put(r, col, v, fmt=NUM, color=None):
+        c = ws.Range(f'{col}{r}')
+        if isinstance(v, str) and v.startswith('='):
+            c.Formula = v
+        else:
+            c.Value = v
+        c.NumberFormat = fmt
+        c.Font.Color = color if color is not None else 0
+
+    hist = list('LMNOP')
+    cons = list('QRS')
+
+    def line(r, label, hv=None, cv=None, indent=1, bold=False, italic=False, fmt=NUM):
+        style(r, label, indent, bold, italic)
+        if hv:
+            for col, v in zip(hist, hv):
+                if v is not None:
+                    put(r, col, v, fmt)
+        if cv:
+            for col, v in zip(cons, cv):
+                if v is not None:
+                    put(r, col, v, fmt, BLUE)
+
+    # revenue block additions (consensus)
+    for col in cons:
+        put(221, col, f'=+{col}16', TOT)
+        ws.Range(f'{col}221').Font.Italic = True
+        put(222, col, f'=+{col}223+{col}224+{col}227', TOT)
+        ws.Range(f'{col}222').Font.Bold = True
+    for r, vals in ((223, (628, 661, 668)), (224, (307, 283, 298)), (227, (176, 184, 190))):
+        for col, v in zip(cons, vals):
+            put(r, col, v, NUM, BLUE)
+    ws.Range('E225').Value = 'Performance Chemicals-Industrial Specialties product line (2024-25: Road Markings)'
+    line(228, 'Check: suma de segmentos vs. Revenue (fila 16)', italic=True, indent=1)
+    for col in 'LMNOPQRS':
+        put(228, col, f'=+{col}222-{col}221', NUM)
+
+    # EBITDA
+    line(230, 'EBITDA by Segment', indent=0, bold=True)
+    line(231, 'Performance Materials', [249.4, 252.2, 303.1, 333.2, 326.3], [346.5, 364.0, 367.5])
+    line(232, 'Performance Chemicals', [140.5, 160.4, 71.1, 53.7, 60.3], [49.0, 50.8, 51.9])
+    line(233, 'Advanced Polymer Technologies', [32.3, 40.0, 49.0, 39.0, 32.1], [34.8, 34.6, 38.7])
+    style(234, 'Segment EBITDA', 0, True)
+    for col in 'LMNOPQRS':
+        put(234, col, f'=SUM({col}231:{col}233)', TOT)
+        ws.Range(f'{col}234').Font.Bold = True
+    style(235, 'Corporate & other (implied: EBITDA - segments)', 1)
+    for col in 'NOPQRS':
+        put(235, col, f'=+{col}236-{col}234', NUM)
+    style(236, 'EBITDA (consolidated, row 35)', 0, False, True)
+    for col in 'LMNOPQRS':
+        put(236, col, f'=+{col}35', TOT)
+        ws.Range(f'{col}236').Font.Italic = True
+
+    # D&A
+    line(238, 'D&A by Segment', indent=0, bold=True)
+    line(239, 'Performance Materials', [36.8, 36.1, 38.3, 38.7, 43.5])
+    line(240, 'Performance Chemicals', [40.0, 43.1, 22.1, 24.3, 23.9])
+    line(241, 'Advanced Polymer Technologies', [33.1, 29.6, 31.3, 30.8, 33.6])
+    line(242, 'Corporate & other', [None, None, 5.7, 5.8, 4.2])
+    style(243, 'Total D&A', 0, True)
+    for col in hist:
+        put(243, col, f'=SUM({col}239:{col}242)', TOT)
+        ws.Range(f'{col}243').Font.Bold = True
+
+    # Capex
+    line(245, 'Capex by Segment (Fixed assets purchased)', indent=0, bold=True)
+    line(246, 'Performance Materials', [46.2, 59.8, 36.4, 38.5, 32.4])
+    line(247, 'Performance Chemicals', [37.1, 62.4, 29.2, 16.5, 14.3])
+    line(248, 'Advanced Polymer Technologies', [20.5, 20.3, 23.8, 16.2, 10.7])
+    style(249, 'Total Capex (segments)', 0, True)
+    for col in hist:
+        put(249, col, f'=SUM({col}246:{col}248)', TOT)
+        ws.Range(f'{col}249').Font.Bold = True
+
+    # Total assets
+    line(251, 'Total Assets by Segment', indent=0, bold=True)
+    line(252, 'Performance Materials', [None, 784.6, None, 824.3, 822.7])
+    line(253, 'Performance Chemicals', [None, 1430.5, None, 498.9, 357.7])
+    line(254, 'Advanced Polymer Technologies', [None, 446.9, None, 568.2, 380.9])
+    line(255, 'Corporate & other', [None, 74.5, None, 63.0, 54.4])
+    line(256, 'Assets of discontinued operations', [None, None, None, 68.2, 35.4])
+    style(257, 'Total Assets', 0, True)
+    for col in 'MOP':
+        put(257, col, f'=SUM({col}252:{col}256)', TOT)
+        ws.Range(f'{col}257').Font.Bold = True
+
+    notes = [
+        'Fuente: LSEG Company Fundamentals - Segments (CF-Export 07-Oct-2026). 2026E-2028E (azul): consenso LSEG Workspace por segmento (captura 07-Oct-2026); no hay D&A/capex/activos por segmento en consenso.',
+        "2021-22: EBITDA de segmento = 'Operating Income/Loss' reportado (base anterior, con costos corporativos asignados). 2023+: base recast sin corporativo (comparable con 10-K 2025). Corporate implied 2021-22 no se muestra.",
+        "'Performance Chemicals-Industrial Specialties' en 2024-25 = Road Markings (IS salio con el recast; el feed conserva la etiqueta). PC consenso 2026 incluye Road Markings hasta 15-abr-26 (vendido a PPG).",
+    ]
+    for i, t in enumerate(notes):
+        c = ws.Range(f'E{259 + i}')
+        c.Value = t
+        c.Font.Name = 'Arial'; c.Font.Size = 9; c.Font.Italic = True; c.Font.Color = 0x595959
+
+    # ratio block (header now at 262)
+    assert ws.Range('E262').Value == 'Ratio & Growth Analysis'
+
+    def ratio(r, col, f):
+        c = ws.Range(f'{col}{r}')
+        c.Formula = f
+        c.NumberFormat = PCT
+        c.Font.Name = 'Arial'; c.Font.Size = 11
+
+    for hdr, rev, eb, da, ta in ((263, 223, 231, 239, 252), (271, 224, 232, 240, 253)):
+        assert ws.Range(f'E{hdr + 1}').Value == 'Revenue YoY Growth', (hdr, ws.Range(f'E{hdr + 1}').Value)
+        ws.Range(f'E{hdr + 2}').Value = 'EBIT Margin (EBITDA - D&A)'
+        for col, prev in zip('MNOPQRS', 'LMNOPQR'):
+            ratio(hdr + 1, col, f'=IFERROR({col}{rev}/{prev}{rev}-1,"")')
+        for col in 'LMNOP':
+            ratio(hdr + 2, col, f'=IFERROR(({col}{eb}-{col}{da})/{col}{rev},"")')
+        for col in 'LMNOPQRS':
+            ratio(hdr + 3, col, f'=IFERROR({col}{eb}/{col}{rev},"")')
+        if hdr == 263:
+            ws.Range(f'E{hdr + 4}').Value = 'ROE (n.a. a nivel segmento)'
+            ws.Range(f'E{hdr + 5}').Value = 'ROA (EBIT / segment assets)'
+            for col in 'MOP':
+                ratio(hdr + 5, col, f'=IFERROR(({col}{eb}-{col}{da})/{col}{ta},"")')
+
+    h = 277
+    for i, (lab, b) in enumerate([('Advanced Polymer Technologies', True), ('Revenue YoY Growth', False),
+                                  ('EBIT Margin (EBITDA - D&A)', False), ('EBITDA Margin', False),
+                                  ('ROA (EBIT / segment assets)', False)]):
+        c = ws.Range(f'E{h + i}')
+        c.Value = lab
+        c.Font.Name = 'Arial'; c.Font.Size = 11; c.Font.Bold = b; c.Font.Italic = False; c.Font.Color = 0
+    for col, prev in zip('MNOPQRS', 'LMNOPQR'):
+        ratio(h + 1, col, f'=IFERROR({col}227/{prev}227-1,"")')
+    for col in 'LMNOP':
+        ratio(h + 2, col, f'=IFERROR(({col}233-{col}241)/{col}227,"")')
+    for col in 'LMNOPQRS':
+        ratio(h + 3, col, f'=IFERROR({col}233/{col}227,"")')
+    for col in 'MOP':
+        ratio(h + 4, col, f'=IFERROR(({col}233-{col}241)/{col}254,"")')
+    for a in ('Q223', 'Q231'):
+        try:
+            ws.Range(a).AddComment('Consenso LSEG Workspace (captura 07-Oct-2026), por segmento.')
+        except Exception as e:
+            print('cmt', a, e)
+finally:
+    x.ScreenUpdating = True
+    x.Calculation = -4105
+print('done')

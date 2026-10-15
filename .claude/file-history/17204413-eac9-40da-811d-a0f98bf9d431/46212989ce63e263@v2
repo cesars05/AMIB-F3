@@ -1,0 +1,29 @@
+"""Compara candidatos de naranja contra el navy, a grosor real de panel."""
+import sys
+sys.path.append(r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs")
+import numpy as np
+import matplotlib.pyplot as plt
+from grafico_banquero import configurar_estilo_banquero
+
+configurar_estilo_banquero()
+NAVY = "#2D3748"
+CAND = [("#FFC000", "actual (chillon)"), ("#E8A33D", "Bloomberg"),
+        ("#D97A29", "ambar oscuro"), ("#C4701A", "quemado"), ("#B45309", "tierra")]
+
+x = np.linspace(0, 10, 260)
+rng = np.random.default_rng(7)
+a = 100 + np.cumsum(rng.normal(0.05, 0.7, 260))
+b = 100 + np.cumsum(rng.normal(0.02, 0.7, 260))
+
+fig, axes = plt.subplots(len(CAND), 1, figsize=(5.2, 8.4), dpi=200)
+for ax, (hexc, nom) in zip(axes, CAND):
+    ax.plot(x, a, color=NAVY, linewidth=1.3)
+    ax.plot(x, b, color=hexc, linewidth=1.3)
+    for s in ("top", "right"):
+        ax.spines[s].set_visible(False)
+    ax.set_xticks([]); ax.set_yticks([])
+    ax.text(0.01, 0.97, f"{hexc}  {nom}", transform=ax.transAxes, fontsize=8,
+            va="top", color=NAVY, fontweight="bold")
+fig.tight_layout()
+fig.savefig("naranjas.png", dpi=200, bbox_inches="tight", pad_inches=0.05)
+print("ok")

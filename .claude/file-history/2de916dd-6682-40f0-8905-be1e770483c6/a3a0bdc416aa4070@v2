@@ -1,0 +1,62 @@
+import json, openpyxl, datetime
+from eu_load import load, files
+
+YRS = list(range(2017, 2026))
+CUR = 'Historic Current Prices, Forecast Current Prices'
+CON = 'Historic Constant 2025 Prices, Forecast Constant 2025 Prices'
+YOY = 'Historic Year-on-Year Exchange Rates, Forecast Year-on-Year Exchange Rates'
+out = {'euro': {}, 'infl': {}, 'fx_bimbo': {2017: 19.1012, 2018: 20.1529, 2019: 19.2616, 2020: 21.4955, 2021: 20.2818,
+                                               2022: 20.1250, 2023: 17.7620, 2024: 18.3024, 2025: 19.2244}}
+
+def series(df, cond):
+    d = df[cond]
+    s = {int(r['Year']): float(r['Actual']) for _, r in d.iterrows() if r['Year'] is not None and int(r['Year']) in YRS}
+    return [s.get(y) for y in YRS]
+
+for ctry, f in files().items():
+    ms = load(f, 'Market Sizes'); ms = ms[ms['Hierarchy level'] == 1]
+    up = load(f, 'Market Size Unit Price'); up = up[up['Hierarchy level'] == 1]
+    cs = load(f, 'Company Share NBO'); cs = cs[cs['Hierarchy level'] == 1]
+    rv = ms['Data Type'] == 'Retail Value RSP'
+    e = {
+        'value_cur': series(ms, rv & (ms['Current/Constant'] == CUR) & (ms['Currency Conversion'] == 'Local Currency')),
+        'value_con': series(ms, rv & (ms['Current/Constant'] == CON) & (ms['Currency Conversion'] == 'Local Currency')),
+        'value_usd': series(ms, rv & (ms['Current/Constant'] == CUR) & (ms['Currency Conversion'] == YOY)),
+        'volume': series(ms, (ms['Data Type'] == 'Retail Volume') & (ms['Unit'] == '000 tonnes')),
+        'unit_price_types': sorted(set(zip(up['Unit Price'], up['Data Type'], up['Currency Conversion']))),
+        'currency': ms[rv & (ms['Currency Conversion'] == 'Local Currency')]['Unit'].dropna().iloc[0],
+    }
+    upl = up[(up['Data Type'] == 'Retail Value RSP') & (up['Currency Conversion'] == 'Local Currency')]
+    e['unit_price_rsp'] = series(upl, upl['Unit Price'].notna()) if len(upl) else None
+    bb = cs[cs['National Brand Owner'].astype(str).str.contains('Bimbo') & (cs['Currency Conversion'] == 'Local Currency')
+            & (cs['Data Type'] == 'Retail Value RSP')]
+    e['bimbo_owner'] = sorted(bb['National Brand Owner'].unique())
+    e['bimbo_share'] = [None if v is None else v for v in
+                        [dict((int(r['Year']), float(r['Percent'])) for _, r in bb.iterrows()).get(y) for y in YRS]]
+    e['bimbo_value'] = [dict((int(r['Year']), float(r['Actual'])) for _, r in bb.iterrows()).get(y) for y in YRS]
+    out['euro'][ctry] = e
+
+def monthly(fn, idx_col=2):
+    ws = openpyxl.load_workbook(fn, data_only=True)['Historical Values']
+    rows = []
+    for r in range(15, ws.max_row + 1):
+        d, v = ws.cell(r, 1).value, ws.cell(r, idx_col).value
+        if isinstance(d, datetime.datetime) and isinstance(v, (int, float)) and 2017 <= d.year <= 2025:
+            rows.append((d.strftime('%Y-%m-%d'), float(v)))
+    return sorted(rows)
+out['infl']['us_cpi_bakery_index'] = monthly('infl_us.xlsx')
+out['infl']['mx_core_yoy'] = monthly('infl_mx.xlsx')
+json.dump(out, open('mgi_data.json', 'w'), indent=1, default=str)
+
+# ---- summary
+for c, e in out['euro'].items():
+    print('#####', c, e['currency'], 'owner', e['bimbo_owner'], '| unit price types', e['unit_price_types'][:4])
+    for k in ('value_cur', 'value_con', 'value_usd', 'volume', 'unit_price_rsp', 'bimbo_share', 'bimbo_value'):
+        v = e[k]
+        print(f'  {k:15s}', ' '.join('' if x is None else (f'{x:,.1f}' if abs(x) >= 100 else f'{x:.3f}') for x in (v or [])))
+mx = out['euro']['Mexico']
+print('FX implied (MXN/USD, Euromonitor):', [round(a / b, 4) if a and b else None for a, b in zip(mx['value_cur'], mx['value_usd'])])
+print('FX Bimbo disclosed:              ', [out['fx_bimbo'][y] for y in YRS])
+import collections
+for k, v in out['infl'].items():
+    cnt = collections.Counter(d[:4] for d, _ in v); print(k, dict(cnt))

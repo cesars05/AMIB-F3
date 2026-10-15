@@ -1,0 +1,115 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions")
+$cm=$wb.Worksheets.Item("Consolidated Model")
+$d =$wb.Worksheets.Item("DCF")
+
+# ---------- GUARDAS ----------
+if([string]$as.Range("H74").Text -ne "Segment to Divest"){ throw "ABORTO: H74 no es 'Segment to Divest'" }
+if([string]$as.Range("H76").Text -ne "Exit Multiple"){ throw "ABORTO: H76 no es 'Exit Multiple'" }
+if([string]$cm.Cells.Item(63,2).Text -notlike "*Tax credit*"){ if([string]$cm.Cells.Item(63,3).Text -notlike "*Tax credit*"){ if([string]$cm.Cells.Item(63,4).Text -notlike "*Tax credit*"){ throw "ABORTO: r63 no es la fila de impuesto no-underlying" } } }
+if([string]$cm.Range("L372").Formula -ne "=+L370-L371"){ throw "ABORTO: r372 (ganancia) cambio de formula" }
+if([string]$cm.Range("L374").Formula -notlike "*L371-L373*"){ throw "ABORTO: r374 cambio de formula" }
+if([string]$cm.Range("L135").Formula -ne "=+K135"){ throw ("ABORTO: r135 goodwill ya fue tocado: "+[string]$cm.Range("L135").Formula) }
+if([string]$cm.Range("L297").Formula -ne "=-L374"){ throw ("ABORTO: r297 cambio: "+[string]$cm.Range("L297").Formula) }
+if([string]$d.Range("E30").Formula -ne "=+E31+E32"){ throw ("ABORTO: DCF E30 cambio: "+[string]$d.Range("E30").Formula) }
+foreach($r in 375,376,377,378){ if(([string]$cm.Cells.Item($r,2).Text+[string]$cm.Cells.Item($r,12).Text) -ne ""){ throw ("ABORTO: CM r"+$r+" no esta vacia") } }
+if(([string]$d.Range("B27").Text+[string]$d.Range("C27").Text) -ne ""){ throw "ABORTO: DCF r27 no esta vacia" }
+
+# columna donde viven las etiquetas del bloque 365-374
+$labCol=0
+foreach($cc in 2,3,4){ if([string]$cm.Cells.Item(374,$cc).Text -like "Fixed assets*"){ $labCol=$cc } }
+if($labCol -eq 0){ throw "ABORTO: no encontre la columna de etiquetas del bloque" }
+Write-Output ("guardas OK - etiquetas del bloque en columna "+$labCol)
+
+$xl.Calculation=-4135
+$xl.ScreenUpdating=$false
+
+# ---------- FIX 5: input del segmento ----------
+$as.Range("H75").Value2="Last Full Year of Ownership"
+$dv=$as.Range("J74").Validation
+try{ $dv.Delete() }catch{}
+$dv.Add(3,1,1,"Water Management,Building Envelope,Housebuilding Products")
+$dv.IgnoreBlank=$true
+$dv.InCellDropdown=$true
+$dv.InputTitle="Segment to Divest"
+$dv.InputMessage="Pick a segment, or clear the cell to switch the module off."
+$dv.ShowInput=$true
+Write-Output "FIX 5 listo: dropdown en J74, H75 renombrado"
+
+# ---------- FIX 1: impuesto sobre partidas no-underlying ----------
+$cm.Range("L63").Formula='=-INDEX(Assumptions!$D$89:$F$89,Assumptions!$F$9)*L21'
+$cm.Range("L63:Q63").FillRight()
+Write-Output "FIX 1 listo: r63 = -tasa x r21 en L..Q"
+
+# ---------- FIX 2/3: desglose del retiro de activos + memo dividendo ----------
+$cm.Cells.Item(375,$labCol).Value2="   of which: Goodwill"
+$cm.Cells.Item(376,$labCol).Value2="   of which: Other intangible assets"
+$cm.Cells.Item(377,$labCol).Value2="   of which: Owned PP&E"
+$cm.Cells.Item(378,$labCol).Value2="Special dividend funded by disposal"
+$cm.Range("L375").Formula='=+IF(L366=1,L374*K135/(K135+K136+K133),0)'
+$cm.Range("L376").Formula='=+IF(L366=1,L374*K136/(K135+K136+K133),0)'
+$cm.Range("L377").Formula='=+IF(L366=1,L374-L375-L376,0)'
+$cm.Range("L378").Formula='=+IF(L366=1,MIN(-L199,MAX(L370-INDEX(Assumptions!$D$89:$F$89,Assumptions!$F$9)*L372,0)),0)'
+foreach($r in 375,376,377,378){ $cm.Range("L"+$r+":Q"+$r).FillRight() }
+
+# recableado de los tres rollos de activos
+$cm.Range("L135").Formula='=+K135-L375'
+$cm.Range("L135:Q135").FillRight()
+$cm.Range("L136").Formula='=+IFERROR(K136+''Segment Model''!L130-(L55-L19)-L376,"")'
+$cm.Range("L136:Q136").FillRight()
+$cm.Range("L297").Formula='=-L377'
+$cm.Range("L297:Q297").FillRight()
+Write-Output "FIX 2/3 listo: r375-378 creadas, r135/r136/r297 recableadas"
+
+# formato: copiar el de r374 a r375:r378
+$cm.Range("B374:S374").Copy() | Out-Null
+$cm.Range("B375:S378").PasteSpecial(-4122) | Out-Null
+$xl.CutCopyMode=0
+
+# ---------- FIX 4: DCF, valor presente de los ingresos netos de la venta ----------
+$d.Range("B21:I21").Copy() | Out-Null
+$d.Range("B27:I27").PasteSpecial(-4122) | Out-Null
+$xl.CutCopyMode=0
+$d.Range("B27").Value2="(+) PV of after-tax disposal proceeds"
+$d.Range("C27").Formula='=+IF(C11<>0,MAX(''Consolidated Model''!L370-$P$13*''Consolidated Model''!L372,0)*C25,0)'
+$d.Range("D27").Formula='=+IF(D11<>0,MAX(''Consolidated Model''!M370-$P$13*''Consolidated Model''!M372,0)*D25,0)'
+$d.Range("E27").Formula='=+IF(E11<>0,MAX(''Consolidated Model''!N370-$P$13*''Consolidated Model''!N372,0)*E25,0)'
+$d.Range("F27").Formula='=+IF(F11<>0,MAX(''Consolidated Model''!O370-$P$13*''Consolidated Model''!O372,0)*F25,0)'
+$d.Range("G27").Formula='=+IF(G11<>0,MAX(''Consolidated Model''!P370-$P$13*''Consolidated Model''!P372,0)*G25,0)'
+$d.Range("H27").Formula='=+IF(H11<>0,MAX(''Consolidated Model''!Q370-$P$13*''Consolidated Model''!Q372,0)*H25,0)'
+$d.Range("E30").Formula='=+E31+E32+SUM(C27:H27)'
+Write-Output "FIX 4 listo: DCF r27 + E30 incluye el VP de los ingresos netos"
+
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$xl.ScreenUpdating=$true
+$wb.Save()
+
+Write-Output ""
+Write-Output "======== ESTADO CON EL MODULO APAGADO (J74 vacio) ========"
+$hdr="  "+"".PadRight(34)
+for($c=11;$c -le 17;$c++){ $hdr+=([string]$cm.Cells.Item(9,$c).Text).PadLeft(10) }
+Write-Output $hdr
+foreach($x in @(@(21,"Non-underlying en EBIT"),@(63,"Impuesto s/ no-underlying"),@(64,"Adj. Net Income"),@(70,"Adj. EPS (p)"),@(135,"Goodwill"),@(136,"Otros intangibles"),@(133,"PP&E propio"),@(168,"Check balance"),@(215,"Check caja"))){
+  $r=[int]$x[0]; $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(10) }
+  Write-Output ("  "+([string]$x[1]).PadRight(34)+$v)
+}
+Write-Output ""
+Write-Output ("  DCF = "+[string]$d.Range("E41").Text+" ("+[string]$d.Range("E42").Text+")   SOTP = "+[string]$wb.Worksheets.Item("SOTP").Range("D112").Text+"   EPV = "+[string]$wb.Worksheets.Item("EPV").Range("E61").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=$wb.Worksheets.Item($nm); $e=0
+  try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

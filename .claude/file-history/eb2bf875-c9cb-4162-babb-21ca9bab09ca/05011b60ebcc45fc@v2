@@ -1,0 +1,75 @@
+$ErrorActionPreference="Stop"
+$wb=$null; $xl=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $sm=$wb.Worksheets.Item("Segment Model")
+$cm=$wb.Worksheets.Item("Consolidated Model"); $d=$wb.Worksheets.Item("DCF"); $su=$wb.Worksheets.Item("Summary")
+$orig=[string]$as.Range("F10").Text
+$as.Range("J74").ClearContents()
+
+Write-Output "########## 1) El snapshot del Summary, otra vez? ##########"
+$as.Range("F10").Value2="Partial Success"
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$s1=""; $s2=""
+for($c=6;$c -le 12;$c++){ $s1+=([string]$su.Cells.Item(30,$c).Text).PadLeft(10) }
+for($c=3;$c -le 9;$c++){ $s2+=([string]$d.Cells.Item(23,$c).Text).PadLeft(10) }
+Write-Output ("  snapshot guardado r30 : "+$s1)
+Write-Output ("  DCF vivo (Partial)    : "+$s2)
+Write-Output ("  football field dice "+[string]$su.Range("E14").Text+"   el DCF vivo dice "+[string]$d.Range("E41").Text)
+
+Write-Output ""
+Write-Output "########## 2) ROIC historico de WM: mi comparacion fue valida? ##########"
+$h="  "+"".PadRight(24)
+for($c=4;$c -le 11;$c++){ $h+=([string]$sm.Cells.Item(9,$c).Text).PadLeft(9) }
+Write-Output $h
+foreach($x in @(@(75,"WM ROIC (r75)"),@(103,"WM Return on Assets (r103)"),@(76,"BE ROIC"),@(77,"HP ROIC"))){
+  $r=[int]$x[0]; $v=""
+  for($c=4;$c -le 11;$c++){ $v+=([string]$sm.Cells.Item($r,$c).Text).PadLeft(9) }
+  Write-Output ("  "+([string]$x[1]).PadRight(24)+$v)
+}
+$s=0.0;$n=0
+for($c=7;$c -le 11;$c++){ $x=0.0; try{ $x=[double]$sm.Cells.Item(75,$c).Value2 }catch{}; if($x -ne 0){ $s+=$x; $n++ } }
+Write-Output ("  -> WM ROIC promedio 5 anos = "+[string][math]::Round($s/$n*100,1)+"%     proyectado FY2032 (Partial) = "+[string]$sm.Range("Q75").Text)
+
+Write-Output ""
+Write-Output "########## 3) El valor terminal usa margen promedio: que pasa por escenario? ##########"
+foreach($esc in "Downside","Stagnation","Partial Success"){
+  $as.Range("F10").Value2=$esc
+  $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+  $mFinal=[double]$d.Range("H14").Value2
+  $mTerm=[double]$d.Range("I14").Value2
+  Write-Output ("  "+$esc.PadRight(18)+" margen FY2032 = "+([string][math]::Round($mFinal*100,1)+"%").PadLeft(7)+"   margen terminal = "+([string][math]::Round($mTerm*100,1)+"%").PadLeft(7)+"   diferencia = "+([string][math]::Round(($mTerm-$mFinal)*100,1)+"pp").PadLeft(8)+"   TV = "+([string]$d.Range("E33").Text).PadLeft(12)+"  %EV = "+[string]$d.Range("D32").Text)
+}
+
+Write-Output ""
+Write-Output "########## 4) Se gana interes sobre la caja acumulada? ##########"
+$as.Range("F10").Value2="Partial Success"
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$h2="  "+"".PadRight(30)
+for($c=11;$c -le 17;$c++){ $h2+=([string]$cm.Cells.Item(9,$c).Text).PadLeft(9) }
+Write-Output $h2
+foreach($x in @(@(126,"Caja"),@(262,"Deuda bancaria"),@(264,"Gasto financiero neto"),@(265,"% tasa"))){
+  $r=[int]$x[0]; $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(9) }
+  Write-Output ("  "+([string]$x[1]).PadRight(30)+$v)
+}
+Write-Output ("  formula r264: "+[string]$cm.Range("Q264").Formula)
+$caja=[double]$cm.Range("Q126").Value2
+Write-Output ("  -> caja FY2032 = "+[string][math]::Round($caja,0)+" mil GBP. A 4% serian "+[string][math]::Round($caja*0.04,0)+" de ingreso financiero no reconocido = "+[string][math]::Round($caja*0.04*0.75/35960*100,2)+"p de EPS")
+
+Write-Output ""
+Write-Output "########## 5) Dilucion / conteo de acciones ##########"
+$v=""
+for($c=4;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item(36,$c).Text).PadLeft(8) }
+Write-Output ("  acciones en circulacion "+$v)
+
+$as.Range("F10").Value2=$orig
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ""
+Write-Output ("restaurado a "+[string]$as.Range("F10").Text)

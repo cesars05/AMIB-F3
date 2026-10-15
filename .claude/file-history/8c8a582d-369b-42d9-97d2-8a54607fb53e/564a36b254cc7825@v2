@@ -1,0 +1,168 @@
+# HOUSE STYLE GUIDE — "Aztlan structure × Halliburton palette"
+
+Forensic result of 7 templates (KLA, Mitsubishi, Gaztransport, Data Centers, Ingevity, M&A FEMSA, Think-cell) measured with PowerPoint COM (effective, not inherited-null values) + chart XML. All numbers are inches / points on a **13.333 × 7.5 in (16:9)** slide.
+Source data: `renders/<deck>/slides.jsonl`, `masters/*.json`, `charts_all.json`, per-slide tables in `specs/*.md`, images in `renders/<deck>/slide_NN.png`.
+
+> Decision recorded: the Team 9 deck is **content reference only** (user dislikes its format). Format comes from the user's own templates. The user's cover image (red wave) fixes the brand direction = Halliburton red.
+
+---------------------------------------------------------------------
+## 0. Two proven systems found in the user's templates
+
+| | **System A – "Aztlan" (analyst house style)** | **System B – "Client-branded academic" (M&A FEMSA)** |
+|---|---|---|
+| Used in | KLA, Mitsubishi, GTT, Data Centers, Ingevity | M&A FEMSA (team deck, names on cover) |
+| Font | **Arial** everywhere (theme major = minor) | **Helvetica** (titles/body), Arial for page number |
+| Title | Arial 28, **black**, regular, x0.575 y0.533 | Helvetica 28 **bold**, **brand color** (#862633), x0.667 y0.372 |
+| Subtitle | Arial 16, navy #221D55 (one-line "so-what"), y0.989 | Helvetica 14 black italic, y0.934 |
+| Rule | Thin line **above** title: y0.313, x0.565→12.828, #002060 | Rule **below** title: y0.936, x0.667→12.667, brand color |
+| Logo | top-right x10.403 y0.362 w2.425 h0.897 | top-right x11.581 y0.505 w1.086 h0.25 |
+| Source line | Arial 10 *italic*, centered, y6.951 | Helvetica 8 gray #7F7F7F, left, y6.951 ("Source(s): …") |
+| Page no. | Arial 11 #002060, right x12.416 | Arial 11 #7F7F7F, right x12.206 |
+| Footer-left | 9 pt #B2BCCB firm disclaimer at x0.565 y6.828 | none |
+| Cover | full navy #221D55, logo, Arial 40 / 24 white | full-bleed image, Helvetica 40 bold white, **team names italic bottom-left** |
+
+**Chosen for this project:** *System A layout grid + typography* (the user calls it "muy estable"; it has the richest chart/table vocabulary) with **System B's cover logic** (full-bleed brand image, team names on cover) and **Halliburton colors**. Nothing is copied from Aztlan branding (no Aztlan logo/disclaimer).
+
+---------------------------------------------------------------------
+## 1. Grid, margins, zones (System A, verified on KLA "General" layout)
+
+```
+x:  0.575 ─────────────── content ─────────────── 12.877      (left margin 0.575, right margin 0.456)
+y:  0.313  top rule (full width 0.565→12.828)
+    0.533  TITLE   (h 0.454, w 9.83)            ← never wider than 9.83 (logo zone x≥10.4)
+    0.989  SUBTITLE (h 0.286)
+    1.30–1.45  content top  (1.446 when subtitle present, 1.308 for FinancialStatements)
+    …      content area  : 12.30 w × 5.33 h  (y 1.446 → 6.78)
+    6.78   content bottom limit
+    6.828  footer-left small text (9 pt) ·  6.951 SOURCE line (centered, 10 pt italic) · page number (right)
+```
+* Two-column split used everywhere: left x0.575–6.417 (w5.842) | right x7.035–12.877 (w5.842); gutter 0.62.
+* "Text + 2 stacked charts": text col x0.575 w7.095 | chart col x8.085 w4.79 (header y1.446, rule y1.817, unit label y1.816, chart y2.107 h2.0; second block header y4.198).
+* Bottom-aligned content rule: nothing between y6.78 and the source line.
+* Dense but never cramped: min gap between blocks 0.15–0.25 in.
+
+## 2. Typography scale (measured by character volume across 130+ slides)
+
+| Role | Size | Weight | Color |
+|---|---|---|---|
+| Cover title | 40 | regular | white |
+| Cover subtitle / date | 24 | regular | white |
+| Slide title | **28** | regular (A) / bold (B) | black (A) |
+| Slide subtitle ("so-what" sentence) | **16** | regular | deep accent (#221D55 in Aztlan → HAL deep red) |
+| Block header (chart/table header) | **16 bold** | bold | #404040 or black, with 1 pt rule under |
+| Body bullets | **14** (text-only slides) / **12** (text next to charts) / **11** (dense slides) | regular, **bold lead-in** | black; key numbers **bold accent**; risks **bold red #C00000** |
+| Sub-bullets | 12 / 11 | regular | black (hollow-circle bullet) |
+| Chart unit label ("Amounts in $m") | 12 | *italic* | black |
+| Chart axis / data labels | 10–12 (category 12, data 9–11) | regular; totals bold | black / white inside dark bars |
+| Table body | **11** (10 for 12+ cols; 8–9 only in appendix) | regular | black |
+| Table header | 11 bold | bold | white on navy→(HAL) fill |
+| Source / footnote | **10 *italic*, centered** | italic | black |
+| Page number | 11 | regular | accent |
+| Footer-left small | 9 | regular | light grey |
+
+Rules: one font family (Arial). Body is **justified** in text-heavy slides (Aztlan) — use left-aligned in narrow columns (<4 in) to avoid rivers. Never below 9 pt except footnotes (8 pt, System B).
+
+Text-emphasis grammar (very consistent in the user's decks): `**Bold lead-in:**` + accent-colored bold for the key claim + normal text for support; one red bold clause per bullet max for "risk/negative".
+
+## 3. Color system — Halliburton adaptation
+
+Aztlan tokens (reference): navy #221D55 / #242852, rule #002060, gold #F5C400, steel #7F8FA9, green #42825D, light blue #ACCBF9, greys #404040 #7F7F7F #F2F2F2, risk red #C00000.
+FEMSA tokens (reference): wine #862633, #9B2C39, #B96A73, #EAD2D2, cream #FEF3DA, greys.
+
+**HAL palette (use these):**
+
+| Token | Hex | Use |
+|---|---|---|
+| `hal-red` | **#CC0000** | **official HAL red** — sampled from the native logo raster (#CC0001) and the IR-deck title accents (#CC0000); accent bars, highlights, "Halliburton" series |
+| `hal-deep` | **#8B1318** | cover field (sampled), subtitle color, table header fill, primary chart series, top rule |
+| `hal-dark` | #630E12 | shadows, dark stack segment |
+| `hal-slate` | #2C394D | HAL's own deck title/ink color (IR deck: slate title + red keyword) — optional for hero titles, e.g. "Halliburton **Global Footprint**" two-tone |
+| `ink` | #000000 / #404040 | title / body / secondary headers |
+| `slate` | #7F7F7F, #A6A6A6, #D9D9D9, #F2F2F2 | neutral series, gridless fills, forecast shading #F2F2F2 |
+| `rose` | #B96A73, #EAD2D2 | tints of red for 2nd/3rd series & callout fills (from FEMSA deck) |
+| `kuwait-green` | #007A3D | **Kuwait** series / KWD / sovereign callouts (flag green) |
+| `kuwait-sand` | #FEF3DA | highlight band (from FEMSA cream) |
+| `gold` | #F5C400 | single "highlight / forecast" accent (from Aztlan) — max 1 per slide |
+| `navy` | #242852 | contrasting 2nd hue for USD/ITESM Track B series, dark table header alt |
+| `pos` / `neg` | #42825D / #C00000 | positive / negative deltas |
+| `bg-soft` | #F2F2F2 | callout boxes, alt table rows, forecast zone |
+
+Series order for charts: 1 `hal-deep` → 2 `hal-red` → 3 `slate #7F7F7F` → 4 `rose #B96A73` → 5 `navy #242852` → 6 `#A6A6A6`. Cap 5 series. Highlight one series/category per chart; the rest in greys (user decks do this: forecast bars in tint, actuals in solid).
+Track identity: **Track A (USD)** = `hal-deep`/red family; **Track B (ITESM)** = `navy`/steel family; **Kuwait** callouts = green.
+
+## 4. Chart grammar (from native chart XML of Data Centers / KLA / Mitsubishi / FEMSA)
+
+* **Bar/column charts: no gridlines, value axis deleted** (12 of 12 stacked/clustered bar charts measured) — values live on data labels. **Line/scatter charts** keep a value axis (9–10 pt) and may use light gridlines (9 of 35 charts). Category axis: baseline line only (black 1 pt), labels 9–12 pt (9 pt is the mode).
+* Column charts: `gapWidth` **80** (mode; range 60–120), stacked `overlap` **100**, clustered `overlap` **−27**. Bars with solid fill, **no outlines, no 3-D, no shadow**.
+* Data labels: 9–11 pt (9 pt mode); inside white on dark segments, outside black above bars; **totals as bold labels above stacks** (hidden scatter/line series trick = "Total Capex" series with `dLblPos = t`).
+* Lines: 2.25 pt (28575 EMU) with no markers; average/target as red dashed (#F21C27) line.
+* Legend: **bottom**, 9–12 pt, no border. Single series → no legend.
+* Header block above each chart: 16 pt bold + 1 pt black rule + 12 pt *italic* unit/description ("Amounts in USD millions"). Source goes in the slide source line, not under the chart.
+* **Forecast zone**: light-grey (#F2F2F2, dotted pattern in Aztlan) rectangle behind estimate years + italic label "Consensus Forecast"; estimates in lighter tint; years suffixed `E`.
+* Callouts: oval "CAGR x.x%" bubble between first/last bar; dashed average line; waterfall with green (+)/red (−)/navy (total) bars.
+* Pie/donut: only for 2–4 slices, labels with %, hollow center for the key number.
+* Heat-map tables (sensitivity): red→yellow→green fill scale, highlighted base case with bordered cell (Ingevity s34, FEMSA s17).
+* Bloomberg/Yahoo **dark-theme screenshots are NOT pasted as charts** (they break the white system). Rebuild from data (CSV in `08_Assets/data`) in house style; use the original screenshot only as an "evidence" thumbnail with source in footer.
+
+## 5. Table grammar (COM-measured)
+
+* Header row: fill `#242852` (Aztlan) → **HAL: `hal-deep` #8B1318**, white bold 11 pt, centered; first column left.
+* Body: 11 pt, white / `#F2F2F2` zebra, numbers right-aligned, negatives in parentheses or red; **peer-median row bold on light fill**; subject-company row highlighted in light blue (Aztlan uses #C2D7F6 / #F2F2F2) → HAL: `#EAD2D2` (rose tint).
+* Borders: thin black rules top/bottom of table and under header only; no vertical borders (FEMSA table: thin gray horizontals).
+* Row height **0.32–0.36 in** for presentation tables (KLA s4/s10/s13 measured 0.325–0.355), **0.19–0.29 in** for financial-statement appendix tables (30 rows × 12 cols at 8–9 pt); actual columns white, estimate columns light-blue/yellow tint with a bold green "CAGR" band.
+* Always a left "Metric" column; units in the header (`$ in millions`).
+
+## 6. Component library (shapes found repeatedly)
+
+* **Colored header boxes** (3–5 across): rectangle with bold white 12–14 pt text, 0.3–0.4 in high, fill = series color; below each a white box with thin outline and 10–11 pt bullets (KLA s3, Mitsubishi s11).
+* **Chevron/process chain** with a red dashed bracket for "where we focus" (KLA s7).
+* **Parallelogram section tags** (FEMSA s3), **roman-numeral agenda pills** (FEMSA s2: pill #9B2C39 + light-grey bar #F2F2F2, Helvetica 14).
+* **Dashed-outline bullet boxes** (GTT s22) for "evidence by region".
+* **"So what / Key takeaway" strip**: 12 pt bold in a `#F2F2F2` rounded box, thin top rule (Data Centers s4–s7 "Key Takeaways" column, FEMSA bottom bullets).
+* Logos: 0.5–0.9 in high, always on white, aligned to a box; company logo at top-right of the *content* when profiling that company (KLA s3, Mitsubishi s3).
+* Pictures (company photos) get **no border**, cropped to the box, 0.1 in minimum gap to text; max 1–2 per slide.
+
+## 7. Slide-type catalogue (what exists / what does NOT)
+
+Standard sequence in the user's decks: **Cover → (Disclaimer) → Company overview → Quant/Model (skip) → Investment call → Key topics (3–6 slides, each = claim title + chart/diagram + bullets) → Market/Competition → Financials (appendix: IS, ratios, valuation, CF, BS, WACC, DCF, sensitivity) → Closing**. Section divider = full-color slide with giant title (GTT s8/s19/s25).
+
+What the templates **do not** use (so do not add it): clip-art, stock icons in color boxes (except think-cell icon sets), 3-D effects, shadows, gradients on shapes, drop caps, more than 2 fonts, emojis, animated builds, text below 9 pt in body, centered paragraphs, colored backgrounds on content slides (only cover/divider/closing), headline without a verb ("Revenue" ≠ "Revenue grew 12% on…"). Titles are **action sentences** (≤ 70 chars, one line at 28 pt over 9.8 in ≈ 62 chars) with the subtitle carrying the quantified so-what.
+
+## 8. Cover & closing spec (user-provided image)
+
+Files (all in `08_Assets/cover/`): `cover_original.jpg` (2048×1152, pixelated source) → **`cover_4k.png` / `cover_4k.jpg` (3840×2160, denoised + Lanczos ×1.875 + unsharp + fine grain)** → `cover_qhd.jpg` (2560×1440, light embed). Logos in `08_Assets/logos/`: `hal_logo_white_transparent.png` (2224×170, from Proxy filing native raster, alpha rebuilt) and `hal_logo_red_transparent.png`.
+
+Image analysis: left ~50% is flat deep red (#8B1318) = **safe text zone x ≤ 7.2 in**; bright diagonal ribbons run from lower-left to upper-right and occupy x ≥ 7.5 in; light-grey wedge at bottom-right (x ≥ 9.5, y ≥ 4.5) → never put white text there.
+
+**Cover layout (final):**
+| Element | Position / style |
+|---|---|
+| Background | `cover_4k.jpg` full-bleed 13.333×7.5 (set as picture, send to back) |
+| HAL logo (white) | x0.62 y0.70 w5.2 in (h≈0.40), left-aligned with title |
+| Kicker | x0.62 y2.55, Arial 14 caps, tracking +100, white 85 % : "FINA 405 · INTERNATIONAL FINANCIAL MANAGEMENT × ALTERNATIVE INVESTMENTS" |
+| Title | x0.62 y2.95 w6.6, Arial 40 white, 2 lines max: "Halliburton in Kuwait" / sub-line 24: "Financing an expansion in a pegged-currency market" |
+| Descriptor | Arial 16 white: "Debt issuance in global markets + alternative-investment overlay" |
+| Team block | x0.62 y5.55–6.85, Arial 12–14 white, **two labeled groups**: `TEAM 9 · USD:` Katie von Gillern, Quinn Dutrey, Ana Myers, Eddie Medina · `TEC de Monterrey:` Diego Martínez Velázquez, Julio César Silva De la Rosa, Alejandro Villanueva del Río |
+| Date | x0.62 y6.95, Arial 11 white 80 %: "October 2026" |
+| Footer rule | 0.5 pt white 60 % line at y5.40 spanning x0.62→6.9 separating title from team block |
+
+**Closing slide** (user precedent: *Deuda FEMSA* s17 = same art as cover with logo only; Aztlan closing = logo centered + one-line title): same image; HAL white logo x0.62 y0.70; "Thank you · Questions" Arial 40 white at y3.0; one-line recommendation recap (Arial 18) ; team block repeated small (Arial 11) at bottom-left; optional QR/Drive link none. Mirror image horizontally **not** needed.
+
+## 9. Evidence slides (Bloomberg / company images the user values)
+
+User instruction: *use the images the company and reports provide*. Rules:
+1. Prefer **native-resolution images** extracted from the PDFs (`08_Assets/company_images/`), not page renders. Placed size must keep ≥150 dpi: image px ÷ placed inches ≥ 150 → a 773 px-wide photo can be at most **5.1 in** wide; 892 px → 5.9 in; 2161 px → 14 in (full-bleed OK).
+2. Photos used as: right-hand 4.3–5.0 in column image (full-height of content area, cropped), or 3-up strip at the bottom (h 1.4 in). Caption = 10 pt italic below, `Source: Halliburton Q2-26 Investor Presentation`.
+3. Company charts (e.g., debt maturity, ROCE, cash-flow) → **rebuild natively** with the same numbers; cite the company deck in the source line. Keep the original page as backup only.
+4. Bloomberg Terminal screenshots → crop to the relevant panel, place at ≤ 6 in wide with 0.5 pt border #7F7F7F and the caption "Source: Bloomberg (DRSK, 11-Sep-2026)". Dark screenshots appear on **at most 1 slide per section**, framed in a white card so they read as exhibits.
+5. Licensing: BI/Bloomberg reports state *"exclusive use of DIEGO MARTINEZ … not for redistribution"* — cite, do not republish the full report; keep screenshots as classroom exhibits.
+
+## 10. Quality gate (apply before declaring any slide done)
+- [ ] Title ≤ 1 line @28 pt, is a sentence with a verb and a number or direction.
+- [ ] Subtitle 16 pt, deep-red, one line, states the "so what".
+- [ ] All text boxes inside x 0.575–12.877, y 1.30–6.78; nothing touches the logo zone (x ≥ 10.4, y ≤ 1.3).
+- [ ] ≤ 3 text sizes in the body area; no text < 10 pt (footnote 8–9 allowed); no justified text in columns < 4 in.
+- [ ] Max 1 chart pair or 1 chart + 1 text column per slide (never > 2 charts + table).
+- [ ] Every number traceable in `FACT_BASE.md` (ID in notes) and source line present.
+- [ ] Series colors in the palette order; one highlight color only.
+- [ ] Render to PNG (PowerPoint COM `Slide.Export`) and visually inspect every slide; run `tools/ppt_forensics.ps1` on the output and diff against this guide (fonts must all be Arial; sizes ∈ {8,9,10,11,12,14,16,18,24,28,40}).

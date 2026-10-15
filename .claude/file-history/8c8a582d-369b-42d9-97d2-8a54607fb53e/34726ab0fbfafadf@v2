@@ -1,0 +1,81 @@
+# OUR DASHBOARD — "HAL × Kuwait Financing Cockpit" (spec, not built yet)
+
+**Why we need it (beyond the professor's):** (1) the project says *"Teams will demonstrate a live scenario during the final presentation"* → the dashboard doubles as the **live-scenario engine** (paste Scenario-0 / Scenario-1Y market data → every number updates); (2) the 21-Oct external jury grades content **and presentation quality**; (3) his dashboard has no calculators and is empty for Kuwait rates (see `PROF_DASHBOARD_ANALYSIS.md` §4); (4) one place for the 7-person team to see the same verified numbers (`FACT_BASE.md`).
+
+## 1. Design principles
+* **Same brand system as the deck** (`07_Template_Analysis/tokens.json`): HAL red `#CC0000` / deep red `#8B1318`, slate `#2C394D`, greys, Kuwait green `#007A3D` for Kuwait items, navy `#242852` for Track B; light + dark theme; tabular numerals; Arial-compatible stack (`Inter, Arial, sans-serif`). No navy-gold "report" look of the professor's page.
+* **One question per view**, action-sentence headers (same as the deck), numbers first, prose second.
+* **Every number carries provenance**: hover/click badge → `fact_id`, source file/page, as-of date, status ✅/⚠️/❓ (from FACT_BASE). ❓ values render hatched and cannot feed headline KPIs.
+* **Charts = house style** (STYLE_GUIDE §4): no gridlines on bars, labels on bars, forecast shading, bottom legend; Plotly.js with a custom template; "Export PNG @2x" and "Copy as slide-ready image" on every chart.
+* **Presentation mode (P key):** full-screen single exhibit, 24 pt+ labels, hides chrome — for the video recording and the live demo.
+* **Accessible & responsive:** WCAG AA contrast, keyboard navigation (`1–9` jump to section), works at 360 px.
+
+## 2. Information architecture (mirrors the project Sections 1–8)
+Left rail (sticky) = the roadmap; global bar = **Scenario switch [S0 | S1Y]**, definition toggle (borrowings / incl. leases / Bloomberg), units (USD / KWD), theme, presentation mode, Data-status chip.
+
+| View | Content | Interactive elements |
+|---|---|---|
+| **Overview** | Recommendation card, 6 KPI tiles (ME/Asia 26%, KWD range 1.97%, Debt/Capital 40.5%, interest cover 5.1x, KIBOR 3M, Kuwait AA-/A+), risk heat-map (FX / activity / sovereign / credit), data-readiness checklist (what is ◇ pending) | click tile → deep-links to the view; tile definition toggle |
+| **1 Company** | Business & regions; 3-yr financials (revenue, margins, D/E, ND/EBITDA — with definition toggle); regional mix & **ME/Asia quarterly + FY26E forecast zone**; debt ladder + notes table (H29); liquidity (revolver, no covenants); credit (ratings, PD models side-by-side with definitions); **peer benchmark** (choose ≥5 ratios × 3–5 peers: SLB, BKR, NOV, WFRD); market-share | peer multi-select, ratio picker, time-range slider, definition toggle, hover reconciliation of 7,158 → 8,316 → 8,399 |
+| **2 Country** | KWD/USD daily + monthly with peg band & rolling vol; CPI vs (no numeric target) / policy rate path; rate structure (CBK 3.50%, KIBOR ON–1Y, USD curve) with term-spread badge; sovereign (Fitch AA-, S&P A+), governance; **conflict & Hormuz timeline** (UBS) with *play* animation over KWD, Brent, HAL price; 5-yr risk matrix (probability × severity); **final slide: macro → financing** | range brush, event filter pills, play/pause speed, risk matrix drag-to-rescore (team judgement) |
+| **3 FRA** | Scenario yield-curve table (editable / paste from Excel) → accumulation factors (semiannual) → **12×24 and 36×60 FRA rates**, vs spot; payoff diagram | paste-from-Excel box, curve editor with ±10 bp nudge (borrowed from his triangular tool), rate-shock slider, "show calculation" step list |
+| **4 Domestic bond** | Face = USD 100M × S₀ (KWD); 4% annual coupon paid semiannually; 10 cash flows; fair value = Σ CF discounted at local curve; **YTM solver**; duration/convexity; price–yield curve | coupon/tenor/face inputs, yield-shift slider (±200 bp), cash-flow table export |
+| **5 FX forwards** | IRP table F_t = S₀·(1+i_KWD/2)^{2t}/(1+i_USD/2)^{2t}, t = 0.5…5.0; hedge each coupon/principal → locked USD cost; unhedged vs hedged distribution; compare **forward vs option vs money-market hedge** | spot nudge, FX-shock slider (±2%, ±5%), peg-break scenario toggle (devalue x%), hedge ratio slider (0–100%) |
+| **6 IRS** | (pending Excel) structure builder: notional, fixed paid, floating received (KIBOR 6M), maturity; effective cost after swap; both legs | placeholders until the Excel arrives; same UI patterns |
+| **7 New conditions** | S1Y data: FX update, curve shifts, FRA P&L, new forwards (0.5…4.0), hedge performance | global Scenario switch re-computes all views; "compare S0 vs S1Y" diff view |
+| **8 Recommendation** | 3-strategy table (unhedged fixed / fixed + forward / floating after IRS): all-in USD cost, risk retained, effectiveness; Track-B alternatives as extra rows; written recommendation block | weight sliders on criteria (cost / risk / liquidity / practicality) → live ranking; sensitivity "what would change the answer" |
+| **Track B** | 6 module cards (crypto/stablecoins, ESG debt, PE/VC, real estate, hedge-fund overlay, structured products) with the verified facts (B01–B07, K12); ESG & NGFS charts; Brent positioning | card flip (fact ↔ implication), module → portfolio asset link |
+| **Portfolio $1M** | Allocator: ≥3 Track-A + ≥3 Track-B assets, weights sum to 100%, risk profile (conservative/balanced/aggressive), expected return (weighted), risk class / σ; diversification note; bubble chart (risk vs return, bubble = weight) + donut | sliders with constraint checker (turns red until valid), preset profiles, "reset to template" (proposal §9.3 example), PDF/PNG export |
+| **Evidence & data** | FACT_BASE browser (filter by status/section, click → source + page), conflict log E1–E14, image gallery (company photos, Bloomberg screenshots, charts) with lightbox, downloads of CSVs | filter pills, modal detail (like his `fx_dashboard.html`), search |
+
+## 3. Interactive features ranked (value for the team)
+1. **Live-scenario calculators (FRA / bond / forward / IRS)** with paste-in curves — directly satisfies the "live scenario" demo and Section 7 later.
+2. **Definition toggle** for leverage metrics + reconciliation tooltip (our key correction vs the professor's numbers).
+3. **Shock panel** (FX ±, rates ±, KOC activity −10/−20/−30%) → interest coverage and DSCR mini-model → feeds the Recommendation ranking.
+4. **Presentation mode + chart export** (house style PNG @2x) → the deck and the dashboard stay visually identical.
+5. **Timeline playback** (Hormuz events × KWD/Brent/HAL).
+6. **Portfolio allocator with constraint checks** (Track A + B).
+7. **Peer benchmark builder**.
+8. Evidence browser with provenance badges and conflict log.
+Nice-to-have: scenario save/share via URL hash, compare S0 vs S1Y diff, "explain this number" popover generated from FACT_BASE.
+
+## 4. Data model (single compact JSON, ~150 KB, + CSV series)
+```
+dashboard_data.json
+ meta:     {firm:"HAL", country:"Kuwait", ccy:"KWD", asof:"2026-10-02", scenario:"S0", version}
+ facts:    [{id:"H10", label, value, unit, source, page, asof, status, definition}]   // from FACT_BASE
+ series:   {kwd_usd_daily, kwd_usd_monthly, hal_price, me_asia_quarterly, brent_netlong, ...}  // CSVs in 08_Assets/data
+ tables:   {senior_notes (H29), segments_regions (H02-H05b), peers (H33…), esg (B03-B05), conflicts (E1-E14)}
+ scenario: {S0:{spot, curve_kwd:[{t,rate}], curve_usd:[{t,rate}]}, S1Y:{…}}                // ◇ pending Scenario Excel
+ images:   [{file, caption, source, px}]
+```
+Rules: no number in HTML text — everything rendered from `facts`/`series`; ranges validated on load (e.g., yields 0–25%, ratios plausible) to prevent the professor's "200% dividend yield" class of bug.
+
+## 5. Calculation specs (must match the project document, FACT_BASE §F)
+* Accumulation factor AF(T) = (1 + i_T/2)^{2T} (annual rates, semiannual compounding). FRA a×b: f = 2·[(AF(b)/AF(a))^{1/(2(b−a))} − 1]. Test vectors required in `tests/` (hand-computed examples).
+* Bond: face_KWD = 100,000,000 × S₀ (S₀ in KWD per USD; ≈ 0.308 at today's KWD/USD ≈ 3.24 — always use the scenario's S₀); coupon per period = 4%/2 × face; PV = Σ CF_t / (1 + y_t/2)^{2t} (curve-based); YTM = solve Σ CF/(1+y/2)^{k} = price (bisection).
+* Forwards: F_t = S₀ × (1+i_quote/2)^{2t} / (1+i_base/2)^{2t} with F in local currency per USD, i_quote domestic, i_base US; hedged USD cost of each KWD payment = payment / F_t(KWD per USD) … state convention on screen.
+* IRS: effective rate = bond coupon − floating received + fixed paid (per period), both legs shown; details from the Excel when available.
+* Section 8: all-in USD cost = IRR of USD-converted cash flows for each strategy.
+
+## 6. Tech & delivery options
+| Option | Pros | Cons |
+|---|---|---|
+| **A. Claude Artifact (HTML, private link, shareable; can store team state)** — recommended for build/iteration | instant link for the 7 members, no hosting, supports shared state (e.g., portfolio weights, risk scoring) via runtime capabilities | needs the artifact-capabilities/design skills at build time; assets via inline/CDN only |
+| B. GitHub Pages single HTML (like the professor) | simple, permanent URL | manual hosting; no shared state without a backend |
+| C. Local HTML in the folder | works offline for the live demo | not shareable |
+Libraries: Plotly.js (cdnjs), vanilla JS or Alpine; no build step; all data inline. **Offline fallback:** same file saved locally for the live demo.
+
+## 7. Build plan (when the user says go)
+1. Data pack: generate `dashboard_data.json` from FACT_BASE + CSVs (script `10_Dashboard/build_data.py`).
+2. Shell: layout, tokens, theme, nav, provenance badges, presentation mode.
+3. Views 1–2 (Company, Country) with real data; Evidence browser.
+4. Calculators 3–5 with paste-in scenario + test vectors; Recommendation (view 8) logic.
+5. Track B + Portfolio allocator.
+6. QA: contrast, keyboard, 360 px, unit tests for formulas, cross-check numbers vs deck; export all charts for the deck.
+Estimated: MVP (steps 1–4) in one build session; polish in a second.
+
+## 8. Open items for the dashboard
+* Scenario-0 / IRS Excel (Q1) — views 3–7 run on placeholder curves until then (clearly watermarked "ILLUSTRATIVE").
+* Confirm hosting choice (A vs B) and whether the instructor must be able to open it (public link) — if public, strip internal commentary and Bloomberg screenshots (licensing).
+* Decide if Spanish toggle is wanted (deck is English).

@@ -1,0 +1,67 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb=$null; foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("SOTP") }
+$dst=Join-Path "C:\Users\cesar\OneDrive\Desktop\Alumasc & Peers\Alumasc\Financials" ("BACKUP_PRE_EXITMULT_"+(Get-Date -Format "yyyyMMdd_HHmmss")+"_"+$wb.Name)
+$wb.SaveCopyAs($dst)
+Write-Output ("Libro: "+[string]$wb.Name+"   Backup: "+(Split-Path $dst -Leaf))
+
+# guards
+if([string](T { $s.Cells.Item(9,2).Text }) -ne "Water Management"){ throw "B9 cambio" }
+foreach($a in "B7","L21","M21","L22","M22","L23","M23","L41","L61","L81"){
+  if(([string](T { $s.Range($a).Text })).Trim() -ne ""){ throw ($a+" no esta vacia") }
+}
+Write-Output "Guards OK"
+$xl.Calculation=-4135
+$NAVY=5384228; $CREAM=13300991; $LGREY=10921638
+
+# ---------- toggle global ----------
+T { $s.Range("B7").Value2="Gordon Growth" }
+T { $s.Range("C7").Value2="<-- Terminal Value Method:  Gordon Growth  /  Exit Multiple" }
+T { $s.Range("B7").Interior.Color=$CREAM }
+T { $s.Range("B7").Font.Bold=$true }
+$dv=T { $s.Range("B7").Validation }
+try{ $dv.Delete() }catch{}
+try{ $s.Range("B7").Validation.Add(3,1,1,"Gordon Growth,Exit Multiple") }catch{}
+
+# ---------- bloque por segmento ----------
+#  off, EBITDA row, FCFF row, g row, WACC row, multiplo semilla, etiqueta
+$blocks=@(
+ @(0 ,13,23,12,16,10.84,"Median of 9 water / drainage peers"),
+ @(20,33,43,32,36,11.43,"Median of 5 roofing / waterproofing peers"),
+ @(40,53,63,52,56, 9.35,"Median of 6 housebuilding products peers"),
+ @(60,73,83,72,76, 7.90,"Held at the model's own implied GGM multiple"))
+foreach($b in $blocks){
+  $o=$b[0]; $eb=$b[1]; $fc=$b[2]; $gr=$b[3]; $wa=$b[4]
+  T { $s.Cells.Item(21+$o,12).Value2="Terminal Value Exit Multiple" }
+  T { $s.Range("L"+(21+$o)).Font.Bold=$true }
+  T { $s.Cells.Item(22+$o,12).Value2="Exit multiple (EV/EBITDA)" }
+  T { $s.Cells.Item(22+$o,13).Value2=$b[5] }
+  T { $s.Range("M"+(22+$o)).NumberFormat='0.00"x"' }
+  T { $s.Range("M"+(22+$o)).Interior.Color=$CREAM }
+  T { $s.Cells.Item(23+$o,12).Value2="Implied g at that multiple" }
+  # g = (TV*w - FCFF) / (TV + FCFF)   con TV = EBITDA_T * multiplo
+  $f="=+IFERROR((J"+$eb+"*M"+(22+$o)+"*M"+$wa+"-J"+$fc+")/(J"+$eb+"*M"+(22+$o)+"+J"+$fc+"),0)"
+  T { $s.Cells.Item(23+$o,13).Formula=$f }
+  T { $s.Range("M"+(23+$o)).NumberFormat="0.0%" }
+  T { $s.Cells.Item(24+$o,12).Value2=$b[6] }
+  T { $s.Range("L"+(24+$o)).Font.Italic=$true }
+  T { $s.Range("L"+(24+$o)).Font.Size=9 }
+  T { $s.Range("L"+(24+$o)).Font.Color=$LGREY }
+}
+Write-Output "  inputs de exit multiple en L21/L41/L61/L81"
+
+# ---------- summary: TV con switch Y referencias por segmento arregladas ----------
+$tv=@(@(92,13,23,12,16,22),@(96,33,43,32,36,42),@(100,53,63,52,56,62),@(104,73,83,72,76,82))
+foreach($t in $tv){
+  $row=$t[0]; $eb=$t[1]; $fc=$t[2]; $gr=$t[3]; $wa=$t[4]; $mu=$t[5]
+  $f="=+IFERROR(IF(`$B`$7=""Exit Multiple"",J"+$eb+"*M"+$mu+",J"+$fc+"*(1+M"+$gr+")/(M"+$wa+"-M"+$gr+")),0)"
+  T { $s.Range("D"+$row).Formula=$f }
+}
+Write-Output "  terminal values con switch + g y WACC por segmento (arregla las referencias rotas)"
+
+$xl.Calculation=-4105
+T { $xl.CalculateFullRebuild() }
+$wb.Save()
+Write-Output "guardado - metodo actual: Gordon Growth"

@@ -1,0 +1,21 @@
+import io, os
+root = r"G:\.shortcut-targets-by-id\1wYoG0nnC8svaqyBKZ-61uOpLfK_2VHVY\AZTLAN\Research\Company Research\Materials\2_Fuso Chemicals"
+
+def edit(path, pairs):
+    t = io.open(path, encoding="utf-8").read()
+    for old, new in pairs:
+        assert old in t, "NOT FOUND in %s: %s" % (os.path.basename(path), old[:80])
+        t = t.replace(old, new, 1)
+    io.open(path, "w", encoding="utf-8").write(t)
+    print("ok", os.path.basename(path))
+
+edit(os.path.join(root, "FUSO_Notes.md"), [
+    ("- Late 1980s to 1990s: start of electronics business with trial production of colloidal silica (the history table lists \"電子材料「コロイダルシリカ」の試験生産開始\"; exact year not mapped with confidence [ND]).",
+     "- Electronics business start: the history table lists \"電子材料「コロイダルシリカ」の試験生産開始\" (trial production of colloidal silica), but the year is not reliably mapped from the converted table [ND]."),
+    ("(founded 1994, 30th anniversary in 2024 [D: Topics P?])", "(founded 1994, 30th anniversary in 2024 [D: 07_FUSO-TOPICS])"),
+    ("[D: Yuho26 P95-ish income statement; I: ratios]", "[D: Yuho26 consolidated income statement; I: ratios]"),
+])
+
+edit(os.path.join(root, "_NOTES.md"), [
+    ("## Layout\n", "## Start here\n- **`FUSO_Notes.md`**: living company file in English, organized by `/company_overview` section (1 to 16) plus appendices (capex timeline, benzene, glossary, source index). Update it and its changelog whenever new facts arrive.\n- `Fuso_DeepDive_2026-10-12.md`: Spanish learning memo (capex, segments, HBM/CMP, financials, benzene).\n- `Company/Fase0_descargas_IR/Prompt_Fuso_DeepDive_v0.1.md`: the prompt behind the memo.\n\n## Layout\n"),
+])

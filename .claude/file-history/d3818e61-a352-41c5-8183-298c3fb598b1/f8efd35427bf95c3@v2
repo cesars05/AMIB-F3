@@ -1,0 +1,16 @@
+---
+name: project-bimbo-market-growth-tab
+description: "How the Market Growth & Inflation tab of Bimbo Financial Model_v2.xlsx is built (Euromonitor-driven revenue growth 2026-2030) and the user's editing preferences"
+metadata:
+  node_type: memory
+  type: project
+  originSessionId: d3818e61-a352-41c5-8183-298c3fb598b1
+  modified: 2026-10-03T20:47:48.844Z
+---
+
+Tab `Market Growth & Inflation` in `Reporte & Presentacion/Bimbo Financial Model_v2.xlsx` (CFA Research Challenge, Bimbo). Bimbo revenue growth by region = Euromonitor market growth (local currency, current prices) x Bimbo share, with share change as a blue pp input (rows 8-11, base 0), FX at 2-Oct-2026 spot (USD/MXN 18.1903, USD/CAD 1.4251), CAGR 25-30 in column P, 5% sanity flag (C24). Proxies: EAA = Spain, LatAm = Brazil. Source blocks start at the "Source Data" header (about row 154), Euromonitor inputs in blue.
+
+**Why:** the user wants forecasts that make sense versus history (they suspect a region cannot grow much above 5%), and wants inputs in blue.
+**How to apply:** the workbook is open live from OneDrive, so edit it through Excel COM (pywin32 GetActiveObject), never openpyxl, and touch only this tab. Respect existing formatting (Arial 11, header fills, blue inputs, gray sub-rows). The user edits the file concurrently, so re-read row positions before writing. Open items: EAA/LatAm proxies are weak, Brazil BRL growth is inflation-heavy, FX step switch (C109) default 0.
+
+Related: [[user-role]]

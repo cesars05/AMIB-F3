@@ -1,0 +1,76 @@
+# LAYOUT LIBRARY (vary the composition — never repeat the same layout twice in a row)
+
+Each layout has an ID, a **source slide** to imitate (PNG in `renders/<deck>/slide_NN.png`, formatting table in `specs/<deck>.md`), the **zones** (inches) and the **HAL-deck use**. Deck keys: `KLA`=202608024_KLA_Corporation · `MIT`=20260904_Mitsubishi_Co_v7 · `GTT`=20260713_Gaztransport_et_Technigaz · `DC`=20260616_Data_Centers_Capex_v5 · `ING`=20260928_Ingevity_Corp_v2 · `FEM`=M_A_FEMSA · `TC`=Thinkcell.
+Slide numbers are true PowerPoint slide numbers (Ingevity has hidden slides 11 and 15, already accounted for). Zones for E*/C4/D5 etc. are proposed from the measured grid; zones quoted with a source slide were measured. All coordinates inside the content area x 0.575–12.877, y 1.446–6.78 unless stated. Titles/subtitles/source/page number per STYLE_GUIDE §1.
+
+## A. Frame slides
+| ID | Source | Description | Use in HAL deck |
+|---|---|---|---|
+| **F1 Cover** | FEM s1 (+ user image) | Full-bleed image, white HAL logo, title, team block (STYLE_GUIDE §8) | Slide 1 |
+| **F2 Agenda (roman pills)** | FEM s2 | Pills x0.731 w0.622 (#9B2C39→`hal-deep`) + bars x1.679 w10.99 h0.38 (#F2F2F2), step 0.573 in | Agenda / roadmap of 5 phases + Track B |
+| **F3 Section divider** | GTT s8/s19/s25 · KLA s18 | Full-color slide, title Arial 40 white + subtitle 24; logo left | One per phase (01…05) — use `hal-deep` field, white text |
+| **F4 Closing** | KLA s18 / user image | Same image as cover; thank-you + recap | Last slide |
+| **F5 Executive summary / thesis** | KLA s6, ING s7 | Text-only 14 pt: 1 intro bullet, "Catalysts" (bold label) with 4–5 bold-lead-in bullets, "Key Risks to Monitor" with red lead-ins. Full width x0.575 w12.3, **justified** | Exec summary (recommendation first) |
+
+## B. Chart-led layouts
+| ID | Source | Zones | Use |
+|---|---|---|---|
+| **C1 Full-width stacked/clustered columns + forecast shading** | DC s3 | chart x0.56 y1.40 w12.32 h5.46; grey forecast zone behind last 3 columns; totals above; legend bottom; unit note in source line | HAL revenue by region 2021–2027E (estimate zone); revenue bridge |
+| **C2 Text left + 2 stacked charts right** | KLA s14 | text x0.575 w7.1 (14/12 pt bullets, bold lead-ins); chart headers x8.085 w4.79: header y1.446, rule y1.817, unit label y1.816, chart y2.107 h2.0; 2nd block y4.198/4.568/4.653 | ME/Asia revenue + backlog/FCF; Kuwait macro (CPI + policy rate) |
+| **C3 Two charts side-by-side with section headers** | KLA s9/s10, DC s4/s5 | headers x0.575 / x7.035 w5.842 (16 bold #404040) y1.473 + rule y1.823; italic 12 pt sub-header y1.864; chart y2.112 h4.646; bullet strip under | KWD/USD 5-yr monthly (line) vs 10Y T-yield; KWD vs USD rates (FRA context) |
+| **C4 Chart + "Key takeaways" column** | DC s6/s7 | chart x0.575 w7.4 h5.0 · takeaway column x8.2 w4.7 (bold header + 4 bullets 12 pt, red clause for risk) | Bond cash-flow profile with hedge; portfolio return vs risk |
+| **C5 Waterfall + bullets** | GTT s21, FEM s16 | waterfall x0.575 w6.2 h3.0 (green +, red −, navy totals); bullets x7.0 w5.9 | FX-hedged vs unhedged USD cost bridge; EV→equity bridge for real estate |
+| **C6 Table-below-chart** | KLA layout `1ChartTableBelow` | chart y1.40 h3.2 + table y4.7 h1.9 (11 pt) | Debt maturity profile + key terms table |
+| **C7 Line chart with annotation callouts** | KLA s17, DC s4/s7 | chart full width; callout ovals (CAGR, current price, high/low) | KWD peg stability; Brent/WTI path |
+| **C8 Bubble / scatter map** | DC s9, TC s19 | chart x0.575 w12.3; bubble size = size metric; quadrant lines dashed | Track-B asset universe: risk (x) vs expected return (y), bubble = allocation |
+| **C9 Donut + KPI cards** | ING s4/s23, GTT s20 | donut x0.9 w3 + 3–4 KPI tiles (number 24 bold + 10 pt label) | Revenue by region; portfolio allocation |
+| **C10 Heat-map sensitivity** | ING s34, FEM s17 | 2 stacked tables, red→yellow→green fill scale, base case with box | FRA/forward/IRS sensitivity (rate × spread, FX × tenor) |
+
+## C. Table-led layouts
+| ID | Source | Zones | Use |
+|---|---|---|---|
+| **T1 Peer benchmark table** | KLA s13, MIT s21, ING s20 | table x0.575 w12.3, header `hal-deep` white 11 bold, subject row highlighted, peer-median row bold; row h 0.32–0.36 | HAL vs SLB/BKR/WFRD leverage & margins |
+| **T2 KPI snapshot + commentary** | KLA s15 | left table x0.575 w6.6 (FY24/25/26 + YoY), right bullets x7.5 w5.4 | Company financial snapshot FY23–FY25 + Q2-26 |
+| **T3 Segment table with color keys** | MIT s3 | 7 colored segment tags (h0.3 fill) + metric columns + 10 pt description | HAL segments (C&P / D&E) + regions |
+| **T4 Financial statements (appendix)** | MIT s23–s27, ING s26–s30 (+WACC s31, DCF s32–33) | `FinancialStatements` layout; 8–9 pt; estimates tinted; CAGR band | Appendix: HAL IS/BS/CF 2021–2027E from Bloomberg |
+| **T5 Terms / term-sheet table** | FEM s9 (EV/Equity boxes), FEM s14 | 2-column key terms + right analysis column | Bond term sheet; forward quote sheet; swap terms |
+| **T6 Comparison grid with photos/logos** | FEM s12 | 3 columns with picture header (h1.5) + 8-row attribute table | KOC vs other counterparties; Track A vs Track B instruments |
+
+## D. Diagram / framework layouts (built from native shapes — editable)
+| ID | Source | Zones | Use |
+|---|---|---|---|
+| **D1 3–5 colored header boxes + bullet boxes** | KLA s3, MIT s11, GTT s3 | headers h0.34 fill series color, white bold 12; body boxes thin outline 10–11 pt | Business segments; "Enhance / Reshape / Create"-style framework for financing options |
+| **D2 Process chain (chevrons)** | KLA s7 | 5–6 chevrons h0.45 + red dashed bracket for scope; notes below | The 8-step financing roadmap, highlighting steps 1–5 (video scope) |
+| **D3 Tree / hierarchy** | MIT s10, KLA s12 | root box top-center, 4 children, bullet boxes below | Risk hierarchy (FX / activity / sovereign / credit) |
+| **D4 Three-column compare with colored heads + dashed boxes** | GTT s22, s24 | 3 heads (h0.4) + dashed-outline bullet boxes + flag/logo | Kuwait vs peers; unhedged / forward / swap comparison |
+| **D5 Numbered drivers with photos + conclusion chevron** | GTT s9 | 3 rows (photo 1.1×0.75, numbered navy circle, title in accent, 2 sub-lines) + big chevron → conclusion | "Three reasons the dinar peg limits FX risk" |
+| **D6 Map with callouts** | MIT s17/s18, ING s4, TC s9 | map x0.6 w7, callout boxes | Hormuz / Kuwait footprint (HAL IR map FIG-004) |
+| **D7 Funnel / pyramid / venn / circles / swim-lane / timeline / road-map / process stages** | TC s2–s18 | see TC render sheets `contact/Thinkcell_*.png` | Roadmap (TC s13/s17/s18), Track A × Track B integration (TC s5/s7), decision funnel (TC s2/s3), portfolio pyramid (TC s4), execution swim-lane (TC s16) |
+| **D8 Build-up equation (boxes with +, ×, =)** | FEM s13 | 5 boxes + donut | Cost-of-debt build (base rate + credit spread + FX/hedge cost = all-in cost) |
+
+## E. Evidence layouts (images the user wants to see used)
+| ID | Source | Zones | Use |
+|---|---|---|---|
+| **E1 Photo column + bullets** | GTT s3 (right image), MIT s3 | image x8.4 y1.5 w4.45 h5.2 (crop), bullets left | Company overview (HAL IR photos: desert rig p3, trucks p15, frac fleet p13) |
+| **E2 3-photo strip** | KLA s16 customers strip / GTT s9 | strip y5.3 h1.4, 3 images equal width | Services/regions slide |
+| **E3 Terminal screenshot exhibit** | KLA s17 (stock screenshot) | card x0.575 w8 h4.9 with 0.5 pt border + commentary right | Bloomberg DRSK/MIPD, Yahoo KWD/USD, news summaries (framed on white) |
+| **E4 Quote / news card** | FEM s4 (quotes row) | grey tag at left + 3 quotes | Management quotes from Q2-26 call (Kuwait, conflict, guidance) |
+
+## F. Pairing rules (to avoid sameness)
+* Max 2 consecutive slides from the same family (A/B/C/D/E). Alternate chart ↔ text ↔ diagram.
+* Every phase = divider (F3) → 1 context/diagram slide (D*) → 1–2 quantitative slides (C*/T*/C10) → 1 "implication/decision" slide (F5-style or D4).
+* Use at most 3 different dark-red fills per slide; icons only from Think-cell sets (green outline) and recolored to `hal-deep`.
+* Keep identical positions for title/subtitle/source across all slides (pixel-identical); vary only the content area.
+
+## G. Debt-deck layouts (from the user's `Deuda FEMSA.pdf`; see `specs/Deuda_FEMSA.md`, renders in `renders/Deuda_FEMSA/`)
+Key for Section 4 (bond) and Section 8 (recommendation). Key `DEU` = Deuda_FEMSA.
+| ID | Source | Description | Use in HAL deck |
+|---|---|---|---|
+| **T7 Bond table with flags** | DEU s4, s12 | 6 columns: bond, issue date, maturity, coupon type, rate, currency flag, outstanding; circled rows = action; header fill brand color, 10–12 pt | Existing HAL notes vs new KWD bond (add flag icons US/KW) |
+| **C11 Maturity ladder (stacked column + weighted-maturity pill)** | DEU s4, s12 | single stacked column by maturity bucket, label with year at right, pill "15.62 yrs" | HAL maturity profile (H14) with the new 5-yr KWD tranche highlighted |
+| **D9 Term-sheet cards** | DEU s7, s10, s11 | rounded cards: dark header strip + 3 label/value boxes (Notional / Coupon / Tenor) ; results card with big green number | KWD bond card (face KWD ≈ 30.7M ◇, coupon 4%, 5 yrs); hedge result card |
+| **D10 Covenant / condition grid (2×3)** | DEU s14 | grey title strip + wine sub-header + short paragraph | Hedge-policy, accounting, liquidity considerations |
+| **T8 Counterparty table with logos** | DEU s15 | 4 columns (adviser / role / rationale / cost) with logos | Banks for FX forwards / FRA / IRS (only if sourced) |
+| **F6 Numbered conclusion cards** | DEU s16 | 3 horizontal cards: circle 01–03, accent bar, bold header, 3 bullets, footer band | Exec summary & final recommendation |
+| **F7 Cover/closing pair** | DEU s1/s17 | same full-bleed brand art; cover = names italic bottom-left + title; closing = logo only | Cover/closing per STYLE_GUIDE §8 |
+| **C13 Leverage bars + dashed target + benchmark coupon bars** | DEU s3, s8 | column chart with own bar in brand color, others grey, dashed policy line (2.0x) | HAL Net debt/EBITDA vs 1.5x BI reference; coupon benchmark vs Kuwait sovereign |

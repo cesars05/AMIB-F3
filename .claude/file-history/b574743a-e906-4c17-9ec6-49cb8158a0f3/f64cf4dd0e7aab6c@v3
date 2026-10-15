@@ -1,0 +1,382 @@
+# ---------- V2 (11-oct-2026): hojas nuevas y ajustes. Se ejecuta con exec() desde build_v3_tail.py (antes de ordenar y guardar) ----------
+import os, csv
+from openpyxl.chart import BarChart, Reference, Series
+from openpyxl.chart.label import DataLabelList
+
+# ===== A) Escenarios: columnas del caso conservador y sin fallas =====
+EX = wb["Escenarios"]
+for col, w in zip("OPQRS", (11, 11, 11, 13, 13)):
+    EX.column_dimensions[col].width = w
+for col, h in zip("OPQRS", ["Conservador:\ncrec. EBITDA", "Conservador:\ndilución", "Conservador:\nmúltiplo s/e", "Múltiplo\nconservador", "Múltiplo\nsin fallas"]):
+    c = EX[f"{col}5"]; c.value = h; header_style(c, "center")
+for i, e in enumerate(empresas):
+    r = 6 + i
+    cons = e.get("cons")
+    put(EX, f"O{r}", cons[0] if cons else None, "in", "0.0%", align="center")
+    put(EX, f"P{r}", cons[1] if cons else None, "in", "0%", align="center")
+    put(EX, f"Q{r}", cons[2] if cons else None, "in", "0.00x", align="center")
+    put(EX, f"R{r}", f'=IF(L{r}<>"",L{r},(1+O{r})^H{r}*(1-P{r})*Q{r})', None, NF_X, bold=True, align="center")
+    put(EX, f"S{r}", f"=(1+I{r})^H{r}*(1-J{r})*K{r}", None, NF_X, bold=True, align="center")
+rt_ = 6 + n
+for col in "RS":
+    put(EX, f"{col}{rt_}", f"=SUMPRODUCT({col}6:{col}{rt_-1},Hoja1_Portafolio!$I$18:$I$25)/SUM(Hoja1_Portafolio!$I$18:$I$25)", None, NF_X, bold=True, align="center")
+    EX[f"{col}{rt_}"].border = Border(top=THIN)
+put(EX, "B4", "Regla del caso calibrado: múltiplo = (1 + crecimiento anual del EBITDA)^años × (1 − dilución por rondas futuras) × (múltiplo de salida ÷ múltiplo de entrada). Sin expansión de múltiplo (cociente ≤ 1.0x). Un valor en 'Override' sustituye a la fórmula (empresas que fallan). Los parámetros de las 5 empresas que funcionan están calibrados para que la TIR neta con fechas del caso base quede en ≈18%; las columnas O a S guardan el caso Conservador y el caso Sin fallas.", "note")
+put(EX, "B3", "Tres conjuntos de supuestos; el conjunto en uso se elige en Hoja1_Portafolio (celda C15) y alimenta toda la cascada. Caso base = Calibrado (3 empresas fallan).", "note")
+
+# ===== B) Hoja2: la cifra a comunicar es la TIR con calendario real =====
+H2["B39"].value = "TIR simplificada de clase: múltiplo neto^(1/años) - 1 (convención del curso; piso)"
+H2["B42"].value = "TIR NETA DE LOS LPs CON CALENDARIO REAL (cifra a comunicar)"
+for col in "BDEF":
+    H2[f"{col}42"].font = base_font(bold=True)
+for col in "DEF":
+    H2[f"{col}42"].number_format = NF_PCT; H2[f"{col}39"].number_format = NF_PCT
+    H2[f"{col}42"].fill = PatternFill("solid", fgColor=MENTA)
+H2["B42"].fill = PatternFill("solid", fgColor=MENTA); H2["C42"].fill = PatternFill("solid", fgColor=MENTA)
+
+# ===== C) Football_Field =====
+FF = wb.create_sheet("Football_Field")
+set_sheet(FF, tab=LIMA, widths={"B": 60, "C": 13})
+for k in range(4, 20): FF.column_dimensions[L(k)].width = 13
+put(FF, "B2", "Aurex Capital - Football field: MOIC neto y TIR neta del LP por caso", "title")
+put(FF, "B3", "Cada caso recalcula la cascada europea completa con aportaciones y salidas en su año (misma mecánica que Hoja2). Azul = supuesto de la sensibilidad. Una sola TIR a comunicar: la neta con calendario real.", "note")
+put(FF, "B5", "Parámetros de las sensibilidades", "sec")
+for col in "CDEFG": FF[f"{col}5"].border = Border(bottom=THIN_G)
+put(FF, "B6", "Salida tardía (años de retraso)"); put(FF, "C6", 1, "in", "0", align="center")
+put(FF, "B7", "Recorte de múltiplos de salida"); put(FF, "C7", 0.20, "in", "0%", align="center")
+put(FF, "B8", "Dilución adicional (puntos)"); put(FF, "C8", 0.10, "in", "0%", align="center")
+put(FF, "B9", "Menor crecimiento del EBITDA (puntos)"); put(FF, "C9", 0.03, "in", "0.0%", align="center")
+put(FF, "B10", "Referencia: TIR mediana de fondos con actividad en México (AMEXCAP 1S-2026)"); put(FF, "C10", 0.1615, "in", "0.00%", align="center")
+put(FF, "B11", "Referencia: TIR neta estimada AINDA Fondo I (Techla, sep-2025)"); put(FF, "C11", 0.155, "in", "0.0%", align="center")
+
+CASES = [
+    # nombre, tipo, fallan(set de nombres o None), shift
+    ("Base (3 fallan)", "F", None, 0), ("Bajo (x0.5)", "bajo", None, 0), ("Alto (x1.10)", "alto", None, 0),
+    ("Conservador", "R", None, 0), ("Sin fallas", "S", None, 0),
+    ("Falla 1 (Uriel)", "sel", {"Uriel Renovables (BRM)"}, 0), ("Fallan 2 (Uriel, FAZT)", "sel", {"Uriel Renovables (BRM)", "FAZT"}, 0),
+    ("Equipo v1", "D", None, 0), ("Monte Carlo P50", "E", None, 0),
+    ("Salida +1 año", "F", None, "shift"), ("Múltiplos -20%", "haircut", None, 0),
+    ("Dilución +10 pts", "dil", None, 0), ("Crecimiento -3 pts", "crec", None, 0),
+    ("Estrés: fallan 5", "estres", None, 0),
+]
+nc = len(CASES)
+R_H = 14  # fila de encabezado de la matriz
+put(FF, f"B{R_H-1}", "Múltiplo de salida por empresa y caso", "sec")
+for k in range(nc + 1): FF[f"{L(3+k)}{R_H-1}"].border = Border(bottom=THIN_G)
+c = FF[f"B{R_H}"]; c.value = "Empresa"; header_style(c, "left")
+put(FF, f"B{R_H+1}", "Años de retraso en la salida", italic=True)
+for k, (nm, tp, fs, sh) in enumerate(CASES):
+    col = L(3 + k)
+    c = FF[f"{col}{R_H}"]; c.value = nm; header_style(c, "center"); c.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+    put(FF, f"{col}{R_H+1}", "=$C$6" if sh == "shift" else 0, None if sh == "shift" else None, "0", align="center")
+FF.row_dimensions[R_H].height = 32
+M0 = R_H + 2  # primera fila de empresas
+for i, e in enumerate(empresas):
+    r = M0 + i; er = 6 + i
+    put(FF, f"B{r}", f"=Hoja1_Portafolio!B{18+i}", "link")
+    for k, (nm, tp, fs, sh) in enumerate(CASES):
+        col = L(3 + k)
+        if tp == "F": f = f"=Escenarios!F{er}"
+        elif tp == "bajo": f = f"=Escenarios!F{er}*Hoja1_Portafolio!$C$33"
+        elif tp == "alto": f = f"=Escenarios!F{er}*Hoja1_Portafolio!$C$34"
+        elif tp == "R": f = f"=Escenarios!R{er}"
+        elif tp == "S": f = f"=Escenarios!S{er}"
+        elif tp == "sel": f = f"=Escenarios!F{er}" if e["nombre"] in fs else f"=Escenarios!S{er}"
+        elif tp == "D": f = f"=Escenarios!D{er}"
+        elif tp == "E": f = f"=Escenarios!E{er}"
+        elif tp == "haircut": f = f"=Escenarios!F{er}*(1-$C$7)"
+        elif tp == "dil": f = f'=IF(Escenarios!L{er}<>"",Escenarios!F{er},Escenarios!F{er}*(1-Escenarios!J{er}-$C$8)/(1-Escenarios!J{er}))'
+        elif tp == "crec": f = f'=IF(Escenarios!L{er}<>"",Escenarios!F{er},(1+Escenarios!I{er}-$C$9)^Escenarios!H{er}*(1-Escenarios!J{er})*Escenarios!K{er})'
+        elif tp == "estres": f = "=0" if e["nombre"] in ("Pireos Power", "XC Generation") else f"=Escenarios!F{er}"
+        put(FF, f"{col}{r}", f, "link", NF_X, align="center")
+MT = M0 + n
+put(FF, f"B{MT}", "Múltiplo del portafolio sobre lo invertido", "tot")
+for k in range(nc):
+    col = L(3 + k)
+    put(FF, f"{col}{MT}", f"=SUMPRODUCT({col}{M0}:{col}{MT-1},Hoja1_Portafolio!$I$18:$I$25)/Hoja1_Portafolio!$C$12", "tot", NF_X, align="center")
+
+# --- bloques de cascada por caso ---
+B0 = (M0 + n + 3) + 10 + 32  # bloques debajo de los gráficos
+BH = 11       # filas por bloque
+yrs_ = [L(4 + k) for k in range(10)]
+put(FF, f"B{B0-2}", "Cálculo anual de la cascada por caso (soporte)", "sec")
+for k in range(11): FF[f"{L(3+k)}{B0-2}"].border = Border(bottom=THIN_G)
+RES = {}
+for k, (nm, tp, fs, sh) in enumerate(CASES):
+    r0 = B0 + k * BH
+    mc = L(3 + k)
+    rng = f"${mc}${M0}:${mc}${MT-1}"
+    put(FF, f"B{r0}", nm, bold=True)
+    for j, col in enumerate(yrs_):
+        c = FF[f"{col}{r0}"]; c.value = j + 1; header_style(c); c.number_format = "0"
+    lab = ["Proceeds del año", "Proceeds acumulados", "Preferente pagado (acum.)", "Catch-up al GP (acum.)", "Total acumulado de los LPs", "Distribución a los LPs en el año", "Flujo neto del LP (distribución - aportación)"]
+    for q, t_ in enumerate(lab): put(FF, f"B{r0+1+q}", t_)
+    for j, col in enumerate(yrs_):
+        prev = yrs_[j - 1] if j else None
+        put(FF, f"{col}{r0+1}", f"=SUMPRODUCT((Hoja1_Portafolio!$K$18:$K$25+{mc}${R_H+1}={col}${r0})*Hoja1_Portafolio!$I$18:$I$25*{rng})", None, NF_NUM1)
+        put(FF, f"{col}{r0+2}", f"=SUM($D{r0+1}:{col}{r0+1})", None, NF_NUM1)
+        put(FF, f"{col}{r0+3}", f"=MIN(MAX({col}{r0+2}-Hoja2_Distribucion!$C$6,0),Hoja2_Distribucion!$C$11)", None, NF_NUM1)
+        put(FF, f"{col}{r0+4}", f"=MIN(MAX({col}{r0+2}-Hoja2_Distribucion!$C$6-{col}{r0+3},0)*Hoja2_Distribucion!$C$10,{col}{r0+3}*Hoja2_Distribucion!$C$9/(1-Hoja2_Distribucion!$C$9))", None, NF_NUM1)
+        put(FF, f"{col}{r0+5}", f"=MIN({col}{r0+2},Hoja2_Distribucion!$C$6)+{col}{r0+3}+(MAX({col}{r0+2}-Hoja2_Distribucion!$C$6-{col}{r0+3},0)-{col}{r0+4})*(1-Hoja2_Distribucion!$C$9)", None, NF_NUM1)
+        put(FF, f"{col}{r0+6}", f"={col}{r0+5}" if not prev else f"={col}{r0+5}-{prev}{r0+5}", None, NF_NUM1)
+        put(FF, f"{col}{r0+7}", f"={col}{r0+6}-Hoja2_Distribucion!{col}$51", None, NF_NUM1)
+    RES[k] = dict(proc=f"M{r0+2}", lp=f"M{r0+5}", flow=f"D{r0+7}:M{r0+7}")
+
+# --- resultados ---
+RR = M0 + n + 3
+put(FF, f"B{RR-1}", "Resultados por caso (el deck y el memorándum leen esta tabla)", "sec")
+for kk in range(nc + 1): FF[f"{L(3+kk)}{RR-1}"].border = Border(bottom=THIN_G)
+c = FF[f"B{RR}"]; c.value = "Concepto"; header_style(c, "left")
+for k, (nm, tp, fs, sh) in enumerate(CASES):
+    col = L(3 + k)
+    c = FF[f"{col}{RR}"]; c.value = f"={col}{R_H}"; header_style(c, "center"); c.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+FF.row_dimensions[RR].height = 32
+rows_ = [("Proceeds del portafolio (USD mm)", "proc", NF_NUM1), ("Total a los LPs (USD mm)", "lp", NF_NUM1), ("Carry del GP (USD mm)", "carry", NF_NUM1),
+         ("MOIC neto del LP", "moic", NF_X), ("TIR neta del LP (calendario real)", "irr", NF_PCT)]
+for q, (lab, key, nf) in enumerate(rows_):
+    r = RR + 1 + q
+    bd = key in ("moic", "irr")
+    put(FF, f"B{r}", lab, bold=bd)
+    for k in range(nc):
+        col = L(3 + k)
+        if key == "proc": f = f"={RES[k]['proc']}"
+        elif key == "lp": f = f"={RES[k]['lp']}"
+        elif key == "carry": f = f"={col}{RR+1}-{col}{RR+2}"
+        elif key == "moic": f = f"={col}{RR+2}/Hoja2_Distribucion!$C$6"
+        else: f = f"=IFERROR(IRR({RES[k]['flow']},0.1),-1)"
+        put(FF, f"{col}{r}", f, None, nf, bold=bd, align="center")
+R_PROC, R_LP, R_CARRY, R_MOIC, R_IRR = RR + 1, RR + 2, RR + 3, RR + 4, RR + 5
+put(FF, f"B{RR+7}", "Verificación: Base coincide con Hoja2 (LPs y TIR)", bold=True)
+put(FF, f"C{RR+7}", f'=IF(AND(ROUND(C{R_LP}-Hoja2_Distribucion!D32,4)=0,ROUND(C{R_IRR}-Hoja2_Distribucion!D42,6)=0),"OK","REVISAR")', None, align="center")
+
+# --- tabla del football field (rangos) ---
+FT = RR + 10
+put(FF, f"B{FT-1}", "Football field: rangos por método (alimenta el gráfico y la lámina de retorno)", "sec")
+for kk in range(7): FF[f"{L(3+kk)}{FT-1}"].border = Border(bottom=THIN_G)
+for i_, h in enumerate(["Método", "MOIC mín.", "MOIC máx.", "Amplitud MOIC", "TIR mín.", "TIR máx.", "Amplitud TIR"]):
+    c = FF.cell(row=FT, column=2 + i_); c.value = h; header_style(c, "left" if i_ == 0 else "center")
+def cl(k): return L(3 + k)
+groups = [
+    ("Escenarios del fondo: Bajo a Alto", [1, 0, 2]),
+    ("Empresas que fallan: de 5 a 0", [13, 0, 4]),
+    ("Sensibilidades: salida tardía, múltiplos, dilución, crecimiento", [9, 10, 11, 12]),
+    ("Otros métodos: Conservador, Equipo v1, Monte Carlo", [3, 7, 8]),
+]
+for q, (nm, ks) in enumerate(groups):
+    r = FT + 1 + q
+    put(FF, f"B{r}", nm)
+    mo = ",".join(f"{cl(k)}{R_MOIC}" for k in ks); ir = ",".join(f"{cl(k)}{R_IRR}" for k in ks)
+    put(FF, f"C{r}", f"=MIN({mo})", None, NF_X, align="center"); put(FF, f"D{r}", f"=MAX({mo})", None, NF_X, align="center")
+    put(FF, f"E{r}", f"=D{r}-C{r}", None, NF_X, align="center")
+    put(FF, f"F{r}", f"=MIN({ir})", None, NF_PCT, align="center"); put(FF, f"G{r}", f"=MAX({ir})", None, NF_PCT, align="center")
+    put(FF, f"H{r}", f"=G{r}-F{r}", None, NF_PCT, align="center")
+r = FT + 1 + len(groups)
+put(FF, f"B{r}", "Referencia: TIR mediana de fondos con actividad en México (AMEXCAP)")
+put(FF, f"F{r}", "=$C$10", None, NF_PCT, align="center"); put(FF, f"G{r}", "=$C$10", None, NF_PCT, align="center"); put(FF, f"H{r}", 0.004, "in", NF_PCT, align="center")
+put(FF, f"B{r+1}", "Referencia: AINDA Fondo I (TIR neta estimada)")
+put(FF, f"F{r+1}", "=$C$11", None, NF_PCT, align="center"); put(FF, f"G{r+1}", "=$C$11", None, NF_PCT, align="center"); put(FF, f"H{r+1}", 0.004, "in", NF_PCT, align="center")
+put(FF, f"B{r+2}", "Referencia: hurdle del fondo (8% anual)")
+put(FF, f"F{r+2}", "=Hoja2_Distribucion!C8", "link", NF_PCT, align="center"); put(FF, f"G{r+2}", "=Hoja2_Distribucion!C8", "link", NF_PCT, align="center"); put(FF, f"H{r+2}", 0.004, "in", NF_PCT, align="center")
+FF_TABLE = dict(first=FT + 1, last=FT + len(groups) + 3)
+# gráficos nativos (rangos con serie invisible)
+def ff_chart(col_low, col_span, title, anchor, nf, last):
+    ch = BarChart(); ch.type = "bar"; ch.grouping = "stacked"; ch.overlap = 100; ch.height = 8.5; ch.width = 18
+    ch.title = title
+    cats = Reference(FF, min_col=2, min_row=FT + 1, max_row=last)
+    s1 = Series(Reference(FF, min_col=col_low, min_row=FT + 1, max_row=last), title="mín.")
+    s1.graphicalProperties.noFill = True; s1.graphicalProperties.line.noFill = True
+    s2 = Series(Reference(FF, min_col=col_span, min_row=FT + 1, max_row=last), title="rango")
+    s2.graphicalProperties.solidFill = VERDE_ENERGIA
+    ch.series.append(s1); ch.series.append(s2); ch.set_categories(cats)
+    ch.legend = None; ch.y_axis.number_format = nf; ch.y_axis.majorGridlines = None
+    ch.x_axis.delete = False; ch.y_axis.delete = False; ch.x_axis.scaling.orientation = "maxMin"
+    FF.add_chart(ch, anchor)
+ff_chart(3, 5, "MOIC neto del LP", f"B{FT+10}", '0.0"x"', FT + len(groups))
+ff_chart(6, 8, "TIR neta del LP", f"H{FT+10}", "0%", FF_TABLE["last"])
+
+# ===== D) Llamadas_Capital =====
+LC = wb.create_sheet("Llamadas_Capital")
+set_sheet(LC, tab=LIMA, widths={"B": 52, "C": 14})
+for k in range(4, 15): LC.column_dimensions[L(k)].width = 12
+put(LC, "B2", "Aurex Capital - Llamadas de capital (callable): términos y calendario", "title")
+put(LC, "B3", "Los LPs se comprometen por US$100M y el fondo llama el dinero conforme invierte y paga comisiones. Mínimos y máximos son términos del fondo (azul = supuesto editable).", "note")
+put(LC, "B5", "Términos de las llamadas", "sec")
+for col in "CDEF": LC[f"{col}5"].border = Border(bottom=THIN_G)
+for i_, h in enumerate(["Concepto", "Mínimo", "Máximo", "Unidad"]):
+    c = LC.cell(row=6, column=2 + i_); c.value = h; header_style(c, "left" if i_ == 0 else "center")
+terms = [
+    ("Capital comprometido del fondo", None, "=Hoja1_Portafolio!C6", "USD mm"),
+    ("Primer cierre (comprometido para iniciar inversiones)", 40, None, "USD mm"),
+    ("Cierre final (tope del fondo; 12 meses desde el primer cierre)", None, 100, "USD mm"),
+    ("Compromiso por LP", 1, 0.20, "USD mm / % del fondo"),
+    ("Monto de cada llamada (% del compromiso de cada LP)", 0.01, 0.25, "%"),
+    ("Aviso previo de cada llamada", 10, None, "días hábiles"),
+    ("Número de llamadas por año", None, 4, "llamadas"),
+    ("Total llamado (% del compromiso)", None, 1.0, "%"),
+    ("Concentración por empresa (% del fondo)", None, "=Hoja1_Portafolio!C11", "%"),
+    ("Reserva para follow-on", None, "=Hoja1_Portafolio!G26", "USD mm"),
+    ("Reciclaje de distribuciones (solo en periodo de inversión)", None, 0.10, "% del fondo"),
+    ("Interés de mora del LP incumplido (puntos sobre TIIE)", None, 5, "puntos"),
+    ("Plazo para pérdida de derechos por mora", 30, None, "días"),
+]
+for i_, (lab, mn, mx, un) in enumerate(terms):
+    r = 7 + i_
+    put(LC, f"B{r}", lab)
+    for col, v in (("C", mn), ("D", mx)):
+        if v is None: continue
+        isf = isinstance(v, str)
+        nf = "0%" if (isinstance(v, float) and v <= 1.0) else "0.0"
+        if isf and "C11" in v: nf = "0%"
+        put(LC, f"{col}{r}", v, "link" if isf else "in", nf, align="center")
+    put(LC, f"E{r}", un, align="center")
+LC["D10"].number_format = "0%"; LC["D9"].number_format = "0.0"; LC["D10"].number_format = "0%"
+put(LC, "B22", "Calendario de llamadas por año (caso Base)", "sec")
+for k in range(12): LC[f"{L(3+k)}22"].border = Border(bottom=THIN_G)
+c = LC["B23"]; c.value = "Año del fondo"; header_style(c, "left")
+c = LC["C23"]; c.value = "Total"; header_style(c)
+for k in range(10):
+    col = L(4 + k); c = LC[f"{col}23"]; c.value = k + 1; header_style(c); c.number_format = "0"
+cal = [("Inversiones iniciales", 47), ("Follow-on", 48), ("Comisión de administración", 49), ("Gastos operativos", 50), ("TOTAL LLAMADO", 51)]
+for i_, (lab, hr) in enumerate(cal):
+    r = 24 + i_; bd = lab.startswith("TOTAL")
+    put(LC, f"B{r}", lab, "tot" if bd else None, bold=bd)
+    put(LC, f"C{r}", f"=SUM(D{r}:M{r})", None, NF_NUM1, bold=bd)
+    for k in range(10):
+        col = L(4 + k)
+        put(LC, f"{col}{r}", f"=Hoja2_Distribucion!{col}{hr}", "link", NF_NUM1, bold=bd)
+put(LC, "B29", "% del compromiso llamado en el año")
+put(LC, "B30", "% del compromiso llamado, acumulado")
+put(LC, "B31", "Saldo por llamar (USD mm)")
+put(LC, "B32", "Número de llamadas del año (monto máximo de cada llamada)")
+put(LC, "B33", "Monto promedio de cada llamada (USD mm)")
+put(LC, "B34", "Monto de cada llamada dentro de mínimo y máximo")
+for k in range(10):
+    col = L(4 + k)
+    put(LC, f"{col}29", f"={col}28/$D$7", None, "0.0%")
+    put(LC, f"{col}30", f"=SUM($D28:{col}28)/$D$7", None, "0.0%")
+    put(LC, f"{col}31", f"=$D$7-SUM($D28:{col}28)", None, NF_NUM1)
+    put(LC, f"{col}32", f"=MAX(1,ROUNDUP({col}28/($D$11*$D$7),0))", None, "0")
+    put(LC, f"{col}33", f"={col}28/{col}32", None, NF_NUM1)
+    put(LC, f"{col}34", f'=IF(AND({col}33>=$C$11*$D$7-0.000001,{col}33<=$D$11*$D$7+0.000001,{col}32<=$D$13),"OK","REVISAR")', None, align="center")
+put(LC, "C29", "=SUM(D29:M29)", None, "0.0%")
+put(LC, "B36", "Resumen por tramo", "sec")
+for col in "CDEF": LC[f"{col}36"].border = Border(bottom=THIN_G)
+for i_, h in enumerate(["Tramo", "USD mm", "% del compromiso"]):
+    c = LC.cell(row=37, column=2 + i_); c.value = h; header_style(c, "left" if i_ == 0 else "center")
+for i_, (lab, a, b) in enumerate([("Años 1 a 3", "D", "F"), ("Años 4 a 5", "G", "H"), ("Años 6 a 10", "I", "M")]):
+    r = 38 + i_
+    put(LC, f"B{r}", lab); put(LC, f"C{r}", f"=SUM({a}28:{b}28)", None, NF_NUM1, align="center"); put(LC, f"D{r}", f"=C{r}/$D$7", None, "0.0%", align="center")
+put(LC, "B42", "Verificaciones", "sec")
+for col in "CDEF": LC[f"{col}42"].border = Border(bottom=THIN_G)
+checks_ = [("Total llamado = compromiso", '=IF(ROUND(C28-$D$7,6)=0,"OK","REVISAR")'),
+           ("Cada llamada entre el mínimo y el máximo y máximo 4 llamadas por año", '=IF(COUNTIF(D34:M34,"OK")=10,"OK","REVISAR")'),
+           ("Ninguna empresa supera el tope de concentración", "=Hoja1_Portafolio!C37"),
+           ("Todo el capital invertido cabe en el compromiso", '=IF(Hoja1_Portafolio!C12<=$D$7,"OK","REVISAR")')]
+for i_, (lab, f) in enumerate(checks_):
+    put(LC, f"B{43+i_}", lab); put(LC, f"C{43+i_}", f, None, align="center")
+put(LC, "B48", "Incumplimiento de un LP: interés de mora (TIIE + 5 puntos); a los 30 días pierde derechos de voto y de distribución; el faltante se reparte entre los demás LPs hasta el tope de su compromiso. Las comisiones y gastos de los años 6 a 10 se llaman por semestre y pueden compensarse con distribuciones.", "note")
+chl = BarChart(); chl.type = "col"; chl.grouping = "stacked"; chl.overlap = 100; chl.height = 7.5; chl.width = 18
+for rr, color in ((24, VERDE_BOSQUE), (25, VERDE_ENERGIA), (26, LIMA), (27, "A6A6A6")):
+    s = Series(Reference(LC, min_col=4, max_col=13, min_row=rr, max_row=rr), title=LC[f"B{rr}"].value)
+    s.graphicalProperties.solidFill = color; chl.series.append(s)
+chl.set_categories(Reference(LC, min_col=4, max_col=13, min_row=23, max_row=23))
+chl.legend.position = "b"; chl.y_axis.majorGridlines = None; chl.y_axis.number_format = "0"
+chl.x_axis.delete = False; chl.y_axis.delete = False
+LC.add_chart(chl, "B50")
+
+# ===== E) Mercado_Gobierno y Proyectos_Region (se llenan con la investigación F1 si existe) =====
+BASE_F1 = r"C:\Users\cesar\Downloads\PE\08_Proyecto_Final\fuentes_investigacion"
+def read_csv(name):
+    p = os.path.join(BASE_F1, name)
+    if not os.path.exists(p): return None
+    with open(p, encoding="utf-8-sig", newline="") as fh:
+        return list(csv.reader(fh))
+MG = wb.create_sheet("Mercado_Gobierno")
+set_sheet(MG, tab="7FB89A", widths={"B": 58, "C": 22, "D": 16, "E": 14, "F": 40, "G": 62, "H": 14, "I": 22})
+put(MG, "B2", "Aurex Capital - Mercado y gobierno: tabla única de cifras verificadas", "title")
+put(MG, "B3", "Cada cifra del deck y del memorándum sale de esta tabla (fuente primaria, URL y fecha). Verificación al 11-oct-2026; contradicciones y alcance de cada plan en fuentes_investigacion/gobierno_oportunidad_2026.md.", "note")
+GOV_NAT = [
+ ("Inversión sexenal en electricidad y gasoductos", "MXN 1.168 billones", "hasta 2030", "Presidencia, estrategia del 7-oct-2026", "https://www.gob.mx/presidencia/prensa/presidenta-claudia-sheinbaum-destaca-inversion-historica-de-cerca-de-1-2-billones-de-pesos-en-el-sexenio-para-electricidad-y-gas-natural", "7-oct-2026", "Verificada (oficial)"),
+ ("Generación: privados casi MXN 200,000M, mixtos MXN 452,000M, CFE MXN 142,000M (de MXN 794,000M)", "MXN 794,000M", "hasta 2030", "Presidencia, versión estenográfica 7-oct-2026", "https://www.gob.mx/presidencia/articulos/version-estenografica-conferencia-de-prensa-de-la-presidenta-claudia-sheinbaum-pardo-del-07-de-octubre-de-2026", "7-oct-2026", "Verificada (oficial)"),
+ ("Capacidad nueva del Plan de Fortalecimiento y Expansión: 32,475 MW (CFE 11,896; mixto 13,830; privado 6,750)", "32,475 MW", "2025-2030", "Proyectos México, ficha del plan", "https://www.proyectosmexico.gob.mx/proyectos/plan-de-fortalecimiento-y-expansion-del-sistema-electrico-nacional-generacion/", "jun-2026", "Verificada (oficial)"),
+ ("Cifra presidencial asociada a la inversión del 7-oct-2026", "≈38,000 MW", "hasta 2030", "Presidencia, comunicado del 7-oct-2026", "ídem fila 1", "7-oct-2026", "Verificada como cita; SENER maneja 32,000 MW"),
+ ("Almacenamiento con baterías de todo el SEN: CFE 2,480 MW y privados 3,071 MW", "5,551 MW", "2025-2030", "SENER, PLADESE 2025-2039 (DOF), Tabla 3.5", "https://dof.gob.mx/nota_detalle.php?codigo=5770297&fecha=17/10/2025", "17-oct-2025", "Verificada (oficial)"),
+ ("Almacenamiento con baterías a 2039", "8,647 MW", "2025-2039", "SENER, PLADESE (DOF)", "ídem fila 5", "17-oct-2025", "Verificada (oficial)"),
+ ("Adiciones de capacidad por particulares (renovables, planeación vinculante)", "7,405 MW", "2026-2030", "SENER, PLADESE (DOF), secc. 4.1.3", "ídem fila 5", "17-oct-2025", "Verificada (oficial)"),
+ ("Capacidad instalada del Sistema Eléctrico Nacional", "90,543 MW", "dic-2024", "SENER, PLADESE (DOF)", "ídem fila 5", "17-oct-2025", "Verificada (oficial)"),
+ ("Generación distribuida instalada (600,651 solicitudes menores a 0.7 MW)", "5,189.71 MW", "cierre 2025", "CNE, estadística 2S-2025 (vía pv magazine y descarga)", "https://www.pv-magazine.com/2026/06/03/mexico-supera-en-2025-los-5-gw-solares-en-generacion-distribuida/", "3-jun-2026", "Verificada con matiz (stock, no meta)"),
+ ("Meta de generación distribuida fotovoltaica en 2039 (adiciones de 4,788 MW en 2025-2030)", "14,432 MW", "2039", "SENER, PLADESE (DOF), Tabla 3.3", "ídem fila 5", "17-oct-2025", "Verificada (oficial)"),
+ ("Piso legal de energía inyectada por el Estado (CFE, FONADIN y PEMEX)", "54%", "2026-2030", "Ley del Sector Eléctrico y PLADESE (DOF)", "ídem fila 5", "17-oct-2025", "Verificada (oficial)"),
+ ("Esquema mixto: CFE mínimo 54% y privado 46% por proyecto", "54% / 46%", "2026-2030", "Presidencia (cita) y Expansión (16-feb-2026)", "https://expansion.mx/empresas/2026/02/16/cfe-tendra-54-y-aportara-especie-esquemas-mixtos", "16-feb-2026", "Parcial (prensa)"),
+ ("Fallo mixto de CFE: proyectos adjudicados", "7,411 MW en 37 proyectos", "5-jun-2026", "Von Wobeser; Proyectos México", "fuentes_investigacion/descargas/VonWobeser_CFE-adjudica-esquema-mixto_12jun2026.pdf", "12-jun-2026", "Verificada (despacho y ficha oficial)"),
+ ("I Squared Capital elegida por SHCP para un vehículo de financiamiento eléctrico", "sin monto", "sep-2026", "Bloomberg Línea (fuentes anónimas)", "https://www.bloomberglinea.com/latinoamerica/mexico/i-squared-supera-a-blackrock-para-gestionar-proyecto-energetico-de-mexico/", "15-sep-2026", "Parcial (sin comunicado de SHCP)"),
+ ("FIEMEX (FONADIN y MIP): 13 plantas de Iberdrola, ≈8.5 GW, US$6,200M", "≈8.5 GW", "2024", "Cleary Gottlieb, LAVCA oct-2025", "https://www.clearygottlieb.com/news-and-insights/news-listing/fiemex-in-landmark-1-49-billion-bond-offering", "2024-2026", "Verificada (despachos)"),
+ ("Demanda máxima histórica del sistema", "54,300 MW", "23-jul-2026", "CFE citada por El Financiero", "https://www.elfinanciero.com.mx/economia/2026/07/25/la-demanda-electrica-se-dispara-en-mexico-este-fue-el-dia-que-mayor-gastaron-luz-los-mexicanos/", "25-jul-2026", "Parcial (fuente no primaria)"),
+ ("Deducción inmediata del 100% de equipo de energía renovable (LISR art. 34 fr. XIII; operar 5 años)", "100%", "vigente", "Ley del ISR (Cámara de Diputados)", "https://www.diputados.gob.mx/LeyesBiblio/pdf/LISR.pdf", "texto consolidado", "Verificada (oficial)"),
+ ("Inversión de capital privado en México", "US$5,376M (2025); US$6,028M (1S-2026)", "2025-1S2026", "AMEXCAP, Brief Perspective 1H-2026", "https://amexcap.com/wp-content/uploads/2026/09/Brief-Perspective-2026_ENG.pdf", "sep-2026", "Verificada (gremial)"),
+]
+for i_, h in enumerate(["Cifra", "Valor", "Periodo", "Fuente", "URL", "Fecha", "Estatus"]):
+    c = MG.cell(row=5, column=2 + i_); c.value = h; header_style(c, "left")
+for k_, row_ in enumerate(GOV_NAT):
+    for i_, v in enumerate(row_):
+        c = MG.cell(row=6 + k_, column=2 + i_); c.value = v; calc_font(c); c.alignment = Alignment(wrap_text=True, vertical="top")
+r = 6 + len(GOV_NAT) + 2
+put(MG, f"B{r}", "Oportunidad pública por región y estado (PLADESE, plan y convocatorias)", "sec")
+for col in "CDEFGHI": MG[f"{col}{r}"].border = Border(bottom=THIN_G)
+r += 1
+for i_, h in enumerate(["Región o estado", "Tecnología", "MW", "Horizonte", "Tipo", "Fuente", "URL", "Fecha"]):
+    c = MG.cell(row=r, column=2 + i_); c.value = h; header_style(c, "left")
+reg = read_csv("gobierno_regiones_2026.csv")
+if reg:
+    for k_, row_ in enumerate(reg[1:]):
+        for i_, v in enumerate((row_ + [""] * 8)[:8]):
+            c = MG.cell(row=r + 1 + k_, column=2 + i_)
+            try: c.value = float(v) if i_ == 2 and v not in ("", None) else v
+            except Exception: c.value = v
+            calc_font(c); c.alignment = Alignment(wrap_text=True, vertical="top")
+PR = wb.create_sheet("Proyectos_Region")
+set_sheet(PR, tab="7FB89A", widths={"B": 24, "C": 28, "D": 14, "E": 40, "F": 18, "G": 18, "H": 10, "I": 10, "J": 26, "K": 54, "L": 14, "M": 10, "N": 18, "O": 40})
+put(PR, "B2", "Aurex Capital - Proyectos y sedes de las 8 empresas por estado", "title")
+put(PR, "B3", "Estado y ciudad de proyectos, estaciones, sedes o clientes públicos, con fuente y fecha. Alimenta el mapa de México del portafolio.", "note")
+prj = read_csv("proyectos_por_region.csv")
+if prj:
+    for i_, h in enumerate(prj[0][:14]):
+        c = PR.cell(row=5, column=2 + i_); c.value = h; header_style(c, "left")
+    for k_, row_ in enumerate(prj[1:]):
+        for i_, v in enumerate((row_ + [""] * 14)[:14]):
+            c = PR.cell(row=6 + k_, column=2 + i_); c.value = v; calc_font(c); c.alignment = Alignment(wrap_text=True, vertical="top")
+
+
+# ===== F) Fuentes adicionales (V2) =====
+FU = wb["Fuentes"]
+rr_ = FU.max_row + 1
+EXTRA_F = [
+ ["Gobierno", "Inversión sexenal en electricidad y gasoductos: MXN 1.168 billones; generación MXN 794,000M (privados ≈200,000M, mixtos 452,000M)", "MXN 1.168 billones", "Presidencia de la República, comunicado y versión estenográfica", "https://www.gob.mx/presidencia/prensa/presidenta-claudia-sheinbaum-destaca-inversion-historica-de-cerca-de-1-2-billones-de-pesos-en-el-sexenio-para-electricidad-y-gas-natural", "7-oct-2026", "2026", "oficial"],
+ ["Gobierno", "Plan de Fortalecimiento y Expansión del SEN: 32,475 MW (privado 6,750 MW; mixto 13,830 MW)", "32,475 MW", "Proyectos México (gobierno federal), ficha del plan", "https://www.proyectosmexico.gob.mx/proyectos/plan-de-fortalecimiento-y-expansion-del-sistema-electrico-nacional-generacion/", "jun-2026", "2025-2030", "oficial"],
+ ["Gobierno", "PLADESE: baterías 5,551 MW (2025-2030), particulares 7,405 MW (2026-2030), GD 14,432 MW al 2039", "ver Mercado_Gobierno", "SENER, PLADESE 2025-2039 (DOF)", "https://dof.gob.mx/nota_detalle.php?codigo=5770297&fecha=17/10/2025", "17-oct-2025", "2025-2039", "oficial"],
+ ["Gobierno", "Generación distribuida instalada 5,189.71 MW (cierre 2025)", "5,189.71 MW", "CNE, estadística 2S-2025", "https://www.pv-magazine.com/2026/06/03/mexico-supera-en-2025-los-5-gw-solares-en-generacion-distribuida/", "3-jun-2026", "2025", "oficial / prensa"],
+ ["Gobierno", "CFE adjudica esquema mixto: 7,411 MW en 37 proyectos", "7,411 MW", "Von Wobeser; Proyectos México", "fuentes_investigacion/descargas/VonWobeser_CFE-adjudica-esquema-mixto_12jun2026.pdf", "12-jun-2026", "2026", "despacho / oficial"],
+ ["Gobierno", "SHCP elige a I Squared Capital para un vehículo de financiamiento eléctrico", "sin monto", "Bloomberg Línea (Bloomberg)", "https://www.bloomberglinea.com/latinoamerica/mexico/i-squared-supera-a-blackrock-para-gestionar-proyecto-energetico-de-mexico/", "15-sep-2026", "2026", "prensa"],
+ ["Salidas", "Ampol adquiere Evie Networks (carga de VE, Australia)", "A$225M", "Comunicado ASX, Ampol", "fuentes_investigacion/comparables_precedentes_2026.md", "1-oct-2026", "2026", "oficial (filing)"],
+ ["Salidas", "Vertiv adquiere UtilityInnovation Group (≈13x EBITDA 2027E)", "US$1.45 mil M + earnout", "Comunicado Vertiv", "fuentes_investigacion/comparables_precedentes_2026.md", "2-sep-2026", "2026", "oficial (comunicado)"],
+ ["Salidas", "Shell adquiere Volta (carga de VE)", "US$169M", "Comunicados Shell y Volta", "fuentes_investigacion/comparables_precedentes_2026.md", "2023", "2023", "oficial"],
+ ["Salidas", "Enel adquiere EnerNOC (respuesta a la demanda)", "≈US$250M", "Comunicado Enel", "fuentes_investigacion/comparables_precedentes_2026.md", "22-jun-2017", "2017", "oficial"],
+ ["Valuación", "Pireos Power: valuación pre-money supuesta de US$40M (ingresos supuestos US$35M, margen EBITDA 15%, múltiplo de entrada 7.5x; comparables públicos a 14-17x con descuento de ≈50% por iliquidez, tamaño y país)", "≈US$40M", "Derivación del fondo con comparables (MYRG, AMRC, EME)", "fuentes_investigacion/comparables_precedentes_2026.md", "oct-2026", "2026", "supuesto del fondo"],
+]
+for k_, row_ in enumerate(EXTRA_F):
+    for i_, v in enumerate(row_):
+        c = FU.cell(row=rr_ + k_, column=2 + i_); c.value = v; calc_font(c); c.alignment = Alignment(wrap_text=True, vertical="top")
+
+# ===== G) Limpieza de texto (sin guiones largos ni marcas de pendiente) =====
+import re as _re
+for _ws in wb.worksheets:
+    for _row in _ws.iter_rows():
+        for _c in _row:
+            _v = _c.value
+            if isinstance(_v, str) and not _v.startswith("="):
+                _n = _re.sub(r"(?<=\d)\s*[–—]\s*(?=\d)", " a ", _v).replace(" — ", ", ").replace("—", ", ").replace(" – ", ", ").replace("–", "-")
+                _n = _n.replace("normas técnicas y reglamento pendientes", "normas técnicas y reglamento en elaboración").replace("normas técnicas de biogás pendientes", "normas técnicas de biogás en elaboración")
+                _n = _n.replace("n.d. = no pública", "estimación del fondo")
+                if _n != _v: _c.value = _n
+
+order_extra = ["Summary", "Hoja1_Portafolio", "Hoja2_Distribucion", "Escenarios", "Llamadas_Capital", "Football_Field", "Criterios", "Curva_J", "Mercado_Gobierno", "Proyectos_Region", "1_Comparables", "2_Simulacion", "3_Precios", "4_Rendimientos", "Fuentes"]

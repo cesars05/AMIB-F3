@@ -1,0 +1,47 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 15;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 900 } }; return "??" }
+$wb=$null; $su=$null
+for($t=0;$t -lt 40;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $x=$w.Worksheets.Item("Summary"); if($x -ne $null){ $wb=$w; $su=$x } } }
+  }catch{}
+  if($su -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+Write-Output ("Libro: "+[string]$wb.Name)
+Write-Output ""
+Write-Output "=== Summary tal como esta (A1:L35) ==="
+for($r=1;$r -le 35;$r++){
+  $line=""
+  for($c=1;$c -le 12;$c++){
+    $t=[string](T { $su.Cells.Item($r,$c).Text })
+    if($t.Trim() -ne ""){ $col=""; $n=$c; while($n -gt 0){ $m=($n-1)%26; $col=[char](65+$m)+$col; $n=[math]::Floor(($n-1)/26) }
+      if($t.Length -gt 30){ $t=$t.Substring(0,30) }
+      $line+=("["+$col+$r+"="+$t+"] ") }
+  }
+  if($line.Trim() -ne ""){ Write-Output ("  "+$line) }
+}
+Write-Output ""
+Write-Output "=== DCF: flujos y parametros ==="
+$d=T { $wb.Worksheets.Item("DCF") }
+foreach($p in @(@(23,"FCFF"),@(24,"PV FCFF"),@(25,"PV factor"),@(26,"Factor"))){
+  $v=(3..10 | ForEach-Object { $i=$_; ([string](T { $d.Cells.Item($p[0],$i).Text })).PadLeft(11) }) -join ""
+  Write-Output ("  r"+$p[0]+" "+([string]$p[1]).PadRight(12)+$v)
+}
+Write-Output ("  C23 frm= "+[string](T { $d.Range("C23").Formula }))
+Write-Output ("  J23 frm= "+[string](T { $d.Range("J23").Formula }))
+Write-Output ("  C26 frm= "+[string](T { $d.Range("C26").Formula }))
+Write-Output ""
+foreach($a in "P12","P16","P17","R12","R16","R20","E30","E31","E32","E33","E34","E35","E36","E37","E39","E40","E41","E42"){
+  Write-Output ("  DCF!"+$a.PadRight(4)+" = "+([string](T { $d.Range($a).Text })).PadRight(14)+" frm= "+[string](T { $d.Range($a).Formula }))
+}
+Write-Output ""
+Write-Output "=== escenario activo y EPV/SOTP ==="
+$as=T { $wb.Worksheets.Item("Assumptions") }
+Write-Output ("  Assumptions!F10 = "+[string](T { $as.Range("F10").Text })+"   F9 = "+[string](T { $as.Range("F9").Text }))
+$so=T { $wb.Worksheets.Item("SOTP") }
+Write-Output ("  SOTP!B7 metodo = "+[string](T { $so.Range("B7").Text })+"   D111 precio = "+[string](T { $so.Range("D111").Text }))
+$ep=T { $wb.Worksheets.Item("EPV") }
+for($r=1;$r -le 60;$r++){
+  $l=[string](T { $ep.Cells.Item($r,2).Text })
+  if($l -match "(?i)per share|implied|equity value|EPV"){ Write-Output ("  EPV r"+$r+" "+$l.PadRight(40)+" = "+[string](T { $ep.Cells.Item($r,3).Text })+" | "+[string](T { $ep.Cells.Item($r,4).Text })+" | "+[string](T { $ep.Cells.Item($r,5).Text })) }
+}

@@ -1,0 +1,378 @@
+"""Formula-driven attribution build in AZTD - Top Holdings Peers_v2.xlsx.
+Inputs kept as data: holdings weights at snapshot dates (SEC N-PORT / Workspace Derived Holdings), RIC list.
+Everything else is formulas: Workspace TR returns (local, per calendar month), FX, drift, contributions,
+linking, attribution, rankings."""
+import pickle, time, datetime as dt, collections, sys, pywintypes
+import engine as E
+from attach import get_app
+
+PATH = r"C:\Users\cesar\OneDrive\Desktop\AZTD Peers\AZTD - Top Holdings Peers_v2.xlsx"
+WBN = "AZTD - Top Holdings Peers_v2.xlsx"
+app = get_app(None)
+names = [w.Name for w in app.Workbooks]
+wb = app.Workbooks(WBN) if WBN in names else app.Workbooks.Open(PATH)
+wb.Activate()
+app.ScreenUpdating = False
+app.Calculation = -4135
+app.EnableEvents = False
+
+def R(fn, *a, **k):
+    for t in range(200):
+        try:
+            return fn(*a, **k)
+        except pywintypes.com_error as e:
+            if e.args[0] in (-2147418111, -2147417846, -2146777998):
+                time.sleep(1); continue
+            raise
+
+def L(n):  # 1-based column -> letter
+    s = ""
+    while n:
+        n, r = divmod(n - 1, 26); s = chr(65 + r) + s
+    return s
+def C(letter):
+    n = 0
+    for ch in letter: n = n * 26 + ord(ch) - 64
+    return n
+
+FUNDS, PEERS = E.FUNDS, E.PEERS
+FRIC = {"AZTD": "AZTD.K", "AVDV": "AVDV.K", "ISCF": "ISCF.K", "DISV": "DISV.Z", "DFIS": "DFIS.K"}
+M = E.MONTHS; NM = len(M); NY = len(E.YTD)
+PLAB = "Jan-24 to Aug-26"
+AZ = wb.Worksheets("AZTD")
+TITLE, BAR = AZ.Range("C2"), AZ.Range("C14")
+GREY = 0x7F7F7F
+
+def fmt_from(src, dst):
+    """Copy the visible style of src onto dst without using the clipboard."""
+    def _do():
+        if src.Interior.Pattern != -4142:
+            dst.Interior.Color = src.Interior.Color
+        f, g = dst.Font, src.Font
+        f.Name = g.Name; f.Size = g.Size; f.Bold = g.Bold; f.Color = g.Color
+        b = src.Borders(9)
+        if b.LineStyle != -4142:
+            dst.Borders(9).LineStyle = b.LineStyle; dst.Borders(9).Weight = b.Weight; dst.Borders(9).Color = b.Color
+        dst.VerticalAlignment = src.VerticalAlignment
+    R(_do)
+
+def put(ws, addr, rows):
+    n = len(rows); m = max(len(r) for r in rows)
+    rows = [list(r) + [None] * (m - len(r)) for r in rows]
+    R(lambda: setattr(ws.Range(addr).GetResize(n, m), "Value2", tuple(tuple(r) for r in rows)))
+
+def note(ws, addr, text):
+    c = ws.Range(addr); c.Value = text; c.Font.Italic = True; c.Font.Size = 9; c.Font.Color = GREY
+
+def sheet(name, after):
+    """Reuse sheet if it exists (keeps inbound references valid), else create."""
+    for s in wb.Worksheets:
+        if s.Name == name:
+            s.Activate()
+            for co in list(s.ChartObjects()): co.Delete()
+            s.Cells.Clear(); s.Cells.FormatConditions.Delete()
+            return s
+    ws = wb.Worksheets.Add(After=wb.Worksheets(after)); ws.Name = name; ws.Activate()
+    return ws
+
+def base(ws):
+    ws.Cells.Font.Name = "Arial"; ws.Cells.Font.Size = 10
+    app.ActiveWindow.DisplayGridlines = False
+    ws.Columns("A").ColumnWidth = 2; ws.Columns("B").ColumnWidth = 2
+
+# ----------------------------------------------------------------------------------------------
+# universe
+EX = E.EX
+rics = sorted(k for k in E.META)
+NR = len(rics)
+# holdings rows (fund, key)
+hold_rows = []
+for f in FUNDS:
+    keys = set()
+    dates = sorted(E.SNAP[f])
+    d0s = []
+    for m in M:
+        cand = [d for d in dates if d <= E.PREV[m]]
+        d0s.append(cand[-1] if cand else None)
+    flags = [i == 0 or d0s[i] != d0s[i - 1] for i in range(NM)]
+    for i, d0 in enumerate(d0s):
+        if flags[i] and d0:
+            keys |= {k for k, v in E.SNAP[f][d0].items() if v}
+    for k in sorted(keys, key=lambda k: -max(E.SNAP[f][d0s[i]].get(k, 0) for i in range(NM) if d0s[i])):
+        raw = [(E.SNAP[f][d0s[i]].get(k, 0) if (flags[i] and d0s[i]) else None) for i in range(NM)]
+        hold_rows.append((f, k, raw))
+    E.__dict__.setdefault("FLAGS", {})[f] = flags
+NH = len(hold_rows)
+print("returns rows", NR, "holdings rows", NH, flush=True)
+
+# ============================ Attr Setup ============================
+ST = sheet("Attr Setup", "DFIS Data"); base(ST)
+fmt_from(TITLE, ST.Range("C2:P2")); ST.Range("C2").Value = "Attribution Setup - periods, FX, fund returns"
+note(ST, "C3", "All figures are formulas: Workspace TR (live) or calculations on 'Attr Holdings' / 'Attr Returns'. Refresh with Workspace > Refresh.")
+# months
+r0 = 5
+ST.Range(f"C{r0}").Value = "Month"; ST.Range(f"C{r0+1}").Value = "SDate"; ST.Range(f"C{r0+2}").Value = "EDate"
+ST.Range(f"C{r0+3}").Value = "YTD-26 flag"; ST.Range(f"C{r0+4}").Value = "Year"
+MC0 = 4  # column D = month 1
+ST.Range(f"{L(MC0)}{r0}").Formula = "=DATE(2024,1,31)"
+for j in range(1, NM):
+    ST.Range(f"{L(MC0+j)}{r0}").Formula = f"=EOMONTH({L(MC0+j-1)}{r0},1)"
+MR = f"$D${r0}:${L(MC0+NM-1)}${r0}"
+for j in range(NM):
+    c = L(MC0 + j)
+    ST.Range(f"{c}{r0+1}").Formula = f'=TEXT(EOMONTH({c}{r0},-1),"yyyy-mm-dd")'
+    ST.Range(f"{c}{r0+2}").Formula = f'=TEXT({c}{r0},"yyyy-mm-dd")'
+    ST.Range(f"{c}{r0+3}").Formula = f"=--(YEAR({c}{r0})=2026)"
+    ST.Range(f"{c}{r0+4}").Formula = f"=YEAR({c}{r0})"
+ST.Range(f"D{r0}:{L(MC0+NM-1)}{r0}").NumberFormat = "mmm-yy"
+fmt_from(BAR, ST.Range(f"C{r0}:{L(MC0+NM-1)}{r0}"))
+ST.Range(f"D{r0}:{L(MC0+NM)}{r0+4}").HorizontalAlignment = -4108
+
+# fund table
+fr0 = 13
+put(ST, f"C{fr0}", [["Fund", "RIC"]])
+fmt_from(BAR, ST.Range(f"C{fr0}:D{fr0}"))
+for i, f in enumerate(FUNDS):
+    put(ST, f"C{fr0+1+i}", [[f, FRIC[f]]])
+FUNDLIST = f"'Attr Setup'!$C${fr0+1}:$C${fr0+5}"
+# snapshot flags block
+b1 = fr0 + 8
+ST.Range(f"C{b1}").Value = "New holdings snapshot at month start (1 = reset weights; 0 = drift)"
+fmt_from(BAR, ST.Range(f"C{b1}:{L(MC0+NM-1)}{b1}"))
+for i, f in enumerate(FUNDS):
+    ST.Range(f"C{b1+1+i}").Value = f
+    put(ST, f"D{b1+1+i}", [[1 if x else 0 for x in E.FLAGS[f]]])
+FLAGS = f"'Attr Setup'!$D${b1+1}:${L(MC0+NM-1)}${b1+5}"
+# holdings return block (formula, filled later once Holdings exists)
+b2 = b1 + 8
+ST.Range(f"C{b2}").Value = "Holdings-based monthly return (sum of contributions, 'Attr Holdings')"
+fmt_from(BAR, ST.Range(f"C{b2}:{L(MC0+NM-1)}{b2}"))
+HRET = f"'Attr Setup'!$D${b2+1}:${L(MC0+NM-1)}${b2+5}"
+# actual monthly (TR)
+b3 = b2 + 8
+ST.Range(f"C{b3}").Value = "Actual monthly total return (Workspace TR.TotalReturn, %)"
+fmt_from(BAR, ST.Range(f"C{b3}:{L(MC0+NM-1)}{b3}"))
+for i, f in enumerate(FUNDS):
+    ST.Range(f"C{b3+1+i}").Value = f
+for j in range(NM):
+    c = L(MC0 + j)
+    ST.Range(f"{c}{b3+1}").Formula = f'=TR($D${fr0+1}:$D${fr0+5},"TR.TotalReturn","SDate=#1 EDate=#2",,{c}${r0+1},{c}${r0+2})'
+b4 = b3 + 8
+ST.Range(f"C{b4}").Value = "Actual monthly total return (decimal)"
+fmt_from(BAR, ST.Range(f"C{b4}:{L(MC0+NM-1)}{b4}"))
+for i, f in enumerate(FUNDS):
+    ST.Range(f"C{b4+1+i}").Value = f
+ST.Range(f"D{b4+1}:{L(MC0+NM-1)}{b4+5}").Formula = f'=IFERROR(D{b3+1}/100,0)'
+AMR = f"'Attr Setup'!$D${b4+1}:${L(MC0+NM-1)}${b4+5}"
+for blk in (b2, b4):
+    ST.Range(f"D{blk+1}:{L(MC0+NM-1)}{blk+5}").NumberFormat = "0.0%"
+ST.Range(f"D{b3+1}:{L(MC0+NM-1)}{b3+5}").NumberFormat = "0.00"
+
+# fund stats
+b5 = b4 + 8
+hdr = ["Fund", "Holdings cum.", "Holdings ann.", "Holdings YTD-26", "Actual cum.", "Actual ann.", "Actual YTD-26",
+       "Link factor period", "Link factor YTD", "Check: TR period cum.", "Check: TR YTD", "Holdings 2024", "Holdings 2025",
+       "Actual 2024", "Actual 2025", "Avg equity wt period", "Avg equity wt YTD"]
+put(ST, f"C{b5}", [hdr]); fmt_from(BAR, ST.Range(f"C{b5}:{L(2+len(hdr))}{b5}"))
+ST.Range(f"D{b5}:{L(2+len(hdr))}{b5}").WrapText = True; ST.Rows(b5).RowHeight = 30
+FS = {}  # stat -> column letter
+for k, h in enumerate(hdr[1:]):
+    FS[h] = L(4 + k)
+yflag = f"$D${r0+3}:${L(MC0+NM-1)}${r0+3}"; yrow = f"$D${r0+4}:${L(MC0+NM-1)}${r0+4}"
+for i, f in enumerate(FUNDS):
+    rr = b5 + 1 + i; hr, ar = b2 + 1 + i, b4 + 1 + i
+    H = f"$D{hr}:${L(MC0+NM-1)}{hr}"; A_ = f"$D{ar}:${L(MC0+NM-1)}{ar}"
+    ST.Range(f"C{rr}").Value = f
+    f2 = {
+        "Holdings cum.": f"=PRODUCT(1+{H})-1",
+        "Holdings ann.": f"=(1+{FS['Holdings cum.']}{rr})^(12/{NM})-1",
+        "Holdings YTD-26": f"=PRODUCT(1+{H}*{yflag})-1",
+        "Actual cum.": f"=PRODUCT(1+{A_})-1",
+        "Actual ann.": f"=(1+{FS['Actual cum.']}{rr})^(12/{NM})-1",
+        "Actual YTD-26": f"=PRODUCT(1+{A_}*{yflag})-1",
+        "Link factor period": f"=IFERROR({FS['Holdings ann.']}{rr}/SUM({H}),1)",
+        "Link factor YTD": f"=IFERROR({FS['Holdings YTD-26']}{rr}/SUMPRODUCT({H},{yflag}),1)",
+        "Check: TR period cum.": f'=IFERROR(TR($D${fr0+1+i},"TR.TotalReturn","SDate=2023-12-31 EDate=2026-08-31")/100,"")',
+        "Check: TR YTD": f'=IFERROR(TR($D${fr0+1+i},"TR.TotalReturn","SDate=2025-12-31 EDate=2026-08-31")/100,"")',
+        "Holdings 2024": f"=PRODUCT(1+{H}*({yrow}=2024))-1",
+        "Holdings 2025": f"=PRODUCT(1+{H}*({yrow}=2025))-1",
+        "Actual 2024": f"=PRODUCT(1+{A_}*({yrow}=2024))-1",
+        "Actual 2025": f"=PRODUCT(1+{A_}*({yrow}=2025))-1",
+    }
+    for h, fx in f2.items():
+        R(lambda: setattr(ST.Range(f"{FS[h]}{rr}"), "Formula2", fx))
+ST.Range(f"D{b5+1}:{L(2+len(hdr))}{b5+5}").NumberFormat = "0.0%"
+ST.Range(f"{FS['Link factor period']}{b5+1}:{FS['Link factor YTD']}{b5+5}").NumberFormat = "0.000"
+ST.Range(f"D{b5+1}:{L(2+len(hdr))}{b5+5}").HorizontalAlignment = -4108
+FSTAT = lambda h: f"'Attr Setup'!${FS[h]}${b5+1}:${FS[h]}${b5+5}"
+STATROW = {f: b5 + 1 + i for i, f in enumerate(FUNDS)}
+
+# FX table
+b6 = b5 + 9
+ccys = sorted(k for k in E.FXT.keys())
+ST.Range(f"C{b6}").Value = "FX: month-end mid (Workspace TR.MIDPRICE on '<CCY>='), then USD per unit"
+put(ST, f"C{b6+1}", [["Currency", "USD"] + ccys])
+put(ST, f"C{b6+2}", [["RIC", ""] + [c + "=" for c in ccys]])
+put(ST, f"C{b6+3}", [["Quote", "USD"] + [("USD per unit" if c in E.USD_PER_UNIT_QUOTE else "per USD") for c in ccys]])
+fmt_from(BAR, ST.Range(f"C{b6+1}:{L(4+len(ccys))}{b6+1}"))
+fx0 = b6 + 4   # 33 rows: Dec-23 .. Aug-26
+ST.Range(f"C{fx0}").Formula = "=DATE(2023,12,31)"
+ST.Range(f"C{fx0+1}:C{fx0+NM}").Formula = f"=EOMONTH(C{fx0},1)"
+ST.Range(f"C{fx0}:C{fx0+NM}").NumberFormat = "mmm-yy"
+ST.Range(f"D{fx0}:D{fx0+NM}").Value = 1
+for k, c in enumerate(ccys):
+    col = L(5 + k)
+    ST.Range(f"{col}{fx0}").Formula = f'=TR({col}${b6+2},"TR.MIDPRICE","SDate=2023-12-31 EDate=2026-08-31 Frq=CM")'
+u0 = fx0 + NM + 3
+ST.Range(f"C{u0-1}").Value = "USD per 1 unit of currency"
+put(ST, f"C{u0}", [["Currency", "USD"] + ccys]); fmt_from(BAR, ST.Range(f"C{u0}:{L(4+len(ccys))}{u0}"))
+ST.Range(f"C{u0+1}:C{u0+1+NM}").Formula = f"=C{fx0}"
+ST.Range(f"C{u0+1}:C{u0+1+NM}").NumberFormat = "mmm-yy"
+ST.Range(f"D{u0+1}:D{u0+1+NM}").Value = 1
+for k, c in enumerate(ccys):
+    col = L(5 + k)
+    ST.Range(f"{col}{u0+1}:{col}{u0+1+NM}").Formula = f'=IFERROR(IF({col}${b6+3}="USD per unit",N({col}{fx0}),1/N({col}{fx0})),1)'
+USDPER = f"'Attr Setup'!$D${u0+1}:${L(4+len(ccys))}${u0+1+NM}"
+USDHDR = f"'Attr Setup'!$D${u0}:${L(4+len(ccys))}${u0}"
+ST.Range(f"D{fx0}:{L(4+len(ccys))}{u0+1+NM}").NumberFormat = "0.0000"
+# currency map + region map
+cm0 = u0 + NM + 4
+put(ST, f"C{cm0}", [["Quote ccy", "FX ccy"], ["GBp", "GBP"], ["GBX", "GBP"], ["ILA", "ILS"], ["ZAc", "ZAR"]])
+fmt_from(BAR, ST.Range(f"C{cm0}:D{cm0}"))
+CCYMAP = f"'Attr Setup'!$C${cm0+1}:$D${cm0+4}"
+countries = sorted({(v[0] or "") for v in E.META.values() if v and v[0] and v[0] != "NULL"})
+put(ST, f"F{cm0}", [["HQ country", "Region"]] + [[c, E.region_of(c)] for c in countries])
+fmt_from(BAR, ST.Range(f"F{cm0}:G{cm0}"))
+REGMAP = f"'Attr Setup'!$F${cm0+1}:$G${cm0+len(countries)}"
+for c, w in (("C", 16), ("F", 22), ("G", 22)): ST.Columns(c).ColumnWidth = w
+print("setup done", flush=True)
+
+# ============================ Attr Returns ============================
+RT = sheet("Attr Returns", "Attr Setup"); base(RT)
+fmt_from(TITLE, RT.Range("C2:P2")); RT.Range("C2").Value = "Attribution Returns - monthly total return per security (Workspace, live)"
+note(RT, "C3", "Local total return = TR.TotalReturn per calendar month (SDate/EDate from 'Attr Setup'); USD return = local x FX change. "
+               "Peer composite columns aggregate 'Attr Holdings'.")
+h0 = 7; d0 = 8; dl = d0 + NR - 1
+LC0 = 10   # J = first local month
+UC0 = LC0 + NM + 1
+PC0 = UC0 + NM + 1
+for j in range(NM):
+    RT.Range(f"{L(LC0+j)}5").Formula = f"='Attr Setup'!{L(MC0+j)}{r0+1}"
+    RT.Range(f"{L(LC0+j)}6").Formula = f"='Attr Setup'!{L(MC0+j)}{r0+2}"
+    RT.Range(f"{L(LC0+j)}{h0}").Formula = f"='Attr Setup'!{L(MC0+j)}{r0}"
+    RT.Range(f"{L(UC0+j)}{h0}").Formula = f"='Attr Setup'!{L(MC0+j)}{r0}"
+RT.Range("I5").Value = "SDate"; RT.Range("I6").Value = "EDate"
+put(RT, f"C{h0}", [["RIC", "Company", "GICS Sector", "HQ Country", "Currency", "Region", "FX col"]])
+RT.Range(f"{L(LC0-1)}4").Value = "Local total return (%)"; RT.Range(f"{L(UC0-1)}4").Value = "USD return"
+pc_h = ["Peer comp. contrib. " + PLAB + " (ann.)", "Peer comp. contrib. YTD-26", "Peer comp. avg wt " + PLAB,
+        "Peer comp. avg wt YTD-26", "AZTD avg wt " + PLAB, "AZTD avg wt YTD-26", "# peers holding"]
+put(RT, f"{L(PC0)}{h0}", [pc_h])
+fmt_from(BAR, RT.Range(f"C{h0}:{L(PC0+len(pc_h)-1)}{h0}"))
+RT.Range(f"{L(LC0)}{h0}:{L(UC0+NM-1)}{h0}").NumberFormat = "mmm-yy"
+RT.Range(f"C{h0}:{L(PC0+len(pc_h)-1)}{h0}").WrapText = True; RT.Rows(h0).RowHeight = 40
+put(RT, f"C{d0}", [[r] for r in rics])
+RT.Range(f"D{d0}").Formula = f'=TR($C${d0}:$C${dl},"TR.CommonName;TR.GICSSector;TR.HeadquartersCountry;TR.PriceClose.currency")'
+RT.Range(f"H{d0}:H{dl}").Formula = f'=IFERROR(VLOOKUP(F{d0},{REGMAP},2,0),"Other")'
+RT.Range(f"I{d0}:I{dl}").Formula = f'=IFERROR(MATCH(IFERROR(VLOOKUP(G{d0},{CCYMAP},2,0),G{d0}),{USDHDR},0),1)'
+for j in range(NM):
+    c = L(LC0 + j)
+    RT.Range(f"{c}{d0}").Formula = f'=TR($C${d0}:$C${dl},"TR.TotalReturn","SDate=#1 EDate=#2",,{c}$5,{c}$6)'
+for j in range(NM):
+    lc, uc = L(LC0 + j), L(UC0 + j)
+    RT.Range(f"{uc}{d0}:{uc}{dl}").Formula = (
+        f'=IF(ISNUMBER({lc}{d0}),(1+{lc}{d0}/100)*INDEX({USDPER},{j+2},$I{d0})/INDEX({USDPER},{j+1},$I{d0})-1,"")')
+RT.Range(f"{L(LC0)}{d0}:{L(LC0+NM-1)}{dl}").NumberFormat = "0.0"
+RT.Range(f"{L(UC0)}{d0}:{L(UC0+NM-1)}{dl}").NumberFormat = "0.0%"
+RET_USD = f"'Attr Returns'!${L(UC0)}${d0}:${L(UC0+NM-1)}${dl}"
+RET_RIC = f"'Attr Returns'!$C${d0}:$C${dl}"
+for c, w in (("C", 12), ("D", 32), ("E", 20), ("F", 16), ("G", 8), ("H", 18), ("I", 6)):
+    RT.Columns(c).ColumnWidth = w
+print("returns sheet done", flush=True)
+
+# ============================ Attr Holdings ============================
+HD = sheet("Attr Holdings", "Attr Returns"); base(HD)
+fmt_from(TITLE, HD.Range("C2:P2")); HD.Range("C2").Value = "Attribution Holdings - weights, drift and contribution by fund & security"
+note(HD, "C3", "Snapshot weights = SEC Form N-PORT (quarterly, to Dec-25) and Workspace Derived Holdings (monthly, Jan-Aug 26); stored as data. "
+               "Start-of-month weight = snapshot when available, else prior weight drifted by its USD return. Contribution = weight x USD return.")
+g0 = 7; e0 = 8; el = e0 + NH - 1
+W0 = 11                  # K: raw snapshot weights
+S0 = W0 + NM + 1         # start weights
+K0 = S0 + NM + 1         # contributions
+Z0 = K0 + NM + 1         # summary
+put(HD, f"C{g0}", [["Fund", "RIC / key", "Company", "GICS Sector", "Region", "Ret row", "Fund row", ""]])
+HD.Range(f"{L(W0)}6").Value = "Snapshot weight (data)"; HD.Range(f"{L(S0)}6").Value = "Start-of-month weight (formula)"
+HD.Range(f"{L(K0)}6").Value = "Contribution (weight x USD return)"
+for j in range(NM):
+    for base_c in (W0, S0, K0):
+        HD.Range(f"{L(base_c+j)}{g0}").Formula = f"='Attr Setup'!{L(MC0+j)}{r0}"
+zh = ["Avg wt " + PLAB, "Contribution " + PLAB + " (ann.)", "Avg wt YTD-26", "Contribution YTD-26"]
+put(HD, f"{L(Z0)}{g0}", [zh])
+fmt_from(BAR, HD.Range(f"C{g0}:{L(Z0+len(zh)-1)}{g0}"))
+HD.Range(f"{L(W0)}{g0}:{L(K0+NM-1)}{g0}").NumberFormat = "mmm-yy"
+HD.Range(f"{L(Z0)}{g0}:{L(Z0+3)}{g0}").WrapText = True; HD.Rows(g0).RowHeight = 40
+# data: fund, key, raw weights
+CH = 3000
+for i in range(0, NH, CH):
+    blk = hold_rows[i:i + CH]
+    put(HD, f"C{e0+i}", [[f, k] for f, k, raw in blk])
+    put(HD, f"{L(W0)}{e0+i}", [[("" if x is None else x) for x in raw] for f, k, raw in blk])
+HD.Range(f"E{e0}:E{el}").Formula = f'=IFERROR(INDEX(\'Attr Returns\'!$D${d0}:$D${dl},$H{e0}),$D{e0})'
+HD.Range(f"F{e0}:F{el}").Formula = f'=IFERROR(INDEX(\'Attr Returns\'!$E${d0}:$E${dl},$H{e0}),"Unclassified")'
+HD.Range(f"G{e0}:G{el}").Formula = f'=IFERROR(INDEX(\'Attr Returns\'!$H${d0}:$H${dl},$H{e0}),"Other")'
+HD.Range(f"H{e0}:H{el}").Formula = f"=IFERROR(MATCH($D{e0},{RET_RIC},0),0)"
+HD.Range(f"I{e0}:I{el}").Formula = f"=MATCH($C{e0},{FUNDLIST},0)"
+# start weights
+HD.Range(f"{L(S0)}{e0}:{L(S0)}{el}").Formula = f"=N({L(W0)}{e0})"
+for j in range(1, NM):
+    sc, pc, rc = L(S0 + j), L(S0 + j - 1), L(W0 + j)
+    HD.Range(f"{sc}{e0}:{sc}{el}").Formula = (
+        f"=IF(INDEX({FLAGS},$I{e0},{j+1})=1,N({rc}{e0}),"
+        f"{pc}{e0}*(1+IF($H{e0}>0,N(INDEX({RET_USD},$H{e0},{j})),0))/(1+CHOOSE($I{e0},"
+        + ",".join(f"'Attr Setup'!${L(MC0+j-1)}${b2+1+q}" for q in range(5)) + ")))")
+for j in range(NM):
+    kc, sc = L(K0 + j), L(S0 + j)
+    HD.Range(f"{kc}{e0}:{kc}{el}").Formula = f"={sc}{e0}*IF($H{e0}>0,N(INDEX({RET_USD},$H{e0},{j+1})),0)"
+SR = lambda a, b, r: f"{L(a)}{r}:{L(b)}{r}"
+HD.Range(f"{L(Z0)}{e0}:{L(Z0)}{el}").Formula = f"=AVERAGE({SR(S0, S0+NM-1, e0)})"
+HD.Range(f"{L(Z0+1)}{e0}:{L(Z0+1)}{el}").Formula = f"=SUM({SR(K0, K0+NM-1, e0)})*INDEX({FSTAT('Link factor period')},$I{e0})"
+HD.Range(f"{L(Z0+2)}{e0}:{L(Z0+2)}{el}").Formula = f"=AVERAGE({SR(S0+NM-NY, S0+NM-1, e0)})"
+HD.Range(f"{L(Z0+3)}{e0}:{L(Z0+3)}{el}").Formula = f"=SUM({SR(K0+NM-NY, K0+NM-1, e0)})*INDEX({FSTAT('Link factor YTD')},$I{e0})"
+HD.Range(f"{L(W0)}{e0}:{L(S0+NM-1)}{el}").NumberFormat = "0.00%;-0.00%;"
+HD.Range(f"{L(K0)}{e0}:{L(K0+NM-1)}{el}").NumberFormat = "0.00%;-0.00%;"
+HD.Range(f"{L(Z0)}{e0}:{L(Z0+3)}{el}").NumberFormat = "0.00%;-0.00%;-"
+for c, w in (("C", 7), ("D", 13), ("E", 30), ("F", 20), ("G", 16), ("H", 7), ("I", 6)):
+    HD.Columns(c).ColumnWidth = w
+HFUND = f"'Attr Holdings'!$C${e0}:$C${el}"; HKEY = f"'Attr Holdings'!$D${e0}:$D${el}"
+HNAME = f"'Attr Holdings'!$E${e0}:$E${el}"; HSEC = f"'Attr Holdings'!$F${e0}:$F${el}"; HREG = f"'Attr Holdings'!$G${e0}:$G${el}"
+HWP = f"'Attr Holdings'!${L(Z0)}${e0}:${L(Z0)}${el}"; HCP = f"'Attr Holdings'!${L(Z0+1)}${e0}:${L(Z0+1)}${el}"
+HWY = f"'Attr Holdings'!${L(Z0+2)}${e0}:${L(Z0+2)}${el}"; HCY = f"'Attr Holdings'!${L(Z0+3)}${e0}:${L(Z0+3)}${el}"
+# holdings monthly return on setup
+for i, f in enumerate(FUNDS):
+    ST.Range(f"C{b2+1+i}").Value = f
+    for j in range(NM):
+        kc = L(K0 + j)
+        ST.Range(f"{L(MC0+j)}{b2+1+i}").Formula = f"=SUMIFS('Attr Holdings'!${kc}${e0}:${kc}${el},{HFUND},$C{b2+1+i})"
+    rr = b5 + 1 + i
+    ST.Range(f"{FS['Avg equity wt period']}{rr}").Formula = f'=SUMIFS({HWP},{HFUND},$C{rr})'
+    ST.Range(f"{FS['Avg equity wt YTD']}{rr}").Formula = f'=SUMIFS({HWY},{HFUND},$C{rr})'
+# peer composite columns on returns sheet
+pc = [L(PC0 + k) for k in range(7)]
+RT.Range(f"{pc[0]}{d0}:{pc[0]}{dl}").Formula = f'=(SUMIFS({HCP},{HKEY},$C{d0})-SUMIFS({HCP},{HKEY},$C{d0},{HFUND},"AZTD"))/{len(PEERS)}'
+RT.Range(f"{pc[1]}{d0}:{pc[1]}{dl}").Formula = f'=(SUMIFS({HCY},{HKEY},$C{d0})-SUMIFS({HCY},{HKEY},$C{d0},{HFUND},"AZTD"))/{len(PEERS)}'
+RT.Range(f"{pc[2]}{d0}:{pc[2]}{dl}").Formula = f'=(SUMIFS({HWP},{HKEY},$C{d0})-SUMIFS({HWP},{HKEY},$C{d0},{HFUND},"AZTD"))/{len(PEERS)}'
+RT.Range(f"{pc[3]}{d0}:{pc[3]}{dl}").Formula = f'=(SUMIFS({HWY},{HKEY},$C{d0})-SUMIFS({HWY},{HKEY},$C{d0},{HFUND},"AZTD"))/{len(PEERS)}'
+RT.Range(f"{pc[4]}{d0}:{pc[4]}{dl}").Formula = f'=SUMIFS({HWP},{HKEY},$C{d0},{HFUND},"AZTD")'
+RT.Range(f"{pc[5]}{d0}:{pc[5]}{dl}").Formula = f'=SUMIFS({HWY},{HKEY},$C{d0},{HFUND},"AZTD")'
+RT.Range(f"{pc[6]}{d0}:{pc[6]}{dl}").Formula = f'=COUNTIFS({HKEY},$C{d0},{HFUND},"<>AZTD",{HWP},">0")'
+RT.Range(f"{pc[0]}{d0}:{pc[5]}{dl}").NumberFormat = "0.00%;-0.00%;-"
+for k in range(7): RT.Columns(pc[k]).ColumnWidth = 13
+RPC = {k: f"'Attr Returns'!${pc[k]}${d0}:${pc[k]}${dl}" for k in range(7)}
+RNAME = f"'Attr Returns'!$D${d0}:$D${dl}"; RSEC = f"'Attr Returns'!$E${d0}:$E${dl}"
+app.CutCopyMode = False
+print("holdings sheet done", flush=True)
+pickle.dump(dict(FS=FS, b5=b5, STATROW=STATROW, HFUND=HFUND, HKEY=HKEY, HNAME=HNAME, HSEC=HSEC, HREG=HREG,
+                 HWP=HWP, HCP=HCP, HWY=HWY, HCY=HCY, RPC=RPC, RNAME=RNAME, RSEC=RSEC, NM=NM,
+                 b2=b2, b4=b4, r0=r0, MC0=MC0), open(E.S + "/live_refs.pkl", "wb"))
+app.Calculation = -4105
+app.ScreenUpdating = True
+print("built")

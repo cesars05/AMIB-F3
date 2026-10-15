@@ -1,0 +1,239 @@
+# IB / new-deck visual review — raw notes (written deck by deck)
+
+Renders: `renders_ib/<KEY>/pNN.png` (PDFs, 1400 px wide) and `renders_ib/JAZZ|NETFLIX/slide_NN.png`, `renders/Allocation_FEMSA|AZTD_vs_Peers_v6/slide_NN.png`. Contact sheets: `contact_ib/`.
+PDF decks are scanned images → positions are visual estimates given as **fractions of slide width/height** (fx, fy). PPTX decks are measured (`forensics/*.json`).
+
+---------------------------------------------------------------------
+## GS_POWERSCHOOL — Goldman Sachs, "Project Picasso – Board of Directors Discussion Materials" (Mar-2024), 13.33×7.5, 35 pp
+
+**Frame**
+- Title: very large bold navy (#0C2454-ish, GS navy), ~28–32 pt equivalent, left at fx 0.05, fy 0.07; titles often wrap to 2 lines (GS accepts 2-line titles, Title Case, statement-style: "Sponsors Remained Most Active Buyers", "Software Multiples Have Adjusted to a New Reality").
+- GS logo box top-right (fx 0.88–0.94), red italic "Confidential" above it.
+- Thick navy bar along the very bottom edge (full width, ~1.2% of height). Page "Investment Banking | 7" grey, bottom-right.
+- Source + Note block: italic 9–10 pt, bottom-left, "Source: FactSet; market data as of 1-Jan-2024" then "Note: …" with superscript footnotes ¹ ² — every data slide has it.
+- Section dividers: full light-grey (#F0F0F0) slide, bold navy title left-middle, navy tab "Investment Banking" bottom-right with light-blue end cap. Very plain.
+- Agenda: 4 numbered rows — navy filled circle with white number + light-blue (#D6E8F7) full-width bar with bold navy text. (Same family as FEMSA roman pills.)
+
+**Executive summary (p3)**: tagline box on top (cream/yellow #FCF6DA fill + thin navy outline, bold italic centered sentence) → 2 square-bullet level-1 statements (bold-ish) each with 3–5 em-dash sub-bullets. Text only. Reading order: framing banner → claim → evidence dashes.
+
+**Chart slides — GS chart grammar**
+- p6 (stacked column + logos): chart header = centered bold navy text with thin navy rule ("Sponsor % of Software M&A Volume (excl. Deals Over $20bn)"); **a KPI row above the bars** (37% 40% 39%… in bold on a light band) aligned to each column — a "metric strip" above the chart; stacked columns (navy dark = sponsors, light blue = strategics, red = deals >$20bn with **company logos inside the red segment**); totals ($130, $59…) bold above; segment labels white inside; red outside labels for the top segment value; **rounded callout boxes with leader lines** ("64 Strategic Transactions"); second metric strip below ("Number of Sponsor Take-Privates": 8 2 10 6 …); then **two logo-tombstone panels** (rounded outline boxes) at bottom with deal size + date under each logo. Very dense, layered: metric strip → chart → metric strip → logo panels → source.
+- p7: 3 small-multiple column charts side by side, each with a centered bold header + underline (Sponsors / Strategics <$10bn / Strategics >$10bn), different color per panel (orange, light blue, navy); **dashed average lines per year with colored labels "2021 Average: $23"**; big diagonal arrow drawn over the chart to show trend; red-filled translucent highlight box on the last period with logo callout.
+- p8: dual-axis line chart (3 series navy / light blue / purple), header + **light-blue banner box with the takeaway sentence inside the chart area**; orange dashed rectangle highlighting the recent period; end-of-line value labels in series color at right; legend bottom.
+- p9: long time-series line chart (4 series) + **embedded mini-table inside the chart's empty upper-left** (3Y Avg / Current / COVID Avg) colored by series; end labels right.
+- p11/p13: indexed performance lines + **mini performance table top-right with the key column outlined by a red dashed box and yellow fill** (Since IPO). End-of-line labels with % in series color. Series colors: Picasso light blue, peers navy/grey, index dark red.
+- p12: price line (navy, thick) + horizontal reference lines for 52-week high (light blue) / low (purple) with labels; dashed-outline mini table (Daily avg volume); **right side VWAP stack table** (label / value, current price row highlighted cream, "vs. current" italic rows in green/red).
+- p14: analyst table (zebra light blue) + highlighted median row (cream/orange band) + **vertical light-blue side label box** ("Median price target implies 30% upside") + 2 mini charts below (price vs target line; stacked rating bars).
+- p26/p35: precedent premia — full-width single-color navy column chart sorted descending, dashed median/percentile lines with colored labels at right; **data table directly under each bar** (announcement date / target / acquirer / value / % cash / premium) aligned to bar columns. "Chart-as-table-header" pattern.
+- p27 (Analysis at various prices — AVP): navy header row with price columns; italic label rows; Enterprise value row on light-blue band + bold; **purple dots with tiny labels marking benchmark positions inside the grid** (e.g., "Software median 30%"); the recommended price range boxed by a **pink dashed vertical rectangle** spanning the table.
+- p32: league-table grid (navy cell = GS, grey others) + 2 bar charts with GS bar navy, others very light blue, **dashed rounded callout "46% above #2"**.
+
+**Box / shape vocabulary (GS)**
+- Rounded-corner rectangles everywhere for content panels (p16, p17, p19, p24 logos) with thin outline in the panel color, often with a soft drop shadow (GS uses shadow on panels — unlike Aztlan).
+- Header strips: full-width filled bar (navy / purple / orange / light blue) with white bold text on top of a white panel (p17 "Expansion in India", "International Leadership").
+- Investment highlights (p16): left = stack of 9 rounded-outline pill rows (bold navy text, each pill outlined; 3 colored outlines highlight the ones expanded later) ; right = 2×2 grid of **solid colored tiles with a white line icon + bold white caption** (purple, orange, navy, light blue). This is the main place GS uses icons.
+- Subtitle banner: light-blue (#D6E8F7) box with navy outline + bold centered sentence directly under the title (p17, p18, p19) = the "so-what".
+- Big KPI boxes (p19): outlined rectangle with large bold italic number "107%" + caption.
+- Option comparison (p23): 3 column heads with numbered circles; **row labels as colored filled blocks at left** (navy, steel blue, purple, orange, yellow, dark red) ; content cells with "+" (pro, red plus) and "–" (con) bullets; check marks ✓✓✓ for scoring rows; the recommended column has **yellow fill + dark-red dashed border** and a tag "GS Recommendation" (dashed box) above.
+- Timeline/Gantt (p28): navy year header, month/week grid, purple filled bars, ★ for milestones, bracket annotations "~3 weeks".
+- Buyer lists (p25): vertical rotated-text color bars at left grouping tiers (Tier 1 navy, Strategics light blue, Tier 2 purple, Tier 3 orange, Likely not interested green) + logo + contact + fund size table.
+- Credentials: tombstone grid (8×3 outlined boxes: logo, role, deal, logo, date) p33; "advisor of choice" (p30) = 4 columns of icon + big number + caption separated by dashed vertical lines and "+" signs, with faded logo cloud background.
+- Images: **only logos, product screenshots (p18 framed in rounded cards), and maps (p17)**. No photos of people/places. Images serve as evidence ("Picasso AI in products today") or identity (logos).
+
+**Palette** navy #0C2454/#0A3254, light blue #D6E8F7/#9DBBE0, mid blue #6E9BCB, purple #6B1F6E, orange #F39200, dark red #A6192E, cream highlight #FCF6DA, greys. Font: a humanist sans (GS Sans-like), bold titles.
+
+---------------------------------------------------------------------
+## BARC_NUVEI — Barclays, "Project Neon – Board Materials" (Apr-2024), 9.72×7.52 (≈4:3), 25 pp — fairness/valuation board book
+
+**Frame**: Title Arial-like bold black ~24 pt, top-left (fx 0.06, fy 0.08), one line, **topic-style (noun phrase)** not action sentence ("Transaction Background", "Neon Valuation Summary"). Footer: thin light-blue rule full width at fy 0.93, page number left under it, BARCLAYS logo right. No subtitle.
+Cover & dividers: **cyan field (#00AEEF) with a big white inset rectangle** (white "card" with ~8% cyan margin) containing title bold black left-aligned; logo eagle top-right on cyan. Dividers same frame, title only.
+- Notice "All currencies stated in USD ($) throughout materials" in red italic top-right (p4) — currency disclaimer convention.
+
+**Signature element: the full-width blue header bar** (#1E64C8-ish royal blue, white bold centered 11–12 pt, h ≈ 3.5% of height) sitting right under the title above every exhibit ("Analysis at Various Prices (Mgmt. Projections)", "Neon Stock Price Performance Since IPO"). When there are two exhibits, each gets its own bar (half width). Secondary header bars in **teal (#14A39A)** for second-type exhibits (Transaction Multiples, Peers, Adj. EBITDA Margin). Sub-headers in **light cyan bars** (#29B6F6-ish) with white text (Management Plan / Consensus / Delta in dark grey).
+- Rotated vertical side tabs (cyan/grey filled, white rotated text "Summary Value", "Premiums", "Multiples", "Valuation", "Reference") grouping rows of a table or football field. Same idea as GS tier bars.
+
+**Slide patterns**
+- Text slides (p4, p5): plain round-bullet lists, 11–12 pt, sub-bullets square; p5 separates parties with **thin blue horizontal rules** between blocks (no boxes).
+- AVP table (p6): columns per offer price, each offer column enclosed in **red dashed vertical box**; final offer column solid blue outline; row groups with side tabs; italic % rows; bold totals; parentheses negatives.
+- Stock chart with event annotations (p8): single cyan price line; shaded hatched vertical bands for periods (Covid, short-seller report) with grey label tabs; **dashed-outline callout boxes with leader lines** for events (earnings = yellow dashed, acquisitions = grey dashed, media leak = red dashed — legend at bottom explains box types); horizontal dashed 52W high/low lines with colored labels at right end; **market-statistics box top-right** (thin blue outline, small table: price, shares, equity value, EV bridge); **summary strip below the chart** (blue outlined box: 30-day avg / 1Y / 2Y / 3Y / 52W high/low with premiums).
+- Indexed lines (p9): 2 stacked charts each with a header bar + a small navy-header table at the top-right corner (Annual returns / Average multiples by year).
+- Management plan (p10): left big financial table (light-blue bands on key rows, CAGR column at right boxed, dashed vertical line separating actual vs projected), right column = 3 stacked "KPI target" panels each: teal header bar → grey box with italic "Target: 15–20% growth" → small cyan column chart. Text→target→evidence chart.
+- Mgmt vs consensus (p11): grouped column headers (colored bars per group), delta columns shaded grey hatch for N/A.
+- Numbered list slide (p13): 5 wide light-grey gradient bars, big blue number left, blue bold text — the "steps / changes" list.
+- p14: valuation bridge columns: unadjusted (light) vs adjusted (dark) bars per period, with **red dashed boxes "Δ of (0.5x)" + red arrows** pointing to change. Teal for transaction multiples, blue for trading.
+- **Football field (p15)** — canonical: header bar "Price per Share"; left labels grouped under bold category labels (Comparable Companies / Precedent Transactions / DCF) with side tab "Valuation" (cyan) and "Reference" (grey) separated by a **dashed cyan horizontal line**; navy horizontal floating bars for valuation methods, **light grey bars for reference items** (LBO, premiums, analyst targets, 52-week range) with ◆ marker for median/avg; low/high values printed at each bar end; **vertical dashed reference lines** for unaffected price (red dashed label box) and offer price (blue dashed label box) labelled at top; x-axis share price at bottom with a small implied multiples table under the axis (Premium, EV, EV/EBITDA rows). Right column: "Assumptions" header bar + stacked outlined boxes with bold method name + 2 bullets each (multiple ranges in bold).
+- Benchmarking (p16): 4 panels of horizontal bar charts side by side, logos as row labels at left (shared), subject company bars cyan, peers navy, dashed-outline boxes for comparison values; group side-tabs ("Business comps", "Business + Valuation comps"); median rows at bottom in dashed boxes. Break symbol "//" on outlier bar.
+- Precedents (p17): dense table with header bar, side tab "Post market peak", quartile/median/mean summary block bottom-right in bold.
+- DCF (p18): top = projection table (historicals grey header, projections teal header, CAGR column) ; bottom-left "Equity Value Build" (header + cyan pill with assumptions "@ 10.75x exit / 14.25% WACC" + $/per share/% table); bottom-right "Sensitivity Analysis" = 4 mini 3×3 grids (WACC rows × multiple / growth cols) with rotated "WACC" label.
+- WACC (p21): 2 tables side by side, key rows boxed, **dashed box + arrow to "Average: 13.5%" callout** (lavender dashed pill).
+- Premiums paid (p23): subtitle sentence in bold under title; small column charts (quartiles) under teal/blue header bars; logo pairs table (target / acquirer).
+- Analyst targets (p24): table + histogram of price targets (teal columns, count labels above).
+
+**Shapes**: square corners everywhere (Barclays = rectangles, header bars, dashed boxes). Rounded only for small pills. No icons, no photos. Logos only as table row labels.
+**Palette**: cyan #00AEEF (brand), royal blue #0B5ED7/#1F6FD1, navy #0A2D5C, teal #12A19A/#0E8C82, light cyan fills #E3F4FD, grey #D9D9D9, red only for dashed highlight boxes. Font Arial/Helvetica.
+
+---------------------------------------------------------------------
+## CS_NEWSTAR — Credit Suisse, "Project Osprey – Board of Directors discussion materials" (Nov-2017), 11×8.5 (letter), 20 pp
+
+**Frame**: **red-outlined disclaimer banner across the very top** (thin dark red rectangle with small caps red text "CREDIT SUISSE DOES NOT PROVIDE ANY TAX ADVICE | MATERIALS ARE PRELIMINARY…") on every page. Title navy (#0B3B73) bold ~22 pt + **subtitle in light grey, same size, regular** ("Illustrative assumptions as of November 2017") — two-tone title/subtitle stack, subtitle gives scope/date not the so-what. Section numbering in a **navy filled circle "1" left of title** (tells which section you are in). Footer: thin navy rule, "Source:/Note:/(1)" block left in 7 pt, "Confidential" + page number right, © line.
+Cover: grey (#D9DDE1) box in the middle-right with navy bold project name + grey subtitle + "Confidential / date", **steel-blue (#6A9BC0) bar under the box** — signature "grey card + blue underbar". Section dividers reuse it: "1. Summary of…" grey card with steel-blue underbar, right-aligned.
+
+**Layout patterns**
+- Text slides: bold intro paragraph (the framing question), then square-bullet list with en-dash sub-bullets; generous line spacing; no boxes.
+- Table + "Selected commentary" (p4, p10, p12): left 70% = financial table (bold underlined section labels "Earnings before tax", rows of forecast / pro forma / **variance row italic bold on grey band**), right 30% = navy bold header "Selected commentary" with navy rule + 2–3 square bullets. Very consistent: **exhibit left, commentary right, both with a navy underline header**.
+- **Red dashed rectangle highlighting a specific table row** (p13 "(–) Adjusted tax provision") + a matching red dashed note box under the table explaining the row ("Calculated based on adjusted GAAP earnings…"). = annotation-by-dashed-box. Total/variance rows on light steel-blue fill.
+- Regression scatter (p5): header bold navy small "P/TBV vs. 2018E ROATCE / ROAE" + rule; scatter with light gridlines, markers by peer group (triangles/squares/circles, navy/teal/grey), regression line grey + **equation box (grey fill) "y = 0.1789x – 0.3646, R² = 0.699"**; subject company dot purple labelled; dashed-outline lavender callout boxes with arrows explaining implied values.
+- Relative stock price (p7): lines (navy, purple, green) + grey volume bars on secondary axis; **mini returns table top-left** with the key column in **red dashed box**; event annotation grey box with red dashed border + red dashed vertical line at the date; end labels.
+- Analyst estimates (p6): commentary on top, then compact table with bold primary-methodology row.
+- Appendix financial summary (p18): dense 8 pt table, bold section labels on grey bands, key rows bold.
+**Palette**: navy #0B3B73, steel blue #6A9BC0 / #A8C4DB (fills #DCE6F0), grey #D9DDE1, red only for disclaimer & dashed highlights. Font Helvetica/Arial. No icons, no images except logo. Square corners only.
+
+---------------------------------------------------------------------
+## GREENPLAINS — **BofA Securities** (this is the BofA deck), "Project Kernel – Discussion Materials" for Green Plains (Apr-2023), 9.72×7.52, 30 pp
+(Taro deck to be checked separately.)
+
+**Frame**: Title = **two-level "breadcrumb" title**: line 1 = section name in large *light/regular* weight (Calibri-Light-like, ~24 pt, dark grey/black) e.g. "GPP Situation Overview"; line 2 = page topic in smaller regular grey (~16 pt) e.g. "Peer Benchmarking". No action titles — the *takeaway* goes in a banner below. Footer: page number bottom-left small, client logo bottom-right (BofA puts the **client's** logo on every page, not its own). Sources in tiny italic bottom-left after a short rule.
+Cover: full-bleed photo-like **abstract navy ribbon/wave artwork** (dark navy #0A1F5C → royal blue diagonal ribbons) on the top 70% with white centered title ("Project Kernel" big light weight + "Discussion Materials"), date; bottom white band with **BofA logo left, client logo right**. Section dividers: white top with big number + section name ("1. GPP Situation Overview", light weight ~40 pt centered), **wave artwork strip across lower third**, BofA flag logo left and client logo right in bottom white band. → the wave art is the identity device.
+
+**Signature BofA elements (the "non-square" shapes the user noticed)**
+1. **Takeaway banner**: full-width *taupe/greige* (#D5CEC6-ish) filled rectangle, bold italic dark text centered, right under the title — "MLPs still have minimal access to third-party equity capital". Also used at the bottom of a slide as a conclusion bar (p7 "Transaction will require a unit majority vote…", p29). = So-what strip; BofA's equivalent of Aztlan's subtitle.
+2. **Down-pointing pentagon labels** (homePlate/pentagon rotated 90° → point down; PowerPoint "Pentagon/Arrow: Pentagon" rotated) in dark navy #032061 with white bold centered text at the left of a phase row (p21 "Initial Phase / Negotiations / Execution"). Height grows with the row content; rows separated by thin grey rules. = process-phases-as-arrows down the page.
+3. **Navy label blocks (square)** at the left of each row with white bold text (p9 Consideration/Description, p22 Description/Benefits/Considerations, p27 precedent attributes): "row-header block + bullets + thin rule" grid. Columns headed by bold black centered text with thick black underline; vertical **dashed grey divider** between Private | Public columns.
+4. **Ovals / ellipse pills (outlined navy, white fill)** carrying a metric row above a chart: "Total Debt $MM: ($59) ($59)…", "Cap. utilization 90%/945" — **metric pills aligned over each bar**. A rounded-rect outlined box for a coverage strip.
+5. **Royal-blue header bars** (#0250C4, white bold) over each of two comparison columns (GPRE | GPP) with grey-outlined body boxes under them (p6).
+6. Bold diagonal **arrow with CAGR label** drawn over a stacked column chart ("'23E–'27E CAGR – 34.8%").
+7. Org/structure chart (p7): navy and royal-blue and steel boxes for entities, ellipse for "Public Unitholders", elbow connectors with % ownership labels, side **dashed-outline light-teal boxes** listing debt detail for each entity. Status quo vs pro forma side by side.
+8. Red dashed vertical box around the "Current price" column of a table (p8, p18) and red vertical line separating parent vs subsidiary columns.
+9. "Blocks" chart (p12): each transaction = a navy square stacked into columns by year (unit chart / stacked tiles with ticker text), count above; failed transactions as red dashed-outline tiles; legend boxed.
+10. Sensitivity tables (p19): navy header bar + royal-blue sub-header "Premium" + rotated "Synergies" side tab; **green fill for accretion, red/pink fill for dilution** (conditional colouring), multiple tables in a 2×4 grid. Left column of assumptions bullets.
+11. Calendar (p23): month mini-calendars with navy month header, highlighted dates (lilac = earnings, light blue = holiday) + events table with green/grey column flagging which entity.
+12. Flowback (p29): hand-drawn-like conceptual curve (volume vs time) with outlined text boxes listing actor types + logo panel with navy header. Bottom taupe takeaway bar.
+
+**Charts**: navy #0A1F5C bars for subject, **green #2CA02C for the second subject**, royal blue #0B6FD8 for peers; value labels above bars, light axis with values (BofA keeps value axis + tick labels, no gridlines); 2×2 grids of small bar charts each with bold black header (no rule) (p13). Line chart total return with **colored end-label tags (filled rectangles with white text: "GPP 63.9%")** stacked at right. Bars with outlined value labels.
+**Typography**: Calibri/Calibri Light-like; body 11–12 pt; bold italic for lead-ins inside bullets ("*GPP is an expensive source of capital* – …"). Square bullets ■.
+**Images**: none except logos (client, investors' logos panel). Cover artwork is abstract brand art, not a photo.
+**Palette**: navy #032061/#0A1F5C, royal blue #0250C4, bright blue #1A8FE3, green #2CA02C, red #E31B23 (dashed highlight & dilution), taupe banner #D9D2CA, light grey #F2F2F2.
+
+---------------------------------------------------------------------
+## TARO — also **BofA Securities**, "Project Turtle – Presentation to the Special Committee" (Jan-2024), 9.72×7.52, 19 pp
+Same BofA system as Green Plains (wave cover, light-weight 2-level title, BofA flag logo top-right on content pages this time). Additions:
+- **Red dashed "Confidential" tag top-right** and red dashed "For Reference Only: Per Special Committee guidance" tag top-left on scenario pages — status stamps as dashed red pills.
+- **Navy side panels** (tall navy rectangle, white bold text + italic unit "(Indexed to 05/25/2023)") as the left label of each stacked chart (p5, p6): chart title lives in a side block instead of over the chart. Second panel for the second chart. → "side-label + chart" rows.
+- Lines with **end-of-line tags**: filled colored rectangle with white value + logo of the peer at the right ("131 Turtle", "129 Peers Median"); peers as thin light-blue lines, subject red, median navy dashed thick.
+- **Yellow callout boxes with pointer** (wedge callout, pale yellow #FFF2B3 with dark outline) for events on the timeline ("Unaffected", "Day prior to disclosure of revised offer", analyst action). Dashed grey boxes with bracket lines for proposal levels.
+- Table + green bracket "Until Unaffected Date" annotation; key columns enclosed by green dashed box.
+- **Projections table with lettered red-circle markers (A, B, C, D)** placed on rows that are highlighted with red dashed boxes, and a **"Commentary" box below** (navy header bar + outlined box) where each lettered marker is explained. Very reusable: number the anomalies in the exhibit → explain below.
+- **Valuation summary (football field, vertical version, p8)**: floating vertical columns (navy for reference-only methods, cyan/teal/green for main methods), header cells above each column group as colored blocks (navy "For Reference Only", blue "Selected Publicly Traded Companies", green "DCF"), dashed coloured horizontal lines for reference prices with legend, low/high labels at bar ends, method assumptions in a mini table under the x-axis (reference dates, multiple ranges). Dashed outline bars for sensitivity scenarios.
+- **Tornado chart** (p10): DCF sensitivity — horizontal bars left (light blue, negative) / right (navy, positive) around a dashed vertical midpoint; labels "($3.75)" / "$1.65" at bar ends; base metric column; midpoint valuation in a grey band with dashed box value.
+- Comps table (p11): logos as row labels, navy header, **median row navy fill white text, mean row royal blue**, subject company block below with rotated "Turtle" tab, red dashed ellipses highlighting values, ★ markers explained by yellow callouts at the bottom.
+- Overview text slide (p14): **navy left label blocks** + bullets (same as GP p9).
+- DCF (p9): navy "Management Projections" header bar over projection columns; UFCF row navy band white bold; then "Perpetuity Growth Method" grey bar; sensitivity tables connected with **"+" and "=" operators between tables** (PV of CF + PV of TV = EV) — equation layout of tables.
+
+---------------------------------------------------------------------
+## JEF_FOCUS — Jefferies, "Project Ferdinand Fairness Opinion" (Feb-2023), 9.72×7.52, 29 pp
+
+**Frame**: minimal. Title bold condensed sans (Helvetica Condensed-like) black ~18 pt, top-left; optional unit line "($ in millions, except per share amounts)" small under title; optional **light-blue outlined tag box next to the title** with a dating note ("Share price as of Feb 1, 2023, the day prior to press release…"). Footer: "Jefferies LLC / February 2023" small left, page number centered, big black "Jefferies" wordmark right. Cover & dividers: white page, title between **two thin grey horizontal rules** (fy 0.37 and 0.53), very sparse.
+**Colour system**: steel blue #4F73A3 (headers/label blocks), light steel #A9C0DA, pale #DCE6F2, + category colours for peer groups: **green #8DB58A (TAMPs), mustard #E2C36B (Multi-affiliate), purple #9B88C7 (DCF)** — consistent colour = peer group across the whole deck (comps table group bands, precedents bars, football field columns, changes table tags). Great principle: *one colour per analysis family, reused everywhere*.
+
+**Patterns**
+- Header bar: full-width steel-blue bar with white bold centered text above every exhibit ("Market Performance: IPO – Pre-announcement", "Implied Equity Value per Share"). Sub-group header boxes (lighter fill) over column groups.
+- Key terms (p6) / assumptions (p8, p9): **left steel-blue label blocks (white bold centered) + right thin-outlined box with small square-bullet text**, rows separated by white gap — the classic term-sheet / assumptions grid.
+- Stock chart (p4): 2 lines (subject steel blue, index green) + **red circles on key dates with thin leader lines to text annotations** (date bold + description + price) placed in white space; small market-data tables top-left (outlined) and right (cap table / EV bridge).
+- Transaction overview table (p5): premium table with outlined "Data" column; **rotated-text side tabs in steel blue** for multiple groups.
+- Forecast summary (p10): 4-quadrant: each quadrant = header bar + chart. Stacked columns (base dark steel / acquired light), **diagonal arrows with CAGR labels ("Total CAGR: 21.0%", "(Base) CAGR: 8.6%")**, % labels inside last bar, small grey boxes "% of $ growth" at the right of the last column, growth % rows under the axis (italic). Pies with leader labels for contribution.
+- Football field (p12): **vertical** floating columns coloured by method family (light blue = market observations, green = trading, mustard = precedents, purple = DCF), header boxes above each family in the same colour, analyst targets as **diamond scatter markers** instead of a bar, horizontal lines for deal price (orange "At Deal $53.00") and unaffected price (blue) with italic coloured labels at right, dashed vertical separator between "for reference only" and valuation methods; criteria text under each column (multiple ranges). 
+- Analyst targets (p13): horizontal bar per analyst (light blue, grey for sell) + vertical lines for median and closing price, then columns with ✓ for methodology and right column with bold-italic methodology notes.
+- Comps table (p14): grouped by colour bands (navy, green, mustard, rust = peer groups) with mean/median rows on steel-blue fill.
+- Precedents (p15): horizontal bars by deal coloured by peer group, vertical median lines per group (rust), ◆ for reference-only deals, logos for target/acquirer in table columns at right → "bar chart + table" hybrid.
+- DCF (p17): **waterfall from PV of FCF → EV → Equity value** (steel blue, light blue for negatives, per-share row above in grey band), assumptions in grey box top-right, 4 sensitivity tables under it each with header bar.
+- Sensitivity tornado (p20): left label blocks in light steel (button-like), base & sensitivity columns, bars light/dark around midpoint line, **red dashed box + "//" break** for out-of-scale bar with explanation note.
+- Changes table (p22): left steel-blue label column (group names), coloured tag cells for peer groups, "No change" column.
+- Footnotes page (p23) lettered A–L.
+**Images**: logos only (precedent tables). No icons, no photos.
+
+---------------------------------------------------------------------
+## BARC_FBL — Barclays (2021 style), "Project Kinnick – Special Committee Materials", 6×4.64 (render), 44 pp
+Older Barclays template, different from Nuvei: white cover with **two vertical cyan bars bracketing the title** (cyan project name + black subtitle). Title regular-weight Arial ~24 pt black + **thin double rule under title** (dark + cyan). Footer: Barclays logo left, page centered, **"Project Kinnick / Confidential" red bold right**. Section dividers: white page, bold navy section name on the left-middle above a navy rule.
+- **Cyan chevron/pentagon label tags** at the left of text rows ("FBPCIC Approach", "Process / Negotiations", "Key Takeaways", "Scope of Transactions Chosen") — right-pointing homePlate shape, white bold text, rows separated by thin cyan rules. (Barclays' "arrow label + bullets" = BofA's down-pentagon equivalent, pointing right.)
+- Transaction summary (p6): bold small label column left + bullets right, thin cyan rule between rows (term-sheet list).
+- Exhibit header: **dark teal-navy bar (#0E5C84)** with white bold title, then **cyan sub-header bars** for each sub-exhibit (two charts side by side) — 2-level header system.
+- Football field (p9): table-style FF: left columns Methodology / Metric / Range in header boxes, **vertical rotated group tabs in dark grey with sub-tabs in colours (cyan Trading, light cyan, yellow DDM, green Milliman)**; bars coloured by group, grey for reference; ◇ diamond markers for single data points (precedent deals, broker targets) with labels; vertical dashed lines for initial offer (pink) and transaction price (dark red) with labels at bottom; dashed green box legend "Denotes valuation range inclusive of new business". Horizontal thick rules separate groups.
+- Share price analysis (p10): premiums table where the transaction column is **boxed in cyan outline + light cyan fill**, dots marking the precedent median position inside the table, cyan rounded callout boxes at right ("Median of precedents at 38%").
+- SOTP (p13): two small bar groups with dashed average lines in group colour, rounded dashed callout "Average: 12.0x", **segment contribution as 100% horizontal stacked bars** (navy/teal/cyan), and an SOTP table below with header bar.
+- Regression (p14): build table on top with subject column in **green dashed box**; scatter with 2 dashed regression lines, R² labels in outlined boxes, bracket showing implied range.
+- Precedents (p16): 2 columns of deal descriptions under teal header bars, left row labels as teal blocks (Description / Valuation).
+- DDM (p18): horizontal 100% bar of capital structure + tables in **cyan outlined boxes per column**.
+- Comps (p28): plain table with mean/median rows boxed; 2 small line charts with mini average tables inside.
+- Precedent table (p25): medians in red dashed boxes.
+
+---------------------------------------------------------------------
+## JAZZ & NETFLIX — training pitch books ("Goldman Stanley", BIWS-style), 10×7.5 PPTX, MEASURED (forensics/*.json)
+Not real bank output — useful for *editable shape recipes*, weak on charts (Excel defaults, gridlines, value axes, no sources) → **do not copy their charts**.
+**Frame (measured)**: title Arial 24 (large, regular, navy-black) x0.417 y0.392 w9.0; thin navy rule under title full width; **small navy square tab at the left edge** (x0, under the rule) = brand mark; unit line "($ USD in Millions)" 10 pt under rule; footer navy rule + "Goldman Stanley" wordmark left + page right. Body Arial 12 (by far the dominant size), table 8–10.
+**Recipe – "#N + arrow label + grey rounded box" conclusion row** (Jazz s3/s16, Netflix s6/s10), 4 rows on a 10-in slide:
+  - `rect` black (tx1) x0.417 w0.67 h0.75 → white "#1" 12 pt
+  - `rightArrow` navy #113D63 x1.087 w2.42 h0.75 → white 12 pt label (method / claim)
+  - `roundRect` light grey #CCD1D7 x2.92 w6.58 h0.75, placed *behind* the arrow so the arrow tip overlaps it → 12 pt black explanation (2–3 lines)
+  - row pitch 1.358 in (gap 0.61). Scale to 13.33 by ×1.333 horizontally.
+**Recipe – label buttons + two columns** (Jazz s4): navy `rect` 2.25×0.33 white 12 pt labels in a column; two grey (#CCD1D7) column-header rects; square bullets with values aligned per row. Comparison grid (Netflix s11): navy header row, **alternating navy-steel (#5E7C9E) and light-grey rows with bold criteria at left** — full-cell fills, white text on dark rows.
+- Highlighting with **thin red rectangles** around table rows / chart regions (Netflix s4, s8, s9) — the red box = "look here".
+- Tier lists with logos (Jazz s18): navy header bar "Tier 1 Potential Partners" + white box with logo grid; steel header for Tier 2.
+- Commentary panel (Jazz s15): steel-blue (#5E7C9E) filled box with white bold header + white bullets next to a pie.
+- Term sheet as bold-label bullets (Netflix s12).
+
+---------------------------------------------------------------------
+## STRAT_4Q25 — **Morgan Stanley** corporate strategic update (investor deck, Jan-2026), 10×7.5, 21 pp
+Not a pitch book — the cleanest *modern corporate/IR* style in the folder; best reference for "make one idea very clear" slides.
+**Frame**: Title = **"Bold Topic: regular claim"** two-weight single line/two lines (e.g. "**Consistent Execution:** On a Higher Plane"), black ~22 pt, top-left. Generous white space; footer = thin grey rule, endnote reference in tiny text, "Morgan Stanley" wordmark left, page right. No logo box, no subtitle.
+**Patterns**
+- **Big-number tiles** (p3): 3 equal light-grey (#E8EAED) squares, huge blue bold number (#0A5AA6, ~40 pt) + label in blue regular. Nothing else on the slide. → "headline KPIs" slide.
+- **Header bar over each panel** (#0A5AA6 blue fill, white bold 11 pt centered) + small grey unit label "EPS ($) ⁽¹⁾" left-aligned under it + chart. 2 or 3 panels side by side, equal width. This is *the* layout of the deck (p4, p5, p8, p9, p10, p12, p15).
+- Charts: **no axes values, no gridlines, data labels above bars bold**, baseline only, light pastel fills (light blue #A9D2FB, lavender #D4C4F2, mint #86E5C1) — each panel its own colour family; **dashed average lines with end dots and italic value labels** for period averages (2016–2020 avg grey vs 2021–2025 avg blue) — shows a step-change. Margin % shown as **grey ellipse pills above bars** ("23%", "29%").
+- Pillars → goals (p6/p16): 4 coloured blocks (blue, purple, mid-blue, green) left, **big light-grey chevron/arrow shape behind them pointing right**, then a 2-column label/value grid (grey cells, value in big blue bold). = "strategy → targets" visual.
+- Org tree (p7): blue header bar on top, 3 navy bars below connected with grey connectors with dots, then pastel tiles under each (mint / light blue / lavender) per segment.
+- Ring diagram (p11): central navy circle + 6 light-blue satellite circles on a grey ring (hub & spoke) next to a list of grey bars with blue bold text (opportunities).
+- Text tiles (p9 right): grey boxes with blue bold heading + small italic blue description.
+- KPI tiles over a faded world map (p13): 4 navy tiles top (big white number + label) and 3 region panels with huge blue % — map is a pale grey background graphic, not a data map.
+- Matrix (p14): navy circles for stages on top, colored row headers with **white line icons** (bank, people), cells light blue/mint, grey thin chevrons between columns.
+**Palette**: MS blue #0A5AA6, navy #1F3864, purple #6633CC, green #1A7F5A, pastels light blue #A9D2FB / lavender #D4C4F2 / mint #86E5C1, grey tiles #E8EAED. Font: a geometric/grotesk sans (MS's own); emphasis via **weight + colour**, not boxes.
+
+---------------------------------------------------------------------
+## Allocation_FEMSA — user's team deck (Apr-2026), 13.33×7.5, 26 slides (19–26 are WIP drafts with yellow notes) — MEASURED
+Same "System B / FEMSA academic" frame as M&A FEMSA: Helvetica; title 28 bold #862633 at x0.667 y0.375 h0.572; **subtitle 14 italic black at y0.947** (one line, often the so-what or the guiding question "¿Qué metodología creará más valor para el accionista?"); rule #862633 at y0.936 x0.667→12.667; FEMSA logo top-right x11.581 y0.505 w1.086; source 8 italic at x0.76 y6.951; page number right. Body 12 pt dominant, 14 for lead boxes, 10–11 dense.
+Cover/closing: wine field #8E2F3C with **concentric line-art "ribbons" in red tints (logo-inspired abstract art)**, FEMSA logo white top-right, title Helvetica 40 bold white + italic date 24, team names white italic 11 bottom-left. Agenda: roman-numeral wine pills + light-grey bars with **soft shadow** (as M&A FEMSA).
+
+**Measured recipes**
+- s3 Share-structure diagram: hierarchy of filled rects (1.6–1.8 × 0.5–0.78 in), **fill encodes category** (rose #EAD2D2 = limited vote, cream #FEF3DA = full vote, wine #862633 = trading unit, light blue #C7DFEF / blue #3D8FC9 = NYSE, slate #8087A1 = BMV) + mini legend top-left (0.2-in squares + 9 pt italic) + arrows (straightConnector1). Right: grey (#F2F2F2) side panel x8.538 w4.128 h5.5 with bold 12 header + thin rule + bullet text 12 justified. → **diagram left 60% + grey explainer panel right 35%**.
+- s4 Nested circles (bubble-in-bubble) for ownership (float ⊃ voting trust ⊃ W.H. Gates) with leader lines + dots to explanation blocks at right (bold 14 header + bullets). Concentric/nested = "part of a whole".
+- s5 **Chevron timeline header + year cards**: 5 `chevron` #9B2C39 h0.633 w2.876 (white bold years) across the top; under each a card `rect` 2.38×4.131 alternating fills (#F2F2F2 with #C0C0C0 outline / #E6E6E6 no outline) with bold 12 card title + grey rule + bold-lead bullets. Header strip: grey roundRect full width "Evolución del Programa…" 12 bold with shadow.
+- s6 Stock line with event annotation: wine line, start/end value tags (wine filled rect white bold), **dashed ovals (orange = buybacks, green = dividends) on dates + legend pills top-right**, grey-filled callout boxes with leader lines for each event.
+- s7 Stacked columns (wine dark/mid/rose for ordinary / extraordinary / buybacks) with **segment labels inside small dark boxes** + total above + right column of 3 outlined boxes (header 12 bold + bullets, numbers in wine bold) + rounded wine-outline total box bottom-left ("Ps. 41 mil millones" big wine bold).
+- s8 **3-D "cylinder/slice" bridge** (custGeom) — sequence of shrinking grey slices ending in wine slice, numbered wine circles 1–6 on top, operator circles (−, −, ≈) between, values inside; bracket + wine pill "Ps. 46,600 mm Total retorno aprobado" under slices 2–3. Visually striking alternative to a waterfall (use sparingly, 1 per deck).
+- s9 Comps: column chart (subject grey, peers wine) with **logos as category labels**, dashed-outline mini legend boxes top-left (peer-group averages), metric rows below in **red dashed rounded boxes per row** (EBITDA mg, yield, EV, market cap) aligned to the bars = chart-above-table alignment like GS.
+- s10 Comparison matrix: 3 header roundRects (Dimensiones wine filled; options grey #F2F2F2) w3.7 h0.451; rows bold label + plain values; **dotted grey row separators (sysDot)**; winning cells boxed with red dashed outline; **wine roundRect conclusion bar at bottom** (y6.222 h0.55 full width, white bold 12).
+- s11/s12 Two-panel "who benefits / quantitative impact": grey header rects 5.5×0.778 (white bold 16); left = grey boxes with bold lead-in text 14; right = wine label blocks 1.602×0.8 (white 12) + KPI cells (outlined, bold label + big wine number).
+- s13 Tax table: wine header row, alternating grey rows, + **full-width coral/wine conclusion banner** (rounded, white bold 14) under the table.
+- s14 Price-range number line (min/target/max tags) + analyst rating stacked bars (green→red) + **sensitivity heat map** (red→yellow→green, base case dashed box with callout "Caso Base") + grey explanation box.
+- s15 Recommendation: split (30/70) with puzzle-shaped connector between halves, structure diagram (re-using s3 colours with % deltas), and "Voting Trust 76.27% → 77.17%" before/after tiles with chevron.
+- s16 Executive conclusion: 4 **homePlate/chevron headers in a progression (grey → rose → wine → dark wine)** = "Situación actual → Programa → Oportunidad → Escenario target" with boxes under each, then grey "Conclusiones" bar with down-pointing tail, 3 bullet columns separated by thin vertical rules.
+- s19 Risks: wine label blocks with **downward pointer triangle under them** (callout shapes) + outlined bullet cards; s20 waterfall with **logos/flags above bars** (use of images = identity of each use of cash); s23 **icon list** (line icons in wine circles) + numbered steps 1–3 with icon rows — icons used to tag metric rows.
+Images: logos (peers, brands Bara/OXXO/Spin), flags, line icons. Purpose = identify entities, never decoration.
+
+---------------------------------------------------------------------
+## AZTD_vs_Peers_v6 — Aztlan analyst deck (Oct-2026), 13.33×7.5, 39 slides, 29 native charts — MEASURED. **Best chart reference in the folder.**
+Frame = Aztlan System A exactly (title placeholder 0.575/0.533 w9.827, subtitle navy 16 one-line quantified so-what, top rule, AZTLAN logo top-right, 3-line grey legal footer-left, source centered italic, page right). Section divider (s20) = full navy #221D55 field, white logo + big year "2025" + "Calendar year" — dividers for each period.
+**Titles are claims with the verdict built in**: "Sectors 2024-26: Materials Lagged, Industrials Led" / subtitle quantifies: "Materials (-5.0pp) and Financials (-3.2pp) cost the most; Industrials (+3.1pp) added the most". Pattern = *Topic + period: verdict* / *numbers that prove it*.
+
+**Two-chart layout (measured, layout `2ChartsSubtitles` / General)**
+- Block header: rect x0.569 y1.472 w5.972 h0.347, Arial 16 bold #404040 → rule (black 1 pt) at y1.861 same width → unit/description line 12 italic black at y1.903 h0.25 → chart y2.194 h4.583 (full) or h2.2 (when a table goes underneath).
+- Right block at x6.903 w5.972. Gutter 0.36 in. When one block is a "Key Takeaways" column: chart w≈7.5, takeaway box (thin black outline, 9–10 pt bullets with **bold navy lead-in "Materials -0.7pp:"**) at the top of the right column, not full height.
+- Chart + table stacked (s3): two charts h2.2 on top, then section header "Fund Snapshot" + rule + italic description, table y5.112 h1.71 with 0.24–0.26-in rows, navy header row (#242852 white bold 9), **comparison row bold on grey band at the bottom ("AZTD vs peer avg")**.
+**Chart parameters (29 charts)**
+- Clustered horizontal bars (AZTD vs peers): gap 60, overlap −15, AZTD **gold #F5C400**, peers **navy #002060/#242852**, labels outEnd 9 pt (bold for AZTD), value axis deleted, no gridlines, category labels 10 pt, legend bottom 9 pt only when >1 series.
+- Diverging single-series bars ("gap vs peers"): **negative bars steel #7F8FA9/#9DAAC0, positive bars navy #242852** (invertIfNegative / point overrides), sorted ascending (worst first), labels with custom number format `+0.0"pp";-0.0"pp"`, axis line at zero only.
+- Vertical columns for returns: gap 45–55, subject gold, peers 3 steel greys (#9DAAC0, #7F8FA9, #5A6A8A…), peer average dark navy; labels on top 9–10 pt.
+- Growth-of-100 lines: 1.25–1.5 pt, AZTD gold thicker 2.5, peers greys/navy, value axis kept (9 pt) with light gridlines, legend bottom.
+- Bubble (s11): one bubble per stock, colour = fund (gold/navy/blues/greys), names as data labels, axes kept with titles.
+- Heat-map tables (s11 right): YTD and score columns with red→yellow→green fills (conditional colours), subject fund rows in bold blue text.
+**Dashed "theme frames"** (s10, s19, s23…): whole content in a **dashed rectangle outlined in the sector's colour** (green #42825D Materials, blue Financials, purple Cons. Disc., orange Staples, red Japan) + sector name in that colour 16 bold + a tinted pill (#D9E6DE, #D5E3F0, #E8E1F2, #F3DECF, #F0DADA) with the one-line stats "AZTD wt 6.8% vs peers 15.8% | … | Gap -5.0pp" + two side-by-side tables (dark grey #404040 header) + outlined footer box with 2 bold-lead bullets ("Allocation vs selection:", "By industry:"). → *colour-coded repeated module* for a series of similar slides (1/4, 2/4 …).
+Images: none except logo. Pure data storytelling — proves a deck can be compelling without photos.

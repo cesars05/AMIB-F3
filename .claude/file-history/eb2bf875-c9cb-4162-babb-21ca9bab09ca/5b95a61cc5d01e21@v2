@@ -1,0 +1,91 @@
+﻿$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+if($wb -eq $null){ throw "ABORTO: no se pudo tomar el libro" }
+$sm=$null
+for($t=0;$t -lt 20;$t++){ try{ $sm=$wb.Worksheets.Item("Segment Model") }catch{}; if($sm -ne $null){ break }; Start-Sleep -Milliseconds 800 }
+if($sm -eq $null){ throw "ABORTO: no se pudo tomar la hoja Segment Model" }
+$q='"'
+$emp=$q+$q
+
+# --- localizar filas por valor conocido de FY2026 (columna K), no por numero memorizado ---
+function FindRow($val){
+  for($r=10;$r -le 245;$r++){
+    $v=$null
+    try{ $v=$sm.Cells.Item($r,11).Value2 }catch{}
+    if($v -ne $null -and $v -is [double] -and [math]::Abs($v-$val) -lt 0.5){ return $r }
+  }
+  return 0
+}
+$rCapWM=FindRow 3179
+$rRevWM=FindRow 46588
+$rDnaWM=0
+for($r=25;$r -le 40;$r++){ $v=$null; try{ $v=$sm.Cells.Item($r,11).Value2 }catch{}; if($v -ne $null -and $v -is [double] -and [math]::Abs($v-2840) -lt 0.5){ $rDnaWM=$r; break } }
+# localizar la etiqueta y la primera fila de datos del bloque de intensidad
+$rLbl=0
+for($r=180;$r -le 245;$r++){
+  $t=[string](T { $sm.Cells.Item($r,3).Text })
+  if($t -like "Growth capital intensity*"){ $rLbl=$r; break }
+}
+if($rLbl -eq 0){ throw "ABORTO: no se encontro la etiqueta de intensidad" }
+$rDat=0
+for($r=$rLbl;$r -le $rLbl+6;$r++){
+  if([string](T { $sm.Cells.Item($r,3).Text }) -eq "Water Management"){ $rDat=$r; break }
+}
+if($rDat -eq 0){ throw "ABORTO: no se encontro la fila de Water Management del bloque" }
+if($rCapWM -eq 0 -or $rRevWM -ne 13 -or $rDnaWM -eq 0){ throw ("ABORTO: mapa incompleto. capexWM=r"+$rCapWM+" revWM=r"+$rRevWM+" dnaWM=r"+$rDnaWM) }
+Write-Output ("mapa: etiqueta r"+$rLbl+"  datos desde r"+$rDat+"  capex WM r"+$rCapWM+"  ingresos WM r"+$rRevWM+"  D&A WM r"+$rDnaWM)
+
+$rCapWM=[int]($rCapWM|Select-Object -First 1)
+$rDnaWM=[int]($rDnaWM|Select-Object -First 1)
+$rRevWM=[int]($rRevWM|Select-Object -First 1)
+$rDat=[int]($rDat|Select-Object -First 1)
+$rLbl=[int]($rLbl|Select-Object -First 1)
+Write-Output ("tipos ok: capex=r"+$rCapWM+" dna=r"+$rDnaWM+" rev=r"+$rRevWM+" dat=r"+$rDat)
+$xl.Calculation=-4135
+# columnas: H=FY2023 (base), I=FY2024, J=FY2025, K=FY2026
+$rows=@{}
+$rows[$rDat]  =@($rCapWM,   $rDnaWM,   $rRevWM)
+$rows[$rDat+1]=@($rCapWM+1, $rDnaWM+1, $rRevWM+1)
+$rows[$rDat+2]=@($rCapWM+2, $rDnaWM+2, $rRevWM+2)
+foreach($r in ($rows.Keys | Sort-Object)){
+  $s=$rows[$r]
+  T { $sm.Cells.Item($r,4).Formula="=SUM(I"+$s[0]+":K"+$s[0]+")" } | Out-Null
+  T { $sm.Cells.Item($r,5).Formula="=SUM(I"+$s[1]+":K"+$s[1]+")" } | Out-Null
+  T { $sm.Cells.Item($r,6).Formula="=+D"+$r+"-E"+$r } | Out-Null
+  T { $sm.Cells.Item($r,7).Formula="=+K"+$s[2]+"-H"+$s[2] } | Out-Null
+  T { $sm.Cells.Item($r,8).Formula="=+IFERROR(F"+$r+"/G"+$r+","+$emp+")" } | Out-Null
+}
+T { $sm.Cells.Item($rLbl,3).Value2="Growth capital intensity - net new capital per GBP 1 of incremental revenue, FY2024-FY2026 (3 years)" } | Out-Null
+$xl.Calculation=-4105
+T { $xl.CalculateFullRebuild() } | Out-Null
+T { $xl.CalculateFullRebuild() } | Out-Null
+$wb.Save()
+Write-Output "aplicado: ventana de 3 anios"
+Write-Output ""
+Write-Output ("  "+[string](T { $sm.Cells.Item($rLbl,3).Text }))
+Write-Output ("  "+"".PadRight(26)+"Capex ac.".PadLeft(12)+"D&A ac.".PadLeft(12)+"Cap.neto".PadLeft(12)+"D Ingr.".PadLeft(12)+"Intens.".PadLeft(12))
+for($r=$rDat;$r -le $rDat+2;$r++){
+  $lab=[string](T { $sm.Cells.Item($r,3).Text }); if($lab.Length -gt 25){ $lab=$lab.Substring(0,25) }
+  $v=""
+  for($c=4;$c -le 8;$c++){ $v+=([string](T { $sm.Cells.Item($r,$c).Text })).PadLeft(12) }
+  Write-Output ("  "+$lab.PadRight(26)+$v)
+}
+Write-Output ""
+Write-Output ("  control D"+$rDat+" frm= "+[string](T { $sm.Cells.Item($rDat,4).Formula })+"    G"+$rDat+" frm= "+[string](T { $sm.Cells.Item($rDat,7).Formula }))
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=T { $wb.Worksheets.Item($nm) }
+  $e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)
+
+

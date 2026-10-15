@@ -1,0 +1,138 @@
+# Sistema de diseño — gráficos del reporte semanal
+
+Implementado en [`grafico_banquero.py`](grafico_banquero.py). Todos los
+generadores importan de ahí. **Si un color no está en `PALETA`, no va en un
+gráfico.**
+
+---
+
+## 1. La paleta
+
+| Rol | Hex | Muestra | Uso |
+|---|---|---|---|
+| `primario` | `#2D3748` | navy pizarra | Serie principal. Default de todo panel de una sola línea. |
+| `acento` | `#D97A29` | ámbar oscuro | Segunda serie, **siempre junto al primario**. |
+| `azul_claro` | `#8FAADC` | azul claro | El acompañante del primario en descomposiciones. |
+| `claro` | `#A0AEC0` | gris azulado | Tercera serie; contexto que debe verse sin competir. |
+| `medio` | `#4A5568` | pizarra medio | Cuarta serie. |
+| `verde` | `#4E9B82` | verde teal | Quinta serie. **No significa "positivo".** |
+| `carbon` | `#595959` | gris carbón | Sexta serie. También el color de los ejes. |
+| `gris` | `#A6A6A6` | gris claro | Relleno, barras negativas, histórico sin protagonismo. |
+| `referencia` | `#FF0000` | rojo | **Solo** líneas de referencia punteadas. |
+| `fondo` | `#F7FAFC` | casi blanco | Sombreados de zona. |
+
+**Tipografía:** Arial en todo.
+
+---
+
+## 2. Las cinco reglas
+
+### R1 — Verde y rojo no codifican signo
+
+Verde/rojo por positivo/negativo es convención de **trading**, no de research.
+En barras se usa `color_signo()`: **navy para positivo, gris para negativo**.
+
+El signo ya se lee en la dirección de la barra y en la etiqueta. El color solo
+tiene que jerarquizar: lo positivo pesa, lo negativo se retira.
+
+```python
+colores = colores_por_signo(valores)   # navy / gris
+```
+
+### R2 — El rojo es exclusivo de las referencias
+
+`#FF0000` punteado marca promedios, umbrales y el cero — nada más. Es la
+convención de tus gráficos de Excel (*"2Y Average, 17.49x"*) y funciona
+**precisamente porque el rojo no aparece en ninguna serie**.
+
+Por eso `banda_sigma()` va en gris claro, no en rojo: si ambos fueran rojos,
+competirían y la línea de referencia dejaría de leerse como referencia.
+
+```python
+linea_referencia(ax, 50, "50")           # umbral del PMI
+linea_referencia(ax, promedio, "2Y Avg, 17.5x")
+```
+
+### R3 — Dos pares canónicos, según qué comparas
+
+| Par | Cuándo | Por qué |
+|---|---|---|
+| **navy + azul_claro** | Partes de un mismo todo: real yield + breakeven = nominal, barras apiladas, dato vs su media móvil, LHS vs RHS | Misma familia de color → el ojo las **suma** |
+| **navy + acento** | Dos cosas distintas que compiten: un sector contra su índice, dos activos, precio vs EPS | Familias opuestas → el ojo las **separa** |
+
+Elegir mal el par hace que el gráfico diga lo contrario de lo que quieres.
+
+### R4 — El acento nunca va solo
+
+`#D97A29` sobre blanco a 1.3pt pierde contraste. Un panel de una sola línea va
+en `primario`. El ámbar solo aparece cuando hay un navy al lado que lo sostenga.
+
+### R5 — Un gráfico, un mensaje
+
+Más de 6 series es ilegible con esta paleta. Si hacen falta más, el gráfico
+está haciendo dos cosas.
+
+---
+
+## 3. Qué formato usar para qué
+
+| Situación | Formato | Helper |
+|---|---|---|
+| Una serie en el tiempo | Línea + banda σ + sombreado del mes | `banda_sigma()` |
+| Cambio mensual (CPI, nóminas) | Barras navy/gris desde cero | `colores_por_signo()` |
+| Nivel con umbral (PMI) | Línea + referencia roja en 50 | `linea_referencia()` |
+| Spread contra cero | Área rellena + cero en rojo | `tipo="area"` |
+| Ranking en una dimensión | Barras horizontales ordenadas | `generar_sectores.py` |
+| **Comparar muchas celdas** | **Matriz sombreada** | `matriz_calor()` |
+| Descomposición | Barras apiladas navy + azul_claro | — |
+
+### Sobre la matriz
+
+Es el formato correcto cuando el lector necesita comparar en **dos**
+dimensiones (índice × periodo, tamaño × estilo). Para una sola dimensión, una
+barra ordenada se lee mejor.
+
+Dos decisiones que importan:
+
+- **`por_columna=True`** (default): la intensidad se escala dentro de cada
+  columna. Con escala global, un YTD de +47% deja las columnas de 1W y MTD en
+  blanco y la tabla pierde la mitad de su información.
+- **`factor_negativo=0.45`**: acota qué tan oscuro se pinta un negativo. Navy y
+  gris son ambos oscuros y desaturados; a intensidad pareja, un navy al 50% y
+  un gris al 70% pesan igual y el signo deja de leerse de un vistazo.
+
+---
+
+## 4. Formato de panel
+
+| Elemento | Especificación |
+|---|---|
+| Tamaño | 3.90 × 2.09 in (layout Grid) · 4.25 × 2.27 in (2×2) |
+| DPI | 300 |
+| Recorte | `bbox_inches="tight", pad_inches=0.02` |
+| Ejes | Solo izquierdo e inferior, en `#595959` |
+| Grid | **Ninguno** |
+| Ticks | 6.5pt, texto en `#2D3748` |
+| Grosor de línea | 1.3pt (paneles) · 1.4pt (macro) |
+| Último dato | Callout en negritas fuera del eje, `annotation_clip=False` |
+| Mes en curso | Sombreado `claro` al 25% |
+
+> **Nota:** el sombreado del mes usa `claro` al 25%, no `fondo` (`#F7FAFC`):
+> sobre blanco, `#F7FAFC` es invisible.
+
+---
+
+## 5. Cuándo NO usar la banda σ
+
+`banda_sigma()` traza media ± 1σ **fija** sobre todo el periodo — a propósito.
+La pregunta de un reporte semanal es *"dónde estamos parados respecto al rango
+del año"*, y solo una referencia estática la contesta. Una banda móvil tipo
+Bollinger persigue al precio y esconde justo los rompimientos de rango que
+interesa señalar.
+
+**No aplicarla a series con quiebre de régimen.** Gold/Oil pasó de 80 a 50 en
+marzo: la media anual queda a caballo del salto y la banda cubre 44–70, un
+rango donde la serie casi no estuvo. Esos indicadores llevan `sigma=False`.
+
+El tier macro la trae apagada por defecto: sobre ~24 observaciones de un cambio
+mensual, la media no describe nada.

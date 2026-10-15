@@ -1,0 +1,95 @@
+$ErrorActionPreference="Stop"
+$xl=[Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$v4=$xl.Workbooks | ?{$_.Name -like "*v4*" -and $_.Name -notlike "*BACKUP*"} | select -First 1
+$ws=$v4.Worksheets.Item("DDM")
+if($xl.WorksheetFunction.CountA($ws.Range("A1:Z100")) -ne 0){ throw "DDM tab is not empty" }
+$CM="'Consolidated Model'!"
+# mirror gridline setting of the Multiples tab
+$v4.Worksheets.Item("Multiples").Activate(); $grid=$xl.ActiveWindow.DisplayGridlines
+$ws.Activate(); $xl.ActiveWindow.DisplayGridlines=$grid
+$ws.Range("A1:M40").Font.Name="Arial"; $ws.Range("A1:M40").Font.Size=11
+$ws.Columns("A").ColumnWidth=3; $ws.Columns("B").ColumnWidth=52; $ws.Columns("C").ColumnWidth=12; $ws.Columns("D").ColumnWidth=12
+$ws.Columns("E").ColumnWidth=14; $ws.Columns("F").ColumnWidth=14
+foreach($c in "G","H","I","J","K","L"){ $ws.Columns($c).ColumnWidth=13 }
+
+$ws.Range("B2").Value2="Dividend Discount Model (DDM)"; $ws.Range("B2").Font.Bold=$true; $ws.Range("B2").Font.Size=14
+$ws.Range("B2:L2").Borders.Item(9).LineStyle=1
+$ws.Range("B3").Value2="MXN in millions, except per share data"; $ws.Range("B3").Font.Italic=$true
+
+# assumptions bar
+$ws.Range("B5").Value2="Two-Stage Model Assumptions"
+$ws.Range("B5:L5").Interior.Color=1709731; $ws.Range("B5:L5").Font.Color=16777215; $ws.Range("B5:L5").Font.Bold=$true
+$ws.Range("B6").Value2="Dividends Per Share (DPS) - Current Period"
+$ws.Range("F6").Formula="=+${CM}L64"
+$ws.Range("B7").Value2="Cost of Equity (Ke)"
+$ws.Range("F7").Formula="=+'Cost of Equity'!C27"
+$ws.Range("E8").Value2="Stage 1"; $ws.Range("F8").Value2="Stage 2"
+$ws.Range("E8:F8").Font.Bold=$true; $ws.Range("E8:F8").HorizontalAlignment=-4108
+$ws.Range("E8:F8").Borders.Item(9).LineStyle=1
+$ws.Range("B9").Value2="Dividend Growth Rate (g)"
+$ws.Range("E9").Formula="=+(L12/G12)^(1/L11)-1"
+$ws.Range("F9").Formula="=+'Terminal g'!D27"
+$ws.Range("F6").NumberFormat='$#,##0.00'; $ws.Range("F7").NumberFormat='0.0%'; $ws.Range("E9:F9").NumberFormat='0.0%'
+$ws.Range("F6:F7").HorizontalAlignment=-4108; $ws.Range("E9:F9").HorizontalAlignment=-4108
+foreach($a in "F7","F9"){ foreach($b in 7,8,9,10){ $ws.Range($a).Borders.Item($b).LineStyle=1; $ws.Range($a).Borders.Item($b).Color=11711154 } }
+
+# stage 1 band and dividends
+$ws.Range("G10").Value2="Stage 1"; $ws.Range("G10:L10").HorizontalAlignment=7; $ws.Range("G10:L10").Interior.Color=15921906; $ws.Range("G10:L10").Font.Bold=$true
+$ws.Range("B11").Value2="Stage 1 Dividends"; $ws.Range("B11").Font.Bold=$true; $ws.Range("B11").Font.Italic=$true; $ws.Range("B11").Font.Underline=2
+for($i=0;$i -lt 6;$i++){ $col=[char](71+$i); $ws.Range("${col}11").Value2=[double]$i }
+$ws.Range("G11:L11").NumberFormat='"Year "0'; $ws.Range("G11:L11").Font.Bold=$true; $ws.Range("G11:L11").HorizontalAlignment=-4108
+$ws.Range("G11:L11").Borders.Item(9).LineStyle=1
+$ws.Range("B12").Value2="Dividends Per Share (DPS)"
+$ws.Range("B13").Value2="Cost of Equity (Ke)"
+$ws.Range("B14").Value2="Present Value (PV) of Dividend"; $ws.Range("B14").Font.Bold=$true
+$ws.Range("B15").Value2="Fiscal year"; $ws.Range("B15").Font.Italic=$true
+$src=@("L","M","N","O","P","Q")
+for($i=0;$i -lt 6;$i++){ $col=[char](71+$i)
+  $ws.Range("${col}12").Formula="=+${CM}$($src[$i])64"
+  $ws.Range("${col}13").Formula='=+$F$7'
+  $ws.Range("${col}14").Formula="=+${col}12/(1+${col}13)^${col}11"
+  $ws.Range("${col}15").Formula="=+${CM}$($src[$i])6"
+}
+$ws.Range("G12:L12").NumberFormat='$#,##0.00'; $ws.Range("G13:L13").NumberFormat='0.0%'; $ws.Range("G14:L14").NumberFormat='$#,##0.00'
+$ws.Range("G12:L15").HorizontalAlignment=-4108; $ws.Range("G14:L14").Font.Bold=$true; $ws.Range("G15:L15").Font.Italic=$true
+$ws.Range("B14:L14").Borders.Item(8).LineStyle=1
+
+# share price calculation
+$ws.Range("B16").Value2="Share Price Calculation"; $ws.Range("B16").Font.Bold=$true; $ws.Range("B16").Font.Italic=$true; $ws.Range("B16").Font.Underline=2
+$ws.Range("B17").Value2="PV of Sum of Stage 1 Dividends"; $ws.Range("F17").Formula="=+SUM(H14:L14)"
+$ws.Range("B18").Value2="Year 5 Dividend x (1 + Stage 2 Growth Rate)"; $ws.Range("F18").Formula="=+L12*(1+F9)"
+$ws.Range("B19").Value2="Stage 2 Terminal Value"; $ws.Range("F19").Formula="=+F18/(F7-F9)"
+$ws.Range("B20").Value2="PV of Stage 2 Terminal Value"; $ws.Range("F20").Formula="=+F19/(1+F7)^L11"
+$ws.Range("B21").Value2="Value Per Share (MXN)"; $ws.Range("F21").Formula="=+F17+F20"
+$ws.Range("F17:F21").NumberFormat='$#,##0.00'; $ws.Range("F17:F21").HorizontalAlignment=-4108
+$ws.Range("B21:F21").Font.Bold=$true; $ws.Range("B21:F21").Interior.Color=13434879
+foreach($b in 7,8,9,10){ $ws.Range("B21:F21").Borders.Item($b).LineStyle=1 }
+$ws.Range("F18").Interior.Color=15921906
+
+# extra checks vs market
+$ws.Range("B23").Value2="Current Share Price (MXN)"; $ws.Range("F23").Formula="=+DCF!C80"
+$ws.Range("B24").Value2="Upside / (Downside)"; $ws.Range("F24").Formula="=+F21/F23-1"
+$ws.Range("B25").Value2="PV of Terminal Value as % of Value Per Share"; $ws.Range("F25").Formula="=+F20/F21"
+$ws.Range("F23").NumberFormat='$#,##0.00'; $ws.Range("F24:F25").NumberFormat='0.0%'; $ws.Range("F23:F25").HorizontalAlignment=-4108
+$ws.Range("B24:F24").Font.Bold=$true
+
+# sensitivity: Ke (rows) vs Stage 2 g (columns)
+$ws.Range("B27").Value2="Sensitivity - value per share (MXN): Ke (rows) vs Stage 2 g (columns)"; $ws.Range("B27").Font.Bold=$true
+$ws.Range("B28").Value2="Ke \ g"; $ws.Range("B28").HorizontalAlignment=-4152
+$ws.Range("C28").Formula='=+$F$9-1%'; $ws.Range("D28").Formula='=+$F$9-0.5%'; $ws.Range("E28").Formula='=+$F$9'; $ws.Range("F28").Formula='=+$F$9+0.5%'
+$ws.Range("B29").Formula='=+$F$7-1%'; $ws.Range("B30").Formula='=+$F$7-0.5%'; $ws.Range("B31").Formula='=+$F$7'; $ws.Range("B32").Formula='=+$F$7+0.5%'; $ws.Range("B33").Formula='=+$F$7+1%'
+foreach($r in 29..33){ foreach($c in "C","D","E","F"){
+  $ws.Range("$c$r").Formula="=IF(`$B$r<=$c`$28,NA(),SUMPRODUCT(`$H`$12:`$L`$12/(1+`$B$r)^`$H`$11:`$L`$11)+`$L`$12*(1+$c`$28)/(`$B$r-$c`$28)/(1+`$B$r)^`$L`$11)" } }
+$ws.Range("C28:F28").NumberFormat='0.0%'; $ws.Range("B29:B33").NumberFormat='0.0%'; $ws.Range("C29:F33").NumberFormat='$#,##0.00'
+$ws.Range("C28:F28").Font.Bold=$true; $ws.Range("B29:B33").Font.Bold=$true; $ws.Range("B29:B33").HorizontalAlignment=-4152
+$ws.Range("C28:F33").HorizontalAlignment=-4108; $ws.Range("B28:F28").Borders.Item(9).LineStyle=1
+$ws.Range("E31").Interior.Color=15921906
+$ws.Range("B34").Value2="Check: base case less value per share (should be 0)"; $ws.Range("B34").Font.Italic=$true
+$ws.Range("F34").Formula="=+E31-F21"; $ws.Range("F34").NumberFormat='0.00;(0.00);0.00'; $ws.Range("F34").HorizontalAlignment=-4108
+
+$ws.Range("A1").Select()
+$xl.Calculate()
+$o=@("gridlines mirrored from Multiples: $grid")
+foreach($r in 6,7,9,11,12,13,14,15,17,18,19,20,21,23,24,25){ $l=@(); foreach($c in "E","F","G","H","I","J","K","L"){ $l+=$ws.Range("$c$r").Text }; $o+=("$r "+$ws.Range("B$r").Text+": "+($l -join " | ")) }
+foreach($r in 28..34){ $l=@(); foreach($c in "B","C","D","E","F"){ $l+=$ws.Range("$c$r").Text }; $o+=("sens $r| "+($l -join " | ")) }
+$o

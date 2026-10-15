@@ -1,0 +1,413 @@
+"""Parser for Interactive Brokers CSV exports.
+
+IBKR's exports (Activity Statement, Flex Query, "Transaction History") share
+one generic structure: every row starts with a section name and a row type
+(``Header`` / ``Data`` / ``MetaInfo`` / ``Total``), e.g.::
+
+    Transaction History,Header,Date,Account,Description,Transaction Type,...
+    Transaction History,Data,2026-07-10,U***44610,FX Translations P&L,...
+
+This module parses that structure generically, then normalizes the
+``Transaction History`` (or classic ``Trades``) section into the flat
+transaction schema used by :mod:`db`.
+"""
+
+import csv
+import hashlib
+from dataclasses import dataclass, field
+from datetime import datetime
+from pathlib import Path
+
+import pandas as pd
+
+TRANSACTION_SECTION_ALIASES = ["Transaction History", "Trades"]
+
+# Raw IBKR "Transaction Type" -> normalized enum used throughout the app.
+TX_TYPE_MAP = {
+    "buy": "BUY",
+    "sell": "SELL",
+    "dividend": "DIVIDEND",
+    "payment in lieu of dividend": "DIVIDEND",
+    "foreign tax withholding": "WITHHOLDING_TAX",
+    "withholding tax": "WITHHOLDING_TAX",
+    "deposit": "DEPOSIT",
+    "electronic fund transfer": "DEPOSIT",
+    "withdrawal": "WITHDRAWAL",
+    "broker interest received": "INTEREST",
+    "broker interest paid": "INTEREST",
+    "interest": "INTEREST",
+    "adjustment": "ADJUSTMENT",
+    "forex trade component": "FX",
+    "commission adjustment": "FEE",
+    "fee": "FEE",
+}
+
+# Transaction types that represent an actual equity trade (affect share count).
+TRADE_TYPES = {"BUY", "SELL"}
+# Transaction types treated as external cash flow for TWR purposes.
+EXTERNAL_CASH_FLOW_TYPES = {"DEPOSIT", "WITHDRAWAL"}
+
+
+class ParserError(Exception):
+    pass
+
+
+@dataclass
+class ParseResult:
+    transactions: list[dict] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+    period_start: str | None = None  # ISO date, from the Statement Period field
+    period_end: str | None = None
+
+
+def _parse_number(val: str | None) -> float | None:
+    # A column absent from a section block comes back as NaN after concat
+    if not isinstance(val, str):
+        return None
+    val = val.strip()
+    if val in ("", "-", "--"):
+        return None
+    try:
+        return float(val)
+    except ValueError:
+        return None
+
+
+def _clean(val: str | None) -> str | None:
+    if not isinstance(val, str):
+        return None
+    val = val.strip()
+    return val if val not in ("", "-") else None
+
+
+def read_sections(path: Path) -> dict[str, pd.DataFrame]:
+    """Group an IBKR multi-section CSV into one DataFrame per section.
+
+    First column = section name, second column = row type. A section can
+    carry MORE THAN ONE ``Header`` row: in Activity Statements, 'Trades'
+    has a Stocks block (Comm/Fee, Basis, Realized P/L...) followed by a
+    Forex block (Comm in USD, MTM in USD...). Each Header opens a new block
+    and its Data rows use that block's columns. Blocks are then concatenated
+    by column NAME, so a column missing from a block comes back as NaN
+    instead of silently taking another block's value by position.
+    Other row types (``MetaInfo``, ``Total``, ...) are ignored.
+    """
+    blocks: dict[str, list[dict]] = {}
+    with open(path, "r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.reader(f)
+        for raw_row in reader:
+            if len(raw_row) < 2:
+                continue
+            section, row_type = raw_row[0].strip(), raw_row[1].strip()
+            if not section:
+                continue
+            cols = raw_row[2:]
+            if row_type == "Header":
+                # Some sections repeat a column name (or leave several
+                # blank); concat needs unique names, so suffix repeats the
+                # way pandas.read_csv does: "Code", "Code.1", ...
+                seen: dict[str, int] = {}
+                names = []
+                for c in (c.strip() for c in cols):
+                    names.append(f"{c}.{seen[c]}" if c in seen else c)
+                    seen[c] = seen.get(c, 0) + 1
+                blocks.setdefault(section, []).append({"columns": names, "rows": []})
+            elif row_type == "Data" and blocks.get(section):
+                block = blocks[section][-1]
+                # Pad/truncate to header width defensively.
+                width = len(block["columns"])
+                block["rows"].append((cols + [None] * width)[:width])
+
+    result = {}
+    for name, section_blocks in blocks.items():
+        frames = [pd.DataFrame(b["rows"], columns=b["columns"])
+                  for b in section_blocks if b["rows"]]
+        if frames:
+            result[name] = pd.concat(frames, ignore_index=True)
+    return result
+
+
+def find_transaction_section(sections: dict[str, pd.DataFrame]) -> tuple[str, pd.DataFrame] | None:
+    for alias in TRANSACTION_SECTION_ALIASES:
+        if alias in sections:
+            return alias, sections[alias]
+    return None
+
+
+def _build_tx_hash(fields: list) -> str:
+    key = "|".join("" if v is None else str(v) for v in fields)
+    return hashlib.sha1(key.encode("utf-8")).hexdigest()[:16]
+
+
+def normalize_transaction_history(df: pd.DataFrame, source_file: str) -> ParseResult:
+    result = ParseResult()
+    hash_counts: dict[str, int] = {}
+    unrecognized_types: set[str] = set()
+
+    for _, row in df.iterrows():
+        date_raw = _clean(row.get("Date") or row.get("Date/Time"))
+        if not date_raw:
+            continue
+        date = date_raw.split(",")[0].strip()  # "Date/Time" can be "2026-01-15, 10:30:00"
+
+        raw_type = _clean(row.get("Transaction Type")) or ""
+        tx_type = TX_TYPE_MAP.get(raw_type.lower())
+        if tx_type is None:
+            tx_type = "OTHER"
+            if raw_type:
+                unrecognized_types.add(raw_type)
+
+        symbol = _clean(row.get("Symbol"))
+        quantity = _parse_number(row.get("Quantity"))
+        price = _parse_number(row.get("Price"))
+        price_currency = _clean(row.get("Price Currency"))
+        gross_amount = _parse_number(row.get("Gross Amount"))
+        commission = _parse_number(row.get("Commission"))
+        net_amount = _parse_number(row.get("Net Amount"))
+        account = _clean(row.get("Account"))
+        description = _clean(row.get("Description"))
+
+        hash_fields = [date, description, raw_type, symbol, quantity, price, net_amount, account]
+        tx_hash = _build_tx_hash(hash_fields)
+        occurrence = hash_counts.get(tx_hash, 0) + 1
+        hash_counts[tx_hash] = occurrence
+
+        result.transactions.append({
+            "tx_hash": tx_hash,
+            "occurrence": occurrence,
+            "date": date,
+            "tx_type": tx_type,
+            "raw_type": raw_type,
+            "symbol": symbol,
+            "yf_ticker": None,
+            "quantity": quantity,
+            "price": price,
+            "price_currency": price_currency,
+            "gross_amount": gross_amount,
+            "commission": commission,
+            "net_amount": net_amount,
+            "account": account,
+            "description": description,
+            "source_file": source_file,
+        })
+
+    if unrecognized_types:
+        result.warnings.append(
+            "Unrecognized transaction types (kept as OTHER, excluded from "
+            f"position/cash-flow calculations): {', '.join(sorted(unrecognized_types))}"
+        )
+    return result
+
+
+def normalize_trades_section(df: pd.DataFrame, source_file: str) -> ParseResult:
+    """Classic Activity Statement 'Trades' section — a different column schema
+    from 'Transaction History': DataDiscriminator, Asset Category, Currency,
+    Symbol, Date/Time, Quantity, T. Price, Proceeds, Comm/Fee, Basis,
+    Realized P/L, Code. No Transaction Type / Account / Net Amount columns —
+    Buy/Sell is derived from the sign of Quantity, and net cash impact is
+    Proceeds + Comm/Fee.
+    """
+    result = ParseResult()
+    hash_counts: dict[str, int] = {}
+
+    for _, row in df.iterrows():
+        date_raw = _clean(row.get("Date/Time"))
+        if not date_raw:
+            continue
+        date = date_raw.split(",")[0].strip()
+
+        quantity = _parse_number(row.get("Quantity"))
+        if quantity is None:
+            continue
+        # Currency conversions (USD.MXN...) are not share trades. They keep
+        # the same FX type the Transaction History export uses, so FIFO and
+        # position logic never see them as a holding.
+        if (_clean(row.get("Asset Category")) or "").lower() == "forex":
+            raw_type, tx_type = "Forex", "FX"
+        else:
+            raw_type = "Buy" if quantity > 0 else "Sell"
+            tx_type = "BUY" if quantity > 0 else "SELL"
+
+        symbol = _clean(row.get("Symbol"))
+        price = _parse_number(row.get("T. Price"))
+        price_currency = _clean(row.get("Currency"))
+        gross_amount = _parse_number(row.get("Proceeds"))
+        # Stocks block reports "Comm/Fee"; the Forex block "Comm in USD"
+        commission = _parse_number(row.get("Comm/Fee"))
+        if commission is None:
+            commission = _parse_number(row.get("Comm in USD"))
+        net_amount = None
+        if gross_amount is not None and commission is not None:
+            net_amount = gross_amount + commission
+
+        hash_fields = [date, "Trades", raw_type, symbol, quantity, price, net_amount, None]
+        tx_hash = _build_tx_hash(hash_fields)
+        occurrence = hash_counts.get(tx_hash, 0) + 1
+        hash_counts[tx_hash] = occurrence
+
+        result.transactions.append({
+            "tx_hash": tx_hash,
+            "occurrence": occurrence,
+            "date": date,
+            "tx_type": tx_type,
+            "raw_type": raw_type,
+            "symbol": symbol,
+            "yf_ticker": None,
+            "quantity": quantity,
+            "price": price,
+            "price_currency": price_currency,
+            "gross_amount": gross_amount,
+            "commission": commission,
+            "net_amount": net_amount,
+            "account": None,
+            "description": f"{symbol} trade",
+            "source_file": source_file,
+        })
+
+    result.warnings.append(
+        "Parsed from a classic 'Trades' section — dividends/deposits/"
+        "withdrawals/withholding won't be present unless a Transaction "
+        "History export is also ingested."
+    )
+    return result
+
+
+def _parse_statement_period(path: Path) -> tuple[str | None, str | None]:
+    """Extract the export's covered window from `Statement,Data,Period` —
+    e.g. "April 25, 2025 - August 3, 2026" or a single date. Best-effort:
+    non-English month names simply yield (None, None)."""
+    raw = None
+    try:
+        with open(path, "r", encoding="utf-8-sig", errors="ignore") as f:
+            for _ in range(20):
+                line = f.readline()
+                if not line:
+                    break
+                if line.startswith("Statement,Data,Period,"):
+                    row = next(csv.reader([line]))
+                    raw = row[3].strip()
+                    break
+    except OSError:
+        return None, None
+    if not raw:
+        return None, None
+
+    def _try(date_str: str) -> str | None:
+        for fmt in ("%B %d, %Y",):
+            try:
+                return datetime.strptime(date_str.strip(), fmt).strftime("%Y-%m-%d")
+            except ValueError:
+                continue
+        return None
+
+    parts = raw.split(" - ")
+    if len(parts) == 2:
+        return _try(parts[0]), _try(parts[1])
+    single = _try(raw)
+    return single, single
+
+
+def parse_file(path: Path) -> ParseResult:
+    path = Path(path)
+    sections = read_sections(path)
+    found = find_transaction_section(sections)
+    if found is None:
+        raise ParserError(
+            f"'{path.name}' does not contain a 'Transaction History' or 'Trades' "
+            "section. In IBKR, export it via Reports/Performance & Statements -> "
+            "Flex Queries or Activity Statements, selecting the 'Transaction "
+            "History' report (or a full Activity Statement with a Trades section)."
+        )
+    section_name, df = found
+    if section_name == "Trades":
+        result = normalize_trades_section(df, source_file=path.name)
+    else:
+        result = normalize_transaction_history(df, source_file=path.name)
+    result.period_start, result.period_end = _parse_statement_period(path)
+    return result
+
+
+# --------------------------------------------------------------- folder scan
+
+def _looks_ingestable(path: Path) -> bool:
+    if path.suffix.lower() != ".csv":
+        return False
+    try:
+        with open(path, "r", encoding="utf-8-sig", errors="ignore") as f:
+            for _ in range(200):
+                line = f.readline()
+                if not line:
+                    break
+                first_col = line.split(",", 1)[0].strip()
+                if first_col in TRANSACTION_SECTION_ALIASES:
+                    return True
+    except OSError:
+        return False
+    return False
+
+
+def _statement_generated_at(path: Path) -> datetime:
+    try:
+        with open(path, "r", encoding="utf-8-sig", errors="ignore") as f:
+            for _ in range(20):
+                line = f.readline()
+                if not line:
+                    break
+                if line.startswith("Statement,Data,WhenGenerated,"):
+                    reader = csv.reader([line])
+                    row = next(reader)
+                    raw = row[3].strip()
+                    for fmt in ("%Y-%m-%d, %H:%M:%S %Z", "%Y-%m-%d, %H:%M:%S"):
+                        try:
+                            return datetime.strptime(raw.rsplit(" ", 1)[0], "%Y-%m-%d, %H:%M:%S")
+                        except ValueError:
+                            continue
+    except OSError:
+        pass
+    return datetime.fromtimestamp(path.stat().st_mtime)
+
+
+def _section_priority(path: Path) -> int:
+    """'Transaction History' files are the comprehensive source (trades +
+    dividends + deposits + withholding); a bare 'Trades' section only has
+    buys/sells and, worse, aggregates lots differently than Transaction
+    History does — mixing the two for the *same* trades would double-count
+    shares. Prefer Transaction History whenever both are available.
+    """
+    try:
+        with open(path, "r", encoding="utf-8-sig", errors="ignore") as f:
+            for _ in range(200):
+                line = f.readline()
+                if not line:
+                    break
+                first_col = line.split(",", 1)[0].strip()
+                if first_col == "Transaction History":
+                    return 2
+    except OSError:
+        pass
+    return 1  # Trades-only
+
+
+def find_latest_statement(folder: Path) -> Path | None:
+    """Scan `folder` for ingestable IBKR CSVs and return the best one: a
+    'Transaction History' export if any exists, else the most recently
+    generated 'Trades'-only file.
+    """
+    folder = Path(folder)
+    if not folder.is_dir():
+        return None
+    candidates = [p for p in folder.iterdir() if _looks_ingestable(p)]
+    if not candidates:
+        return None
+    return max(candidates, key=lambda p: (_section_priority(p), _statement_generated_at(p)))
+
+
+def find_all_ingestable(folder: Path) -> list[Path]:
+    folder = Path(folder)
+    if not folder.is_dir():
+        return []
+    return sorted(
+        (p for p in folder.iterdir() if _looks_ingestable(p)),
+        key=lambda p: (_section_priority(p), _statement_generated_at(p)),
+        reverse=True,
+    )

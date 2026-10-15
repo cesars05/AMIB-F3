@@ -1,0 +1,42 @@
+import io, sys
+p = sys.argv[1]
+t = io.open(p, encoding="utf-8").read()
+
+def rep(old, new):
+    global t
+    assert old in t, "NOT FOUND: " + old[:90]
+    t = t.replace(old, new, 1)
+
+rep("2. **El dinero va casi todo a un solo producto en un solo segmento:** sílice coloidal de ultra alta pureza (el abrasivo de las suspensiones de pulido CMP) de Electronic Materials. En FY03/2026, 79.3 de 107.8 oku de capex fueron a ese segmento",
+    "2. **El dinero va sobre todo a un solo producto en un solo segmento:** sílice coloidal de ultra alta pureza (el abrasivo de las suspensiones de pulido CMP) de Electronic Materials. En FY03/2026, 79.3 de 107.8 oku de capex (73%) fueron a ese segmento")
+rep("11. **Las utilidades netas de Q1 FY03/2027 (+115%) están infladas por un subsidio de ¥3.7 bn.**", "11. **La utilidad neta de Q1 FY03/2027 (+115%) está inflada por un subsidio de ¥3.7 bn.**")
+rep("| Kashima II certificada y llenándose.", "| Kashima II debería certificarse y llenarse.")
+rep("con ventas a \"buenos fabricantes de slurry chinos\" [D: Deck26 P30; Q2deck P31]", "con ventas a fabricantes de slurry CMP \"de calidad\" en China [D: Deck26 P30; Q2deck P31]")
+rep("Cada nodo nuevo exige más pasos de CMP y más pureza.", "Los nodos avanzados exigen más pasos de CMP y más pureza [D: MTP P14].")
+rep("Usan el slurry en cientos de pasos", "Usan el slurry en muchos pasos del proceso")
+rep("| Capacidad de Fuso: +50% respecto de FY03/2023 hoy; +20% más en feb-2029 |", "| Capacidad de Fuso: +50% respecto de FY03/2023 con las tres líneas terminadas (Kashima II aún en certificación); +20% más en feb-2029 |")
+rep("- **Petróleo, nafta y benceno.** La nafta es", "- **Petróleo, nafta y benceno [I-general].** La nafta es")
+rep("- **Benceno a anhídrido maleico.** El benceno se oxida", "- **Benceno a anhídrido maleico [I-general].** El benceno se oxida")
+rep("El ácido málico se usa como acidulante en bebidas, caramelos y también en galvanoplastia y limpieza; el fumárico, en alimentos, resinas, papel y pinturas.", "El ácido málico se usa como acidulante en bebidas, caramelos y también en galvanoplastia y limpieza; el fumárico, en alimentos, resinas, papel y pinturas [I-general; el yuho cita galvanoplastia y detergentes para el málico, y papel y pinturas para el fumárico: Yuho25 P25-26].")
+rep("La planta de anhídrido maleico operaría hasta el mantenimiento programado", "La planta de anhídrido maleico seguía operando hasta el mantenimiento programado")
+rep("| Osaka (Sakai) | ND (el refuerzo explica la mayor parte del capex LS de FY03/2026: 27.3) |", "| Osaka (Sakai) | ND (el refuerzo sísmico es el principal componente del capex LS de FY03/2026, 27.3 [D: Yuho26 P38]) |")
+rep("No se firmó ninguna obra grande nueva hasta marzo de 2026.", "No se aprobó ninguna obra nueva de sílice hasta marzo de 2026.")
+rep("Deck26 P24-25, P36, P39; Yuho26 P23, P28-29 |", "Deck26 P24-25, P36, P39; Yuho26 P26, P29, P32 |")
+rep("- Cada tonelada adicional de benceno cuesta ¥57,800 más al precio de abr-may 2026 (385 USD × ¥150)", "- Cada tonelada adicional de benceno cuesta unos ¥57,750 más al precio de abr-may 2026 (385 USD × ¥150)")
+rep("su primera planta de sílice de ultra pureza allí en abril de 2023", "su primera planta de sílice de ultra pureza allí (Fase I) en abril de 2023")
+
+t = t.rstrip("\n") + """
+
+---
+
+## 12. Cómo usar esto en el `/company_overview` (siguiente paso)
+
+- **Fase 0 (inventario y fuentes):** ya está resuelta en los `_NOTES.md`. Falta bajar de TDnet el aviso de jun-ago 2026 y el Q1 FY03/2027 en japonés.
+- **Fases 1-2 (historia, qué hace, cadena de valor, productos):** las secciones 1, 5 y 6.2 de este documento son el borrador. Lo que no está en los archivos: clientes por producto de Life Science, volúmenes y la fórmula de traspaso de precios.
+- **Fase 3 (IA, PC, smartphone):** la sección 6 deja claro qué es dato y qué es inferencia; el vacío central es el desglose de ventas por aplicación.
+- **Fase 4 (segmentos, economía unitaria, finanzas):** las secciones 4, 5 y 7 ya tienen las series; el siguiente paso útil es llevar la sección 4.3 (calendario depreciación contra ingresos) al bloque de gestión del Excel.
+- **Fase 5 (pares):** de los tres archivos de la carpeta Competidores, Nissan Chemical (sílice coloidal) es el único competidor directo documentado; Fujimi es cliente histórico. Hay que buscar los competidores reales de Life Science (ácidos de fruta de China y otros), que la empresa no nombra.
+- **Reglas de trabajo para ahorrar tiempo:** (1) leer la lámina como imagen cuando haya gráficos, (2) citar siempre el yuho para capex, depreciación y clientes, (3) revisar el período real de cada archivo de pares, (4) separar guía de la empresa de consenso del Modelo.
+"""
+io.open(p, "w", encoding="utf-8").write(t)
+print("saved", len(t))

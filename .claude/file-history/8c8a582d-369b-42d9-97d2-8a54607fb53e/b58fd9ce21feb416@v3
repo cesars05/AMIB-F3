@@ -1,0 +1,18 @@
+---
+name: project-hal-kuwait-deck
+description: FINA 405 (USD) x ITESM Team 9 project - Halliburton in Kuwait deck; state of the handoff package and where things live
+metadata:
+  node_type: memory
+  type: project
+  originSessionId: 8c8a582d-369b-42d9-97d2-8a54607fb53e
+  modified: 2026-10-02T07:05:33.622Z
+---
+
+Team 9 (4 USD + 3 TEC students) analyzes Halliburton (HAL) in Kuwait for FINA 405 (USD) x Inversiones Alternativas (ITESM). Deliverable in progress: a professional PowerPoint for USD Sections 1-5 (Company, Country, FRA, Domestic bond, FX forward) + Track B (ITESM alternative-investment) block; video <=12 min due Wed 21-Oct-2026.
+
+As of 2026-10-02 the analysis/planning package is complete in `C:\Users\cesar\Downloads\USD x ITESM\00_HANDOFF` (MASTER_PROMPT, STORYLINE, FACT_BASE, OPEN_QUESTIONS, 00_INDEX, WORKFLOW) + `07_Template_Analysis` (STYLE_GUIDE, LAYOUT_LIBRARY, tokens.json). No slides built yet by design; the user will build with Opus 5.5 from `09_Deck_Build/`.
+
+**Why:** user asked to stop right before the presentation so it can be generated in Opus 5.5 with the analysis.
+**How to apply:** start from 00_HANDOFF/MASTER_PROMPT.md; The FINA 405 project doc is `01_Brief/FINA405_Project_v3.pdf` (5-yr KWD bond, USD 100M face, 4% semiannual; FRA 12x24/36x60; IRP forwards); Scenario-0 market data + IRS Excel are still NOT in the folder - ask for them; official HAL red is #CC0000; never use "74.2% Debt/Capital" (it is Bloomberg Debt/Equity incl. leases; borrowings-only D/C = 40.5%). See [[feedback-deck-format-and-images]].
+
+**Update 2026-10-02 (later):** user also wants OUR OWN interactive dashboard (professor Ceballos has a public one: luisceballos.github.io/FINA405-Dashboard/Project_CP1.html; he disliked its design). Analysis + spec are in `10_Dashboard/` (not built). Deck language = English (confirmed). Logos: USD + Tec extracted to `08_Assets/logos/universities/`. HAL 10-K facts verified via SEC in browser; Scenario-0 Excel still missing (Canvas needs user login). Professor's rules: last Country slide must tie macro to financing; 21-Oct video judged by external jury on content + presentation.

@@ -1,0 +1,44 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$d=$wb.Worksheets.Item("DCF")
+$cm=$wb.Worksheets.Item("Consolidated Model")
+$LT=@{1="A";2="B";3="C";4="D";5="E";6="F";7="G";8="H";9="I";10="J";11="K";12="L";13="M";14="N";15="O";16="P";17="Q";18="R";19="S";20="T";21="U";22="V";23="W";24="X";25="Y";26="Z";27="AA"}
+
+Write-Output "=== DCF: filas 1..50, todas las celdas con contenido (texto) ==="
+for($r=1;$r -le 50;$r++){
+  $line=""; $any=$false
+  foreach($c in 2..12){
+    $t=""
+    try{ $t=[string]$d.Cells.Item($r,$c).Text }catch{}
+    if($t.Length -gt 15){ $t=$t.Substring(0,15) }
+    if($t.Trim() -ne ""){ $any=$true }
+    $line+=$t.PadRight(16)
+  }
+  if($any){ Write-Output ("r"+([string]$r).PadRight(4)+$line.TrimEnd()) }
+}
+Write-Output ""
+Write-Output "=== DCF: formulas columnas C..I filas 10..45 ==="
+for($r=10;$r -le 45;$r++){
+  foreach($c in 2,3,4,8,9){
+    $f=""
+    try{ $f=[string]$d.Cells.Item($r,$c).Formula }catch{}
+    if($f -ne ""){ Write-Output ("  "+$LT[$c]+$r+"  "+$f) }
+  }
+}
+Write-Output ""
+Write-Output "=== CONSOLIDATED: balance filas 120..170 etiquetas + L ==="
+for($r=120;$r -le 170;$r++){
+  $lab=""
+  foreach($cc in 2,3,4){ $t=""; try{ $t=[string]$cm.Cells.Item($r,$cc).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  $fl=""; try{ $fl=[string]$cm.Cells.Item($r,12).Formula }catch{}
+  $vk=""; try{ $vk=[string]$cm.Cells.Item($r,11).Text }catch{}
+  if($fl.Length -gt 95){ $fl=$fl.Substring(0,95)+"..." }
+  if($lab.Trim() -ne "" -or $fl -ne ""){ Write-Output ("r"+([string]$r).PadRight(4)+$lab.PadRight(40)+" K="+$vk.PadLeft(9)+"  L="+$fl) }
+}

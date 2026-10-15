@@ -1,0 +1,39 @@
+# _NOTES: 2_Fuso Chemicals (root)
+
+Written 12-Oct-2026. Start here, then open the `_NOTES.md` of the subfolder you need. Do not re-inventory the folder.
+
+## Start here
+- **`FUSO_Notes.md`**: living company file in English, organized by `/company_overview` section (1 to 16) plus appendices (capex timeline, benzene, glossary, source index). Update it and its changelog whenever new facts arrive.
+- `Fuso_DeepDive_2026-10-12.md`: Spanish learning memo (capex, segments, HBM/CMP, financials, benzene).
+- `Company/Fase0_descargas_IR/Prompt_Fuso_DeepDive_v0.1.md`: the prompt behind the memo.
+
+## Layout
+| Path | Content |
+|---|---|
+| `20261009_Fuso Chemicals.xlsx` | **Current model** (the `~$` file is Excel's lock; the workbook may be open). Edit only through Excel COM, never save with openpyxl (it strips LSEG `RDP.Data` formulas). Read-only inspection with openpyxl on a copy is safe |
+| `Backup/` | Older model versions and the LSEG segment data (see its notes) |
+| `Company/Fase0_descargas_IR/` | All Fuso primary documents, converted to md, plus the prompts |
+| `Company/Competidores/` | Fujimi, Nissan Chemical, Mitsubishi Chemical Group files. The folder name is a label, not evidence of competition (see its notes) |
+| Root PDFs/md | English decks and the Q1 FY03/2027 English release (below) |
+
+## Root-level files
+| File | Meaning |
+|---|---|
+| `Fuso Chemical - Q4 2026 - Conference Call Deck` | English deck of the **FY03/2026 results, 15-May-2026** (59 pages). "Q4 2026" is the file-name year, not a quarter of 2026. Twin of Fase0 `3825ea4a...` (JA). Its md is scrambled for charts: render PDF pages. Key pages: P4-13 financials, P12 capex/depreciation/R&D, P17-24 Life Science, P25 benzene, P28-37 Electronic Materials, P31 CMP market, P32 capacity and certification timeline, P35 HBM, P36 price pass-through, P39-43 FY03/2027 plan and depreciation (P41), P52 capex plans, P56 cash allocation |
+| `Fuso Chemical - Q2 2026 - Conference Call Deck` | English deck of **Q2 FY03/2026** (Nov-2025, 48 pages, 16 MB). Same caveats |
+| `Fuso Chemical - Q1 2027 (1)` | English summary of the **Q1 FY03/2027** release (7-Aug-2026). Byte-identical to the Fase0 copy "Q1 2027". No segment data |
+| `Fuso Chemical - Corporate presentation - Conference Call Deck (1)` | Cost-of-capital update of 30-Jun-2026. Byte-identical to the Fase0 copy |
+The "(1)" files are duplicates; keep one set.
+
+## The Excel model (what is in it, read 12-Oct-2026)
+Sheets: Cover, Company Tearsheet, Annual Model, Annual Model Seg, **Fuso Financials**, Quarterly Model, DCF, Peer Analysis, Charts, FS Codes (+ 3 veryHidden LSEG sheets).
+- `Fuso Financials` (built in the segment-analysis session) holds sourced segment history FY03/2020 to FY03/2026 (sales, OP, D&A, capex additions, assets), consensus FY03/2027 to FY03/2031, management guidance by segment, Life Science price/volume indices, a driver log, Q1 FY03/2027 data. Use it as a cross-check; company PDFs prevail.
+- Useful cross-checks found: consensus capex FY03/2027 29,900 / FY03/2028 23,600 / FY03/2029 12,000 / FY03/2030 13,000 / FY03/2031 30,000 (million yen); consensus FY03/2027 sales 91.3 bn vs guidance 85.8 bn; consensus FY03/2031 OP 42.3 bn vs MTP target 36.0 bn.
+- Known label error: row 93 calls the Q1 FY03/2027 extraordinary income a "gain on sale of fixed assets"; it is a **subsidy** (3,704m yen).
+- Net income guidance rows 38-39 (19,200 vs 16,600): see Fase0 notes, "Open conflicts". Do not call either wrong without the TDnet notice.
+
+## Working rules that saved time in this folder
+1. Tag every number D / I / ND with file and page; FY labels as FY03/20XX.
+2. For deck numbers use the bilingual PDF in Fase0 or render the page; never trust md chart text.
+3. The yuho is the source for capex by segment, depreciation policy, customers, risks. Decks are the source for management framing.
+4. Check which yuho/term a peer file really is before using it (the Fujimi "Yuho_61st-term" is FY03/2013).

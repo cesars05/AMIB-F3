@@ -1,0 +1,127 @@
+# Catálogo de indicadores — LSEG Workspace
+
+Barrido de disponibilidad del **2026-09-15** sobre la licencia actual.
+Cada RIC de la sección "Disponibles" fue probado y devolvió datos.
+
+---
+
+## ⛔ Lo que NO se puede sacar (bloqueado por entitlement)
+
+**Los 26 indicadores económicos `=ECI` probados fallaron, sin excepción.**
+
+| Categoría | RICs probados |
+|---|---|
+| Inflación | `USCPI=ECI`, `USCPIX=ECI`, `USCPF=ECI`, `USPPI=ECI`, `USPCE=ECI`, `USCPCE=ECI` |
+| Empleo | `USUNR=ECI`, `USNFP=ECI`, `USJOB=ECI`, `USJOBN=ECI` |
+| Actividad | `USGDP=ECI`, `USGDPF=ECI`, `USIP=ECI`, `USDGO=ECI`, `USTBAL=ECI` |
+| Vivienda | `USHST=ECI`, `USBPE=ECI`, `USNHS=ECI`, `USEHS=ECI` |
+| Consumo | `USRSL=ECI`, `USRSLX=ECI`, `USCONC=ECI`, `USUMSF=ECI` |
+| Encuestas | `USISM=ECI`, `USNPMI=ECI`, `USPMIM=ECI` |
+
+La sintaxis `=ECI` **es la correcta** — Eikon tiene ~1,800 indicadores bajo esa
+convención, navegables desde la app "EM" (Economic Monitor) dentro de Workspace.
+Es un hueco de licencia, no de código. Pedir más spellings no lo resuelve.
+
+**Otros bloqueos confirmados:**
+
+| RIC | Qué era | Sustituto en uso |
+|---|---|---|
+| `.MERH0A0`, `.MERC0A0` | Spreads de crédito ICE BofA | Ratio `HYG.P / LQD.P` |
+| `.DJI` | Dow Jones | ETF `DIA.P` |
+| `.N225` | Nikkei 225 | `.TOPX` (TOPIX) |
+| `.VXN`, `.SKEW` | Volatilidad Nasdaq / cola | `.VIX`, `.MOVE` |
+| `USONFFE=`, `SOFRRATE=` | Tasas overnight | `US1MT=RR`, `US3MT=RR` |
+| `UST5YIE=R` | Breakeven precalculado | Se calcula: nominal − TIPS |
+| P/E por índice | Consenso EPS | Solo `.SPX` tiene EPS |
+
+---
+
+## ✅ Disponibles — organizados por tier
+
+Implementados en `indicadores.py`. Corrida: `python indicadores.py --tier 1`
+
+### Tier 1 — núcleo semanal (14)
+
+| Indicador | RIC / cálculo | Campo |
+|---|---|---|
+| VIX | `.VIX` | TRDPRC_1 |
+| **MOVE** (volatilidad de bonos) | `.MOVE` | TRDPRC_1 |
+| Spread 2s10s | `US10YT=RR` − `US2YT=RR` | MID_YLD_1 |
+| **Breakeven 10Y** | `US10YT=RR` − `US10YTIP=RR` | MID_YLD_1 |
+| **Breakeven 5Y** | `US5YT=RR` − `US5YTIP=RR` | MID_YLD_1 |
+| Dollar Index | `.DXY` | TRDPRC_1 |
+| USD/MXN | `MXN=` | MID_PRICE |
+| EUR/USD | `EUR=` | MID_PRICE |
+| USD/JPY | `JPY=` | MID_PRICE |
+| WTI | `CLc1` | TRDPRC_1 |
+| Brent | `LCOc1` | TRDPRC_1 |
+| Oro spot | `XAU=` | MID_PRICE |
+| **Crack spread 3-2-1** | `RBc1`, `HOc1`, `CLc1` | TRDPRC_1 |
+| Crédito HY/IG | `HYG.P / LQD.P` | TRDPRC_1 |
+
+### Tier 2 — rotación y posicionamiento (14)
+
+| Indicador | RIC / cálculo |
+|---|---|
+| Gold / S&P 500 | `XAU= / .SPX` |
+| Gold / Oil | `XAU= / CLc1` |
+| Copper / Gold (señal de crecimiento) | `HGc1 / XAU=` |
+| Equal vs cap weight | `RSP.P / SPY.P` |
+| Small vs large caps | `IWM.P / SPY.P` |
+| Cíclicos vs defensivos | `XLY.P / XLP.P` |
+| Semiconductores | `.SOX` |
+| **Homebuilders** | `XHB.P` |
+| **PHLX Housing** | `.HGX` (también `ITB.P`, `PHM.N`, `DHI.N`, `LEN.N`) |
+| Bancos regionales | `KRE.P` |
+| Biotech | `XBI.P` |
+| Retail | `XRT.P` |
+| Gas natural | `NGc1` |
+| Cobre | `HGc1` |
+
+### Tier 3 — contexto (10)
+
+`.BADI` (Baltic Dry), `BTC=`, `BRL=`, `KRW=`, `CLP=`, `CAD=`,
+`URA.P` (uranio), `TAN.P` (solar), `COPX.P` (mineras), `JETS.P` (aerolíneas).
+
+También disponibles y no cableados aún: `AUD=`, `CHF=`, `INR=`, `COP=`,
+`SMH.P`, `CLc2`, `RBc2`, `HOc2`, `TIP.P`, `.RUI`.
+
+### Ya cubiertos por otros scripts
+
+Curva completa (11 plazos, `generar_curva.py`), 11 sectores GICS
+(`generar_sectores.py`), P/E forward y precio-vs-EPS (`generar_valuacion.py`),
+9 índices (`generar_graficos_ppt.py`), ganadores/perdedores por índice
+(`generar_ganadores_perdedores.py`).
+
+---
+
+## Dos trampas de datos que ya costaron un error
+
+**1. El campo debe fijarse por instrumento, no buscarse con fallback.**
+`US3MT=RR` responde a los dos campos con números distintos:
+
+```
+US3MT=RR [MID_PRICE] 3.9625      <- precio a descuento
+US3MT=RR [MID_YLD_1] 4.0587      <- rendimiento
+```
+
+Un loop "prueba TRDPRC_1, luego MID_PRICE, luego MID_YLD_1" graficaría precio
+donde se pidió rendimiento **sin lanzar ningún error**. Por eso `indicadores.py`
+declara `YLD` / `MID` / `PRC` explícito en cada entrada.
+
+**2. El crack spread necesita conversión de unidades.**
+RBOB y Heating Oil cotizan en **$/galón**; el WTI en **$/barril**. Son 42
+galones por barril:
+
+```python
+crack = (2*RBc1*42 + HOc1*42 - 3*CLc1) / 3
+```
+
+Sin el ×42 el resultado sale en **−101** en lugar de **+65.2**.
+*Caveat:* son contratos continuos con fechas de roll distintas entre sí, así que
+la serie tiene saltos espurios en los rolls. No se corrige, solo se documenta.
+
+**3. La banda σ no aplica a series con quiebre de régimen.**
+Gold/Oil pasó de 80 a 50 en marzo; la media anual queda a caballo del quiebre y
+la banda cubre 44–70, un rango donde la serie casi no estuvo. Esos indicadores
+llevan `sigma=False`. Revisar el panel antes de publicarlo.

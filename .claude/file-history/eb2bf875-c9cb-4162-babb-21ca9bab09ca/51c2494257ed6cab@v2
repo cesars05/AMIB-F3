@@ -1,0 +1,62 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+Write-Output ("LIBRO: "+[string]$wb.Name)
+$sm=$wb.Worksheets.Item("Segment Model")
+Write-Output ""
+Write-Output "### Filas del Segment Model que llevan el interruptor de desinversion (columna L = FY2027) ###"
+for($r=10;$r -le 240;$r++){
+  $f=""
+  try{ $f=[string]$sm.Cells.Item($r,12).Formula }catch{}
+  if($f -eq "" -or -not $f.StartsWith("=")){ continue }
+  if($f -match "J\`$74" -or $f -match "J\`$75"){
+    $lab=""
+    foreach($c in 2,3,4){ $t=""; try{ $t=[string]$sm.Cells.Item($r,$c).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+    if($lab.Length -gt 40){ $lab=$lab.Substring(0,40) }
+    Write-Output ("  r"+([string]$r).PadRight(4)+$lab)
+  }
+}
+Write-Output ""
+Write-Output "### Filas clave que NO lo llevan (verificacion) ###"
+$chk=@{}
+$chk[21]="Utilidad operativa WM"
+$chk[30]="D&A WM"
+$chk[35]="EBITDA WM"
+$chk[81]="Activos segmentales WM"
+$chk[90]="Pasivos segmentales WM"
+$chk[133]="Capex WM"
+$chk[142]="Depreciacion WM"
+foreach($r in ($chk.Keys | Sort-Object)){
+  $f=""
+  try{ $f=[string]$sm.Cells.Item($r,12).Formula }catch{}
+  $tiene=$(if($f -match "J\`$74"){"SI lleva interruptor"}else{"no lo lleva"})
+  $lab=""
+  foreach($c in 2,3,4){ $t=""; try{ $t=[string]$sm.Cells.Item($r,$c).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  if($lab.Length -gt 28){ $lab=$lab.Substring(0,28) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$chk[$r].PadRight(26)+" ["+$lab.PadRight(28)+"] "+$tiene)
+}
+Write-Output ""
+Write-Output "### EBITDA por segmento: donde esta ###"
+foreach($r in 35,36,37,38){
+  $lab=""
+  foreach($c in 2,3,4){ $t=""; try{ $t=[string]$sm.Cells.Item($r,$c).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  if($lab.Length -gt 34){ $lab=$lab.Substring(0,34) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(35)+" K="+([string]$sm.Cells.Item($r,11).Text).PadLeft(9)+"  N(FY2029)="+([string]$sm.Cells.Item($r,14).Text).PadLeft(9))
+}
+Write-Output ""
+$cm=$wb.Worksheets.Item("Consolidated Model")
+Write-Output "### Consolidated Model: lineas donde entraria la venta ###"
+foreach($r in 20,176,191,194,297,135){
+  $lab=""
+  foreach($c in 2,3,4){ $t=""; try{ $t=[string]$cm.Cells.Item($r,$c).Text }catch{}; if($t.Trim() -ne ""){ $lab=$t; break } }
+  if($lab.Length -gt 44){ $lab=$lab.Substring(0,44) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(45)+" L(FY27)="+([string]$cm.Cells.Item($r,12).Text).PadLeft(9)+"  frm= "+[string]$cm.Cells.Item($r,12).Formula)
+}
+Write-Output ""
+Write-Output ("  ultima fila usada en Consolidated Model: "+[string]($cm.UsedRange.Row+$cm.UsedRange.Rows.Count-1))

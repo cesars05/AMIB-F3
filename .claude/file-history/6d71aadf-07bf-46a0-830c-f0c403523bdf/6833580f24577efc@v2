@@ -1,0 +1,134 @@
+"""'Model Test' tab - quintile spreads, IC and start-of-year test (all formulas on 'Quant History')."""
+import pickle
+import engine as E
+from build_live_helpers import *   # noqa
+Q = pickle.load(open(E.S + "/quant_refs.pkl", "rb"))
+def Lc(n):
+    s = ""
+    while n: n, r = divmod(n - 1, 26); s = chr(65 + r) + s
+    return s
+def bgr(hx): hx = hx.lstrip("#"); return int(hx[4:6] + hx[2:4] + hx[0:2], 16)
+d0, dl = Q["d0"], Q["dl"]
+QHn = "'Quant History'"
+col = lambda c: f"{QHn}!${Lc(c)}${d0}:${Lc(c)}${dl}"
+REG = f"{QHn}!$F${d0}:$F${dl}"
+TEST = ["Jan-26", "Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26"]
+NEXT = ["Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26", "Jul-26"]
+FIELDS = ["Model 1.1", "Stability", "Tactical", "6M Slope"]
+MT = sheet("Model Test", "Model Screen"); base(MT)
+MT.Cells.Font.Size = 10
+fmt_from(TITLE, MT.Range("C2:N2")); MT.Range("C2").Value = "Model 1.1 Test - how good has the model been in 2026?"
+note(MT, "C3", "Each month-end score (Quant Model) is ranked into quintiles (Q5 = best 20%) and compared with the NEXT month's USD total return "
+               "(Workspace). IC = correlation between score rank and next-month return rank. Jul-26 scores are missing, so the test covers Feb-Jul 26.")
+for c_, w in (("C", 30), ("D", 12), ("E", 12), ("F", 12), ("G", 12), ("H", 12), ("I", 13), ("J", 13), ("K", 11), ("L", 11), ("M", 11), ("N", 3)):
+    MT.Columns(c_).ColumnWidth = w
+INP = wb.Worksheets("AZTD").Range("D4")
+MT.Range("C5").Value = "Universe (edit):"; MT.Range("C5").Font.Bold = True
+MT.Range("D5").Value = "All"
+c = MT.Range("D5"); c.Interior.Color = INP.Interior.Color; c.Font.Color = INP.Font.Color; c.HorizontalAlignment = -4108
+for b in (7, 8, 9, 10): c.Borders(b).LineStyle = 1
+dv = MT.Range("D5").Validation; dv.Delete(); dv.Add(3, 1, 1, "All,ex-US")
+note(MT, "E5", "All = full Quant Model universe; ex-US = excludes North America (closer to the peers' universe).")
+RC = 'IF($D$5="ex-US","<>NAM","*")'
+def hdr(r, labels, last):
+    fmt_from(BAR, MT.Range(f"C{r}:{last}{r}")); put(MT, f"C{r}", [labels])
+    MT.Range(f"D{r}:{last}{r}").WrapText = True; MT.Range(f"D{r}:{last}{r}").HorizontalAlignment = -4108; MT.Rows(r).RowHeight = 30
+# ---- A. Model 1.1 quintile returns by month
+r = 7
+hdr(r, ["Model 1.1 - next-month return by quintile", "Q1 (worst)", "Q2", "Q3", "Q4", "Q5 (best)", "Q5 - Q1", "Universe avg", "IC", "# names"], "L")
+edges = [(0, 0.2), (0.2, 0.4), (0.4, 0.6), (0.6, 0.8), (0.8, 1.01)]
+prm = Q["PR0"]["Model 1.1"]
+for j in range(6):
+    rr = r + 1 + j
+    ret = col(Q["UR0"] + j); pr = col(prm + j); prr = col(Q["PRR0"] + j)
+    row = [f"{TEST[j]} score -> {NEXT[j]} return"]
+    for lo, hi in edges:
+        row.append(f'=IFERROR(AVERAGEIFS({ret},{pr},">={lo}",{pr},"<{hi}",{REG},{RC}),"")')
+    row += [f"=H{rr}-D{rr}", f'=IFERROR(AVERAGEIFS({ret},{pr},">=0",{REG},{RC}),"")',
+            f'=IFERROR(CORREL(IF(({pr}<>"")*({prr}<>"")*ISNUMBER(MATCH({REG},IF($D$5="ex-US",{{"EU","ASIA","OTHER","LATAM","EM","AFRICA","MIDEAST","ME","PAC"}},{REG}),0)),{pr}),IF(({pr}<>"")*({prr}<>""),{prr})),"")',
+            f'=COUNTIFS({pr},">=0",{REG},{RC})']
+    put(MT, f"C{rr}", [row[:8]])
+    R(lambda: setattr(MT.Range(f"K{rr}"), "Formula2", f'=IFERROR(CORREL(FILTER({pr},({pr}<>"")*({prr}<>"")*IF($D$5="ex-US",{REG}<>"NAM",TRUE)),'
+                                                      f'FILTER({prr},({pr}<>"")*({prr}<>"")*IF($D$5="ex-US",{REG}<>"NAM",TRUE))),"")'))
+    MT.Range(f"L{rr}").Formula = row[-1]
+avg = r + 7
+put(MT, f"C{avg}", [["Average"] + [f"=AVERAGE({c_}{r+1}:{c_}{r+6})" for c_ in "DEFGHIJK"] + [f"=AVERAGE(L{r+1}:L{r+6})"]])
+put(MT, f"C{avg+1}", [["% months positive", None, None, None, None, None, f'=COUNTIF(I{r+1}:I{r+6},">0")/6', None, f'=COUNTIF(K{r+1}:K{r+6},">0")/6']])
+put(MT, f"C{avg+2}", [["Cumulative Feb-Jul (compounded)"] + [f"=PRODUCT(1+{c_}{r+1}:{c_}{r+6})-1" for c_ in "DEFGH"] + [f"=H{avg+2}-D{avg+2}", f"=PRODUCT(1+J{r+1}:J{r+6})-1"]])
+for rr in (avg + 2,):
+    for c_ in "DEFGHJ":
+        R(lambda: setattr(MT.Range(f"{c_}{rr}"), "Formula2", MT.Range(f"{c_}{rr}").Formula))
+MT.Range(f"D{r+1}:J{avg+2}").NumberFormat = "0.0%;-0.0%;-"; MT.Range(f"I{r+1}:I{avg+2}").NumberFormat = "+0.0%;-0.0%;-"
+MT.Range(f"K{r+1}:K{avg}").NumberFormat = "0.00"; MT.Range(f"L{r+1}:L{avg}").NumberFormat = "#,##0"
+MT.Range(f"I{avg+1}").NumberFormat = "0%"; MT.Range(f"K{avg+1}").NumberFormat = "0%"
+MT.Range(f"D{r+1}:L{avg+2}").HorizontalAlignment = -4108
+MT.Range(f"C{avg}:L{avg}").Font.Bold = True; MT.Range(f"C{avg}:L{avg}").Borders(8).LineStyle = 1
+MT.Range(f"C{avg+2}:L{avg+2}").Font.Bold = True
+fc = MT.Range(f"D{r+1}:H{r+6}").FormatConditions; fc.Delete()
+cs = fc.AddColorScale(3)
+cs.ColorScaleCriteria(1).FormatColor.Color = bgr("F4B183"); cs.ColorScaleCriteria(2).FormatColor.Color = 0xFFFFFF; cs.ColorScaleCriteria(3).FormatColor.Color = bgr("9DC3E6")
+A_END = avg + 2
+# ---- B. factor summary
+r = A_END + 3
+hdr(r, ["All scores - summary (Feb-Jul 26)", "Avg IC", "% months IC > 0", "Avg Q5 - Q1 / month", "Cum. Q5", "Cum. Q1", "Cum. Q5 - Q1"], "I")
+FS0 = r
+for i, k in enumerate(FIELDS):
+    rr = r + 1 + i; p0 = Q["PR0"][k]
+    ic_cells, sp_cells, q5, q1 = [], [], [], []
+    for j in range(6):
+        ret = col(Q["UR0"] + j); pr = col(p0 + j); prr = col(Q["PRR0"] + j)
+        flt = f'({pr}<>"")*({prr}<>"")*IF($D$5="ex-US",{REG}<>"NAM",TRUE)'
+        ic_cells.append(f"IFERROR(CORREL(FILTER({pr},{flt}),FILTER({prr},{flt})),0)")
+        q5.append(f'IFERROR(AVERAGEIFS({ret},{pr},">=0.8",{REG},{RC}),0)')
+        q1.append(f'IFERROR(AVERAGEIFS({ret},{pr},">=0",{pr},"<0.2",{REG},{RC}),0)')
+    MT.Range(f"C{rr}").Value = k
+    R(lambda: setattr(MT.Range(f"D{rr}"), "Formula2", "=AVERAGE(" + ",".join(ic_cells) + ")"))
+    R(lambda: setattr(MT.Range(f"E{rr}"), "Formula2", "=(" + "+".join(f"--({x}>0)" for x in ic_cells) + ")/6"))
+    R(lambda: setattr(MT.Range(f"F{rr}"), "Formula2", "=AVERAGE(" + ",".join(f"{a}-{b}" for a, b in zip(q5, q1)) + ")"))
+    R(lambda: setattr(MT.Range(f"G{rr}"), "Formula2", "=" + "*".join(f"(1+{x})" for x in q5) + "-1"))
+    R(lambda: setattr(MT.Range(f"H{rr}"), "Formula2", "=" + "*".join(f"(1+{x})" for x in q1) + "-1"))
+    MT.Range(f"I{rr}").Formula = f"=G{rr}-H{rr}"
+MT.Range(f"D{r+1}:D{r+4}").NumberFormat = "0.00"; MT.Range(f"E{r+1}:E{r+4}").NumberFormat = "0%"
+MT.Range(f"F{r+1}:I{r+4}").NumberFormat = "+0.0%;-0.0%;-"; MT.Range(f"G{r+1}:H{r+4}").NumberFormat = "0.0%"
+MT.Range(f"D{r+1}:I{r+4}").HorizontalAlignment = -4108
+B_END = r + 4
+# ---- C. start-of-year test
+r = B_END + 3
+hdr(r, ["Start-of-year test: Jan-26 Model 1.1 -> Feb-Aug 26 cumulative return", "Q1 (worst)", "Q2", "Q3", "Q4", "Q5 (best)", "Q5 - Q1", "Universe avg", "# names"], "K")
+C0 = r
+cum = col(Q["CUM"]); prc = col(Q["PRCUM"])
+row = ["Avg cumulative USD return"]
+for lo, hi in edges:
+    row.append(f'=IFERROR(AVERAGEIFS({cum},{prc},">={lo}",{prc},"<{hi}",{REG},{RC}),"")')
+row += [f"=H{r+1}-D{r+1}", f'=IFERROR(AVERAGEIFS({cum},{prc},">=0",{REG},{RC}),"")', f'=COUNTIFS({prc},">=0",{REG},{RC})']
+put(MT, f"C{r+1}", [row])
+row2 = ["Median cumulative USD return"]
+for lo, hi in edges:
+    row2.append(f'=IFERROR(MEDIAN(FILTER({cum},({prc}>={lo})*({prc}<{hi})*({prc}<>"")*IF($D$5="ex-US",{REG}<>"NAM",TRUE))),"")')
+MT.Range(f"C{r+2}").Value = row2[0]
+for k_, fx in enumerate(row2[1:]):
+    R(lambda: setattr(MT.Range(f"{Lc(4+k_)}{r+2}"), "Formula2", fx))
+MT.Range(f"I{r+2}").Formula = f"=H{r+2}-D{r+2}"
+MT.Range(f"D{r+1}:J{r+2}").NumberFormat = "0.0%;-0.0%;-"; MT.Range(f"I{r+1}:I{r+2}").NumberFormat = "+0.0%;-0.0%;-"
+MT.Range(f"K{r+1}").NumberFormat = "#,##0"; MT.Range(f"D{r+1}:K{r+2}").HorizontalAlignment = -4108
+note(MT, f"C{r+3}", "Buy-and-hold from 31-Jan-26: a name ranked in the top 20% on Jan-26 vs the bottom 20%, measured to 31-Aug-26 in USD.")
+C_END = r + 3
+# ---- D. AZTD holdings by Jan score
+r = C_END + 2
+hdr(r, ["AZTD holdings at 31-Jan-26: Feb-Aug return by Jan-26 score", "Score < 0.4", "0.4 - 0.6", "0.6 - 0.8", ">= 0.8", "All AZTD", "# names"], "I")
+AZD = "'AZTD Data'"
+ric = f"{QHn}!$C${d0}:$C${dl}"
+inAZ = f"ISNUMBER(MATCH({ric},FILTER({AZD}!$C$11:$C$200,{AZD}!$H$11:$H$200>0),0))"
+sc = f"{QHn}!${Lc(Q['blocks']['Model 1.1'])}${d0}:${Lc(Q['blocks']['Model 1.1'])}${dl}"
+bk = [(0, 0.4), (0.4, 0.6), (0.6, 0.8), (0.8, 1.01)]
+MT.Range(f"C{r+1}").Value = "Avg cumulative USD return (Feb-Aug)"
+for k_, (lo, hi) in enumerate(bk):
+    R(lambda: setattr(MT.Range(f"{Lc(4+k_)}{r+1}"), "Formula2", f'=IFERROR(AVERAGE(FILTER({cum},{inAZ}*({sc}>={lo})*({sc}<{hi})*ISNUMBER({cum}))),"")'))
+R(lambda: setattr(MT.Range(f"H{r+1}"), "Formula2", f'=IFERROR(AVERAGE(FILTER({cum},{inAZ}*ISNUMBER({cum}))),"")'))
+R(lambda: setattr(MT.Range(f"I{r+1}"), "Formula2", f'=SUM(--({inAZ}*ISNUMBER({cum})))'))
+MT.Range(f"D{r+1}:H{r+1}").NumberFormat = "0.0%;-0.0%;-"; MT.Range(f"D{r+1}:I{r+1}").HorizontalAlignment = -4108
+note(MT, f"C{r+2}", "AZTD holdings = names with weight at 31-Jan-26 in 'AZTD Data'. Shows whether AZTD's higher-scored names actually did better.")
+D_END = r + 2
+pickle.dump(dict(A=7, A_END=A_END, FS0=FS0, C0=C0, D_END=D_END), open(E.S + "/mtest_layout.pkl", "wb"))
+app.Calculation = -4105; app.ScreenUpdating = True
+print("model test written", A_END, FS0, C0, D_END)

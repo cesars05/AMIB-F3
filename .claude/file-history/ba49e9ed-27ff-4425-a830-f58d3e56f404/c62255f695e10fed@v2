@@ -1,0 +1,366 @@
+import copy, re
+from lxml import etree
+from pptx import Presentation
+from pptx.util import Inches, Pt, Emu
+from pptx.dml.color import RGBColor
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
+from pptx.oxml.ns import qn
+
+NS = {'a': 'http://schemas.openxmlformats.org/drawingml/2006/main',
+      'p': 'http://schemas.openxmlformats.org/presentationml/2006/main',
+      'r': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'}
+A = '{%s}' % NS['a']
+
+NAVY = '002060'; RED = 'C00000'
+# Ingevity brand palette (sampled from Ingevity investor materials)
+LIME = '74C900'; PURPLE = '584574'; STEEL = '335677'; DGREEN = '468B40'; CHAR = '2B3A42'
+LGREEN = 'EAF4E9'; GREY = '7F7F7F'; LGREY = 'F2F2F2'
+SEG = {'PM': PURPLE, 'PC': DGREEN, 'APT': STEEL}
+
+BULLET = '•'
+
+# ---------- rich text ----------
+TOKEN = re.compile(r'(\*\*.+?\*\*|##.+?##|!!.+?!!|__.+?__)')
+
+def parse_rich(s):
+    """**bold**  ##bold navy##  !!bold red!!  __italic bold navy__"""
+    out = []
+    for part in TOKEN.split(s):
+        if not part:
+            continue
+        if part.startswith('**'):
+            out.append((part[2:-2], dict(b=True)))
+        elif part.startswith('##'):
+            out.append((part[2:-2], dict(b=True, color=NAVY)))
+        elif part.startswith('!!'):
+            out.append((part[2:-2], dict(b=True, color=RED)))
+        elif part.startswith('__'):
+            out.append((part[2:-2], dict(b=True, i=True, color=NAVY)))
+        else:
+            out.append((part, {}))
+    return out
+
+
+def make_run(text, size=None, b=False, i=False, color=None, font=None):
+    r = etree.SubElement(etree.Element(A + 'dummy'), A + 'r')
+    rpr = etree.SubElement(r, A + 'rPr'); rpr.set('lang', 'en-US'); rpr.set('dirty', '0')
+    if size: rpr.set('sz', str(int(size * 100)))
+    if b: rpr.set('b', '1')
+    if i: rpr.set('i', '1')
+    if color:
+        sf = etree.SubElement(rpr, A + 'solidFill'); c = etree.SubElement(sf, A + 'srgbClr'); c.set('val', color)
+    if font:
+        lt = etree.SubElement(rpr, A + 'latin'); lt.set('typeface', font)
+    t = etree.SubElement(r, A + 't'); t.text = text
+    if text != text.strip():
+        t.set('{http://www.w3.org/XML/1998/namespace}space', 'preserve')
+    return r
+
+
+def make_para(rich, ppr=None, size=None, base_color=None, base_bold=False, base_italic=False, align=None):
+    p = etree.Element(A + 'p')
+    if ppr is not None:
+        p.append(copy.deepcopy(ppr))
+    elif align:
+        pp = etree.SubElement(p, A + 'pPr'); pp.set('algn', align)
+    if align and ppr is not None:
+        p.find(A + 'pPr').set('algn', align)
+    segs = parse_rich(rich) if isinstance(rich, str) else rich
+    for text, f in segs:
+        p.append(make_run(text, size=size, b=f.get('b', base_bold), i=f.get('i', base_italic),
+                          color=f.get('color', base_color)))
+    return p
+
+
+def ppr_xml(marL=0, indent=0, algn='l', bullet=None, lnSpc=None, spcBef=None, spcAft=None, lvl=None):
+    pp = etree.Element(A + 'pPr')
+    if marL: pp.set('marL', str(int(marL)))
+    if indent: pp.set('indent', str(int(indent)))
+    if lvl: pp.set('lvl', str(lvl))
+    pp.set('algn', algn)
+    if lnSpc:
+        l = etree.SubElement(pp, A + 'lnSpc'); s = etree.SubElement(l, A + 'spcPts'); s.set('val', str(int(lnSpc * 100)))
+    if spcBef is not None:
+        l = etree.SubElement(pp, A + 'spcBef'); s = etree.SubElement(l, A + 'spcPts'); s.set('val', str(int(spcBef * 100)))
+    if spcAft is not None:
+        l = etree.SubElement(pp, A + 'spcAft'); s = etree.SubElement(l, A + 'spcPts'); s.set('val', str(int(spcAft * 100)))
+    if bullet:
+        bf = etree.SubElement(pp, A + 'buFont'); bf.set('typeface', 'Arial')
+        bc = etree.SubElement(pp, A + 'buChar'); bc.set('char', bullet)
+    else:
+        etree.SubElement(pp, A + 'buNone')
+    return pp
+
+
+def fill_tf(shape, paras):
+    """Replace all paragraphs of a shape's txBody with given lxml <a:p> list."""
+    txBody = shape.text_frame._txBody
+    for p in txBody.findall(A + 'p'):
+        txBody.remove(p)
+    for p in paras:
+        txBody.append(p)
+    if not paras:
+        etree.SubElement(txBody, A + 'p')
+
+
+def set_text_keep(shape, text):
+    """Replace text keeping the first run's formatting (single paragraph)."""
+    tf = shape.text_frame
+    paras = tf._txBody.findall(A + 'p')
+    p0 = paras[0]
+    for p in paras[1:]:
+        tf._txBody.remove(p)
+    runs = p0.findall(A + 'r')
+    if not runs:
+        # placeholder without runs
+        r = make_run(text); ep = p0.find(A + 'endParaRPr')
+        if ep is not None: p0.insert(list(p0).index(ep), r)
+        else: p0.append(r)
+        return
+    for r in runs[1:]:
+        p0.remove(r)
+    for br in p0.findall(A + 'br'):
+        p0.remove(br)
+    runs[0].find(A + 't').text = text
+
+
+def cell_text(cell, text, bold=None, color=None):
+    tf = cell.text_frame
+    paras = tf._txBody.findall(A + 'p')
+    p0 = paras[0]
+    for p in paras[1:]:
+        tf._txBody.remove(p)
+    runs = p0.findall(A + 'r')
+    if runs:
+        for r in runs[1:]:
+            p0.remove(r)
+        r = runs[0]
+    else:
+        ep = p0.find(A + 'endParaRPr')
+        r = make_run('')
+        if ep is not None:
+            # clone endParaRPr format into rPr
+            rpr = copy.deepcopy(ep); rpr.tag = A + 'rPr'
+            r.remove(r.find(A + 'rPr')); r.insert(0, rpr)
+            p0.insert(list(p0).index(ep), r)
+        else:
+            p0.append(r)
+    r.find(A + 't').text = text
+    rpr = r.find(A + 'rPr')
+    if bold is not None:
+        rpr.set('b', '1' if bold else '0')
+    if color is not None:
+        for sf in rpr.findall(A + 'solidFill'): rpr.remove(sf)
+        sf = etree.Element(A + 'solidFill'); c = etree.SubElement(sf, A + 'srgbClr'); c.set('val', color)
+        rpr.insert(0, sf)
+
+
+def cell_fill(cell, color):
+    tcPr = cell._tc.get_or_add_tcPr()
+    for tag in ('solidFill', 'noFill', 'gradFill'):
+        for e in tcPr.findall(A + tag): tcPr.remove(e)
+    sf = etree.Element(A + 'solidFill'); c = etree.SubElement(sf, A + 'srgbClr'); c.set('val', color)
+    # fill must come after borders (lnL.. lnB..) per schema
+    idx = 0
+    for k, e in enumerate(list(tcPr)):
+        if e.tag in (A + 'lnL', A + 'lnR', A + 'lnT', A + 'lnB', A + 'lnTlToBr', A + 'lnBlToTr'):
+            idx = k + 1
+    tcPr.insert(idx, sf)
+
+
+# ---------- table structure ----------
+def delete_col(table, idx, keep_width=True):
+    tbl = table._tbl
+    grid = tbl.tblGrid
+    cols = grid.findall(A + 'gridCol')
+    w_removed = int(cols[idx].get('w'))
+    total = sum(int(c.get('w')) for c in cols)
+    grid.remove(cols[idx])
+    for tr in tbl.findall(A + 'tr'):
+        tcs = tr.findall(A + 'tc')
+        tr.remove(tcs[idx])
+    if keep_width:
+        cols = grid.findall(A + 'gridCol')
+        rem = total - w_removed
+        for c in cols:
+            c.set('w', str(int(int(c.get('w')) * total / rem)))
+
+
+def delete_row(table, idx):
+    tbl = table._tbl
+    trs = tbl.findall(A + 'tr')
+    tbl.remove(trs[idx])
+
+
+def dup_row(table, idx, after=None):
+    tbl = table._tbl
+    trs = tbl.findall(A + 'tr')
+    new = copy.deepcopy(trs[idx])
+    (trs[after] if after is not None else trs[idx]).addnext(new)
+    return new
+
+
+# ---------- slides ----------
+def delete_slide(prs, slide):
+    sldIdLst = prs.slides._sldIdLst
+    for sldId in list(sldIdLst):
+        if prs.part.related_part(sldId.rId) is slide.part:
+            prs.part.drop_rel(sldId.rId)
+            sldIdLst.remove(sldId)
+            return
+
+
+def reorder(prs, slides_in_order):
+    sldIdLst = prs.slides._sldIdLst
+    ids = {prs.part.related_part(s.rId): s for s in sldIdLst}
+    new = [ids[sl.part] for sl in slides_in_order]
+    for s in list(sldIdLst): sldIdLst.remove(s)
+    for s in new: sldIdLst.append(s)
+
+
+def remove_shape(shape):
+    el = shape._element; el.getparent().remove(el)
+
+
+def ph(slide, idx):
+    for s in slide.placeholders:
+        if s.placeholder_format.idx == idx:
+            return s
+    return None
+
+
+# ---------- shape factories ----------
+def box(slide, x, y, w, h, fill=None, line=None, lw=0.75, shape=MSO_SHAPE.RECTANGLE, dash=None, alpha=None):
+    sh = slide.shapes.add_shape(shape, Inches(x), Inches(y), Inches(w), Inches(h))
+    sh.shadow.inherit = False
+    if fill:
+        sh.fill.solid(); sh.fill.fore_color.rgb = RGBColor.from_string(fill)
+        if alpha is not None:
+            sf = sh.fill._xPr.find(A + 'solidFill'); clr = sf[0]
+            a = etree.SubElement(clr, A + 'alpha'); a.set('val', str(int(alpha * 1000)))
+    else:
+        sh.fill.background()
+    if line:
+        sh.line.color.rgb = RGBColor.from_string(line); sh.line.width = Pt(lw)
+        if dash:
+            from pptx.enum.dml import MSO_LINE
+            sh.line.dash_style = dash
+    else:
+        sh.line.fill.background()
+    tf = sh.text_frame
+    tf.margin_left = tf.margin_right = Inches(0.06); tf.margin_top = tf.margin_bottom = Inches(0.04)
+    tf.word_wrap = True
+    return sh
+
+
+def text_in(sh, paras, anchor='t'):
+    """paras: list of lxml <a:p>."""
+    bp = sh.text_frame._txBody.find(A + 'bodyPr')
+    bp.set('anchor', anchor)
+    fill_tf(sh, paras)
+    return sh
+
+
+def tbox(slide, x, y, w, h, paras, anchor='t', margin=0.0, autofit=False, wrap=True):
+    tb = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(h))
+    tf = tb.text_frame; tf.word_wrap = wrap
+    tf.margin_left = tf.margin_right = Inches(margin); tf.margin_top = tf.margin_bottom = Inches(0.02)
+    bp = tf._txBody.find(A + 'bodyPr'); bp.set('anchor', anchor)
+    fill_tf(tb, paras)
+    return tb
+
+
+def line(slide, x1, y1, x2, y2, color='000000', w=0.75, dash=False):
+    from pptx.enum.shapes import MSO_CONNECTOR
+    ln = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, Inches(x1), Inches(y1), Inches(x2), Inches(y2))
+    ln.line.color.rgb = RGBColor.from_string(color); ln.line.width = Pt(w)
+    if dash:
+        from pptx.enum.dml import MSO_LINE
+        ln.line.dash_style = MSO_LINE.DASH
+    return ln
+
+
+def picture_fit(slide, path, x, y, w, h, align='c'):
+    from PIL import Image
+    iw, ih = Image.open(path).size
+    r = min(w / iw, h / ih)
+    pw, ph_ = iw * r, ih * r
+    px = x + (w - pw) / 2 if align == 'c' else x
+    py = y + (h - ph_) / 2
+    return slide.shapes.add_picture(path, Inches(px), Inches(py), Inches(pw), Inches(ph_))
+
+
+def P(rich, size=11, bullet=False, algn='l', color=None, bold=False, italic=False, spcBef=None, lnSpc=None, marL=None, lvl_char=None):
+    if bullet:
+        ch = lvl_char or BULLET
+        m = marL if marL is not None else 137160
+        pp = ppr_xml(marL=m, indent=-m, algn=algn, bullet=ch, spcBef=spcBef, lnSpc=lnSpc)
+    else:
+        pp = ppr_xml(algn=algn, spcBef=spcBef, lnSpc=lnSpc)
+    return make_para(rich, ppr=pp, size=size, base_color=color, base_bold=bold, base_italic=italic)
+
+
+def panel_header(slide, x, y, w, title, sub):
+    """KLA-style panel header: 16pt title, thin rule, 12pt italic subheader."""
+    tbox(slide, x, y, w, 0.37, [P(title, size=16)], anchor='b')
+    line(slide, x, y + 0.37, x + w, y + 0.37, '000000', 0.75)
+    tbox(slide, x, y + 0.38, w, 0.3, [P(sub, size=12, italic=True)])
+
+
+def cell_fill_alpha(cell, color, alpha_pct):
+    cell_fill(cell, color)
+    sf = cell._tc.get_or_add_tcPr().find(A + 'solidFill')
+    a = etree.SubElement(sf[0], A + 'alpha'); a.set('val', str(int(alpha_pct * 1000)))
+
+
+def rebuild_rows(table, order):
+    """order: list of original row indices (may repeat) -> deep-copied rows in this order."""
+    tbl = table._tbl
+    trs = tbl.findall(A + 'tr')
+    new = [copy.deepcopy(trs[i]) for i in order]
+    for tr in trs: tbl.remove(tr)
+    for tr in new: tbl.append(tr)
+
+
+def unlink_chart(chart):
+    """Drop an externally linked workbook so replace_data can embed a fresh one."""
+    cs = chart._chartSpace
+    ed = cs.find(qn('c:externalData'))
+    if ed is not None:
+        rid = ed.get(qn('r:id'))
+        cs.remove(ed)
+        try:
+            chart.part.drop_rel(rid)
+        except Exception:
+            chart.part._rels.pop(rid)
+
+
+C_NS = 'http://schemas.openxmlformats.org/drawingml/2006/chart'
+C = '{%s}' % C_NS
+
+
+def fix_scatter_totals(chart, cats, totals):
+    """KLA takeaway chart carries a scatter series used only for 'Total' labels; rewrite its caches."""
+    cs = chart._chartSpace
+    for sc in cs.iter(C + 'scatterChart'):
+        for ser in sc.findall(C + 'ser'):
+            for tag in ('cat', 'val'):
+                e = ser.find(C + tag)
+                if e is not None: ser.remove(e)
+            xv = ser.find(C + 'xVal'); yv = ser.find(C + 'yVal')
+            # x values
+            sr = xv.find(C + 'strRef'); sr.find(C + 'f').text = 'Sheet1!$A$2:$A$%d' % (len(cats) + 1)
+            cache = sr.find(C + 'strCache')
+            for pt in cache.findall(C + 'pt'): cache.remove(pt)
+            cache.find(C + 'ptCount').set('val', str(len(cats)))
+            for i, c in enumerate(cats):
+                pt = etree.SubElement(cache, C + 'pt'); pt.set('idx', str(i)); v = etree.SubElement(pt, C + 'v'); v.text = c
+            nr = yv.find(C + 'numRef'); nr.find(C + 'f').text = 'Sheet1!$E$2:$E$%d' % (len(cats) + 1)
+            cache = nr.find(C + 'numCache')
+            fc = cache.find(C + 'formatCode')
+            if fc is not None: fc.text = '#,##0.0'
+            for pt in cache.findall(C + 'pt'): cache.remove(pt)
+            cache.find(C + 'ptCount').set('val', str(len(totals)))
+            for i, t in enumerate(totals):
+                pt = etree.SubElement(cache, C + 'pt'); pt.set('idx', str(i)); v = etree.SubElement(pt, C + 'v'); v.text = str(t)

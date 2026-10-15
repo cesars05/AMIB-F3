@@ -1,0 +1,30 @@
+<section id="technology" data-transition="fade" style="background:#12131A; color:#F5F6FA; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px 128px 160px; display:flex; flex-direction:column; gap:48px">
+  <div style="display:flex; flex-direction:column; gap:16px">
+    <p style="font-family:'Space Grotesk', Arial, sans-serif; font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#A78BFA">Tecnología</p>
+    <h2 style="font-family:'Space Grotesk', Arial, sans-serif; font-size:60px; font-weight:700; line-height:1.1">Arquitectura Web3</h2>
+  </div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:32px; flex:1">
+    <div style="background:#1C1E2B; border:1px solid #2A2D3D; border-radius:24px; padding:40px; display:flex; flex-direction:column; gap:16px">
+      <x-icon name="Globe" style="color:#A78BFA; width:48px; height:48px"></x-icon>
+      <h3 style="font-size:32px; font-weight:600">LAND</h3>
+      <p style="font-size:26px; line-height:1.4; color:#A6ABBD">Parcelas de terreno como NFTs (ERC-721) con coordenadas únicas (x, y) en el mapa.</p>
+    </div>
+    <div style="background:#1C1E2B; border:1px solid #2A2D3D; border-radius:24px; padding:40px; display:flex; flex-direction:column; gap:16px">
+      <x-icon name="Chart" style="color:#5EEAD4; width:48px; height:48px"></x-icon>
+      <h3 style="font-size:32px; font-weight:600">MANA</h3>
+      <p style="font-size:26px; line-height:1.4; color:#A6ABBD">Token ERC-20: la moneda del ecosistema, usada para comprar y para votar en la DAO.</p>
+    </div>
+    <div style="background:#1C1E2B; border:1px solid #2A2D3D; border-radius:24px; padding:40px; display:flex; flex-direction:column; gap:16px">
+      <x-icon name="Star" style="color:#A78BFA; width:48px; height:48px"></x-icon>
+      <h3 style="font-size:32px; font-weight:600">NAMES y Wearables</h3>
+      <p style="font-size:26px; line-height:1.4; color:#A6ABBD">Nombres de usuario y objetos de avatar, también emitidos como NFTs propios.</p>
+    </div>
+    <div style="background:#1C1E2B; border:1px solid #2A2D3D; border-radius:24px; padding:40px; display:flex; flex-direction:column; gap:16px">
+      <x-icon name="Database" style="color:#5EEAD4; width:48px; height:48px"></x-icon>
+      <h3 style="font-size:32px; font-weight:600">Ethereum + Polygon</h3>
+      <p style="font-size:26px; line-height:1.4; color:#A6ABBD">Blockchain base para contratos inteligentes; Polygon reduce las comisiones de red.</p>
+    </div>
+  </div>
+  <p style="position:absolute; left:128px; bottom:64px; font-size:24px; color:#8A90A6">Decentraland · Equipo 10</p>
+  <p style="position:absolute; right:128px; bottom:64px; font-size:24px; color:#8A90A6">03</p>
+</section>

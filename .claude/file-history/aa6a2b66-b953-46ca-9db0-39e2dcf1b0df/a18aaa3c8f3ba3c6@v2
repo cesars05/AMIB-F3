@@ -1,0 +1,26 @@
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$m  = $xl.Workbooks.Item('20260922_SETSA Transportes.xlsx').Worksheets.Item('Modelo SETSA')
+
+function Move-ToEnd([string]$needle) {
+    $f = $m.Columns.Item(3).Find($needle, [Type]::Missing, -4163, 2)   # xlValues, xlPart
+    if ($f -eq $null) { return "NO ENCONTRADO: $needle" }
+    $r = $f.Row
+    $last = $m.Cells.Item($m.Rows.Count, 3).End(-4162).Row
+    if ($r -ge $last) { return "ya al final: $needle" }
+    $m.Rows.Item($r).Cut() | Out-Null
+    $m.Rows.Item($last + 1).Insert() | Out-Null
+    return "movido: $needle (fila $r -> $last)"
+}
+
+Move-ToEnd 'Check: activo - (pasivo'
+Move-ToEnd 'Check: efectivo final'
+Move-ToEnd 'Total reportado en el anexo'
+Move-ToEnd 'Check: suma de clientes'
+Move-ToEnd 'Diferencia: anexo - balance'
+$f = $m.Columns.Item(3).Find('Check vs balance', [Type]::Missing, -4163, 1)
+if ($f -ne $null) { $f.Value2 = 'Check: cartera en concurso - balance'; Move-ToEnd 'Check: cartera en concurso - balance' }
+$xl.CutCopyMode = $false
+$last = $m.Cells.Item($m.Rows.Count, 3).End(-4162).Row
+"--- bloque final ---"
+$start = $m.Columns.Item(3).Find('Memo: cifras reportadas', [Type]::Missing, -4163, 2).Row
+for ($r = $start; $r -le $last; $r++) { "$r : " + $m.Cells.Item($r,3).Value2 + " | D=" + $m.Cells.Item($r,4).Formula }

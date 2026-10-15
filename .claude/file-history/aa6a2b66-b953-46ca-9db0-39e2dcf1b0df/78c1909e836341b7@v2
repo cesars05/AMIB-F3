@@ -1,0 +1,93 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t  = $xl.Workbooks.Item('20260922_SETSA Transportes.xlsx')
+$m  = $t.Worksheets.Item('Modelo SETSA')
+$tx = $t.Worksheets.Item('Transacciones Precedentes')
+$ia = [char]0xED; $o = [char]0xF3; $a = [char]0xE1; $e = [char]0xE9
+
+function Find-In($ws, [string]$col, [string]$needle, [int]$from = 1, [switch]$exact) {
+    $v = $ws.Range("$($col)1:$($col)400").Value2
+    for ($r = $from; $r -le 400; $r++) {
+        $s = [string]$v[$r, 1]
+        if ($exact) { if ($s -ceq $needle) { return $r } } elseif ($s.Contains($needle)) { return $r }
+    }
+    throw "No encontrado: $needle"
+}
+function Abs([int]$r) { return "`$D`$$r" }
+
+# --- filas actuales (todo se busca de nuevo, nada guardado de antes) ---
+$rISR  = Find-In $m 'C' 'Tasa ISR'
+$rPTU  = Find-In $m 'C' 'Tasa PTU'
+$rIVA  = Find-In $m 'C' 'Tasa IVA'
+$rDays = Find-In $m 'C' 'por a'           # Días por año
+$rRec  = Find-In $m 'C' 'esperada de cartera en concurso (%)'
+"Supuestos -> ISR D$rISR=" + $m.Range("D$rISR").Text + " PTU D$rPTU=" + $m.Range("D$rPTU").Text + " IVA D$rIVA=" + $m.Range("D$rIVA").Text + " Dias D$rDays=" + $m.Range("D$rDays").Text + " Rec D$rRec=" + $m.Range("D$rRec").Text
+$ISR = Abs $rISR; $PTU = Abs $rPTU; $IVA = Abs $rIVA; $DAYS = Abs $rDays; $REC = Abs $rRec
+
+# --- 1) Recuperación neta (modelo) ---
+$r25  = Find-In $m 'C' 'Cliente 25' -exact
+$r01  = Find-In $m 'C' 'Cliente 01' -exact
+$rNet = Find-In $m 'C' 'neta esperada (sin IVA'
+foreach ($c in 'D','E','F','G','H','I') {
+    $m.Range("$c$rNet").Formula = "=($c$r25+$c$r01)*$REC/(1+$IVA)*(1-$ISR-$PTU)"
+}
+
+# --- 2) DSO a 360 con fórmula limpia ---
+$rCli = Find-In $m 'C' 'Clientes' -exact
+$rRev = Find-In $m 'C' 'Ingresos anualizados'
+$rD1  = Find-In $m 'C' 'DSO (cartera con IVA'
+$rD2  = Find-In $m 'C' 'DSO sobre cartera promedio'
+foreach ($c in 'D','E','F','G','H','I') {
+    $m.Range("$c$rD1").Formula = "=$c$rCli/($c$rRev*(1+$IVA))*$DAYS"
+    if ($c -eq 'D') { $m.Range("D$rD2").Formula = "=D$rD1" }
+    else { $p = [char]([int][char]$c - 1); $m.Range("$c$rD2").Formula = "=AVERAGE($p$rCli,$c$rCli)/($c$rRev*(1+$IVA))*$DAYS" }
+}
+$m.Cells.Item($rD1, 3).Value2 = "DSO: d${ia}as de CxC (clientes con IVA / ingresos con IVA x 360)"
+
+# --- 3) DPO con CxP a corto plazo + ciclo de conversión ---
+$rCxP  = Find-In $m 'C' 'Cuentas por pagar a corto plazo'
+$rCOGS = Find-In $m 'C' 'Costo de Venta y/o Servicio'
+$rSGA  = Find-In $m 'C' 'Gastos generales total'
+$rDep  = Find-In $m 'C' 'Depreciaciones' -exact
+$rPay  = Find-In $m 'C' 'mina total: percepciones'
+if ([string]$m.Cells.Item($rD2 + 1, 3).Value2 -notlike 'DPO*') {
+    $m.Range("$($rD2 + 1):$($rD2 + 3)").EntireRow.Insert() | Out-Null
+    $m.Rows.Item($rD2).Copy($m.Range("$($rD2 + 1):$($rD2 + 3)")) | Out-Null
+}
+$rBase = $rD2 + 1; $rDPO = $rD2 + 2; $rCCC = $rD2 + 3
+$m.Cells.Item($rBase, 3).Value2 = "Costos y gastos pagados a terceros anualizados (sin n${o}mina ni depreciaci${o}n)"
+$m.Cells.Item($rDPO, 3).Value2  = "DPO: d${ia}as de CxP (CxP corto plazo / costos a terceros con IVA x 360)"
+$m.Cells.Item($rCCC, 3).Value2  = "Ciclo de conversi${o}n de efectivo (DSO - DPO)"
+foreach ($c in 'D','E','F','G','H','I') {
+    $m.Range("$c$rBase").Formula = "=-($c$rCOGS+$c$rSGA-$c$rDep-$c$rPay)*12/$c`$11"
+    $m.Range("$c$rBase").NumberFormat = $m.Range("$c$rRev").NumberFormat
+    $m.Range("$c$rDPO").Formula  = "=$c$rCxP/($c$rBase*(1+$IVA))*$DAYS"
+    $m.Range("$c$rCCC").Formula  = "=$c$rD1-$c$rDPO"
+}
+$m.Cells.Item($rBase, 11).Value2 = "Combustible, mantenimiento, seguros, honorarios, rentas y otros (base de proveedores)"
+$m.Cells.Item($rDPO, 11).Value2  = "Proxy: 'Proveedores' est${a} en 0 y la CxP CP incluye financiamiento de unidades -> sobreestima d${ia}as"
+$m.Cells.Item($rCCC, 11).Value2  = "Negativo = los proveedores financian la operaci${o}n"
+
+# --- 4) Valuación: valor del capital = TEV - deuda - latente + recuperación ---
+$rTEV  = Find-In $tx 'B' 'Valor empresa (TEV)'
+$rDN   = Find-In $tx 'B' 'Deuda neta a jun-26'
+$rLat  = Find-In $tx 'B' 'ISR y PTU latentes'
+$rRecT = Find-In $tx 'B' 'neta de cartera en concurso'
+$rCapT = Find-In $tx 'B' 'Valor del capital (100%)' $rRecT
+$tx.Range("E$rRecT").Formula = "='Modelo SETSA'!I$rNet"
+$tx.Range("E$rCapT").Formula = "=E$rTEV+E$rDN+E$rLat+E$rRecT"
+$tx.Range("E$rRecT").Font.Color = $tx.Range("E$rLat").Font.Color
+
+$xl.CalculateFull()
+$err = 0
+foreach ($ws in $t.Worksheets) { foreach ($c in $ws.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $err++; "ERR " + $ws.Name + "!" + $c.Address($false,$false) + " " + $c.Formula } } }
+"errores=$err"
+foreach ($r in $rRev, $rD1, $rD2, $rBase, $rDPO, $rCCC, $rNet) {
+    "M$r " + $m.Cells.Item($r,3).Value2 + " | 2023=" + $m.Range("F$r").Text + " 2024=" + $m.Range("G$r").Text + " 2025=" + $m.Range("H$r").Text + " 1S26=" + $m.Range("I$r").Text
+}
+"  formula DSO H: " + $m.Range("H$rD1").Formula + " | DPO H: " + $m.Range("H$rDPO").Formula + " | Rec I: " + $m.Range("I$rNet").Formula
+foreach ($r in $rTEV, $rDN, $rLat, $rRecT, $rCapT) { "TX$r " + $tx.Cells.Item($r,2).Value2 + " | " + $tx.Range("E$r").Formula + " = " + $tx.Range("E$r").Text }
+foreach ($r in $rDN, $rLat) {
+    $ref = ([string]$tx.Range("E$r").Formula).Split('!')[1]
+    "  vinculo $ref -> " + $m.Cells.Item($m.Range($ref).Row, 3).Value2
+}

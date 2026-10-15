@@ -1,0 +1,25 @@
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t  = $xl.Workbooks.Item('20260922_SETSA Transportes.xlsx')
+$xl.CalculateFull()
+foreach ($ws in $t.Worksheets) {
+    $errs = @()
+    foreach ($c in $ws.UsedRange.Cells) {
+        $txt = [string]$c.Text
+        if ($txt.StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $errs += $c.Address($false,$false) }
+    }
+    $ws.Name + " -> errores: " + $errs.Count + " " + (($errs | Select-Object -First 15) -join ',')
+}
+$m = $t.Worksheets.Item('Modelo SETSA')
+"--- checks (D..I) ---"
+for ($r = 283; $r -le 296; $r++) {
+    $lab = [string]$m.Cells.Item($r,3).Value2
+    if ($lab.StartsWith('Check') -or $lab.StartsWith('Diferencia')) {
+        $vals = @(); for ($c = 4; $c -le 9; $c++) { $vals += [string]$m.Cells.Item($r,$c).Text }
+        "$r $lab : " + ($vals -join ' | ')
+    }
+}
+"--- clave ---"
+foreach ($r in 65,146,147,148,261,262,269) { "$r " + $m.Cells.Item($r,3).Value2 + " : " + $m.Cells.Item($r,5).Text + " | " + $m.Cells.Item($r,8).Text + " | " + $m.Cells.Item($r,9).Text }
+$tx = $t.Worksheets.Item('Transacciones Precedentes')
+"--- transacciones ---"
+foreach ($r in 31,32,44,45,46,47,52) { "$r " + $tx.Cells.Item($r,2).Value2 + " : " + $tx.Cells.Item($r,5).Formula + " = " + $tx.Cells.Item($r,6).Text }

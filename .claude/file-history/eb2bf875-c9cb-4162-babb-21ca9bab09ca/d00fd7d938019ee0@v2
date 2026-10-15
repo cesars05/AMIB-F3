@@ -1,0 +1,80 @@
+$ErrorActionPreference="Stop"
+$wb=$null; $xl=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $er=$wb.Worksheets.Item("Expected Returns")
+$cm=$wb.Worksheets.Item("Consolidated Model"); $d=$wb.Worksheets.Item("DCF")
+
+# localizar filas de Expected Returns por etiqueta
+$MAP=@{}
+for($i=1;$i -le 70;$i++){
+  $lab=([string]$er.Cells.Item($i,2).Text).Trim()
+  if($lab -eq "Exit Year (FY)"){ $MAP["exitYear"]=$i }
+  if($lab -eq "Exit EV / EBITDA"){ $MAP["multX"]=$i }
+  if($lab -eq "Gross Money Multiple (MoIC)"){ $MAP["moic"]=$i }
+  if($lab -eq "IRR"){ $MAP["irr"]=$i }
+  if($lab -eq "Total Dividends Received"){ $MAP["div"]=$i }
+  if($lab -eq "Exit Proceeds Received"){ $MAP["exitP"]=$i }
+  if($lab -eq "Exit Price per Share (p)"){ $MAP["pxX"]=$i }
+  if($lab -eq "Exit Year Adj. EBITDA (post-divestiture)"){ $MAP["ebX"]=$i }
+  if($lab -eq "Entry EV / EBITDA"){ $MAP["multEnt"]=$i }
+}
+foreach($k in "exitYear","multX","moic","irr","div","exitP","pxX","ebX","multEnt"){ if(-not $MAP.ContainsKey($k)){ throw ("ABORTO: falta fila "+$k) } }
+$guardaMult=[string]$er.Cells.Item($MAP["multX"],3).Formula
+$guardaYear=[string]$er.Cells.Item($MAP["exitYear"],3).Formula
+Write-Output ("multiplo de entrada = "+[string]$er.Cells.Item($MAP["multEnt"],3).Text+"   entrada "+[string]$er.Range("C15").Text+"p   % adquirido "+[string]$er.Range("C17").Text)
+Write-Output ""
+
+function Caso($id,$desc,$esc,$venta,$anoVenta,$multVenta,$anoSalida,$multSalida){
+  $as.Range("F10").Value2=$esc
+  if($venta){
+    $as.Range("J74").Value2="Water Management"
+    $as.Range("J75").Value2=[double]$anoVenta
+    $as.Range("J76").Value2=[double]$multVenta
+  } else {
+    $as.Range("J74").ClearContents()
+  }
+  $er.Cells.Item($MAP["exitYear"],3).Value2=[double]$anoSalida
+  $er.Cells.Item($MAP["multX"],3).Value2=[double]$multSalida
+  $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+  $divPS=([double]$er.Cells.Item($MAP["div"],3).Value2)/([double]$er.Range("C17").Value2)/([double]$er.Range("C12").Value2)*100
+  $exPS =([double]$er.Cells.Item($MAP["exitP"],3).Value2)/([double]$er.Range("C17").Value2)/([double]$er.Range("C12").Value2)*100
+  $espPS=0.0
+  if($venta){
+    for($c=12;$c -le 17;$c++){ $espPS+=[double]$cm.Cells.Item(378,$c).Value2 }
+    $espPS=$espPS/([double]$er.Range("C12").Value2)*100
+  }
+  Write-Output ("  "+$id+"  "+$desc.PadRight(34)+([string]$er.Cells.Item($MAP["moic"],3).Text).PadLeft(7)+([string]$er.Cells.Item($MAP["irr"],3).Text).PadLeft(9)+"  | esp "+([string][math]::Round($espPS,0)+"p").PadLeft(6)+"  div "+([string][math]::Round($divPS,0)+"p").PadLeft(5)+"  salida "+([string][math]::Round($exPS,0)+"p").PadLeft(6)+"  total "+([string][math]::Round($divPS+$exPS,0)+"p").PadLeft(6)+"  | DCF "+([string]$d.Range("E41").Text).PadLeft(8))
+}
+
+Write-Output "======================= LOS CINCO CASOS ======================="
+Write-Output ("  id  narrativa                              MOIC      IRR   | pence por accion recibidos            | DCF")
+Caso "A" "Downside, salida 5.0x, 3 anos"   "A - Downside"        $false 0 0    2029 5.0
+Caso "B" "Stagnation, salida 6.1x, 3 anos" "B - Stagnation"      $false 0 0    2029 6.1
+Caso "C" "Partial success, 6.5x, 3 anos"   "C - Partial Success" $false 0 0    2029 6.5
+Caso "D" "Venta WM FY27, stub 8.0x, 1+5"   "C - Partial Success" $true  2027 7.9 2032 8.0
+Caso "E" "Venta WM FY27, stub 9.0x, 1+5"   "C - Partial Success" $true  2027 7.9 2032 9.0
+
+# restaurar: caso C sin venta
+$as.Range("F10").Value2="C - Partial Success"
+$as.Range("J74").ClearContents()
+$as.Range("J75").Value2=[double]2027
+$er.Cells.Item($MAP["exitYear"],3).Value2=[double]2032
+$er.Cells.Item($MAP["multX"],3).Value2=[double]8.0
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ""
+Write-Output ("RESTAURADO: escenario="+[string]$as.Range("F10").Text+"  venta='"+[string]$as.Range("J74").Text+"'  salida="+[string]$er.Cells.Item($MAP["exitYear"],3).Text+"  mult="+[string]$er.Cells.Item($MAP["multX"],3).Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary","Expected Returns"){
+  $s=$wb.Worksheets.Item($nm); $e=0
+  try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

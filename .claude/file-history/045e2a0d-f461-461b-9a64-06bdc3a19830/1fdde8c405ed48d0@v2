@@ -1,0 +1,18 @@
+---
+name: feedback-research-output
+description: Format preferences for company research summaries and Excel cells that the user explicitly approved
+metadata:
+  node_type: memory
+  type: feedback
+  originSessionId: 045e2a0d-f461-461b-9a64-06bdc3a19830
+  modified: 2026-09-24T16:59:53.038Z
+---
+
+Company summaries in 2-3 paragraphs per name, ranked most to least attractive, were explicitly praised ("me lo diste muy bien"). Structure that worked: what the business does in plain words, moat, latest-quarter data from filings, position vs competitors (growth/share, margins, P/E, Model 1.1), key risks including EM % of revenue, and a one-line **Veredicto**, closing with a ranking table.
+
+Excel cell text (Description / Recent Context): English, professional, concise enough to fit the cell, key facts in bold, and no em dashes and no colons. Recent Context should state fundamentals (what the company has done, main risk, EM exposure, whether market view matches filings), not repeat YTD/multiples already in other columns.
+
+**Why:** the user presents this to the fund and needs it scannable and consistent with the sheet.
+**How to apply:** reuse this structure for future screening batches; verify numbers against 10-Q/8-K/IR filings before writing, and flag data gaps rather than inventing figures.
+
+Related: [[user-role]]

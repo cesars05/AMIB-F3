@@ -1,0 +1,43 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 15;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 900 } }; return "??" }
+$wb=$null; $sm=$null
+for($t=0;$t -lt 40;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $x=$w.Worksheets.Item("Segment Model"); if($x -ne $null){ $wb=$w; $sm=$x } } }
+  }catch{}
+  if($sm -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+Write-Output ("Libro: "+[string]$wb.Name)
+Write-Output ("        "+"".PadRight(38)+((10..17 | ForEach-Object { $i=$_; ([string](T { $sm.Cells.Item(9,$i).Text })).PadLeft(8) }) -join ""))
+Write-Output ""
+Write-Output "=== ROA por segmento (curva: sube, se aplana, baja?) ==="
+foreach($r in 103,104,105,106){
+  $lab=[string](T { $sm.Cells.Item($r,3).Text })
+  $v=(10..17 | ForEach-Object { $i=$_; ([string](T { $sm.Cells.Item($r,$i).Text })).PadLeft(8) }) -join ""
+  Write-Output ("  r"+$r+" "+$lab.PadRight(36)+$v)
+}
+Write-Output ""
+Write-Output "=== margenes por segmento (pico y deterioro?) ==="
+foreach($r in 57,58,59){
+  $lab=[string](T { $sm.Cells.Item($r,3).Text })
+  $v=(10..17 | ForEach-Object { $i=$_; ([string](T { $sm.Cells.Item($r,$i).Text })).PadLeft(8) }) -join ""
+  Write-Output ("  r"+$r+" "+$lab.PadRight(36)+$v)
+}
+Write-Output ""
+Write-Output "=== capex % de ventas del segmento (baja con el tiempo?) ==="
+foreach($r in 166,167,168){
+  $lab=[string](T { $sm.Cells.Item($r,3).Text })
+  $v=(10..17 | ForEach-Object { $i=$_; ([string](T { $sm.Cells.Item($r,$i).Text })).PadLeft(8) }) -join ""
+  Write-Output ("  r"+$r+" "+$lab.PadRight(36)+$v)
+}
+Write-Output ""
+Write-Output "=== capex absoluto por segmento ==="
+foreach($r in 133,134,135){
+  $lab=[string](T { $sm.Cells.Item($r,3).Text })
+  $v=(10..17 | ForEach-Object { $i=$_; ([string](T { $sm.Cells.Item($r,$i).Text })).PadLeft(8) }) -join ""
+  Write-Output ("  r"+$r+" "+$lab.PadRight(36)+$v)
+}
+Write-Output ""
+Write-Output "=== hojas del libro (para ver que tabs existen) ==="
+$h=@(); foreach($ws in $wb.Worksheets){ $h+=$ws.Name }
+Write-Output ("  "+($h -join " | "))

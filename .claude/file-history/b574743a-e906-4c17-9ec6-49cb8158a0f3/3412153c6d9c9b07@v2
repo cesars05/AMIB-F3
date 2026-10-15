@@ -1,0 +1,26 @@
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
+p = r'C:\Users\cesar\Downloads\PE\08_Proyecto_Final\PLAN_V2_PROMPT_Y_WORKFLOW.md'
+lines = open(p, encoding='utf-8').read().split('\n')
+
+
+def setline(prefix, new):
+    hit = [i for i, l in enumerate(lines) if l.startswith(prefix)]
+    if len(hit) != 1:
+        print("PROBLEM", prefix, hit)
+        return
+    lines[hit[0]] = new
+
+
+setline("1. **Empresas que fallan:",
+        "1. **Empresas que fallan (3 de 8): una pérdida total y dos recuperaciones parciales.** **Uriel/BRM: 0.0x** (pérdida total; biogás de rellenos con riesgo regulatorio y cliente único). **FAZT: 0.5x** (carga de vehículos eléctricos que depende de utilización y subsidios; recupera la mitad vía preferencia de liquidación 1x no participativa). **S2G Energy: 0.3x** (la más pequeña y con más condiciones FICAP; venta de activos y tecnología). Son las de menos \"Cumple\" en `Criterios`. Entre las tres recuperan ≈US$6.9M de US$19M invertidos.")
+setline("2. **Orden de magnitud esperado",
+        "2. **TIR objetivo del caso base: ≈18% (neta, con fechas, en USD).** Con las 3 empresas que fallan, las cinco que funcionan (Pireos, XC, BioEsol, Quartux, Niko; US$63M invertidos) deben llevar el portafolio a **≈US$245 a 255M de salidas** (≈2.2x neto para el LP; el carry del GP aparece solo pasando ≈US$245M por el catch-up del 100%, y queda en ≈US$30 a 35M). Eso exige ≈**3.8x promedio** en esas cinco empresas, mucho más que el caso calibrado anterior (2.2x a 2.8x), así que se calibra con supuestos de crecimiento de EBITDA de 25% a 30% anual, dilución baja y ratio de múltiplo de salida entre 0.75x y 0.90x, documentados empresa por empresa como supuestos del fondo. Punto de partida (se ajusta con búsqueda de objetivo sobre la TIR con fechas): Pireos 4.2x, Quartux 4.0x, Niko 3.8x, XC 3.6x, BioEsol 3.5x. Contraste que se muestra en el football field: TIR mediana de fondos con actividad en México 16.15% (AMEXCAP 1S-2026) y AINDA I 15.5%; el caso base queda por encima de la mediana y los casos Bajo y Conservador por debajo.")
+setline("**7.2 Caso con fallas:**",
+        "**7.2 Caso con fallas y TIR objetivo de ≈18%:** en `Escenarios`, nuevo conjunto \"Base con fallas\" (en uso): **Uriel/BRM 0.0x, FAZT 0.5x y S2G 0.3x** con override y fundamento; las cinco empresas que funcionan se calibran por la regla (crecimiento anual de EBITDA, dilución y cociente de múltiplos) hasta que la **TIR neta con fechas del LP quede entre 17.5% y 18.5%** (búsqueda de objetivo en Excel sobre crecimiento y ratio; punto de partida en la sección 2). Se agregan: **\"Conservador\"** (los múltiplos calibrados anteriores, 2.2x a 2.8x, con las mismas 3 fallas: ≈1.6x neto, TIR ≈10 a 11%), **\"Alto\"** (sin fallas) y **\"Bajo\"** (factor 0.5 sobre el caso base). Se conservan v1 y v2 como sensibilidades. Cada parámetro calibrado lleva en `Escenarios` una nota visible de que es un supuesto del fondo calibrado al objetivo y la evidencia que lo respalda; el deck y el memo lo presentan igual, sin lenguaje de duda.")
+setline("> 4. Las 8 empresas entran",
+        "> 4. Las 8 empresas entran en los años 1 a 3 (follow-on en años 3 a 5; salidas en años 6 a 9); el caso base incluye 3 empresas que fallan (Uriel/BRM 0.0x, FAZT 0.5x, S2G 0.3x) y una TIR neta objetivo de ≈18% lograda con supuestos calibrados de las 5 que funcionan (sección 7.2).")
+setline("1. ~~¿Qué empresas fallan?~~",
+        "1. ~~¿Qué empresas fallan?~~ **Resuelto:** Uriel/BRM (0.0x), FAZT (0.5x) y S2G (0.3x); TIR objetivo ≈18%; las demás combinaciones quedan como sensibilidades.")
+open(p, 'w', encoding='utf-8').write('\n'.join(lines))
+print("ok")

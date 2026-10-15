@@ -1,0 +1,47 @@
+---
+titulo: "HAL FY2025 Form 10-K — verbatim extracts"
+origen: "https://www.sec.gov/Archives/edgar/data/45012/000004501226000015/hal-20251231.htm"
+obtenido: "2026-10-02 (read in the built-in browser; EDGAR blocks scripted curl without a declared contact, so the full filing was not saved — save the PDF from ir.halliburton.com if you want it archived)"
+nota: "Only the passages used in the project are reproduced (short verbatim quotes, numbers exactly as filed)."
+---
+
+# HAL 2025 Form 10-K — passages used by the Team 9 project
+
+**Item 7 / 7(a) — Financial instrument market risk (10-K p.36–38)**
+- "We selectively manage these exposures through the use of derivative instruments, including forward foreign exchange contracts, foreign exchange options, interest rate swaps, and CDS's … We do not use derivative instruments for trading purposes. The fair value of our forward contracts, options, and interest rate swaps was not material as of December 31, 2025 or December 31, 2024."
+- Functional currency: "currencies other than the U.S. dollar, our functional currency". Techniques include "foreign currency borrowing and investing, and the use of currency exchange instruments."
+- **FX sensitivity:** "a hypothetical 10% adverse change in the value of all our foreign currency positions relative to the U.S. dollar as of December 31, 2025 would result in a **$81 million, pre-tax loss** for our net monetary assets denominated in currencies other than U.S. dollars."
+- **Interest-rate risk:** "We had **fixed rate long-term debt totaling $7.2 billion** at December 31, 2025 and December 31, 2024 … As of December 31, 2025 and December 31, 2024, **we did not have any interest rate swaps outstanding**."
+
+**Note 10 — Debt (10-K p.61–62), millions of dollars, 31-Dec-2025 / 31-Dec-2024**
+| Instrument | 2025 | 2024 |
+|---|---|---|
+| 5.0% senior notes due November 2045 | 1,887 | 1,887 |
+| 2.92% senior notes due March 2030 | 1,000 | 1,000 |
+| 4.85% senior notes due November 2035 | 997 | 997 |
+| 7.45% senior notes due September 2039 | 938 | 938 |
+| 4.75% senior notes due August 2043 | 846 | 846 |
+| 6.7% senior notes due September 2038 | 763 | 763 |
+| 4.5% senior notes due November 2041 | 469 | 469 |
+| 7.6% senior debentures due August 2096 | 226 | 226 |
+| 6.75% senior notes due February 2027 | 90 | 90 |
+| Other | 6 | 6 |
+| Unamortized issuance costs and discounts | (64) | (62) |
+| **Total long-term debt** | **7,158** | **7,160** |
+| Short-term borrowings and current maturities | — | 381 |
+| **Total debt** | **7,158** | **7,541** |
+- 3.8% notes: "In November 2025, we retired the remaining $382 million principal amount of our 3.8% senior notes at their scheduled maturity using cash on hand."
+- **Revolver:** "On August 18, 2025, we entered into a new $3.5 billion five-year revolving facility … expires on August 16, 2030. The full amount … was available as of December 31, 2025."
+- **Maturities:** "no amounts in 2026, $90 million in 2027, no amounts in 2028 and 2029, $1.0 billion in 2030, and the remainder thereafter."
+- Guarantees: "approximately $3.1 billion of letters of credit, bank guarantees, or surety bonds were outstanding as of December 31, 2025."
+
+**Item 7 — Liquidity (10-K p.25–26)**
+- "$2.2 billion of cash and equivalents and $3.5 billion of available committed bank credit … We believe we have a manageable debt maturity profile, with approximately $90 million due February 2027. Furthermore, we have no financial covenants or material adverse change provisions in our bank agreements."
+- "We currently expect capital spending for 2026 to be approximately $1.1 billion"; 2026 expected payments: "$378 million of interest on debt, and $418 million under our leasing arrangements."
+
+**Item 7 — Results by region (10-K p.29–31)**
+- "Middle East/Asia revenue in 2025 was $5.8 billion, a 4% decrease compared to 2024, resulting from lower activity across multiple product service lines in Saudi Arabia and Malaysia. Partially offsetting these decreases were **improved activity across multiple product service lines in Kuwait**, higher stimulation activity in India, higher drilling related services in Indonesia, and increased fluids services in the United Arab Emirates." (This is the *only* mention of Kuwait in the 10-K — Kuwait is not disclosed separately.)
+
+**Item 1 — Business**
+- "In 2025, **91% of our workforce and 85% of management were on local terms** in the countries where they work."
+- "No other country accounted for more than 10% of our consolidated revenue" (besides the U.S.); "No other country or single customer accounted for more than 10% of our receivables."

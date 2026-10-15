@@ -1,0 +1,213 @@
+"""Utilidades para convertir el modelo al formato Icarus (Calibri 10, B2, sin cuadricula) en verdes de energia.
+Convencion IB: azul 0000FF = entradas, negro = formulas, verde 00B050 = vinculos puros a otra hoja."""
+import re
+from copy import copy
+from openpyxl.formula.tokenizer import Tokenizer, Token
+from openpyxl.styles import Font, PatternFill, Border, Side, Alignment
+from openpyxl.utils import get_column_letter, column_index_from_string
+from openpyxl.worksheet.formula import ArrayFormula
+
+# ---- paleta ----
+VERDE_BOSQUE = "0B3D2E"
+VERDE_ENERGIA = "1B7F4B"
+MENTA = "DDEFE3"
+LIMA = "8BC53F"
+LIMA_SUAVE = "EAF4D6"
+AMBAR = "F2B705"
+ROJO = "C0392B"
+AZUL_IN = "0000FF"
+VERDE_LINK = "00B050"
+
+THIN = Side(style="thin", color="000000")
+THIN_G = Side(style="thin", color=VERDE_BOSQUE)
+
+_ref_re = re.compile(r"^(\$?)([A-Z]{1,3})(\$?)(\d+)$")
+
+def _shift_cell(ref, dc, dr):
+    m = _ref_re.match(ref)
+    if not m:
+        return ref
+    a, col, b, row = m.groups()
+    return f"{a}{get_column_letter(column_index_from_string(col)+dc)}{b}{int(row)+dr}"
+
+def shift_range(rng, dc=1, dr=1):
+    # rng puede traer prefijo de hoja
+    if "!" in rng:
+        sheet, r = rng.rsplit("!", 1)
+        prefix = sheet + "!"
+    else:
+        prefix, r = "", rng
+    parts = r.split(":")
+    parts = [_shift_cell(p, dc, dr) for p in parts]
+    return prefix + ":".join(parts)
+
+def shift_formula(f, dc=1, dr=1):
+    if not (isinstance(f, str) and f.startswith("=")):
+        return f
+    tok = Tokenizer(f)
+    out = ["="]
+    for t in tok.items:
+        if t.type == Token.OPERAND and t.subtype == Token.RANGE:
+            out.append(shift_range(t.value, dc, dr))
+        else:
+            out.append(t.value)
+    return "".join(out)
+
+def is_pure_link(f):
+    """=Hoja!A1 o ='Hoja'!A1 (con o sin $) -> vinculo puro a otra hoja"""
+    return bool(re.match(r"^=\s*('[^']+'|[A-Za-z0-9_]+)!\$?[A-Z]{1,3}\$?\d+\s*$", f))
+
+def base_font(bold=False, italic=False, color="000000", size=10):
+    return Font(name="Calibri", size=size, bold=bold, italic=italic, color=color)
+
+def header_style(c, align="center"):
+    c.font = base_font(bold=True)
+    c.fill = PatternFill("solid", fgColor=MENTA)
+    c.border = Border(bottom=THIN)
+    c.alignment = Alignment(horizontal=align, vertical="center", wrap_text=True)
+
+def total_style(c):
+    c.font = base_font(bold=True, color=c.font.color.rgb[-6:] if c.font and c.font.color and c.font.color.type == "rgb" and c.font.color.rgb else "000000")
+    c.border = Border(top=THIN)
+
+def section_style(c):
+    c.font = base_font(bold=True, color=VERDE_BOSQUE, size=11)
+    c.border = Border(bottom=THIN_G)
+
+def title_style(c, size=12):
+    c.font = base_font(bold=True, color=VERDE_BOSQUE, size=size)
+
+def input_font(c, bold=False):
+    c.font = base_font(bold=bold, color=AZUL_IN)
+
+def calc_font(c, bold=False, italic=False):
+    c.font = base_font(bold=bold, italic=italic)
+
+def link_font(c, bold=False):
+    c.font = base_font(bold=bold, color=VERDE_LINK)
+
+def note_style(c):
+    c.font = base_font(italic=True, color="595959", size=9)
+
+def set_sheet(ws, tab=VERDE_BOSQUE, zoom=100, widths=None):
+    ws.sheet_view.showGridLines = False
+    ws.sheet_view.zoomScale = zoom
+    ws.sheet_properties.tabColor = tab
+    ws.column_dimensions["A"].width = 2.7
+    if widths:
+        for k, v in widths.items():
+            ws.column_dimensions[k].width = v
+
+def argb(c):
+    col = c.font.color if c.font else None
+    if col is not None and col.type == "rgb" and col.rgb:
+        return col.rgb[-6:].upper()
+    return None
+
+def fill_rgb(c):
+    if c.fill and c.fill.fill_type:
+        fg = c.fill.fgColor
+        if fg.type == "rgb" and fg.rgb:
+            return fg.rgb[-6:].upper()
+    return None
+
+DARK_FILLS = {"1F3864", "2F5496"}
+LIGHT_HDR_FILLS = {"D9E2F3"}
+
+def restyle_cell(c):
+    """Aplica el formato Icarus segun el estilo semantico original de la celda (ya desplazada)."""
+    if c.value is None and not fill_rgb(c):
+        return
+    fr = fill_rgb(c)
+    col = argb(c)
+    f = c.font
+    bold = bool(f.b) if f else False
+    italic = bool(f.i) if f else False
+    size = f.sz if f else 10
+    nf = c.number_format
+    val = c.value
+    is_formula = isinstance(val, str) and val.startswith("=") or isinstance(val, ArrayFormula)
+    # encabezados / secciones por relleno original
+    if fr in DARK_FILLS:
+        if size and size >= 13:           # titulo de hoja
+            c.fill = PatternFill(fill_type=None); title_style(c, 14); return
+        if c.row > 3 and col == "FFFFFF" and bold and fr == "2F5496" or (fr == "1F3864" and size and size >= 11 and c.column == 2):
+            c.fill = PatternFill(fill_type=None); section_style(c); return
+        # encabezado de tabla oscuro -> menta
+        c.fill = PatternFill(fill_type=None); header_style(c); return
+    if fr in LIGHT_HDR_FILLS:
+        # encabezado de tabla o fila total (si hay numero) -> encabezado o total
+        if isinstance(val, (int, float)) or is_formula:
+            c.fill = PatternFill(fill_type=None)
+            c.font = base_font(bold=True, color=("0000FF" if (col == "0000FF") else "000000"))
+            c.border = Border(top=THIN)
+            c.alignment = Alignment(horizontal=c.alignment.horizontal, wrap_text=c.alignment.wrap_text)
+            return
+        header_style(c); return
+    if fr in {"FFF2CC", "FFFF00"}:
+        c.fill = PatternFill("solid", fgColor=LIMA_SUAVE)
+    # fuentes
+    if italic and (size and size <= 9):
+        note_style(c); c.alignment = Alignment(wrap_text=False, vertical="top"); return
+    if isinstance(val, (int, float)) and not is_formula:
+        # constante numerica -> azul (entrada), excepto etiquetas de anio/encabezado ya tratadas
+        input_font(c, bold)
+    elif is_formula:
+        if isinstance(val, str) and is_pure_link(val):
+            link_font(c, bold)
+        else:
+            calc_font(c, bold)
+    else:
+        # texto
+        if col == "0000FF":
+            input_font(c, bold)
+        else:
+            c.font = base_font(bold=bold, italic=italic)
+    # encabezados de tabla sin relleno (negrita centrada) quedan igual
+
+def copy_sheet_shifted(src, dst, dc=1, dr=1):
+    for row in src.iter_rows():
+        for c in row:
+            if c.value is None and not c.has_style:
+                continue
+            nc = dst.cell(row=c.row + dr, column=c.column + dc)
+            v = c.value
+            if isinstance(v, ArrayFormula):
+                v = shift_formula(v.text, dc, dr)
+            else:
+                v = shift_formula(v, dc, dr)
+            nc.value = v
+            if c.has_style:
+                nc.font = copy(c.font); nc.fill = copy(c.fill); nc.border = copy(c.border)
+                nc.alignment = copy(c.alignment); nc.number_format = c.number_format
+    for k, d in src.column_dimensions.items():
+        idx = column_index_from_string(k) + dc
+        dst.column_dimensions[get_column_letter(idx)].width = d.width
+    for k, d in src.row_dimensions.items():
+        if d.height:
+            dst.row_dimensions[k + dr].height = d.height
+    if src.freeze_panes:
+        dst.freeze_panes = shift_range(src.freeze_panes, dc, dr)
+
+
+def post_fix(ws):
+    """Limpia bandas vacias heredadas: titulos sin relleno, secciones con borde inferior verde, encabezados con relleno menta."""
+    maxc = ws.max_column
+    for row in ws.iter_rows(min_row=1, max_row=ws.max_row):
+        b = row[1] if len(row) > 1 else None   # columna B
+        if b is None:
+            continue
+        bs = b.font.sz if b.font else None
+        is_title = b.value is not None and bs and bs >= 13 and (b.font.b)
+        is_section = b.value is not None and b.border and b.border.bottom and b.border.bottom.color is not None and \
+            (b.border.bottom.color.rgb or "").endswith(VERDE_BOSQUE) and not b.fill.fill_type
+        is_header = b.value is not None and b.fill.fill_type and fill_rgb(b) == MENTA
+        for c in row[2:maxc]:
+            if c.value is not None:
+                continue
+            if is_title:
+                c.fill = PatternFill(fill_type=None); c.border = Border()
+            elif is_section:
+                c.fill = PatternFill(fill_type=None); c.border = Border(bottom=THIN_G)
+            elif is_header:
+                c.fill = PatternFill("solid", fgColor=MENTA); c.border = Border(bottom=THIN)

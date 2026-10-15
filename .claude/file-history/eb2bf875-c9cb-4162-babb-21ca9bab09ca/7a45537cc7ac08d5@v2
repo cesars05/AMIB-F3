@@ -1,0 +1,90 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $cm=$wb.Worksheets.Item("Consolidated Model")
+$er=$wb.Worksheets.Item("Expected Returns"); $d=$wb.Worksheets.Item("DCF")
+$xl.Calculation=-4105
+$estadoIni=[string]$as.Range("J74").Text
+Write-Output ("modulo al entrar: '"+$estadoIni+"'")
+
+$mult=[double]$er.Range("C27").Value2
+$ebEntry=[double]$er.Range("C26").Value2
+$ndEntry=[double]$er.Range("C24").Value2
+$eqEntry=[double]$er.Range("C15").Value2*[double]$er.Range("C12").Value2/100
+Write-Output ("entrada: precio "+[string]$er.Range("C15").Text+"p   equity "+[string][math]::Round($eqEntry,0)+"   deuda neta "+[string][math]::Round($ndEntry,0)+"   EBITDA FY2026 "+[string][math]::Round($ebEntry,0)+"   multiplo "+[string][math]::Round($mult,2)+"x")
+
+function Corrida($etiqueta){
+  Write-Output ""
+  Write-Output ("=========== "+$etiqueta+" ===========")
+  Write-Output "  salida   EBITDA   deuda neta   equity   p/accion    MoIC     IRR    retorno marginal del ano"
+  $eqPrev=$eqEntry
+  foreach($y in 2027,2028,2029,2030,2031,2032){
+    $er.Range("C21").Value2=[double]$y
+    $xl.CalculateFullRebuild()
+    $eb=[double]$er.Range("C31").Value2
+    $nd=[double]$er.Range("C34").Value2
+    $eq=[double]$er.Range("C35").Value2
+    # dividendo total del ano al 100% de la empresa
+    $col=0
+    foreach($c in 4,5,6,7,8,9){ if([double]$er.Cells.Item(42,$c).Value2 -eq $y){ $col=$c } }
+    $divAno=0.0
+    if($col -gt 0){ $divAno=([double]$er.Cells.Item(44,$col).Value2+[double]$er.Cells.Item(45,$col).Value2+[double]$er.Cells.Item(46,$col).Value2)/[double]$er.Range("C17").Value2 }
+    $marg=($eq+$divAno)/$eqPrev-1
+    Write-Output ("  FY"+[string]$y+([string][math]::Round($eb,0)).PadLeft(9)+([string][math]::Round($nd,0)).PadLeft(13)+([string][math]::Round($eq,0)).PadLeft(9)+([string]$er.Range("C36").Text).PadLeft(11)+([string]$er.Range("C53").Text).PadLeft(8)+([string]$er.Range("C54").Text).PadLeft(8)+([string][math]::Round($marg*100,1)+"%").PadLeft(18))
+    $eqPrev=$eq
+  }
+  # atribucion al horizonte completo FY2032
+  $er.Range("C21").Value2=[double]2032
+  $xl.CalculateFullRebuild()
+  $eb=[double]$er.Range("C31").Value2; $nd=[double]$er.Range("C34").Value2; $eq=[double]$er.Range("C35").Value2
+  $porEbitda=$mult*($eb-$ebEntry)
+  $porDeuda=($ndEntry-$nd)
+  $divTot=[double]$er.Range("C51").Value2/[double]$er.Range("C17").Value2
+  Write-Output ""
+  Write-Output ("  ATRIBUCION del valor creado a FY2032 (100% de la empresa, GBP 000):")
+  Write-Output ("    equity de entrada                         "+([string][math]::Round($eqEntry,0)).PadLeft(10))
+  Write-Output ("    (+) crecimiento de EBITDA x "+[string][math]::Round($mult,2)+"x           "+([string][math]::Round($porEbitda,0)).PadLeft(10))
+  Write-Output ("    (+) reduccion de deuda neta               "+([string][math]::Round($porDeuda,0)).PadLeft(10))
+  Write-Output ("    (+) re-rating del multiplo                "+("0").PadLeft(10)+"   <-- el modelo no le da credito")
+  Write-Output ("    = equity de salida                        "+([string][math]::Round($eq,0)).PadLeft(10))
+  Write-Output ("    (+) dividendos cobrados en el camino      "+([string][math]::Round($divTot,0)).PadLeft(10))
+  Write-Output ("    = valor total recibido                    "+([string][math]::Round($eq+$divTot,0)).PadLeft(10))
+}
+
+# --- A) sin activismo ---
+$xl.Calculation=-4135
+$as.Range("J74").ClearContents()
+$xl.Calculation=-4105; $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+Corrida "A) PASIVO - mantener los 3 segmentos"
+
+# --- B) con la venta de WM ---
+$xl.Calculation=-4135
+$as.Range("J74").Value2="Water Management"; $as.Range("J75").Value2=[double]2029; $as.Range("J76").Value2=[double]7.9
+$xl.Calculation=-4105; $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+Corrida "B) ACTIVISTA - vender Water Management en FY2029 a 7.9x"
+
+# --- C) que pasa si ademas re-califica el multiplo ---
+Write-Output ""
+Write-Output "=========== C) SENSIBILIDAD: y si el mercado re-califica al vender el segmento malo? ==========="
+Write-Output "  (salida FY2032, venta de WM en FY2029; se fuerza el multiplo de salida a mano)"
+$er.Range("C21").Value2=[double]2032
+$guardaC32=[string]$er.Range("C32").Formula
+foreach($m in 6.29,7.0,7.5,8.0,8.5){
+  $er.Range("C32").Formula="="+[string]$m
+  $xl.CalculateFullRebuild()
+  Write-Output ("  multiplo salida "+([string]$m+"x").PadLeft(7)+"   equity "+([string]$er.Range("C35").Text).PadLeft(10)+"   p/accion "+([string]$er.Range("C36").Text).PadLeft(9)+"   MoIC "+([string]$er.Range("C53").Text).PadLeft(6)+"   IRR "+([string]$er.Range("C54").Text).PadLeft(7))
+}
+$er.Range("C32").Formula=$guardaC32
+$xl.Calculation=-4135
+$as.Range("J74").ClearContents()
+$er.Range("C21").Value2=[double]2032
+$xl.Calculation=-4105; $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ""
+Write-Output ("RESTAURADO: J74='"+[string]$as.Range("J74").Text+"'  C21="+[string]$er.Range("C21").Text+"  C32="+[string]$er.Range("C32").Formula+"  IRR "+[string]$er.Range("C54").Text+"  DCF "+[string]$d.Range("E41").Text)

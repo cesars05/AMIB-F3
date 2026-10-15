@@ -1,0 +1,18 @@
+<section id="overview" data-transition="fade" style="background:#12131A; color:#F5F6FA; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px 128px 160px; display:flex; flex-direction:column; gap:56px">
+  <div style="display:flex; flex-direction:column; gap:16px">
+    <p style="font-family:'Space Grotesk', Arial, sans-serif; font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#A78BFA">Descripción general</p>
+    <h2 style="font-family:'Space Grotesk', Arial, sans-serif; font-size:60px; font-weight:700; line-height:1.1">¿Qué es Decentraland?</h2>
+  </div>
+  <div style="display:flex; flex-direction:row; gap:40px; flex:1">
+    <div style="flex:1; background:#1C1E2B; border:1px solid #2A2D3D; border-radius:24px; padding:48px; display:flex; flex-direction:column; gap:20px">
+      <h3 style="font-size:36px; font-weight:600; color:#F5F6FA">Un mundo propiedad de su comunidad</h3>
+      <p style="font-size:28px; line-height:1.5; color:#C7CBDA">Mundo virtual 3D descentralizado construido sobre Ethereum, lanzado en 2020 por la Decentraland Foundation (Ari Meilich y Esteban Ordano). Los usuarios exploran, construyen y comercian dentro de un mapa fijo de parcelas.</p>
+    </div>
+    <div style="flex:1; background:#1C1E2B; border:1px solid #2A2D3D; border-radius:24px; padding:48px; display:flex; flex-direction:column; gap:20px">
+      <h3 style="font-size:36px; font-weight:600; color:#F5F6FA">El problema que resuelve</h3>
+      <p style="font-size:28px; line-height:1.5; color:#C7CBDA">En los mundos Web2 (Second Life, videojuegos), la empresa controla los servidores: si cierran, pierdes tus activos. Decentraland da propiedad verificable vía NFTs y traslada el control a la comunidad mediante una DAO.</p>
+    </div>
+  </div>
+  <p style="position:absolute; left:128px; bottom:64px; font-size:24px; color:#8A90A6">Decentraland · Equipo 10</p>
+  <p style="position:absolute; right:128px; bottom:64px; font-size:24px; color:#8A90A6">02</p>
+</section>

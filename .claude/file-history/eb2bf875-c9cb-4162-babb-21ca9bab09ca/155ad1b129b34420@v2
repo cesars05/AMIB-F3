@@ -1,0 +1,99 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$wb=$null; $su=$null
+for($t=0;$t -lt 40;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $x=$w.Worksheets.Item("Summary"); if($x -ne $null){ $wb=$w; $su=$x } } }
+  }catch{}
+  if($su -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+Write-Output ("Libro: "+[string]$wb.Name)
+if([string](T { $su.Range("C14").Text }) -ne "DCF - Base Case"){ throw "C14 cambio" }
+if([string](T { $su.Range("N14").Text }) -ne "Base Case"){ throw "snapshot N14 no esta" }
+$xl.Calculation=-4135
+$NAVY=5384228; $CREAM=13300991; $LGREY=10921638; $GREY=15921906
+
+# ---------- encabezados ----------
+T { $su.Range("G12").Value2="vs 235p" }
+T { $su.Range("H12").Value2="Driver del rango" }
+foreach($a in "D12","E12","F12","G12","H12"){ T { $su.Range($a).Font.Bold=$true } }
+
+# ---------- parametros del rango ----------
+T { $su.Range("C23").Value2="Parámetros del rango" }
+T { $su.Range("C23").Font.Bold=$true }
+T { $su.Range("D23").Value2="Low" };  T { $su.Range("E23").Value2="Target" }; T { $su.Range("F23").Value2="High" }
+foreach($a in "D23","E23","F23"){ T { $su.Range($a).Font.Bold=$true }; T { $su.Range($a).HorizontalAlignment=-4152 } }
+T { $su.Range("C24").Value2="WACC" }
+T { $su.Range("D24").Value2=0.12 }; T { $su.Range("E24").Value2=0.11 }; T { $su.Range("F24").Value2=0.10 }
+T { $su.Range("C25").Value2="Crecimiento terminal (g)" }
+T { $su.Range("D25").Value2=0.010 }; T { $su.Range("E25").Value2=0.015 }; T { $su.Range("F25").Value2=0.020 }
+T { $su.Range("D24:F25").NumberFormat="0.0%" }
+T { $su.Range("D24:F25").Interior.Color=$CREAM }
+T { $su.Range("C26").Value2="Piso: management extrapola a 1% en su prueba de deterioro (AR2025 nota 13).  Techo: PIB nominal UK de largo plazo ~3.5-4%." }
+T { $su.Range("C26").Font.Italic=$true }; T { $su.Range("C26").Font.Size=9 }; T { $su.Range("C26").Font.Color=$LGREY }
+
+# ---------- filas DCF: calculo exacto desde el snapshot ----------
+$map=@{14=14;15=15;16=16}
+foreach($r in 14,15,16){
+  $sr=$map[$r]
+  foreach($c in "D","E","F"){
+    $f="=+IFERROR((SUMPRODUCT(`$O"+$sr+":`$U"+$sr+",1/(1+"+$c+"`$24)^`$O`$17:`$U`$17)+`$V"+$sr+"*(1+"+$c+"`$25)/("+$c+"`$24-"+$c+"`$25)/(1+"+$c+"`$24)^`$V`$17-DCF!`$E`$37)/DCF!`$E`$39*100,0)"
+    T { $su.Range($c+$r).Formula=$f }
+  }
+  T { $su.Range("H"+$r).Value2="WACC 12/11/10%  ×  g 1.0/1.5/2.0%   (exacto, desde el FCFF capturado)" }
+}
+
+# ---------- EPV: escala inversa al WACC (EV sin crecimiento = NOPAT/WACC) ----------
+foreach($c in "D","E","F"){
+  $f="=+IFERROR((EPV!`$E`$51*DCF!`$P`$16/"+$c+"`$24-DCF!`$E`$37)/DCF!`$E`$39*100,0)"
+  T { $su.Range($c+"17").Formula=$f }
+}
+T { $su.Range("H17").Value2="WACC 12/11/10%  -  sin crecimiento por definición (EV escala 1/WACC)" }
+
+# ---------- SOTP: misma escala inversa sobre su EV ----------
+foreach($c in "D","E","F"){
+  $f="=+IFERROR((SOTP!`$D`$108*DCF!`$P`$16/"+$c+"`$24-DCF!`$E`$37)/DCF!`$E`$39*100,0)"
+  T { $su.Range($c+"18").Formula=$f }
+}
+T { $su.Range("H18").Value2="WACC 12/11/10%  -  aproximado, escalando el EV del SOTP" }
+
+# ---------- vs precio actual ----------
+foreach($r in 14,15,16,17,18){
+  T { $su.Range("G"+$r).Formula=("=+IFERROR(E"+$r+"/DCF!`$E`$40-1,0)") }
+}
+
+# ---------- rango total y precio ----------
+T { $su.Range("C20").Value2="Rango" }
+T { $su.Range("D20").Formula="=+MIN(D14:D18)" }
+T { $su.Range("F20").Formula="=+MAX(F14:F18)" }
+T { $su.Range("C21").Value2="Precio actual" }
+T { $su.Range("E21").Formula="=+DCF!`$E`$40" }
+T { $su.Range("C20:H21").Font.Bold=$true }
+T { $su.Range("C20:H20").Interior.Color=$GREY }
+
+# ---------- guard de validacion ----------
+T { $su.Range("C28").Value2="Check: la fórmula al WACC y g del propio DCF debe reproducir DCF!E41" }
+T { $su.Range("D28").Formula="=+IFERROR((SUMPRODUCT(`$O14:`$U14,1/(1+DCF!`$P`$16)^`$O`$17:`$U`$17)+`$V14*(1+DCF!`$P`$12)/(DCF!`$P`$16-DCF!`$P`$12)/(1+DCF!`$P`$16)^`$V`$17-DCF!`$E`$37)/DCF!`$E`$39*100,0)" }
+T { $su.Range("E28").Formula="=+DCF!`$E`$41" }
+T { $su.Range("F28").Formula="=+D28-E28" }
+T { $su.Range("C28:F28").Font.Italic=$true }; T { $su.Range("C28:F28").Font.Size=9 }; T { $su.Range("C28:F28").Font.Color=$LGREY }
+
+# ---------- formatos ----------
+T { $su.Range("D14:F21").NumberFormat='0.0"p"' }
+T { $su.Range("D28:F28").NumberFormat='0.0"p"' }
+T { $su.Range("G14:G18").NumberFormat="0.0%;-0.0%" }
+T { $su.Range("H14:H18").Font.Italic=$true }; T { $su.Range("H14:H18").Font.Size=9 }; T { $su.Range("H14:H18").Font.Color=$LGREY }
+
+$xl.Calculation=-4105
+T { $xl.CalculateFullRebuild() }; T { $xl.CalculateFullRebuild() }
+$wb.Save()
+Write-Output ""
+Write-Output ("        "+"".PadRight(30)+"Low".PadLeft(10)+"Target".PadLeft(10)+"High".PadLeft(10)+"vs 235p".PadLeft(10))
+foreach($r in 14,15,16,17,18,20,21){
+  $lab=[string](T { $su.Cells.Item($r,3).Text }); if($lab.Trim() -eq ""){ continue }
+  $line="  r"+([string]$r).PadRight(4)+$lab.PadRight(30)
+  foreach($c in 4,5,6,7){ $line+=([string](T { $su.Cells.Item($r,$c).Text })).PadLeft(10) }
+  Write-Output $line
+}
+Write-Output ""
+Write-Output ("  CHECK  formula="+[string](T { $su.Range("D28").Text })+"   DCF!E41="+[string](T { $su.Range("E28").Text })+"   dif="+[string](T { $su.Range("F28").Text }))

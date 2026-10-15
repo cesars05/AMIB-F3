@@ -1,0 +1,147 @@
+$ErrorActionPreference="Stop"
+$wb=$null; $xl=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $cm=$wb.Worksheets.Item("Consolidated Model")
+$d=$wb.Worksheets.Item("DCF"); $so=$wb.Worksheets.Item("SOTP")
+$vs=$wb.Worksheets.Item("Valuation Summary"); $ns=$wb.Worksheets.Item("Scenarios Summary")
+$er=$wb.Worksheets.Item("Expected Returns")
+
+Write-Output "########## 1) DONDE ESTABAN LOS #N/A DEL SOTP ##########"
+Write-Output "  Aparecian SOLO en el escenario Downside. Estas eran las 7 celdas:"
+Write-Output "    SOTP I81  '(+) D&A'                     <- la raiz"
+Write-Output "    SOTP I74  'EBITDA'                      = I76+I81"
+Write-Output "    SOTP I84  'FCFF'                        = SUM(I80:I83)"
+Write-Output "    SOTP I85  'Present Value FCFF'          = I84*I86"
+Write-Output "    SOTP N35  'Margin (%)'                  = I74*L35"
+Write-Output "    SOTP D104 'Cash Flow Present Value'     = SUM(C85:I85)"
+Write-Output "    SOTP D106 'Terminal Value PV'           = D105*I86"
+Write-Output ""
+Write-Output ("  I81 hoy = "+[string]$so.Range("I81").Formula)
+Write-Output "  (antes era el mismo LOOKUP pero SIN el IFERROR)"
+Write-Output ""
+Write-Output "  prueba: cambio a Downside y cuento errores"
+$as.Range("F10").Value2="Downside"
+[void]$as.Range("J74").ClearContents()
+for($k=1;$k -le 4;$k++){ $xl.CalculateFullRebuild() }
+$errSOTP=0
+try{ $errSOTP=[int]$so.UsedRange.SpecialCells(-4123,16).Count }catch{}
+Write-Output ("    Downside -> errores en SOTP = "+$errSOTP+"    I81 = "+[string]$so.Range("I81").Text+"    I74 = "+[string]$so.Range("I74").Text+"    SOTP = "+[string]$so.Range("D112").Text)
+
+Write-Output ""
+Write-Output "########## 2) r264: la etiqueta ##########"
+Write-Output ("  antes: '"+[string]$cm.Cells.Item(264,3).Text+"'")
+$cm.Cells.Item(264,3).Value2="Bank Interest Expense"
+Write-Output ("  ahora: '"+[string]$cm.Cells.Item(264,3).Text+"'")
+Write-Output "  (la formula no cambia: seguimos sin reconocer ingreso financiero sobre la caja, por conservadurismo)"
+
+Write-Output ""
+Write-Output "########## 3) Entrada: 235p confirmado ##########"
+$er.Range("D15").Value2=[double]235.0
+Write-Output ("  Expected Returns D15 = "+[string]$er.Range("D15").Text+"   participacion "+[string]$er.Range("D17").Text)
+
+Write-Output ""
+Write-Output "########## 4) RECAPTURA DEL SNAPSHOT FCFF (Valuation Summary) ##########"
+$as.Range("F10").Value2="Downside"
+for($k=1;$k -le 4;$k++){ $xl.CalculateFullRebuild() }
+$vs.Range("F32").Value2=[double]$d.Range("C23").Value2
+$vs.Range("G32").Value2=[double]$d.Range("D23").Value2
+$vs.Range("H32").Value2=[double]$d.Range("E23").Value2
+$vs.Range("I32").Value2=[double]$d.Range("F23").Value2
+$vs.Range("J32").Value2=[double]$d.Range("G23").Value2
+$vs.Range("K32").Value2=[double]$d.Range("H23").Value2
+$vs.Range("L32").Value2=[double]$d.Range("I23").Value2
+Write-Output ("  Downside   -> r32   DCF "+[string]$d.Range("E41").Text)
+$as.Range("F10").Value2="Stagnation"
+for($k=1;$k -le 4;$k++){ $xl.CalculateFullRebuild() }
+$vs.Range("F31").Value2=[double]$d.Range("C23").Value2
+$vs.Range("G31").Value2=[double]$d.Range("D23").Value2
+$vs.Range("H31").Value2=[double]$d.Range("E23").Value2
+$vs.Range("I31").Value2=[double]$d.Range("F23").Value2
+$vs.Range("J31").Value2=[double]$d.Range("G23").Value2
+$vs.Range("K31").Value2=[double]$d.Range("H23").Value2
+$vs.Range("L31").Value2=[double]$d.Range("I23").Value2
+Write-Output ("  Stagnation -> r31   DCF "+[string]$d.Range("E41").Text)
+$as.Range("F10").Value2="Partial Success"
+for($k=1;$k -le 4;$k++){ $xl.CalculateFullRebuild() }
+$vs.Range("F30").Value2=[double]$d.Range("C23").Value2
+$vs.Range("G30").Value2=[double]$d.Range("D23").Value2
+$vs.Range("H30").Value2=[double]$d.Range("E23").Value2
+$vs.Range("I30").Value2=[double]$d.Range("F23").Value2
+$vs.Range("J30").Value2=[double]$d.Range("G23").Value2
+$vs.Range("K30").Value2=[double]$d.Range("H23").Value2
+$vs.Range("L30").Value2=[double]$d.Range("I23").Value2
+Write-Output ("  Partial    -> r30   DCF "+[string]$d.Range("E41").Text)
+
+Write-Output ""
+Write-Output "########## 5) RECAPTURA DE LOS 5 CASOS (Scenarios Summary) ##########"
+$shares=[double]$er.Range("D12").Value2
+$pct=[double]$er.Range("D17").Value2
+$entry=[double]$er.Range("D15").Value2
+function Caso($esc,$venta,$anoSalida,$multSalida){
+  $as.Range("F10").Value2=$esc
+  if($venta){
+    $as.Range("J74").Value2="Water Management"
+    $as.Range("J75").Value2=[double]2029
+    $as.Range("J76").Value2=[double]8.0
+  } else { [void]$as.Range("J74").ClearContents() }
+  $er.Range("D21").Value2=[double]$anoSalida
+  $er.Range("D32").Value2=[double]$multSalida
+  for($k=1;$k -le 4;$k++){ $xl.CalculateFullRebuild() }
+  $esp=0.0
+  foreach($a in "E46","F46","G46","H46","I46","J46"){ $esp+=[double]$er.Range($a).Value2 }
+  $o=New-Object 'double[]' 5
+  $o[0]=[double]$er.Range("D54").Value2
+  $o[1]=[double]$er.Range("D55").Value2
+  $o[2]=([double]$er.Range("D52").Value2-$esp)/$pct/$shares*100
+  $o[3]=$esp/$pct/$shares*100
+  $o[4]=[double]$er.Range("D53").Value2/$pct/$shares*100
+  return ,$o
+}
+$a1=Caso "Downside"        $false 2029 5.25
+$b1=Caso "Stagnation"      $false 2029 6.10
+$c1=Caso "Partial Success" $false 2029 7.50
+$d1=Caso "Partial Success" $true  2032 8.50
+$e1=Caso "Partial Success" $true  2032 10.00
+$ns.Range("H14").Value2=[double]$a1[0]; $ns.Range("I14").Value2=[double]$a1[1]
+$ns.Range("H15").Value2=[double]$b1[0]; $ns.Range("I15").Value2=[double]$b1[1]
+$ns.Range("H16").Value2=[double]$c1[0]; $ns.Range("I16").Value2=[double]$c1[1]
+$ns.Range("H17").Value2=[double]$d1[0]; $ns.Range("I17").Value2=[double]$d1[1]
+$ns.Range("H18").Value2=[double]$e1[0]; $ns.Range("I18").Value2=[double]$e1[1]
+$ns.Range("D28").Value2=[double](-$entry); $ns.Range("E28").Value2=[double]$a1[2]; $ns.Range("F28").Value2=[double]$a1[3]; $ns.Range("G28").Value2=[double]$a1[4]
+$ns.Range("D29").Value2=[double](-$entry); $ns.Range("E29").Value2=[double]$b1[2]; $ns.Range("F29").Value2=[double]$b1[3]; $ns.Range("G29").Value2=[double]$b1[4]
+$ns.Range("D30").Value2=[double](-$entry); $ns.Range("E30").Value2=[double]$c1[2]; $ns.Range("F30").Value2=[double]$c1[3]; $ns.Range("G30").Value2=[double]$c1[4]
+$ns.Range("D31").Value2=[double](-$entry); $ns.Range("E31").Value2=[double]$d1[2]; $ns.Range("F31").Value2=[double]$d1[3]; $ns.Range("G31").Value2=[double]$d1[4]
+$ns.Range("D32").Value2=[double](-$entry); $ns.Range("E32").Value2=[double]$e1[2]; $ns.Range("F32").Value2=[double]$e1[3]; $ns.Range("G32").Value2=[double]$e1[4]
+
+# restaurar
+$as.Range("F10").Value2="Partial Success"
+[void]$as.Range("J74").ClearContents()
+$er.Range("D21").Value2=[double]2032
+$er.Range("D32").Value2=[double]8.5
+for($k=1;$k -le 4;$k++){ $xl.CalculateFullRebuild() }
+$wb.Save()
+
+Write-Output ""
+Write-Output "########## VERIFICACION FINAL ##########"
+Write-Output ("  "+"".PadRight(24)+"MOIC".PadLeft(9)+"IRR".PadLeft(9)+"   |"+"Ordinarios".PadLeft(11)+"Especial".PadLeft(10)+"Salida".PadLeft(10)+"Total".PadLeft(10))
+for($i=14;$i -le 18;$i++){
+  $j=$i+14
+  Write-Output ("  "+([string]$ns.Cells.Item($i,3).Text).PadRight(24)+([string]$ns.Cells.Item($i,8).Text).PadLeft(9)+([string]$ns.Cells.Item($i,9).Text).PadLeft(9)+"   |"+([string]$ns.Cells.Item($j,5).Text).PadLeft(11)+([string]$ns.Cells.Item($j,6).Text).PadLeft(10)+([string]$ns.Cells.Item($j,7).Text).PadLeft(10)+([string]$ns.Cells.Item($j,8).Text).PadLeft(10))
+}
+Write-Output ""
+Write-Output ("  football field: DCF "+[string]$vs.Range("E14").Text+" vs vivo "+[string]$d.Range("E41").Text+"   SOTP "+[string]$vs.Range("E18").Text+" vs "+[string]$so.Range("D112").Text+"   EPV "+[string]$vs.Range("E17").Text+" vs "+[string]$wb.Worksheets.Item("EPV").Range("E61").Text)
+Write-Output ("  blended "+[string]$vs.Range("E20").Text+"   upside "+[string]$vs.Range("E21").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Valuation Summary","Expected Returns","Scenarios Summary"){
+  $s=$wb.Worksheets.Item($nm); $e=0
+  try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot+"   escenario "+[string]$as.Range("F10").Text+"   venta='"+[string]$as.Range("J74").Text+"'")

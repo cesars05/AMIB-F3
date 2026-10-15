@@ -1,0 +1,303 @@
+# 12 — Financial Analysis: los campeones que faltaban y el recetario metodológico
+
+**Fecha:** 20 septiembre 2026
+**Qué agrega sobre `11`:** el doc `11` ya fijó el estándar (texto verbatim del `Essentials`, las cinco obligaciones) y analizó 5 reportes: Waterloo '24, Waterloo '26, Fibra MTY Tec, UDLAP y La Comer. **No re-derivo nada de eso.** Este documento cubre los **9 reportes restantes de la carpeta**, entre ellos **tres campeones mundiales que nunca se habían leído** (Sydney–Qantas '23, Northern Illinois–Motorola '22, Kozminski–Dom Development '25) y los **dos ganadores locales de México** que faltaban (ITAM–Grupo México, Ibero–Grupo BMV). De los cuatro ganadores de Boston, **BJ's se analiza a fondo** por ser el análogo de negocio más cercano a Bimbo; Toast, HubSpot y Akamai sólo se revisaron de forma dirigida (§4).
+
+Y agrega lo que `11` no tiene: **el "cómo se hace"** (§6), que es donde estaba el hueco real.
+
+> Fuentes: extracción de texto con `pdftotext -layout` de los PDFs originales + el MD de Kozminski. **Caveat de método heredado de `11`:** parte de los apéndices vive como imagen, así que un "no aparece" es sobre el texto extraíble, no prueba de ausencia.
+
+---
+
+## 1. El titular
+
+De los 14 reportes de la carpeta, **los 14 tienen trabajo financiero y 11 tienen una sección con el nombre de la rúbrica** — las tres excepciones son UDLAP, BJ's y Akamai, que lo reparten en otras secciones. Pero la diferencia entre el ganador local promedio y el campeón mundial no está en la tabla de ratios. Está en **tres cosas que sólo hacen los campeones**:
+
+1. **Declaran que el número reportado no es el número real** — y lo cuantifican.
+2. **Pronostican deterioro** cuando el deterioro es lo honesto.
+3. **Emiten juicio sobre la administración** usando el propio marco declarado por la empresa.
+
+El ganador local de México 2023 (Ibero–BMV) no hace ninguna de las tres y ganó. Eso es una noticia buena y una mala, y §7 la explica.
+
+---
+
+## 2. Matriz ampliada — mismos renglones que `11` §2
+
+| Dimensión | **Qantas** (Global '23) | **Motorola** (Global '22) | **Kozminski** (Global '25) | **BJ's** (Boston '23) | **ITAM** (MX '22) | **Ibero** (MX '23) |
+|---|---|---|---|---|---|---|
+| Sección con el nombre de la rúbrica | Sí | Sí | Sí | **No** (fluye desde las tesis) | Sí | Sí |
+| Ubicación | Después de las tesis, antes de Valuation | Antes de Valuation | Después de Investment Summary | Antes de Valuation | Antes de Valuation | Antes de Valuation |
+| Espacio | ~2 pág | ~1.5 pág | ~1.5 pág | ~1 pág | ~1.5 pág | ~1.5 pág |
+| **Tabla de ratios tipo DuPont** | No como tabla; DuPont **en prosa** | No | **Sí** — 4A + 7E, bloques idénticos a Waterloo | No | No | No |
+| Ventana histórica | FY16–FY22 | 2012–2020 | 2020A–2023A | 2016–2022 | 2013–2021 | 2018–2022 (algo 2014) |
+| Horizonte de pronóstico | FY23E–FY30E (8a) | 2022–2030 (9a) | 2024E–2030E (7a) | 2022E–2032E (11a) | 2022E–2031E (10a) | 2023E–2028E (6a) |
+| Liquidez | Sí (ICR, DSCR) | Sí (current 1.3→1.1, cash 0.4→0.1) | Sí (current, quick) | **Sí, y es su mejor bloque** | Parcial | Parcial (current ratio) |
+| Apalancamiento | **Sí, el más profundo de los 14** | Sí (Debt/EBITDA 2.75, LTD/TA 0.5→0.1) | Sí (Debt/EBITDA 0.9–1.2x) | Sí (deuda y deuda+arrend.) | Sí (Net debt/EBITDA vs. peers) | Sí (D/E vs. peers) |
+| Capital de trabajo / ciclo | **Sí** (RRIA como fuente negativa de capital de trabajo) | No | **Sí** (días + waterfall de NWC) | **Sí** (días → pronostican el ratio) | No | No |
+| **Calidad de utilidades explícita** | **Sí — el mejor ejemplo de los 14** (§3.1) | **Sí — Beneish/Piotroski/Altman** (§3.2) | Parcial | Sí (comps ex-gasolina) | Parcial (outlier declarado) | **No** |
+| Ratios específicos de industria | RASK, CASK, ASK, load factor, unit profitability, CASK ex-fuel | Ninguno propio; usa scores académicos | Entregas × precio medio, land bank, TTS | Comp ex-gas, miembros/tienda, canasta de precios | **Net cash cost, ore grade** | Ingreso por línea de negocio |
+| Estados completos en apéndice | Sí | Sí (Apéndices 19 y 21) | Sí (Annex 15) | Sí | Sí | Sí |
+| Escenarios ligados a la sección | Sí | Sí | Sí (bull/bear sobre entregas y margen) | No | Sí | No |
+| Opinión del auditor / material weakness | No | **Proxy: Beneish M-score** | No | No | No | No |
+| **Comparación explícita vs. consenso** | **Sí, dentro de la sección** | Sí (vs. consenso S&P 500) | Sí (football field) | No | No | No |
+
+**Lo que confirma la matriz:** la tabla DuPont **no es universal entre campeones** — tres de los cinco la tienen (Waterloo ×2, Kozminski) y dos no (Qantas, Motorola). **Pero los dos que no la tienen no se saltaron el trabajo: lo presentaron en prosa densa con pares nombrados.** Qantas descompone el ROE en sus factores dentro del párrafo (margen NPAT −80bps, rotación activo/capital +1.9x) y Motorola compara margen bruto contra TYL, LHX y AXON renglón por renglón. La diferencia es de formato, no de contenido — y la tabla es el formato más barato en espacio, que es la razón por la que §8 la recomienda de todos modos.
+
+Lo que sí es universal entre los cinco campeones mundiales (Waterloo ×2, Sydney, Northern Illinois, Kozminski) es **un bloque de calidad de utilidades**. Ese es el patrón duro, y es el que hay que cumplir sin excepción.
+
+---
+
+## 3. Los cuatro hallazgos que no existen en `11`
+
+### 3.1 Qantas — el mejor ejemplo de calidad de utilidades de los 14 reportes
+
+Una sola frase hace el trabajo completo de la obligación #3:
+
+> *"Whilst QAN experienced statutory EBITDA margin expansion from 17.7% (FY16) to 19.3% (FY19) prior to COVID, this was **significantly confounded by one-off gains of asset disposals and impairment reversals**. A look through underlying EBITDA margin **contracted by 270bps** in this period due to a 16.4% uplift in fuel costs per barrel (post hedging)."*
+
+Léase con cuidado lo que hicieron: **el margen reportado subía — de 17.7% a 19.3%, es decir +160bps de aritmética nuestra, ellos sólo dan los dos niveles — mientras el margen real caía 270bps**, que es la única cifra de efecto que el reporte publica. Identificaron la causa (ganancias por venta de activos y reversiones de deterioro), la aislaron, recalcularon, y dieron la cifra del efecto. Cuatro pasos, dos renglones de texto.
+
+Esto es **más fuerte que el ejemplo de Lightspeed** que `11` §3.2 elogia, porque Lightspeed denuncia que la empresa dejó de reportar métricas, mientras Qantas **rehace la métrica y publica el número corregido**. Denunciar es bueno; recalcular es mejor.
+
+**Es el molde exacto para el puente de EBITDA Ajustado de Bimbo** que `11` §5 pone como prioridad #1.
+
+**Lo demás que Qantas hace y nadie más:**
+
+- **Compara su pronóstico contra el consenso *dentro* de Financial Analysis**, no sólo en Valuation: *"Our FY24e EBIT margin is 42bps above consensus"*, *"50bps and 80bps above consensus EBITDA margins in FY25 and FY26"*. Convierte la sección en la evidencia de por qué el mercado se equivoca. Esto conecta directo con `08`.
+- **Audita el marco de capital de la propia empresa.** Qantas declara un objetivo flotante de deuda neta de 2.0x–2.5x EBITDA ajustado anclado a un "10% ROIC framework". El equipo **toma ese marco, calcula qué nivel de deuda implica (0.8x/0.6x), y muestra que la empresa estaba por encima de su propio límite**. Juzgar a la administración con su propia vara es más difícil de refutar que una opinión.
+- **Usa la métrica de la calificadora**: FFO/net debt "derived from Standard and Poor's credit rating ratios", y amarra el movimiento al rating real (BB+ de S&P → alza a Baa2 de Moody's, outlook de negativo a estable).
+- **Cuantifica el beneficio de la cobertura contra pares que no cubren**: costo unitario de combustible +24.8% vs. +71.4% del barril; American y Delta, que no cubren, absorbieron +72.7% y +76.2%. Y lo traduce a volatilidad: márgenes moviéndose 120–270bps vs. 320–610bps de las norteamericanas.
+- **Sensibilidad puntual al precio de la acción**: *"each marginal 10bp fuel efficiency gain annually results in a 1.8% share price impact."*
+- **Descompone el recorte de costos por categoría**: mano de obra 59%, S&M 10%, variables de operación de aeronave 6%, otros gastos 26%.
+- **Trata el buyback como reversa de una dilución previa**: la recompra de A$400m "represents a rolling back" de la colocación institucional de A$1.4bn de ago-20 que aumentó las acciones en circulación 25%.
+- **Proyecta el payout hacia el promedio de un grupo de pares** (Air New Zealand / Singapore Airlines, 51.8%), no hacia su propia historia.
+
+### 3.2 Motorola — los tres scores académicos, que nadie más usó
+
+Northern Illinois es el único de los 14 reportes que aplica modelos formales de detección:
+
+| Score | MSI | Promedio peers | Qué mide | Lectura del equipo |
+|---|---|---|---|---|
+| **Beneish M-score** | −2.75 | −2.61 | **Probabilidad de manipulación de utilidades** | *"although the industry is not prone to fraud, MSI has the most valid earnings"* |
+| **Piotroski F-score** | 7 | 6 | Solidez fundamental (9 criterios binarios) | valida la rentabilidad vs. competidores |
+| **Altman Z-score** | 2.79 | mayor en peers | Riesgo de quiebra | *"increased but still unlikely risk of bankruptcy"* — **lo reportan aunque les sale peor** |
+
+**Por qué importa esto para nosotros:** `11` §4 cerraba diciendo que la casilla que los cinco reportes fallaron era la opinión del auditor. El Beneish M-score es **la versión cuantitativa y defendible de esa misma casilla** — y es replicable con los estados financieros que ya están en la carpeta (`Estados Financieros Auditados 2025 (EN).pdf`). Es una fórmula de ocho índices, se calcula en una hoja, y el resultado es citable. Ningún equipo mexicano lo ha hecho nunca.
+
+Que **reporten el Altman que les sale desfavorable** es igual de instructivo: la sección gana credibilidad cuando incluye un número que no ayuda a la tesis.
+
+**Lo otro que Motorola aporta, y es lo más copiable de todo el reporte:**
+
+- **La asignación de capital modelada como cascada del flujo operativo**, cada renglón anclado al objetivo declarado por la administración y contrastado contra el promedio histórico:
+
+| Uso | Histórico | Objetivo declarado / modelado | Fuente |
+|---|---|---|---|
+| CapEx | 21.5% del OCF (2012–2020) | **20%** (objetivo de la empresa) | disclosure |
+| Adquisiciones | 35.4% (2012–2020) | **37.5%** (el equipo lo sube) | juicio propio |
+| Dividendos | 33.5% (2012–2021) | **30%** | disclosure |
+| Recompras | 18.3% (2017–2021) | **12.5%** | disclosure |
+
+  Todo suma 100% del OCF. Es un marco de proyección completo, auditable renglón por renglón, y cualquiera puede reconstruirlo.
+
+- **Revenue por regresión econométrica**: regresan el ingreso histórico por segmento contra drivers económicos del sector (gasto en seguridad pública, gasto en TI, construcción, embarques de nodos LTE y body cams), toman los coeficientes significativos y los aparean con pronósticos de esos drivers. Es la **alternativa al build-up bottom-up** y es la única de los 14 que la usa.
+- **Crecimiento inorgánico con rezago explícito**: el ingreso de servicios se incrementa **con dos años de rezago de implementación** sobre el aumento relativo en gasto anual en adquisiciones. Modelar M&A como función del gasto, no como supuesto suelto.
+- **Admiten el costo de su propia tesis**: *"implementation of the above strategic priorities will erode MSI's liquidity metrics"* — razón corriente 1.3→1.1 y razón de efectivo 0.4→0.1 al 2030 — *"Management may need to increase short-term liquidity"*. Autocrítica dentro de la sección.
+
+### 3.3 Kozminski — el campeón que pronostica que le va a ir peor
+
+La tabla DuPont de Dom Development (2020A–2030E, bloques idénticos a Waterloo: DuPont / Liquidity / Debt Ratios) tiene una particularidad que no tiene ninguna otra de la carpeta: **casi todos los renglones bajan en el pronóstico.**
+
+| Renglón | 2023A | 2030E |
+|---|---|---|
+| Margen bruto | 32% | **27%** |
+| Margen EBITDA | 23% | **18%** |
+| Margen neto | 17% | **15%** |
+| ROE | 32% | **24%** |
+| ROIC | 26% | **24%** |
+
+Y lo justifican: *"industry-wide margin pressure is inevitable and will persist"*, por costos de material y mano de obra, regulación más estricta y competencia. La empresa venía de cinco años con EBITDA >20%. **Ganaron el mundial recomendando COMPRA con márgenes en contracción durante siete años.** El upside viene del volumen de entregas y del precio, no de una expansión de margen inventada.
+
+Esto responde la advertencia del `Essentials` sobre extrapolación, pero por el camino contrario al de Waterloo '24. Waterloo dijo "el COVID fue anómalo, no lo extrapolamos hacia arriba". Kozminski dice "nuestro margen histórico es anómalo, tampoco lo extrapolamos". **Para Bimbo, con márgenes de EAA y Latam en recuperación, la pregunta de qué es lo anómalo va en los dos sentidos.**
+
+Lo demás:
+- **Waterfall de capital de trabajo neto** (Figura 37): inventarios + cuentas por cobrar + otros activos circulantes − provisiones − ingreso diferido − cuentas por pagar = NWC. Una gráfica de puentes que descompone el NWC en sus partes.
+- **Días para cada componente**: cobrar 13 días, pagar 93 días; inventario ligado a las ventas del año siguiente en 1.33x–1.34x; ingreso diferido como 3.1%–3.2% de las ventas del año siguiente.
+- **Política de dividendos como fórmula**: 40% de la utilidad neta del año en curso + 60% de la del año anterior. Replicable, no "asumimos payout de X%".
+- **Una cita de experto dentro de Financial Analysis**: *"DOM is a candidate for consolidating the market via M&A because of their well managed financial strategy" — Expert X.* La investigación primaria que `06` §3.6 elogia **entra también a la sección financiera**, no sólo a industria.
+- Debt/EBITDA de 0.9–1.2x contra mediana sectorial de 2.3x y promedio de 2.97x, con gráfica de pares nombrados.
+
+### 3.4 BJ's Wholesale — el análogo de negocio más cercano a Bimbo
+
+Consumo básico, margen delgado, volumen, capital de trabajo. Cuatro subtítulos-afirmación, sin encabezado de sección:
+
+1. *Strong Comparable Club Sales Growth Driven by a Widening Value Proposition*
+2. *Improving Capital Efficiency Driven by Higher Members-per-Store*
+3. *BJ's Reduced Leverage Leading to a Stronger Balance Sheet*
+4. *Liquidity in-line with Industry Peers*
+
+**Lo directamente trasplantable a Bimbo:**
+
+- **Depuran la métrica de crecimiento del componente volátil**: reportan comparable club sales **"minus gasoline"**, 3.5% CAGR. La gasolina mueve el comparable por precio de commodity, no por desempeño del negocio. **Es el análogo exacto del "excluding FX" de Bimbo** que `11` §5 pone como prioridad #2 — y la lección es que el ajuste se presenta como la métrica principal, no como nota al pie.
+- **Construyen un ratio con investigación propia**: una canasta de precios que muestra que BJ's mantiene precios **24.8% por debajo** de supermercados y tiendas de autoservicio. Eso no sale de los estados financieros. Es el equivalente a lo que `06` §3.6 propone para el canal de Bimbo.
+- **Descomponen la eficiencia de capital en economía unitaria**: miembros por tienda de ~28,000 (2022) a 38,000, con el crecimiento de miembros corriendo **por encima** del crecimiento de tiendas (3.6% CAGR). La eficiencia mejora por densidad, no por expansión.
+- **Pronostican el ratio de liquidez desde los días, no al revés.** La razón corriente se mantiene en 0.8x *"primarily driven by a decrease in inventory days, and a rise in accounts payable days"* — menos días de inventario por mejor surtido y mayor rotación, más días de pago por mejores términos con proveedores derivados de comprar más a cada uno. **El ratio es el resultado del supuesto operativo, no un supuesto en sí.** Esta es la receta que `11` §5 pide para el ciclo de conversión de efectivo de Bimbo.
+- **Reencuadran un ratio "malo" con pares**: razón corriente de 0.8x suena a problema; contra Costco 1.0x y Walmart 0.9x es normal del modelo de negocio. Y dicen que la caída es **positiva** porque viene de mejora en días de capital de trabajo.
+- **Deuda con historia de propiedad**: 7x EBITDA al momento de la OPI bajo CVC y Leonard Green, hoy <1x; y reportan **deuda sola y deuda+arrendamientos** (~3.5x) por separado — el mismo ajuste de IFRS 16 que `11` §3.5 destaca de La Comer.
+- **Cierran el círculo estructura financiera → estrategia**: menos apalancamiento les permite **comprar** tiendas nuevas en vez de arrendarlas, lo que mejora la economía unitaria. El balance financia una decisión operativa.
+
+---
+
+## 4. Los dos reportes de SaaS de Boston — un patrón, brevemente
+
+No son análogos a Bimbo, pero confirman el patrón duro: **todo ganador tiene un bloque de "el número reportado no es el número real."**
+
+- **Toast** titula el bloque *"Stock-Based Compensation: Highly Impactful, Highly Ignored"* y discute que la calle lo suma de vuelta al flujo libre sin reconocer su costo.
+- **HubSpot** sigue el SBC como % del ingreso (12.1% en 2017 → 19.9% en 2023 → 21.7% proyectado al 2029), lo liga a la dilución anual de acciones, y agrega **venta de insiders sin compras del consejo** como señal sobre el juicio de la administración.
+
+Para Bimbo el SBC no es material. **El principio sí lo es:** hay que encontrar *cuál* es la partida donde la cifra presentada y la realidad económica se separan. En Qantas fue la venta de activos; en La Comer el IFRS 16; en Lightspeed la métrica redefinida; en BJ's la gasolina. **En Bimbo los candidatos son el puente de EBITDA Ajustado y el crecimiento "excluding FX".**
+
+---
+
+## 5. Lo que hace ITAM con una empresa cíclica — el caso más pertinente a la advertencia del `Essentials`
+
+Grupo México es cobre. `11` §5 advierte que Bimbo tiene ciclo de trigo, energía y tipo de cambio. ITAM es el único reporte mexicano de la carpeta que enfrenta el problema de frente.
+
+**Su primer subtítulo de Financial Analysis es, literalmente, "Revenue Cyclicality".** Abren la sección declarando el problema en vez de esconderlo.
+
+**Etiquetan el outlier y se niegan a extrapolarlo:** el crecimiento de 35% en 2021 *"which we think represented a one-year outlier."*
+
+**Pronostican la caída:** EBIT **−53% en 2022**, recuperación de +19% y +22% en 2023–24, y luego *"conservative 2% growth going forward."* Un ganador local recomendando con un colapso de utilidad operativa en el año base.
+
+**El price deck en tres capas — la metodología más copiable del reporte:**
+
+| Horizonte | Fuente del precio | Razón |
+|---|---|---|
+| Corto plazo (hasta 2025) | **Curvas de futuros** de CMX y LME | precio observable de mercado, no opinión |
+| 2026 en adelante | **Tasa histórica de crecimiento nominal** del mineral | reversión a la media de largo plazo |
+| Hacia 2031 | **Decae a 2%** = inflación esperada | un commodity no crece en términos reales a perpetuidad |
+
+Tres capas, cada una con su justificación. **Esto es directamente aplicable al trigo y la energía de Bimbo** — y es defendible ante un juez porque la primera capa es un precio de mercado citable, no un supuesto del equipo.
+
+**El volumen sale de la física, no de un porcentaje:** agotamiento de reservas + vida productiva estimada mina por mina.
+
+**El ratio de industria construido y definido en el texto:** *net cash cost* — costo operativo total de extraer una tonelada/libra, **restando el valor de mercado de los subproductos** (molibdeno, plata, zinc). Explican la definición antes de usarla. Y *ore grade* (ley del mineral).
+
+**Convierten una desventaja en análisis honesto:** las minas son más viejas → ley del mineral por debajo del promedio → mayor costo de extracción por unidad → **pero** la integración vertical lo compensa con creces → el efecto neto de la ley baja cae sobre el tamaño de reservas, no sobre el costo. Reconocen el dato malo y lo resuelven, en vez de omitirlo.
+
+ROIC histórico de 11.3% vs. 7.5% de competidores.
+
+---
+
+## 6. Recetario — cómo se construye cada pieza
+
+Esto es lo que `11` no tiene. Cada receta viene de un reporte ganador identificado.
+
+### R1 — Puente de utilidad reportada a utilidad subyacente *(Qantas)*
+1. Tomar la métrica que la empresa promueve (EBITDA Ajustado, crecimiento ex-FX) y la métrica estatutaria.
+2. Listar **cada** partida del puente con su monto y su año.
+3. Clasificar cada partida: **recurrente disfrazada de no recurrente** / genuinamente no recurrente / contable sin efectivo.
+4. Recalcular el margen con las recurrentes dentro.
+5. **Publicar el delta en puntos base y el sentido.** "Reportado +160bps / subyacente −270bps."
+6. Verificar si la partida se repite tres años seguidos. Si se repite, no es no recurrente, y decirlo.
+
+### R2 — DuPont que argumenta en vez de decorar *(La Comer, Qantas)*
+Una tabla de ROE no dice nada. Lo que dice algo es **cuál de los tres factores se movió**:
+- Si el ROE sube y el apalancamiento está plano → **la mejora es operativa** (el argumento de La Comer).
+- Si el ROE se sostiene pero el ROIC cae y el multiplicador A/E sube → **el retorno lo está pagando la deuda, no el negocio** (el diagnóstico de Qantas: margen NPAT −80bps compensado por expansión de 1.9x en la rotación activo/capital).
+- Escribir la conclusión como subtítulo. La tabla es la evidencia, no el entregable.
+
+### R3 — Revenue build de volumen × precio/mezcla cuando la empresa no lo desglosa *(UDLAP, ITAM, Kozminski)*
+Bimbo sólo da prosa ("favorable price/mix and positive volume growth"). Tres salidas, en orden de preferencia:
+1. **Despejarlo de datos físicos**: si hay toneladas o unidades en el reporte anual o el informe integrado, precio implícito = ingreso ÷ volumen, y el residual es mezcla.
+2. **Construirlo por segmento geográfico** con inflación de alimentos de cada país como proxy de precio, y volumen como el residual contra el ingreso reportado en moneda local.
+3. **Declarar el método y el supuesto en el texto.** UDLAP separó renta en USD y MXN creciendo cada una con la inflación de su país; ITAM usó curvas de futuros. Lo que el `Essentials` premia es **declarar** el supuesto, no tenerlo perfecto.
+
+### R4 — Price deck en tres capas para el insumo cíclico *(ITAM)*
+Futuros observables → media histórica nominal → convergencia a inflación. Para Bimbo: trigo y energía. La capa 1 es citable de mercado y hace defendible el resto.
+
+### R5 — Capital de trabajo por días, y el ratio como resultado *(BJ's, Kozminski, UDLAP)*
+1. Calcular días históricos de inventario, cobrar y pagar (3–5 años).
+2. Proyectar **cada uno** con una razón operativa nombrada — "mejor surtido eleva la rotación", "mayor volumen por proveedor mejora términos".
+3. Derivar de ahí el capital de trabajo, y **de ahí** la razón corriente y el flujo libre.
+4. Reportar el **ciclo de conversión de efectivo** y decir qué significa: si es negativo, el crecimiento se autofinancia (La Comer, −2 días).
+5. Si el capital de trabajo se estira mientras el flujo libre "mejora", **decirlo** — es el ángulo que `11` §5 marca como el menos obvio para Bimbo, dado el recorte de capex a US$1.0–1.2bn.
+
+### R6 — Asignación de capital como cascada del OCF *(Motorola)*
+Una tabla de cuatro renglones: capex / M&A / dividendos / recompras, cada uno como % del flujo operativo, con tres columnas — **promedio histórico**, **objetivo declarado por la administración**, **lo que modela el equipo** — y una frase donde el equipo difiere y por qué. Suma 100%. Es auditable y es un marco de proyección completo.
+
+### R7 — Calidad de utilidades cuantificada *(Motorola)*
+Calcular **Beneish M-score** (manipulación), **Piotroski F-score** (solidez) y **Altman Z-score** (quiebra) para la empresa **y para cada par**. Reportar los tres aunque alguno salga desfavorable. Se calculan con los estados auditados, que ya están en la carpeta.
+
+> **Advertencia de aplicación a Bimbo — no está en el reporte de Motorola.** Northern Illinois lo aplicó a un emisor estadounidense de una sola moneda bajo US GAAP, que es donde el modelo está calibrado. Bimbo reporta en pesos consolidando cuatro regiones, y varios de los índices del Beneish (DSRI de cuentas por cobrar, SGAI de gastos de venta, y sobre todo el de crecimiento de ventas) **se contaminan con la traducción cambiaria**: un peso débil infla el ingreso reportado sin que nada operativo haya cambiado, y el modelo lo puede leer como señal de manipulación. **Calcularlo sobre base de moneda constante o sobre datos por segmento en moneda local**, y decir en el texto qué base se usó. Si no, R7 contradice a R1, que es precisamente la receta que establece que el FX es donde vive la brecha entre lo reportado y lo real en esta empresa.
+
+### R8 — Construir un ratio que no existe en los estados *(todos los ganadores)*
+La obligación #5 del `Essentials`. El método es igual en los cinco casos:
+1. Identificar la unidad económica real del negocio (una hora de vuelo, un socio, una tonelada de cobre, un metro cuadrado, **una ruta / un punto de venta**).
+2. Buscar el numerador y el denominador en fuentes distintas — uno suele estar en el reporte operativo y el otro en el financiero.
+3. **Definir la métrica por escrito antes de usarla** (ITAM define net cash cost; BJ's define la canasta).
+4. Compararla contra pares, o contra su propia historia, o contra el promedio de industria.
+
+### R9 — Juzgar a la administración con su propio marco *(Qantas)*
+Buscar el objetivo financiero declarado por la empresa (rango de apalancamiento, hurdle de ROIC, política de payout, meta de capex). Calcular qué implica. **Mostrar si lo cumplió o no.** Es la forma de juicio más difícil de refutar porque la vara es de ellos.
+
+### R10 — Posicionarse contra el consenso dentro de la sección *(Qantas)*
+Al menos una frase del tipo *"nuestro margen EBITDA de FY26 está X bps arriba/abajo del consenso porque Y"*. `08` ya tiene el material de sell-side para hacerlo con Bimbo. Convierte Financial Analysis en el sustento de por qué el mercado se equivoca, que es de lo que vive la recomendación.
+
+---
+
+## 7. Calibración local: el estándar mexicano es más bajo de lo que parece
+
+Los ganadores locales de México de la carpeta:
+
+| Reporte | Tabla DuPont | Calidad de utilidades | Ratios de industria construidos | vs. consenso |
+|---|---|---|---|---|
+| ITAM – Grupo México ('22) | No | Parcial (outlier declarado) | **Sí** (net cash cost, ore grade) | No |
+| Ibero – Grupo BMV ('23) | **No** | **No** | No | No |
+| UDLAP – Fibra Mty ('24) | No | Parcial | Sí | No |
+| La Comer – Tec CDMX ('25) | **Sí** | Parcial (IFRS 16) | Sí | No |
+
+**Ibero ganó el local 2023 sin tabla de ratios, sin bloque de calidad de utilidades y con una debilidad metodológica visible:** reportan repetidamente el *"CAGR del margen"* — 1.18% CAGR del margen neto, 2.69% CAGR del margen EBITDA, 5.93% CAGR del ROIC. Un CAGR de un porcentaje es un constructo confuso: mezcla la tasa de cambio de un ratio con la tasa de crecimiento de un nivel, y no es interpretable. **No copiar eso.** Lo que Ibero sí hace bien es descomponer el ingreso por línea de negocio con sensibilidad a tasas y tipo de cambio (equity −11.84%, Indeval −19.59%, 26% del ingreso de mercados globales, pérdida cambiaria de 3.40 millones contra ganancia por intereses de 289 millones).
+
+**La lectura estratégica:** hay una **tendencia clara al alza** en el local mexicano — La Comer ('25) es notablemente más fuerte que Ibero ('23). El estándar está subiendo y hay que planear contra el estándar de '25, no el de '23. Pero **ninguno de los cuatro reportes mexicanos hizo R1, R6, R7, R9 ni R10.** Cada una de esas recetas es, hoy, un diferenciador local completo.
+
+---
+
+## 8. El presupuesto: 1.5 páginas, y qué va al apéndice
+
+Los 14 reportes gastan entre 1 y 2 páginas. **Nada de lo de arriba sirve si no cabe.** La asignación que se sostiene:
+
+**En la sección (1.5 pág):**
+- Tabla de ratios (DuPont + Liquidez + Deuda), 3–5 años A y 5 años E, con **EBITDA Ajustado como renglón separado** — ~1/3 de página
+- 5 subtítulos-afirmación con su párrafo, cada uno con figura pareada a la derecha (el patrón de densidad de `06` §3.4)
+- El puente de R1 — **este no se delega al apéndice**, es el corazón de los 20 puntos
+- Una frase de R10 contra consenso
+- Una frase de R9 sobre el marco de capital declarado por Bimbo
+
+**Al apéndice:**
+- Los tres estados completos (`11` §5 ya marca no repetir el error de Fibra MTY Tec, que sólo puso balance)
+- El cálculo de Beneish / Piotroski / Altman con los índices intermedios (R7)
+- El desglose de días de capital de trabajo y el CCC (R5)
+- La construcción del ratio de industria propio (R8) — Waterloo '24 puso el costo por block hour en los Apéndices 9 y 10
+- El price deck de trigo y energía con las tres capas (R4)
+- La cascada de asignación de capital (R6)
+
+**Los cinco subtítulos que el material disponible ya soporta** — no son borradores, son las afirmaciones que hoy tienen evidencia en la carpeta: (1) el puente de EBITDA Ajustado, (2) márgenes por los cuatro segmentos geográficos, no consolidado, (3) el ciclo de conversión de efectivo contra la historia de flujo libre del capex recortado, (4) la brecha entre la prima de 8% en EV/EBITDA y la de 37% en P/E como carga financiera, (5) el juicio sobre la asignación de capital con el marco declarado por la empresa.
+
+---
+
+## 9. Checklist de cierre
+
+Contra las cinco obligaciones de `11` §1, lo que este doc agrega:
+
+- [ ] **R1** — Puente EBITDA reportado → ajustado, con delta en bps y prueba de recurrencia a 3 años *(oblig. 3)*
+- [ ] **R7** — Beneish / Piotroski / Altman para Bimbo y pares, los tres reportados *(oblig. 3)*
+- [ ] **Opinión del auditor** — sigue pendiente de `11` §4; una sola persona dueña de la lectura y de la frase en Investment Risks
+- [ ] **R5** — Días de capital de trabajo → CCC → razón corriente y flujo libre, en ese orden *(oblig. 1, 4)*
+- [ ] **R4** — Price deck de trigo y energía en tres capas *(oblig. 2, y la advertencia del ciclo)*
+- [ ] **R3** — Descomposición price/mix vs. volumen con método declarado *(oblig. 2, 5)*
+- [ ] **R8** — Al menos un ratio propio: ingreso por ruta o por punto de venta *(oblig. 5)*
+- [ ] **R6** — Cascada de asignación de capital vs. objetivos declarados *(oblig. 4)*
+- [ ] **R2** — DuPont con la conclusión escrita como subtítulo *(oblig. 1)*
+- [ ] **R9** — Juicio sobre la administración con su propio marco
+- [ ] **R10** — Una frase de posicionamiento contra consenso dentro de la sección
+- [ ] **La pregunta de Kozminski**: ¿qué parte de la historia reciente de Bimbo es lo anómalo — los márgenes deprimidos de EAA/Latam, o los de Norteamérica? El pronóstico tiene que contestar eso explícitamente, en el sentido que sea.

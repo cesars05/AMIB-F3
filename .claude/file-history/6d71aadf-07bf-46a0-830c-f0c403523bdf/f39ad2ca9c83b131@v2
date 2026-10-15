@@ -1,0 +1,93 @@
+"""Phase 3: make each Summary single-period; recolor color scales; Top-25 model lists."""
+import time, pywintypes
+from attach import get_app
+app = get_app(); wb = app.Workbooks("AZTD - Top Holdings Peers_v2.xlsx")
+def R(fn):
+    for i in range(300):
+        try: return fn()
+        except pywintypes.com_error as e:
+            if e.args[0] in (-2147418111, -2147417846, -2146777998): time.sleep(1); continue
+            raise
+    raise RuntimeError("busy")
+def bgr(h): h = h.lstrip("#"); return int(h[4:6] + h[2:4] + h[0:2], 16)
+R(lambda: setattr(app, "Calculation", -4135)); R(lambda: setattr(app, "ScreenUpdating", False))
+S1 = wb.Worksheets("Summary 2024-2026"); SY = wb.Worksheets("Summary YTD"); AY = wb.Worksheets("Attribution YTD")
+def find(ws, text, start=1, col="B", stop=400):
+    for r in range(start, stop):
+        if str(ws.Range(f"{col}{r}").Value or "").strip().startswith(text): return r
+    return None
+def findall(ws, text, col="B", stop=400):
+    return [r for r in range(1, stop) if str(ws.Range(f"{col}{r}").Value or "").strip().startswith(text)]
+# ---------------- Summary 2024-2026 ----------------
+sec = find(S1, "Performance by Sec"); reg = find(S1, "Performance by Reg"); bar = sec - 1
+end = find(S1, "Fund return", reg)
+R(lambda: S1.Range(f"O{bar}:P{end}").Delete(-4159))
+R(lambda: S1.Range(f"F{bar}:H{end}").Delete(-4159))
+S1.Range(f"B{bar}").Value = "Jan-24 to Aug-26 (annualized)"
+for r in (sec, reg):
+    S1.Range(f"C{r}").Value = "AZTD (pp / yr)"; S1.Range(f"D{r}").Value = "Peer avg (pp / yr)"; S1.Range(f"E{r}").Value = "AZTD vs peer"
+    S1.Range(f"F{r}").Value = "Allocation"; S1.Range(f"G{r}").Value = "Selection"
+    S1.Range(f"H{r}").Value = "AZTD avg weight"; S1.Range(f"I{r}").Value = "Peer avg weight"
+    S1.Range(f"J{r}").Value = "Return AZTD (ann.)"; S1.Range(f"K{r}").Value = "Return peers (ann.)"
+miss = findall(S1, "What AZTD is missing")
+if len(miss) >= 2:
+    r0 = miss[1]; R(lambda: S1.Rows(f"{r0-1}:{r0+6}").Delete())
+    miss = findall(S1, "What AZTD is missing")
+S1.Range(f"B{miss[0]}").Value = "What AZTD is missing - top peer names not held (ranked by contribution, Jan-24 to Aug-26)"
+# ---------------- Summary YTD ----------------
+sec = find(SY, "Performance by Sec"); reg = find(SY, "Performance by Reg"); bar = sec - 1
+end = find(SY, "Fund return", reg)
+R(lambda: SY.Range(f"O{bar}:P{end}").Delete(-4159))
+R(lambda: SY.Range(f"F{bar}:H{end}").Delete(-4159))
+SY.Range(f"B{bar}").Value = "YTD-26 (Jan-Aug, cumulative)"
+aS = find(AY, "Sector contribution YTD", col="C"); aR = find(AY, "Region contribution YTD", col="C")
+bS = find(AY, "Attribution vs peer average - by sector", col="C"); bR = find(AY, "Attribution vs peer average - by region", col="C")
+A = "'Attribution YTD'"
+def repoint(sr, ar, br, n):
+    for i in range(n + 3):           # groups + total + resid + actual
+        rr = sr + 1 + i; a = ar + 1 + i
+        SY.Range(f"C{rr}").Formula = f"={A}!D{a}"; SY.Range(f"D{rr}").Formula = f"={A}!I{a}"; SY.Range(f"E{rr}").Formula = f"=C{rr}-D{rr}"
+        if i < n:
+            b = br + 1 + i
+            SY.Range(f"F{rr}").Formula = f"={A}!D{b}"; SY.Range(f"G{rr}").Formula = f"={A}!E{b}"
+        if i <= n:
+            SY.Range(f"H{rr}").Formula = f"={A}!K{a}"; SY.Range(f"I{rr}").Formula = f"={A}!L{a}"
+            SY.Range(f"J{rr}").Formula = f"={A}!M{a}"; SY.Range(f"K{rr}").Formula = f"={A}!N{a}"
+    SY.Range(f"C{sr}").Value = "AZTD YTD-26 (pp)"; SY.Range(f"D{sr}").Value = "Peer avg YTD-26 (pp)"; SY.Range(f"E{sr}").Value = "AZTD vs peer"
+    SY.Range(f"F{sr}").Value = "Allocation YTD"; SY.Range(f"G{sr}").Value = "Selection YTD"
+    SY.Range(f"H{sr}").Value = "AZTD avg weight YTD"; SY.Range(f"I{sr}").Value = "Peer avg weight YTD"
+    SY.Range(f"J{sr}").Value = "Return AZTD YTD"; SY.Range(f"K{sr}").Value = "Return peers YTD"
+repoint(sec, aS, bS, 12); repoint(reg, aR, bR, 7)
+miss = findall(SY, "What AZTD is missing")
+if len(miss) >= 2:
+    r0 = miss[0]; R(lambda: SY.Rows(f"{r0-1}:{r0+6}").Delete())
+miss = findall(SY, "What AZTD is missing")
+mY = find(AY, "Top peer contributors not held by AZTD YTD", col="C")
+for i in range(5):
+    rr = miss[0] + 1 + i; a = mY + 1 + i
+    for c_s, c_a in (("B", "C"), ("C", "D"), ("D", "G"), ("E", "H")):
+        SY.Range(f"{c_s}{rr}").Formula = f"={A}!{c_a}{a}"
+SY.Range(f"B{miss[0]}").Value = "What AZTD is missing - top peer names not held (ranked by contribution, YTD-26)"
+# ---------------- color scales & gap highlights (both summaries) ----------------
+NEG, WHITE, POS = bgr("F4B183"), 0xFFFFFF, bgr("9BC2E6")
+for ws in (S1, SY):
+    fcs = ws.Cells.FormatConditions
+    for i in range(1, fcs.Count + 1):
+        f = fcs(i)
+        try:
+            if f.Type == 3:
+                n = f.ColorScaleCriteria.Count
+                if n == 3:
+                    f.ColorScaleCriteria(1).FormatColor.Color = NEG; f.ColorScaleCriteria(2).FormatColor.Color = WHITE; f.ColorScaleCriteria(3).FormatColor.Color = POS
+                else:
+                    f.ColorScaleCriteria(1).FormatColor.Color = WHITE; f.ColorScaleCriteria(2).FormatColor.Color = bgr("8EA9DB")
+            elif f.Type == 1:
+                op = f.Operator
+                if op == 5:   # greater than 0
+                    f.Interior.Color = bgr("DDEBF7"); f.Font.Color = bgr("1F3864")
+                elif op == 6:
+                    f.Interior.Color = bgr("FBE5D6"); f.Font.Color = bgr("843C0C")
+        except Exception as e:
+            pass
+R(lambda: setattr(app, "ScreenUpdating", True))
+print("summaries done")

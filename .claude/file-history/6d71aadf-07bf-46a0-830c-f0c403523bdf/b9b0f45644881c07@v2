@@ -1,0 +1,119 @@
+"""Apply the 'Charts' tab house style to the charts on 'Performance Charts' and 'Attribution'."""
+import time, pywintypes
+from attach import get_app
+app = get_app(); wb = app.Workbooks("AZTD - Top Holdings Peers_v2.xlsx")
+def R(fn):
+    for i in range(60):
+        try: return fn()
+        except pywintypes.com_error: time.sleep(1)
+def bgr(h): h = h.lstrip("#"); return int(h[4:6] + h[2:4] + h[0:2], 16)
+NAVY, BLUE, LBLUE, GREEN, ORANGE, GOLD, SALMON, GREY = map(bgr, ("1F3864", "2E75B6", "9DC3E6", "70AD47", "ED7D31", "FFC000", "F4B183", "7F7F7F"))
+FUND = {"AZTD": NAVY, "AVDV": BLUE, "ISCF": GREEN, "DISV": ORANGE, "DFIS": GOLD}
+SEQ = [bgr(x) for x in ("1F3864", "2E75B6", "9DC3E6", "70AD47", "A9D18E", "ED7D31", "F4B183", "FFC000", "FFE699", "7F7F7F", "BFBFBF", "C9C9C9")]
+PAIR = {"AZTD": NAVY, "Peer avg": BLUE, "Actual (ann.)": NAVY, "Holdings-based (ann.)": BLUE, "Actual YTD": NAVY,
+        "Holdings-based YTD": BLUE, "Allocation": NAVY, "Selection": BLUE, "Avg YTD return": NAVY}
+
+def sentence(t):
+    t = t.strip()
+    if t.isupper():
+        t = t.capitalize()
+        for k in ("aztd", "ytd", "jan-24", "aug-26", "pp", "model 1.1", "usd"):
+            t = t.replace(k, {"aztd": "AZTD", "ytd": "YTD", "jan-24": "Jan-24", "aug-26": "Aug-26", "pp": "pp", "model 1.1": "Model 1.1", "usd": "USD"}[k])
+    return t
+
+def style(co):
+    c = co.Chart; ct = c.ChartType
+    # chart area / plot area
+    c.ChartArea.Format.Fill.Visible = True; c.ChartArea.Format.Fill.ForeColor.RGB = 0xFFFFFF
+    c.ChartArea.Format.Line.Visible = True; c.ChartArea.Format.Line.ForeColor.RGB = bgr("D9D9D9"); c.ChartArea.Format.Line.Weight = 0.75
+    c.PlotArea.Format.Fill.Visible = False; c.PlotArea.Format.Line.Visible = False
+    c.ChartArea.Font.Name = "Arial"; c.ChartArea.Font.Color = 0
+    # title
+    if c.HasTitle:
+        c.ChartTitle.Text = sentence(c.ChartTitle.Text)
+        f = c.ChartTitle.Format.TextFrame2.TextRange.Font
+        f.Name = "Arial"; f.Size = 12; f.Bold = True; f.Fill.ForeColor.RGB = 0
+    n = c.SeriesCollection().Count
+    # legend
+    if n > 1:
+        c.HasLegend = True; c.Legend.Position = -4160; c.Legend.Font.Size = 9; c.Legend.Font.Name = "Arial"; c.Legend.Font.Color = 0
+    else:
+        c.HasLegend = False
+    is_bar = ct in (51, 57)
+    is_line = ct in (4, 65)
+    is_area = ct in (76, 77)
+    is_bubble = ct in (15, 87)
+    # axes
+    for t in (1, 2):
+        try:
+            ax = c.Axes(t)
+        except Exception:
+            continue
+        R(lambda: setattr(ax, "HasMajorGridlines", False)); R(lambda: setattr(ax, "HasMinorGridlines", False))
+        R(lambda: setattr(ax, "MajorTickMark", -4142)); R(lambda: setattr(ax, "MinorTickMark", -4142))
+        ax.TickLabels.Font.Name = "Arial"; ax.TickLabels.Font.Size = 9; ax.TickLabels.Font.Color = 0
+        if t == 1 or is_bubble:
+            ax.Format.Line.Visible = True; ax.Format.Line.ForeColor.RGB = 0; ax.Format.Line.Weight = 0.75
+        else:
+            ax.Format.Line.Visible = False
+    # series
+    for k in range(1, n + 1):
+        s = c.SeriesCollection(k); nm = str(s.Name)
+        col = FUND.get(nm, PAIR.get(nm, SEQ[(k - 1) % len(SEQ)]))
+        if is_line:
+            s.Format.Line.Visible = True; s.Format.Line.ForeColor.RGB = col
+            s.Format.Line.Weight = 2.25 if nm == "AZTD" else 1.5
+            R(lambda: setattr(s, "MarkerStyle", -4142))
+        elif is_area:
+            s.Format.Fill.ForeColor.RGB = SEQ[(k - 1) % len(SEQ)]; s.Format.Line.Visible = False
+        elif is_bubble:
+            s.Format.Fill.ForeColor.RGB = bgr("215F9A"); s.Format.Fill.Transparency = 0.5
+            s.Format.Line.Visible = True; s.Format.Line.ForeColor.RGB = NAVY; s.Format.Line.Weight = 1.75
+        else:
+            s.Format.Fill.Visible = True; s.Format.Fill.Solid(); s.Format.Fill.ForeColor.RGB = col; s.Format.Line.Visible = False
+            if n == 1:
+                R(lambda: setattr(s, "InvertIfNegative", True))
+                R(lambda: setattr(s, "InvertColor", SALMON))
+                if "detractor" in (c.ChartTitle.Text.lower() if c.HasTitle else ""):
+                    s.Format.Fill.ForeColor.RGB = SALMON; R(lambda: setattr(s, "InvertColor", SALMON))
+        if R(lambda: s.HasDataLabels):
+            dl = s.DataLabels(); dl.Font.Size = 8; dl.Font.Name = "Arial"; dl.Font.Color = 0; dl.Font.Bold = False
+            R(lambda: setattr(dl, "Position", 2))
+    # bars: gap/overlap; single-series bars get data labels and hide value axis (house style)
+    if is_bar:
+        g = c.ChartGroups(1)
+        if n == 1:
+            g.GapWidth = 50; g.Overlap = 0
+            s = c.SeriesCollection(1); s.HasDataLabels = True
+            dl = s.DataLabels(); dl.Font.Size = 8; dl.Font.Name = "Arial"; dl.Font.Color = 0; R(lambda: setattr(dl, "Position", 2))
+            fmt = "+0.0%;-0.0%;0.0%" if ("contribut" in c.ChartTitle.Text.lower() or "gap" in c.ChartTitle.Text.lower() or "active" in c.ChartTitle.Text.lower()) else "0.0%"
+            if "detractor" in c.ChartTitle.Text.lower() or "contributor" in c.ChartTitle.Text.lower(): fmt = "+0.00%;-0.00%"
+            dl.NumberFormat = fmt
+            R(lambda: setattr(c, "HasAxis", (2, 1), False)) if False else None
+            try: c.Axes(2).Delete()
+            except Exception: pass
+        else:
+            g.GapWidth = 80; g.Overlap = -27
+            try:
+                c.Axes(2).Format.Line.Visible = False
+            except Exception: pass
+    if is_line:
+        try: c.Axes(2).TickLabels.NumberFormat = "0"
+        except Exception: pass
+
+for sh in ("Performance Charts", "Attribution"):
+    ws = wb.Worksheets(sh)
+    for co in ws.ChartObjects():
+        R(lambda: style(co))
+    print(sh, "styled", ws.ChartObjects().Count)
+
+# section headers on Performance Charts: house header style (light-blue bar, bold)
+CS = wb.Worksheets("Performance Charts"); BAR = wb.Worksheets("AZTD").Range("C14")
+for r in range(4, 400):
+    v = str(CS.Range(f"B{r}").Value or "")
+    if v[:2] in ("1.", "2."):
+        rg = CS.Range(f"B{r}:X{r}")
+        rg.Interior.Color = BAR.Interior.Color; rg.Font.Bold = True; rg.Font.Size = 11; rg.Font.Color = 0
+        rg.Borders(9).LineStyle = 1; rg.Borders(9).Color = BAR.Borders(9).Color; rg.Borders(9).Weight = 2
+        CS.Range(f"B{r}").Value = v.title().replace("Ytd", "YTD").replace("Aug", "Aug").replace("To", "to")
+wb.Save(); print("saved")

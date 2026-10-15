@@ -1,0 +1,13 @@
+# _NOTES: Company/Competidores/
+
+Written 12-Oct-2026. **The folder name is a label, not evidence.** What each peer is to Fuso, from the documents themselves:
+
+| Peer | Relationship to Fuso supported by the files | Confidence | Use for |
+|---|---|---|---|
+| **Fujimi Inc.** (5384) | CMP slurry and polishing-material maker. Its (old) yuho shows it holds 18,000 Fuso shares "to strengthen trading relations" and owed Fuso 715m yen in trade payables, i.e. **a customer of Fuso as of FY03/2013**. Fuso's FY03/2026 yuho does not name Fujimi as a >10% customer (only FUJIFILM Electronic Materials Taiwan is) | High for the 2013 relationship, ND for today | Market facts on CMP demand, HBM-driven memory demand, peer capex-and-depreciation pattern |
+| **Nissan Chemical** (4021) | Sells colloidal silica (Snowtex) for polishing, including semiconductor CMP, inside "inorganic colloid"; also semiconductor materials (ARC, EUV, 3D-packaging materials). **A direct competitor in colloidal silica**, not in fruit acids | High (Nissan product table) | Growth benchmark (inorganic colloid +6% FY03/2026, +8% FY03/2027 guidance), analyst Q&A on HBM4/4E/5 layers |
+| **Mitsubishi Chemical Group** (4188) | Large diversified chemicals; semiconductor-related activities are precision cleaning, high-purity chemicals, quartz and parts. No Fuso product overlap was found in the files | Low | Little. Treat as context only; do not call it a competitor without a source |
+
+Other peers named by Fuso itself: none found in the files (the MTP and yuho do not list competitors by name; the yuho says only "overseas manufacturers" in Life Science, with price competition from China). Chinese low-cost makers of formulations and fruit acids are cited generically (deck slide 16).
+
+Subfolders: `Fujimi/`, `Nissan_Chemical/`, `Mitsubishi_Chemical_Group/`, each with its own `_NOTES.md`. All md files were converted 9-Oct-2026 and have the same chart-scrambling caveat as Fuso decks.

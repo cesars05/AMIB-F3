@@ -1,0 +1,17 @@
+# Empresas – documentos oficiales de los productores de EE. UU.
+
+Descargados el 2026-10-14 de fuentes oficiales (SEC EDGAR y sitios de relación con inversionistas). Último trimestre disponible: **2T26** (NUE, STLD, CLF) y **3T fiscal 26, cierre may-26** (CMC). El 3T calendario aún no se reporta.
+
+| Archivo | Qué es | Origen |
+|---|---|---|
+| `NUE/NUE_2Q26_earnings_release.pdf` | Comunicado de resultados 2T26 (precios, utilización, segmentos) | Nucor IR |
+| `NUE/NUE_2Q26_investor_presentation_8K_ex99-2.htm` | Presentación de la call del 28-jul (**solo el texto**; los gráficos de las láminas no vienen) | SEC 8-K, Ex. 99.2 |
+| `STLD/STLD_2Q26_earnings_release_8K_ex99-1.htm` | Comunicado 2T26 (20-jul) | SEC 8-K, Ex. 99.1 |
+| `CLF/CLF_2Q26_earnings_release.pdf` | Comunicado 2T26 (23-jul) | Cleveland-Cliffs IR |
+| `CMC/CMC_3QFY26_earnings_release_8K.htm` | Comunicado 3T fiscal (25-jun) | SEC 8-K |
+
+## Pendiente
+- **Presentaciones con gráficos** de STLD, CLF y CMC: no aparecieron como PDF directo; están en las secciones "Events & Presentations" de sus sitios de IR. Nucor sí tiene el texto en el 8-K.
+- **3T calendario:** STLD reporta 19-oct, NUE 26-oct; CMC y CLF por confirmar. Bajar sus comunicados cuando salgan.
+- U.S. Steel no reporta por separado (pertenece a Nippon Steel).
+- Resumen cualitativo de las calls: `../.MD/notas/nota_Earnings-calls-productores-US.md`.

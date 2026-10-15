@@ -1,0 +1,78 @@
+function Retry([scriptblock]$b) { for ($k=0; $k -lt 80; $k++) { try { $res = & $b; return ,$res } catch { Start-Sleep -Milliseconds 600 } }; throw "gave up: $b" }
+function RangeOf($addr) { for ($k=0; $k -lt 80; $k++) { try { $x = $ws.Range($addr); return ,$x } catch { Start-Sleep -Milliseconds 600 } }; throw "gave up range $addr" }
+function RGB($r,$g,$b) { return $r + 256*$g + 65536*$b }
+
+$excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb = Retry { $excel.Workbooks.Item(1) }
+$ws = Retry { $wb.Sheets.Item("Peers") }
+trap { try { $excel.ScreenUpdating = $true; $excel.Calculation = -4105 } catch {}; Write-Output "FAILED: $_"; break }
+
+$k4 = Retry { $ws.Cells.Item(4,11).Text }; $l4 = Retry { $ws.Cells.Item(4,12).Text }; $ad4 = Retry { $ws.Cells.Item(4,30).Text }
+if ($k4 -ne "Net Margin LTM" -or $l4 -ne "Net Debt / EBITDA" -or $ad4 -ne "EBITDA FY0") { Write-Output "Unexpected layout K4='$k4' L4='$l4' AD4='$ad4', aborting"; exit 1 }
+
+Retry { $excel.Calculation = -4135 }
+Retry { $excel.ScreenUpdating = $false }
+try { $ws.Outline.ShowLevels(0, 2) | Out-Null } catch {}
+
+$cols = RangeOf "L:M"
+Retry { $cols.EntireColumn.Insert(-4161, 0) } | Out-Null
+
+# New layout: L = FCF Conversion, M = FCF Yield, inputs W..AF, new FCF input AG
+Retry { $ws.Cells.Item(4,12).Value2 = "FCF Conversion (FCF / EBITDA)" }
+Retry { $ws.Cells.Item(4,13).Value2 = "FCF Yield" }
+Retry { $ws.Cells.Item(4,33).Value2 = "FCF FY0" }
+$h = RangeOf "AG4"
+Retry { $h.Interior.Color = 6299648 }; Retry { $h.Font.Color = 16777215 }; Retry { $h.Font.Bold = $true }
+Retry { $h.WrapText = $true }; Retry { $h.HorizontalAlignment = -4108 }; Retry { $h.VerticalAlignment = -4108 }
+
+$blocks = @(@{F=7;L=10;A=11}, @{F=14;L=17;A=18}, @{F=21;L=24;A=25}, @{F=28;L=32;A=33}, @{F=36;L=38;A=39}, @{F=42;L=46;A=47}, @{F=50;L=55;A=56}, @{F=59;L=62;A=63})
+$P = 'Scale=6 Curn=USD'
+foreach ($blk in $blocks) {
+  for ($r = $blk.F; $r -le $blk.L; $r++) {
+    $fcf  = "=IFERROR(1*TR(`$C$r,""TR.F.LEVEREDFOCF"",""Period=FY0 $P""),""n/a"")"
+    $conv = "=IFERROR(IF(AF$r<=0,""n/a"",AG$r/AF$r),""n/a"")"
+    $yld  = "=IFERROR(AG$r/D$r,""n/a"")"
+    Retry { $ws.Cells.Item($r,33).Formula = $fcf }
+    Retry { $ws.Cells.Item($r,12).Formula = $conv }
+    Retry { $ws.Cells.Item($r,13).Formula = $yld }
+  }
+  $pf = $blk.F + 1
+  foreach ($c in @("L","M")) {
+    $col = if ($c -eq "L") { 12 } else { 13 }
+    $fa = "=IFERROR(AVERAGE(${c}${pf}:${c}$($blk.L)),""n/a"")"
+    Retry { $ws.Cells.Item($blk.A,$col).Formula = $fa }
+  }
+}
+
+Retry { $ws.Range("L6:M70").NumberFormat = "0.0%" }
+Retry { $ws.Range("L6:M70").HorizontalAlignment = -4108 }
+Retry { $ws.Range("AG6:AG70").NumberFormat = "#,##0" }
+Retry { $ws.Columns.Item(12).ColumnWidth = 12 }
+Retry { $ws.Columns.Item(13).ColumnWidth = 10.5 }
+Retry { $ws.Columns.Item(33).ColumnWidth = 11 }
+
+Retry { $ws.Activate() }
+$green = RGB 198 239 206; $greenF = RGB 0 97 0
+$red = RGB 255 199 206; $redF = RGB 156 0 6
+foreach ($blk in $blocks) {
+  foreach ($c in @("L","M")) {
+    $rng = RangeOf "$c$($blk.F):$c$($blk.L)"
+    Retry { $rng.FormatConditions.Delete() } | Out-Null
+    Retry { $rng.Select() } | Out-Null
+    $cell = "$c$($blk.F)"; $avg = "$c`$$($blk.A)"
+    $fc1 = Retry { $rng.FormatConditions.Add(2, [Type]::Missing, "=AND(ISNUMBER($cell),ISNUMBER($avg),$cell>$avg)") }
+    Retry { $fc1.Interior.Color = $green }; Retry { $fc1.Font.Color = $greenF }
+    $fc2 = Retry { $rng.FormatConditions.Add(2, [Type]::Missing, "=AND(ISNUMBER($cell),ISNUMBER($avg),$cell<$avg)") }
+    Retry { $fc2.Interior.Color = $red }; Retry { $fc2.Font.Color = $redF }
+  }
+}
+
+try { $ws.Columns("T:AG").Ungroup() | Out-Null } catch {}
+try { $ws.Columns("W:AG").Ungroup() | Out-Null } catch {}
+Retry { $ws.Columns("W:AG").Group() } | Out-Null
+try { $ws.Outline.ShowLevels(0, 1) | Out-Null } catch {}
+Retry { $ws.Range("B2").Select() } | Out-Null
+
+Retry { $excel.ScreenUpdating = $true }
+Retry { $excel.Calculation = -4105 }
+Write-Output "done"

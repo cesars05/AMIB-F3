@@ -1,0 +1,56 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+Write-Output ("LIBRO: "+[string]$wb.Name)
+$as=$wb.Worksheets.Item("Assumptions")
+Write-Output ""
+Write-Output "### Modulo de desinversion: donde esta y que contiene ###"
+for($r=70;$r -le 80;$r++){
+  for($c=8;$c -le 12;$c++){
+    $t=""
+    try{ $t=[string]$as.Cells.Item($r,$c).Text }catch{}
+    if($t.Trim() -ne ""){
+      $col=""; $n=$c; while($n -gt 0){ $m=($n-1)%26; $col=[char](65+$m)+$col; $n=[math]::Floor(($n-1)/26) }
+      $f=""
+      try{ $f=[string]$as.Cells.Item($r,$c).Formula }catch{}
+      Write-Output ("  "+($col+$r).PadRight(6)+" = "+$t.PadRight(22)+"  frm= "+$f)
+    }
+  }
+}
+Write-Output ""
+Write-Output "### Quien referencia esas celdas en todo el libro ###"
+$pat=@("`$J`$74","`$J`$75","`$J`$76","J74","J75","J76","D95","D96","`$D`$95","`$D`$96")
+foreach($nm in "Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=$wb.Worksheets.Item($nm)
+  $hits=0
+  $ur=$s.UsedRange
+  $nr=$ur.Rows.Count; $nc=$ur.Columns.Count
+  $r1=$ur.Row; $c1=$ur.Column
+  for($r=$r1;$r -lt $r1+$nr;$r++){
+    for($c=$c1;$c -lt $c1+$nc;$c++){
+      $f=""
+      try{ $f=[string]$s.Cells.Item($r,$c).Formula }catch{}
+      if($f -eq "" -or -not $f.StartsWith("=")){ continue }
+      if($f -match "Assumptions!"){
+        foreach($p in $pat){
+          if($f -match [regex]::Escape("Assumptions!"+$p)){
+            $col=""; $n=$c; while($n -gt 0){ $m=($n-1)%26; $col=[char](65+$m)+$col; $n=[math]::Floor(($n-1)/26) }
+            $sh=$f; if($sh.Length -gt 120){ $sh=$sh.Substring(0,120)+".." }
+            Write-Output ("  ["+$nm+"] "+($col+$r)+" = "+$sh)
+            $hits++
+            break
+          }
+        }
+      }
+      if($hits -gt 12){ break }
+    }
+    if($hits -gt 12){ break }
+  }
+  if($hits -eq 0){ Write-Output ("  ["+$nm+"] sin referencias al modulo") }
+}

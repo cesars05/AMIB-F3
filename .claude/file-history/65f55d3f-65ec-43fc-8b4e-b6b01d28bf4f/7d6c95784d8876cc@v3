@@ -1,0 +1,192 @@
+import copy
+import openpyxl
+from pptx import Presentation
+from pptx.chart.data import CategoryChartData
+from pptx.enum.chart import XL_CHART_TYPE, XL_LABEL_POSITION, XL_LEGEND_POSITION
+from pptx.util import Pt
+from pptx.dml.color import RGBColor
+from lxml import etree
+
+M = r"G:\.shortcut-targets-by-id\1wYoG0nnC8svaqyBKZ-61uOpLfK_2VHVY\AZTLAN\Advisory\Arabela\01 Modelo Vigente\ArabelaModelo2026_v11.xlsx"
+wb = openpyxl.load_workbook(M, data_only=True, read_only=True)
+rows_of = lambda sh: [list(r) for r in wb[sh].iter_rows(values_only=True)]
+bs = rows_of("Balance General")
+hdr = [r for r in bs if 2026 in r and 2025 in r][0]
+i25 = hdr.index(2025)
+def get(rows, label, i):
+    for r in rows:
+        if label in r[:3]:
+            return r[i]
+nd = (get(bs, "Deuda Corto Plazo", i25) + get(bs, "Deuda Largo Plazo", i25)
+      + get(bs, "Factoraje", i25) - get(bs, "Efectivo y Equivalentes", i25))
+rm = rows_of("Resumen Modelo")
+h2 = [r for r in rm if 2026 in r and 2025 in r][0]
+e26 = [r for r in rm if "Adj. EBITDA (Interno)" in r[:3]][0][h2.index(2026)]
+mult = 4652.0 / 772.0
+ev26 = mult * e26
+eq26 = ev26 - nd
+ev23, nd23, eq23 = 4652.0, 664.0, 3988.0
+MSM = 0.2006
+print("ND dic-2025", nd, "EBITDA26", e26, "EV", ev26, "EQ", eq26, "var", eq26 / eq23 - 1)
+
+p = Presentation(r"C:\Users\cesar\Downloads\20261012_Arabela.pptx")
+
+def settext(obj, t):
+    tf = obj.text_frame
+    para = tf.paragraphs[0]
+    if para.runs:
+        para.runs[0].text = t
+        for r in para.runs[1:]:
+            r.text = ""
+    else:
+        para.text = t
+    for extra in tf.paragraphs[1:]:
+        extra._p.getparent().remove(extra._p)
+
+def byname(s, n):
+    return [x for x in s.shapes if x.name == n][0]
+
+# ---------- Slide 3: EBITDA
+s = p.slides[2]
+settext(byname(s, "Title 2"), "El EBITDA proyectado en 2023 no se concretó")
+settext(byname(s, "Subtitle 3"), "Comparativo del Adj. EBITDA proyectado en 2023 contra el real y el del modelo actual")
+settext(byname(s, "TextBox 8"), "Adj. EBITDA proyectado en la valuación de 2023")
+settext(byname(s, "TextBox 16"), "Adj. EBITDA real y modelo actual")
+settext(byname(s, "Text Placeholder 4"), "Notas: 2026P–2028P corresponden al modelo actual.")
+
+# ---------- Slides 4 y 5: Covenants
+s4, s5 = p.slides[3], p.slides[4]
+old = [x for x in s5.shapes if x.has_chart][0]
+L, T, W, H = old.left, old.top, old.width, old.height
+old._element.getparent().remove(old._element)
+for x in list(s4.shapes):
+    if x.name not in ("Title 2", "Subtitle 3", "Slide Number Placeholder 5", "Text Placeholder 4"):
+        x._element.getparent().remove(x._element)
+for nm in ("Straight Connector 7", "TextBox 8", "TextBox 9", "Straight Connector 10", "TextBox 16", "TextBox 17"):
+    s4.shapes._spTree.append(copy.deepcopy(byname(s5, nm)._element))
+
+CNS = "http://schemas.openxmlformats.org/drawingml/2006/chart"
+C = "{%s}" % CNS
+yrs = ["2023", "2024", "2025", "2026P", "2027P"]
+NAVY, GOLD = RGBColor(0x1F, 0x3A, 0x5F), RGBColor(0xF2, 0xC4, 0x00)
+
+def covchart(sl, left, series, limit, limname, mx):
+    """series: list of (name, values, color). Barras + línea punteada del covenant."""
+    fmt = '0.0"x"'
+    cd = CategoryChartData(number_format=fmt)
+    cd.categories = yrs
+    for nm, vals, _ in series:
+        cd.add_series(nm, vals)
+    cd.add_series(limname, [limit] * len(yrs))
+    gf = sl.shapes.add_chart(XL_CHART_TYPE.COLUMN_CLUSTERED, left, T, W, H, cd)
+    ch = gf.chart
+    ch.has_legend = True
+    ch.legend.include_in_layout = False
+    ch.legend.position = XL_LEGEND_POSITION.BOTTOM
+    ch.legend.font.size = Pt(11)
+    ch.font.size = Pt(12)
+    va = ch.value_axis
+    va.visible = False
+    va.has_major_gridlines = False
+    va.minimum_scale = 0
+    va.maximum_scale = mx
+    ch.category_axis.format.line.color.rgb = RGBColor(0x80, 0x80, 0x80)
+    pl = ch.plots[0]
+    pl.gap_width = 60
+    pl.overlap = -10
+    for se, (_, _, col) in zip(list(pl.series)[:len(series)], series):
+        se.format.fill.solid()
+        se.format.fill.fore_color.rgb = col
+        dl = se.data_labels
+        dl.show_value = True
+        dl.number_format = fmt
+        dl.number_format_is_linked = False
+        dl.position = XL_LABEL_POSITION.OUTSIDE_END
+        dl.font.size = Pt(11)
+    bar = ch._chartSpace.xpath(".//c:barChart")[0]
+    ser_l = bar.xpath("c:ser")[len(series)]
+    bar.remove(ser_l)
+    for e in ser_l.xpath("c:invertIfNegative") + ser_l.xpath("c:spPr"):
+        ser_l.remove(e)
+    line = etree.Element(C + "lineChart")
+    etree.SubElement(line, C + "grouping").set("val", "standard")
+    etree.SubElement(line, C + "varyColors").set("val", "0")
+    line.append(ser_l)
+    sp = etree.fromstring(
+        '<c:spPr xmlns:c="%s" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">'
+        '<a:ln w="28575" cap="rnd"><a:solidFill><a:srgbClr val="C0392B"/></a:solidFill>'
+        '<a:prstDash val="dash"/><a:round/></a:ln></c:spPr>' % CNS)
+    ser_l.xpath("c:tx")[0].addnext(sp)
+    mk = etree.fromstring('<c:marker xmlns:c="%s"><c:symbol val="none"/></c:marker>' % CNS)
+    sp.addnext(mk)
+    etree.SubElement(line, C + "marker").set("val", "1")
+    for ax in bar.xpath("c:axId"):
+        etree.SubElement(line, C + "axId").set("val", ax.get("val"))
+    bar.addnext(line)
+
+PROJ_DEBT = [1.71, 1.34, 1.03, 0.76, 0.51]
+
+def covslide(sl, debt, cov):
+    settext(byname(sl, "Title 2"), "El apalancamiento hoy es mayor al esperado en 2023")
+    settext(byname(sl, "Subtitle 3"), "Deuda / EBITDA y cobertura del servicio de deuda frente a los límites contractuales")
+    settext(byname(sl, "TextBox 8"), "Deuda total / EBITDA")
+    settext(byname(sl, "TextBox 9"), "Veces; límite máximo de 3.0x")
+    settext(byname(sl, "TextBox 16"), "Cobertura del servicio de deuda")
+    settext(byname(sl, "TextBox 17"), "Veces; límite mínimo de 1.20x")
+    settext(byname(sl, "Text Placeholder 4"), "Notas: EBITDA de bancos. La deuda de la proyección de 2023 incluye factoraje y otros pasivos financieros; la del modelo actual no, por lo que la brecha real es mayor. Cobertura = EBITDA / (intereses + vencimientos de largo plazo).")
+    covchart(sl, L, [("Proyectado en 2023", PROJ_DEBT, GOLD), ("Real / modelo actual", debt, NAVY)], 3.0, "Límite covenant", 4.0)
+    covchart(sl, 6288186, [("Real / modelo actual", cov, NAVY)], 1.2, "Límite covenant", 3.0)
+
+covslide(s4, [1.21, 3.38, 2.26, 2.47, 2.37], [2.38, 1.27, 1.99, 1.98, 2.20])   # v11
+covslide(s5, [1.21, 3.38, 2.26, 2.68, 2.57], [2.38, 1.27, 1.99, 1.94, 2.10])   # v12
+
+# ---------- Slide 6: Valuación
+s = p.slides[5]
+var = (eq26 / eq23 - 1) * 100
+settext(byname(s, "Title 2"), "A múltiplo constante, el valor de capital es menor")
+settext(byname(s, "Subtitle 3"), "Condiciones de la Salida 2023 aplicadas al Adj. EBITDA 2026P y a la deuda neta actual")
+settext(byname(s, "Text Placeholder 4"), "Notas: Participación de FSM de 20.06%. Deuda neta = deuda financiera + factoraje – caja, al cierre de 2025. En 2023 el múltiplo se aplicó al Adj. EBITDA 2024E; hoy se aplica al 2026P.")
+f1 = lambda v: f"${v:,.1f}"
+f0 = lambda v: f"${v:,.0f}"
+lt = byname(s, "Table 14").table
+vals = [("Supuestos de Valuación", ""), (" Concepto", "Valor"),
+        (" Salida 2023", "\xa0"), (" EV / Adj. EBITDA 24E", "%.2fx" % mult),
+        (" Hoy", "\xa0"), (" Adj. EBITDA 2026P", f1(e26)),
+        (" Deuda neta 2025*", f1(nd)), (" Múltiplo aplicado", "%.2fx" % mult),
+        (" Participación FSM", "20.06%")]
+for r, (a, b) in zip(lt.rows, vals):
+    settext(r.cells[0], a)
+    settext(r.cells[1], b)
+bt = byname(s, "Table 11").table
+d = lambda a, b: f"{b - a:+,.0f}"
+pc = lambda a, b: f"{(b / a - 1) * 100:+.1f}%"
+rows = [("(En millones MXN)", "Salida 2023", "Hoy", "Var. MXN", "Var. %"),
+        ("Adj. EBITDA base", "$772", "$%.0f" % e26, d(772, e26), pc(772, e26)),
+        ("Múltiplo EV / Adj. EBITDA", "%.2fx" % mult, "%.2fx" % mult, "–", "–"),
+        ("Valor de Empresa", f0(ev23), f0(ev26), d(ev23, ev26), pc(ev23, ev26)),
+        ("Deuda Neta", f0(nd23), f0(nd), d(nd23, nd), pc(nd23, nd)),
+        ("Valor de Capital", f0(eq23), f0(eq26), d(eq23, eq26), pc(eq23, eq26)),
+        ("Valor del 20.06% de FSM", f0(eq23 * MSM), f0(eq26 * MSM), d(eq23 * MSM, eq26 * MSM), pc(eq23, eq26))]
+for r, vs in zip(bt.rows, rows):
+    for c, v in zip(r.cells, vs):
+        settext(c, v)
+settext(byname(s, "Rectangle: Rounded Corners 13"), "Var. Valor de Capital: %s" % pc(eq23, eq26))
+settext(byname(s, "TextBox 15"), "En millones de pesos")
+ch = [x for x in s.shapes if x.has_chart][0].chart
+cd = CategoryChartData(number_format='"$"#,##0')
+NL = chr(10)
+cd.categories = ["Salida 2023" + NL + "Valor de empresa: " + f0(ev23), "Hoy" + NL + "Valor de empresa: " + f0(ev26)]
+cd.add_series("Deuda Neta", [nd23, nd])
+cd.add_series("Valor de Capital", [eq23, eq26])
+ch.replace_data(cd)
+ch.value_axis.maximum_scale = 5200
+ch.value_axis.minimum_scale = 0
+for se in ch.plots[0].series:
+    dl = se.data_labels
+    dl.show_value = True
+    dl.number_format = '"$"#,##0'
+    dl.number_format_is_linked = False
+    dl.font.size = Pt(12)
+settext(byname(p.slides[0], "Text Placeholder 1"), "Evolución de la Valuación de Arabela")
+p.save(r"C:\Users\cesar\Downloads\20261012_Arabela_v3.pptx")
+print("saved")

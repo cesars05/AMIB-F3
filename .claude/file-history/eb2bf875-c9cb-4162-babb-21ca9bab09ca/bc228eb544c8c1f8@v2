@@ -1,0 +1,27 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); if([int]$xl.Workbooks.Count -gt 0){ foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } } } }catch{}; if($wb -ne $null){break}; Start-Sleep -Milliseconds 800 }
+$cm=$null
+for($i=0;$i -lt 30;$i++){ try{ $cm=$wb.Worksheets.Item("Consolidated Model"); if($cm -ne $null){ break } }catch{}; Start-Sleep -Milliseconds 700 }
+Write-Output ("Libro: "+$wb.Name)
+Write-Output ""
+Write-Output "=== diagnostico de formato en el bloque ==="
+for($r=277;$r -le 297;$r++){
+  $c=$cm.Cells.Item($r,11)
+  $st=""
+  try{ $st=[string]$c.Font.Strikethrough }catch{ $st="?" }
+  $it=""
+  try{ $it=[string]$c.Font.Italic }catch{ $it="?" }
+  $lab=[string]$cm.Cells.Item($r,3).Text
+  if($lab.Trim() -ne ""){ Write-Output ("  r"+$r+"  "+$lab.PadRight(46)+"  tachado="+$st.PadRight(6)+" cursiva="+$it) }
+}
+Write-Output ""
+Write-Output "=== comparacion: una fila sana del modelo (r53) ==="
+$c=$cm.Cells.Item(53,11)
+Write-Output ("  r53  tachado="+[string]$c.Font.Strikethrough+"  cursiva="+[string]$c.Font.Italic+"  nombre="+[string]$c.Font.Name+"  tam="+[string]$c.Font.Size)
+$c2=$cm.Cells.Item(285,11)
+Write-Output ("  r285 tachado="+[string]$c2.Font.Strikethrough+"  cursiva="+[string]$c2.Font.Italic+"  nombre="+[string]$c2.Font.Name+"  tam="+[string]$c2.Font.Size)
+Write-Output ""
+Write-Output ("  ErrorCheckingOptions.InconsistentFormula = "+[string]$xl.ErrorCheckingOptions.InconsistentFormula)
+Write-Output ("  ErrorCheckingOptions.OmittedCells        = "+[string]$xl.ErrorCheckingOptions.OmittedCells)
+Write-Output ("  ErrorCheckingOptions.NumberAsText        = "+[string]$xl.ErrorCheckingOptions.NumberAsText)

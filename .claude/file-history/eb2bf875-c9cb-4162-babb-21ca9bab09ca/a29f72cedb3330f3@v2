@@ -1,0 +1,120 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $cm=$wb.Worksheets.Item("Consolidated Model")
+$er=$wb.Worksheets.Item("Expected Returns"); $d=$wb.Worksheets.Item("DCF")
+
+Write-Output "--- area destino en Assumptions (H79:K84) antes de escribir ---"
+for($i=78;$i -le 85;$i++){
+  $s=""
+  foreach($c in 8,9,10,11){ $t=""; try{ $t=[string]$as.Cells.Item($i,$c).Text }catch{}; $s+="["+$t+"]" }
+  Write-Output ("  r"+$i+"  "+$s)
+}
+
+# ---------- GUARDAS ----------
+if([string]$as.Range("H73").Text -ne "Divestiture Module"){ throw "ABORTO: H73 no es el encabezado esperado" }
+foreach($i in 79,80,81){
+  foreach($c in 8,9,10,11){
+    $t=""; try{ $t=[string]$as.Cells.Item($i,$c).Text }catch{}
+    if($t.Trim() -ne ""){ throw ("ABORTO: Assumptions fila "+$i+" no esta vacia: '"+$t+"'") }
+  }
+}
+$g199=[string]$cm.Range("L199").Formula
+if($g199 -ne '=-IFERROR(MAX(L268-L270,0),0)'){ throw ("ABORTO: r199 cambio: "+$g199) }
+if([string]$cm.Range("L378").Formula -notlike "*L366=1*"){ throw "ABORTO: r378 no es la fila esperada" }
+if([string]$cm.Cells.Item(378,3).Text -ne "Special dividend funded by disposal"){ throw "ABORTO: etiqueta de r378 no coincide" }
+Write-Output "guardas OK"
+
+$xl.Calculation=-4135
+$xl.ScreenUpdating=$false
+
+# ---------- 1) el switch en Assumptions ----------
+$as.Range("H73").Copy() | Out-Null
+$as.Range("H79").PasteSpecial(-4122) | Out-Null
+$as.Range("H74").Copy() | Out-Null
+$as.Range("H80").PasteSpecial(-4122) | Out-Null
+$as.Range("J74").Copy() | Out-Null
+$as.Range("J80").PasteSpecial(-4122) | Out-Null
+$xl.CutCopyMode=0
+$as.Range("H79").Value2="Cash Sweep"
+$as.Range("H80").Value2="Excess Cash Policy"
+$as.Range("J80").Value2="On"
+$dv=$as.Range("J80").Validation
+try{ $dv.Delete() }catch{}
+$dv.Add(3,1,1,"On,Off")
+$dv.IgnoreBlank=$false
+$dv.InCellDropdown=$true
+$dv.ShowInput=$false
+$dv.ShowError=$true
+$dv.ErrorTitle="On / Off"
+$dv.ErrorMessage="On = excess cash above the maximum target is paid out as an extraordinary dividend. Off = cash accumulates on the balance sheet."
+
+# ---------- 2) r378 independiente (rompe la referencia circular a r199) ----------
+$cm.Range("L378").Formula='=+IF(L366=1,MAX(MIN(L268-L269,MAX(L370-INDEX(Assumptions!$D$89:$F$89,Assumptions!$F$9)*L372,0)),0),0)'
+$cm.Range("L378:Q378").FillRight()
+
+# ---------- 3) r199 obedece al switch ----------
+$cm.Range("L199").Formula='=-IFERROR(L378+IF(Assumptions!$J$80="Off",0,MAX(L268-L270-L378,0)),0)'
+$cm.Range("L199:Q199").FillRight()
+
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$xl.ScreenUpdating=$true
+$wb.Save()
+Write-Output "switch creado en Assumptions J80 (On/Off); r378 y r199 recableadas"
+
+# ---------- verificacion ----------
+$MAP=@{}
+for($i=1;$i -le 70;$i++){
+  $lab=([string]$er.Cells.Item($i,2).Text).Trim()
+  if($lab -eq "Gross Money Multiple (MoIC)"){ $MAP["moic"]=$i }
+  if($lab -eq "IRR"){ $MAP["irr"]=$i }
+  if($lab -eq "Total Dividends Received"){ $MAP["divTot"]=$i }
+  if($lab -eq "Exit Equity Value"){ $MAP["eqX"]=$i }
+}
+function Foto($t){
+  Write-Output ""
+  Write-Output ("---- "+$t+" ----")
+  $h="  "+"".PadRight(34)
+  for($c=11;$c -le 17;$c++){ $h+=([string]$cm.Cells.Item(9,$c).Text).PadLeft(10) }
+  Write-Output $h
+  foreach($x in @(@(198,"Dividendo ordinario"),@(199,"Dividendo extraordinario"),@(378,"  del cual, por la venta"),@(126,"Caja"))){
+    $r=[int]$x[0]; $v=""
+    for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(10) }
+    Write-Output ("  "+([string]$x[1]).PadRight(34)+$v)
+  }
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string][math]::Round(([double]$cm.Cells.Item(253,$c).Value2-[double]$cm.Cells.Item(126,$c).Value2),0)).PadLeft(10) }
+  Write-Output ("  "+"Deuda neta".PadRight(34)+$v)
+  Write-Output ("  dividendos "+[string]$er.Cells.Item($MAP["divTot"],3).Text+"   equity salida "+[string]$er.Cells.Item($MAP["eqX"],3).Text+"   MoIC "+[string]$er.Cells.Item($MAP["moic"],3).Text+"   IRR "+[string]$er.Cells.Item($MAP["irr"],3).Text+"   DCF "+[string]$d.Range("E41").Text)
+  Write-Output ("  checks: balance FY2032 "+[string]$cm.Range("Q168").Text+"   caja "+[string]$cm.Range("Q215").Text)
+}
+Foto "SWEEP = On, sin venta  (debe ser identico a como estaba antes)"
+
+$xl.Calculation=-4135; $as.Range("J80").Value2="Off"; $xl.Calculation=-4105; $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+Foto "SWEEP = Off, sin venta  (la caja se acumula)"
+
+$xl.Calculation=-4135; $as.Range("J74").Value2="Water Management"; $as.Range("J75").Value2=[double]2029; $xl.Calculation=-4105; $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+Foto "SWEEP = Off + venta de WM  (solo sale el producto de la venta)"
+
+$xl.Calculation=-4135; $as.Range("J80").Value2="On"; $xl.Calculation=-4105; $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+Foto "SWEEP = On + venta de WM"
+
+$xl.Calculation=-4135; $as.Range("J74").ClearContents(); $as.Range("J80").Value2="On"; $xl.Calculation=-4105; $xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ""
+Write-Output ("RESTAURADO: J74='"+[string]$as.Range("J74").Text+"'  J80='"+[string]$as.Range("J80").Text+"'  IRR "+[string]$er.Cells.Item($MAP["irr"],3).Text+"  DCF "+[string]$d.Range("E41").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary","Expected Returns"){
+  $s=$wb.Worksheets.Item($nm); $e=0
+  try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

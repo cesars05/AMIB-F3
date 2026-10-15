@@ -1,0 +1,41 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions")
+if([string]$as.Range("H74").Text -ne "Segment to Divest"){ throw "ABORTO: H74 no es 'Segment to Divest'" }
+if([string]$as.Range("H75").Text -ne "Last Full Year of Ownership"){ throw "ABORTO: H75 no es lo esperado" }
+
+# J74: dropdown de segmentos, SIN el globo amarillo
+$dv=$as.Range("J74").Validation
+try{ $dv.Delete() }catch{}
+$dv.Add(3,1,1,"Water Management,Building Envelope,Housebuilding Products")
+$dv.IgnoreBlank=$true
+$dv.InCellDropdown=$true
+$dv.ShowInput=$false
+$dv.ShowError=$false
+
+# J75: sigue restringido a FY2027-FY2030, SIN globo, pero conserva el aviso de error
+$dv2=$as.Range("J75").Validation
+try{ $dv2.Delete() }catch{}
+$dv2.Add(1,1,1,"2027","2030")
+$dv2.IgnoreBlank=$true
+$dv2.ShowInput=$false
+$dv2.ErrorTitle="Out of range"
+$dv2.ErrorMessage="Use FY2027-FY2030. Selling in FY2031 leaves no clean post-disposal year and the DCF terminal value breaks."
+$dv2.ShowError=$true
+
+$wb.Save()
+Write-Output "globos de ayuda eliminados en J74 y J75"
+Write-Output ("  J74 dropdown activo: "+[string]$as.Range("J74").Validation.InCellDropdown+"   globo: "+[string]$as.Range("J74").Validation.ShowInput)
+Write-Output ("  J75 globo: "+[string]$as.Range("J75").Validation.ShowInput+"   aviso de error si sale del rango: "+[string]$as.Range("J75").Validation.ShowError)
+Write-Output ""
+Write-Output "  el bloque se lee completo otra vez:"
+foreach($r in 73,74,75,76,77){
+  Write-Output ("   "+([string]$as.Cells.Item($r,8).Text).PadRight(30)+([string]$as.Cells.Item($r,10).Text).PadLeft(20))
+}

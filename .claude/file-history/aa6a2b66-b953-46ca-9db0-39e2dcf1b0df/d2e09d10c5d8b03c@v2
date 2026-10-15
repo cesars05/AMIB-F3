@@ -1,0 +1,48 @@
+$ErrorActionPreference = 'Stop'
+$xl = [Runtime.InteropServices.Marshal]::GetActiveObject('Excel.Application')
+$t  = $xl.Workbooks.Item('20260922_SETSA Transportes.xlsx')
+$m  = $t.Worksheets.Item('Modelo SETSA')
+$tx = $t.Worksheets.Item('Transacciones Precedentes')
+
+function Find-In($ws, [string]$col, [string]$needle, [int]$from = 1, [switch]$exact) {
+    $v = $ws.Range("$($col)1:$($col)400").Value2
+    for ($r = $from; $r -le 400; $r++) {
+        $s = [string]$v[$r, 1]
+        if ($exact) { if ($s -ceq $needle) { return $r } } elseif ($s.Contains($needle)) { return $r }
+    }
+    throw "No encontrado: $needle"
+}
+$rIVA  = Find-In $m 'C' 'Tasa IVA'
+$rDays = Find-In $m 'C' 'por a'
+$rPay  = Find-In $m 'C' 'mina total: percepciones'
+$rCxP  = Find-In $m 'C' 'Cuentas por pagar a corto plazo'
+$rCOGS = Find-In $m 'C' 'Costo de Venta y/o Servicio'
+$rSGA  = Find-In $m 'C' 'Gastos generales total'
+$rDep  = Find-In $m 'C' 'Depreciaciones' -exact
+$rD1   = Find-In $m 'C' 'DSO: d'
+$rBase = Find-In $m 'C' 'Costos y gastos pagados a terceros'
+$rDPO  = Find-In $m 'C' 'DPO: d'
+$rCCC  = Find-In $m 'C' 'Ciclo de conversi'
+"filas: IVA=$rIVA Dias=$rDays Nomina=$rPay CxP=$rCxP Base=$rBase DPO=$rDPO CCC=$rCCC"
+"check etiquetas: " + $m.Cells.Item($rPay,3).Value2 + " | D$rIVA=" + $m.Range("D$rIVA").Text + " | D$rDays=" + $m.Range("D$rDays").Text
+foreach ($c in 'D','E','F','G','H','I') {
+    $m.Range("$c$rBase").Formula = "=-($c$rCOGS+$c$rSGA-$c$rDep-$c$rPay)*12/$c`$11"
+    $m.Range("$c$rDPO").Formula  = "=$c$rCxP/($c$rBase*(1+`$D`$$rIVA))*`$D`$$rDays"
+    $m.Range("$c$rCCC").Formula  = "=$c$rD1-$c$rDPO"
+    $m.Range("$c$rDPO").NumberFormat = $m.Range("$c$rD1").NumberFormat
+    $m.Range("$c$rCCC").NumberFormat = $m.Range("$c$rD1").NumberFormat
+}
+$xl.CalculateFull()
+$err = 0
+foreach ($ws in $t.Worksheets) { foreach ($c in $ws.UsedRange.Cells) { if (([string]$c.Text).StartsWith('#') -or ([string]$c.Formula).Contains('#REF')) { $err++; "ERR " + $ws.Name + "!" + $c.Address($false,$false) + " " + $c.Formula } } }
+"errores=$err"
+foreach ($r in $rD1, ($rD1 + 1), $rBase, $rDPO, $rCCC) {
+    "M$r " + $m.Cells.Item($r,3).Value2 + " | 2021=" + $m.Range("D$r").Text + " 2022=" + $m.Range("E$r").Text + " 2023=" + $m.Range("F$r").Text + " 2024=" + $m.Range("G$r").Text + " 2025=" + $m.Range("H$r").Text + " 1S26=" + $m.Range("I$r").Text
+}
+"DPO H: " + $m.Range("H$rDPO").Formula
+# checks del modelo
+$rChk = Find-In $m 'C' 'Memo: cifras reportadas'
+$last = $m.Cells.Item($m.Rows.Count, 3).End(-4162).Row
+for ($r = $rChk; $r -le $last; $r++) { $l = [string]$m.Cells.Item($r,3).Value2; if ($l.StartsWith('Check') -or $l.StartsWith('Diferencia')) { "$l : " + $m.Range("D$r").Text + " | " + $m.Range("E$r").Text + " | " + $m.Range("F$r").Text + " | " + $m.Range("G$r").Text + " | " + $m.Range("H$r").Text + " | " + $m.Range("I$r").Text } }
+"Valor del capital: " + $tx.Range("E38").Text
+$t.Save(); "guardado=" + $t.Saved

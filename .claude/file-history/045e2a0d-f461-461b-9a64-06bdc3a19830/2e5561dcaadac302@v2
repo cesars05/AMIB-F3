@@ -1,0 +1,72 @@
+$excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb = $excel.Workbooks.Item("AZTD_Universe.xlsx")
+$ws = $wb.Sheets.Item("Analysis")
+
+function Set-CellWithBold {
+    param($cell, [string]$text, [string[]]$boldPhrases)
+    $cell.Value2 = $text
+    $cell.Font.Bold = $false
+    foreach ($phrase in $boldPhrases) {
+        $idx = $text.IndexOf($phrase)
+        if ($idx -ge 0) { $cell.Characters($idx + 1, $phrase.Length).Font.Bold = $true }
+        else { Write-Output "WARNING row phrase not found -> '$phrase'" }
+    }
+}
+
+$rows = @(
+    @{ Row = 3
+       Desc = 'One of the two largest global distributors of electronic components and enterprise IT. Global Components (about 70% of sales) buys chips, passives and connectors from suppliers and resells them to OEMs and EMS providers, while Global ECS (about 30%) distributes cloud, security and infrastructure software to IT resellers. Margins are thin by nature, and the edge comes from scale, financing and logistics.'
+       DescBold = @('two largest global distributors')
+       Ctx = 'Stock up 106% YTD but down 5.5% over three months, trading at 10.2x forward earnings. Q2 2026 revenue reached $10.0 billion, up 32%, with non-GAAP operating income up 87% and four straight quarters above guidance. Net debt to EBITDA fell from about 2.8x to 1.75x. Risks include a CEO seat vacant since September 2025, recurring ECS contract charges and price inflation explaining about a third of recent component growth. Emerging market exposure is moderate, with Asia Pacific about 29% of sales and China plus Hong Kong 14.3%.'
+       CtxBold = @('up 106% YTD', 'Q2 2026 revenue reached $10.0 billion, up 32%', 'CEO seat vacant since September 2025', 'China plus Hong Kong 14.3%') },
+    @{ Row = 4
+       Desc = 'Largest US specialty retailer of intimate apparel, sleepwear and beauty under the Victoria''s Secret and PINK brands, with about 1,420 stores, a digital channel and franchise partners in roughly 70 countries. Competes on brand and bra fitting expertise against Aerie, Skims and value retailers.'
+       DescBold = @('Largest US specialty retailer')
+       Ctx = 'Stock up 54% YTD at 17.8x forward earnings after a 269% gain over the prior year. The turnaround under CEO Hillary Super, appointed in 2024, has delivered five straight quarters of positive comps and two guidance raises, with FY revenue now guided at $7.10 to 7.18 billion. Q2 operating margin of 15.9% was inflated by a one-off $148 million tariff refund, and shares fell over 16% on softer Q3 guidance. The board beat an activist proxy fight in June 2026. Revenue is mostly US, with limited emerging market exposure.'
+       CtxBold = @('up 54% YTD', 'five straight quarters of positive comps', 'one-off $148 million tariff refund', 'activist proxy fight') },
+    @{ Row = 5
+       Desc = 'Israeli maker of optical inspection and metrology systems that find defects and measure structures in chips, with about 75% of revenue from advanced packaging such as HBM memory and CoWoS AI accelerators. Sells mainly to OSATs, foundries and memory makers in Asia.'
+       DescBold = @('about 75% of revenue from advanced packaging')
+       Ctx = 'Stock up 38% YTD but down 23% over three months, at a rich 41.9x forward earnings. FY2025 revenue grew 16% to $496 million with a 30% operating margin, and orders topped $600 million year to date. Q3 guidance of $158 to 160 million implies about 20% sequential growth. Emerging market exposure is high, with China 49% of 2025 revenue and Asia Pacific 91%, while Korea fell from $117 million to $37 million. This breaches the 30% limit and excludes it from the screen.'
+       CtxBold = @('41.9x forward earnings', 'China 49% of 2025 revenue', 'excludes it from the screen') },
+    @{ Row = 6
+       Desc = 'US oilfield equipment maker supplying drilling, completion, subsea and production products, such as downhole tools, frac manifolds and ROV technology, to oil and gas operators and service companies worldwide.'
+       DescBold = @('oilfield equipment maker')
+       Ctx = 'Stock up 124% YTD and 58% over three months, now at 20.2x forward earnings with a market cap near $930 million. FY2025 revenue fell 3.1%, but growth turned positive in 2026 at 8% and 13%, with operating income up 34% in H1. EBITDA guidance was raised twice to $115 to 125 million, and net leverage is a healthy 1.1x. New wins include its first DuraLine order in Argentina and a data center cooling order. Emerging market exposure is about 21% of revenue across the Middle East, Latin America and Asia Pacific.'
+       CtxBold = @('up 124% YTD', 'raised twice', 'about 21% of revenue') },
+    @{ Row = 7
+       Desc = 'B2B marketplace for large parcel goods such as furniture, appliances and fitness equipment, connecting mostly Chinese manufacturers with resellers in the US and Europe. It handles discovery, payment, warehousing and freight, and also sells its own inventory.'
+       DescBold = @('B2B marketplace for large parcel goods')
+       Ctx = 'Stock up 34% YTD and 59% over three months, yet trades at only 11.9x forward earnings with a 28% ROE and about $416 million of net cash. Q2 2026 EPS of $1.65 beat consensus by 77% on revenue of $412 million, up 28%, and a new $120 million buyback was added. Europe GMV grew 66%, while the New Classic acquisition adds inorganic growth. Revenue comes from developed markets (US 54%, Germany 25%), but supply is concentrated in China, creating tariff risk. The founder holds about 65% of voting power.'
+       CtxBold = @('11.9x forward earnings', 'EPS of $1.65 beat consensus by 77%', 'supply is concentrated in China') },
+    @{ Row = 8
+       Desc = 'Japanese maker of wafer handling robots, equipment front end modules (EFEM) and wafer stockers that move silicon wafers inside semiconductor fabs without contamination. About a third is sold through equipment makers such as Applied Materials and the rest directly to fabs such as TSMC.'
+       DescBold = @('wafer handling robots')
+       Ctx = 'Stock up 59% YTD but down 26% over three months, near 18.1x forward earnings, after peaking in July. Q1 FY27 orders jumped 190% to JPY 45.8 billion, lifting backlog 128%, and operating profit rose 21%. FY26 net profit fell 19% due to a JPY 7.4 billion provision from a Kawasaki Heavy Industries patent verdict. Net cash, a 66% equity ratio and roughly 28% ROIC. About 70% of revenue is overseas, with China near 25% of quarterly sales, close to the 30% emerging market limit. Part of recent profit growth came from the weak yen.'
+       CtxBold = @('orders jumped 190%', 'JPY 7.4 billion provision', 'China near 25% of quarterly sales') },
+    @{ Row = 9
+       Desc = 'One of the largest US land drillers and frac providers, renting high spec drilling rigs and pressure pumping fleets to oil and gas producers in shale basins such as the Permian. Reached its current scale through the 2023 NexTier merger.'
+       DescBold = @('largest US land drillers and frac providers')
+       Ctx = 'Stock up 81% YTD and 10% over three months with a 5.2% dividend yield, but still loss making, with a negative ROE and no meaningful forward P/E. Revenue fell 9% to 27% year over year through 2024 and 2025, and Q2 2026 was the first positive quarter at just 0.7%, with a $20 million net loss despite EBITDA of $232 million beating estimates. Completion pricing is up 10 to 15% and leverage is conservative at 1.1 to 1.3x. Revenue is almost fully US, so no emerging market exposure, but results hinge on oil and gas prices.'
+       CtxBold = @('$20 million net loss', 'Completion pricing is up 10 to 15%') },
+    @{ Row = 10
+       Desc = 'Japanese operator of online B2B auctions for used goods, mainly smartphones and PCs, pre-owned luxury brand items, and used cars and motorcycles. Dealers buy through its platform and resell in Japan and abroad, making it a circular economy play.'
+       DescBold = @('online B2B auctions for used goods')
+       Ctx = 'Stock up 30% YTD at 15.4x forward earnings with a 23% ROE and 1.8% dividend yield. H1 2026 revenue rose 16.8% to JPY 38 billion, guidance was raised to JPY 75 billion in revenue and JPY 12 billion in operating profit, and a JPY 3.5 billion M&A budget was redirected to a special dividend. Growth leans on reversible tailwinds, including GIGA School device replacement, a weak yen and a strong Nikkei. Only one analyst covers it and trading is thin at about $1.5 to 3 million a day. Overseas buyer share is not disclosed.'
+       CtxBold = @('H1 2026 revenue rose 16.8%', 'reversible tailwinds', 'one analyst') },
+    @{ Row = 11
+       Desc = 'Israeli provider of vehicle telematics, fleet management and stolen vehicle recovery services, sold mainly on a recurring subscription basis to drivers, fleets and insurers in Israel and Brazil.'
+       DescBold = @('stolen vehicle recovery')
+       Ctx = 'Stock up 22% YTD but down 17% over three months, at 14.7x forward earnings with a 26% ROE and 3.5% dividend yield. Q2 2026 revenue hit a record $104.8 million, up 21%. Geography is the issue, with Israel 56%, Brazil 22% and rest of world 22% of revenue, and Latin America overall estimated near 45% in filings. That is above the 30% emerging market limit and excludes it from the screen despite strong fundamentals.'
+       CtxBold = @('record $104.8 million, up 21%', 'Latin America overall estimated near 45%', 'excludes it from the screen') }
+)
+
+foreach ($item in $rows) {
+    $d = $ws.Cells.Item($item.Row, 5); $c = $ws.Cells.Item($item.Row, 6)
+    $d.WrapText = $true; $c.WrapText = $true
+    Set-CellWithBold -cell $d -text $item.Desc -boldPhrases $item.DescBold
+    Set-CellWithBold -cell $c -text $item.Ctx -boldPhrases $item.CtxBold
+}
+$ws.Rows("3:11").AutoFit() | Out-Null
+$wb.Save()
+Write-Output "Done and saved."

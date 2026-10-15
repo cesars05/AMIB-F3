@@ -1,0 +1,33 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 12;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 800 } }; return "??" }
+$xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$wb=$null; foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+Write-Output ("Libro: "+[string]$wb.Name)
+$s=T { $wb.Worksheets.Item("SOTP") }
+
+Write-Output ""
+Write-Output "=== andamiaje de exit multiple por bloque (cols K..M) ==="
+foreach($o in 0,20,40,60){
+  Write-Output ("--- "+[string](T { $s.Cells.Item(9+$o,2).Text })+" (offset "+$o+")")
+  for($r=(8+$o);$r -le (26+$o); $r++){
+    $line=""
+    for($c=11;$c -le 13;$c++){
+      $t=[string](T { $s.Cells.Item($r,$c).Text })
+      if($t.Trim() -ne ""){ $line+=("["+[char](64+$c)+$r+"="+$t+"] ") }
+    }
+    if($line.Trim() -ne ""){ Write-Output ("    "+$line) }
+  }
+}
+Write-Output ""
+Write-Output "=== columna J (terminal) de cada bloque: EBITDA, margen, FCFF, factor ==="
+foreach($o in 0,20,40,60){
+  $nom=[string](T { $s.Cells.Item(9+$o,2).Text })
+  Write-Output ("  "+$nom.PadRight(28)+" salesJ="+([string](T { $s.Cells.Item(11+$o,10).Text })).PadLeft(9)+" EBITDAj="+([string](T { $s.Cells.Item(13+$o,10).Text })).PadLeft(9)+" margen="+([string](T { $s.Cells.Item(14+$o,10).Text })).PadLeft(7)+" FCFFj="+([string](T { $s.Cells.Item(23+$o,10).Text })).PadLeft(9)+" PVfactorJ="+([string](T { $s.Cells.Item(25+$o,10).Text })).PadLeft(7))
+  Write-Output ("        J"+(13+$o)+" frm= "+[string](T { $s.Cells.Item(13+$o,10).Formula }))
+  Write-Output ("        J"+(14+$o)+" frm= "+[string](T { $s.Cells.Item(14+$o,10).Formula }))
+}
+Write-Output ""
+Write-Output "=== summary: filas de Terminal Value ==="
+foreach($r in 92,96,100,104){
+  Write-Output ("  r"+$r+" ["+[string](T { $s.Cells.Item($r,2).Text })+"]  D= "+[string](T { $s.Range("D"+$r).Formula }))
+}

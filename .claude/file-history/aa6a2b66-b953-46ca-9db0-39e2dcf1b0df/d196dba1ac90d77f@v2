@@ -1,0 +1,338 @@
+# Modelo SETSA en una sola pestaña + Transacciones Precedentes (para insertar en 20260922_SETSA Transportes.xlsx)
+import datetime, os
+src = open(os.path.join(os.path.dirname(__file__), "build_setsa.py"), encoding="utf-8").read()
+exec(src[:src.index("# ================= PORTADA =================")])   # helpers + datos
+
+OUT = r"C:\Users\cesar\setsa_v2.xlsx"
+wb = Workbook(); wb.remove(wb.active)
+MS = "'Modelo SETSA'"
+
+ws = wb.create_sheet("Modelo SETSA")
+ws.sheet_view.showGridLines = False; ws.sheet_view.zoomScale = 85
+ws.sheet_properties.tabColor = "7F8FA9"
+ws.sheet_format.defaultRowHeight = 15; ws.sheet_format.customHeight = True
+for k_, w_ in {"A": 2, "B": 2, "C": 58, "J": 3, "K": 70}.items(): ws.column_dimensions[k_].width = w_
+for c_ in COLS: ws.column_dimensions[c_].width = 18
+
+# ---- título e info (mismo layout que 'Segment Model') ----
+ws.row_dimensions[2].height = 37.2
+for col in range(3, 12): ws.cell(2, col).fill = fill(NAVY)
+t = ws.cell(2, 3, "SETSA Transportes - Modelo Financiero"); t.font = F(size=30, color=WHITE); t.alignment = Alignment(vertical="center")
+for i, (txt, bold, ital, sz) in enumerate([
+        ("Última información reportada", True, False, 11), ("30 de junio de 2026 (1S26)", False, False, 11),
+        ("Moneda: MXN", True, False, 11), ("México · NIF · Régimen de Coordinados (flujo de efectivo)", False, False, 11),
+        ("Cifras en pesos · costos y gastos en negativo · SETSA individual · fuente: presentación Grupo SESA (láminas 13–27)", False, True, 9)]):
+    for col in range(3, 5): ws.cell(4 + i, col).fill = fill(GREY_INFO)
+    ws.cell(4 + i, 3, txt).font = F(size=sz, bold=bold, italic=ital)
+c = ws.cell(9, 3, "Ejercicio fiscal al 31 de diciembre"); c.font = F(size=11, bold=True, color=WHITE); c.fill = fill(NAVY)
+for i, col in enumerate(COLS):
+    h = ws[f"{col}9"]; h.value = PER[i]; h.font = F(size=11, bold=True, color=WHITE); h.fill = fill(NAVY); h.alignment = Alignment(horizontal="right")
+subheader(ws, 10)
+line(ws, 11, "Meses en el periodo", [12, 12, 12, 12, 12, 6], fmt="0", italic=True)
+
+# ---- supuestos ----
+def inp(r_, label_, val, fmt, note):
+    ws.cell(r_, 3, label_).font = F(bold=True)
+    c_ = ws.cell(r_, 4, val); c_.font = F(bold=True, color=BLUE); c_.fill = fill(INPUT_FILL); c_.number_format = fmt
+    c_.alignment = Alignment(horizontal="center"); c_.border = Border(top=thin, bottom=thin, left=thin, right=thin)
+    ws.cell(r_, 5, note).font = F(italic=True, size=9)
+c = ws.cell(13, 3, "Supuestos"); c.font = F(size=11, bold=True, color=WHITE); c.fill = fill(NAVY)
+for col in range(4, 10): ws.cell(13, col).fill = fill(NAVY)
+inp(14, "CxP a corto plazo como deuda financiera (1 = Sí, 0 = No)", 1, "0", "<-- El balance no separa proveedores; la cuenta mezcla proveedores y financiamiento de unidades")
+inp(15, "Tasa ISR", 0.30, "0.0%", "<-- Para impuesto latente sobre cartera (Régimen de Coordinados)")
+inp(16, "Tasa PTU", 0.10, "0.0%", "")
+inp(17, "Tasa IVA", 0.16, "0.0%", "<-- Para limpiar la cartera (saldos incluyen IVA)")
+SW, ISR, PTU, IVA = "$D$14", "$D$15", "$D$16", "$D$17"
+
+G = dict(gastos)
+neg = lambda k: [-x for x in G[k]]
+r = R(18)
+
+# ================= ESTADO DE RESULTADOS =================
+r.nxt("h", 1); header(ws, r.r, "Estado de Resultados", note="Comentario")
+r.nxt("rev"); line(ws, r.r, "Ingresos totales", rev, bold=True, italic=False)
+r.nxt("g"); line(ws, r.r, "Crecimiento anual (%)", lambda c, i: None if i in (0, 5) else f"={c}{r['rev']}/{prev(c)}{r['rev']}-1", "calc", PCT,
+                 note="1S26 no comparable (semestre)")
+# Costos
+label(ws, r.nxt(skip=1), "Costo de venta y/o servicio", top=False)
+cost_items = [("fuel", "Combustibles"), ("mant", "Mantenimiento"), ("da", "Depreciaciones"),
+              ("seg", "Seguros y fianzas"), ("plac", "Impuestos, derechos, placas y tenencias")]
+c_first = r.r + 1
+for k_, name in cost_items:
+    r.nxt(k_); line(ws, r.r, name, neg(name),
+                    note={"fuel": "2022: pico de diésel sin traspaso a tarifa", "plac": "2025 incluye $4.44M de 4 ejercicios atrasados",
+                          "da": "Depreciación de flotilla (D&A del EBITDA)"}.get(k_))
+r.nxt("nomop"); line(ws, r.r, "Nómina operativa y cuotas IMSS (asignada por diferencia)",
+                     lambda c, i: f"={c}{{COSTREP}}-SUM({c}{c_first}:{c}{r.r - 1})", "calc",
+                     note="Supuesto: costo reportado menos conceptos operativos = choferes y personal de operación")
+r.nxt("cogs"); line(ws, r.r, "Costo de venta total", lambda c, i: f"=SUM({c}{c_first}:{c}{r['nomop']})", "calc", bold=True, top=True)
+r.nxt("gp"); line(ws, r.r, "Utilidad bruta", lambda c, i: f"={c}{r['rev']}+{c}{r['cogs']}", "calc", bold=True, top=True)
+r.nxt("gpm"); line(ws, r.r, "Margen bruto (%)", lambda c, i: f"={c}{r['gp']}/{c}{r['rev']}", "calc", PCT)
+# Gastos
+label(ws, r.nxt(skip=1), "Gastos generales", top=False)
+r.nxt("nomad"); g_first = r.r
+line(ws, r.r, "Nómina administrativa y cuotas IMSS (resto)", lambda c, i: f"={c}{{PAYTOT}}-{c}{r['nomop']}", "calc",
+     note="Nómina total (percepciones + IMSS) menos la asignada a costo")
+gasto_items = [("hcons", "Honorarios a consejeros"), ("hprof", "Honorarios a profesionistas y personas físicas"),
+               ("arr", "Arrendamientos"), ("ofi", "Gastos de oficina"), ("soft", "Gastos de software"), ("viaje", "Gastos de viaje"),
+               ("serv", "Servicios públicos (teléfono, luz, agua, internet)"), ("otros", "Otros")]
+for k_, name in gasto_items:
+    r.nxt(k_); line(ws, r.r, name, neg(name),
+                    note={"hcons": "Pagos a socios por emolumentos", "arr": "Incluye renta de inmueble a la socia Hilda E. Múzquiz"}.get(k_))
+r.nxt("sga"); line(ws, r.r, "Gastos generales total", lambda c, i: f"=SUM({c}{g_first}:{c}{r['otros']})", "calc", bold=True, top=True)
+r.nxt("sgap"); line(ws, r.r, "Gastos generales / ingresos (%)", lambda c, i: f"=-{c}{r['sga']}/{c}{r['rev']}", "calc", PCT)
+# Resultado
+r.nxt("ebit", 1); line(ws, r.r, "Utilidad de operación (EBIT)", lambda c, i: f"={c}{r['gp']}+{c}{r['sga']}", "calc", bold=True, top=True)
+r.nxt("ebitm"); line(ws, r.r, "Margen operativo (%)", lambda c, i: f"={c}{r['ebit']}/{c}{r['rev']}", "calc", PCT)
+r.nxt("fin"); line(ws, r.r, "Gastos financieros", [-x for x in fin])
+r.nxt("ebt"); line(ws, r.r, "Utilidad antes de impuestos", lambda c, i: f"={c}{r['ebit']}+{c}{r['fin']}", "calc", bold=True, top=True)
+r.nxt("tax"); line(ws, r.r, "ISR, PTU y otros (implícito)", lambda c, i: f"={c}{r['ebt']+3}-{c}{r['ebt']}", "calc",
+                   note="Resultado neto reportado menos UAI; 1S26 = 0 (sin provisión de ISR/PTU)")
+r.nxt("etr"); line(ws, r.r, "Tasa efectiva implícita (%)", lambda c, i: f"=IFERROR(-{c}{r['tax']}/{c}{r['ebt']},0)", "calc", PCT)
+r.nxt("ni"); line(ws, r.r, "Resultado neto", ni, bold=True, top=True, italic=False)
+r.nxt("nim"); line(ws, r.r, "Margen neto (%)", lambda c, i: f"={c}{r['ni']}/{c}{r['rev']}", "calc", PCT)
+r.nxt("ebitda", 1); line(ws, r.r, "EBITDA (EBIT + depreciaciones)", lambda c, i: f"={c}{r['ebit']}-{c}{r['da']}", "calc", bold=True, top=True)
+r.nxt("ebitdam"); line(ws, r.r, "Margen EBITDA (%)", lambda c, i: f"={c}{r['ebitda']}/{c}{r['rev']}", "calc", PCT)
+r.nxt("ind"); line(ws, r.r, "(+) Indemnización laboral (30 años de antigüedad)", [0, 0, 0, 0, 4843975, 0], note="Partida extraordinaria 2025")
+r.nxt("pla"); line(ws, r.r, "(+) Placas y tenencias atrasadas (4 ejercicios)", [0, 0, 0, 0, 4439387, 0], note="Partida extraordinaria 2025")
+r.nxt("ebitdaa"); line(ws, r.r, "EBITDA ajustado", lambda c, i: f"={c}{r['ebitda']}+{c}{r['ind']}+{c}{r['pla']}", "calc", bold=True, top=True)
+r.nxt("ebitdaam"); line(ws, r.r, "Margen EBITDA ajustado (%)", lambda c, i: f"={c}{r['ebitdaa']}/{c}{r['rev']}", "calc", PCT,
+                       note="1S26 inflado: tarifas retroactivas (clientes 02/23) y aguinaldo sin provisionar")
+# Memo reportado y checks
+label(ws, r.nxt(skip=1), "Memo: cifras reportadas y checks", top=False)
+r.nxt("PAYTOT"); line(ws, r.r, "Nómina total: percepciones + cuotas IMSS",
+                      [-(a + b) for a, b in zip(G["Percepciones de trabajadores (sueldos y prestaciones)"], G["Impuestos y cuotas de seguridad social"])],
+                      note="Lámina 24 (desglose homogéneo, costos + gastos combinados)")
+r.nxt("paypct"); line(ws, r.r, "Nómina total / ingresos (%)", lambda c, i: f"=-{c}{r['PAYTOT']}/{c}{r['rev']}", "calc", PCT,
+                      note="Reforma de pensiones 2020 y aumentos al salario mínimo; 1S26 bajo por aguinaldo")
+r.nxt("COSTREP"); line(ws, r.r, "Costo de venta reportado (lámina 13)", [-x for x in cogs])
+r.nxt("sgarep"); line(ws, r.r, "Gastos generales reportados (lámina 13)", [-x for x in sga])
+r.nxt("chkg"); line(ws, r.r, "Check: gastos generales desglose - reportado", lambda c, i: f"=ROUND({c}{r['sga']}-{c}{r['sgarep']},0)", "calc", note="±2 por redondeo")
+r.nxt("ebitdar"); line(ws, r.r, "EBITDA reportado (lámina 14)", ebitda_rep)
+r.nxt("chke"); line(ws, r.r, "Check: EBITDA calculado - reportado", lambda c, i: f"=ROUND({c}{r['ebitda']}-{c}{r['ebitdar']},0)", "calc", note="±2 por redondeo")
+
+# ================= FLUJO (reservado; necesita filas del balance) =================
+cf_start = r.r + 2
+b = R(cf_start + 42)
+# ================= BALANCE =================
+b.nxt("h", 0); header(ws, b.r, "Balance General", note="Comentario")
+label(ws, b.nxt(), "Activo circulante", top=False)
+for k_, t_, n_ in [("cash", "Efectivo y bancos", None), ("cli", "Clientes", "Ver detalle en Cartera de Clientes"),
+                   ("res", "Cartera en concurso mercantil (línea 'Reserva de cuentas incobrables')", "OJO: se SUMA al activo; es la cuenta bruta de Clientes 01 y 25, no una reserva"),
+                   ("deu", "Deudores diversos", None), ("pag", "Pagos anticipados", None), ("imf", "Impuestos a favor", None),
+                   ("inv", "Inventarios", "Sin cambio en 6 años"), ("ant", "Anticipo a proveedores", None)]:
+    b.nxt(k_); line(ws, b.r, t_, bs[k_], note=n_)
+b.nxt("tac"); line(ws, b.r, "Total activo circulante", lambda c, i: f"=SUM({c}{b['cash']}:{c}{b['ant']})", "calc", bold=True, top=True)
+label(ws, b.nxt(), "Activo fijo y otros", top=False)
+for k_, t_ in [("maq", "Maquinaria y equipo"), ("flo", "Autos, autobuses, camiones y tractocamiones"), ("mob", "Mobiliario y equipo de oficina"),
+               ("cmp", "Equipo de cómputo"), ("com", "Equipo de comunicación"), ("ada", "Adaptaciones y mejoras")]:
+    b.nxt(k_); line(ws, b.r, t_, bs[k_])
+b.nxt("gppe"); line(ws, b.r, "Activo fijo bruto", lambda c, i: f"=SUM({c}{b['maq']}:{c}{b['ada']})", "calc", bold=True, top=True)
+b.nxt("dac"); line(ws, b.r, "Depreciación acumulada", bs["dac"])
+b.nxt("nppe"); line(ws, b.r, "Activo fijo neto", lambda c, i: f"={c}{b['gppe']}+{c}{b['dac']}", "calc", bold=True, top=True)
+b.nxt("dep"); line(ws, b.r, "Depósitos en garantía", bs["dep"])
+b.nxt("taf"); line(ws, b.r, "Total activo fijo y otros", lambda c, i: f"={c}{b['nppe']}+{c}{b['dep']}", "calc", bold=True, top=True)
+b.nxt("ta"); line(ws, b.r, "TOTAL ACTIVO", lambda c, i: f"={c}{b['tac']}+{c}{b['taf']}", "calc", bold=True, top=True)
+b.nxt("tar"); line(ws, b.r, "Total activo reportado", rep_tot["ta"])
+b.nxt("chka"); line(ws, b.r, "Check: activo calculado - reportado", lambda c, i: f"=ROUND({c}{b['ta']}-{c}{b['tar']},0)", "calc", note="±1 por redondeo")
+label(ws, b.nxt(skip=1), "Pasivo a corto plazo", top=False)
+for k_, t_, n_ in [("prv", "Proveedores", "Vacía: proveedores parecen estar dentro de 'Cuentas por pagar'"),
+                   ("cxpc", "Cuentas por pagar a corto plazo", "Mezcla proveedores y financiamiento de unidades (ver switch)"),
+                   ("acr", "Acreedores diversos", None), ("imp", "Impuestos por pagar", None), ("sue", "Provisión de sueldos y fondo de ahorro", None),
+                   ("fah", "Fondo de ahorro por pagar (adicional)", None), ("ptu", "PTU por pagar", None), ("opc", "Otros pasivos a corto plazo", None)]:
+    b.nxt(k_); line(ws, b.r, t_, bs[k_], note=n_)
+b.nxt("tpc"); line(ws, b.r, "Total pasivo circulante", lambda c, i: f"=SUM({c}{b['prv']}:{c}{b['opc']})", "calc", bold=True, top=True)
+label(ws, b.nxt(), "Pasivo a largo plazo", top=False)
+b.nxt("acrl"); line(ws, b.r, "Acreedores diversos largo plazo", bs["acrl"])
+b.nxt("cxpl"); line(ws, b.r, "Cuentas por pagar a largo plazo", bs["cxpl"], note="Financiamiento de flotilla (proxy de deuda)")
+b.nxt("tpl"); line(ws, b.r, "Total pasivo a largo plazo", lambda c, i: f"={c}{b['acrl']}+{c}{b['cxpl']}", "calc", bold=True, top=True)
+b.nxt("tp"); line(ws, b.r, "TOTAL PASIVO", lambda c, i: f"={c}{b['tpc']}+{c}{b['tpl']}", "calc", bold=True, top=True)
+label(ws, b.nxt(skip=1), "Capital contable", top=False)
+b.nxt("cs"); line(ws, b.r, "Capital social", bs["cs"], note="Serie A $50k fija + Serie B $5.95M variable")
+b.nxt("rl"); line(ws, b.r, "Reserva legal", bs["rl"], note="20% del capital social (tope LGSM)")
+b.nxt("rea"); line(ws, b.r, "Resultado de ejercicios anteriores", bs["rea"])
+b.nxt("div"); line(ws, b.r, "Otras cuentas de capital (dividendos acumulados)", bs["div"], note="Contra-capital: dividendos retirados en la vida de la sociedad")
+b.nxt("rej"); line(ws, b.r, "Resultado del ejercicio", lambda c, i: f"={c}{r['ni']}", "calc")
+b.nxt("tc"); line(ws, b.r, "TOTAL CAPITAL CONTABLE", lambda c, i: f"=SUM({c}{b['cs']}:{c}{b['rej']})", "calc", bold=True, top=True)
+b.nxt("tpc2"); line(ws, b.r, "TOTAL PASIVO + CAPITAL", lambda c, i: f"={c}{b['tp']}+{c}{b['tc']}", "calc", bold=True, top=True)
+b.nxt("chkb"); line(ws, b.r, "Check: activo - (pasivo + capital)", lambda c, i: f"=ROUND({c}{b['ta']}-{c}{b['tpc2']},0)", "calc", note="Debe ser 0 (±2 por redondeo)")
+label(ws, b.nxt(skip=1), "Memo: balance ajustado (castigando la cartera en concurso)", top=False)
+b.nxt("adjeq"); line(ws, b.r, "Capital contable ajustado", lambda c, i: f"={c}{b['tc']}-{c}{b['res']}", "calc", bold=True)
+b.nxt("adjta"); line(ws, b.r, "Activo total ajustado", lambda c, i: f"={c}{b['ta']}-{c}{b['res']}", "calc")
+b.nxt("adjwc"); line(ws, b.r, "Capital de trabajo ajustado", lambda c, i: f"={c}{b['tac']}-{c}{b['res']}-{c}{b['tpc']}", "calc")
+
+# ================= FLUJO DE EFECTIVO =================
+f = R(cf_start)
+f.nxt("h", 0); header(ws, f.r, "Flujo de Efectivo (derivado del balance, método indirecto)", note="Comentario")
+FIRST = lambda i: i == 0
+def d_asset(key): return lambda c, i: None if FIRST(i) else f"={prev(c)}{b[key]}-{c}{b[key]}"
+def d_liab(key, mult=""): return lambda c, i: None if FIRST(i) else f"=({c}{b[key]}-{prev(c)}{b[key]}){mult}"
+f.nxt("ni"); line(ws, f.r, "Resultado neto", lambda c, i: None if FIRST(i) else f"={c}{r['ni']}", "calc", note="2021 sin balance inicial: flujo desde 2022")
+f.nxt("da"); line(ws, f.r, "(+) Depreciación y amortización", lambda c, i: None if FIRST(i) else f"=-{c}{r['da']}", "calc")
+label(ws, f.nxt(), "Cambios en capital de trabajo", bold=False, top=False)
+f.nxt("w1"); line(ws, f.r, "(Aumento) / disminución en clientes", d_asset("cli"), "calc")
+for key, t_ in [("res", "(Aumento) / disminución en cartera en concurso"), ("deu", "(Aumento) / disminución en deudores diversos"),
+                ("pag", "(Aumento) / disminución en pagos anticipados"), ("imf", "(Aumento) / disminución en impuestos a favor"),
+                ("inv", "(Aumento) / disminución en inventarios"), ("ant", "(Aumento) / disminución en anticipo a proveedores")]:
+    f.nxt(key); line(ws, f.r, t_, d_asset(key), "calc",
+                     note="2023: reclasificación de Clientes 01/25 (se compensa con la baja de clientes)" if key == "res" else None)
+f.nxt("wcxp"); line(ws, f.r, "Aumento / (disminución) en CxP corto plazo (operativa)", d_liab("cxpc", f"*(1-{SW})"), "calc", note="Solo si el switch = 0")
+for key, t_ in [("acr", "Aumento / (disminución) en acreedores diversos"), ("imp", "Aumento / (disminución) en impuestos por pagar"),
+                ("sue", "Aumento / (disminución) en provisión de sueldos"), ("fah", "Aumento / (disminución) en fondo de ahorro"),
+                ("ptu", "Aumento / (disminución) en PTU por pagar"), ("opc", "Aumento / (disminución) en otros pasivos CP")]:
+    f.nxt("l" + key); line(ws, f.r, t_, d_liab(key), "calc")
+f.nxt("wc"); line(ws, f.r, "Total cambio en capital de trabajo", lambda c, i: None if FIRST(i) else f"=SUM({c}{f['w1']}:{c}{f['lopc']})", "calc", bold=True, top=True)
+f.nxt("cfo"); line(ws, f.r, "Flujo de operación (CFO)", lambda c, i: None if FIRST(i) else f"={c}{f['ni']}+{c}{f['da']}+{c}{f['wc']}", "calc", bold=True, top=True)
+f.nxt("capex", 1); line(ws, f.r, "Capex neto implícito", lambda c, i: None if FIRST(i) else f"=-({c}{b['nppe']}-{prev(c)}{b['nppe']}+{c}{f['da']})", "calc",
+                        note="Capex = -(Δ activo fijo neto + depreciación); neto de bajas")
+f.nxt("dep"); line(ws, f.r, "(Aumento) / disminución en depósitos en garantía", d_asset("dep"), "calc")
+f.nxt("cfi"); line(ws, f.r, "Flujo de inversión (CFI)", lambda c, i: None if FIRST(i) else f"={c}{f['capex']}+{c}{f['dep']}", "calc", bold=True, top=True)
+f.nxt("dcp", 1); line(ws, f.r, "Aumento / (disminución) en CxP corto plazo (financiamiento)", d_liab("cxpc", f"*{SW}"), "calc", note="Solo si el switch = 1")
+f.nxt("dlp"); line(ws, f.r, "Aumento / (disminución) en CxP largo plazo", d_liab("cxpl"), "calc")
+f.nxt("dal"); line(ws, f.r, "Aumento / (disminución) en acreedores largo plazo", d_liab("acrl"), "calc")
+f.nxt("dv"); line(ws, f.r, "Dividendos pagados a socios", d_liab("div"), "calc", note="Δ 'Otras cuentas de capital'; suma 2022–1S26 = $21.3M")
+f.nxt("oth"); line(ws, f.r, "Otros ajustes directos a capital", lambda c, i: None if FIRST(i) else f"={c}{b['rea']}-{prev(c)}{b['rea']}-{prev(c)}{r['ni']}", "calc",
+                   note="Cargos a resultados acumulados sin pasar por el P&L (~$3M en total)")
+f.nxt("cff"); line(ws, f.r, "Flujo de financiamiento (CFF)", lambda c, i: None if FIRST(i) else f"=SUM({c}{f['dcp']}:{c}{f['oth']})", "calc", bold=True, top=True)
+f.nxt("net", 1); line(ws, f.r, "Flujo neto del periodo", lambda c, i: None if FIRST(i) else f"={c}{f['cfo']}+{c}{f['cfi']}+{c}{f['cff']}", "calc", bold=True)
+f.nxt("beg"); line(ws, f.r, "Efectivo inicial", lambda c, i: None if FIRST(i) else f"={prev(c)}{b['cash']}", "calc")
+f.nxt("end"); line(ws, f.r, "Efectivo final", lambda c, i: None if FIRST(i) else f"={c}{f['beg']}+{c}{f['net']}", "calc", bold=True, top=True)
+f.nxt("chk"); line(ws, f.r, "Check: efectivo final vs. balance", lambda c, i: None if FIRST(i) else f"=ROUND({c}{f['end']}-{c}{b['cash']},0)", "calc", note="±2 por redondeo")
+f.nxt("fcf", 1); line(ws, f.r, "Flujo libre (CFO + capex)", lambda c, i: None if FIRST(i) else f"={c}{f['cfo']}+{c}{f['capex']}", "calc", bold=True)
+f.nxt("fcfd"); line(ws, f.r, "Flujo libre después de dividendos", lambda c, i: None if FIRST(i) else f"={c}{f['fcf']}+{c}{f['dv']}", "calc")
+assert f.r < cf_start + 41, f.r
+
+# ================= CARTERA DE CLIENTES =================
+cc = R(b.r + 1)
+cc.nxt("h", 0); header(ws, cc.r, "Cartera de Clientes (saldo por cliente, incluye IVA)", note="Comentario")
+cfirst = cc.r + 1
+for code, v in clients.items():
+    cc.nxt("c" + code)
+    concurso = code in ("01", "25")
+    line(ws, cc.r, f"Cliente {code}" + (" (concurso mercantil)" if concurso else ""), v,
+         note="Mismo grupo económico en concurso mercantil; saldo reclasificado a partir de 2023" if concurso else None)
+    if concurso: ws.cell(cc.r, 3).font = F(italic=True, bold=True, color="C00000")
+clast = cc.r
+cc.nxt("tot"); line(ws, cc.r, "Total cartera de clientes", lambda c, i: f"=SUM({c}{cfirst}:{c}{clast})", "calc", bold=True, top=True)
+cc.nxt("rep"); line(ws, cc.r, "Total reportado en el anexo (lámina 25)", cartera_rep)
+cc.nxt("chk"); line(ws, cc.r, "Check: suma de clientes - anexo", lambda c, i: f"=ROUND({c}{cc['tot']}-{c}{cc['rep']},0)", "calc")
+cc.nxt("chk2"); line(ws, cc.r, "Diferencia: anexo - balance", lambda c, i: f"=ROUND({c}{cc['tot']}-{c}{b['cli']},0)", "calc",
+                     note="2023: $1.1M sin conciliar entre anexo y balance")
+label(ws, cc.nxt(skip=1), "Concentración", top=False)
+rng = lambda c: f"{c}{cfirst}:{c}{clast}"
+cc.nxt("n"); line(ws, cc.r, "Número de clientes con saldo", lambda c, i: f"=COUNTIF({rng(c)},\">0\")", "calc", "0")
+cc.nxt("top1"); line(ws, cc.r, "Cliente principal (% del total)", lambda c, i: f"=LARGE({rng(c)},1)/{c}{cc['tot']}", "calc", PCT)
+cc.nxt("top3"); line(ws, cc.r, "Top 3 clientes (% del total)", lambda c, i: f"=(LARGE({rng(c)},1)+LARGE({rng(c)},2)+LARGE({rng(c)},3))/{c}{cc['tot']}", "calc", PCT,
+                     note="Jun-26: 68% (lámina 27)")
+cc.nxt("top5"); line(ws, cc.r, "Top 5 clientes (% del total)", lambda c, i: f"=(LARGE({rng(c)},1)+LARGE({rng(c)},2)+LARGE({rng(c)},3)+LARGE({rng(c)},4)+LARGE({rng(c)},5))/{c}{cc['tot']}", "calc", PCT)
+cc.nxt("hhi"); line(ws, cc.r, "Índice Herfindahl (HHI)", lambda c, i: f"=SUMPRODUCT(({rng(c)}/{c}{cc['tot']})^2)*10000", "calc", "#,##0", note=">2,500 = concentración alta")
+cc.nxt("retro"); line(ws, cc.r, "Clientes 02 + 23", lambda c, i: f"={c}{cc['c02']}+{c}{cc['c23']}", "calc", bold=True)
+cc.nxt("retrod"); line(ws, cc.r, "Variación clientes 02 + 23", lambda c, i: None if i == 0 else f"={c}{cc['retro']}-{prev(c)}{cc['retro']}", "calc",
+                       note="1S26: +$13.1M, proxy del ingreso retroactivo por renegociación de tarifas")
+label(ws, cc.nxt(skip=1), "Cartera en concurso mercantil (línea 'Reserva')", top=False)
+cc.nxt("r25"); line(ws, cc.r, "Cliente 25", [0, 0, 17463870, 17463870, 17463870, 17463870])
+cc.nxt("r01"); line(ws, cc.r, "Cliente 01", [0, 0, 13093218, 13093218, 13093218, 13093218])
+cc.nxt("rdv"); line(ws, cc.r, "Cartera diversa de imposible recuperación", [0, 0, 0, 4631378, 4585112, 4585112])
+cc.nxt("rtot"); line(ws, cc.r, "Total 'estimación' de incobrables", lambda c, i: f"=SUM({c}{cc['r25']}:{c}{cc['rdv']})", "calc", bold=True, top=True)
+cc.nxt("rchk"); line(ws, cc.r, "Check vs balance", lambda c, i: f"=ROUND({c}{cc['rtot']}-{c}{b['res']},0)", "calc")
+cc.nxt("rsh"); line(ws, cc.r, "Cartera en concurso / capital contable", lambda c, i: f"={c}{cc['rtot']}/{c}{b['tc']}", "calc", PCT,
+                    note="Se suma como activo; nunca pasó por resultados")
+label(ws, cc.nxt(skip=1), "Días de cartera e impuesto latente", top=False)
+cc.nxt("reva"); line(ws, cc.r, "Ingresos anualizados", lambda c, i: f"={c}{r['rev']}*12/{c}$11", "calc")
+cc.nxt("DSO"); line(ws, cc.r, "DSO (cartera con IVA)", lambda c, i: f"={c}{b['cli']}/{c}{cc['reva']}*365", "calc", DAYS)
+cc.nxt("dsox"); line(ws, cc.r, "DSO sin IVA", lambda c, i: f"={c}{b['cli']}/(1+{IVA})/{c}{cc['reva']}*365", "calc", DAYS,
+                     note="2021–22 inflado por clientes en concurso")
+cc.nxt("base"); line(ws, cc.r, "Cartera sin IVA (ingreso aún no acumulado para ISR)", lambda c, i: f"={c}{b['cli']}/(1+{IVA})", "calc",
+                     note="Régimen de Coordinados: el ingreso se grava al cobrarse")
+cc.nxt("isr"); line(ws, cc.r, "ISR latente", lambda c, i: f"={c}{cc['base']}*{ISR}", "calc")
+cc.nxt("ptu"); line(ws, cc.r, "PTU latente", lambda c, i: f"={c}{cc['base']}*{PTU}", "calc")
+cc.nxt("lat"); line(ws, cc.r, "Impuesto latente total sobre cartera", lambda c, i: f"={c}{cc['isr']}+{c}{cc['ptu']}", "calc", bold=True, top=True,
+                    note="Antes de deducciones pendientes de pago")
+
+# ================= DEUDA E INTERESES =================
+d = R(cc.r + 1)
+d.nxt("h", 0); header(ws, d.r, "Deuda e Intereses", note="Comentario")
+d.nxt("cp"); line(ws, d.r, "Cuentas por pagar a corto plazo", lambda c, i: f"={c}{b['cxpc']}", "calc", note="Incluida como deuda según el switch")
+d.nxt("lp"); line(ws, d.r, "Cuentas por pagar a largo plazo", lambda c, i: f"={c}{b['cxpl']}", "calc")
+d.nxt("al"); line(ws, d.r, "Acreedores diversos largo plazo", lambda c, i: f"={c}{b['acrl']}", "calc")
+d.nxt("debt"); line(ws, d.r, "Deuda financiera (según switch)", lambda c, i: f"={c}{d['cp']}*{SW}+{c}{d['lp']}+{c}{d['al']}", "calc", bold=True, top=True)
+d.nxt("debtlp"); line(ws, d.r, "Deuda de largo plazo únicamente", lambda c, i: f"={c}{d['lp']}+{c}{d['al']}", "calc")
+d.nxt("cash"); line(ws, d.r, "(-) Efectivo y bancos", lambda c, i: f"=-{c}{b['cash']}", "calc")
+d.nxt("nd"); line(ws, d.r, "Deuda neta", lambda c, i: f"={c}{d['debt']}+{c}{d['cash']}", "calc", bold=True, top=True)
+d.nxt("otr"); line(ws, d.r, "(+) Impuestos por pagar", lambda c, i: f"={c}{b['imp']}", "calc", note="Incluye IVA trasladado no cobrado; revisar adeudos vencidos")
+d.nxt("lat"); line(ws, d.r, "(+) Impuesto latente sobre cartera", lambda c, i: f"={c}{cc['lat']}", "calc", note="No registrado en balance (sin ISR diferido)")
+d.nxt("ndadj"); line(ws, d.r, "Deuda neta ajustada (incluye pasivos tipo deuda)", lambda c, i: f"={c}{d['nd']}+{c}{d['otr']}+{c}{d['lat']}", "calc", bold=True, top=True)
+label(ws, d.nxt(skip=1), "Costo implícito del financiamiento", top=False)
+d.nxt("int"); line(ws, d.r, "Gastos financieros del periodo", lambda c, i: f"=-{c}{r['fin']}", "calc")
+d.nxt("inta"); line(ws, d.r, "Gastos financieros anualizados", lambda c, i: f"={c}{d['int']}*12/{c}$11", "calc")
+d.nxt("avg"); line(ws, d.r, "Deuda financiera promedio (inicio y cierre)", lambda c, i: f"={c}{d['debt']}" if i == 0 else f"=AVERAGE({prev(c)}{d['debt']},{c}{d['debt']})", "calc",
+                   note="2021: saldo de cierre (sin balance inicial)")
+d.nxt("RATE"); line(ws, d.r, "Tasa de interés implícita sobre deuda promedio", lambda c, i: f"=IFERROR({c}{d['inta']}/{c}{d['avg']},0)", "calc", PCT, bold=True,
+                    note="Crédito de flotilla típico: TIIE + spread")
+d.nxt("avglp"); line(ws, d.r, "Deuda de largo plazo promedio", lambda c, i: f"={c}{d['debtlp']}" if i == 0 else f"=AVERAGE({prev(c)}{d['debtlp']},{c}{d['debtlp']})", "calc")
+d.nxt("ratelp"); line(ws, d.r, "Tasa implícita sobre deuda de largo plazo", lambda c, i: f"=IFERROR({c}{d['inta']}/{c}{d['avglp']},0)", "calc", PCT,
+                      note="Cota superior: supone que todo el interés es de la deuda LP")
+d.nxt("rateend"); line(ws, d.r, "Tasa implícita sobre deuda de cierre", lambda c, i: f"=IFERROR({c}{d['inta']}/{c}{d['debt']},0)", "calc", PCT)
+label(ws, d.nxt(skip=1), "Coberturas y apalancamiento", top=False)
+d.nxt("ebitda"); line(ws, d.r, "EBITDA ajustado anualizado", lambda c, i: f"={c}{r['ebitdaa']}*12/{c}$11", "calc", note="1S26 x2 sobreestima")
+d.nxt("ebit"); line(ws, d.r, "EBIT anualizado", lambda c, i: f"={c}{r['ebit']}*12/{c}$11", "calc")
+d.nxt("cov"); line(ws, d.r, "EBITDA ajustado / intereses", lambda c, i: f"=IFERROR({c}{d['ebitda']}/{c}{d['inta']},0)", "calc", MULT)
+d.nxt("cov2"); line(ws, d.r, "EBIT / intereses", lambda c, i: f"=IFERROR({c}{d['ebit']}/{c}{d['inta']},0)", "calc", MULT)
+d.nxt("intsh"); line(ws, d.r, "Intereses / EBITDA ajustado (%)", lambda c, i: f"=IFERROR({c}{d['inta']}/{c}{d['ebitda']},0)", "calc", PCT)
+d.nxt("NDE"); line(ws, d.r, "Deuda neta / EBITDA ajustado", lambda c, i: f"=IFERROR({c}{d['nd']}/{c}{d['ebitda']},0)", "calc", MULT, bold=True)
+d.nxt("nde2"); line(ws, d.r, "Deuda neta ajustada / EBITDA ajustado", lambda c, i: f"=IFERROR({c}{d['ndadj']}/{c}{d['ebitda']},0)", "calc", MULT)
+d.nxt("dte"); line(ws, d.r, "Deuda financiera / capital contable ajustado", lambda c, i: f"={c}{d['debt']}/{c}{b['adjeq']}", "calc", MULT)
+label(ws, d.nxt(skip=1), "Uso de la deuda", top=False)
+d.nxt("ddebt"); line(ws, d.r, "Variación de deuda financiera", lambda c, i: None if i == 0 else f"={c}{d['debt']}-{prev(c)}{d['debt']}", "calc")
+d.nxt("capex"); line(ws, d.r, "Capex neto implícito", lambda c, i: None if i == 0 else f"=-{c}{f['capex']}", "calc")
+d.nxt("divs"); line(ws, d.r, "Dividendos pagados", lambda c, i: None if i == 0 else f"=-{c}{f['dv']}", "calc",
+                    note="2022: $8.1M de dividendos con pérdida neta y deuda al alza")
+
+# ================= ACTIVO FIJO =================
+a = R(d.r + 1)
+a.nxt("h", 0); header(ws, a.r, "Activo Fijo y Flotilla", note="Comentario")
+a.nxt("fs"); line(ws, a.r, "Flotilla / activo fijo bruto (%)", lambda c, i: f"={c}{b['flo']}/{c}{b['gppe']}", "calc", PCT)
+a.nxt("dp"); line(ws, a.r, "Depreciación acumulada / bruto (%)", lambda c, i: f"=-{c}{b['dac']}/{c}{b['gppe']}", "calc", PCT, note="~70%: flotilla muy depreciada")
+a.nxt("daa"); line(ws, a.r, "Depreciación anualizada", lambda c, i: f"=-{c}{r['da']}*12/{c}$11", "calc")
+a.nxt("rate"); line(ws, a.r, "Depreciación / flotilla bruta (%)", lambda c, i: f"={c}{a['daa']}/{c}{b['flo']}", "calc", PCT,
+                    note="~7% vs 25% fiscal (art. 34 LISR): gran parte ya totalmente depreciada")
+a.nxt("life"); line(ws, a.r, "Depreciación acumulada / depreciación anual (años)", lambda c, i: f"=-{c}{b['dac']}/{c}{a['daa']}", "calc", '0.0" años"')
+a.nxt("bajas"); line(ws, a.r, "Bajas implícitas (Δ dep. acumulada - depreciación)", lambda c, i: None if i == 0 else f"=-({c}{b['dac']}-{prev(c)}{b['dac']})+{c}{r['da']}", "calc",
+                     note="0 casi siempre: nunca se dan de baja unidades")
+a.nxt("capex"); line(ws, a.r, "Capex neto implícito", lambda c, i: None if i == 0 else f"=-{c}{f['capex']}", "calc", bold=True)
+a.nxt("cd"); line(ws, a.r, "Capex / depreciación", lambda c, i: None if i == 0 else f"={c}{a['capex']}/-{c}{r['da']}", "calc", MULT, note="2025 ~0: renovación diferida")
+a.nxt("NPPEADJ"); line(ws, a.r, "Activo fijo neto / activo total ajustado (%)", lambda c, i: f"={c}{b['nppe']}/{c}{b['adjta']}", "calc", PCT)
+a.nxt("turn"); line(ws, a.r, "Ingresos anualizados / flotilla bruta", lambda c, i: f"={c}{r['rev']}*12/{c}$11/{c}{b['flo']}", "calc", MULT)
+a.nxt("ebc"); line(ws, a.r, "EBITDA ajustado - capex", lambda c, i: None if i == 0 else f"={c}{r['ebitdaa']}-{c}{a['capex']}", "calc", bold=True,
+                   note="Métrica de caja relevante para valuación")
+
+# ================= INDICADORES =================
+k = R(a.r + 1)
+k.nxt("h", 0); header(ws, k.r, "Indicadores Clave", note="Comentario")
+k.nxt("cr"); line(ws, k.r, "Razón circulante reportada", lambda c, i: f"={c}{b['tac']}/{c}{b['tpc']}", "calc", MULT)
+k.nxt("cra"); line(ws, k.r, "Razón circulante ajustada", lambda c, i: f"=({c}{b['tac']}-{c}{b['res']})/{c}{b['tpc']}", "calc", MULT, note="Sin la cartera en concurso")
+k.nxt("lev"); line(ws, k.r, "Pasivo / capital reportado", lambda c, i: f"={c}{b['tp']}/{c}{b['tc']}", "calc", MULT)
+k.nxt("leva"); line(ws, k.r, "Pasivo / capital ajustado", lambda c, i: f"={c}{b['tp']}/{c}{b['adjeq']}", "calc", MULT)
+k.nxt("roe"); line(ws, k.r, "ROE (resultado neto / capital)", lambda c, i: f"={c}{r['ni']}/{c}{b['tc']}", "calc", PCT, note="1S26 sin anualizar y sin ISR")
+k.nxt("roa"); line(ws, k.r, "ROA (resultado neto / activo)", lambda c, i: f"={c}{r['ni']}/{c}{b['ta']}", "calc", PCT)
+ws.freeze_panes = "D12"
+
+# resolver placeholders
+for row in ws.iter_rows():
+    for c_ in row:
+        if isinstance(c_.value, str) and c_.value.startswith("="):
+            c_.value = c_.value.replace("{COSTREP}", str(r["COSTREP"])).replace("{PAYTOT}", str(r["PAYTOT"]))
+
+# ================= TRANSACCIONES PRECEDENTES =================
+tx_src = src[src.index("# ================= TRANSACCIONES PRECEDENTES + VALUACIÓN ================="):src.index("# ---------- resolver placeholders entre hojas ----------")]
+tx_src = tx_src.replace("{EF}!H{EFr['ebitdaa']}", "{MS}!H{r['ebitdaa']}").replace("{EF}!H{EFr['rev']}", "{MS}!H{r['rev']}")
+tx_src = tx_src.replace("{DI}!I{DId['nd']}", "{MS}!I{d['nd']}").replace("{DI}!I{DId['lat']}", "{MS}!I{d['lat']}")
+tx_src = tx_src.replace("{AF}!I{AFa['nppe']}", "{MS}!I{b['nppe']}").replace("{EF}!I{EFb['adjeq']}", "{MS}!I{b['adjeq']}")
+tx_src = tx_src.replace("AVERAGE({AF}!E{AFa['capex']}:H{AFa['capex']})", "AVERAGE({MS}!E{a['capex']}:{MS}!H{a['capex']})")
+tx_src = tx_src.replace("switch de Portada", "switch del modelo")
+assert "{EF}" not in tx_src and "{DI}" not in tx_src and "{AF}" not in tx_src, "referencias sin reemplazar"
+exec(tx_src)
+ws = wb["Transacciones Precedentes"]
+ws.sheet_format.defaultRowHeight = 15; ws.sheet_format.customHeight = True
+for c_ in "EFGHIJK": ws.column_dimensions[c_].width = 18
+wb.save(OUT); print("saved", OUT)

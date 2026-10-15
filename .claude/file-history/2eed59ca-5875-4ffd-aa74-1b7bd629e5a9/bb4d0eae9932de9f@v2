@@ -1,0 +1,176 @@
+import win32com.client as w, time
+x = w.GetActiveObject('Excel.Application')
+wb = [b for b in x.Workbooks if b.Name == '20261007_Ingevity Corp.xlsx'][0]
+am = wb.Worksheets('Annual Model')
+dcf = wb.Worksheets('DCF')
+INBLUE = 16719360
+NUM = '#,##0.0;(#,##0.0);"-"'
+PCT = '0.0%;(0.0%);"-"'
+USD1 = '$#,##0.0;($#,##0.0);"-"'
+
+
+def lab(r):
+    return str(am.Range(f'E{r}').Value or '')
+
+
+x.Calculation = -4135
+x.ScreenUpdating = False
+try:
+    # ---- sanity checks on current layout ----
+    assert lab(238) == 'Performance Materials' and lab(237).startswith('D&A'), (lab(237), lab(238))
+    assert lab(245) == 'Performance Materials' and lab(244).startswith('Capex'), lab(244)
+    assert lab(263) == 'EBITDA Margin' and lab(268) == 'EBITDA Margin' and lab(274).startswith('ROA'), (lab(263), lab(268), lab(274))
+    assert lab(224) == 'Performance Materials' and lab(225) == 'Performance Chemicals' and lab(228).startswith('Advanced')
+
+    # ---- 1) insert 2 rows (D&A % / CapEx %) in each ratio block, bottom-up ----
+    for after_row in (274, 268, 263):
+        am.Rows(f'{after_row + 1}:{after_row + 2}').Insert()
+        am.Rows(after_row).Copy()
+        am.Rows(f'{after_row + 1}:{after_row + 2}').PasteSpecial(-4122)
+    x.CutCopyMode = False
+    # new row positions after all inserts
+    pm_da, pm_cx = 264, 265
+    pc_da, pc_cx = 271, 272     # 268+2 shift = 270 EBITDA margin -> new rows 271,272
+    apt_da, apt_cx = 279, 280   # 274+4 shift = 278 ROA -> new rows 279,280
+    assert lab(pc_da - 1) == 'EBITDA Margin', lab(pc_da - 1)
+    assert lab(apt_da - 1).startswith('ROA'), lab(apt_da - 1)
+    hist = 'LMNOP'
+    cons = 'QRS'
+
+    def setrow(r, text, seg_rev, seg_row, inputs, kind):
+        c = am.Range(f'E{r}')
+        c.Value = text
+        c.Font.Name = 'Arial'; c.Font.Size = 11; c.Font.Bold = False; c.Font.Italic = False; c.Font.Color = 0
+        for col in hist:
+            f = f'=IFERROR({col}{seg_row}/{col}{seg_rev},"")'
+            cell = am.Range(f'{col}{r}')
+            cell.Formula = f
+            cell.NumberFormat = PCT
+            cell.Font.Color = 0
+        for col, v in zip(cons, inputs):
+            cell = am.Range(f'{col}{r}')
+            cell.Value = v
+            cell.NumberFormat = PCT
+            cell.Font.Color = INBLUE
+    # D&A % of sales
+    setrow(pm_da, 'D&A % of Sales', 224, 238, (0.070, 0.070, 0.070), 'da')
+    setrow(pc_da, 'D&A % of Sales', 225, 239, (0.044, 0.042, 0.042), 'da')
+    setrow(apt_da, 'D&A % of Sales', 228, 240, (0.174, 0.174, 0.174), 'da')
+    # CapEx % of sales
+    setrow(pm_cx, 'CapEx % of Sales', 224, 245, (0.048, 0.058, 0.058), 'cx')
+    setrow(pc_cx, 'CapEx % of Sales', 225, 246, (0.036, 0.045, 0.045), 'cx')
+    setrow(apt_cx, 'CapEx % of Sales', 228, 247, (0.050, 0.050, 0.050), 'cx')
+
+    # ---- 2) forecast D&A and capex by segment (rows 238-242, 245-248) ----
+    for col in cons:
+        for r, rev, pr in ((238, 224, pm_da), (239, 225, pc_da), (240, 228, apt_da),
+                           (245, 224, pm_cx), (246, 225, pc_cx), (247, 228, apt_cx)):
+            c = am.Range(f'{col}{r}')
+            c.Formula = f'=+{col}{rev}*{col}{pr}'
+            c.NumberFormat = NUM
+            c.Font.Color = 0
+        c = am.Range(f'{col}241')
+        c.Value = 0
+        c.NumberFormat = NUM
+        c.Font.Color = INBLUE
+        c = am.Range(f'{col}242')
+        c.Formula = f'=SUM({col}238:{col}241)'
+        c.NumberFormat = '$#,##0;-$#,##0; "-"'
+        c.Font.Bold = True
+        c = am.Range(f'{col}248')
+        c.Formula = f'=SUM({col}245:{col}247)'
+        c.NumberFormat = '$#,##0;-$#,##0; "-"'
+        c.Font.Bold = True
+    try:
+        am.Range('Q241').AddComment('2026+: D&A corporativo ya viene asignado dentro de los segmentos (Q1/Q2-26 no reportan linea corporate/indirect).')
+    except Exception as e:
+        print('cmt', e)
+
+    # ---- 3) link consolidated D&A and capex to the segment build ----
+    for col in cons:
+        am.Range(f'{col}36').Formula = f'=+{col}242'
+        am.Range(f'{col}151').Formula = f'=-{col}248'
+
+    # ---- 4) DCF New Ingevity section: D&A and capex from segments ----
+    AMq = "'Annual Model'!"
+    for col, ac in zip('CDE', 'QRS'):
+        dcf.Range(f'{col}84').Formula = f"=+{AMq}{ac}238+{AMq}{ac}239+{AMq}{ac}241"
+        dcf.Range(f'{col}85').Formula = f"=-({AMq}{ac}245+{AMq}{ac}246)"
+        dcf.Range(f'{col}84:{col}85').Font.Color = 5287936
+    dcf.Range('J78').Value = 'D&A % sales (implicito 2027; ahora de Annual Model por segmento)'
+    dcf.Range('K78').Formula = '=+D84/D75'
+    dcf.Range('J79').Value = 'CapEx % sales (implicito 2027; ahora de Annual Model por segmento)'
+    dcf.Range('K79').Formula = '=-D85/D75'
+    dcf.Range('K78:K79').Font.Color = 0
+
+    # ---- 5) Adjusted earnings & returns block ----
+    r0 = 289
+    assert str(am.Range(f'E{r0}').Value or '') == '' and str(am.Range(f'E{r0+14}').Value or '') == ''
+    am.Rows(259).Copy()
+    am.Rows(r0).PasteSpecial(-4104)  # all (formats + formulas)
+    x.CutCopyMode = False
+    am.Range(f'E{r0}').Value = 'Adjusted Earnings & Returns (ex-impairments)'
+    rows = {
+        'ni': r0 + 1, 'imp': r0 + 2, 'oth': r0 + 3, 'adj': r0 + 4, 'eps': r0 + 5,
+        'eq': r0 + 7, 'cum': r0 + 8, 'eqx': r0 + 9, 'roe': r0 + 10, 'roea': r0 + 11, 'roex': r0 + 12,
+    }
+    texts = {
+        'ni': 'Net Income (GAAP, total company)', 'imp': '(+) Impairments: goodwill + long-lived (pre-tax)',
+        'oth': '(+) Other special items, tax effects & disc. ops (plug to reported)',
+        'adj': 'Adjusted Net Income (total adjusted earnings)', 'eps': 'Adj. EPS (aprox., shares fila 47)',
+        'eq': "Total Shareholders' Equity", 'cum': 'Cumulative impairments (pre-tax)', 'eqx': 'Equity ex-impairments',
+        'roe': 'ROE (GAAP) = NI / avg equity', 'roea': 'ROE adj. = Adj NI / avg equity',
+        'roex': 'ROE adj. ex-impairments = Adj NI / avg equity ex-imp.',
+    }
+    for k, r in rows.items():
+        c = am.Range(f'E{r}')
+        c.Value = texts[k]
+        c.Font.Name = 'Arial'; c.Font.Size = 11; c.Font.Italic = False; c.Font.Color = 0
+        c.Font.Bold = k in ('adj', 'roex')
+        rg = am.Range(f'L{r}:U{r}')
+        rg.Font.Name = 'Arial'; rg.Font.Size = 11; rg.Font.Bold = k in ('adj', 'roex')
+    allc = 'LMNOPQRS'
+    imp = {'L': 0, 'M': 0, 'N': 0, 'O': 349.1, 'P': 293.1}
+    adj = {'M': 231.4, 'N': 129.6, 'O': 128.3, 'P': 167.0}
+    for i, col in enumerate(allc):
+        prev = allc[i - 1] if i else None
+        am.Range(f'{col}{rows["ni"]}').Formula = f'=+{col}44'
+        c = am.Range(f'{col}{rows["imp"]}')
+        c.Value = imp.get(col, 0)
+        c.Font.Color = INBLUE if col in cons else 0
+        if col in cons:
+            am.Range(f'{col}{rows["oth"]}').Value = 0
+            am.Range(f'{col}{rows["oth"]}').Font.Color = INBLUE
+            am.Range(f'{col}{rows["adj"]}').Formula = f'=+{col}{rows["ni"]}+{col}{rows["imp"]}+{col}{rows["oth"]}'
+        elif col in adj:
+            am.Range(f'{col}{rows["adj"]}').Value = adj[col]
+            am.Range(f'{col}{rows["oth"]}').Formula = f'=+{col}{rows["adj"]}-{col}{rows["ni"]}-{col}{rows["imp"]}'
+        if col in cons or col in adj:
+            am.Range(f'{col}{rows["eps"]}').Formula = f'=IFERROR({col}{rows["adj"]}/{col}47,"")'
+        am.Range(f'{col}{rows["eq"]}').Formula = f'=+{col}139'
+        am.Range(f'{col}{rows["cum"]}').Formula = (f'=+{col}{rows["imp"]}' if not prev else f'=+{prev}{rows["cum"]}+{col}{rows["imp"]}')
+        am.Range(f'{col}{rows["eqx"]}').Formula = f'=+{col}{rows["eq"]}+{col}{rows["cum"]}'
+        if prev:
+            am.Range(f'{col}{rows["roe"]}').Formula = f'=IFERROR({col}{rows["ni"]}/AVERAGE({prev}{rows["eq"]}:{col}{rows["eq"]}),"")'
+            if col in cons or col in adj:
+                am.Range(f'{col}{rows["roea"]}').Formula = f'=IFERROR({col}{rows["adj"]}/AVERAGE({prev}{rows["eq"]}:{col}{rows["eq"]}),"")'
+                am.Range(f'{col}{rows["roex"]}').Formula = f'=IFERROR({col}{rows["adj"]}/AVERAGE({prev}{rows["eqx"]}:{col}{rows["eqx"]}),"")'
+        for k in ('ni', 'imp', 'oth', 'adj', 'eq', 'cum', 'eqx'):
+            am.Range(f'{col}{rows[k]}').NumberFormat = USD1
+        am.Range(f'{col}{rows["eps"]}').NumberFormat = '$0.00;($0.00);"-"'
+        for k in ('roe', 'roea', 'roex'):
+            am.Range(f'{col}{rows[k]}').NumberFormat = PCT
+    notes = [
+        'Fuente adj. earnings (total company, cont. + disc.): Q4-23 (2022: 231.4), Q4-24 (2023 re-expresado: 129.6; 2024: 128.3), Q4-25 (2025: 167.0). 2021 no disponible en los archivos. 2026E-28E: NI de la fila 44 sin partidas especiales (azul = input).',
+        'Impairments: 2024 = goodwill 306.6 (cont.) + 42.5 (disc.); 2025 = goodwill APT 183.8 + Road Markings 109.3. Antes de impuestos; el goodwill normalmente no es deducible, los activos de larga vida si, asi que equity ex-impairments es aproximado.',
+        'Equity 2026E-28E viene del template con recompras de $300M/ano (filas 156-157, 207): queda negativo y distorsiona el ROE a futuro. Adj. EPS usa acciones de la fila 47 (la compania usa ~36.7M diluidas en 2025, reporta $4.55).',
+    ]
+    for i, t in enumerate(notes):
+        c = am.Range(f'E{r0 + 14 + i}')
+        c.Value = t
+        c.Font.Name = 'Arial'; c.Font.Size = 9; c.Font.Italic = True; c.Font.Color = 0x595959
+finally:
+    x.CutCopyMode = False
+    x.ScreenUpdating = True
+    x.Calculation = -4105
+print('done')

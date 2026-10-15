@@ -1,0 +1,133 @@
+import win32com.client as w, time
+x = w.GetActiveObject('Excel.Application')
+wb = [b for b in x.Workbooks if b.Name == '20261007_Ingevity Corp.xlsx'][0]
+am = wb.Worksheets('Annual Model')
+INBLUE = 16719360
+NUM = '#,##0.0;(#,##0.0);"-"'
+PCT = '0.0%;(0.0%);"-"'
+USD1 = '$#,##0.0;($#,##0.0);"-"'
+
+
+def lab(r):
+    return str(am.Range(f'E{r}').Value or '')
+
+
+def find(text, start=1, end=400, exact=True):
+    for r in range(start, end):
+        v = lab(r)
+        if (v == text) if exact else v.startswith(text):
+            return r
+    raise AssertionError('not found: ' + text)
+
+
+x.Calculation = -4135
+x.ScreenUpdating = False
+try:
+    r_proc = find('Divesture Proceds')
+    assert lab(r_proc - 3) == 'APT Divesture', lab(r_proc - 3)
+    L304 = r_proc
+    # snapshot key rows
+    r_ppe_net = find('Property Plant & Equipment - Net - Total')
+    r_ppe_bop = find('PP&E BOP')
+    r_int = find('Intangibles', 130, 160)
+    r_oth = find('Other Assets', 130, 160)
+    r_ocl = find('Other Current Liabilities', 140, 170)
+    r_eq = find('Total Shareholder Equity', 140, 170)
+    r_div = find('Dividends Paid - Cash - Total - Cash Flo', 160, 190, exact=False)
+    r_stk = find('Stock - Total - Issuance/(Retirement) -', 160, 190, exact=False)
+    r_olc = find('Other Operating Cash Flows', 150, 180)
+    r_bb = find('Total Value of Shares Repurchased', 200, 260, exact=False)
+    print('rows', dict(proc=r_proc, ppe_net=r_ppe_net, bop=r_ppe_bop, intang=r_int, oth=r_oth, ocl=r_ocl, eq=r_eq, div=r_div, stk=r_stk, olc=r_olc, bb=r_bb))
+
+    # ---------- 1) detail rows under the APT Divestiture block ----------
+    first = r_proc + 1
+    assert lab(first) == '' and lab(first + 1) == ''
+    am.Rows(f'{first}:{first + 15}').Insert()
+    items = [
+        ('apt_bv', 'APT: carrying value pre-impairment (YE25 seg. assets 380.9 - D&A H1 15.7)', '=380.9-15.7', NUM, True),
+        ('apt_imp', 'APT: (-) Q2-26 impairment (ya en resultados H1)', 32.1, NUM, True),
+        ('apt_cv', 'APT: carrying value at sale', '=+L{apt_bv}-L{apt_imp}', NUM, False),
+        ('apt_gl', 'APT: gain / (loss) vs carrying value (pre-tax)', f'=+L{L304}-L{{apt_cv}}', NUM, False),
+        ('apt_tx', 'APT: tax effect on result (%)', 0.0, PCT, True),
+        ('apt_gla', 'APT: gain / (loss) after-tax', '=+L{apt_gl}*(1-L{apt_tx})', NUM, False),
+        ('is_pr', 'IS/CTO + Road Markings: proceeds (H1-26 actual)', 156.3, NUM, True),
+        ('is_gn', 'IS/CTO + Road Markings: gains (H1-26 actual: 54.2 + 8.6)', '=54.2+8.6', NUM, True),
+        ('is_bv', 'IS/CTO + Road Markings: book value sold', '=+L{is_pr}-L{is_gn}', NUM, False),
+        ('h1_sp', "H1-26 special items net, after-tax (GAAP 95.1 - adj. earnings 102.9)", '=95.1-102.9', NUM, True),
+        ('sp_tot', 'Total special items 2026, after-tax (a equity)', '=+L{apt_gla}+L{h1_sp}', NUM, False),
+        ('wd', 'Total assets derecognized (APT pre-impairment + IS/RM)', '=+L{apt_bv}+L{is_bv}', NUM, False),
+        ('w_ppe', '  -> % PP&E (supuesto)', 0.55, PCT, True),
+        ('w_int', '  -> % Intangibles (supuesto)', 0.30, PCT, True),
+        ('w_oth', '  -> % Other assets (supuesto)', 0.15, PCT, True),
+        ('lit', 'Litigio BASF: cargo devengado en 2026 (ya en H1 specials)', 16.2, NUM, True),
+    ]
+    R = {k: first + i for i, (k, *_r) in enumerate(items)}
+    for k, text, v, nf, is_in in items:
+        r = R[k]
+        c = am.Range(f'E{r}')
+        c.Value = text
+        c.Font.Name = 'Arial'; c.Font.Size = 11; c.Font.Bold = k in ('sp_tot', 'wd'); c.Font.Italic = False; c.Font.Color = 0
+        cell = am.Range(f'L{r}')
+        if isinstance(v, str) and v.startswith('='):
+            cell.Formula = v.format(**R) if '{' in v else v
+        else:
+            cell.Value = v
+        cell.NumberFormat = nf
+        cell.Font.Name = 'Arial'; cell.Font.Size = 11
+        cell.Font.Color = INBLUE if is_in else 0
+        cell.Font.Bold = k in ('sp_tot', 'wd')
+    note = am.Range(f'E{first + 16}')
+    note.Value = 'Supuestos de bajas: APT sin pasivos transferidos (carrying value = activos del segmento); split PP&E/intangibles/otros es estimado. Impuesto de la perdida de APT en 0% (conservador). NWC de APT sale por dias de ventas -> en 2027 libera ~$30M de caja que en realidad se va con el negocio.'
+    note.Font.Name = 'Arial'; note.Font.Size = 9; note.Font.Italic = True; note.Font.Color = 0x595959
+    shift = 16
+    # rows below the insertion moved by 16 (insert was 16 rows incl. note row)
+    # re-find rows that moved
+    r_bb = find('Total Value of Shares Repurchased', 200, 260, exact=False)
+
+    # ---------- 2) balance sheet links ----------
+    am.Range(f'Q{r_ppe_net}').Formula = f'=+Q{r_ppe_bop}-Q{r_ppe_bop + 1}-Q{r_ppe_bop + 2}-$L${R["wd"]}*$L${R["w_ppe"]}'
+    am.Range(f'Q{r_int}').Formula = f'=++IF(Q30<>0,P{r_int}-$L${R["wd"]}*$L${R["w_int"]},0)'
+    am.Range(f'Q{r_oth}').Formula = f'=++IF(Q30<>0,P{r_oth}-$L${R["wd"]}*$L${R["w_oth"]},0)'
+    am.Range(f'Q{r_ocl}').Formula = f'=+IF(Q30<>0,P{r_ocl}+Q{r_olc}+$L${R["lit"]},0)'
+
+    # ---------- 3) adjusted-earnings block ----------
+    r_ni = find('Net Income (GAAP, total company)')
+    r_imp = r_ni + 1
+    r_othp = r_ni + 2
+    r_adj = r_ni + 3
+    r_eps = r_ni + 4
+    r_memo = r_ni + 5
+    assert lab(r_imp).startswith('(+) Impairments') and lab(r_adj).startswith('Adjusted Net Income') and lab(r_eps).startswith('Adj. EPS')
+    assert lab(r_memo) == '' and lab(r_ni + 6).startswith("Total Shareholders' Equity"), (lab(r_memo), lab(r_ni + 6))
+    c = am.Range(f'E{r_memo}')
+    c.Value = 'Memo: special items & divestiture result 2026-28 (after-tax; +gain / -charge)'
+    c.Font.Name = 'Arial'; c.Font.Size = 11; c.Font.Italic = True; c.Font.Color = 0
+    for col in 'QRS':
+        m = am.Range(f'{col}{r_memo}')
+        if col == 'Q':
+            m.Formula = f'=+L{R["sp_tot"]}'
+            m.Font.Color = 0
+        else:
+            m.Value = 0
+            m.Font.Color = INBLUE
+        m.NumberFormat = USD1
+        m.Font.Name = 'Arial'; m.Font.Size = 11; m.Font.Italic = True
+        am.Range(f'{col}{r_ni}').Formula = f'=+{col}44+{col}{r_memo}'
+        am.Range(f'{col}{r_adj}').Formula = f'=+{col}44'
+        am.Range(f'{col}{r_othp}').Formula = f'=+{col}{r_adj}-{col}{r_ni}-{col}{r_imp}'
+    am.Range(f'Q{r_imp}').Value = 32.1
+    am.Range(f'Q{r_imp}').Font.Color = INBLUE
+
+    # ---------- 4) equity uses GAAP NI incl. specials ----------
+    for col, prev in zip('QRS', 'PQR'):
+        am.Range(f'{col}{r_eq}').Formula = f'=+IF({col}30<>0,{prev}{r_eq}-{col}{r_div}+{col}{r_ni}+{col}{r_stk},0)'
+
+    # ---------- 5) buybacks 150 / 150 ----------
+    am.Range(f'Q{r_bb}').Value = 150
+    am.Range(f'R{r_bb}').Value = 150
+finally:
+    x.Calculation = -4105
+    x.ScreenUpdating = True
+    x.CutCopyMode = False
+print('R', R)
+print('done')

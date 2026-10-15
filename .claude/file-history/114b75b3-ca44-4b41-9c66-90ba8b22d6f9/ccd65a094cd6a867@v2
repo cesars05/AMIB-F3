@@ -1,0 +1,113 @@
+# Market Terminal
+
+## What This Is
+
+A personal, institutional-grade markets system for César that runs mostly unattended on his Windows machine. One data engine (LSEG Workspace plus free public sources) feeds five surfaces: a Bloomberg-style market dashboard, daily and weekly PPTX decks, an Ideas Screener, an IBKR-based portfolio view, and a 13F tracker for large AI and infrastructure funds. Arithmetic is done in code; an LLM (Claude Haiku via `claude -p`) only writes prose around numbers it never invents.
+
+Full requirements: `BRIEF.md`. Data and style rules: `CLAUDE.md`.
+
+## Core Value
+
+Every number César sees is correct and traceable to its source. A surface that shows fewer things but reconciles is worth more than one that shows everything with a silent error.
+
+## Requirements
+
+### Validated
+
+<!-- Inferred from the existing codebase (.planning/codebase/, 2026-09-24). -->
+
+- ✓ IBKR CSV parsing by block with multiple Header rows per section, concatenated by column name (`backend/ibkr_parser.read_sections`, Forex-as-shares bug fixed 2026-09-24) — existing
+- ✓ Idempotent ingestion of dropped IBKR statements with `tx_hash` dedup and FX-translation overlap handling (`backend/portfolio_service.py`) — existing
+- ✓ Portfolio math: FIFO realized P&L, TWR, MWR, risk metrics, Markowitz frontier (`backend/metrics.py`, `backend/optimization.py`) — existing
+- ✓ FastAPI backend (port 8000) and Next.js portfolio frontend (port 3000) inherited from Portafolio_Tracker V3, production build passing — existing
+- ✓ Anomaly detector: z-score of returns across 67 series, cross-sectional and pair divergences, writes `datos_detector.json` (`engine/detector.py`) — existing
+- ✓ News layer: LSEG headlines, whitelist of ~240 sources in tiers, `RUIDO` noise regex (`engine/noticias.py`) — existing
+- ✓ Indicator library, tier 1/2/3 plus 12 `=ECI` macro series, explicit field per instrument class (`engine/indicadores.py`) — existing
+- ✓ Chart generators for each weekly deck section: sectors, curve, macro, valuation, P/E decomposition, winners/losers, AI tiers, portfolio P/E (`engine/generar_*.py`) — existing
+- ✓ Design system: `engine/paleta.md` + `engine/grafico_banquero.py` — existing
+- ✓ Free sources verified: FRED, Banxico SIE, SEC EDGAR, Treasury FiscalData; keys in `.env` read by `config.secreto()` — existing
+- ✓ Text layer: `claude -p --model haiku` authenticated on César's Pro subscription — existing
+
+### Active
+
+- [ ] Portfolio cash reconciles to each IBKR statement's Summary `Starting Cash` (today cumulative cash is +0.24 high)
+- [ ] Automated regression tests for the IBKR parser and cash math, on synthetic fixtures only
+- [ ] One daily job at 16:00 CDMX writes a single JSON (prices, detector findings, news) that the dashboard and daily deck read
+- [ ] Daily 1-2 slide deck (market + portfolio) generated after the close
+- [ ] Bloomberg-style market dashboard with dark/light switch, detector-driven main chart, insight, ranked news, right-hand ticker column with market-chosen single stocks
+- [ ] Excel download (values sheet + Workspace formula sheet) for every table and chart
+- [ ] Weekly 9-10 slide deck assembled on `templates/News September.pptx` every Friday close, exported to `SALIDA_DECKS`
+- [ ] Full portfolio page: 15-minute refresh, MXN and constant-FX views, commissions panel, insights, GICS rivals
+- [ ] Ideas Screener (US / Europe / Japan, Small / Mid / Large bundles) refreshed every ~15 days, with deep dive per name
+- [ ] 13F tracker for AI and infrastructure funds with 13F holdings > US$30B, QoQ allocation changes
+
+### Out of Scope
+
+- Position sizing and buy/sell recommendations — César forms his own views; the system informs, never advises
+- Politicians' trading disclosures in the 13F tracker — explicitly excluded by César
+- Portfolio data on the market dashboard — the dashboard is market only; portfolio has its own page
+- Cloud-hosted jobs for LSEG data — cloud cannot reach Workspace at `localhost:9000`
+- Multi-user access, login, network exposure — Excel downloads are César only, local (decided 2026-09-24)
+- Unlicensed LSEG content (WSJ, Bloomberg, Dow Jones, Barron's, `.DJI`, `.N225`, `.VXN`, `.SKEW`, SOFR futures, `ECON_RLDT`) — verified not in the license
+- Editing the OneDrive archives `News\Templates\Graphs` and `Portafolio_Tracker` — frozen
+
+## Context
+
+- Brownfield. The engine is a set of CLI scripts that each open an LSEG session and write `datos_*.json` + PNGs into `engine/` (CWD), not into `config.DATOS`. There is no output-location contract yet; the daily JSON phase must set one.
+- `engine/test_compacto_sp500.py` and `engine/test_volumen_sp500.py` are manual live-LSEG chart scripts, not tests. They must be renamed before pytest is introduced so it never collects them.
+- No automated test suite, no CI. `npm run build` is the only frontend gate. `/verify-before-done` is the project verification skill.
+- The portfolio DB lives at `backend/portfolio.db`; `data/portfolio_antes_ytd.db` is a pre-YTD snapshot, not a superset.
+- Splits come from yfinance; ex-dates differ from LSEG by days to weeks (CRWD 4:1, APH 2:1 in 2026). Today this is a manual check.
+- `_parse_statement_period` only handles English `"%B %d, %Y"` and silently returns `(None, None)` otherwise, which disables FX-translation overlap logic. Feeds the cash bug.
+- Four existing desktop scheduled tasks need review once the new pipeline runs.
+- Codebase map: `.planning/codebase/` (7 documents, 2026-09-24).
+
+## Constraints
+
+- **Data source**: LSEG Workspace desktop proxy on `localhost:9000`, guaranteed open at 16:00 CDMX. US close is 14:00 CDMX. LSEG jobs run at or after 16:00 — Workspace is not reliably up earlier.
+- **Scheduling**: local only (Windows Task Scheduler or the desktop app's local scheduled tasks) — cloud cannot reach Workspace.
+- **Failure mode**: if LSEG or Workspace does not respond, the job fails explicitly and never writes an empty JSON that a surface could render as a quiet day.
+- **Cost**: free and public sources first (SEC EDGAR, Fed, Treasury, FRED, Banxico SIE); LSEG for the rest. Minimize API calls and compute with caching and incremental pulls.
+- **LLM**: Claude Haiku via `claude -p --model haiku` on César's subscription, called from a neutral directory with no tools. The model never writes a number. Every surface renders with numbers and charts only if the text step fails.
+- **Output style**: English, Arial, IB/corporate tone, no em-dashes, few colons. Design system in `engine/paleta.md` + `engine/grafico_banquero.py` overrides generic dataviz guidance. Red only for dashed reference lines; green/red never encode sign; max 6 series; every chart reads in dark and light themes.
+- **Paths**: `engine/config.py` is the only place an absolute path lives. Secrets from `.env` via `config.secreto()`.
+- **Test data**: tests use synthetic IBKR CSV fixtures only. Real statements are never committed or reproduced.
+- **Frontend**: this Next.js version has breaking changes; read `frontend/AGENTS.md` before touching it.
+
+## Key Decisions
+
+| Decision | Rationale | Outcome |
+|----------|-----------|---------|
+| Phase order: portfolio fixes, daily JSON + daily deck, dashboard, weekly deck, rest of portfolio, screener, 13F | Agreed with César 2026-09-24. Portfolio fixes go first because the daily deck shows portfolio figures; the daily deck ships with the JSON so something useful exists before the dashboard | — Pending |
+| Dashboard single stocks chosen by the market (top gainers, losers, unusual volume vs 20-day average, S&P 500 universe) | César, 2026-09-24 | — Pending |
+| Excel download: values sheet + Workspace formula sheet, both generated from one field registry | So the two sheets cannot drift; derived columns as Excel formulas for auditability | — Pending |
+| Excel downloads are for César only, saved locally from the dashboard | César, 2026-09-24. No login or network exposure needed | — Pending |
+| Every Values sheet carries "Source: LSEG Workspace" | LSEG redistribution terms | — Pending |
+| Cash anchored to each statement's Summary `Starting Cash` instead of a pure cumsum from date zero | A superseded 2025 FX Translations P&L row leaves cumulative cash +0.24 high | — Pending |
+| LLM writes prose only, around numbers injected from code-generated JSON | Numbers from an LLM have cost wrong results before | ✓ Good |
+| Declared LSEG field per instrument class, never a fallback loop | `US3MT=RR` returns a price under one field and a yield under another, silently | ✓ Good |
+
+## Open Decisions
+
+- 13F seed list of funds (gates the 13F phase only).
+- Review of the 4 existing desktop scheduled tasks once the new pipeline runs.
+
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd-transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd:complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
+---
+*Last updated: 2026-09-24 after initialization*

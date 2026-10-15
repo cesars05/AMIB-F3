@@ -1,0 +1,145 @@
+import sys, io, re
+p = sys.argv[1]; t = io.open(p, encoding='utf-8').read()
+
+
+def swap_block(start, end, new):
+    global t
+    i = t.index(start); j = t.index(end, i)
+    t = t[:i] + new + t[j:]
+
+
+def rep(a, b):
+    global t
+    assert t.count(a) == 1, a[:70]
+    t = t.replace(a, b)
+
+
+# subtitle length warning
+rep('    s = d.content_slide(title, subtitle, source=source)\n',
+    '    if subtitle and len(subtitle) > 92: print(f"WARN subtitle {len(subtitle)}: {subtitle}")\n    s = d.content_slide(title, subtitle, source=source)\n')
+
+# implication boxes: shorter, bigger text
+rep('        d.bullet_box(s, x, y + 0.67, cw, 6.72 - (y + 0.67), lines, size=12, line="#A6A6A6")',
+    '        d.bullet_box(s, x, y + 0.67, cw, 3.1, lines, size=13, line="#A6A6A6")')
+
+# ---- 8: OECD table screenshot (user style)
+swap_block('# 8 demand by region (native, OECD T2.1)', '# 9 capacity outruns demand', '''# 8 demand by region (OECD Table 2.1 screenshot, user's dashed box)
+s = slide("Global Demand Falls for a Fourth Year", "World steel demand fell 2.6% in 2025 to 1,805 Mt and grows only 0.9% a year to 2030",
+          source="OECD (2026), OECD Steel Outlook 2026, Table 2.1", link=URL["oecd"])
+exhibit(s, 0.575, 1.47, 7.4, 5.3, "OECD_T2.1.png", "Steel Demand by Region", "Million tonnes, crude steel equivalent; 2026 and 2030 projections",
+        align="left", boxes=[(0.02, 0.025, 0.96, 0.05), (0.02, 0.765, 0.96, 0.135)])
+bul(s, 8.3, 1.55, 4.55, 5.2, [
+    "**China (-6.9% in 2025)** drove the decline as the property crisis deepened; Beijing dropped its 'three red lines' developer rules in Jan-26, but buyers stay cautious and demand keeps edging down to 818 Mt in 2030.",
+    "**India is the growth engine:** +9.8% in 2025 and +5.1% a year to 209 Mt by 2030 (+46 Mt), on roads, rail and housing; ASEAN adds +3.5% a year.",
+    "**Mature markets barely grow:** USMCA (+0.4% a year) and the EU (+0.7%). For US mills, earnings depend on price and import share, not volume.",
+    "**Downside risk:** the Middle East conflict lifts energy costs and clouds the 2026 recovery the OECD expects (+0.4%)."], size=12)
+
+''')
+
+# ---- 10 diagram
+rep('"China\'s surplus travels through four channels; each new tariff pushes it into the next weakest market"',
+    '"China\'s surplus travels through four channels; each new tariff pushes it to a weaker market"')
+rep('d.line(s, 8.6, 3.62, 8.95, 2.2, color=NAVY, width=2.0, arrow=True)\n',
+    'd.merge(s, [(5.7, 1.55 + k * 1.3, 2.85, 1.05) for k in range(4)], mk, trunk_x=8.78)\n')
+
+# ---- 11 China exports: OECD Fig 1.2
+swap_block('# 11 China now 41% of world exports (native)', '# 12 prices split', '''# 11 China exports (OECD Figure 1.2)
+s = slide("China Now Ships 41% of the World's Exported Steel", "Chinese exports doubled since 2019 to a record 131 Mt as other major regions export less",
+          source="OECD (2026), OECD Steel Outlook 2026, Figure 1.2 and Table 2.3", link=URL["oecd"])
+exhibit(s, 0.575, 1.47, 7.6, 5.3, "OECD_1.2.png", "Steel Exports by Region", "Million tonnes (left); exports as % of production (right), 2019-2025", align="left",
+        boxes=[(0.02, 0.06, 0.47, 0.72)])
+bul(s, 8.55, 1.55, 4.3, 5.2, [
+    "**China +109% since 2019 (131 Mt):** exports are the outlet for output that the property market no longer absorbs; its share of world trade rose from 19% to 41%.",
+    "**Exports now equal ~14% of Chinese output** (about 5% in 2020), while the share exported by Europe and the rest of Asia keeps falling.",
+    "**Everyone else retreats:** Europe's exports are down 53% since 2019 and North America's 20%, as their mills lose third-country markets to cheaper steel.",
+    "**From Jan-26 China requires export licenses** for all mill products, a possible brake if enforced."], size=12)
+
+''')
+
+# ---- subtitles / titles that wrapped
+rep('"Iron ore rose 9% and coking coal 17% in 2025 while steel prices stalled; margins sit near cycle lows"', '"Iron ore +9% and coking coal +17% in 2025 while steel stalled; margins sit near cycle lows"')
+rep('"Trade Defenses Move From Product Cases to Broad Walls", "395 AD/CVD measures are in force; governments now add country-wide tariffs and quotas that are harder to evade"',
+    '"Trade Defenses Shift to Broad Tariff Walls", "395 AD/CVD cases are in force; governments now add country-wide tariffs and quotas"')
+rep('"Construction, Energy and Data Centers Drive US Demand", "worldsteel sees US demand +2.0% in 2026 to 92.7 Mt; growth is concentrated in non-residential and energy"',
+    '"Projects, Not Housing, Drive US Demand", "worldsteel sees US demand +2.0% in 2026 to 92.7 Mt, led by non-residential and energy"')
+rep('"HRC lead times reach ~9.3 weeks, a sign of tight supply; non-residential spending stays high through 2030"', '"HRC lead times reach ~9.3 weeks; non-residential spending stays high through 2030"')
+rep('"The tariff doubled to 50% in June 2025 and since April 2026 applies to the full value of steel derivatives"', '"The tariff doubled to 50% in June 2025 and now applies to the full value of derivatives"')
+rep('"Canada, Brazil and Mexico Ship Less; Korea Ships More", "2026 annualized imports from Canada are -51% vs. 2024, while South Korea\'s are +59% and now the largest"',
+    '"Korea Replaces Canada as the Top Supplier", "2026 annualized imports: Canada -51% vs. 2024, South Korea +59% and now #1"')
+rep('"US HRC trades more than $400/st above Southeast Asian import parity, the key risk for 2027 prices"', '"US HRC trades >$400/st above SE Asian import parity, the key risk for 2027 prices"')
+rep('"EU and UK demand fell 1.2% in 2025; the OECD sees only +1.4% in 2026 and BofA\'s real-time gauge is negative again"', '"EU and UK demand fell 1.2% in 2025; BofA\'s real-time gauge is negative again in 2026"')
+rep('"From 1 July 2026 import quotas fall ~47% and out-of-quota steel pays 50%, plus a carbon border tax"', '"From July 2026 import quotas fall ~47% and out-of-quota steel pays a 50% duty"')
+rep('"Demand fell 6.9% in 2025 but output only 4.3%; the gap went abroad as a record 131 Mt of exports"', '"Demand fell 6.9% in 2025 but output only 4.3%; the surplus went abroad at falling prices"')
+rep('"To 2030 India\'s demand grows 5.1% a year and ASEAN\'s output 8.5%, while Japan and Korea shrink"', '"To 2030 India\'s demand grows 5.1% a year and ASEAN output 8.5%; Japan-Korea shrink"')
+rep('"Cross-border projects are ~21% of future capacity; over half involve Chinese firms and 86% use blast furnaces"', '"~21% of future capacity is cross-border; most is Chinese and 86% uses blast furnaces"')
+rep('"China\'s surplus and Asian capacity growth keep world prices low; Asian steel is the main import threat to the US"', '"China\'s surplus and Asian capacity keep world prices low and threaten US imports"')
+rep('"All four see solid orders, falling imports and rising prices; Nucor and Steel Dynamics ship record volumes"', '"All four see solid orders, falling imports and rising prices; two ship record volumes"')
+rep('"EBITDA rose 19-201% quarter on quarter as realized prices climbed; Cliffs guides another doubling in Q3"', '"EBITDA rose 19-201% q/q on higher prices; Cliffs guides another doubling in Q3"')
+rep('f"Since end-2024 Nucor {fin[\'Nucor\']:+.0%} and Steel Dynamics {fin[\'Steel Dynamics\']:+.0%} vs. the S&P 500 {fin[\'S&P 500\']:+.0%}; Cliffs and CMC trail"',
+    'f"Since end-2024 Nucor {fin[\'Nucor\']:+.0%}, Steel Dynamics {fin[\'Steel Dynamics\']:+.0%} vs. S&P 500 {fin[\'S&P 500\']:+.0%}"')
+
+# ---- 17 HRC annotations: band labels at bottom, staggered events
+rep('    d.text(s, X(a), py + 0.02, X(b) - X(a), 0.22, lab, size=9, italic=True, color=GREY, align="center", inset=0)',
+    '    d.text(s, X(a), py + ph - 0.26, X(b) - X(a), 0.22, lab, size=9, italic=True, color=GREY, align="center", inset=0)')
+rep('''for day, txt, lab_y in [(dt.date(2018, 3, 8), "Mar-18: 232 tariff 25%", 1500), (dt.date(2021, 9, 10), "Sep-21: post-COVID peak", 2120),
+                        (dt.date(2025, 2, 10), "Feb-25: 25% on all", 1650), (dt.date(2025, 5, 30), "May-25: 50% announced", 1950)]:
+    i = min(range(len(hw)), key=lambda q: abs((hw[q][0] - day).days)); xx = X(hw[i][0])
+    d.line(s, xx, Y(lab_y) + 0.03, xx, Y(hw[i][1]) - 0.04, color=RED, width=0.75, dash="dash")
+    d.text(s, xx - 1.0, Y(lab_y) - 0.36, 2.0, 0.34, [f"**{txt}**", f"${hw[i][1]:,.0f}/st"], size=8, color=RED, align="center", inset=0, spacing=0)''',
+    '''for day, txt, lab_y, side in [(dt.date(2018, 3, 8), "Mar-18: 232 tariff 25%", 1450, "c"), (dt.date(2021, 9, 10), "Sep-21: post-COVID peak", 2150, "r"),
+                              (dt.date(2025, 2, 10), "Feb-25: 25% on all", 1500, "l"), (dt.date(2025, 5, 30), "May-25: 50% announced", 1850, "l")]:
+    i = min(range(len(hw)), key=lambda q: abs((hw[q][0] - day).days)); xx = X(hw[i][0])
+    col = GREY if "peak" in txt else RED
+    d.line(s, xx, Y(lab_y) + 0.03, xx, Y(hw[i][1]) - 0.04, color=col, width=0.75, dash="dash")
+    bx0 = {"c": xx - 1.0, "l": xx - 2.0, "r": xx}[side]
+    d.text(s, bx0, Y(lab_y) - 0.36, 2.0, 0.34, [f"**{txt}**", f"${hw[i][1]:,.0f}/st"], size=8, color=col,
+           align={"c": "center", "l": "right", "r": "left"}[side], inset=0.03, spacing=0)''')
+
+# ---- 18 PPI axis
+rep('[NAVY], [2.25], "0", 100, 650, 100,', '[NAVY], [2.25], "0", 100, 800, 100,')
+
+# ---- 21 BofA box position
+rep('boxes=[(0.735, 0.0, 0.085, 0.9)])', 'boxes=[(0.775, 0.0, 0.07, 0.9)])')
+
+# ---- 32 Europe: OECD Fig 2.6 instead of native
+swap_block('ex = {n: v for n, v in D3["exports"]}\ns = slide("Europe Loses Its Export Markets"', 's = slide("Europe Builds Its Own Trade Wall"', '''s = slide("Europe Loses Exports and Absorbs Asian Steel", "European exports fell 53% since 2019; Asian steel gained share in Italy, Türkiye and Spain",
+          source="OECD (2026), OECD Steel Outlook 2026, Figure 2.6 and Table 2.3", link=URL["oecd"])
+exhibit(s, 0.575, 1.47, 7.6, 5.3, "OECD_2.6.png", "Change in Imports by Source and Market", "Million tonnes, 2019-2025", align="left",
+        boxes=[(0.23, 0.48, 0.73, 0.11)])
+bul(s, 8.55, 1.55, 4.3, 5.2, [
+    "**EU27 lost its own neighbors:** EU shipments into France (-4.7 Mt), Germany (-3.1 Mt) and Italy (-1.6 Mt) fell, replaced by ASEAN, Chinese and MENA steel.",
+    "**Europe now exports 26% of its output vs. 47% in 2019** (EU27+UK exports -38.5% to 22.8 Mt), so lost export volume becomes idle capacity at home.",
+    "**Türkiye and Italy are the entry points:** +4.1 Mt and +1.1 Mt from China, +2.4 Mt each from ASEAN.",
+    "**This is exactly what the new trade regime targets.**"], size=12)
+
+''')
+
+# ---- 36 China (Asia): Fig 2.5 volume vs value
+rep('exhibit(s, 6.2, 1.47, 6.67, 5.3, "OECD_1.2.png", "Exports by Region and as % of Production", "Million tonnes (left); exports / production, % (right)", boxes=[(0.02, 0.05, 0.47, 0.75)])',
+    'exhibit(s, 6.2, 1.47, 6.67, 5.3, "OECD_2.5.png", "Export Volume vs. Export Value", "Index, 2019 = 100; dashed = volume, solid = value", boxes=[(0.6, 0.25, 0.37, 0.45)])')
+rep('"**Exports now equal ~14% of output** (about 5% in 2020) and 41% of world trade; mills shifted from rebar to flat products, the segment the US and EU protect most."',
+    '"**Volume up, value flat:** Chinese export tonnage doubled since 2019 while export value grew far less, a sign of steep discounting; ASEAN shows the same pattern."')
+
+# ---- 38 capacity: OECD Fig 3.3
+swap_block('cap = {r[0]: r for r in D3["capacity"]}', 's = slide("Chinese Capital Builds Blast Furnaces Abroad"', '''s = slide("New Capacity Concentrates in Asia", "Asia holds 84 Mt of the 139 Mt planned for 2026-28; China returns as the largest builder",
+          source="OECD (2026), OECD Steel Outlook 2026, Figure 3.3 and Table 3.2", link=URL["oecd"])
+exhibit(s, 0.575, 1.47, 7.6, 5.3, "OECD_3.3.png", "Potential Capacity Additions, 2026-2028", "Million tonnes, by region and furnace type", align="left", boxes=[(0.05, 0.0, 0.1, 0.72)])
+bul(s, 8.55, 1.55, 4.3, 5.2, [
+    "**China plans up to 38.6 Mt** after cutting 11 Mt in 2021-25, the largest national expansion anywhere; whether closures offset it depends on the new 1.5:1 swap rule.",
+    "**India adds up to 31.8 Mt** after +41 Mt in 2021-25; together China and India are 84% of Asia's additions, mostly blast furnaces.",
+    "**Only 47 Mt is underway; 92 Mt is planned**, so the 2028 surplus could be smaller if projects slip, an upside risk to prices.",
+    "**North America adds ~11 Mt, mostly electric furnaces.**"], size=12)
+
+''')
+
+# ---- 42 axis labels low
+rep('ch.plots[0].series[4].format.line.dash_style', 'from pptx.enum.chart import XL_TICK_LABEL_POSITION\nch.category_axis.tick_label_position = XL_TICK_LABEL_POSITION.LOW\nch.plots[0].series[4].format.line.dash_style')
+
+# ---- 44 earnings layout tighter
+rep('''gf, ch = clustered(s, 1.9, yh, 10.97, 3.0, ["Nucor", "Steel Dynamics", "Cleveland-Cliffs", "CMC"],''',
+    '''gf, ch = clustered(s, 1.9, yh, 10.97, 2.55, ["Nucor", "Steel Dynamics", "Cleveland-Cliffs", "CMC"],''')
+rep('Inches(yh + 3.0 + 0.02), Inches(lw), Inches(lh))', 'Inches(yh + 2.55 + 0.02), Inches(lw), Inches(lh))')
+rep('y0 = yh + 3.5\n', 'y0 = yh + 3.0\n')
+rep('d.text(s, 0.575, y0 + 1.52, 12.3, 0.22,', 'd.text(s, 0.575, y0 + 1.55, 12.3, 0.22,')
+
+io.open(p, 'w', encoding='utf-8').write(t); print('patched')

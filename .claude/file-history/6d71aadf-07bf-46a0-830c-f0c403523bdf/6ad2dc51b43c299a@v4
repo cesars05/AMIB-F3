@@ -1,0 +1,73 @@
+import pickle, math, collections, json
+import engine as E
+
+N = len(E.MONTHS)
+res = {"months": [str(m) for m in E.MONTHS], "funds": {}, "sec": {}, "brinson": {}}
+
+def period_stats(f, months, annualize):
+    lk, cum = E.linked(f, months)
+    scale = 1.0
+    out_ret = cum
+    if annualize:
+        a = E.ann(cum, len(months)); scale = a / cum if abs(cum) > 1e-12 else 1; out_ret = a
+    contrib = {r: v * scale for r, v in lk.items()}
+    return contrib, out_ret, cum
+
+rows = []   # security level
+for f in E.FUNDS:
+    cP, annP, cumP = period_stats(f, E.MONTHS, True)
+    cY, ytd, _ = period_stats(f, E.YTD, False)
+    wP = E.avg_weight(f, E.MONTHS); wY = E.avg_weight(f, E.YTD)
+    miss = sum(E.MISSING[f][m] for m in E.MONTHS) / N
+    res["funds"][f] = dict(ann=annP, cum=cumP, ytd=ytd, miss=miss,
+                           monthly={str(m): E.HRET[f][m] for m in E.MONTHS})
+    res["sec"][f] = dict(P=dict(E.by_sector(cP)), Y=dict(E.by_sector(cY)),
+                         wP=dict(E.by_sector(wP)), wY=dict(E.by_sector(wY)))
+    res.setdefault("reg", {})[f] = dict(P=dict(E.by_region(cP)), Y=dict(E.by_region(cY)),
+                         wP=dict(E.by_region(wP)), wY=dict(E.by_region(wY)))
+    for ric in set(cP) | set(cY) | set(wP):
+        rows.append(dict(fund=f, ric=ric, name=E.name(ric), sector=E.sector(ric), region=E.region(ric),
+                         wP=wP.get(ric, 0), cP=cP.get(ric, 0), wY=wY.get(ric, 0), cY=cY.get(ric, 0)))
+res["rows"] = rows
+
+for tag, months, annualize in (("P", E.MONTHS, True), ("Y", E.YTD, False)):
+    alloc, sel, cumA, cumP = E.brinson(months)
+    if annualize:
+        gap = E.ann(cumA, len(months)) - E.ann(cumP, len(months))
+        sc = gap / (cumA - cumP) if abs(cumA - cumP) > 1e-12 else 1
+    else:
+        gap = cumA - cumP; sc = 1
+    ra, rs, _, _ = E.brinson(months, E.by_region)
+    res.setdefault("brinson_reg", {})[tag] = dict(alloc={k: v * sc for k, v in ra.items()}, sel={k: v * sc for k, v in rs.items()})
+    res["brinson"][tag] = dict(alloc={k: v * sc for k, v in alloc.items()},
+                               sel={k: v * sc for k, v in sel.items()}, gap=gap)
+pickle.dump(res, open(E.S + "/results.pkl", "wb"))
+
+# quick print
+for f in E.FUNDS:
+    d = res["funds"][f]
+    print(f, "ann %.2f%% cum %.2f%% ytd %.2f%% missing-ret wt %.2f%%" % (d["ann"]*100, d["cum"]*100, d["ytd"]*100, d["miss"]*100))
+for tag in ("P", "Y"):
+    b = res["brinson"][tag]
+    print(tag, "gap %.2f" % (b["gap"]*100), "alloc %.2f sel %.2f" % (sum(b["alloc"].values())*100, sum(b["sel"].values())*100))
+    for s in E.GICS + [E.OTHER, "Cash & other"]:
+        print("   %-24s A %6.2f  S %6.2f" % (s, b["alloc"].get(s, 0)*100, b["sel"].get(s, 0)*100))
+
+# ---------- actual fund returns & residual ----------
+FR = pickle.load(open(E.S + "/fundret_exact.pkl", "rb"))
+RICS = {"AZTD": "AZTD.K", "AVDV": "AVDV.K", "ISCF": "ISCF.K", "DISV": "DISV.Z", "DFIS": "DFIS.K"}
+def comp(xs): return math.prod(1 + x for x in xs) - 1
+for f, ric in RICS.items():
+    act = {d[:7]: v / 100 for d, v in FR[ric]}
+    am = [act[str(m)[:7]] for m in E.MONTHS]
+    d = res["funds"][f]
+    d["act_monthly"] = {str(m): act[str(m)[:7]] for m in E.MONTHS}
+    d["act_cum"] = comp(am); d["act_ann"] = E.ann(d["act_cum"], len(am)); d["act_ytd"] = comp(am[-8:])
+    yrs = {}
+    for y in (2024, 2025, 2026):
+        ms = [m for m in E.MONTHS if m.year == y]
+        yrs[y] = dict(act=comp([act[str(m)[:7]] for m in ms]), hold=comp([E.HRET[f][m] for m in ms]))
+    d["years"] = yrs
+    print(f, "actual ann %.2f ytd %.2f | resid ann %.2f ytd %.2f" % (d["act_ann"]*100, d["act_ytd"]*100,
+          (d["act_ann"]-d["ann"])*100, (d["act_ytd"]-d["ytd"])*100), {y: (round(v["act"]*100,1), round(v["hold"]*100,1)) for y, v in yrs.items()})
+pickle.dump(res, open(E.S + "/results.pkl", "wb"))

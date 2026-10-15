@@ -1,0 +1,188 @@
+@NOTE Amarillo = opcional, guárdalo por si preguntan. Los nombres de entre corchetes son quién habla y el tiempo sugerido.
+
+@H Slide 1: Portada
+@WHO Julio · 0:15
+Buenas tardes. Somos el equipo 5 del curso de Capital Privado y Capital Emprendedor y les presentamos **Aurex Capital**, un fondo de **US$100 millones** que invierte en **empresas mexicanas de energía distribuida**.
+Energía distribuida quiere decir energía que se genera y se guarda en el mismo lugar donde se usa: una fábrica, una tienda o un centro de distribución, en lugar de una planta grande lejos del cliente.
+Somos seis: Julio, Roberto, Mariana, Tomás, Pablo y Miguel, y cada quien va a defender una parte del fondo.
+
+@H Slide 2: Resumen ejecutivo
+@WHO Julio · 1:00
+Esta slide resume todo el fondo en una sola pantalla. El mensaje es que **invertimos US$100 millones en 8 empresas mexicanas y, aun suponiendo que 3 de las 8 fallan, el inversionista gana 2.26 veces su dinero, con una tasa de retorno de 17.9% anual**.
+A la izquierda vemos cuatro bloques:
+- **Qué compramos:** participaciones minoritarias, es decir, una parte de la empresa y no el control, con asiento en el consejo, en 8 empresas que ya venden solar, baterías, microrredes y gestión de energía. Cada ticket inicial es de **US$2 a 10 millones**, más un segundo pago llamado *follow-on* cuando la empresa cumple sus metas. Ninguna empresa puede pesar más de **15% del fondo**.
+- **Dónde y cuándo:** México, en etapa de crecimiento, o sea, empresas que ya tienen clientes y contratos. Entran de forma escalonada en los años 1 a 3. De los US$100 millones, **US$82 millones llegan a las empresas**: US$56 millones iniciales y US$26 millones de *follow-on*.
+- **Cómo funciona:** es un fideicomiso privado, regulado por los artículos 192 y 193 de la LISR, que es la Ley del Impuesto sobre la Renta, para inversionistas calificados. Dura **10 años divididos en 5 + 5: los primeros 5 años son para invertir, comprando y acompañando a las empresas, y los últimos 5 son para vender y devolver el dinero**.
+- **Cómo salimos:** vendiendo cada empresa entre los años 6 y 9 a compradores que ya identificamos.
+A la derecha está el panel de retorno del caso base: **2.26x MOIC neto**, que quiere decir que por cada dólar que pone el inversionista regresan US$2.26 después de todos los costos; **17.9% de TIR neta**, la tasa interna de retorno, que es el rendimiento anual compuesto; y **US$32 millones de carry** para nosotros, la gestora.
+Lo importante: **asumimos que 3 de las 8 empresas fallan**, Uriel/BRM, FAZT y S2G, **y que las otras 5 sí funcionan y sostienen el resultado**. Con eso el portafolio recupera US$258 millones, **3.15 veces lo invertido**.
+==Si fallan 5 de las 8, el inversionista todavía recupera 1.33 veces su dinero.==
+La barra verde final es honesta: somos un primer fondo sin historial, así que nuestra credibilidad está en cómo diseñamos el fondo y no en adjetivos.
+
+@H Slide 3: Equipo
+@WHO Julio · 0:30
+Aquí vemos a los seis integrantes y la pregunta que cada uno responde. Julio, como Managing Partner, dirige el fondo y responde **qué hacemos y por qué**. Roberto, socio de inversión, ve el origen, la diligencia y el caso de inversión, y responde **cuánto invertimos y en quién**. Mariana, socia de operaciones, ve el vehículo, las reglas y las llamadas de capital, y responde **cómo funciona el fondo**. Tomás, de relación con inversionistas, responde **por qué un inversionista elige Aurex**. Pablo, analista, construyó el modelo financiero y responde **qué tan bien podría irnos**. Y Miguel, analista, ve el mercado y los datos de gobierno, y responde **dónde está la oportunidad**.
+En un primer fondo el comité no puede revisar un historial, así que revisa quién decide qué y qué pasa si esa persona se va. Por eso abajo está la regla de *key man*, o persona clave: **si salen dos o más de las personas clave, el Managing Partner y el Socio de inversión, el periodo de inversión se suspende** hasta que los inversionistas decidan si continúan.
+También los conflictos de interés se declaran, la persona se abstiene y los revisa el LPAC, que es el Comité Asesor de Inversionistas.
+==Si preguntan por el conflicto: un familiar directo de un integrante es dueño de una empresa del sector. Está declarado, esa empresa no entra al portafolio sin aprobación del LPAC y el integrante se abstiene.==
+
+@H Slide 4: El Estado abre espacio, pero no a nuestro ticket
+@WHO Miguel · 1:15
+Para esta slide vemos que **el gobierno mexicano sí está abriendo espacio a la inversión privada en electricidad, pero en una escala que no es la nuestra**, y eso es justo lo que justifica el fondo.
+Arriba tenemos cinco cifras:
+- **MXN 1.168 billones** de inversión sexenal en electricidad, anunciada por Presidencia el 7 de octubre de 2026.
+- **32,475 MW** de capacidad nueva en el plan 2025 a 2030. MW es megawatt, una medida de potencia.
+- **5,551 MW de baterías** en el SEN, que es el Sistema Eléctrico Nacional, la red eléctrica del país, entre 2025 y 2030.
+- **5,190 MW de generación distribuida** al cierre de 2025, es decir, energía producida en el mismo lugar donde se consume.
+- **7,411 MW de proyectos mixtos** que la CFE, la Comisión Federal de Electricidad, adjudicó en junio de 2026. Mixto significa que la CFE se asocia con un privado.
+La primera gráfica, **"Adiciones por región"**, viene del PLADESE, que es el **Plan de Desarrollo del Sistema Eléctrico Nacional 2025 a 2039**, el plan oficial de la Secretaría de Energía publicado en el Diario Oficial de la Federación el 17 de octubre de 2025. Muestra cuánta capacidad nueva se planea en cada región de control. Una región de control es una de las zonas en que el CENACE, el Centro Nacional de Control de Energía, opera la red. **Lo que se ve en verde son las dos regiones con más capacidad nueva: la Oriental con 9,056 MW y la Occidental con 6,626 MW**, que juntas suman más de 15,000 MW. Las demás, en gris, van bajando hasta la región Norte con 1,375 MW.
+La segunda gráfica muestra la **generación distribuida ya instalada por estado**, con datos de la CNE, que es la Comisión Nacional de Energía, el regulador del sector. Encabeza Jalisco con 748 MW, seguido de Nuevo León con 544, Chihuahua con 393 y Guanajuato con 359. Lo que nos dice es que **ya existe un mercado real de energía en sitio, concentrado en estados industriales**.
+==Ojo: en esta gráfica el verde marca Jalisco, Nuevo León y Guanajuato y la slide no trae leyenda. Si preguntan, el criterio más cercano en nuestros documentos es "estados con más generación distribuida donde vemos espacio para el fondo". Mejor no decir que es donde están nuestras empresas, porque no lo es.==
+En el recuadro **"Qué significa para Aurex"**:
+- En generación y proyectos mixtos el gobierno plantea **MXN 794,000 millones hasta 2030**, de los cuales casi 200,000 millones serían privados y 452,000 millones serían mixtos con CFE. **Son proyectos de cientos de MW**, con cheques de cientos de millones de dólares. Ahí no entramos.
+- **Aguas abajo**, la generación distribuida ya suma 5,190 MW y la meta del plan es llegar a **14,432 MW en 2039**. Además, el autoconsumo de entre 0.7 y 20 MW, que es el rango de tamaño de una fábrica o un centro comercial, necesita baterías o respaldo propio cuando la energía es solar. Eso crea demanda de lo que venden nuestras empresas.
+- Existe la **deducción fiscal de 100%** del equipo renovable, en el artículo 34 fracción XIII de la LISR, que ayuda al cliente a decidirse.
+Con todo esto, **para Aurex la conclusión es que hay demanda de energía en sitio, pero el capital institucional fluye a escala utility, es decir, a grandes plantas; nosotros entramos aguas abajo, en industria y comercio, donde nadie financia cheques de US$2 a 10 millones**.
+==Ojo: 7,411 MW (proyectos mixtos adjudicados) y 7,405 MW (adiciones de particulares en el PLADESE) son cifras distintas con números casi iguales. Y la cifra de 38,000 MW que mencionó Presidencia no está conciliada con los 32,475 MW de la ficha del plan; usamos 32,475.==
+
+@H Slide 5: Energía en sitio donde nadie la financia
+@WHO Julio · 1:15
+Esta slide explica **por qué existe este fondo y por qué no lo hace otro**.
+La barra oscura de arriba es nuestra tesis: invertimos de US$2 a 10 millones en empresas mexicanas de energía distribuida y eficiencia, con ingresos recurrentes, para escalar solar, baterías y gestión de energía en clientes industriales y comerciales.
+Las tres tarjetas la justifican.
+- **Qué vemos que otros no:** clientes industriales y comerciales con un ahorro real en su tarifa, sin depender de subsidios, y empresas con ingresos recurrentes, ya sea por contratos de arrendamiento, por suscripción o por PPA, que es un *Power Purchase Agreement*, un contrato de compra de energía a largo plazo.
+- **Dónde falta capital:** según AMEXCAP, la Asociación Mexicana de Capital Privado, las operaciones de infraestructura y energía en México promedian **US$262 millones** y las de *growth* y *buyout*, que son inversiones de crecimiento y de compra de empresas, **US$43 millones**. **Nuestro cheque, de 2 a 10 millones, queda por debajo de ambos**.
+- **Cómo ganamos:** con el crecimiento del EBITDA de las empresas, que es su utilidad operativa antes de intereses, impuestos y depreciación, **sin contar con que el múltiplo de venta suba**, y con asiento en el consejo y salida a compradores identificados.
+La tabla de la derecha compara con otras gestoras. Los fondos visibles escriben cheques **unas diez veces mayores que el nuestro**: General Atlantic invertía de US$50 a 400 millones (dato de 2015), AINDA puso hasta US$50 millones en Quartux, Riverstone compra el control de plataformas, y Mexico Infrastructure Partners y Macquarie hacen operaciones de alrededor de US$1,000 millones. Fíjense en la columna **"¿Compite?"**: solo Riverstone, Blue Global y viveenergía son competidores directos, y los últimos dos levantan vehículos de US$30 millones, parecidos al nuestro.
+Aquí aparece una idea clave: **somos la contraparte de salida natural** de los fondos grandes. Contraparte es el otro lado de la operación. Con un cheque chico no competimos con ellos al comprar, pero **cuando nuestras empresas ya hayan crecido, ellos serán quienes tengan el tamaño de cheque para comprarlas**. Nosotros compramos chico y ellos compran grande.
+==Es una hipótesis: ningún fondo nos ha prometido comprar. Además AINDA ya está dentro de Quartux, así que ahí sería socio y no comprador nuevo.==
+La barra verde final resume la diferencia: tamaño de cheque, asiento en el consejo y alineación del GP, porque no cobramos carry hasta que el fondo rinde unas 2.16 veces lo comprometido.
+
+@H Slide 6: Tres razones verificables y un límite honesto
+@WHO Tomás · 0:45
+Aquí respondemos la pregunta más incómoda: **¿por qué ustedes y no un fondo con experiencia?** La respuesta es que no tenemos historial, y por eso lo compensamos con tres cosas que se pueden verificar.
+- **8 de 8:** las ocho empresas están investigadas, con fuente y liga, y a cada una le aplicamos cinco criterios de exclusión: que ningún cliente pese más de 30% de sus ventas, que sus directivos tengan experiencia en energía, que no sea generación mayorista, que no dependa de subsidios y que valga US$100 millones o menos. Por ejemplo, Verdigris se excluyó porque es de California y no opera en México, y la sustituimos por BioEsol.
+- **2% o más:** la gestora aporta al menos 2% del fondo, **US$2 millones, en efectivo y renunciando a parte de su comisión**, así que si el inversionista pierde, nosotros también. Y solo cobramos carry después de que el inversionista gane 8% anual compuesto sobre todo lo comprometido.
+- **6 de 6:** seis protecciones desde el día uno: el LPAC, que se reúne sin nosotros; la cláusula de persona clave; el tope de 15% por empresa; el *clawback*, que es devolver el carry cobrado de más; informes trimestrales; y un valuador independiente.
+Abajo está el **límite**: no tenemos historial ni salidas propias, las decisiones no tienen un historial verificable y dependemos de personas clave. Para cada límite mostramos qué ofrecemos a cambio.
+Lo que le pedimos al comité, como dice la barra, es **confiar en el diseño del fondo y no en una trayectoria que todavía no existe**.
+
+@H Slide 7: Fideicomiso privado y cascada europea
+@WHO Mariana · 1:30
+Esta slide explica **cómo está armado el fondo y cómo se reparte el dinero**.
+Empecemos con el diagrama de la izquierda, de arriba hacia abajo. Los **LPs**, que es *Limited Partners*, los inversionistas, entre ellos family offices, personas de alto patrimonio y corporativos, ponen su capital en un **fideicomiso privado**, el FICAP, que es el fideicomiso de capital de riesgo del artículo 192 de la LISR y lo administra un banco o una casa de bolsa como fiduciario. El fideicomiso le da un **mandato** a la gestora, o **GP**, *General Partner*, que somos nosotros, con un Comité de Inversión que decide y el LPAC que vigila. Y la gestora invierte en las 8 empresas mexicanas. La regla fiscal es que **al menos 80% del patrimonio esté en empresas mexicanas no listadas**.
+La tabla de la derecha da los términos:
+- **10 años: 5 de inversión y 5 de salida**, con extensiones de 1 + 1 si queda alguna empresa por vender.
+- **Comisión de administración:** 2% anual sobre lo comprometido en los años 1 a 5, y 1.5% sobre lo invertido en los años 6 a 10, más IVA. Baja porque en la segunda mitad ya no compramos, solo administramos y vendemos.
+- **Carry de 20%, hurdle de 8% y catch-up de 100%.** Los explico con los cuatro escalones de abajo.
+Una **cascada** es el orden en que se reparte el dinero que sale de las ventas, y la **europea** reparte con base en todo el fondo y no empresa por empresa.
+- **Uno, Capital, 100.0:** primero el inversionista recupera sus US$100 millones.
+- **Dos, Preferente, 115.9:** después recibe su retorno preferente, el *hurdle*, que es **8% anual compuesto durante 10 años** sobre los US$100 millones. Es el mínimo que debe ganar antes de que nosotros cobremos.
+- **Tres, Catch-up, 29.0:** superado ese mínimo, la gestora recibe todo lo que sigue hasta alcanzar 20% de la ganancia total.
+- **Cuatro, resto 80/20:** lo que sobre se reparte 80% al inversionista y 20% a la gestora.
+En el caso base **los LPs reciben US$226.4 millones y la gestora US$31.6 millones de carry**. Y si cobramos de más, devolvemos el exceso: eso es el *clawback*.
+Con todo esto, **para Aurex significa que necesitamos que el portafolio rinda unas 2.16 veces lo comprometido para cobrar el primer peso**. Esa es nuestra señal de alineación.
+La barra final reconoce un costo: elegimos fideicomiso privado y no un vehículo listado en bolsa, como los CKD o los CERPI, porque se constituye en semanas y no en 6 a 12 meses y no revela información pública. **Pero las AFOREs, que son los fondos de pensión, no pueden invertir en un fideicomiso no listado**, así que apuntamos a family offices y corporativos.
+
+@H Slide 8: Llamadas de capital
+@WHO Mariana · 1:00
+Aquí vemos **cómo y cuándo pedimos el dinero**. El inversionista no entrega los US$100 millones el primer día: los **compromete**, y nosotros se los **llamamos** poco a poco, conforme los necesitamos. A eso se le llama llamada de capital.
+Los tres bloques de la izquierda cuentan la historia:
+- **Años 1 a 3: US$68.6 millones, 69% del total.** Entran las 8 empresas, con sus inversiones iniciales de US$56 millones y las primeras comisiones.
+- **Años 4 y 5: US$24.4 millones.** Es el *follow-on*, US$26 millones en total, **solo para empresas que cumplen sus metas**. Termina el periodo de inversión y la comisión baja a 1.5%.
+- **Años 6 a 10: US$7.1 millones**, solo comisiones y gastos, que se compensan con lo que ya estamos distribuyendo.
+La gráfica lo muestra: **verde oscuro es inversión inicial, verde medio es *follow-on*, lima es comisión y gris son gastos**. Los años 1 y 2 son las barras más altas, **US$26.2 millones cada uno**. El año 4 sube a 20.2 por el *follow-on*. Y **en el recuadro punteado, de los años 6 a 10, solo 1.4 millones por año**.
+La tabla da las reglas: **primer cierre desde US$40 millones y cierre final de US$100 millones en 12 meses**; compromiso por inversionista de **US$1 millón hasta 20% del fondo**; cada llamada de **1% a 25%** del compromiso, con 10 días hábiles de aviso y máximo cuatro al año. Si un inversionista no paga, **paga mora de TIIE más 5 puntos**, donde la TIIE es la tasa de interés interbancaria de referencia en México, y a los 30 días pierde su voto y sus distribuciones.
+Con esto, **para Aurex el inversionista paga cuando el dinero trabaja y nosotros no tenemos dinero ocioso**.
+==Ojo: las llamadas de los años 1 y 2 son 26.2% del compromiso y el máximo por llamada es 25%. Se resuelve porque ese monto se divide en varias llamadas, hasta cuatro al año.==
+
+@H Slide 9: Ocho empresas en tres años, salidas del 6 al 9
+@WHO Mariana · 1:15
+Esta slide es **la película completa de los 10 años del fondo**. Recordemos: **cinco años para invertir y cinco para vender**.
+Seguimos el camino de arriba hacia abajo. **Año 1:** primer cierre y entran 3 empresas, Pireos, Quartux y Niko. **Años 2 y 3:** entran las otras 5, XC, BioEsol y FAZT en el año 2, y S2G y Uriel/BRM en el 3. **Años 4 y 5:** *follow-on* y fin del periodo de inversión. **Años 6 a 10:** las salidas, en gris porque todavía no ocurren. Después del año 3 no entra ninguna empresa nueva.
+La tabla de abajo lo detalla por año:
+- **Salidas:** 2 en el año 6, 3 en el 7, 2 en el 8 y 1 en el 9.
+- **Llamadas:** 26.2, 26.2, 16.2, 20.2 y 4.2 millones, y después 1.4 cada año.
+- **Distribuciones al inversionista:** 29.8 en el año 6, 50.9 en el 7, **118.8 en el 8** y 27.0 en el 9.
+- **TVPI**, que es el valor total del inversionista entre lo que ha aportado: empieza en **0.92x en el año 1**, sube a 1.26x en el 4 y 1.83x en el 6, llega a **2.53x en el año 8** y cierra en **2.30x en el 9 y 2.26x en el 10**.
+Lo que vemos en el TVPI es la **curva J**: el primer año el inversionista ve que su inversión vale menos de lo que puso, 0.92, por las comisiones y gastos que se pagan antes de que las empresas crezcan. Es normal y por eso lo mostramos. ==El TVPI baja de 2.53 a 2.30 y 2.26 porque la gestora cobra su carry de unos US$31.6 millones en el año 9.==
+Con todo esto, **para Aurex las entradas escalonadas reducen el riesgo de comprar todo en un mal momento y las salidas escalonadas reducen el riesgo de vender todo en un mal año**.
+
+@H Slide 10: De cada US$100M, US$82M llegan a las empresas
+@WHO Pablo · 1:00
+Aquí mostramos **cuánto cuesta el fondo y a dónde va cada dólar**.
+La gráfica de la izquierda es una cascada: **lo verde es dinero y lo rojo es lo que se resta**. Partimos de **US$100 millones comprometidos**. Se van **US$10 millones en comisión de los años 1 a 5**, que es 2% sobre 100 durante cinco años; **US$6.1 millones en comisión de los años 6 a 10**; y **US$1.9 millones en gastos operativos**. Quedan **US$82 millones invertidos en empresas**. Es decir, **18 de cada 100 dólares son costo del fondo**.
+==El gasto de US$1.85 millones es un supuesto de nuestro modelo.==
+La gráfica de la derecha reparte esos US$82 millones por empresa: **verde oscuro es inversión inicial y verde lima es *follow-on***. Pireos recibe US$15 millones, 10 iniciales y 5 de *follow-on*; XC y BioEsol, 14 cada una; Quartux, 11; Niko y FAZT, 9; S2G, 8; y Uriel/BRM, solo 2. Las tres que suponemos que fallan son las que menos reciben.
+La conclusión está en la barra: **ninguna empresa supera el tope de 15% del fondo, US$15 millones, y Pireos llega justo a ese límite**. Es una regla que se cumple y no solo un discurso.
+
+@H Slide 11: Ocho empresas en siete verticales
+@WHO Roberto · 2:00
+Esta slide dice **en qué invertimos exactamente y cómo escogimos**.
+La dona muestra el capital por **vertical**, que es un segmento del negocio. Son siete: **microrredes y solar comercial e industrial, US$29 millones, 35%**, la más grande; energía como servicio, 14; almacenamiento con baterías, 11; solar para pymes, 9; carga de vehículos eléctricos, 9; gestión de energía, 8; y biogás, 2.
+La tabla da las ocho empresas con cuánto invertimos, cuándo entramos y salimos y una valuación estimada. Por ejemplo, **Pireos Power**, de microrredes, solar y baterías, recibe US$15 millones y entra en el año 1; **XC Generation**, de solar con ingeniería y contratos de energía, US$14 millones; **BioEsol**, solar con baterías y software, US$14 millones; **Quartux**, baterías para industria, US$11 millones; **Niko Energy**, solar y baterías para pymes, US$9 millones. ==Las valuaciones son estimaciones del fondo porque ninguna de estas empresas publica su valor.==
+**Aquí está lo clave: las tres filas en rosa.** **Asumimos que 3 de las 8 empresas fallan.** No sabemos cuáles serán, así que, para ser conservadores, **se la asignamos a las tres de menor puntaje en nuestros criterios**: **FAZT**, con 31 estaciones de carga en un solo anfitrión y poca utilización de vehículos eléctricos; **S2G Energy**, la más pequeña; y **Uriel/BRM**, con un solo comprador de energía y un solo anfitrión. **Y asumimos que existen cinco empresas que sí funcionan: Pireos, XC, BioEsol, Quartux y Niko**, que generan el retorno del fondo.
+El embudo de abajo explica cómo llegamos a estas ocho: origen del pipeline, filtro de cinco criterios, *due diligence* (la revisión a fondo de la empresa), *term sheet* (los términos de la inversión) y seguimiento con asiento en el consejo. En el camino descartamos a Verdigris, de California y sin operación en México, y a Solar Inc. y Energypro Mx, que valen entre US$0.5 y 1 millón y son demasiado pequeñas.
+Con todo esto, **para Aurex lo que limita el daño de que 3 empresas fallen es el tope de 15% y que el *follow-on* se da solo si la empresa cumple sus metas**: si una empresa empieza a fallar, no le damos el segundo cheque.
+==Si preguntan: la mayor concentración es 35% en microrredes y solar. No hay un tope por vertical, solo por empresa.==
+
+@H Slide 12: Caso de inversión, Pireos Power
+@WHO Roberto · 2:30
+Esta slide muestra **cómo se ve una inversión de Aurex de principio a fin**, con una empresa concreta.
+**Pireos Power** instala microrredes, solar, baterías y mantenimiento para industria y comercio, y declara **más de 300 proyectos**, entre ellos una microrred de Walmart con 5 MWp de solar, 14 MWh de baterías y 3.5 MW de respaldo.
+**Cuánto, a qué valor y qué parte.** Como Pireos no publica sus números, **estimamos** ingresos de US$35 millones y un margen EBITDA de 15%, o sea, un EBITDA de unos US$5 millones. Lo valuamos en **7.5 veces el EBITDA**, que es **la mitad de lo que valen empresas públicas comparables, de 14 a 17 veces**. El descuento refleja que es privada, pequeña, poco líquida y concentrada en Walmart. Eso da **US$40 millones antes de nuestra inversión**, el *pre-money*. Nosotros ponemos **US$10 millones**, el valor después de la inversión, el *post-money*, es de **US$50 millones**, y recibimos **20%**. En el cap table: **Aurex 20%, fundadores 70% y 10% para un *pool* de incentivos**. En el año 4 damos **US$5 millones más de *follow-on***, solo si la empresa cumple sus metas.
+La gráfica del centro muestra cómo crece el valor de nuestra inversión en el modelo. **La parte oscura es lo que ponemos, el costo, y la parte verde lima es la plusvalía**, lo que el modelo supone que gana. En el año 1 vale 10; en el 4 sube a 24 porque ya pusimos el *follow-on*; y llega a **US$66 millones en el año 8**. **Sobre US$15 millones invertidos, son 4.43 veces.** El supuesto es que el EBITDA crezca unos 26.5% al año durante 7 años, con 5% de dilución, **y que la vendamos a un múltiplo 10% menor al de entrada**. Es decir, no apostamos a que nos paguen más.
+**Cómo nos protegemos**, en el recuadro de la derecha:
+- **Preferencia de liquidación 1x no participativa:** si la empresa se vende por poco, cobramos primero hasta recuperar lo invertido.
+- **Asiento en el consejo y vetos** sobre deuda, venta y presupuesto.
+- ***Drag-along***, que nos permite arrastrar a todos los socios en una venta, y ***tag-along***, que nos permite acompañar a los fundadores si ellos venden.
+- ***Vesting*** para que los fundadores se ganen sus acciones con el tiempo.
+- Verificar, antes de firmar, que ningún cliente pese más de 30%.
+Con todo esto, **para Aurex la regla es clara: si el *due diligence* muestra concentración mayor a 30%, no invertimos o reducimos el ticket**. El riesgo real es que el grupo Walmart supere ese porcentaje.
+==Ingresos, valuación y términos son supuestos del fondo; Pireos no participó.==
+
+@H Slide 13: Curva J y detalle por empresa
+@WHO Pablo · 1:15
+Aquí vemos **cómo evoluciona el valor para el inversionista y qué aporta cada empresa**.
+Primero, tres indicadores, medidos en veces lo aportado. **DPI** es lo que ya se distribuyó en efectivo; **RVPI** es lo que todavía vale dentro de las empresas; y **TVPI** es la suma de los dos.
+En la gráfica, **la línea amarilla es DPI**: está en cero hasta el año 5, porque todavía no vendemos nada, y a partir del año 6 se dispara, con **0.32x en el año 6, 2.05x en el 8, 2.30x en el 9, y cierra en 2.26x**. **La línea verde oscuro es RVPI**: es el valor de las empresas que aún tenemos, y baja a cero conforme las vendemos. **La línea verde claro es TVPI**: empieza en **0.92x en el año 1** por las comisiones y los gastos, sube hasta **2.53x en el año 8**, y baja a 2.30x y 2.26x cuando se paga el carry. Esa forma, que empieza abajo y luego sube, es la **curva J**.
+La tabla de la derecha muestra quién aporta. **Pireos recupera US$66.5 millones, 4.43x; XC, 58.6, 4.18x; BioEsol, 52.3, 3.74x; Quartux, 44.0, 4.00x; Niko, 29.8, 3.31x.** Y las tres que fallan: **FAZT, 4.5 millones, 0.50x; S2G, 2.4, 0.30x; y Uriel/BRM, cero**. El total es **US$258 millones sobre US$82 invertidos, 3.15 veces**, y esa cifra es **bruta**, antes de comisiones y carry.
+Con todo esto, **para Aurex las cinco empresas que funcionan tienen que multiplicar su capital entre 3.3 y 4.4 veces para compensar a las tres que no**. Eso es lo que hay que defender en las preguntas.
+
+@H Slide 14: Caso base, 2.26x neto y 17.9% de TIR
+@WHO Pablo · 1:30
+Esta slide muestra **cuánto puede ganar o perder el inversionista y qué mueve el resultado**.
+Arriba vemos las cifras clave: **2.26x y 17.9% de TIR neta**, en dólares y con las fechas reales de cada flujo, que es **la única tasa que usamos**. Si el caso fuera Conservador, **1.82x y 12%**; en el escenario Bajo, **1.29x y 5%**.
+La gráfica de la izquierda se lee así: **cada barra es el rango de TIR que resulta de cambiar un supuesto**. La primera, de Bajo a Alto, va **de 5% a 20%**. La segunda, **si fallan de 5 a 0 empresas**, va de 7% a 20%. Las demás, como bajar 20% los múltiplos de salida, que va de 15% a 18%, son barras muy cortas. Las dos líneas punteadas son referencias: **la roja, de 8%, es el *hurdle***, el mínimo que debe ganar el inversionista antes de que cobremos; **la gris, de 16%, es la mediana de los fondos con actividad en México** según AMEXCAP.
+El **tornado** de la derecha muestra cuántos puntos de TIR se pierden frente a la base de 17.9. **Lo que más resta es que fallen 5 empresas en vez de 3: 11.2 puntos.** El caso Conservador resta 5.4, que la salida tarde un año resta 3.1, y **bajar 20% los múltiplos de salida resta solo 2.6**. La única barra a la derecha es que no falle ninguna: suma 2.3 puntos.
+Lo que sacamos de aquí: **lo que más mueve el resultado es cuántas empresas fallan y mucho menos el múltiplo al que vendamos**. Por eso nuestro riesgo está en escoger bien las empresas y no en adivinar el mercado.
+Y hay que ser honestos: **nuestra base de 17.9% está por encima de la mediana de 16%**, porque asumimos que las cinco empresas buenas crecen entre 24% y 33% al año. **El piso razonable es el caso Conservador, 12%**. Por eso decimos que el 18% es el objetivo y no una promesa, y que **aun si fallan 5 de 8 el inversionista recupera 1.33 veces**.
+
+@H Slide 15: Compradores con nombre, salidas escalonadas
+@WHO Roberto · 1:15
+Aquí explicamos **cómo recuperamos el dinero, que es el riesgo principal del fondo**, y lo decimos en el subtítulo: ninguna salida mexicana comparable es de nuestro tamaño. AMEXCAP reporta apenas unos US$900 millones en 111 salidas entre 2025 y el primer semestre de 2026.
+Por eso **nombramos un comprador por empresa**. En la tabla: **Niko**, año 6, a fondos de infraestructura; **Uriel/BRM**, año 6, recompra de su propio grupo; **Quartux**, año 7, a AINDA o Riverstone; **FAZT**, año 7, a Soriana, su anfitrión, o a Factorenergia; **S2G**, año 7, a Schneider, Siemens o Enel X; **Pireos**, año 8, a Skysense/Riverstone, AINDA o empresas eléctricas; **BioEsol**, año 8, a Enlight/ENGIE, Atera o Schneider/Siemens; y **XC Generation**, año 9, a IPP, que son productores independientes de energía, o fondos de infraestructura. **Son hipótesis del equipo.**
+La gráfica muestra cuánto recupera el portafolio por año, antes de comisiones y carry: **US$30 millones en el año 6, 51 en el 7, 119 en el 8 y 59 en el 9**, que suman los 258. El año 8 es el pico porque ahí salen Pireos y BioEsol, las que más aportan.
+==Si preguntan por qué en la slide 9 el año 9 dice 27 y aquí 59: aquella es lo que recibe el inversionista después del carry; esta es lo que recupera el portafolio.==
+Los precedentes de la derecha son de otros mercados: Ampol compra Evie, una red de carga de vehículos eléctricos; Vertiv compra UtilityInnovation Group por unas 13 veces EBITDA; en México, COX compra Iberdrola México por unos US$4,000 millones. **Lo que queremos mostrar es que sí hay compradores de empresas de energía, no que nos pagarán ese múltiplo.** Por eso la barra final dice que mostramos quién compra, no qué múltiplo esperar: esas operaciones son 100 veces más grandes que nuestros tickets.
+**Si no aparece comprador:** venta a otro fondo, venta parcial o un vehículo de continuación, que es pasar la empresa a un nuevo fondo con valuador independiente y aprobación del LPAC. Además hay extensiones de 1 + 1 años.
+
+@H Slide 16: Seis riesgos y siete controles
+@WHO Mariana · 1:00
+Aquí vemos **qué puede salir mal y qué hacemos al respecto**.
+En la tabla de la izquierda, la columna de color es la probabilidad: **rojo es alta, amarillo es media y verde es baja**. **En rojo hay un solo riesgo, el más probable: la salida**, con impacto alto. Lo manejamos con compradores por empresa, consejo y vehículo de continuación. **En amarillo:** que fallen 3 de 8, que ya está dentro del caso base y se contiene con el tope de 15% y el *follow-on* con metas; la concentración de clientes, con la regla de 30% verificada antes de invertir; y el riesgo regulatorio, que abarca la Ley del Sector Eléctrico, la CNE y la CFE, y lo manejamos invirtiendo solo en industria y comercio sin subsidios. **En verde:** el régimen fiscal del FICAP, que exige dos años de tenencia, 80% en empresas mexicanas y distribuir 80% en dos meses; y la dependencia de personas clave. ==Probabilidad e impacto son juicio del equipo.==
+A la derecha están **las siete protecciones al inversionista**: el LPAC, la cláusula de persona clave, el tope de 15% por empresa, la cascada europea con *hurdle* de 8%, el *clawback*, el 2% de la gestora y los informes trimestrales con valuador independiente. Además, los inversionistas pueden remover a la gestora **con o sin causa**, por mayoría calificada.
+Con esto, y es nuestra frase de cierre: **el inversionista no compra una promesa de retorno, compra un diseño que le paga primero y que nos cobra solo si el fondo gana**.
+
+@H Slide 17: Preguntas y lo que pedimos al comité
+@WHO Julio · 0:30
+Para cerrar, lo que pedimos al comité: un **primer cierre desde US$40 millones** y un **cierre final de US$100 millones dentro de 12 meses**; un compromiso **mínimo de US$1 millón por inversionista y máximo de 20% del fondo**; y como siguientes pasos, revisar el memorándum de colocación privada, tener una sesión con el LPAC y hacer el *due diligence* de las 8 empresas.
+Nuestro caso base es **2.26 veces y 17.9%**, y el escenario Bajo, **1.29 veces**. Muchas gracias; estamos listos para sus preguntas.
+
+@H Frases que sostienen todo
+@WHO Para repetir en las preguntas
+- **Diez años: cinco para invertir y cinco para vender.**
+- **Asumimos que 3 de las 8 empresas fallan; las otras 5 sostienen el resultado.**
+- **No dependemos de que el mercado pague más: el retorno viene de que crezca el EBITDA.**
+- **La gestora no cobra hasta que el inversionista gana 8% anual compuesto sobre todo lo comprometido.**
+- **Somos un primer fondo: nuestra credibilidad es el diseño, no una trayectoria.**

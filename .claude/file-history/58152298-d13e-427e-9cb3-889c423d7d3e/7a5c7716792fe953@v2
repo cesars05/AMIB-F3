@@ -1,0 +1,279 @@
+import sys, datetime as dt
+from openpyxl import Workbook
+from openpyxl.styles import Font, PatternFill, Border, Side, Alignment
+from openpyxl.utils import get_column_letter as L
+
+BEIGE = "DDD9C4"; CELESTE = "DAE9F8"; YELLOW = "FFFFCC"
+F = "Calibri"
+def font(b=False, i=False, color="000000"): return Font(name=F, size=10, bold=b, italic=i, color=color)
+THIN = Side(style="thin");
+FMT_USD = '#,##0.00_);\\(#,##0.00\\);\\-_)'
+FMT_SH = '#,##0_);\\(#,##0\\);\\-_)'
+FMT_PX = '$#,##0.00_)'
+FMT_PCT = '0.0%_);\\(0.0%\\);\\-_)'
+FMT_X = '0.00"x"'
+FMT_D = 'd\\-mmm\\-yy'
+
+INVESTORS = [  # tab, name, entry date, [(shares, price)] MSDL, CGBD, FSK, NCDL
+    ("OR", "Othon Ruiz", dt.date(2026, 7, 15), [(6270, 16.02), (9313, 10.79), (8947, 11.25), (7633, 12.82)]),
+    ("PZB", "Pablo Zambrano", dt.date(2026, 8, 5), [(16600, 15.06), (24360, 10.26), (22700, 11), (20000, 12.5)]),
+    ("JL", "Juan Lans", dt.date(2026, 8, 19), [(24400, 15.41), (33100, 11.37), (31100, 12.08), (30200, 12.4)]),
+    ("EZB", "Enrique Zambrano", dt.date(2026, 8, 25), [(8100, 15.37), (10900, 11.4062), (10300, 12.044), (10000, 12.378)]),
+    ("JCZB", "Juan Carlos Zambrano", dt.date(2026, 8, 28), [(8150, 15.33), (10550, 11.87), (10200, 12.28), (10050, 12.37)]),
+]
+BDCS = [("MSDL", "MSDL.K", 15.35), ("CGBD", "CGBD.O", 11.98), ("FSK", "FSK", 12.41), ("NCDL", "NCDL.K", 12.51)]
+# 3Q26 dividend log (ex-date, pay date, DPS) - sourced from company releases / dividend calendars
+DIV3Q = {"MSDL": (dt.date(2026, 9, 30), dt.date(2026, 10, 23), 0.45),
+         "CGBD": (dt.date(2026, 9, 30), dt.date(2026, 10, 16), 0.35),
+         "FSK": (dt.date(2026, 9, 16), dt.date(2026, 10, 2), 0.44),
+         "NCDL": (dt.date(2026, 9, 30), dt.date(2026, 10, 27), 0.38)}
+QTRS = [("3Q26", dt.date(2026, 7, 1), dt.date(2026, 9, 30)), ("4Q26", dt.date(2026, 10, 1), dt.date(2026, 12, 31))]
+
+def build(path, test=False, val=dt.date(2026, 8, 31)):
+    wb = Workbook(); wb.remove(wb.active)
+    def rdp(expr):  # Workspace call; in test mode replaced by 0 so the file can be recalculated offline
+        return "0" if test else expr
+
+    def sheet(name, title2, lastcol, widths):
+        ws = wb.create_sheet(name)
+        ws.sheet_view.showGridLines = False; ws.sheet_view.zoomScale = 85
+        ws.column_dimensions["A"].width = 2
+        for c, w in widths.items(): ws.column_dimensions[c].width = w
+        for r, (txt, b, i) in enumerate([("Icarus BDCs - Tracker", True, False), (title2, True, False), ("Figures in US$", False, True)], start=2):
+            ws.cell(r, 2, txt).font = font(b, i)
+        for c in range(2, lastcol + 1): ws.cell(6, c).fill = PatternFill("solid", fgColor="000000")
+        ws.row_dimensions[6].height = 14
+        ws.freeze_panes = "C1"
+        ws.sheet_properties.tabColor = None
+        return ws
+
+    def banner(ws, r, text, lastcol):
+        for c in range(2, lastcol + 1):
+            cell = ws.cell(r, c); cell.fill = PatternFill("solid", fgColor=BEIGE); cell.border = Border(bottom=THIN)
+        ws.cell(r, 2, text).font = font(True)
+
+    def header(ws, r, labels, startcol=2, wrap=False):
+        for k, t in enumerate(labels):
+            c = ws.cell(r, startcol + k, t)
+            c.font = font(True); c.fill = PatternFill("solid", fgColor=CELESTE); c.border = Border(bottom=THIN)
+            c.alignment = Alignment(horizontal="left" if k == 0 and startcol == 2 else "center", vertical="center", wrap_text=wrap)
+
+    def put(ws, ref, v, fmt=None, kind="calc", b=False, i=False, align=None):
+        c = ws[ref]; c.value = v
+        color = {"calc": "000000", "input": "0000FF", "link": "00B050"}[kind]
+        c.font = font(b, i, color)
+        if kind == "input": c.fill = PatternFill("solid", fgColor=YELLOW)
+        if fmt: c.number_format = fmt
+        if align: c.alignment = Alignment(horizontal=align)
+        return c
+
+    def total_row(ws, r, c1, c2):
+        for c in range(c1, c2 + 1):
+            cell = ws.cell(r, c); col = cell.font.color
+            rgb = col.rgb if col is not None and isinstance(col.rgb, str) else "000000"
+            cell.border = Border(top=THIN); cell.font = Font(name=F, size=10, bold=True, color=rgb)
+
+    # ------------------------------------------------------------------ Summary placeholder (first tab)
+    sm = sheet("Summary", "Summary - Blended Returns", 10, {"B": 38, **{L(c): 15 for c in range(3, 11)}})
+
+    # ------------------------------------------------------------------ Inputs
+    ip = sheet("Inputs", "Inputs", 13, {"B": 38, "C": 12, "D": 12, "E": 12, "F": 12, "G": 13, "H": 13, "I": 11, "J": 12, "K": 12, "L": 11, "M": 14})
+    banner(ip, 8, "General:", 13)
+    ip["B10"] = "Valuation Date"; ip["B10"].font = font()
+    put(ip, "C10", val, FMT_D, "input", align="right")
+    ip["D10"] = "Share prices are pulled as of this date; dividends count only if paid on or before it."; ip["D10"].font = font(i=True)
+
+    banner(ip, 12, "Share Prices:", 13)
+    header(ip, 14, ["BDC", "RIC", "Manual Override", "Price Used", "Note"])
+    ip.row_dimensions[14].height = 26
+    for c in range(2, 7): ip.cell(14, c).alignment = Alignment(horizontal="left" if c == 2 else "center", vertical="center", wrap_text=True)
+    PR = {}  # ticker -> row
+    for k, (tk, ric, px) in enumerate(BDCS):
+        r = 15 + k; PR[tk] = r
+        put(ip, f"B{r}", tk)
+        put(ip, f"C{r}", ric, kind="input", align="center")
+        put(ip, f"D{r}", px, FMT_PX, "input")
+        put(ip, f"E{r}", f'=IF(D{r}<>"",D{r},{rdp(f"_xll.RDP.Data($C{r},\"TR.PriceClose\",\"SDate=#1\",,$C$10)")})', FMT_PX)
+        put(ip, f"F{r}", "Override = Aug-31 close from v1. Clear it to pull TR.PriceClose from Workspace.", kind="calc", i=True)
+    # Dividend log
+    banner(ip, 20, "Dividend Log:", 13)
+    header(ip, 22, ["BDC", "RIC", "Quarter", "Window Start", "Window End", "Ex-Date Override", "Pay Date Override", "DPS Override",
+                    "Ex-Date", "Pay Date", "DPS ($)", "Status"], wrap=True)
+    ip.row_dimensions[22].height = 26
+    DR0 = 23; r = DR0
+    for tk, ric, _ in BDCS:
+        for q, s, e in QTRS:
+            put(ip, f"B{r}", tk)
+            put(ip, f"C{r}", f"=$C${PR[tk]}", kind="calc", align="center")
+            put(ip, f"D{r}", q, kind="input", align="center")
+            put(ip, f"E{r}", s, FMT_D, "input"); put(ip, f"F{r}", e, FMT_D, "input")
+            if q == "3Q26":
+                ex, pay, dps = DIV3Q[tk]
+                put(ip, f"G{r}", ex, FMT_D, "input"); put(ip, f"H{r}", pay, FMT_D, "input"); put(ip, f"I{r}", dps, FMT_PX, "input")
+            else:
+                for col, fm in (("G", FMT_D), ("H", FMT_D), ("I", FMT_PX)): put(ip, f"{col}{r}", None, fm, "input")
+            ex_f = rdp(f'_xll.RDP.Data($C{r},"TR.DivExDate","SDate=#1 EDate=#2",,$E{r},$F{r})')
+            pay_f = rdp(f'_xll.RDP.Data($C{r},"TR.DivPayDate","SDate=#1 EDate=#2",,$E{r},$F{r})')
+            dps_f = rdp(f'_xll.RDP.Data($C{r},"TR.DivAdjustedGross","SDate=#1 EDate=#2",,$E{r},$F{r})')
+            put(ip, f"J{r}", f'=IF(G{r}<>"",G{r},IFERROR({ex_f},0))', FMT_D)
+            put(ip, f"K{r}", f'=IF(H{r}<>"",H{r},IFERROR({pay_f},0))', FMT_D)
+            put(ip, f"L{r}", f'=IF(I{r}<>"",I{r},IFERROR({dps_f},0))', FMT_PX)
+            put(ip, f"M{r}", f'=IF(K{r}=0,"Not declared",IF(K{r}<=$C$10,"Paid","Pending"))', align="center")
+            r += 1
+    DR1 = r - 1
+    ip.cell(r, 2, "Overrides are 3Q26 ex / pay dates and DPS from company releases (CGBD ex-date = record date, T+1). NCDL $0.38 = $0.36 regular + $0.02 special.").font = font(i=True)
+    ip.cell(r + 1, 2, "Only dividends with Pay Date <= Valuation Date flow into returns. A buyer receives it only if Entry Date < Ex-Date.").font = font(i=True)
+    mr = r + 3
+    banner(ip, mr, "Next Dividend - Consensus (memo only, not included in any return until paid):", 13)
+    header(ip, mr + 2, ["BDC", "RIC", "Consensus DPS (FQ1)"], wrap=True)
+    ip.row_dimensions[mr + 2].height = 26
+    for k, (tk, ric, _) in enumerate(BDCS):
+        rr = mr + 3 + k
+        put(ip, f"B{rr}", tk); put(ip, f"C{rr}", f"=$C${PR[tk]}", align="center")
+        put(ip, f"D{rr}", f'=IFERROR({rdp(f"_xll.RDP.Data($C{rr},\"TR.DPSMean(Period=FQ1)\")")},"n/a")', FMT_PX)
+
+    # ------------------------------------------------------------------ Investor tabs
+    R = dict(entry=10, val=11, hold=12, ret_b=14, ret_h=16, ret0=17, bdc_b=27, bdc_h=29, bdc0=30, bdc_t=34,
+             pur_b=36, pur_h=38, pur0=39, pur_t=43, mv_b=45, mv_h=47, mv0=48, mv_t=52,
+             div_b=54, div_h=56, div0=57, div_t=65, cf_b=67, cf_h=69, cf0=70)
+    NDIV = DR1 - DR0 + 1  # 8
+    for tab, name, entry, pos in INVESTORS:
+        ws = sheet(tab, name, 9, {"B": 38, **{L(c): 15 for c in range(3, 10)}})
+        banner(ws, 8, "Investor Details:", 9)
+        ws["B10"] = "Entry Date"; ws["B10"].font = font(); put(ws, "C10", entry, FMT_D, "input", align="right")
+        ws["B11"] = "Valuation Date"; ws["B11"].font = font(); put(ws, "C11", "=Inputs!$C$10", FMT_D, "link", align="right")
+        ws["B12"] = "Holding Period (Days)"; ws["B12"].font = font(); put(ws, "C12", "=C11-C10", FMT_SH)
+
+        # Purchase
+        banner(ws, R["pur_b"], "Purchase:", 9)
+        header(ws, R["pur_h"], ["BDC", "Shares", "Share Price", "Cost", "% of Total"])
+        for k, (tk, _, _) in enumerate(BDCS):
+            r = R["pur0"] + k
+            put(ws, f"B{r}", f"=Inputs!$B${PR[tk]}", kind="link")
+            put(ws, f"C{r}", pos[k][0], FMT_SH, "input"); put(ws, f"D{r}", pos[k][1], FMT_PX, "input")
+            put(ws, f"E{r}", f"=C{r}*D{r}", FMT_USD); put(ws, f"F{r}", f"=E{r}/E${R['pur_t']}", FMT_PCT)
+        t = R["pur_t"]; ws[f"B{t}"] = "Total"
+        put(ws, f"E{t}", f"=SUM(E{R['pur0']}:E{t-1})", FMT_USD); put(ws, f"F{t}", f"=SUM(F{R['pur0']}:F{t-1})", FMT_PCT)
+        total_row(ws, t, 2, 6)
+        # Market value
+        banner(ws, R["mv_b"], "", 9)
+        ws.cell(R["mv_b"], 2, '="Market Value as of "&TEXT($C$11,"mmmm d, yyyy")&":"')
+        header(ws, R["mv_h"], ["BDC", "Shares", "Share Price", "Market Value", "Market Return"])
+        for k in range(4):
+            r = R["mv0"] + k; p = R["pur0"] + k
+            put(ws, f"B{r}", f"=B{p}"); put(ws, f"C{r}", f"=C{p}", FMT_SH)
+            put(ws, f"D{r}", f"=Inputs!$E${PR[BDCS[k][0]]}", FMT_PX, "link")
+            put(ws, f"E{r}", f"=C{r}*D{r}", FMT_USD); put(ws, f"F{r}", f"=E{r}/E{p}-1", FMT_PCT)
+        t = R["mv_t"]; ws[f"B{t}"] = "Total"
+        put(ws, f"E{t}", f"=SUM(E{R['mv0']}:E{t-1})", FMT_USD); put(ws, f"F{t}", f"=E{t}/E{R['pur_t']}-1", FMT_PCT)
+        total_row(ws, t, 2, 6)
+        # Dividends
+        banner(ws, R["div_b"], "Dividends Received:", 9)
+        header(ws, R["div_h"], ["BDC", "Quarter", "Ex-Date", "Pay Date", "DPS ($)", "Shares", "Paid? (1/0)", "Amount"])
+        for k in range(NDIV):
+            r = R["div0"] + k; s = DR0 + k
+            put(ws, f"B{r}", f"=Inputs!B{s}", kind="link"); put(ws, f"C{r}", f"=Inputs!D{s}", kind="link", align="center")
+            put(ws, f"D{r}", f"=Inputs!J{s}", FMT_D, "link"); put(ws, f"E{r}", f"=Inputs!K{s}", FMT_D, "link")
+            put(ws, f"F{r}", f"=Inputs!L{s}", FMT_PX, "link")
+            put(ws, f"G{r}", f"=SUMIF($B${R['pur0']}:$B${R['pur_t']-1},B{r},$C${R['pur0']}:$C${R['pur_t']-1})", FMT_SH)
+            put(ws, f"H{r}", f"=IF(AND($C$10<D{r},E{r}>0,E{r}<=$C$11),1,0)", "0", align="center")
+            put(ws, f"I{r}", f"=F{r}*G{r}*H{r}", FMT_USD)
+        t = R["div_t"]; ws[f"B{t}"] = "Total"; put(ws, f"I{t}", f"=SUM(I{R['div0']}:I{t-1})", FMT_USD); total_row(ws, t, 2, 9)
+        # Returns by BDC
+        banner(ws, R["bdc_b"], "Returns by BDC:", 9)
+        header(ws, R["bdc_h"], ["BDC", "Cost", "Market Value", "Dividends", "Total Value", "Market Return", "Total Return", "MOIC"])
+        for k in range(4):
+            r = R["bdc0"] + k
+            put(ws, f"B{r}", f"=B{R['pur0']+k}")
+            put(ws, f"C{r}", f"=E{R['pur0']+k}", FMT_USD); put(ws, f"D{r}", f"=E{R['mv0']+k}", FMT_USD)
+            put(ws, f"E{r}", f"=SUMIF($B${R['div0']}:$B${R['div_t']-1},B{r},$I${R['div0']}:$I${R['div_t']-1})", FMT_USD)
+            put(ws, f"F{r}", f"=D{r}+E{r}", FMT_USD)
+            put(ws, f"G{r}", f"=D{r}/C{r}-1", FMT_PCT); put(ws, f"H{r}", f"=F{r}/C{r}-1", FMT_PCT); put(ws, f"I{r}", f"=F{r}/C{r}", FMT_X)
+        t = R["bdc_t"]; ws[f"B{t}"] = "Total"
+        for col in "CDEF": put(ws, f"{col}{t}", f"=SUM({col}{R['bdc0']}:{col}{t-1})", FMT_USD)
+        put(ws, f"G{t}", f"=D{t}/C{t}-1", FMT_PCT); put(ws, f"H{t}", f"=F{t}/C{t}-1", FMT_PCT); put(ws, f"I{t}", f"=F{t}/C{t}", FMT_X)
+        total_row(ws, t, 2, 9)
+        # Cashflows
+        banner(ws, R["cf_b"], "Cashflows (for XIRR):", 9)
+        header(ws, R["cf_h"], ["Description", "Date", "Amount"])
+        c0 = R["cf0"]
+        put(ws, f"B{c0}", "Purchase"); put(ws, f"C{c0}", "=$C$10", FMT_D); put(ws, f"D{c0}", f"=-E{R['pur_t']}", FMT_USD)
+        for k in range(NDIV):
+            r = c0 + 1 + k; d = R["div0"] + k
+            put(ws, f"B{r}", f'="Dividend - "&B{d}&" "&C{d}'); put(ws, f"C{r}", f"=IF(I{d}>0,E{d},$C$10)", FMT_D); put(ws, f"D{r}", f"=I{d}", FMT_USD)
+        cl = c0 + NDIV + 1
+        put(ws, f"B{cl}", "Market Value"); put(ws, f"C{cl}", "=$C$11", FMT_D); put(ws, f"D{cl}", f"=E{R['mv_t']}", FMT_USD)
+        CF1 = cl
+        # Returns summary (top)
+        banner(ws, R["ret_b"], "Returns:", 9)
+        header(ws, R["ret_h"], ["Return Summary", "Total"])
+        t = R["bdc_t"]; r0 = R["ret0"]
+        rows = [("Total Invested", f"=C{t}", FMT_USD), ("Market Value", f"=D{t}", FMT_USD), ("Dividends Received", f"=E{t}", FMT_USD),
+                ("Total Value", f"=F{t}", FMT_USD), ("Whole Dollar Profit", f"=C{r0+3}-C{r0}", FMT_USD),
+                ("Market Return (price only)", f"=G{t}", FMT_PCT), ("Total Return (incl. dividends)", f"=H{t}", FMT_PCT),
+                ("MOIC", f"=I{t}", FMT_X), ("IRR (XIRR, annualized)", f'=IFERROR(XIRR(D{c0}:D{CF1},C{c0}:C{CF1}),"n/a")', FMT_PCT)]
+        for k, (lab, f_, fm) in enumerate(rows):
+            put(ws, f"B{r0+k}", lab, b=(lab in ("MOIC", "IRR (XIRR, annualized)", "Whole Dollar Profit")))
+            put(ws, f"C{r0+k}", f_, fm, b=(lab in ("MOIC", "IRR (XIRR, annualized)", "Whole Dollar Profit")), align="right")
+
+    # ------------------------------------------------------------------ Summary body
+    tabs = [x[0] for x in INVESTORS]
+    def over(cellfmt): return "+".join(f"{t}!{cellfmt}" for t in tabs)
+    banner(sm, 8, "Blended Returns:", 10)
+    header(sm, 10, ["Return Summary", "Total"])
+    put(sm, "B11", "Valuation Date"); put(sm, "C11", "=Inputs!$C$10", FMT_D, "link", align="right")
+    # by BDC
+    banner(sm, 22, "Returns by BDC (Blended):", 10)
+    header(sm, 24, ["BDC", "Shares", "Cost", "Market Value", "Dividends", "Total Value", "Market Return", "Total Return", "MOIC"])
+    for k in range(4):
+        r = 25 + k
+        put(sm, f"B{r}", f"=OR!B{R['pur0']+k}", kind="link")
+        put(sm, f"C{r}", "=" + over(f"C{R['pur0']+k}"), FMT_SH, "link")
+        put(sm, f"D{r}", "=" + over(f"C{R['bdc0']+k}"), FMT_USD, "link")
+        put(sm, f"E{r}", "=" + over(f"D{R['bdc0']+k}"), FMT_USD, "link")
+        put(sm, f"F{r}", "=" + over(f"E{R['bdc0']+k}"), FMT_USD, "link")
+        put(sm, f"G{r}", f"=E{r}+F{r}", FMT_USD)
+        put(sm, f"H{r}", f"=E{r}/D{r}-1", FMT_PCT); put(sm, f"I{r}", f"=G{r}/D{r}-1", FMT_PCT); put(sm, f"J{r}", f"=G{r}/D{r}", FMT_X)
+    sm["B29"] = "Total"
+    for col in "DEFG": put(sm, f"{col}29", f"=SUM({col}25:{col}28)", FMT_USD)
+    put(sm, "H29", "=E29/D29-1", FMT_PCT); put(sm, "I29", "=G29/D29-1", FMT_PCT); put(sm, "J29", "=G29/D29", FMT_X)
+    total_row(sm, 29, 2, 10)
+    # cashflows
+    banner(sm, 31, "Cashflows (Blended):", 10)
+    header(sm, 33, ["Description", "Date", "Amount"])
+    for k, (tab, *_x) in enumerate(INVESTORS):
+        r = 34 + k
+        put(sm, f"B{r}", f'="Purchase - "&{tab}!B3', kind="link"); put(sm, f"C{r}", f"={tab}!C10", FMT_D, "link")
+        put(sm, f"D{r}", f"=-{tab}!E{R['pur_t']}", FMT_USD, "link")
+    for k in range(NDIV):
+        r = 39 + k; d = R["div0"] + k
+        put(sm, f"B{r}", f'="Dividend - "&OR!B{d}&" "&OR!C{d}', kind="link")
+        put(sm, f"D{r}", "=" + over(f"I{d}"), FMT_USD, "link")
+        put(sm, f"C{r}", f"=IF(D{r}>0,OR!E{d},$C$34)", FMT_D)
+    put(sm, "B47", "Market Value"); put(sm, "C47", "=Inputs!$C$10", FMT_D, "link"); put(sm, "D47", "=E29", FMT_USD)
+    # headline
+    rows = [("Total Invested", "=D29", FMT_USD), ("Market Value", "=E29", FMT_USD), ("Dividends Received", "=F29", FMT_USD),
+            ("Total Value", "=G29", FMT_USD), ("Whole Dollar Profit", "=C15-C12", FMT_USD), ("Market Return (price only)", "=H29", FMT_PCT),
+            ("Total Return (incl. dividends)", "=I29", FMT_PCT), ("MOIC", "=J29", FMT_X),
+            ("IRR (XIRR, annualized)", '=IFERROR(XIRR(D34:D47,C34:C47),"n/a")', FMT_PCT)]
+    for k, (lab, f_, fm) in enumerate(rows):
+        bold = lab in ("MOIC", "IRR (XIRR, annualized)", "Whole Dollar Profit")
+        put(sm, f"B{12+k}", lab, b=bold); put(sm, f"C{12+k}", f_, fm, b=bold, align="right")
+    # checks
+    banner(sm, 49, "Checks:", 10)
+    put(sm, "B51", "Invested: BDC table vs. investor tabs"); put(sm, "C51", "=D29-(" + over(f"E{R['pur_t']}") + ")", FMT_USD)
+    put(sm, "B52", "Dividends: BDC table vs. investor tabs"); put(sm, "C52", "=F29-(" + over(f"I{R['div_t']}") + ")", FMT_USD)
+    put(sm, "B53", "Market value: BDC table vs. investor tabs"); put(sm, "C53", "=E29-(" + over(f"E{R['mv_t']}") + ")", FMT_USD)
+    put(sm, "B54", "Status", b=True, i=True)
+    c = put(sm, "C54", '=IF(AND(ABS(C51)<0.01,ABS(C52)<0.01,ABS(C53)<0.01),"OK","ERROR")', b=True, i=True, align="right")
+    c.font = Font(name=F, size=10, bold=True, italic=True, color="C00000")
+
+    # order: Summary, Inputs, investors
+    wb.calculation.fullCalcOnLoad = True
+    for w in wb.worksheets:
+        w.page_setup.orientation = "landscape"; w.page_setup.fitToWidth = 1; w.page_setup.fitToHeight = 0
+        w.sheet_properties.pageSetUpPr.fitToPage = True
+    wb.save(path)
+
+if __name__ == "__main__":
+    build(sys.argv[1], test=(sys.argv[2] == "test"), val=dt.date.fromisoformat(sys.argv[3]))

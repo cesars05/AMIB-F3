@@ -1,0 +1,38 @@
+# Diagramas estructurales ("explicar la estructura con formas")
+
+El usuario valora mucho los slides que **explican un concepto con formas** en vez de con bullets, y los considera lo más profesional de sus decks: la cadena de procesos de KLA, la estructura accionaria de FEMSA, los círculos anidados de propiedad, el número-línea de precios, los cilindros del puente de caja y la barra "Conclusiones" con su triángulo tenue.
+
+**Son conceptos, no plantillas fijas.** Cada receta se adapta: cambia el número de pasos, los colores, el texto, la orientación o se combina con otra. Lo que hay que conservar es la *idea*: qué relación muestra la forma (secuencia, jerarquía, pertenencia, rango, resta, conclusión). Si un concepto nuevo no encaja en ninguna, construye uno propio con los mismos principios (§ final).
+
+Funciones en `scripts/house.py`; ejemplo completo en `scripts/gallery_structural.py`. Renders de referencia: `assets/gallery_structural.png`.
+
+| Concepto | Qué comunica | Función | Fuente (medida) | Cómo se adapta |
+|---|---|---|---|---|
+| **Cadena de proceso con foco** | dónde se ubica la empresa dentro de un proceso y qué pasos controla | `process_chain(steps, focus=(i0,i1), focus_label, feedback, row2)` + `detail_card()` debajo | KLA s7: homePlate h0.773, contorno 2.25 pt; entradas en blanco con contorno de color + imagen; pasos neutros gris #A6A6A6; pasos en foco del color de marca con **alpha de 80% a 50%** (se desvanecen); bracket rojo punteado 2.25 pt + etiqueta bold-itálica; flechas de retroalimentación en codo; abajo, 2 tarjetas (barra gris + caja con borde + imagen redonda) | cadena de valor, proceso productivo, ciclo de crédito, flujo de una transacción; foco = el segmento donde está el negocio |
+| **Árbol de estructura** | cómo se componen o derivan las piezas (acciones, entidades, deuda) | `struct_box()` + `connect()` + `legend_items()` + panel gris explicativo a la derecha | ALLOC s3: cajas 1.6–1.8 × 0.5–0.78, **el relleno codifica la categoría** (leyenda arriba-izq.), cajas oscuras con texto blanco, notas itálicas bold bajo la caja, flechas rectas o en codo; panel #F2F2F2 de 4.1 in a la derecha | organigrama corporativo, estructura de capital, holding/subsidiarias, flujos de dividendos |
+| **Círculos anidados** | parte de un todo, cuando un grupo contiene a otro | `nested_circles(rings, callouts)` | ALLOC s4: los círculos alineados abajo; el exterior solo con contorno y los internos rellenos (tinte de marca, gris claro); líneas guía con punto en el borde de cada anillo hacia bloques de texto a la derecha | free float ⊃ trust ⊃ familia; TAM ⊃ SAM ⊃ SOM; clientes ⊃ activos ⊃ premium |
+| **Número-línea de rango** | dónde cae un valor dentro de un rango; zona válida | `price_range(lo, hi, marks, band, callout)` | ALLOC s14: eje con flecha, ticks, etiquetas de valor en pills oscuras con sombra, banda punteada con etiqueta oscura debajo, callout tipo globo para el consenso | rango de recompra, rango de valuación, banda de leverage objetivo, rango de tasas |
+| **Puente de cilindros** | de un saldo a otro restando o sumando bloques (resta visual) | `cylinder_bridge(stages, operators, bracket)` | ALLOC s8: rebanadas grises que se achican y terminan en una rebanada de marca; círculos numerados; operadores (−, ≈) en círculos oscuros entre rebanadas; bracket con pill y caption bajo las rebanadas 2–3 | caja → usos → exceso; EV → equity; deuda bruta → neta. **Máx. 1 por deck**; si se repite el concepto, usa `waterfall` |
+| **Progresión → conclusión** | narrativa "dónde estamos → a dónde vamos" + lectura final | `chevron_row(fills=progression(n))` + `boxed_columns()` + `tail_bar()` + `bullet_columns()` | ALLOC s16: chevrons de **gris → rosa → marca → marca oscuro** (la progresión de color *es* el mensaje); cajas grises con borde; barra "Conclusiones" gris con un **triángulo ancho y tenue debajo que actúa como flecha grande** hacia los bullets; 3 columnas separadas por reglas verticales | resumen ejecutivo, recomendación, situación → target |
+| **Barra con cola (triángulo tenue)** | "todo lo anterior desemboca en esto" | `tail_bar(text, fill, tail_fill)` | ALLOC s16/s15: barra sólida h0.45 + triángulo invertido full-width, alto 0.2–0.25, color = barra aclarada al ~60% | encima de conclusiones, de una tabla resumen o de una caja de "Excess cash"; también angosta sobre una sola caja |
+| **Fases con pentágono hacia abajo** | etapas verticales de un proceso | `phase_pentagon()` | BofA (Green Plains p21) | proceso de M&A, roadmap de implementación |
+
+## Reacomodar, no solo re-rotular (kit de flujo libre)
+`process_chain()` es **una** forma de acomodar el lenguaje visual de KLA. Para cambiar la estructura (número de cajas, orden, dirección, ramas) usa las primitivas de `house.py`:
+| Primitiva | Qué hace |
+|---|---|
+| `node(s, x, y, w, h, label, kind, shape, alpha)` | una caja en cualquier lugar; kind = input / neutral / focus / end; shape = pentagon / chevron / rect / round; las cajas altas sirven como hub |
+| `flow(s, a, b, via=)` | conector recto o en codo entre dos cajas (horizontal o vertical) |
+| `merge(s, fuentes, destino, trunk_x)` | **convergencia**: varias cajas → una, con tronco común |
+| `fan(s, origen, destinos, trunk_x)` | **divergencia**: una caja → varias apiladas |
+| `loop_back(s, a, b, side="top"/"bottom", label)` | retroalimentación por arriba o por abajo, con etiqueta |
+| `focus_frame(s, cajas, label)` | marco rojo punteado alrededor de **cualquier** conjunto de cajas |
+Ejemplo completo: `Slide Construction\Ejemplos\ejemplo_adaptado_v2.py` (KLA lineal 8 pasos → 3 fuentes que convergen, 1 hub, 4 usos que divergen, 2 que vuelven a converger, loop por abajo, lectura con `tail_bar` en vez de tarjetas).
+Otras formas de acomodar el mismo concepto: vertical de arriba a abajo (usa `side_a="bottom", side_b="top"`), árbol que se abre en 2 niveles, dos cadenas paralelas que se unen en un punto, ciclo cerrado con `loop_back`.
+
+## Principios para inventar uno nuevo
+1. **La forma tiene que imitar la relación**: secuencia → flechas/chevrons; jerarquía → árbol; pertenencia → anidado; resta → bloques que se achican; rango → línea; convergencia → embudo o cola.
+2. **El color codifica una sola cosa** (categoría, progreso o foco), siempre con leyenda o con una progresión obvia. El resto va en grises.
+3. **Debajo del diagrama, la interpretación**: tarjetas de detalle, bullets en columnas o una barra de conclusión. Nunca dejes un diagrama sin lectura.
+4. Formas nativas y editables, alineadas al grid, con 1–2 tamaños de texto. Sombras y alpha solo como en la fuente (FEMSA: sombra suave; KLA: alpha en los pasos del foco).
+5. Si existe una versión en think-cell (`references/thinkcell-library.md`), impórtala y recolórala en vez de dibujarla desde cero.

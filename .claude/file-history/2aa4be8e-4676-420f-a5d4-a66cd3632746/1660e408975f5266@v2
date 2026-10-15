@@ -1,0 +1,165 @@
+$ErrorActionPreference="Stop"
+$xl=[Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+$xl.DisplayAlerts=$false
+$nb=$xl.Workbooks.Add()
+$ws=$nb.Worksheets.Item(1); $ws.Name="SARD"
+$p="C:\Users\cesar\OneDrive - Instituto Tecnologico y de Estudios Superiores de Monterrey\CFA\Reporte & Presentacion\SARD_Bimbo_Rebuild.xlsx"
+$nb.SaveAs($p,51)
+$nb.Activate(); $xl.ActiveWindow.DisplayGridlines=$false
+$ws.Cells.Font.Name="Arial"; $ws.Cells.Font.Size=11
+function Hdr([string]$rng){ $r=$ws.Range($rng); $r.Font.Bold=$true; $r.Font.Color=7746854; $r.HorizontalAlignment=-4108; $r.Borders.Item(9).LineStyle=1; $r.Borders.Item(9).Color=13332572 }
+function Inp([string]$rng){ $c=$ws.Range($rng); $c.Interior.Color=13434879; $c.HorizontalAlignment=-4108; $c.Font.Color=16711680; foreach($b in 7,8,9,10){ $c.Borders.Item($b).LineStyle=1; $c.Borders.Item($b).Color=11711154 } }
+function PutRow([int]$r,[string[]]$vals){ for($i=0;$i -lt $vals.Count;$i++){ $ws.Cells.Item($r,2+$i).Value2=$vals[$i] } }
+$map=[ordered]@{
+"AGRO.N"=@(0,"Agricultural commodity producer");"ALICORC1.LM"=@(1,"Branded consumer foods in Peru");"AQUACHILE.SN"=@(0,"Salmon farming");"AVO.OQ"=@(0,"Fresh avocado distributor");
+"BAFARB.BIV"=@(0,"Meat processor");"CAG.N"=@(1,"Branded packaged foods");"CALM.OQ"=@(0,"Egg commodity producer");"CPB.OQ"=@(1,"Branded packaged foods and snacks");
+"DOLE.N"=@(0,"Fresh produce");"EBRO.MC"=@(1,"Branded rice and pasta");"FLO.N"=@(1,"Branded baked goods");"FRPT.OQ"=@(0,"Pet food");
+"GIS.N"=@(1,"Branded packaged foods");"GLORIAI1.LM"=@(0,"Dairy processor");"GRUMAB.MX"=@(1,"Exception as closest Mexican peer with tortillas");"HRL.N"=@(1,"Branded packaged foods with snacks");
+"HSY.N"=@(0,"Confectionery");"JBS.N"=@(0,"Global protein processor");"JJSF.OQ"=@(1,"Snack foods and bakery");"KHC.N"=@(1,"Branded packaged foods");
+"KRIr.AT"=@(0,"Dairy and ice cream");"LW.N"=@(0,"Foodservice frozen potato supplier");"MBRF3.SA"=@(0,"Protein processor");"MDIA3.SA"=@(1,"Biscuits pasta and bakery");
+"MFI.TO"=@(0,"Protein processor");"MKC.N"=@(1,"Branded spices and condiments");"MZTI.OQ"=@(1,"Branded dressings and bakery");"NOMD.N"=@(1,"Branded frozen foods");
+"NUTRESA.CN"=@(1,"Branded packaged foods in Latin America");"PBH.TO"=@(0,"Protein and specialty foods supplier");"PODR.ZA"=@(0,"Small regional food group");"POST.N"=@(1,"Branded cereal and packaged foods");
+"PPC.OQ"=@(0,"Chicken processor");"SAP.TO"=@(0,"Dairy processor");"SEB.A"=@(0,"Diversified agribusiness");"SENEA.OQ"=@(0,"Private label canned vegetables");
+"SFD.OQ"=@(0,"Protein processor");"SIGMAFA.MX"=@(1,"Exception as closest Mexican peer");"SJM.N"=@(1,"Branded packaged foods and bakery");"SMTO3.SA"=@(0,"Sugar and ethanol producer");
+"TR.N"=@(0,"Confectionery");"TSN.N"=@(0,"Protein processor");"UTZ.N"=@(1,"Savoury snacks");"VIS.MC"=@(0,"Sausage casings supplier")}
+$ws.Range("B2").Value2="Peer Universe"; $ws.Range("B2").Font.Size=14; $ws.Range("B2").Font.Bold=$true
+$ws.Range("B3").Value2="SARD peer selection for Grupo Bimbo. Data from LSEG Workspace."
+$ws.Range("B7").Value2="Universe of selection"; $ws.Range("B7").Font.Bold=$true
+$ws.Range("B9").Value2="Units"; $ws.Range("C9").Value2="MXN"; $ws.Range("B11").Value2="Scale"; $ws.Range("C11").Value2=6; $ws.Range("B12").Value2="Period"; $ws.Range("C12").Value2="FI0"
+Inp "C9"; Inp "C11"; Inp "C12"; $ws.Range("C9").Font.Color=0
+$ws.Range("T14").Value2="TR.WACCTaxRate"
+$f=@{"B"="LSEG Formulas";"C"="TR.CommonName";"D"="TR.CompanyMarketCap";"N"="TR.EV";"O"="TR.F.TotDebtExclIslamic(Period=FI0)";"P"="TR.F.CashCashEquivTot(Period=FI0)";"Q"="TR.F.TotRevenue(Period=LTM)";"R"="TR.F.IncAvailToComShr(Period=LTM)";"S"="TR.F.ShHoldEqParentShHoldTot";"T"="TR.TaxRateActValue";"V"="TR.F.OpProfBefNonRecurIncExpn(Period=LTM)";"W"="TR.F.DebtTot(FY-1)+TR.PCTotShholdEquAttribToPrntShhold(FY-1)+TR.F.MinIntrTot(FY-1)-TR.F.CashCashEquivTot(FY-1)";"X"="TR.F.DebtTot(FY0)+TR.PCTotShholdEquAttribToPrntShhold(FY0)+TR.F.MinIntrTot(FY0)-TR.F.CashCashEquivTot(FY0)";"AA"="TR.EPSMean(FY1)";"AB"="TR.EPSMean(FY2)"}
+foreach($k in $f.Keys){ $ws.Range($k+"15").NumberFormat="@"; $ws.Range($k+"15").Value2=[string]$f[$k] }
+$ws.Range("B14:AB15").Font.Color=8421504
+$ws.Range("N17").Value2="Support Data"
+$h=@{"B"="RIC";"C"="Company Name";"D"="Market Cap";"E"="ROE";"F"="ROIC";"G"="Net debt/ EBIT";"H"="Net Debt / Invested Capital";"I"="Consensus EPS Growth 2Y";"J"="EBIT Margin";"K"="EV/EBIT";"L"="P/BV";"N"="EV";"O"="Total Debt";"P"="Cash";"Q"="Revenue";"R"="Net Income";"S"="Total Equity";"T"="Tax Rate";"U"="NOPAT";"V"="EBIT";"W"="Invested Capital FY-1";"X"="Invested Capital FY0";"Y"="Avg Invested Capital";"Z"="EBIT Margin";"AA"="EPS FY1";"AB"="EPS FY2";"AD"="In scope (1 = yes)";"AE"="Scope rationale"}
+foreach($k in $h.Keys){ $ws.Range($k+"18").Value2=[string]$h[$k] }
+Hdr "B18:L18"; Hdr "AD18:AE18"
+$hs=$ws.Range("N18:AB18"); $hs.Font.Bold=$true; $hs.Font.Color=0; $hs.Interior.Color=15921906; $hs.HorizontalAlignment=-4108; $hs.Borders.Item(9).LineStyle=1; $hs.Borders.Item(9).Color=7746854
+$ws.Range("B18:AE18").WrapText=$true
+$ws.Range("B19").Value2="BIMBOA.MX"; $i=20
+foreach($k in $map.Keys){ $ws.Range("B$i").Value2=[string]$k; $ws.Range("AD$i").Value2=[double]$map[$k][0]; $ws.Range("AE$i").Value2=[string]$map[$k][1]; $i++ }
+$ws.Range("AD19").Value2=1; $ws.Range("AE19").Value2="Base company"
+$ws.Range("C19:C63").Formula='=+TR($B19,C$15,"Null=BLANK")'
+$ws.Range("D19:D63").Formula='=+IFERROR(TR($B19,D$15,"Curn=#1 Scale=#2 Null=BLANK",,$C$9,$C$11),"")'
+foreach($c in "N","O","P","Q","R","S","V","W","X"){ $ws.Range("${c}19:${c}63").Formula="=+TR(`$B19,${c}`$15,`"Curn=#1 Scale=#2 Null=BLANK`",,`$C`$9,`$C`$11)" }
+$ws.Range("T19:T63").Formula='=+IFERROR(TR($B19,T$15,"Curn=#1 Scale=#2 Period=#3 Null=BLANK",,$C$9,$C$11,$C$12)*1%,TR($B19,T$14,"Curn=#1 Scale=#2 Period=#3 Null=BLANK",,$C$9,$C$11,$C$12)*1%)'
+$ws.Range("U19:U63").Formula='=+V19*(1-T19)'
+$ws.Range("Y19:Y63").Formula='=+AVERAGE(W19:X19)'
+$ws.Range("Z19:Z63").Formula='=+V19/Q19'
+$ws.Range("AA19:AA63").Formula='=+TR($B19,AA$15,"Curn=#1 Null=BLANK",,$C$9)'
+$ws.Range("AB19:AB63").Formula='=+TR($B19,AB$15,"Curn=#1 Null=BLANK",,$C$9)'
+$ws.Range("E19:E63").Formula='=+IFERROR(R19/S19,"")'
+$ws.Range("F19:F63").Formula='=+IFERROR(U19/Y19,"")'
+$ws.Range("G19:G63").Formula='=+IFERROR((O19-P19)/V19,"")'
+$ws.Range("H19:H63").Formula='=+IFERROR((O19-P19)/Y19,"")'
+$ws.Range("I19:I63").Formula='=+IFERROR(AB19/AA19-1,"")'
+$ws.Range("J19:J63").Formula='=+IFERROR(V19/Q19,"")'
+$ws.Range("K19:K63").Formula='=+IFERROR(N19/V19,"")'
+$ws.Range("L19:L63").Formula='=+IFERROR(D19/S19,"")'
+$ws.Range("B19:AE63").HorizontalAlignment=-4108; $ws.Range("AE19:AE63").HorizontalAlignment=-4131
+$ws.Range("D19:D63").NumberFormat='$#,##0'; foreach($c in "N","O","P","Q","R","S","U","V","W","X","Y"){ $ws.Range("${c}19:${c}63").NumberFormat='$#,##0' }
+foreach($c in "E","F","I","J","T","Z"){ $ws.Range("${c}19:${c}63").NumberFormat="0.00%" }
+foreach($c in "G","H","K","L"){ $ws.Range("${c}19:${c}63").NumberFormat="0.00x" }
+$ws.Range("AA19:AB63").NumberFormat='$#,##0.00'; $ws.Range("AD19:AD63").NumberFormat="0"; $ws.Range("AD19:AD63").Font.Color=16711680
+$ws.Range("B19:AE19").Font.Bold=$true
+$ws.Columns("A").ColumnWidth=2; $ws.Columns("B").ColumnWidth=16.14; $ws.Columns("C").ColumnWidth=40
+foreach($c in "D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC"){ $ws.Columns($c).ColumnWidth=13 }
+$ws.Columns("AD").ColumnWidth=18; $ws.Columns("AE").ColumnWidth=48; $ws.Rows(18).RowHeight=45
+$nb.Save()
+
+# ---------------- results and process
+$ws.Range("B66").Value2="SARD Results"; $ws.Range("B66").Font.Bold=$true
+$ws.Range("B105").Value2="SARD Process"; $ws.Range("B105").Font.Bold=$true
+$ws.Range("B67:S207").HorizontalAlignment=-4108
+$ws.Range("B68").Value2="Peers selected (n)"; $ws.Range("C68").Value2=9; Inp "C68"; $ws.Range("C68").NumberFormat="0"
+$ws.Range("B69").Value2="Outlier cut-off (std dev)"; $ws.Range("C69").Value2=3; Inp "C69"; $ws.Range("C69").NumberFormat="0.0"
+$ws.Range("B70").Value2="Apply industry scope (1 = yes)"; $ws.Range("C70").Value2=1; Inp "C70"; $ws.Range("C70").NumberFormat="0"
+
+$ws.Range("B107").Value2="EV/EBIT. Selection variables: ROE, Net debt/EBIT, Size, Consensus EPS growth, EBIT margin"; $ws.Range("B107").Font.Bold=$true
+$ws.Range("B108").Value2="Mean EV/EBIT (eligible base)"; $ws.Range("B109").Value2="Std dev"; $ws.Range("B110").Value2="Upper cut-off"
+$ws.Range("C108").Formula='=AVERAGE(D113:D156)'; $ws.Range("C109").Formula='=STDEV.S(D113:D156)'; $ws.Range("C110").Formula='=C108+$C$69*C109'
+$ws.Range("C108:C110").NumberFormat="0.00x"
+PutRow 112 @("RIC","Company","EV/EBIT","Eligible","DiffROE","DiffND/EBIT","DiffSize","DiffGrowth","DiffEBIT mgn","Rank ROE","Rank ND/EBIT","Rank Size","Rank Growth","Rank EBIT mgn","SARD","Final rank","Selected","Peer EV/EBIT")
+Hdr "B112:S112"
+$ws.Range("B113:B156").Formula='=$B20'
+$ws.Range("C113:C156").Formula='=$C20'
+$ws.Range("D113:D156").Formula='=IFERROR(IF(AND(OR($C$70=0,$AD20=1),ISNUMBER($E20),ISNUMBER($G20),ISNUMBER($D20),ISNUMBER($I20),ISNUMBER($J20),ISNUMBER($K20),$V20>0,$K20>0,$AA20>0),$K20,""),"")'
+$ws.Range("E113:E156").Formula='=IF(ISNUMBER(D113),IF(D113>$C$110,0,1),0)'
+$ws.Range("F113:F156").Formula='=IF($E113=1,ABS($E20-$E$19),"")'
+$ws.Range("G113:G156").Formula='=IF($E113=1,ABS($G20-$G$19),"")'
+$ws.Range("H113:H156").Formula='=IF($E113=1,ABS($D20-$D$19),"")'
+$ws.Range("I113:I156").Formula='=IF($E113=1,ABS($I20-$I$19),"")'
+$ws.Range("J113:J156").Formula='=IF($E113=1,ABS($J20-$J$19),"")'
+$cols=@("F","G","H","I","J"); $rk=@("K","L","M","N","O")
+for($i=0;$i -lt 5;$i++){ $c=$cols[$i]; $t=$rk[$i]; $ws.Range("${t}113:${t}156").Formula="=IF(${c}113="""","""",RANK.EQ(${c}113,${c}`$113:${c}`$156,1))" }
+$ws.Range("P113:P156").Formula='=IF($E113=1,SUM(K113:O113),"")'
+$ws.Range("Q113:Q156").Formula='=IF(P113="","",COUNTIF(P$113:P$156,"<"&P113)+COUNTIF(P$113:P113,P113))'
+$ws.Range("R113:R156").Formula='=IF(Q113="",0,IF(Q113<=$C$68,1,0))'
+$ws.Range("S113:S156").Formula='=IF(R113=1,D113,"")'
+$ws.Range("D113:D156").NumberFormat="0.00x"; $ws.Range("S113:S156").NumberFormat="0.00x"
+$ws.Range("F113:F156").NumberFormat="0.00%"; $ws.Range("G113:G156").NumberFormat="0.00x"; $ws.Range("H113:H156").NumberFormat='$#,##0'; $ws.Range("I113:J156").NumberFormat="0.00%"
+$ws.Range("E113:E156").NumberFormat="0"; $ws.Range("K113:R156").NumberFormat="0"
+
+$ws.Range("B158").Value2="P/BV. Selection variables: ROIC, Net debt/Invested capital, Size, Consensus EPS growth"; $ws.Range("B158").Font.Bold=$true
+$ws.Range("B159").Value2="Mean P/BV (eligible base)"; $ws.Range("B160").Value2="Std dev"; $ws.Range("B161").Value2="Upper cut-off"
+$ws.Range("C159").Formula='=AVERAGE(D164:D207)'; $ws.Range("C160").Formula='=STDEV.S(D164:D207)'; $ws.Range("C161").Formula='=C159+$C$69*C160'
+$ws.Range("C159:C161").NumberFormat="0.00x"
+PutRow 163 @("RIC","Company","P/BV","Eligible","DiffROIC","DiffND/IC","DiffSize","DiffGrowth","Rank ROIC","Rank ND/IC","Rank Size","Rank Growth","SARD","Final rank","Selected","Peer P/BV")
+Hdr "B163:Q163"
+$ws.Range("B164:B207").Formula='=$B20'
+$ws.Range("C164:C207").Formula='=$C20'
+$ws.Range("D164:D207").Formula='=IFERROR(IF(AND(OR($C$70=0,$AD20=1),ISNUMBER($F20),ISNUMBER($H20),ISNUMBER($D20),ISNUMBER($I20),ISNUMBER($L20),$S20>0,$L20>0,$AA20>0),$L20,""),"")'
+$ws.Range("E164:E207").Formula='=IF(ISNUMBER(D164),IF(D164>$C$161,0,1),0)'
+$ws.Range("F164:F207").Formula='=IF($E164=1,ABS($F20-$F$19),"")'
+$ws.Range("G164:G207").Formula='=IF($E164=1,ABS($H20-$H$19),"")'
+$ws.Range("H164:H207").Formula='=IF($E164=1,ABS($D20-$D$19),"")'
+$ws.Range("I164:I207").Formula='=IF($E164=1,ABS($I20-$I$19),"")'
+$cols=@("F","G","H","I"); $rk=@("J","K","L","M")
+for($i=0;$i -lt 4;$i++){ $c=$cols[$i]; $t=$rk[$i]; $ws.Range("${t}164:${t}207").Formula="=IF(${c}164="""","""",RANK.EQ(${c}164,${c}`$164:${c}`$207,1))" }
+$ws.Range("N164:N207").Formula='=IF($E164=1,SUM(J164:M164),"")'
+$ws.Range("O164:O207").Formula='=IF(N164="","",COUNTIF(N$164:N$207,"<"&N164)+COUNTIF(N$164:N164,N164))'
+$ws.Range("P164:P207").Formula='=IF(O164="",0,IF(O164<=$C$68,1,0))'
+$ws.Range("Q164:Q207").Formula='=IF(P164=1,D164,"")'
+$ws.Range("D164:D207").NumberFormat="0.00x"; $ws.Range("Q164:Q207").NumberFormat="0.00x"
+$ws.Range("F164:F207").NumberFormat="0.00%"; $ws.Range("G164:G207").NumberFormat="0.00x"; $ws.Range("H164:H207").NumberFormat='$#,##0'; $ws.Range("I164:I207").NumberFormat="0.00%"
+$ws.Range("E164:E207").NumberFormat="0"; $ws.Range("J164:P207").NumberFormat="0"
+
+$ws.Range("B71").Value2="EV/EBIT. Selected peers"; $ws.Range("B71").Font.Bold=$true
+PutRow 72 @("#","Peer","SARD","EV/EBIT"); Hdr "B72:E72"
+for($k=1;$k -le 9;$k++){ $r=72+$k
+  $ws.Range("B$r").Value2=[double]$k
+  $m='MATCH($B'+$r+',$Q$113:$Q$156,0)'
+  $ws.Range("C$r").Formula='=IF($B'+$r+'>$C$68,"",IFERROR(INDEX($C$113:$C$156,'+$m+'),""))'
+  $ws.Range("D$r").Formula='=IF($B'+$r+'>$C$68,"",IFERROR(INDEX($P$113:$P$156,'+$m+'),""))'
+  $ws.Range("E$r").Formula='=IF($B'+$r+'>$C$68,"",IFERROR(INDEX($D$113:$D$156,'+$m+'),""))' }
+$ws.Range("D73:D81").NumberFormat="0"; $ws.Range("E73:E81").NumberFormat="0.00x"
+$ws.Range("B83").Value2="P/BV. Selected peers"; $ws.Range("B83").Font.Bold=$true
+PutRow 84 @("#","Peer","SARD","P/BV"); Hdr "B84:E84"
+for($k=1;$k -le 9;$k++){ $r=84+$k
+  $ws.Range("B$r").Value2=[double]$k
+  $m='MATCH($B'+$r+',$O$164:$O$207,0)'
+  $ws.Range("C$r").Formula='=IF($B'+$r+'>$C$68,"",IFERROR(INDEX($C$164:$C$207,'+$m+'),""))'
+  $ws.Range("D$r").Formula='=IF($B'+$r+'>$C$68,"",IFERROR(INDEX($N$164:$N$207,'+$m+'),""))'
+  $ws.Range("E$r").Formula='=IF($B'+$r+'>$C$68,"",IFERROR(INDEX($D$164:$D$207,'+$m+'),""))' }
+$ws.Range("D85:D93").NumberFormat="0"; $ws.Range("E85:E93").NumberFormat="0.00x"
+
+PutRow 95 @("Implied valuation","EV/EBIT","P/BV"); Hdr "B95:D95"
+$lab=@("Bimbo multiple","Peer mean","Peer median","Peer mean vs Bimbo","Implied market cap (MXN mn)","Current market cap (MXN mn)","Implied vs current market cap","Eligible candidates (#)")
+for($i=0;$i -lt 8;$i++){ $ws.Cells.Item(96+$i,2).Value2=[string]$lab[$i] }
+$ws.Range("C96").Formula='=K19'; $ws.Range("D96").Formula='=L19'
+$ws.Range("C97").Formula='=AVERAGE(S113:S156)'; $ws.Range("D97").Formula='=AVERAGE(Q164:Q207)'
+$ws.Range("C98").Formula='=MEDIAN(S113:S156)'; $ws.Range("D98").Formula='=MEDIAN(Q164:Q207)'
+$ws.Range("C99").Formula='=C97/C96-1'; $ws.Range("D99").Formula='=D97/D96-1'
+$ws.Range("C100").Formula='=C97*$V$19-($N$19-$D$19)'; $ws.Range("D100").Formula='=D97*$S$19'
+$ws.Range("C101").Formula='=$D$19'; $ws.Range("D101").Formula='=$D$19'
+$ws.Range("C102").Formula='=C100/C101-1'; $ws.Range("D102").Formula='=D100/D101-1'
+$ws.Range("C103").Formula='=SUM(E113:E156)'; $ws.Range("D103").Formula='=SUM(E164:E207)'
+$ws.Range("C96:D98").NumberFormat="0.00x"; $ws.Range("C99:D99").NumberFormat="0.0%"; $ws.Range("C100:D101").NumberFormat='$#,##0'; $ws.Range("C102:D102").NumberFormat="0.0%"; $ws.Range("C103:D103").NumberFormat="0"
+$fc=$ws.Range("B113:S156").FormatConditions.Add(2,0,'=$R113=1'); $fc.Interior.Color=15921906
+$fc2=$ws.Range("B164:Q207").FormatConditions.Add(2,0,'=$P164=1'); $fc2.Interior.Color=15921906
+$nb.Save()
+$xl.DisplayAlerts=$true
+"saved "+$nb.FullName
+for($t=0;$t -lt 30;$t++){ Start-Sleep -Seconds 5; $v=$ws.Range("D19").Value2; if($v -is [double]){ break } }
+"D19="+$ws.Range("D19").Text+" C19="+$ws.Range("C19").Text+" waited="+($t*5)+"s"

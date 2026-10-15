@@ -1,0 +1,170 @@
+# Registro de cambios y decisiones, Bimbo Financial Model v7
+
+Estado al 11-oct-2026: **no se ha modificado ninguna celda de la v7**. Este documento registra las decisiones y su lógica, y se completará con cada cambio aplicado (celda, antes, después, razón, valor por acción).
+
+Base: v6 del 11-oct 10:14 AM. Valor por acción **Ps67.32**, upside 20.38%, WACC 10.345%, precio Ps55.92. Respaldo: `Excel Backup\Bimbo Financial Model_v6_BACKUP_base-pre-v7.xlsx`.
+
+Reglas de operación: la v7 tiene AutoSave activo (cada escritura por COM se guarda), por lo que se hace un respaldo con `SaveCopyAs` antes de cada bloque. El WACC queda en vivo (decisión del usuario), así que en cada paso del puente se registran WACC y precio para separar movimientos de mercado de cambios de supuestos.
+
+## 1. Decisiones confirmadas por el usuario
+
+| Tema | Decisión | Lógica |
+|---|---|---|
+| Archivo | Crear v7 desde v6 | Conservar v6 y v4 intactas |
+| Participación de mercado | México pan 0; Canadá pan 0; EE.UU. pan sin pérdida (ya en 0); Colombia +0.10 pp al año | El histórico de Colombia está distorsionado por el salto de 2023 (11.8% a 15.6%); Euromonitor muestra pan estabilizado en México, Canadá y EE.UU. |
+| Impuestos | 33% fijo 2026 a 2030; bajista 34%; alcista 32% | Histórico 33.1%, 32.3%, 35.7% y ~37% en 2026 acumulado |
+| Otros márgenes regionales | México 21.0%, EAA 12.5%, Latinoamérica 9.5% sin cambio | El usuario los considera razonables. Riesgo: EAA y México quedan sobre su récord histórico |
+| Refinanciamiento | 9% para deuda nueva o refinanciada; la existente a su tasa actual | Bono de feb-2026 a 9.22%; BIMBO 23L a 9.24% |
+| Circularidad | Activar cálculo iterativo en la Fase 2, con interruptor de seguridad y la v6 cerrada | El cálculo iterativo es de toda la instancia de Excel |
+| Payout | Dividendo 2026E = Ps1.075 por acción (propuesta de la asamblea); 2027E en adelante = 40% de la utilidad neta del año anterior | Se paga sobre la utilidad previa; 2025 pagó 40.0% de la utilidad de 2025 |
+| Capex | Sin cambio de supuestos; marcar que 2026E (Ps19.8bn) está en el extremo bajo de la guía (US$1.0 a 1.2bn) | Decisión del usuario |
+| WACC | **En vivo**, sin congelar; impuestos del WACC alineados a 33% | Decisión del usuario |
+| Margen de Norteamérica | Llega a 11% en 2030 (9.8%, 10.2%, 10.6%, 10.8%, 11.0%) | Decisión del usuario, confirmada sabiendo que sube el margen base (no lo baja) |
+| `Multiples` | Corregir arrendamientos solo en `Q13`; EV/FCF de J&J queda en blanco (sin estimado forward); consenso para Bimbo | Decisión del usuario |
+| Reestructura | Opción B: costo extra decreciente 0.40%, 0.30%, 0.20%, 0.10% de ingresos (2027 a 2030), en la línea corporativa existente | Decisión del usuario; el total que persiste cae a ~0.2% en 2030, por debajo del mínimo histórico (0.5%), supuesto más optimista que mi recomendación A |
+| Recompras | 15% de la utilidad neta del año anterior | Acorde al histórico: payout total 2023-25 ≈ 55% menos 40% de dividendo; recompras históricas 5% a 41% de la utilidad (promedio 21%, mediana 18%) |
+| Efectivo mínimo | 2.0% de ingresos; sin ingreso por intereses | Decisión del usuario |
+| Intereses | Deuda existente 8.1%, arrendamientos 6.05%, nueva o refinanciada 9% | Decisión del usuario |
+| Efectivo mínimo | Porcentaje de ingresos; **sin ingreso por intereses** sobre el efectivo | Evitar optimismo |
+| Registro de cambios | Archivo `.md`, no hoja dentro del libro | Decisión del usuario |
+| Adquisiciones | Modelarlas: el crecimiento histórico ya las incluye, y sin ellas el pronóstico no es comparable con el pasado | Ver sección 3.5 |
+
+## 2. Pendiente de confirmar
+
+| Tema | Pregunta |
+|---|---|
+| Adquisiciones | El usuario cree que no hace falta modelar reparto regional ni año terminal; se evalúa si modelar o no las adquisiciones (ver conversación del 11-oct) |
+
+## 3. Análisis y propuestas
+
+### 3.1 Margen de Norteamérica
+
+Estado actual (`Regional Assumptions` filas 59 a 62, y `Regional Model` fila 128):
+
+| | 2021A | 2022A | 2023A | 2024A | 2025A | 2026E | 2027E | 2028E | 2029E | 2030E |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Margen EBITDA Norteamérica (base) | 12.2% | 11.0% | 10.5% | 8.4% | 9.0% | 9.8% | 10.0% | 10.3% | 10.5% | 10.5% |
+
+Hoy el caso base llega a 10.5% (tope al nivel de 2023), el bajista a 9.5% y el alcista a 11.5%. **Nada en el modelo llega a 12%**; 12.2% es el récord histórico de 2021. Llevar el caso base a **11% en 2030 sube** el margen en 0.5 pp (valor estimado +Ps2 por acción), y el alcista pasaría a 12.0%, cerca del récord. Propuesta de trayectoria: 9.8%, 10.2%, 10.6%, 10.8%, 11.0% (2026 a 2030). Confirmada y aplicada (sección 4).
+
+### 3.2 Reestructura e integración
+
+Histórico (`Consolidated Model` filas 22 y 27):
+
+| | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 |
+|---|---|---|---|---|---|---|
+| Reestructura (Ps m) | 1,143 | 2,059 | 1,657 | 2,959 | 6,293 | 3,908 |
+| Integración (Ps m) | 1,968 | 724 | 367 | 288 | 317 | 541 |
+| Total, % de ingresos | 0.94% | 0.82% | 0.51% | 0.81% | 1.62% | 1.04% |
+| Margen Adj. EBITDA reportado | 13.65% | 13.98% | 13.41% | 13.74% | 13.59% | 13.93% |
+| Margen antes de reestructura e integración | 14.59% | 14.80% | 13.92% | 14.55% | 15.21% | 14.97% |
+
+Conclusiones:
+
+- Ocurre **todos los años**, nunca por debajo de 0.5% de los ingresos y con promedio de ~1.0%. Es casi recurrente, no un evento aislado.
+- El Adj. EBITDA de la empresa y del modelo **ya descuenta** estos costos (los ajustes de la fila 36 son pequeños), así que sumarlos completos encima duplicaría 2026E.
+- El margen consolidado de 2030E (15.35%) es **igual o mayor que el mejor margen subyacente histórico (15.21%, 2024)** solo si la reestructura casi desaparece (≤0.14%). Si se mantiene en 0.5%, el margen subyacente implícito sería 15.85%, 64 pb sobre ese techo.
+- Los márgenes del modelo implican, según la estimación del handoff, que el costo cae de 1.04% a ~0.1% en 2030. Eso no es observable; es lo que hace consistente la mejora de margen.
+
+Propuesta (a confirmar), con una línea explícita "Restructuring & integration" y un interruptor:
+
+| % de ingresos | 2026E | 2027E | 2028E | 2029E | 2030E |
+|---|---|---|---|---|---|
+| Nivel total que persiste | 0.90% | 0.90% | 0.75% | 0.60% | 0.50% |
+| Ya implícito en los márgenes (estimación) | 0.90% | 0.70% | 0.50% | 0.30% | 0.10% |
+| **Costo extra a modelar** | 0.00% | 0.20% | 0.25% | 0.30% | 0.40% |
+| Costo extra aproximado (Ps bn) | 0.0 | 0.9 | 1.2 | 1.5 | 2.1 |
+
+El nivel total baja desde 2028 y termina en el piso histórico (0.5%); el extra es la parte que los márgenes actuales no cubren. Efecto estimado en el valor: ~−Ps4 por acción, mayormente por el año terminal. Se mostrará el margen EBITDA antes de reestructura como memo.
+
+### 3.3 Distribución de capital (payout y recompras)
+
+| | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 |
+|---|---|---|---|---|---|---|
+| Dividendos (Ps m) | 2,433 | 4,636 | 5,885 | 3,549 | 4,234 | 4,451 |
+| Recompras (Ps m) | 3,740 | 1,901 | 2,568 | 3,586 | 4,433 | 1,253 |
+| Payout total / utilidad neta | 67.8% | 41.1% | 18.0% | 46.1% | 69.1% | 51.2% |
+| Dividendos / utilidad neta | 26.7% | 29.1% | 12.5% | 22.9% | 33.8% | 40.0% |
+| Recompras / utilidad neta | 41.0% | 11.9% | 5.5% | 23.2% | 35.3% | 11.3% |
+
+Las recompras son oportunistas y varían entre 5% y 41% de la utilidad. El payout total de 2023 a 2025 promedia ~55%. Con dividendo de 40%, queda **~15% de la utilidad neta del año anterior** para recompras (2026E ≈ Ps1.7bn; 2025 fue Ps1.25bn). Se usa el año anterior para no agregar otro lazo circular, y las recompras salen del efectivo sobre el mínimo. Esto frena la caída de acciones (hoy −9% a 2030E) que infla el EPS.
+
+Nota: dividendos, recompras, deuda y efectivo **no mueven el valor del DCF** (usa FCFF y el balance real del 2T26). Se mostrarán en el puente el EPS 2027E y la deuda neta / EBITDA junto al valor por acción.
+
+### 3.4 Efectivo mínimo, deuda e intereses
+
+Efectivo al cierre como porcentaje:
+
+| | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 | Promedio | Coef. de variación |
+|---|---|---|---|---|---|---|---|---|
+| De ingresos | 2.80% | 2.58% | 3.09% | 1.59% | 1.97% | 2.00% | 2.34% | 0.25 |
+| De costos de operación en efectivo | 3.24% | 3.00% | 3.57% | 1.84% | 2.28% | 2.32% | 2.71% | 0.25 |
+| De activos totales | 3.0% | 2.6% | 3.5% | 1.8% | 1.9% | 2.1% | 2.48% | 0.27 |
+
+Los tres son parecidos; ingresos y costos empatan en estabilidad y los activos son algo más inestables. Se propone **2.0% de ingresos** (promedio 2023 a 2025 ≈ 1.85%, 2020 a 2025 ≈ 2.3%): Ps9.0bn en 2026E y Ps10.7bn en 2030E. El excedente por encima del mínimo repaga deuda. Sin ingreso por intereses.
+
+Intereses: deuda existente a la tasa implícita de 2025A (Ps12,327m sobre deuda promedio de Ps152,284m = **8.1%**; no el 7.55% de rendimiento de mercado, porque el gasto sigue al cupón), arrendamientos a **~6.05%** (Ps2,137m sobre Ps35,296m promedio), y 9% para lo refinanciado o nuevo. Se usarán las filas 42 y 43, hoy vacías en el pronóstico, con `M41 = SUM(M42:M44)` como en el histórico.
+
+### 3.5 Adquisiciones
+
+Efectivo pagado (Ps bn): 2021 10.6, 2022 6.5, 2023 6.5, 2024 6.0, 2025 11.3 (más 1.5 por el 40% de Bimbo Colombia). Propuesta de Ps5bn al año, a ~1.0x EV/Ventas y margen de la región, medio año en el año de la operación.
+
+Comparabilidad: el CAGR de ingresos de 2020 a 2025 fue ~5.2% (incluye adquisiciones y tipo de cambio). El pronóstico orgánico es ~4.6%. Con Ps5bn al año se agregan ~Ps24bn de ingresos a 2030E y el CAGR total sube a ~5.5%, comparable con el histórico. Sin la línea, el pronóstico sería más lento que el pasado.
+
+Reparto regional por defecto (histórico por número de operaciones): EAA 50%, Latinoamérica 25%, Norteamérica 25%. Año terminal del DCF: se propone excluir la salida de adquisiciones **y** el crecimiento inorgánico del crecimiento perpetuo (g = 3.52% es orgánico) conservando la base ya adquirida. El DCF necesita una fila "(−) Acquisitions" en el FCFF; el balance necesita un rollforward de crédito mercantil e intangibles para que cuadre.
+
+Revisión del 11-oct a raíz del argumento del usuario (la participación ganada ya incluye valor de adquisiciones y expansión): se midió cuánto crecimiento aporta la participación. Al cambiar temporalmente el selector `Regional Assumptions!C42` de Gain (3) a Hold (2) y restaurarlo a 3, los ingresos de 2030E pasan de Ps533,246m a Ps524,711m (−Ps8.5bn), el CAGR de 4.55% a 4.21% y el valor por acción de Ps63.89 a Ps62.61. Es decir, **todo el crecimiento por participación suma 0.34 pp al año y Ps1.28 por acción**, y buena parte es orgánico (botanas, Colombia). Ps5bn al año a 1.0x EV/Ventas comprarían ~Ps23bn de ingresos a 2030E, unas 2.7 veces más. Además EAA crece 1.6% a 2.2% en el pronóstico (participación 0) contra 8% a 20% en 2019 a 2024, que fue crecimiento por adquisiciones: ese componente no está en el pronóstico.
+
+**Prueba retrospectiva del método (11-oct).** Se aplicó el método del modelo (crecimiento de mercado de Euromonitor por país proxy, más cambio de participación) a 2019 y se comparó con los ingresos reales de 2025 (`Market Growth & Inflation` filas 20 a 24, 112, 167, 227 y 285):
+
+| Región | Ingresos 2019 | 2025 real | 2025 según el método | Real vs método | CAGR real | CAGR método |
+|---|---|---|---|---|---|---|
+| Norteamérica | 143,354 | 188,852 | 207,023 | −8.8% | 4.7% | 6.3% |
+| México | 94,942 | 140,360 | 143,751 | −2.4% | 6.7% | 7.2% |
+| EAA | 26,505 | 54,125 | 34,062 | **+58.9%** | 12.6% | 4.3% |
+| Latinoamérica | 27,125 | 43,615 | 56,678 | −23.0% | 8.2% | 13.1% |
+| **Consolidado** | 291,926 | 426,952 | 441,514 | **−3.3%** | 6.54% | 7.14% |
+
+Lectura: el método habría **sobreestimado** el consolidado en 3.3% (0.6 pp al año). EAA creció Ps20bn más que su proxy (Reino Unido y España; ahí están las adquisiciones y los países fuera del proxy), pero Norteamérica y Latinoamérica quedaron Ps31bn por debajo (conversión de precio al consumidor a ventas netas, mezcla y tipo de cambio; con estos datos no se separan). Por lo tanto el método sin adquisiciones **no** subestimó el crecimiento histórico total. Sumar ingresos adquiridos encima lo dejaría por encima de lo observado. Además, el balance del pronóstico deja el crédito mercantil plano (`Consolidated Model` fila 183 = año anterior), así que modelar adquisiciones exigiría también un rollforward de crédito mercantil.
+
+**Decisión recomendada: opción A** (pronóstico orgánico, sin línea de adquisiciones), con el crecimiento 2025-30 de 4.55% presentado como orgánico y la sensibilidad de adquisiciones (Ps5bn al año: ~+1 pp de crecimiento, valor cercano a neutral, deuda neta / EBITDA ~+0.2x) descrita fuera del modelo.
+
+### 3.6 `Multiples`
+
+Errores y observaciones verificados en las fórmulas:
+
+1. **Doble conteo de arrendamientos (error).** `F13` ya resta los arrendamientos al EV, y `H13` e `I13` quitan el interés de arrendamientos y la depreciación del activo por derecho de uso, así que los múltiplos son pre-IFRS 16. Pero `Q13 = DCF!C70 + DCF!C71` resta los arrendamientos otra vez en el puente a capital. Corrección: usar solo `DCF!C70`. Efecto: Ps33,361m / 4,285m acciones = **Ps7.8 por acción** en cada método de EV; con 90% del peso, el precio objetivo pasa de Ps66.55 a ~Ps73.6 (upside ~31%). Es un error real, pero la corrección **sube** un método mientras el DCF baja.
+2. EV/FCF de Sigma es 3.63x porque su FCF (Ps40.6bn) es más de cinco veces su utilidad neta (Ps7.2bn): parece un dato defectuoso. El FCF de J&J Snack Foods está en blanco.
+3. Gruma y Sigma tienen interés de arrendamientos en 0, así que su ajuste es parcial.
+4. El handoff decía que Gruma y Sigma no tienen EBITDA ni EBIT; ya traen valores.
+5. `Multiples` usa consenso de LSEG para Bimbo, no el modelo. **Los cambios de la v7 solo lo mueven por el puente a capital.**
+
+El punto 1 se corrigió el 11-oct (sección 4); los demás quedan como observaciones.
+
+### 3.7 Rutas de impacto en el DCF
+
+El FCFF toma la tasa de impuestos de `Consolidated Model` fila 309 (`DCF!D39`), el EBIT, el capex (`Consolidated Model` filas 108 y 110) y el capital de trabajo (fila 254). Cada cambio del puente se verificará contra estas rutas para confirmar que llega al valor.
+
+## 4. Cambios aplicados (11-oct-2026)
+
+Por decisión del usuario no se hacen respaldos intermedios (AutoSave activo). WACC en vivo: se registra en cada paso. Precio Ps55.92 y capitalización Ps239,593m no cambiaron durante la sesión.
+
+| # | Hoja y celda | Antes | Después | Razón | WACC | Valor por acción | Cambio |
+|---|---|---|---|---|---|---|---|
+| 0 | Base v6 | | | | 10.345% | Ps67.32 (BUY, +20.4%) | |
+| 1 | `Assumptions!C50:G50` (impuestos, base) | 30% | 33% | Histórico 33.1%, 32.3%, 35.7%, ~37% en 2026. Bajista y alcista pasan solos a 34% y 32% (spread 1 pp) | 10.345% | Ps62.53 (HOLD, +11.8%) | −4.79 |
+| 2 | `Regional Assumptions!E46` (México pan, Gain) | +0.05% | 0 | México pan estable en 14.8% en 2024 y 2025 | 10.345% | | |
+| 2 | `Regional Assumptions!E50` (Canadá pan, Gain) | +0.03% | 0 | Canadá ~11.5% estable | 10.345% | | |
+| 2 | `Regional Assumptions!E54` (Colombia, Gain) | +0.03% | +0.10% | El salto de 2023 distorsiona el histórico; +0.10 pp es prudente | 10.345% | Ps61.76 (HOLD, +10.5%) | −0.77 |
+| 3 | `Regional Assumptions!C61:G61` (margen NA, base 2026 a 2030) | 9.8%, 10.0%, 10.3%, 10.5%, 10.5% | 9.8%, 10.2%, 10.6%, 10.8%, 11.0% | Decisión del usuario; sigue bajo el récord de 12.2% (2021). Bajista 10.0% y alcista 12.0% en 2030 | 10.345% | Ps63.86 (HOLD, +14.2%) | +2.10 |
+| 4 | `Cost of Debt!C62` (tasa de impuestos MX en el WACC) | 30% (valor) | `=Assumptions!$C$50` (33%, vínculo en verde) | Alinear el escudo fiscal de la deuda con el DCF. Cambia `Cost of Debt!C64` (27.0% a 28.2%) y `C65` | 10.243% | Ps65.38 (BUY, +16.9%) | +1.52 |
+| 5 | `Multiples!Q13` (puente a capital) | `=+DCF!C70+DCF!C71` (−187,021) | `=+DCF!C70` (−153,660) | Los múltiplos son pre-IFRS 16; los arrendamientos se restaban dos veces | n.a. | Precio objetivo de Multiples Ps66.55 → Ps73.56 (+31.5%) | +7.01 (no afecta el DCF) |
+| 6 | `Regional Assumptions!C143:G143` (Corporate & eliminations Adj. EBITDA, % de ingresos) y nueva fila de insumos `C145:G145` | `='Regional Model'!$L$124/'Regional Model'!$L$34` (0.31% fijo) | La misma fórmula menos la fila 145: 0.00%, 0.40%, 0.30%, 0.20%, 0.10% (2026 a 2030) | Costo extra de reestructura e integración que disminuye con el tiempo (opción B del usuario). Se carga en la línea corporativa que ya existía en `Regional Model` fila 124, sin líneas nuevas: fluye a EBITDA, EBIT, utilidad neta y FCFF, y las verificaciones 222 a 225 siguen en cero | 10.243% | Ps63.89 (HOLD, +14.3%) | −1.49 |
+
+Resultado acumulado del DCF tras los pasos 1 a 6: **Ps63.89 (+14.3%, HOLD)** contra Ps67.32 al inicio. Margen EBITDA consolidado: 14.62%, 14.49%, 14.91%, 15.19%, 15.42% (2026 a 2030).
+
+Verificaciones realizadas: las tres escenas de tasa de impuestos (34%, 33%, 32%) fluyen a `DCF!I39:K39` (33.00%); la participación activa (`Regional Assumptions!F46`, `F50`, `F54`) muestra 0.00%, 0.00% y 0.10%; el margen de Norteamérica en 2030 queda en 10.0% (bajista), 11.0% (base) y 12.0% (alcista).
+
+Observación: el paso 4 es una alineación del WACC, no un supuesto operativo. Con los pasos 1 a 3 el valor era Ps63.86 (+14.2%, dentro de la banda de ±15%, HOLD); el paso 4 lo llevó a BUY y el paso 6 lo devolvió a HOLD, a solo 0.7 pp del umbral.
+
+Pendiente de aplicar: recompras (15% de la utilidad neta del año anterior, aprobadas), política de deuda e intereses (Fase 2, con cálculo iterativo y la v6 cerrada), payout, y la decisión sobre adquisiciones.

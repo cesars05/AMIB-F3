@@ -1,0 +1,260 @@
+import json, sys, datetime
+import win32com.client as w
+
+D = json.load(open('mgi_data.json'))
+xl = w.GetActiveObject('Excel.Application')
+wb = [xl.Workbooks(i) for i in range(1, xl.Workbooks.Count + 1) if xl.Workbooks(i).Name == 'Bimbo Financial Model_v2.xlsx'][0]
+ws = wb.Worksheets('Market Growth & Inflation')
+wr = wb.Worksheets('Regional Model')
+wcons = wb.Worksheets('Consolidated Model')
+
+def rgb(h): h = h.lstrip('#'); return int(h[0:2], 16) + int(h[2:4], 16) * 256 + int(h[4:6], 16) * 65536
+BLUEHDR, DATAHDR, GREEN = rgb('DAE4F1'), rgb('F2F2F2'), rgb('E2EFDA')
+INPUT, HDRFONT = rgb('0000FF'), rgb('001AAF')
+VAL, PCT, IDX, PRC, FXF = '#,##0;(#,##0);"-"', '0.0%', '0.0', '0.00', '0.0000'
+
+# ---- guards
+if ws.UsedRange.Cells.Count > 4 and any(ws.Cells(r, c).Formula not in ('', None) for r in range(1, 60) for c in range(2, 12)):
+    sys.exit('Market Growth & Inflation tab is not empty, aborting')
+if not (str(wr.Cells(6, 2).Value).strip() == 'North America' and str(wr.Cells(7, 2).Value).strip() == 'Mexico' and wr.Range('E5').Value == 2018):
+    sys.exit('Regional layout changed')
+rs = next(r for r in range(100, 260) if str(wr.Cells(r, 2).Value or '').startswith('2021 Restated'))
+rs_ns = rs + 1
+if not (str(wr.Cells(rs_ns, 2).Value).strip() == 'Net Sales' and str(wr.Cells(rs, 4).Value).strip() == 'Mexico'):
+    sys.exit('restated block not found as expected')
+
+prev_calc = xl.Calculation
+xl.ScreenUpdating = False; xl.Calculation = -4135
+try:
+    ws.Cells.Font.Name = 'Arial'; ws.Cells.Font.Size = 11
+    ws.Columns('A').ColumnWidth = 3; ws.Columns('B').ColumnWidth = 68
+    for col in 'CDEFGHIJK': ws.Columns(col).ColumnWidth = 13
+    ws.Cells.RowHeight = 15
+
+    DC = range(3, 11)                  # display C..J = 2018..2025
+    SC = range(3, 12)                  # source C..K = 2017..2025
+    L = lambda c: ws.Cells(1, c).Address.split('$')[1]
+
+    def label(r, text, bold=False, indent=0, italic=False, color=None):
+        c = ws.Cells(r, 2); c.Value2 = text; c.Font.Bold = bold; c.IndentLevel = indent; c.Font.Italic = italic
+        if color is not None: c.Font.Color = color
+    def header(r, text, fill, font=0, years='display'):
+        cols = DC if years == 'display' else SC
+        rng = ws.Range(ws.Cells(r, 2), ws.Cells(r, cols[-1]))
+        rng.Interior.Color = fill; rng.Font.Bold = True; rng.Font.Color = font
+        rng.Borders(8).LineStyle = 1; rng.Borders(9).LineStyle = 1
+        ws.Rows(r).RowHeight = 18
+        ws.Cells(r, 2).Value2 = text
+        for c in cols:
+            cell = ws.Cells(r, c); cell.NumberFormat = '0"A"'; cell.HorizontalAlignment = -4152
+            if years == 'display':
+                if r == 5: cell.Formula = '=2018' if c == 3 else f'={L(c-1)}5+1'
+                else: cell.Formula = f'={L(c)}$5'
+            else:
+                cell.Value2 = 2014 + c
+    def row_formula(r, fn, fmt, change=False, bold=False, font=0):
+        for c in DC:
+            ws.Cells(r, c).Formula = fn(c)
+        rng = ws.Range(ws.Cells(r, 3), ws.Cells(r, 10)); rng.NumberFormat = fmt; rng.Font.Color = font; rng.Font.Bold = bold
+        if change: ws.Range(ws.Cells(r, 2), ws.Cells(r, 10)).Interior.Color = GREEN
+    def note(addr, t):
+        c = ws.Range(addr)
+        if c.Comment is not None: c.Comment.Delete()
+        c.AddComment(t)
+
+    # ---------------- title
+    wcons.Range('B2').Copy(); ws.Range('B2').PasteSpecial(Paste=-4122)
+    wcons.Range('B3').Copy(); ws.Range('B3').PasteSpecial(Paste=-4122); xl.CutCopyMode = False
+    ws.Range('B2').Value2 = 'Grupo Bimbo (BIMBOA.MX)'
+    ws.Range('B3').Value2 = 'Market Growth & Inflation | Local currency, annual (2017 used only as base year)'
+
+    # ---------------- SOURCE DATA layout (rows fixed, filled later) ----------------
+    S0 = 70                                     # source header
+    src = {}
+    r = S0 + 2
+    for ctry, cur in (('Mexico', 'MXN mm'), ('USA', 'USD mm')):
+        src[ctry] = {'title': r}
+        keys = [('value_cur', f'Retail Value RSP, Current Prices ({cur})'),
+                ('value_con', f'Retail Value RSP, Constant 2025 Prices ({cur})'),
+                ('volume', "Retail Volume ('000 tonnes)"),
+                ('bimbo_value', f"{'Grupo Bimbo' if ctry == 'Mexico' else 'Bimbo Bakeries USA'} Retail Value, NBO ({cur})"),
+                ('bimbo_share', f"{'Grupo Bimbo' if ctry == 'Mexico' else 'Bimbo Bakeries USA'} Market Share, NBO (%)")]
+        for i, (k, t) in enumerate(keys):
+            src[ctry][k] = r + 1 + i
+        r += len(keys) + 2
+    FXR = r; r += 2
+    M0 = r + 1                                  # monthly header row
+    months = [(y, m) for y in range(2017, 2026) for m in range(1, 13)]
+    MR1, MR2 = M0 + 1, M0 + len(months)
+    SY = S0                                     # source year row
+    def idx(row, yr_expr): return f'INDEX($C${row}:$K${row},MATCH({yr_expr},$C${SY}:$K${SY},0))'
+
+    # ---------------- 1. INFLATION ----------------
+    header(5, 'Inflation (Annual Average)', BLUEHDR)
+    label(7, 'United States', bold=True)
+    label(8, 'CPI Cereals & Bakery Products (Index, 1982-84=100)', indent=1)
+    row_formula(8, lambda c: f'=AVERAGEIFS($D${MR1}:$D${MR2},$C${MR1}:$C${MR2},{L(c)}$5)', IDX)
+    label(9, 'CPI Cereals & Bakery Products, YoY Change', indent=1)
+    row_formula(9, lambda c: f'={L(c)}8/AVERAGEIFS($D${MR1}:$D${MR2},$C${MR1}:$C${MR2},{L(c)}$5-1)-1', PCT, change=True)
+    label(11, 'Mexico', bold=True)
+    label(12, 'Core Inflation (INPC Subyacente), YoY Change', indent=1)
+    row_formula(12, lambda c: f'=AVERAGEIFS($E${MR1}:$E${MR2},$C${MR1}:$C${MR2},{L(c)}$5)/100', PCT, change=True)
+    note('B8', 'Annual average of monthly index levels. YoY = average of year / average of prior year - 1. Source LSEG Workspace, BLS series aUSCPFCBF/C (not seasonally adjusted). 2025 averages 11 months, October 2025 was not published by BLS (government shutdown).')
+    note('B12', 'Simple average of the 12 monthly YoY rates (already a YoY series, not compounded). Mexico core inflation includes processed food such as packaged bread, unlike US core. Source LSEG Workspace MXCCPI=ECI (INEGI). 2023 averages 11 months, one month missing in the export.')
+
+    # ---------------- 2. MARKET DATA ----------------
+    header(15, 'Market Data (Euromonitor, Baked Goods, Retail)', BLUEHDR)
+    mrows = {}
+    r = 17
+    for ctry, name, cur, cpi in (('Mexico', 'Mexico', 'MXN', 12), ('USA', 'United States', 'USD', 9)):
+        s = src[ctry]; m = {}
+        label(r, f'{name} ({cur} mm)', bold=True)
+        m['size'] = r + 1; label(r + 1, 'Market Size, Retail Value RSP (Current Prices)', indent=1)
+        row_formula(r + 1, lambda c, s=s: '=' + idx(s['value_cur'], f'{L(c)}$5'), VAL)
+        m['size_g'] = r + 2; label(r + 2, 'Market Growth, Nominal', indent=2)
+        row_formula(r + 2, lambda c, s=s: f'={idx(s["value_cur"], f"{L(c)}$5")}/{idx(s["value_cur"], f"{L(c)}$5-1")}-1', PCT, change=True)
+        m['real'] = r + 3; label(r + 3, 'Market Size, Constant 2025 Prices', indent=1)
+        row_formula(r + 3, lambda c, s=s: '=' + idx(s['value_con'], f'{L(c)}$5'), VAL)
+        m['real_g'] = r + 4; label(r + 4, 'Market Growth, Real (Volume and Mix)', indent=2)
+        row_formula(r + 4, lambda c, s=s: f'={idx(s["value_con"], f"{L(c)}$5")}/{idx(s["value_con"], f"{L(c)}$5-1")}-1', PCT, change=True)
+        m['price_eff'] = r + 5; label(r + 5, 'Implied Price Effect (Nominal vs Real)', indent=2)
+        row_formula(r + 5, lambda c, m=m: f'=(1+{L(c)}{m["size_g"]})/(1+{L(c)}{m["real_g"]})-1', PCT, change=True)
+        m['vol'] = r + 6; label(r + 6, "Retail Volume ('000 tonnes)", indent=1)
+        row_formula(r + 6, lambda c, s=s: '=' + idx(s['volume'], f'{L(c)}$5'), VAL)
+        m['vol_g'] = r + 7; label(r + 7, 'Volume Growth', indent=2)
+        row_formula(r + 7, lambda c, s=s: f'={idx(s["volume"], f"{L(c)}$5")}/{idx(s["volume"], f"{L(c)}$5-1")}-1', PCT, change=True)
+        m['ppk'] = r + 8; label(r + 8, f'Price per kg ({cur}, Current Prices)', indent=1)
+        row_formula(r + 8, lambda c, m=m: f'={L(c)}{m["size"]}/{L(c)}{m["vol"]}', PRC)
+        m['ppk_g'] = r + 9; label(r + 9, 'Price per kg Growth', indent=2)
+        row_formula(r + 9, lambda c, s=s: f'=({idx(s["value_cur"], f"{L(c)}$5")}/{idx(s["volume"], f"{L(c)}$5")})/({idx(s["value_cur"], f"{L(c)}$5-1")}/{idx(s["volume"], f"{L(c)}$5-1")})-1', PCT, change=True)
+        m['infl_vs'] = r + 10; label(r + 10, 'Price per kg Growth vs Inflation (pp)', indent=2)
+        row_formula(r + 10, lambda c, m=m, cpi=cpi: f'={L(c)}{m["ppk_g"]}-{L(c)}{cpi}', PCT, change=True)
+        bname = 'Grupo Bimbo' if ctry == 'Mexico' else 'Bimbo Bakeries USA'
+        m['bval'] = r + 11; label(r + 11, f'{bname} Retail Value (NBO)', indent=1)
+        row_formula(r + 11, lambda c, s=s: '=' + idx(s['bimbo_value'], f'{L(c)}$5'), VAL)
+        m['share'] = r + 12; label(r + 12, f'{bname} Market Share', indent=1)
+        row_formula(r + 12, lambda c, s=s: f'={idx(s["bimbo_share"], f"{L(c)}$5")}/100', PCT)
+        m['share_ch'] = r + 13; label(r + 13, 'Change in Market Share (pp)', indent=2)
+        row_formula(r + 13, lambda c, s=s: f'=({idx(s["bimbo_share"], f"{L(c)}$5")}-{idx(s["bimbo_share"], f"{L(c)}$5-1")})/100', PCT, change=True)
+        mrows[ctry] = m
+        r += 15
+    note(f'B{mrows["Mexico"]["size"]}', 'Euromonitor Passport, Staple Foods 2026 edition, Baked Goods (bread, pastries, cakes, dessert mixes, frozen baked goods), retail channel, retail selling price. Market retail value, not Bimbo revenue. Bimbo Mexico segment also includes Barcel salty snacks, which are outside this category.')
+    note(f'B{mrows["Mexico"]["price_eff"]}', 'Nominal growth divided by real growth at constant 2025 prices. Euromonitor deflator, equivalent to the price component of market growth.')
+    note(f'B{mrows["USA"]["size"]}', 'Euromonitor covers the USA only. Bimbo North America segment also includes Canada (no Canada file downloaded).')
+    note(f'B{mrows["Mexico"]["vol"]}', '2020 retail volume jumps because COVID shifted consumption from foodservice to retail, then normalizes in 2021.')
+
+    # ---------------- 3. IMPACT ON BIMBO REVENUE ----------------
+    H3 = r
+    header(H3, 'Impact on Bimbo Revenue (Price vs Volume and Mix)', BLUEHDR)
+    r = H3 + 2
+    RG = lambda c, row: f"'Regional Model'!{L(c + 2)}{row}"          # display col -> regional col (2018=E)
+    # Mexico
+    label(r, 'Mexico (MXN mm)', bold=True)
+    mx_ns = r + 1; label(mx_ns, 'Net Sales, Mexico Segment (Regional Model)', indent=1)
+    row_formula(mx_ns, lambda c: '=' + RG(c, 7), VAL)
+    mx_g = r + 2; label(mx_g, 'Net Sales Growth', indent=2)
+    row_formula(mx_g, lambda c: f"={RG(c, 7)}/'Regional Model'!{L(c + 1)}7-1", PCT, change=True)
+    ws.Cells(mx_g, 7).Formula = f"={RG(7, 7)}/'Regional Model'!D{rs_ns}-1"      # 2022 vs restated 2021 (ex Ricolino)
+    mx_cpi = r + 3; label(mx_cpi, 'Price Proxy, Core Inflation', indent=2)
+    row_formula(mx_cpi, lambda c: f'={L(c)}12', PCT)
+    mx_vm = r + 4; label(mx_vm, 'Implied Volume and Mix (vs Inflation)', indent=2, bold=True)
+    row_formula(mx_vm, lambda c: f'=(1+{L(c)}{mx_g})/(1+{L(c)}{mx_cpi})-1', PCT, change=True, bold=True)
+    mx_mp = r + 5; label(mx_mp, 'Price Proxy, Market Price per kg (Euromonitor)', indent=2)
+    row_formula(mx_mp, lambda c: f'={L(c)}{mrows["Mexico"]["ppk_g"]}', PCT)
+    mx_vm2 = r + 6; label(mx_vm2, 'Implied Volume, Mix and Share (vs Market Price)', indent=2, bold=True)
+    row_formula(mx_vm2, lambda c: f'=(1+{L(c)}{mx_g})/(1+{L(c)}{mx_mp})-1', PCT, change=True, bold=True)
+    note(f'G{mx_g}', '2022 growth measured against restated 2021 Mexico sales excluding Ricolino (Regional Model restated block). 2018-2021 are on the original basis including Ricolino.')
+    note(f'B{mx_vm}', 'Implied volume and mix = (1 + sales growth) / (1 + price proxy) - 1. A residual, it also absorbs acquisitions, channel mix and share changes.')
+    r = mx_vm2 + 2
+    # North America
+    label(r, 'North America (USD mm)', bold=True)
+    na_mx = r + 1; label(na_mx, 'Net Sales, North America Segment (MXN mm, Regional Model)', indent=1)
+    row_formula(na_mx, lambda c: '=' + RG(c, 6), VAL)
+    na_fx = r + 2; label(na_fx, 'Average Exchange Rate (MXN per USD)', indent=1)
+    row_formula(na_fx, lambda c: '=' + idx(FXR, f'{L(c)}$5'), FXF)
+    na_us = r + 3; label(na_us, 'Net Sales, North America (USD mm)', indent=1)
+    row_formula(na_us, lambda c: f'={L(c)}{na_mx}/{L(c)}{na_fx}', VAL)
+    na_g = r + 4; label(na_g, 'Net Sales Growth in USD', indent=2)
+    row_formula(na_g, lambda c: f"={L(c)}{na_us}/('Regional Model'!{L(c + 1)}6/{idx(FXR, f'{L(c)}$5-1')})-1", PCT, change=True)
+    na_rep = r + 5; label(na_rep, 'Reported Growth excl. FX (Company, check)', indent=2, italic=True)
+    for yr, v in ((2023, 0.067), (2024, -0.046), (2025, -0.040)):
+        ws.Cells(na_rep, yr - 2015).Value2 = v
+    ws.Range(ws.Cells(na_rep, 3), ws.Cells(na_rep, 10)).NumberFormat = PCT
+    ws.Range(ws.Cells(na_rep, 3), ws.Cells(na_rep, 10)).Font.Color = INPUT
+    na_cpi = r + 6; label(na_cpi, 'Price Proxy, US CPI Cereals & Bakery', indent=2)
+    row_formula(na_cpi, lambda c: f'={L(c)}9', PCT)
+    na_vm = r + 7; label(na_vm, 'Implied Volume and Mix (vs Inflation)', indent=2, bold=True)
+    row_formula(na_vm, lambda c: f'=(1+{L(c)}{na_g})/(1+{L(c)}{na_cpi})-1', PCT, change=True, bold=True)
+    na_mp = r + 8; label(na_mp, 'Price Proxy, US Market Price per kg (Euromonitor)', indent=2)
+    row_formula(na_mp, lambda c: f'={L(c)}{mrows["USA"]["ppk_g"]}', PCT)
+    na_vm2 = r + 9; label(na_vm2, 'Implied Volume, Mix and Share (vs Market Price)', indent=2, bold=True)
+    row_formula(na_vm2, lambda c: f'=(1+{L(c)}{na_g})/(1+{L(c)}{na_mp})-1', PCT, change=True, bold=True)
+    note(f'B{na_fx}', '2019-2025 average rates disclosed by Grupo Bimbo (financial statement notes, BMV annual reports). 2017-2018 implied from Euromonitor MXN and USD market values (Bimbo disclosed 19.10 and 20.15, inconsistent with market averages). Euromonitor and Bimbo rates match within 0.1% in 2019-2024.')
+    note(f'B{na_rep}', 'Company-reported full-year North America growth excluding FX (4Q23, 4Q24 and 4Q25 releases). USD conversion reproduces it within about 0.5pp, the gap is Canada translated in CAD.')
+    note(f'B{na_g}', 'Proxy for local-currency growth. North America includes Canada, converted here at the USD rate.')
+    end3 = na_vm2
+
+    if end3 + 3 > S0:
+        sys.exit(f'layout overlap: section 3 ends {end3}, source starts {S0}')
+
+    # ---------------- 4. SOURCE DATA ----------------
+    header(S0, 'Source Data (2017 base year included)', DATAHDR, font=HDRFONT, years='source')
+    for ctry, name in (('Mexico', 'Euromonitor, Mexico, Baked Goods, Retail'), ('USA', 'Euromonitor, USA, Baked Goods, Retail')):
+        s = src[ctry]; e = D['euro'][ctry]
+        label(s['title'], name, bold=True)
+        for k, rowlab in (('value_cur', None), ('value_con', None), ('volume', None), ('bimbo_value', None), ('bimbo_share', None)):
+            rr = s[k]
+        titles = {'value_cur': 'Retail Value RSP, Current Prices', 'value_con': 'Retail Value RSP, Constant 2025 Prices',
+                  'volume': "Retail Volume ('000 tonnes)", 'bimbo_value': 'Bimbo Retail Value, NBO', 'bimbo_share': 'Bimbo Market Share, NBO (%)'}
+        cur = 'MXN mm' if ctry == 'Mexico' else 'USD mm'
+        for k in titles:
+            rr = s[k]; t = titles[k] + ('' if k in ('volume', 'bimbo_share') else f' ({cur})')
+            label(rr, t, indent=1)
+            for i, c in enumerate(SC):
+                v = e[k][i]
+                if v is not None: ws.Cells(rr, c).Value2 = round(v, 4)
+            rg = ws.Range(ws.Cells(rr, 3), ws.Cells(rr, 11)); rg.Font.Color = INPUT
+            rg.NumberFormat = PRC if k == 'bimbo_share' else VAL
+    note(f'B{src["Mexico"]["title"]}', 'Euromonitor Passport export, Staple Foods 2026 edition, extracted 28 Sep 2026. Files saved in Bimbo Research / Euromonitor.')
+    label(FXR, 'Average Exchange Rate (MXN per USD)', bold=True)
+    fx = {2017: 18.8669, 2018: 19.2489}; fx.update({int(k): v for k, v in D['fx_bimbo'].items() if int(k) >= 2019})
+    for c in SC:
+        ws.Cells(FXR, c).Value2 = fx[2014 + c]
+    rg = ws.Range(ws.Cells(FXR, 3), ws.Cells(FXR, 11)); rg.Font.Color = INPUT; rg.NumberFormat = FXF
+    # monthly block
+    hdr = ws.Range(ws.Cells(M0, 2), ws.Cells(M0, 5))
+    hdr.Interior.Color = DATAHDR; hdr.Font.Bold = True; hdr.Font.Color = HDRFONT; hdr.Borders(8).LineStyle = 1; hdr.Borders(9).LineStyle = 1
+    ws.Rows(M0).RowHeight = 18
+    for c, t in zip(range(2, 6), ('Monthly Inflation Data', 'Year', 'US CPI Cereals & Bakery (Index)', 'Mexico Core Inflation YoY (%)')):
+        ws.Cells(M0, c).Value2 = t
+    ws.Range(ws.Cells(M0, 3), ws.Cells(M0, 5)).WrapText = True; ws.Rows(M0).RowHeight = 30
+    us = {d[:7]: v for d, v in D['infl']['us_cpi_bakery_index']}
+    mx = {d[:7]: v for d, v in D['infl']['mx_core_yoy']}
+    for i, (y, m) in enumerate(months):
+        rr = MR1 + i; key = f'{y}-{m:02d}'
+        ws.Cells(rr, 2).Formula = f'=DATE({y},{m},1)'; ws.Cells(rr, 2).NumberFormat = 'mmm-yy'; ws.Cells(rr, 2).HorizontalAlignment = -4131
+        ws.Cells(rr, 3).Formula = f'=YEAR(B{rr})'; ws.Cells(rr, 3).NumberFormat = '0'
+        if key in us: ws.Cells(rr, 4).Value2 = us[key]
+        if key in mx: ws.Cells(rr, 5).Value2 = mx[key]
+    ws.Range(ws.Cells(MR1, 4), ws.Cells(MR2, 5)).Font.Color = INPUT
+    ws.Range(ws.Cells(MR1, 4), ws.Cells(MR2, 4)).NumberFormat = '0.000'
+    ws.Range(ws.Cells(MR1, 5), ws.Cells(MR2, 5)).NumberFormat = '0.00'
+    note(f'B{M0}', 'Monthly data exported from LSEG Workspace on 27 Sep 2026. US series aUSCPFCBF/C (BLS), Mexico series MXCCPI=ECI (INEGI). Blank cells are months not published or missing in the export.')
+
+    # ---------------- freeze panes ----------------
+    act = xl.ActiveSheet
+    ws.Activate(); xl.ActiveWindow.FreezePanes = False
+    ws.Range('C6').Select(); xl.ActiveWindow.FreezePanes = True; ws.Range('B2').Select()
+    act.Activate()
+
+    xl.Calculation = -4105; xl.CalculateFull()
+    try: err = ws.UsedRange.SpecialCells(-4123, 16).Address
+    except Exception: err = None
+    print('errors:', err, '| rows: market', mrows, 'impact', H3, 'source', S0, 'monthly', M0, MR1, MR2)
+    for rr in list(range(5, 13)) + list(range(15, end3 + 1)):
+        t = ws.Cells(rr, 2).Text
+        if t: print(rr, t[:52].ljust(52), [ws.Cells(rr, c).Text for c in DC])
+    wb.Save()
+finally:
+    xl.Calculation = prev_calc if prev_calc in (-4105, -4135) else -4105
+    xl.ScreenUpdating = True

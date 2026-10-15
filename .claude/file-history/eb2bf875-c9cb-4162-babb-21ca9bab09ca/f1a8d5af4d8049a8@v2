@@ -1,0 +1,70 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $sm=$wb.Worksheets.Item("Segment Model")
+$cm=$wb.Worksheets.Item("Consolidated Model"); $d=$wb.Worksheets.Item("DCF")
+$dcfAntes=[string]$d.Range("E41").Text
+
+$rCap=0
+for($r=20;$r -le 80;$r++){
+  $t=""; try{ $t=[string]$as.Cells.Item($r,3).Text }catch{}
+  if($t -like "PP&E Capex as % of Segment Revenue*"){ $rCap=$r; break }
+}
+if($rCap -eq 0){ throw "ABORTO: no encontre el bloque de capex" }
+$rHP=$rCap+3
+if([string]$as.Cells.Item($rHP,3).Text -ne "Housebuilding Products"){ throw "ABORTO: la fila HP no coincide" }
+$antes=[double]$as.Cells.Item($rHP,6).Value2
+if([math]::Round($antes,3) -ne 0.061){ throw ("ABORTO: HP Base no esta en 6.1%, esta en "+[string]$antes) }
+Write-Output ("bloque capex r"+$rCap+"   fila HP r"+$rHP+"   valor actual "+[string][math]::Round($antes*100,1)+"%")
+
+$xl.Calculation=-4135
+foreach($c in 4,5,6){ $as.Cells.Item($rHP,$c).Value2=0.075 }
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output "HP capex: 6.1% -> 7.5% (igual en Stress/Bear/Base)"
+Write-Output ""
+$h="  "+"".PadRight(30)
+for($c=11;$c -le 17;$c++){ $h+=([string]$sm.Cells.Item(9,$c).Text).PadLeft(9) }
+Write-Output $h
+foreach($x in @(@(15,"HP ingresos"),@(84,"HP activos"),@(135,"HP capex"),@(145,"HP depreciacion"),@(77,"HP ROIC"))){
+  $r=[int]$x[0]
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$sm.Cells.Item($r,$c).Text).PadLeft(9) }
+  Write-Output ("  "+([string]$x[1]).PadRight(30)+$v)
+}
+Write-Output ""
+Write-Output "  --- los otros dos, para comparar el piso capex vs depreciacion ---"
+foreach($x in @(@(82,"WM activos"),@(83,"BE activos"),@(75,"WM ROIC"),@(76,"BE ROIC"))){
+  $r=[int]$x[0]
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$sm.Cells.Item($r,$c).Text).PadLeft(9) }
+  Write-Output ("  "+([string]$x[1]).PadRight(30)+$v)
+}
+Write-Output ""
+$h2="  "+"".PadRight(30)
+for($c=11;$c -le 17;$c++){ $h2+=([string]$cm.Cells.Item(9,$c).Text).PadLeft(9) }
+Write-Output $h2
+foreach($x in @(@(53,"Adj. EBITDA"),@(88,"Capex / Revenue"),@(91,"Capex / D&A"))){
+  $r=[int]$x[0]
+  $v=""
+  for($c=11;$c -le 17;$c++){ $v+=([string]$cm.Cells.Item($r,$c).Text).PadLeft(9) }
+  Write-Output ("  "+([string]$x[1]).PadRight(30)+$v)
+}
+Write-Output ""
+Write-Output ("  DCF antes = "+$dcfAntes+"   ahora = "+[string]$d.Range("E41").Text+"  ("+[string]$d.Range("E42").Text+")")
+Write-Output ("  SOTP = "+[string]$wb.Worksheets.Item("SOTP").Range("D112").Text+"   EPV = "+[string]$wb.Worksheets.Item("EPV").Range("E61").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=$wb.Worksheets.Item($nm)
+  $e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

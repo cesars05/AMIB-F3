@@ -1,0 +1,126 @@
+import pandas as pd
+import numpy as np
+import yfinance as yf
+import os
+
+# 1. Cargar el modelo cuantitativo desde el archivo CSV
+script_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(script_dir, "data_2026-09-30 (2).csv")
+
+try:
+    df_csv = pd.read_csv(file_path)
+except FileNotFoundError:
+    print(f"Error: No se encontró el archivo {file_path}. Asegúrate de que el CSV esté en la carpeta {script_dir}")
+    exit()
+
+# Extraer la clave base del ticker (ej. 'VESTA.MX' -> 'VESTA')
+df_csv['ticker_base'] = df_csv['RIC'].apply(lambda x: str(x).split('.')[0] if pd.notna(x) else '')
+
+# 2. Mapeo de Tickers Mexicanos (.MX) y Globales
+tickers_mx_yf = [
+    "AC.MX", "ACTINVRB.MX", "ALFAA.MX", "ALPEKA.MX", "ALSEA.MX", "AMXB.MX",
+    "ASURB.MX", "BIMBOA.MX", "BOLSAA.MX", "CEMEXCPO.MX", "CHDRAUIB.MX",
+    "CUERVO.MX", "ELEKTRA.MX", "FEMSAUBD.MX", "GAPB.MX", "GCARSOT1.MX",
+    "GCC.MX", "GENTERA.MX", "GFINBURO.MX", "GFNORTEO.MX", "GMEXICOB.MX",
+    "GRUMAB.MX", "KIMBERA.MX", "KOFUBL.MX", "LABB.MX", "LASITEB.MX",
+    "LIVEPOLC1.MX", "MEGACPO.MX", "MFRISCOA1.MX", "OMAB.MX", "ORBIA.MX",
+    "PE&OLES.MX", "PINFRA.MX", "Q.MX", "RA.MX", "SITESB1.MX", "VESTA.MX",
+    "VOLARA.MX", "WALMEX.MX", "BBAJIOO.MX"
+]
+
+tickers_global_yf = [
+    "AAPL", "ABBV", "ABNB", "AMAT", "AMD", "AMZN", "AVGO", "BA", "BABA",
+    "COST", "CRM", "CVX", "DIS", "GOOGL", "INTC", "JPM", "LLY", "MA",
+    "MCD", "MELI", "META", "MSFT", "NVDA", "ORCL", "PEP", "PG", "PLTR",
+    "PYPL", "QCOM", "TSLA", "UBER", "V", "WMT", "XOM", "QQQ", "SPY", "PSQ"
+]
+
+all_tickers_yf = tickers_mx_yf + tickers_global_yf
+
+print("Descargando precios históricos (México + Globales) desde Yahoo Finance...")
+# FIX: Changed '6m' to '6mo' to satisfy yfinance requirements
+df_prices = yf.download(all_tickers_yf, period="6mo")['Adj Close']
+
+# 3. Función para calcular RSI (14 días)
+def calcular_rsi(data, window=14):
+    delta = data.diff()
+    gain = (delta.where(delta > 0, 0)).rolling(window=window).mean()
+    loss = (-delta.where(delta < 0, 0)).rolling(window=window).mean()
+    rs = gain / loss
+    return 100 - (100 / (1 + rs))
+
+# 4. Cálculo de Indicadores Técnicos y Momentum
+resultados_tecnicos = []
+
+if not df_prices.empty:
+    for ticker_yf in df_prices.columns:
+        series = df_prices[ticker_yf].dropna()
+        if len(series) < 30:
+            continue
+
+        precio_actual = series.iloc[-1]
+        sma_30 = series.rolling(window=30).mean().iloc[-1]
+        pct_vs_sma30 = ((precio_actual - sma_30) / sma_30) * 100
+        posicion = "ARRIBA" if pct_vs_sma30 > 0 else "ABAJO"
+
+        ret_1m = ((precio_actual / series.iloc[-21]) - 1) * 100 if len(series) >= 21 else np.nan
+        ret_3m = ((precio_actual / series.iloc[-63]) - 1) * 100 if len(series) >= 63 else np.nan
+
+        rsi_series = calcular_rsi(series)
+        rsi_actual = rsi_series.iloc[-1] if not rsi_series.empty else np.nan
+        ticker_clean = ticker_yf.replace('.MX', '')
+
+        resultados_tecnicos.append({
+            'Ticker_YF': ticker_yf,
+            'ticker_base': ticker_clean,
+            'Mercado': 'MÉXICO' if '.MX' in ticker_yf else 'GLOBAL',
+            'Precio_Actual': round(precio_actual, 2),
+            'SMA_30': round(sma_30, 2),
+            '%_vs_SMA30': round(pct_vs_sma30, 2),
+            'Posición_SMA30': posicion,
+            'RSI_14': round(rsi_actual, 1),
+            'Ret_1M_%': round(ret_1m, 2),
+            'Ret_3M_%': round(ret_3m, 2)
+        })
+
+if not resultados_tecnicos:
+    print("Error: No se pudieron descargar datos suficientes de Yahoo Finance para calcular indicadores.")
+    exit()
+
+df_tec = pd.DataFrame(resultados_tecnicos)
+
+columnas_modelo = ['ticker_base', 'EARNREV', 'EPS_SUE', 'Model1.1 Slope', 'Tactical Score', 'GROWTHSCORE']
+columnas_modelo_existentes = [col for col in columnas_modelo if col in df_csv.columns]
+df_merged = pd.merge(df_tec, df_csv[columnas_modelo_existentes], on='ticker_base', how='left')
+
+if 'EARNREV' in df_merged.columns:
+    df_merged['EARNREV_filled'] = df_merged['EARNREV'].fillna(0.50)
+    df_merged['Momentum_Score'] = (
+        (df_merged['%_vs_SMA30'].fillna(0) * 0.3) +
+        (df_merged['Ret_1M_%'].fillna(0) * 0.3) +
+        (df_merged['EARNREV_filled'] * 100 * 0.4)
+    )
+else:
+    df_merged['Momentum_Score'] = (
+        (df_merged['%_vs_SMA30'].fillna(0) * 0.5) +
+        (df_merged['Ret_1M_%'].fillna(0) * 0.5)
+    )
+
+df_ranking = df_merged.sort_values(by='Momentum_Score', ascending=False)
+columnas_pantalla_full = ['Mercado', 'Ticker_YF', 'Precio_Actual', '%_vs_SMA30', 'Posición_SMA30', 'RSI_14', 'EARNREV', 'EPS_SUE', 'Model1.1 Slope']
+columnas_pantalla = [col for col in columnas_pantalla_full if col in df_ranking.columns]
+
+print("\n=== TOP 10 NACIONALES (MÉXICO) ===")
+mex_top = df_ranking[df_ranking['Mercado'] == 'MÉXICO']
+if not mex_top.empty:
+    print(mex_top[columnas_pantalla].head(10).to_string(index=False))
+
+print("\n=== TOP 10 GLOBALES (SIC / EE.UU.) ===")
+global_top = df_ranking[df_ranking['Mercado'] == 'GLOBAL']
+if not global_top.empty:
+    print(global_top[columnas_pantalla].head(10).to_string(index=False))
+
+output_cols = [col for col in df_ranking.columns if col != 'EARNREV_filled']
+output_path = os.path.join(script_dir, "reporte_completo_mexico_global.csv")
+df_ranking[output_cols].to_csv(output_path, index=False)
+print(f"\n Archivo guardado correctamente en {output_path}")

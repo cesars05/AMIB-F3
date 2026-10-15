@@ -1,0 +1,40 @@
+# Bloomberg / market screenshots — image-by-image analysis
+Every PNG/GIF in `04_Bloomberg_Data` was opened and read (vision). OCR alone is unreliable on Terminal screens, so numbers below were read off the image; IDs refer to `00_HANDOFF/FACT_BASE.md`. "Deck use" = recommended treatment under STYLE_GUIDE §9 (rebuild chart natively vs. framed exhibit).
+
+## Class2_HAL_Profile_ESG_Risk_Debt/
+| File | What it shows | Key numbers | Deck use |
+|---|---|---|---|
+| `Perfil Halliburton.png` | Bloomberg HAL US profile (ES) | Price 35.01 (−2.32%); 52w 43.59 / 21.46; mkt cap 29,167.9M; float 746.8M (4.57% short); P/E 15.93, fwd 14.94; EPS 2.20→2.34e; div yield 1.94% (0.17 on 09/02/26); 12M TR 60.63%; beta 0.75; employees 46,000; CEO Jeff Miller, Rami Yassine (Eastern Hemisphere), Casey Maxwell (Western); next earnings 21-Oct-26 | Company snapshot KPI tiles (H18) |
+| `Debt/Credit analysis.png` + `Credit analysis 2.png` | Bloomberg ratios → Credit, FY2016–2025 | Total debt FY25 8,316 (ST 344/LT 7,972); Debt/EBITDA 2.22; Net debt/EBITDA 1.63; EBIT/interest 5.14; EBITDA/interest 8.53; interest expense 440; Debt/Capital 44.18%; Debt/Equity 79.16%; EBITDA 3,753, EBIT 2,260; FY2023–24: EBITDA/interest 11.4/11.7 | **Rebuild**: leverage & coverage trend chart 2018–2025 (C3) (H11) |
+| `Debt/Short Interest.png` | Short-interest panel (S&P Global SI) | Short interest 34.16M sh; SI ratio 2.95; 4.58% of float; price hi 42.30; SI high 38.17M (Feb) | optional (market sentiment) |
+| `Risk/Bloomberg Default Risk.png` | DRSK model, as of 11-Sep-2026 | 1Y PD 0.0135% (IG4); 5Y model CDS 69.0 bp vs market 41.8 bp; total debt 8,399; D/E 74.2%; EBIT/Int 7.5; ROA 6.3%; Liab/EBITDA 13.8 | Framed exhibit **or** KPI tiles; **never label 74.2% "Debt/Capital"** (E1) |
+| `Risk/MIPD.png` | Market-implied PD, 14-Sep-2026 | 1Y PD 2.14% (energy 0.88%); LGD 74.74%; implied CDS 161.5 bp vs 68.5; Moody's A3, S&P BBB+, Fitch WD; US risk: political low, cyber HIGH, maritime very low | KPI tiles + PD chart rebuilt (90-day PD 1.93–2.40%) |
+| `ESG/ESG SCORES.png`, `Halliburton ESG OVERVIEW.png` | ESG score tree & overview | ESG 5.00 "Leading"; E 3.07/S 5.93/G 7.09; pillar weights 40/30/30; GHG mgmt 0.00 lagging; board composition below median; independent directors 83.3%; CEO comp 16.5M; MSCI BBB; Sustainalytics 26.89; S&P ESG rank 97; 0% transition revenue; no green/social/sustainability-linked debt | Track B module 3 (ESG financing) (B03) |
+| `ESG/CT_ Emissions and Targets.png` | Climate transition – emissions | 2025 S1+2 4.4 Mt (S1 60.4% / S2 39.6%); 5-yr CAGR 9.3%; no SBTi/net-zero; behind pathway −211% (2025), −287% (2030), < −500% (2040); alignment score 2.50/10 | chart: pathway gap |
+| `ESG/CT_ Future impact on rev.png` | NGFS Delayed-Transition revenue path | base 23,153; 2030 23,759 (+2.62%); 2035 21,356 (−7.76%); 2040 17,958 (−22.44%); 2045 15,249 (−34.14%); 2050 12,514 (**−45.95%**); peers −44.23% | **Rebuild** line chart (HAL vs peer avg) (B04) |
+| `ESG/CT_ KPIs Company Actions.png` | KPIs & actions | renewable energy 0.1%; energy use 13,292→18,954 MWh; water withdrawal 1,479→1,679 KCM; has carbon target, no transition plan, no SBTi validation, not reporting scope 3 | checklist table |
+| `ESG/CT_ Rev and Capex.png` | Revenue/Capex taxonomy | revenue 22,944 = 100% fossil/oil; clean energy 0%; capex 1,442 | donut |
+| `ESG/Nature_*.png` (3) | Nature & water | 100% revenue in nature-risk sector (Consumable Fuels); **63 assets (35%) in high water stress (45 extreme, 18 high)**; 2% (3 assets) in pristine areas; water use 1.68M m³, intensity 76 m³/$M; 12/21 nature actions; no deforestation risk | Track B ESG risk slide |
+| `ESG/Physical Risk.png` | Physical climate risk 2030 | asset damage rate 21%; 27 of 168 assets high-risk (16%); 74% of high-risk assets in USA; primary factor wildfire | bar chart rebuilt |
+| `ESG/SFDR.png` | EU SFDR | 100% fossil-fuel exposure; women on board 25%; ESG funds 475 (Art. 9: 4; Art. 8: 370) | table |
+
+## Class3_KWD-FX_HAL-Financials/
+| File | What it shows | Deck use |
+|---|---|---|
+| `KWD_USD Yahoo.png` | Yahoo KWDUSD=X 1Y chart; last 3.2541 (18-Sep-26), bid 3.2616/ask 3.2404, day range 3.2541, **52w 3.2221–3.2857**, 1Y −0.88%; July spike to ≈3.281 | evidence thumbnail + rebuilt line |
+| `KWD_USD Hist Data 1–4.png` | Monthly OHLC Oct-2020 → 18-Sep-2026 (73 rows) | **Transcribed** → `08_Assets/data/kwd_usd_monthly_close.csv`; rebuild 6-yr line with band (peg stability) |
+| `Excel clase 3 KWD y HALLIBURTON.xlsx` (+`.md`) | 16 sheets: GDP (real/nominal/industry), CPI, unemployment-LFPR, trade, exports/imports, Bloomberg financials template; sheets `inflacion`, `tasa de interes o referencia`, `desempleo`, `pers o estim econo`, `KWD Currency` contain **only images** (4 PNG in `08_Assets/excel_class3_media/`) | Macro data for Section 2; **fix the nominal-GDP formula** (E3) |
+
+## News_and_Forecast/
+| File | What it shows | Deck use |
+|---|---|---|
+| `News_OIL/Fuentes…`, `ss resumen noticias OIL 1/2.png` | Bloomberg AI summary 3–4 Sep 2026: WTI ≈ $91.50 (+0.2%); Brent net-long +37,837 to 261,435; Bessent: oil could fall to $40–50 after Iran conflict; record diesel $5.85/gal; Saudi Aramco OSP unchanged; Hormuz/ADNOC LNG; Venezuela deal | News context (oil price risk, Section 2/risk) |
+| `Forecast/CL1 Futures.png` | WTI futures curve (CL1) 4-Sep-26 vs 6-Mar-26: steep backwardation (≈ $91 front → ≈ $53 by 2036) vs flatter March curve | **Rebuild** forward curve chart (oil downside for KOC activity) |
+| `Forecast/Captura …18003022.png` | Bloomberg chart "Bullish Brent bets rise to highest since May" (net-long, 500K scale; peak ≈ 430K Apr; trough ≈ 40K Jul; ≈ 250K Sep) | optional |
+| `Forecast/imagen oil.gif`, `imagen oil 2.gif` | BI infographic: Brent/Arabian Light price 1956–1986 and 1987–2025 with geopolitical events (2026 Jan–Jul avg ≈ $90) | historical oil-regimes backdrop |
+| `Forecast/*.pdf` (2) | Hedge-fund oil bets; Simplify CTA ETF 42% Brent/33% diesel | Track B module 6 (hedge funds) (B02) |
+| `News_Crypto/NOTICIAS STABLECOINS.png`, `Captura … 172913.png` | Bloomberg headline list on stablecoins; American Banker: "Int'l banks plan stablecoin, OpenPayd enters US market" (consortium to issue USD stablecoin early 2027) | Track B module 2 (B01) |
+| `News_Crypto/Stablecoin Retreat…pdf` | USDT $184bn, USDC $72bn; Bessent $3tn goal | Track B module 2 |
+| `HALLIBURTON/Halliburton Awarded Developmen.pdf` | 22-Jul-26 Dow Jones: KOC multi-year agreement, Ahmadi Innovation Valley (**text only in figure**) | **Core Section-1 fact (H21)** |
+| `HALLIBURTON/*.png` (9) | Spanish re-captures of the ESG panels above (all 9 opened). **One unique item:** `Nivel de daño de activos de HAL vs peers…png` adds the HAL-vs-peer-median asset-damage-rate projection (HAL ≈ 21% in 2030, above peer median) | use English originals; keep this one for the physical-risk slide |
+| `Screenshot analisis ESG.png` | **IBM US** ESG panel (not HAL) | excluded (E13) |

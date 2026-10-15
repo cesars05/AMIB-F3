@@ -1,0 +1,199 @@
+# fix columnas Hoja1: C=vertical, D=valor estimado (texto)
+for i, e in enumerate(empresas):
+    H1[f"B{18+i}"].value = e["nombre"]
+    H1[f"C{18+i}"].value = e["vertical"]
+    H1[f"D{18+i}"].value = e["valor_est"]
+    H1[f"D{18+i}"].alignment = Alignment(horizontal="center")
+for r, (nm, fac) in zip((32, 33, 34), zip(CFG["nombres_esc"], CFG["factores"])):
+    H1[f"B{r}"].value = nm; H1[f"C{r}"].value = fac
+    H1[f"C{r}"].number_format = "0.00"; input_font(H1[f"C{r}"])
+
+for i, e in enumerate(empresas):
+    h = 18 + i
+    H1[f"E{h}"].value = e["ini"]; H1[f"F{h}"].value = e["ent"]
+    H1[f"G{h}"].value = e["fo"]; H1[f"H{h}"].value = e["fo_y"]; H1[f"K{h}"].value = e["sal"]
+H1["D17"].value = "Valuación\n(USD mm)\nn.d. = no pública"
+put(H1, "B40", "Tenencia mínima de 2 años por ticket (art. 192 LISR)")
+put(H1, "C40", '=IF(SUMPRODUCT(--((K18:K25-F18:F25)<2))+SUMPRODUCT(--(G18:G25>0),--((K18:K25-H18:H25)<2))=0,"OK","REVISAR")', None)
+H1["B3"].value = CFG["sub_h1"]
+for k, txt in enumerate(CFG["notas_h1"]):
+    H1[f"B{42+k}"].value = txt; note_style(H1[f"B{42+k}"])
+for k, txt in enumerate(CFG["notas_h2"]):
+    H2[f"B{91+k}"].value = txt; note_style(H2[f"B{91+k}"])
+H1["B3"].font = base_font(italic=True, color="595959", size=9)
+H1.column_dimensions["B"].width = 62; H1.column_dimensions["C"].width = 28
+for col, w in zip("DEFGHIJKLMNO", (14, 11, 10, 11, 10, 13, 8, 10, 10, 12, 12, 13)):
+    H1.column_dimensions[col].width = w
+H2.column_dimensions["B"].width = 74
+for col in "CDEFGHIJKLM": H2.column_dimensions[col].width = 13
+H1.freeze_panes = None
+
+# ---------- 4) Curva J ----------
+J = wb.create_sheet("Curva_J"); set_sheet(J, tab=LIMA, widths={"B": 62})
+put(J, "B2", "Aurex Capital - Curva J: DPI, RVPI y TVPI por año (caso Base)", "title")
+put(J, "B3", "DPI = distribuido acumulado ÷ aportado acumulado · RVPI = valor residual del portafolio (a modelo) ÷ aportado · TVPI = DPI + RVPI. Valor residual: cada ticket se acrece geométricamente hasta su múltiplo de salida; antes de carry no realizado.", "note")
+put(J, "B5", "Año del fondo", "hdr", align="left")
+for k in range(10):
+    col = L(4 + k)
+    c = J[f"{col}5"]; c.value = k + 1; header_style(c); c.number_format = "0"
+put(J, "C5", "Total", "hdr")
+def yrs():
+    return [L(4 + k) for k in range(10)]
+put(J, "B6", "Aportaciones de los LPs en el año (llamadas de capital)")
+put(J, "B7", "Aportado acumulado (paid-in)")
+put(J, "B8", "Distribución neta a los LPs en el año")
+put(J, "B9", "Distribuido acumulado")
+for col in yrs():
+    put(J, f"{col}6", f"=Hoja2_Distribucion!{col}51", "link", NF_NUM1)
+    put(J, f"{col}7", f"=SUM($D6:{col}6)", None, NF_NUM1)
+    put(J, f"{col}8", f"=Hoja2_Distribucion!{col}61", "link", NF_NUM1)
+    put(J, f"{col}9", f"=SUM($D8:{col}8)", None, NF_NUM1)
+put(J, "C6", "=SUM(D6:M6)", None, NF_NUM1, bold=True); put(J, "C8", "=SUM(D8:M8)", None, NF_NUM1, bold=True)
+put(J, "B11", "Valor residual por empresa (a modelo, caso Base)", "sec")
+for col in ["C"] + yrs(): J[f"{col}11"].border = Border(bottom=THIN_G)
+for i in range(n):
+    r = 12 + i; h = 18 + i
+    put(J, f"B{r}", f"=Hoja1_Portafolio!B{h}", "link")
+    for col in yrs():
+        f = (f"=IF(AND({col}$5>=Hoja1_Portafolio!$F{h},{col}$5<Hoja1_Portafolio!$K{h}),"
+             f"Hoja1_Portafolio!$E{h}*(Hoja1_Portafolio!$L{h}*Hoja1_Portafolio!$C$32)^(({col}$5-Hoja1_Portafolio!$F{h})/(Hoja1_Portafolio!$K{h}-Hoja1_Portafolio!$F{h})),0)"
+             f"+IF(AND(Hoja1_Portafolio!$G{h}>0,{col}$5>=Hoja1_Portafolio!$H{h},{col}$5<Hoja1_Portafolio!$K{h}),"
+             f"Hoja1_Portafolio!$G{h}*(Hoja1_Portafolio!$L{h}*Hoja1_Portafolio!$C$32)^(({col}$5-Hoja1_Portafolio!$H{h})/(Hoja1_Portafolio!$K{h}-Hoja1_Portafolio!$H{h})),0)")
+        put(J, f"{col}{r}", f, None, NF_NUM1)
+rn = 12 + n
+put(J, f"B{rn}", "Valor residual del portafolio (NAV a modelo)", "tot")
+J[f"C{rn}"].border = Border(top=THIN)
+for col in yrs(): put(J, f"{col}{rn}", f"=SUM({col}12:{col}{rn-1})", "tot", NF_NUM1)
+rm = rn + 2
+put(J, f"B{rm}", "Métricas del LP", "sec")
+for col in ["C"] + yrs(): J[f"{col}{rm}"].border = Border(bottom=THIN_G)
+put(J, f"B{rm+1}", "DPI (distribuido ÷ aportado)", bold=True)
+put(J, f"B{rm+2}", "RVPI (residual ÷ aportado)", bold=True)
+put(J, f"B{rm+3}", "TVPI (DPI + RVPI)", bold=True)
+for col in yrs():
+    put(J, f"{col}{rm+1}", f"=IF({col}7=0,0,{col}9/{col}7)", None, NF_X, bold=True)
+    put(J, f"{col}{rm+2}", f"=IF({col}7=0,0,{col}{rn}/{col}7)", None, NF_X, bold=True)
+    put(J, f"{col}{rm+3}", f"={col}{rm+1}+{col}{rm+2}", None, NF_X, bold=True)
+put(J, f"B{rm+5}", "Lectura: el TVPI es <1.0x en los primeros años (comisiones y gastos antes de que las empresas valgan más que su costo); el DPI sigue en cero hasta la primera salida.", "note")
+ch = LineChart(); ch.title = None; ch.height = 7.5; ch.width = 18
+ch.y_axis.title = "x aportado"; ch.x_axis.title = "Año del fondo"
+for rr, color in ((rm+1, VERDE_BOSQUE), (rm+3, LIMA)):
+    s = Series(Reference(J, min_col=4, max_col=13, min_row=rr, max_row=rr), title=J[f"B{rr}"].value)
+    s.graphicalProperties.line.solidFill = color; s.graphicalProperties.line.width = 28000; s.smooth = False
+    ch.series.append(s)
+ch.set_categories(Reference(J, min_col=4, max_col=13, min_row=5, max_row=5))
+ch.legend.position = "b"
+ch.y_axis.number_format = '0.0"x"'
+ch.y_axis.majorGridlines = None
+ch.x_axis.delete = False; ch.y_axis.delete = False
+J.add_chart(ch, f"B{rm+7}")
+J_ROWS = dict(dpi=rm+1, rvpi=rm+2, tvpi=rm+3, nav=rn)
+
+# ---------- 5) Fuentes ----------
+F = wb.create_sheet("Fuentes"); set_sheet(F, tab="7FB89A", widths={"B": 26, "C": 48, "D": 22, "E": 38, "F": 60, "G": 12, "H": 10, "I": 14})
+put(F, "B2", "Aurex Capital - Fuentes y supuestos documentados", "title")
+put(F, "B3", "Cada dato externo con fuente, URL, fecha y año del dato. Preferencia: fuentes oficiales mexicanas 2026; lo anterior se etiqueta con su año.", "note")
+for i, h in enumerate(["Tema", "Dato", "Valor", "Fuente", "URL", "Fecha pub.", "Año dato", "Tipo"]):
+    c = F.cell(row=5, column=2 + i); c.value = h; header_style(c, "left")
+for k, row in enumerate(CFG["fuentes"]):
+    for i, v in enumerate(row):
+        c = F.cell(row=6 + k, column=2 + i); c.value = v; calc_font(c)
+        c.alignment = Alignment(wrap_text=True, vertical="top")
+
+# ---------- 6) Summary ----------
+S = wb.create_sheet("Summary", 0); set_sheet(S, tab=VERDE_BOSQUE, widths={"B": 48, "C": 4})
+put(S, "B2", "Aurex Capital - Modelo Financiero", "title")
+put(S, "B3", "Summary", bold=True)
+put(S, "B4", CFG["sub_summary"], "note")
+put(S, "B6", "Conjunto de múltiplos en uso:", bold=True)
+put(S, "F6", "Cifras en USD. CETES 28 d (6.09%) y Banxico (6.50%) son en MXN: no comparar sin ajuste cambiario.", "note")
+put(S, "D6", "=Hoja1_Portafolio!D15", "link", bold=True)
+put(S, "B8", "Resultados por escenario (USD mm)", "sec")
+for col in "CDEF": S[f"{col}8"].border = Border(bottom=THIN_G)
+put(S, "B9", "Escenario", "hdr", align="center")
+S["C9"].fill = PatternFill("solid", fgColor=MENTA); S["C9"].border = Border(bottom=THIN)
+for col in "DEF":
+    put(S, f"{col}9", f"=Hoja2_Distribucion!{col}18", "hdr")
+    S[f"{col}9"].font = base_font(bold=True, color=VERDE_LINK)
+S.row_dimensions[9].height = 30
+res = [
+ ("Recupera el portafolio", 19, NF_NUM1), ("Múltiplo bruto sobre capital invertido", 41, NF_X),
+ ("Múltiplo bruto sobre capital comprometido", 20, NF_X), ("Total a los LPs", 32, NF_NUM1),
+ ("Carry del GP", 33, NF_NUM1), ("Compensación total del GP (fee + carry)", 36, NF_NUM1),
+ ("Ganancia (pérdida) neta de los LPs · Whole Dollar Profit", 37, NF_NUM1), ("Múltiplo neto de los LPs · MOIC", 38, NF_X),
+ ("TIR neta de los LPs (calendario real)", 42, NF_PCT)
+]
+for k, (lab, hr, nf) in enumerate(res):
+    r = 10 + k
+    bd = ("MOIC" in lab or "TIR neta" in lab or "Whole" in lab)
+    put(S, f"B{r}", lab, bold=bd)
+    for col in "DEF":
+        put(S, f"{col}{r}", f"=Hoja2_Distribucion!{col}{hr}", "link", nf, bold=bd, align="right")
+rend = 10 + len(res)
+for col in "BCDEF": S[f"{col}{rend-1}"].border = Border(bottom=THIN)
+rb = rend + 1
+put(S, f"B{rb}", "Caso Base · Whole Dollar Profit a los LPs", bold=True); put(S, f"D{rb}", "=D16", None, NF_NUM1, bold=True)
+put(S, f"B{rb+1}", "Caso Base · TIR neta de los LPs", bold=True); put(S, f"D{rb+1}", "=D18", None, NF_PCT, bold=True)
+put(S, f"B{rb+2}", "Caso Base · MOIC neto de los LPs", bold=True); put(S, f"D{rb+2}", "=D17", None, NF_X, bold=True)
+for rr in (rb, rb+1, rb+2):
+    S[f"B{rr}"].border = Border(left=THIN, top=THIN if rr == rb else None, bottom=THIN if rr == rb+2 else None)
+    S[f"C{rr}"].border = Border(top=THIN if rr == rb else None, bottom=THIN if rr == rb+2 else None)
+    S[f"D{rr}"].border = Border(right=THIN, top=THIN if rr == rb else None, bottom=THIN if rr == rb+2 else None)
+rj = rb + 5
+put(S, f"B{rj}", "Curva J del LP (caso Base)", "sec")
+for col in "CDEFGHIJKLM": S[f"{col}{rj}"].border = Border(bottom=THIN_G)
+put(S, f"B{rj+1}", "Año del fondo", "hdr", align="center"); S[f"C{rj+1}"].fill = PatternFill("solid", fgColor=MENTA); S[f"C{rj+1}"].border = Border(bottom=THIN)
+for k in range(10):
+    col = L(4 + k)
+    put(S, f"{col}{rj+1}", f"=Curva_J!{col}5", "hdr"); S[f"{col}{rj+1}"].font = base_font(bold=True, color=VERDE_LINK); S[f"{col}{rj+1}"].number_format = "0"
+for key, lab in (("dpi", "DPI"), ("rvpi", "RVPI"), ("tvpi", "TVPI")):
+    r = rj + 2 + ("dpi", "rvpi", "tvpi").index(key)
+    put(S, f"B{r}", lab, bold=(key == "tvpi"))
+    for k in range(10):
+        col = L(4 + k)
+        put(S, f"{col}{r}", f"=Curva_J!{col}{J_ROWS[key]}", "link", NF_X, bold=(key == "tvpi"), align="right")
+for col in "BCDEFGHIJKLM": S[f"{col}{rj+4}"].border = Border(bottom=THIN)
+for col in "DEFGHIJKLM": S.column_dimensions[col].width = 12
+rp = rj + 7
+put(S, f"B{rp}", "Portafolio (USD mm)", "sec")
+for col in "CDEFGHI": S[f"{col}{rp}"].border = Border(bottom=THIN_G)
+for i, h in enumerate(["Empresa", "", "Invertido", "% del fondo", "Año salida", "Múltiplo", "Recupera", "Ganancia"]):
+    c = S.cell(row=rp+1, column=2 + i); c.value = h; header_style(c, "center" if i > 1 else "left")
+for i in range(n):
+    r = rp + 2 + i; h = 18 + i
+    put(S, f"B{r}", f"=Hoja1_Portafolio!B{h}", "link")
+    for col, hc, nf in (("D", "I", NF_NUM1), ("E", "J", NF_PCT), ("F", "K", "0"), ("G", "L", NF_X), ("H", "M", NF_NUM1), ("I", "N", NF_NUM1)):
+        put(S, f"{col}{r}", f"=Hoja1_Portafolio!{hc}{h}", "link", nf, align="right")
+rt2 = rp + 2 + n
+put(S, f"B{rt2}", "Total del fondo", "tot")
+for col in "CDEFGHI": S[f"{col}{rt2}"].border = Border(top=THIN)
+put(S, f"D{rt2}", f"=SUM(D{rp+2}:D{rt2-1})", "tot", NF_NUM1); put(S, f"E{rt2}", f"=SUM(E{rp+2}:E{rt2-1})", "tot", NF_PCT)
+put(S, f"G{rt2}", "=Hoja1_Portafolio!L27", "link", NF_X, bold=True); S[f"G{rt2}"].border = Border(top=THIN)
+put(S, f"H{rt2}", f"=SUM(H{rp+2}:H{rt2-1})", "tot", NF_NUM1); put(S, f"I{rt2}", f"=SUM(I{rp+2}:I{rt2-1})", "tot", NF_NUM1)
+rv = rt2 + 2
+put(S, f"B{rv}", "Verificaciones del modelo", "sec")
+for col in "CDEF": S[f"{col}{rv}"].border = Border(bottom=THIN_G)
+checks = [("Concentración ≤ tope por empresa", "=Hoja1_Portafolio!C37"), ("Gastos operativos no negativos", "=Hoja1_Portafolio!C38"),
+          ("Salida posterior a entrada y follow-on", "=Hoja1_Portafolio!C39"), ("Tenencia mínima de 2 años por ticket", "=Hoja1_Portafolio!C40"),
+          ("LPs + GP = proceeds (Base)", "=Hoja2_Distribucion!D34"), ("LPs + GP = proceeds (Bajo)", "=Hoja2_Distribucion!E34"),
+          ("LPs + GP = proceeds (Alto)", "=Hoja2_Distribucion!F34"), ("Lo aportado = capital comprometido", "=Hoja2_Distribucion!C52"),
+          ("TIR con calendario coincide con la cascada", "=Hoja2_Distribucion!C64")]
+for k, (lab, f) in enumerate(checks):
+    put(S, f"B{rv+1+k}", lab); put(S, f"D{rv+1+k}", f, "link", align="center")
+put(S, f"B{rv+len(checks)+2}", "Nota: las hojas que pide la guía del proyecto son Hoja1_Portafolio y Hoja2_Distribucion; Summary, Escenarios, Curva_J, 1 a 4 (Monte Carlo) y Fuentes son anexos de soporte.", "note")
+ch2 = LineChart(); ch2.height = 6.0; ch2.width = 14
+for rr, color in ((rj+2, VERDE_BOSQUE), (rj+4, LIMA)):
+    s = Series(Reference(S, min_col=4, max_col=13, min_row=rr, max_row=rr), title=S[f"B{rr}"].value)
+    s.graphicalProperties.line.solidFill = color; s.graphicalProperties.line.width = 28000; s.smooth = False
+    ch2.series.append(s)
+ch2.set_categories(Reference(S, min_col=4, max_col=13, min_row=rj+1, max_row=rj+1))
+ch2.legend.position = "b"; ch2.y_axis.number_format = '0.0"x"'; ch2.y_axis.majorGridlines = None
+ch2.x_axis.delete = False; ch2.y_axis.delete = False
+S.add_chart(ch2, "H8")
+
+order = ["Summary", "Hoja1_Portafolio", "Hoja2_Distribucion", "Escenarios", "Criterios", "Curva_J", "1_Comparables", "2_Simulacion", "3_Precios", "4_Rendimientos", "Fuentes"]
+wb._sheets = [wb[nm] for nm in order]
+wb.active = 0
+for ws in wb.worksheets: ws.sheet_view.tabSelected = (ws.title == "Summary")
+wb.save(OUT)
+print("saved", OUT)

@@ -1,0 +1,168 @@
+import json, os, subprocess, html
+S=os.path.dirname(os.path.abspath(__file__))
+L=json.load(open(os.path.join(S,"deck3_log.json")))
+IMG=os.path.join(S,"tpl","v2")
+OUT_HTML=os.path.join(S,"explainer.html")
+OUT_PDF=r"C:\Users\cesar\OneDrive\Desktop\AZTD Peers\AZTD vs Peers - Guía de lectura_v2.pdf"
+def p(v,d=1,sign=False): return (f"{{:+.{d}f}}%" if sign else f"{{:.{d}f}}%").format(v*100)
+def pp(v,d=1): return f"{v*100:+.{d}f}pp"
+O=L["overview"]; C=L["by_year"]["cal"]; G=L["by_year"]["gap"]
+sP={r[0]:r for r in L["sec_P"]["u"]+L["sec_P"]["o"]}; s25={r[0]:r for r in L["sec_25"]["u"]+L["sec_25"]["o"]}; sY={r[0]:r for r in L["sec_Y"]["u"]+L["sec_Y"]["o"]}
+rP,r25,rY=L["reg_P"],L["reg_25"],L["reg_Y"]
+nP={b["s"]:b for b in L["names_P"]}; n25={b["s"]:b for b in L["names_25"]}; nY={b["s"]:b for b in L["names_Y"]}
+yt=L["ytd"]; mg=dict(yt["mgap"])
+B={k[4:]:v for k,v in L.items() if k.startswith("bub_")}
+
+def sec(n,title,ves,lee,implica):
+    return dict(n=n,title=title,ves=ves,lee=lee,imp=implica)
+SL=[
+sec(1,"Portada","Portada del análisis: AZTD contra sus cuatro peers (AVDV, ISCF, DISV y DFIS), de enero 2024 a septiembre 2026.","-","-"),
+sec(2,"Disclaimer","Aviso legal estándar de Aztlan.","-","-"),
+sec(3,"Separador: Performance Overview","Abre la primera sección: el panorama general de retornos.","-","-"),
+sec(4,"AZTD vs Peers: Performance 2024 to 2026",
+ "Tres piezas. (1) Crecimiento de 100: cuánto valdrían 100 dólares invertidos en cada ETF desde dic-23 (retorno total real, en USD). (2) Retorno anualizado de cada fondo de ene-24 a sep-26. (3) Fund Snapshot: número de holdings, scores del Quant Model (Model 1.1, 6M Slope, Stability, Tactical) al 31-ago-26 y retornos 3Y, YTD, 3M, 1M y P/E forward.",
+ "La línea azul marino gruesa es AZTD. 'Anualizado' significa el retorno promedio por año que, compuesto, da el retorno total del periodo. La última fila de la tabla es AZTD menos el promedio de los peers.",
+ f"AZTD rindió {p(O['aztd'])} al año contra {p(O['peers'])} del promedio de peers: una brecha de {pp(O['gap'])} por año. Ojo: AZTD tiene el Model 1.1 más alto ({O['m11']:.2f} vs {O['m11p']:.2f} de los peers) con solo 50 posiciones contra 1,158 a 3,433 de los peers; la brecha no viene de tener peores scores."),
+sec(5,"Returns by Year",
+ "El retorno de cada fondo por año calendario (2024, 2025 y 2026 hasta septiembre) y una tabla AZTD vs promedio de peers.",
+ "Cada grupo de barras es un año; AZTD es la barra azul marino y el promedio de peers la dorada. La columna 'Gap' es AZTD menos peers.",
+ f"La brecha no es pareja: en 2024 AZTD le ganó a los peers ({pp(G[0])}), en 2025 perdió {abs(G[1])*100:.1f}pp (AZTD {p(C['AZTD'][1])} vs {p(C['Peer avg'][1])}) y en 2026 YTD pierde {abs(G[2])*100:.1f}pp. 2025 es el año que explica la mayor parte del problema."),
+sec(6,"Separador: 2024 to 2026","Abre la sección del periodo completo (ene-24 a sep-26, anualizado).","-","-"),
+sec(7,"Sectores 2024-26",
+ "Izquierda: contribución de cada sector al retorno de AZTD (azul) y de los peers (dorado), en pp por año. Derecha: la diferencia (AZTD menos peers), ordenada de peor a mejor. Abajo, los tres sectores más relevantes con pesos y retornos.",
+ "Contribución = peso x retorno de las acciones del sector, sumado mes a mes. Una barra roja a la derecha = ese sector nos costó contra los peers. Estas cifras usan los holdings de inicio de mes (antes de costos de trading y fees), por eso no suman exactamente la brecha real del fondo.",
+ f"Materials cuesta {pp(sP['Materials'][1])}/año: AZTD tuvo {p(sP['Materials'][2])} en el sector vs {p(sP['Materials'][3])} de los peers y sus acciones rindieron {p(sP['Materials'][4],0)} vs {p(sP['Materials'][5],0)} al año. Financials cuesta {pp(sP['Financials'][1])}/año. Industrials aporta {pp(sP['Industrials'][1])}/año (acciones de AZTD {p(sP['Industrials'][4],0)} vs {p(sP['Industrials'][5],0)})."),
+sec(8,"Regiones 2024-26",
+ "Izquierda: brecha por región (pp por año) y tabla de pesos y retornos por región. Derecha: en Europa y Japón, las 5 posiciones más grandes de AZTD contra las 5 más grandes de los peers (por peso promedio), con su retorno y Model 1.1.",
+ "El encabezado de color de cada región resume peso y contribución de AZTD vs peers. 'Ret.' es el retorno de la acción en todo el periodo (misma medida para ambos lados). La columna 'AZTD' dice si AZTD también tuvo ese nombre.",
+ f"Europa ({pp(rP['eu'][0])}/año) y Japón ({pp(rP['jp'][0])}/año) son las regiones que más restan, sobre todo por estar subponderados: AZTD tuvo {p(rP['eu'][1],0)} en Europa vs {p(rP['eu'][2],0)} de los peers y {p(rP['jp'][1],0)} en Japón vs {p(rP['jp'][2],0)}. Los top 5 de los peers en Europa rindieron {p(rP['b_eu']['peer_ret'],0)} (ponderado) vs {p(rP['b_eu']['aztd_ret'],0)} los de AZTD. EE.UU. suma {pp(rP['us'][0])}/año, pero es exposición que los peers no tienen ({p(rP['us'][1],0)} vs {p(rP['us'][2],1)})."),
+sec(9,"Allocation 2024-26",
+ "El efecto de asignación por sector: cuánto ganó o perdió AZTD por tener más o menos peso que los peers en cada sector.",
+ "Fórmula (Brinson-Fachler): (peso AZTD - peso peers) x (retorno del sector de los peers - retorno total de los peers). Ejemplo: tener menos Materials cuando Materials subió más que el mercado da un número negativo. Rojo = costó; azul = ayudó.",
+ f"El total de allocation es {pp(L['alloc_P']['tot'])} por año: la asignación sectorial explica una parte chica. Lo que más costó fue el bajo peso en Materials ({pp(L['alloc_P']['neg'][0][1])}) y el sobrepeso en Health Care ({pp(L['alloc_P']['neg'][1][1])}); ayudó no tener Real Estate ({pp(L['alloc_P']['pos'][0][1])})."),
+sec(10,"Selection 2024-26",
+ "El efecto de selección por sector: si las acciones que eligió AZTD dentro de cada sector rindieron más o menos que las de los peers en ese mismo sector.",
+ "Fórmula: peso AZTD x (retorno de las acciones de AZTD en el sector - retorno de las acciones de los peers en el sector). El hit rate es el % de acciones de AZTD que le ganaron al promedio del sector de los peers (50% = moneda al aire).",
+ f"La selección total es {pp(L['sel_P']['tot'])} por año, más grande que la allocation. Financials es el peor ({pp(L['sel_P']['neg'][0][1])}/año) y Industrials el mejor ({pp(L['sel_P']['pos'][0][1])}/año). El hit rate es 43% por nombres y 39% ponderado: menos de la mitad de las apuestas le ganaron a los peers."),
+sec(11,"Weak Sectors 2024-26: Largest Positions (1/2)",
+ "Para los dos sectores que más costaron (Materials y Financials): las 5 posiciones más grandes de AZTD contra las 5 más grandes de los peers, ordenadas por peso promedio. Columnas: peso, retorno de la acción, contribución, retorno YTD-26, Model 1.1 y Stability.",
+ "El color del encabezado identifica el sector (mismo color en todo el deck). 'Return' es el retorno de la acción en todo el periodo, igual para ambos lados; 'Contrib.' es lo que esa posición realmente le dio a cada fondo (depende de cuándo la tuvo). La línea azul de abajo compara la contribución y el retorno ponderado de cada top 5 (ojo: AZTD concentra más peso por nombre, así que la contribución del sector completo es la cifra clave).",
+ f"En Materials el sector completo aportó a AZTD -0.2pp/año vs +4.8pp/año a los peers. Los top 5 de AZTD aportaron {pp(nP['Materials']['aztd_ctr'],2)}/año y el resto de sus nombres restó; AZTD llegó a tener ganadoras como Mitsui Kinzoku (+406%) y OceanaGold (+391%), pero en los meses equivocados (su contribución fue casi nula), mientras los peers tuvieron muchas mineras todo el periodo (Eldorado, B2Gold, Hudbay). En Financials los top 5 de AZTD sí aportaron ({pp(nP['Financials']['aztd_ctr'],2)}/año vs {pp(nP['Financials']['peer_ctr'],2)} los de los peers); el hueco del sector vino del resto de sus nombres financieros (hit rate 35%) y de no tener los bancos europeos que subieron 200%-350% (Sydbank, Lion Finance, Bankinter, Sabadell)."),
+sec(12,"Weak Sectors 2024-26: Largest Positions (2/2)",
+ "Lo mismo para Consumer Discretionary y Utilities.",
+ "Igual que la slide anterior.",
+ f"En Consumer Discretionary los top 5 de AZTD rindieron más que los de los peers ({p(nP['Consumer Discretionary']['aztd_ret'],0)} vs {p(nP['Consumer Discretionary']['peer_ret'],0)}), pero el timing en dos de sus posiciones más grandes restó: The Gap (1.2% de peso, -0.76pp/año) y Upbound (0.7%, -0.41pp/año). En Utilities los peers ganan {p(nP['Utilities']['peer_ret'],0)} vs {p(nP['Utilities']['aztd_ret'],0)}."),
+sec(13,"Separador: 2025","Abre la sección del año calendario 2025.","-","-"),
+sec(14,"Sectores 2025","Misma lectura que la slide 7, solo para 2025 (pp acumulados en el año).","Igual que la slide 7.",
+ f"Materials explica {pp(s25['Materials'][1])} en un solo año: AZTD tuvo {p(s25['Materials'][2])} vs {p(s25['Materials'][3])} de los peers, y las acciones de Materials de los peers subieron {p(s25['Materials'][5],0)} (las de AZTD {p(s25['Materials'][4],0)}). Consumer Discretionary resta {pp(s25['Consumer Discretionary'][1])} y Financials {pp(s25['Financials'][1])}; Industrials suma {pp(s25['Industrials'][1])}."),
+sec(15,"Regiones 2025","Misma lectura que la slide 8, para 2025.","Igual que la slide 8.",
+ f"Japón resta {pp(r25['jp'][0])} y Europa {pp(r25['eu'][0])}. En Japón, los top 5 de los peers rindieron {p(r25['b_jp']['peer_ret'],0)} vs {p(r25['b_jp']['aztd_ret'],0)} los de AZTD; en Europa empataron ({p(r25['b_eu']['peer_ret'],0)} vs {p(r25['b_eu']['aztd_ret'],0)}), así que el problema europeo de 2025 fue el bajo peso ({p(r25['eu'][1],0)} vs {p(r25['eu'][2],0)}). EE.UU. suma {pp(r25['us'][0])}."),
+sec(16,"Weak Sectors 2025: Largest Positions (1/2)","Materials y Consumer Discretionary en 2025: top 5 por peso de AZTD vs peers.","Igual que la slide 11; 'Return' es el retorno de la acción en 2025.",
+ f"Materials: los top 5 de los peers subieron {p(n25['Materials']['peer_ret'],0)} en 2025 vs {p(n25['Materials']['aztd_ret'],0)} los de AZTD (Methanex, Scotts); en contribución, {pp(n25['Materials']['peer_ctr'],2)} vs {pp(n25['Materials']['aztd_ctr'],2)} aun con mucho menos peso por nombre. Consumer Discretionary: {p(n25['Consumer Discretionary']['peer_ret'],0)} vs {p(n25['Consumer Discretionary']['aztd_ret'],0)} (JB Hi-Fi, Round One, The Gap, Upbound, Pandora)."),
+sec(17,"Weak Sectors 2025: Largest Positions (2/2)","Financials y Energy en 2025.","Igual que la slide 11.",
+ f"Financials: {p(n25['Financials']['peer_ret'],0)} los peers vs {p(n25['Financials']['aztd_ret'],0)} AZTD. Energy: {p(n25['Energy']['peer_ret'],0)} vs {p(n25['Energy']['aztd_ret'],0)}, y AZTD no tuvo ninguno de los top 5 de los peers."),
+sec(18,"Separador: 2026 YTD","Abre la sección de enero a septiembre 2026.","-","-"),
+sec(19,"2026 YTD: AZTD vs Peers",
+ "Izquierda: crecimiento de 100 desde dic-25. Derecha: la brecha mensual, retorno de AZTD en el mes menos el promedio de los peers.",
+ "Barras rojas = meses en que AZTD quedó detrás de los peers.",
+ f"AZTD lleva {p(yt['a'])} vs {p(yt['pv'])} de los peers ({pp(yt['gap'])}). AZTD iba detrás en el primer trimestre (enero {pp(mg['Jan'])}, febrero {pp(mg['Feb'])}), se puso adelante de abril a julio (a fin de junio 116.8 vs 108.1 en el índice de crecimiento) y quedó atrás desde agosto: julio {pp(mg['Jul'])}, agosto {pp(mg['Aug'])} y septiembre {pp(mg['Sep'])}."),
+sec(20,"Sectores 2026 YTD","Misma lectura que la slide 7, para 2026 YTD.","Igual que la slide 7.",
+ f"Materials ({pp(sY['Materials'][1])}) y Financials ({pp(sY['Financials'][1])}) siguen restando; Consumer Staples resta {pp(sY['Consumer Staples'][1])} porque las acciones de AZTD cayeron {p(sY['Consumer Staples'][4],0)} (HelloFresh). Tech suma {pp(sY['Information Technology'][1])} (AZTD {p(sY['Information Technology'][2])} del portafolio vs {p(sY['Information Technology'][3])} de los peers) y Health Care {pp(sY['Health Care'][1])}."),
+sec(21,"Regiones 2026 YTD","Misma lectura que la slide 8, para 2026 YTD.","Igual que la slide 8.",
+ f"Europa resta {pp(rY['eu'][0])}: AZTD tiene {p(rY['eu'][1],0)} vs {p(rY['eu'][2],0)} de los peers y sus top 5 europeos van {p(rY['b_eu']['aztd_ret'],0)} (HelloFresh, flatexDEGIRO, Italgas) vs {p(rY['b_eu']['peer_ret'],0)} de los peers. Japón resta {pp(rY['jp'][0])}. EE.UU. suma {pp(rY['us'][0])} con ~{p(rY['us'][1],0)} del portafolio."),
+sec(22,"YTD Allocation","Efecto de asignación por sector en 2026 YTD (misma lectura que la slide 9).","Igual que la slide 9.",
+ f"En 2026 la asignación ayuda: {pp(L['alloc_Y']['tot'])}, sobre todo por el sobrepeso en Tech ({pp(L['alloc_Y']['pos'][0][1])}) y no tener Real Estate ({pp(L['alloc_Y']['pos'][1][1])}). Costó el sobrepeso en Health Care ({pp(L['alloc_Y']['neg'][0][1])}) y el bajo peso en Materials ({pp(L['alloc_Y']['neg'][1][1])})."),
+sec(23,"YTD Selection","Efecto de selección por sector en 2026 YTD (misma lectura que la slide 10).","Igual que la slide 10.",
+ f"La selección resta {pp(L['sel_Y']['tot'])}: Financials ({pp(L['sel_Y']['neg'][0][1])}) y Consumer Staples ({pp(L['sel_Y']['neg'][1][1])}) son las peores apuestas; Health Care ({pp(L['sel_Y']['pos'][0][1])}, Halozyme) y Tech ({pp(L['sel_Y']['pos'][1][1])}, Lumentum) las mejores. Hit rate YTD: 35% por nombres, 42% ponderado."),
+sec(24,"Weak Sectors 2026 YTD: Largest Positions (1/2)","Materials y Financials en 2026 YTD. Aquí 'YTD-26' es el retorno de la acción en el año; se agrega el retorno 3Y anualizado.","Igual que la slide 11.",
+ f"Materials: los top 5 de los peers van {p(nY['Materials']['peer_ret'],0)} vs {p(nY['Materials']['aztd_ret'],0)} los de AZTD (OceanaGold, Orla, Commercial Metals). Financials: {p(nY['Financials']['peer_ret'],0)} vs {p(nY['Financials']['aztd_ret'],0)}; AZTD no tiene ninguno de los top 5 de los peers, aunque sus nombres tienen mejor Model 1.1 ({nY['Financials']['aztd_m11']:.2f} vs {nY['Financials']['peer_m11']:.2f})."),
+sec(25,"Weak Sectors 2026 YTD: Largest Positions (2/2)","Consumer Staples y Energy en 2026 YTD.","Igual que la slide 11.",
+ f"Consumer Staples: AZTD {p(nY['Consumer Staples']['aztd_ret'],0)} vs peers {p(nY['Consumer Staples']['peer_ret'],0)} (HelloFresh -63% es el mayor detractor). Energy: AZTD {p(nY['Energy']['aztd_ret'],0)} vs peers {p(nY['Energy']['peer_ret'],0)} con la mitad del peso (3.6% vs 7.0%)."),
+sec(26,"Separador: Peer Names to Watch","Abre la sección de ideas: nombres repetidos en los portafolios de los peers dentro de los sectores débiles.","-","-"),
+]
+bub_txt={"Materials":"mineras de oro, plata y cobre; AZTD solo tiene Commercial Metals",
+ "Financials":"bancos y aseguradoras europeos; AZTD tiene fintech/brokers de EE.UU.",
+ "Consumer Discretionary":"autopartes y retail europeo/canadiense",
+ "Energy":"productoras de gas y petróleo canadienses y servicios",
+ "Utilities":"utilities europeas; el sector es chico para todos"}
+for k,s_ in enumerate(["Materials","Financials","Consumer Discretionary","Energy","Utilities"]):
+    b=B[s_]; cand=", ".join(c[0].title() if c[0].isupper() else c[0] for c in b["cand"]) or "ninguno"
+    SL.append(sec(27+k,f"Peer Names to Watch: {s_}",
+      f"Gráfico de burbujas del sector {s_}: los 10 nombres más grandes que tienen 3 o más peers y AZTD no tiene ({bub_txt[s_]}), contra las posiciones actuales de AZTD en el sector (azul marino). Eje X: retorno YTD-26; eje Y: Model 1.1. A la derecha, la tabla con YTD, Model 1.1, Stability, peso y número de peers que lo tienen.",
+      "Arriba a la derecha = buen score y buen retorno. El tamaño de la burbuja es el peso promedio en los peers; las burbujas de AZTD no están a escala (solo marcan dónde están). Datos al 31-ago-26.",
+      f"Mediana YTD de los nombres de peers: {p(b['pm'],0)}" + (f" vs {p(b['am'],0)} de los de AZTD." if b['am'] is not None else ".") + f" Candidatos a revisar (Model 1.1 ≥ 0.75 y Stability ≥ 0.60): {cand}."))
+SL+= [sec(32,"Key Insights","Las conclusiones principales del análisis en 8 puntos.","Cada punto empieza con el tema en azul y trae el número que lo respalda.",
+  "Resumen: la brecha es de -7.4pp por año y casi toda viene de 2025; los sectores que más restan son Materials, Financials, Consumer Discretionary y Utilities; regionalmente Europa y Japón (por bajo peso). El Model 1.1 del portafolio actual es más alto que el de los peers, pero eso es una foto de hoy, no explica los holdings de 2024-25."),
+ sec(33,"Cierre","Slide de cierre de Aztlan.","-","-")]
+
+TABS=[("Guide","Índice del libro: qué responde, cómo están organizadas las pestañas, conceptos clave (retorno real, holdings-based, contribución, allocation, selection, hit rate) y fuentes/caveats (incluido Lawson)."),
+("Summary 2024-2026","Resumen del periodo completo: retorno real y holdings-based de cada fondo (anualizado), y la tabla principal de los ETFs (holdings, scores, retornos)."),
+("Attribution 2024-2026","El motor de conclusiones del periodo: contribución por sector y región (AZTD vs cada peer y promedio), pesos y retornos por sector, Brinson (allocation/selection), retornos por año calendario, hit rate y el bloque 2025 focus."),
+("Charts 2024-2026","Gráficos del periodo: crecimiento de 100, contribución por sector/región, top contribuidores y detractores."),
+("Selection Main","Por sector: los nombres de AZTD ordenados por contribución (peores primero) contra los mejores nombres de los peers. Selector de periodo en la celda amarilla (2024-2026, 2025, YTD-26)."),
+("Top Holdings Main (nueva en v5)","Por sector y por región: las posiciones más grandes de AZTD (por peso promedio) contra las más grandes de los peers, con la misma medida de retorno para ambos, contribución, YTD, Model 1.1, Stability, 3Y, # peers y si AZTD lo tuvo. Selector de periodo. Es la fuente de las tablas de 'Largest Positions' y Europa/Japón del deck."),
+("Summary YTD / Attribution YTD / Charts YTD","Lo mismo que las tres de arriba pero para 2026 YTD (ene-sep, acumulado)."),
+("Model Test","Prueba de si el Model 1.1 predice retornos: cada mes ordena por quintiles el score y mide el retorno del mes siguiente."),
+("Underweights","Sectores donde AZTD está subponderado vs los peers y, para los sectores elegidos, los top 10 nombres de los peers con Model 1.1, 3Y y si están en otra estrategia de Aztlan."),
+("Charts Aug-26 / Model Screen","Foto del portafolio al 31-ago-26 (pesos, scores) y screen de los mejores nombres por Model 1.1."),
+("AZTD, AVDV, ISCF, DISV, DFIS","Holdings actuales de cada ETF con datos de Workspace (sector, país, scores, retornos)."),
+("AZTD Data ... DFIS Data","Datos crudos de holdings por fondo (pesos), base de las pestañas anteriores."),
+("Attr Setup","Configuración del motor: fechas mensuales (dic-23 a sep-26), banderas de rebalanceo, retornos holdings-based y reales por fondo, factores de linkeo y tipos de cambio."),
+("Attr Returns","Una fila por acción (~5,400): retornos mensuales locales y en USD (fórmulas TR de Workspace), sector, región, scores y resúmenes (pesos, contribuciones, retornos por periodo). Fila 5425: override de Lawson con el RIC deslistado 2651.T^G24."),
+("Attr Holdings","Una fila por fondo x acción (~11,000): pesos de inicio de mes, contribuciones mensuales, resúmenes por periodo y el cálculo del hit rate."),
+("Quant History / Quant Model Aug","Scores del Quant Model (historial mensual y la foto al 31-ago-26)."),
+("Aztlan Strategies","Nombres de las otras estrategias de Aztlan (CORE, PRIME, LARGE, NRSH, XIMEC) para la columna 'Other Aztlan strategies'.")]
+
+def esc(t): return html.escape(t)
+parts=[]
+parts.append("""<!doctype html><html lang="es"><head><meta charset="utf-8"><title>AZTD vs Peers - Guía de lectura</title>
+<style>
+@page{size:A4;margin:14mm 14mm 14mm 14mm}
+body{font-family:Arial,Helvetica,sans-serif;font-size:10pt;color:#1a1a1a;line-height:1.38}
+h1{color:#242852;font-size:22pt;margin:0 0 4pt}
+h2{color:#242852;font-size:14pt;border-bottom:1.5px solid #242852;padding-bottom:3pt;margin:18pt 0 8pt}
+h3{color:#242852;font-size:11.5pt;margin:0 0 6pt}
+.sub{color:#555;font-size:11pt;margin-bottom:12pt}
+.slide{page-break-inside:avoid;margin:0 0 16pt;padding-bottom:10pt;border-bottom:1px solid #ddd}
+.slide img{width:86%;display:block;margin-left:auto;margin-right:auto;border:1px solid #ccc;margin:4pt 0 6pt}
+.lbl{font-weight:bold;color:#242852}
+p{margin:3pt 0}
+table{border-collapse:collapse;width:100%;font-size:9.5pt}
+td,th{border-bottom:1px solid #ddd;padding:5pt 6pt;vertical-align:top;text-align:left}
+th{background:#242852;color:#fff}
+.box{background:#eef2fa;border-left:3px solid #242852;padding:8pt 10pt;margin:8pt 0}
+.small{display:flex;gap:12pt}.small img{width:48%}
+.pb{page-break-before:always}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6pt}.grid img{width:100%!important;margin:0!important}.cap{font-size:8pt;color:#555}
+</style></head><body>""")
+parts.append("<h1>AZTD vs Peers: Guía de lectura</h1><div class='sub'>Qué se ve en cada slide del deck (v2) y en cada pestaña del Excel (v5). Datos: holdings y scores al 31-ago-26; retornos al 30-sep-26.</div>")
+parts.append(f"""<h2>Antes de empezar: convenciones</h2>
+<div class='box'><p><span class='lbl'>Retorno real (actual):</span> lo que rindió el ETF. Es la única medida de retorno de fondo que se muestra en el deck.</p>
+<p><span class='lbl'>pp (puntos porcentuales):</span> diferencia entre dos porcentajes. Si AZTD rinde 14.2% y los peers 21.7%, la brecha es -7.4pp.</p>
+<p><span class='lbl'>Anualizado:</span> para 2024-26 (33 meses) las cifras se expresan por año; 2025 y 2026 YTD son acumuladas en el periodo.</p>
+<p><span class='lbl'>Peers / promedio de peers:</span> AVDV, ISCF, DISV y DFIS, promedio simple de los cuatro.</p>
+<p><span class='lbl'>Sectores y regiones:</span> se calculan con los holdings de inicio de cada mes x el retorno mensual de cada acción en USD (antes de costos de trading, fees y cash). Por eso los sectores no suman exactamente la brecha real del fondo.</p>
+<p><span class='lbl'>Colores:</span> azul marino = AZTD, dorado = promedio de peers, rojo = restó vs peers, azul = sumó. Cada sector tiene su propio color (Materials coral, Financials verde, Consumer Discretionary morado, Energy azul, Utilities turquesa, Consumer Staples mostaza), igual en encabezados y burbujas.</p></div>
+<h3>Bueno saberlo (no está en el deck)</h3>
+<p>De los -7.4pp por año, unos -3.6pp vienen de las acciones que tuvo AZTD (allocation {pp(L['alloc_P']['tot'])} + selection {pp(L['sel_P']['tot'])}) y unos -3.9pp de la diferencia entre el retorno real del fondo y el de sus holdings (rebalanceo, ejecución, fees y cash). En 2025 esa diferencia fue casi cero; en 2024 y 2026 no. Con Lawson corregido (RIC 2651.T^G24) el retorno holdings-based de AZTD 2024-26 pasó de 18.4% a 18.9% anualizado.</p>""")
+parts.append("<h2 class='pb'>Parte 1: el deck, slide por slide</h2>")
+TRIV=[s for s in SL if s['lee']=="-"]
+parts.append("<div class='slide'><h3>Slides de estructura: "+", ".join(str(s['n']) for s in TRIV)+"</h3><p>Portada, disclaimer, separadores de sección (uno por periodo: Overview, 2024-26, 2025, 2026 YTD y Peer Names to Watch) y cierre. Sirven para ordenar el deck por año.</p><div class='grid'>")
+for s in TRIV:
+    img=os.path.join(IMG,f"s{s['n']:02d}.png").replace("\\","/")
+    parts.append(f"<div><img src='file:///{img}'><div class='cap'>Slide {s['n']}: {esc(s['title'])}</div></div>")
+parts.append("</div></div>")
+for s in [x for x in SL if x['lee']!="-"]:
+    img=os.path.join(IMG,f"s{s['n']:02d}.png").replace("\\","/")
+    parts.append(f"<div class='slide'><h3>Slide {s['n']}: {esc(s['title'])}</h3><img src='file:///{img}'>")
+    parts.append(f"<p><span class='lbl'>Qué ves:</span> {esc(s['ves'])}</p>")
+    if s['lee']!="-": parts.append(f"<p><span class='lbl'>Cómo se lee:</span> {esc(s['lee'])}</p>")
+    if s['imp']!="-": parts.append(f"<p><span class='lbl'>Qué implica en este caso:</span> {esc(s['imp'])}</p>")
+    parts.append("</div>")
+parts.append("<h2 class='pb'>Parte 2: el Excel (v5), pestaña por pestaña</h2><p>Las pestañas con '>' son separadores de sección (en blanco). Las de 'Data' alimentan todo lo demás.</p><table><tr><th style='width:28%'>Pestaña</th><th>Qué contiene / para qué sirve</th></tr>")
+for t,d in TABS: parts.append(f"<tr><td><b>{esc(t)}</b></td><td>{esc(d)}</td></tr>")
+parts.append("</table><div class='box'><p><span class='lbl'>Importante al abrir el Excel:</span> inicia sesión en Workspace antes de abrir el archivo; si no, las fórmulas TR muestran #NAME? y se pierden los datos descargados. Un refresh completo tarda ~30 minutos. Lawson se actualiza sola con su propia fila (Attr Returns, fila 5425), sin refrescar lo demás.</p></div></body></html>")
+open(OUT_HTML,"w",encoding="utf-8").write("\n".join(parts))
+edge=r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+r=subprocess.run([edge,"--headless","--disable-gpu","--no-pdf-header-footer","--allow-file-access-from-files",f"--print-to-pdf={OUT_PDF}","file:///"+OUT_HTML.replace("\\","/")],capture_output=True,text=True,timeout=180)
+print(r.returncode, os.path.exists(OUT_PDF) and os.path.getsize(OUT_PDF))

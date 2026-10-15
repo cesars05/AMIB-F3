@@ -1,0 +1,58 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$as=$wb.Worksheets.Item("Assumptions"); $d=$wb.Worksheets.Item("DCF")
+$er=$wb.Worksheets.Item("Expected Returns"); $cm=$wb.Worksheets.Item("Consolidated Model")
+if([string]$as.Range("J74").Text -ne ""){ throw "ABORTO: el modulo esta encendido" }
+if([string]$as.Range("H75").Text -ne "Last Full Year of Ownership"){ throw "ABORTO: H75 no tiene la etiqueta esperada" }
+
+# El TV del DCF se construye con LOOKUP del ultimo ano no-cero. Si la venta cae en FY2031,
+# el ultimo ano (FY2032) ES el ano de la venta y el TV hereda la liberacion de capital de
+# trabajo de una sola vez. Se necesita al menos un ano limpio post-venta: FY2027..FY2030.
+$dv=$as.Range("J75").Validation
+try{ $dv.Delete() }catch{}
+$dv.Add(1,1,1,"2027","2030")
+$dv.IgnoreBlank=$true
+$dv.InputTitle="Last Full Year of Ownership"
+$dv.InputMessage="FY2027 to FY2030. The forecast needs at least one clean year after the sale for the terminal value to be meaningful."
+$dv.ShowInput=$true
+$dv.ErrorTitle="Out of range"
+$dv.ErrorMessage="Use FY2027-FY2030. Selling in FY2031 leaves no clean post-disposal year, and the DCF terminal value would inherit the one-off working capital release."
+$dv.ShowError=$true
+$wb.Save()
+Write-Output "J75 restringido a FY2027-FY2030 con mensaje de error explicativo"
+
+# verificacion: recorrer los anos permitidos y confirmar que el DCF se comporta
+$xl.Calculation=-4135
+$as.Range("J74").Value2="Water Management"
+$as.Range("J76").Value2=[double]7.9
+Write-Output ""
+Write-Output "  ano venta        DCF       IRR      MoIC    EBITDA salida   precio salida"
+foreach($y in 2027,2028,2029,2030){
+  $as.Range("J75").Value2=[double]$y
+  $xl.Calculation=-4105; $xl.CalculateFullRebuild()
+  Write-Output ("  FY"+[string]$y+"      "+([string]$d.Range("E41").Text).PadLeft(9)+([string]$er.Range("C54").Text).PadLeft(10)+([string]$er.Range("C53").Text).PadLeft(10)+([string]$er.Range("C31").Text).PadLeft(14)+([string]$er.Range("C36").Text).PadLeft(14))
+  $xl.Calculation=-4135
+}
+$as.Range("J75").Value2=[double]2029
+$as.Range("J74").ClearContents()
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$wb.Save()
+Write-Output ""
+Write-Output ("ESTADO FINAL: J74='"+[string]$as.Range("J74").Text+"' (apagado)   DCF "+[string]$d.Range("E41").Text+"   IRR "+[string]$er.Range("C54").Text)
+Write-Output ("  checks: balance FY2032 "+[string]$cm.Range("Q168").Text+"   caja FY2032 "+[string]$cm.Range("Q215").Text)
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary","Expected Returns"){
+  $s=$wb.Worksheets.Item($nm); $e=0
+  try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error: "+$tot)

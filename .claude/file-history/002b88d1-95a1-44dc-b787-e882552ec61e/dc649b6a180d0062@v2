@@ -1,0 +1,38 @@
+<section id="risks" data-transition="fade" style="background:#12131A; color:#F5F6FA; font-family:'IBM Plex Sans', Arial, sans-serif; padding:128px 128px 160px; display:flex; flex-direction:column; gap:44px">
+  <div style="display:flex; flex-direction:column; gap:16px">
+    <p style="font-family:'Space Grotesk', Arial, sans-serif; font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#F0B429">Riesgos y retos</p>
+    <h2 style="font-family:'Space Grotesk', Arial, sans-serif; font-size:60px; font-weight:700; line-height:1.1">Lo que aún falta resolver</h2>
+  </div>
+  <div style="display:flex; flex-direction:row; gap:48px; flex:1">
+    <div style="flex:1; display:flex; flex-direction:column; gap:28px">
+      <div style="display:flex; flex-direction:row; gap:20px; align-items:flex-start">
+        <x-icon name="Warning" style="color:#F0B429; width:36px; height:36px"></x-icon>
+        <p style="font-size:27px; line-height:1.4; color:#F5F6FA"><b>Usuarios activos bajos:</b> <span style="color:#A6ABBD">métrica muy disputada (caso "38 usuarios diarios", 2022).</span></p>
+      </div>
+      <div style="display:flex; flex-direction:row; gap:20px; align-items:flex-start">
+        <x-icon name="Warning" style="color:#F0B429; width:36px; height:36px"></x-icon>
+        <p style="font-size:27px; line-height:1.4; color:#F5F6FA"><b>UX/técnico:</b> <span style="color:#A6ABBD">rendimiento gráfico limitado e interfaz poco pulida.</span></p>
+      </div>
+      <div style="display:flex; flex-direction:row; gap:20px; align-items:flex-start">
+        <x-icon name="Warning" style="color:#F0B429; width:36px; height:36px"></x-icon>
+        <p style="font-size:27px; line-height:1.4; color:#F5F6FA"><b>Caída del token:</b> <span style="color:#A6ABBD">MANA cae más de 90% desde su máximo histórico.</span></p>
+      </div>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; gap:28px">
+      <div style="display:flex; flex-direction:row; gap:20px; align-items:flex-start">
+        <x-icon name="Warning" style="color:#F0B429; width:36px; height:36px"></x-icon>
+        <p style="font-size:27px; line-height:1.4; color:#F5F6FA"><b>Regulación:</b> <span style="color:#A6ABBD">incertidumbre legal sobre cripto/NFTs según el país.</span></p>
+      </div>
+      <div style="display:flex; flex-direction:row; gap:20px; align-items:flex-start">
+        <x-icon name="Warning" style="color:#F0B429; width:36px; height:36px"></x-icon>
+        <p style="font-size:27px; line-height:1.4; color:#F5F6FA"><b>Gobernanza lenta:</b> <span style="color:#A6ABBD">decidir vía DAO toma más tiempo que en una empresa central.</span></p>
+      </div>
+      <div style="display:flex; flex-direction:row; gap:20px; align-items:flex-start">
+        <x-icon name="Warning" style="color:#F0B429; width:36px; height:36px"></x-icon>
+        <p style="font-size:27px; line-height:1.4; color:#F5F6FA"><b>Adopción:</b> <span style="color:#A6ABBD">la utilidad más allá de la especulación aún no está probada.</span></p>
+      </div>
+    </div>
+  </div>
+  <p style="position:absolute; left:128px; bottom:64px; font-size:24px; color:#8A90A6">Decentraland · Equipo 10</p>
+  <p style="position:absolute; right:128px; bottom:64px; font-size:24px; color:#8A90A6">09</p>
+</section>

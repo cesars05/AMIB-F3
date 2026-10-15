@@ -1,0 +1,431 @@
+import openpyxl
+from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+from openpyxl.utils import get_column_letter
+
+wb = openpyxl.Workbook()
+
+FONT_NAME = "Arial"
+BLUE = Font(name=FONT_NAME, color="0000FF")
+BLUE_BOLD = Font(name=FONT_NAME, color="0000FF", bold=True)
+BLACK = Font(name=FONT_NAME, color="000000")
+BLACK_BOLD = Font(name=FONT_NAME, color="000000", bold=True)
+TITLE = Font(name=FONT_NAME, color="FFFFFF", bold=True, size=14)
+HEADER = Font(name=FONT_NAME, color="FFFFFF", bold=True, size=11)
+SECTION = Font(name=FONT_NAME, color="000000", bold=True, size=12)
+ITALIC_GRAY = Font(name=FONT_NAME, italic=True, color="595959", size=9)
+
+FILL_TITLE = PatternFill("solid", fgColor="1F4E78")
+FILL_HEADER = PatternFill("solid", fgColor="2E75B6")
+FILL_INPUT_LABEL = PatternFill("solid", fgColor="D9E1F2")
+FILL_TODO = PatternFill("solid", fgColor="FFFF00")
+FILL_SECTION = PatternFill("solid", fgColor="BDD7EE")
+
+THIN = Side(style="thin", color="BFBFBF")
+BORDER = Border(left=THIN, right=THIN, top=THIN, bottom=THIN)
+
+CURRENCY = '$#,##0;($#,##0);"-"'
+PERCENT = '0.00%'
+MULT = '0.00"x"'
+
+def set_col_widths(ws, widths):
+    for i, w in enumerate(widths, start=1):
+        ws.column_dimensions[get_column_letter(i)].width = w
+
+def title_bar(ws, text, span, row=1):
+    ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=span)
+    c = ws.cell(row=row, column=1, value=text)
+    c.font = TITLE
+    c.fill = FILL_TITLE
+    c.alignment = Alignment(horizontal="left", vertical="center", indent=1)
+    ws.row_dimensions[row].height = 26
+
+def section(ws, row, col, text, span=1):
+    ws.merge_cells(start_row=row, start_column=col, end_row=row, end_column=col+span-1)
+    c = ws.cell(row=row, column=col, value=text)
+    c.font = SECTION
+    c.fill = FILL_SECTION
+    c.alignment = Alignment(horizontal="left", vertical="center", indent=1)
+
+def label(ws, row, col, text, bold=False):
+    c = ws.cell(row=row, column=col, value=text)
+    c.font = BLACK_BOLD if bold else BLACK
+    return c
+
+def input_cell(ws, row, col, value, fmt=None):
+    c = ws.cell(row=row, column=col, value=value)
+    c.font = BLUE_BOLD
+    c.fill = FILL_INPUT_LABEL
+    c.border = BORDER
+    if fmt:
+        c.number_format = fmt
+    c.alignment = Alignment(horizontal="center")
+    return c
+
+def todo_cell(ws, row, col, fmt=None, note=None):
+    c = ws.cell(row=row, column=col, value=None)
+    c.fill = FILL_TODO
+    c.border = BORDER
+    c.font = BLACK
+    if fmt:
+        c.number_format = fmt
+    c.alignment = Alignment(horizontal="center")
+    return c
+
+# ============================================================
+# SHEET 0 - INSTRUCCIONES
+# ============================================================
+ws = wb.active
+ws.title = "Instrucciones"
+set_col_widths(ws, [3, 90, 3])
+title_bar(ws, "CASO PRACTICO — Inversion y Valuacion en Bienes Raices (ITESM)", 3)
+
+r = 3
+ws.cell(row=r, column=2, value="Este archivo tiene 3 casos independientes para practicar lo que vimos en las Fases 1 a 5:").font = BLACK_BOLD
+r += 2
+items = [
+    ("Caso A — GIM (pestana 'Caso A - GIM')",
+     "Enfoque de Ingresos simple: calcular EGI y GIM, y comparar contra un comparable de mercado."),
+    ("Caso B — NOI, Cap Rate, Proforma y TIR (pestana 'Caso B - NOI CapRate TIR')",
+     "El caso principal: proyectar 6 anos de renta y gastos, calcular NOI, valuar por Cap Rate (entrada y salida), "
+     "armar el flujo de efectivo (DCF) y calcular la TIR Unlevered. Incluye una seccion BONUS de apalancamiento "
+     "(Cash on Cash y TIR Levered) que es un adelanto de la Fase 6 — resuelvela solo si quieres el reto extra."),
+    ("Caso C — Cost Approach (pestana 'Caso C - Cost Approach')",
+     "Calcular el valor por el enfoque de costo y compararlo contra los valores ya obtenidos por Comparables e "
+     "Ingresos para la misma propiedad — ejercicio de reconciliacion de las 3 metodologias."),
+]
+for h, body in items:
+    ws.cell(row=r, column=2, value=h).font = BLACK_BOLD
+    r += 1
+    ws.cell(row=r, column=2, value=body).font = BLACK
+    ws.cell(row=r, column=2).alignment = Alignment(wrap_text=True)
+    ws.row_dimensions[r].height = 30
+    r += 2
+
+r += 1
+section(ws, r, 2, "Como leer las celdas", span=1)
+r += 2
+legend = [
+    (FILL_INPUT_LABEL, BLUE_BOLD, "Azul con fondo claro = dato DADO del caso (no lo cambies, es un supuesto o input)."),
+    (FILL_TODO, BLACK, "Amarillo = celda que TU debes llenar (con formula o numero, segun corresponda)."),
+    (None, BLACK, "Texto normal en negro = etiquetas o formulas que ya vienen resueltas (por ejemplo, las proyecciones de renta/gastos, que son datos derivados de los supuestos, no parte del ejercicio)."),
+]
+for fill, font, text in legend:
+    c = ws.cell(row=r, column=2, value="  " + text)
+    c.font = font
+    if fill:
+        ws.cell(row=r, column=2).fill = fill
+    r += 1
+
+r += 2
+ws.cell(row=r, column=2, value="Tip: usa la funcion =TIR() de Excel para las preguntas de TIR (selecciona el rango completo de flujos, desde el ano 0).").font = Font(name=FONT_NAME, italic=True, color="595959")
+r += 1
+ws.cell(row=r, column=2, value="Cuando termines, mandame tus resultados en el chat y los revisamos juntos.").font = Font(name=FONT_NAME, italic=True, color="595959")
+
+# ============================================================
+# SHEET 1 - CASO A - GIM
+# ============================================================
+ws = wb.create_sheet("Caso A - GIM")
+set_col_widths(ws, [3, 40, 20, 20, 3])
+title_bar(ws, "CASO A — Gross Income Multiplier (GIM)", 4)
+
+r = 3
+ws.merge_cells(start_row=r, start_column=2, end_row=r, end_column=4)
+ws.cell(row=r, column=2, value=(
+    "Plaza retail 'Los Encinos' (strip center) se vendio hace 3 meses. Quieres saber si el precio de venta fue "
+    "caro o barato frente al mercado, usando el multiplo GIM."
+)).font = BLACK
+ws.cell(row=r, column=2).alignment = Alignment(wrap_text=True)
+ws.row_dimensions[r].height = 32
+
+r += 2
+section(ws, r, 2, "Datos del caso", span=3)
+r += 1
+rows_a = [
+    ("Ingreso Bruto Potencial (PGI) anual, 100% ocupacion", 480000, CURRENCY),
+    ("Vacancia estimada del submercado", 0.10, PERCENT),
+    ("Precio de venta observado", 3800000, CURRENCY),
+    ("GIM de un comparable de referencia (dado por el corredor)", 7.5, MULT),
+]
+data_a_rows = {}
+for name, val, fmt in rows_a:
+    label(ws, r, 2, name)
+    input_cell(ws, r, 3, val, fmt)
+    data_a_rows[name] = r
+    r += 1
+
+r += 1
+section(ws, r, 2, "Lo que tienes que calcular", span=3)
+r += 1
+label(ws, r, 2, "Effective Gross Income (EGI)")
+todo_cell(ws, r, 3, CURRENCY)
+row_egi = r
+r += 1
+label(ws, r, 2, "GIM de la propiedad (usando EGI)")
+todo_cell(ws, r, 3, MULT)
+row_gim = r
+r += 1
+label(ws, r, 2, "Vs. el GIM comparable (7.5x): ¿la propiedad se vendio cara o barata? ¿por que?")
+todo_cell(ws, r, 3)
+ws.merge_cells(start_row=r, start_column=3, end_row=r, end_column=4)
+r += 1
+
+r += 1
+ws.cell(row=r, column=2, value="Nota: PGI, Vacancia y Precio son datos dados; EGI y GIM debes calcularlos tu con formula.").font = ITALIC_GRAY
+
+# ============================================================
+# SHEET 2 - CASO B - NOI, CAP RATE, PROFORMA, TIR
+# ============================================================
+ws = wb.create_sheet("Caso B - NOI CapRate TIR")
+set_col_widths(ws, [3, 34] + [14]*7 + [3])
+title_bar(ws, "CASO B — Nave Industrial 'Nexus Industrial Park', Apodaca NL", 9)
+
+r = 3
+ws.merge_cells(start_row=r, start_column=2, end_row=r, end_column=9)
+ws.cell(row=r, column=2, value=(
+    "Una nave industrial de 12,000 m2, ocupada al 100% por un solo inquilino de logistica, esta en venta. "
+    "Quieres decidir si comprarla, proyectando 5 anos de operacion (mas un ano 6 de referencia para valuar la salida) "
+    "y calculando el retorno esperado (TIR)."
+)).font = BLACK
+ws.cell(row=r, column=2).alignment = Alignment(wrap_text=True)
+ws.row_dimensions[r].height = 40
+
+r += 2
+section(ws, r, 2, "Datos del caso", span=8)
+r += 1
+inputs_b = [
+    ("Area rentable (m2)", 12000, '#,##0'),
+    ("Renta mensual actual (100% ocupada)", 18500, CURRENCY),
+    ("Incremento contractual de renta (anual)", 0.03, PERCENT),
+    ("Gastos operativos - ano 1 (anual)", 48000, CURRENCY),
+    ("Incremento de gastos operativos (anual)", 0.02, PERCENT),
+    ("Going-In Cap Rate (mercado, hoy)", 0.08, PERCENT),
+    ("Exit Cap Rate (asumido a la salida)", 0.075, PERCENT),
+    ("Holding Period (anos)", 5, '0'),
+    ("Costos de adquisicion (legal + DD), % sobre precio de compra", 0.025, PERCENT),
+    ("Comision de venta (broker), % sobre valor de venta", 0.04, PERCENT),
+]
+input_b_row = {}
+for name, val, fmt in inputs_b:
+    label(ws, r, 2, name)
+    input_cell(ws, r, 3, val, fmt)
+    input_b_row[name] = r
+    r += 1
+
+RENTA_MENSUAL_ROW = input_b_row["Renta mensual actual (100% ocupada)"]
+INC_RENTA_ROW = input_b_row["Incremento contractual de renta (anual)"]
+GASTO_Y1_ROW = input_b_row["Gastos operativos - ano 1 (anual)"]
+INC_GASTO_ROW = input_b_row["Incremento de gastos operativos (anual)"]
+CAP_IN_ROW = input_b_row["Going-In Cap Rate (mercado, hoy)"]
+CAP_EXIT_ROW = input_b_row["Exit Cap Rate (asumido a la salida)"]
+HP_ROW = input_b_row["Holding Period (anos)"]
+COSTOS_ADQ_ROW = input_b_row["Costos de adquisicion (legal + DD), % sobre precio de compra"]
+COMISION_ROW = input_b_row["Comision de venta (broker), % sobre valor de venta"]
+
+r += 1
+section(ws, r, 2, "Proyeccion de Renta y Gastos (dato derivado — ya viene resuelto)", span=8)
+r += 1
+year_row = r
+label(ws, r, 2, "Ano", bold=True)
+for i, col in enumerate(range(3, 10)):
+    c = ws.cell(row=r, column=col, value=i)
+    c.font = HEADER
+    c.fill = FILL_HEADER
+    c.alignment = Alignment(horizontal="center")
+ws.cell(row=r, column=2).fill = FILL_HEADER
+ws.cell(row=r, column=2).font = HEADER
+r += 1
+
+renta_row = r
+label(ws, r, 2, "Renta Anual", bold=True)
+ws.cell(row=r, column=3).value = None  # Year 0 has no rent
+ws.cell(row=r, column=3).border = BORDER
+for i, col in enumerate(range(4, 10), start=1):
+    if i == 1:
+        f = f"=$C${RENTA_MENSUAL_ROW}*12"
+    else:
+        f = f"={get_column_letter(col-1)}{r}*(1+$C${INC_RENTA_ROW})"
+    c = ws.cell(row=r, column=col, value=f)
+    c.font = BLACK
+    c.number_format = CURRENCY
+    c.border = BORDER
+r += 1
+
+gastos_row = r
+label(ws, r, 2, "Gastos Operativos", bold=True)
+ws.cell(row=r, column=3).value = None
+ws.cell(row=r, column=3).border = BORDER
+for i, col in enumerate(range(4, 10), start=1):
+    if i == 1:
+        f = f"=$C${GASTO_Y1_ROW}"
+    else:
+        f = f"={get_column_letter(col-1)}{r}*(1+$C${INC_GASTO_ROW})"
+    c = ws.cell(row=r, column=col, value=f)
+    c.font = BLACK
+    c.number_format = CURRENCY
+    c.border = BORDER
+r += 1
+
+r += 1
+section(ws, r, 2, "Lo que tienes que calcular: NOI y valuacion", span=8)
+r += 1
+
+noi_row = r
+label(ws, r, 2, "NOI (Renta - Gastos)", bold=True)
+ws.cell(row=r, column=3).fill = FILL_TODO
+ws.cell(row=r, column=3).border = BORDER
+for col in range(4, 10):
+    todo_cell(ws, r, col, CURRENCY)
+r += 2
+
+label(ws, r, 2, "Precio de Compra (Going-In) = NOI ano 1 / Going-In Cap Rate")
+todo_cell(ws, r, 3, CURRENCY)
+precio_compra_row = r
+r += 1
+label(ws, r, 2, "Costos de Adquisicion = Precio de Compra x %")
+todo_cell(ws, r, 3, CURRENCY)
+r += 1
+label(ws, r, 2, "Inversion Total (Ano 0) = Precio de Compra + Costos de Adquisicion")
+todo_cell(ws, r, 3, CURRENCY)
+inversion_total_row = r
+r += 2
+
+label(ws, r, 2, "Valor de Venta (Ano 5) = NOI ano 6 / Exit Cap Rate")
+todo_cell(ws, r, 3, CURRENCY)
+valor_venta_row = r
+r += 1
+label(ws, r, 2, "Comision de Venta = Valor de Venta x %")
+todo_cell(ws, r, 3, CURRENCY)
+r += 1
+label(ws, r, 2, "Venta Neta (Ano 5) = Valor de Venta - Comision")
+todo_cell(ws, r, 3, CURRENCY)
+venta_neta_row = r
+r += 2
+
+section(ws, r, 2, "Flujo de Efectivo Unlevered y TIR", span=8)
+r += 1
+label(ws, r, 2, "Ano", bold=True)
+for i, col in enumerate(range(3, 9)):
+    c = ws.cell(row=r, column=col, value=i)
+    c.font = HEADER
+    c.fill = FILL_HEADER
+    c.alignment = Alignment(horizontal="center")
+ws.cell(row=r, column=2).fill = FILL_HEADER
+ws.cell(row=r, column=2).font = HEADER
+r += 1
+label(ws, r, 2, "Flujo Unlevered (Ano 0 a Ano 5)", bold=True)
+for col in range(3, 9):
+    todo_cell(ws, r, col, CURRENCY)
+flujo_row = r
+r += 2
+
+label(ws, r, 2, "TIR Unlevered (usa =TIR() sobre el rango de flujos)")
+todo_cell(ws, r, 3, PERCENT)
+r += 2
+
+ws.cell(row=r, column=2, value="Pista: la celda amarilla de 'Flujo Unlevered' en Ano 0 debe ser negativa (es la inversion); en Anos 1-4 es el NOI del ano; en Ano 5 es NOI + Venta Neta.").font = ITALIC_GRAY
+r += 3
+
+# BONUS section - leverage
+section(ws, r, 2, "BONUS (adelanto de Fase 6) — Apalancamiento, Cash on Cash y TIR Levered", span=8)
+r += 1
+ws.merge_cells(start_row=r, start_column=2, end_row=r, end_column=8)
+ws.cell(row=r, column=2, value="Opcional. Resuelvelo si quieres ir mas alla de lo visto en clase hasta ahora.").font = ITALIC_GRAY
+r += 2
+
+label(ws, r, 2, "LTV (Loan to Value)")
+input_cell(ws, r, 3, 0.60, PERCENT)
+ltv_row = r
+r += 1
+label(ws, r, 2, "Tasa de interes anual (interest-only, sin amortizacion)")
+input_cell(ws, r, 3, 0.085, PERCENT)
+tasa_row = r
+r += 2
+
+label(ws, r, 2, "Monto de Deuda = Precio de Compra x LTV")
+todo_cell(ws, r, 3, CURRENCY)
+r += 1
+label(ws, r, 2, "Interes Anual = Monto de Deuda x Tasa")
+todo_cell(ws, r, 3, CURRENCY)
+r += 1
+label(ws, r, 2, "Equity Investment = Inversion Total - Monto de Deuda")
+todo_cell(ws, r, 3, CURRENCY)
+r += 2
+
+label(ws, r, 2, "Ano", bold=True)
+for i, col in enumerate(range(3, 9)):
+    c = ws.cell(row=r, column=col, value=i)
+    c.font = HEADER
+    c.fill = FILL_HEADER
+    c.alignment = Alignment(horizontal="center")
+ws.cell(row=r, column=2).fill = FILL_HEADER
+ws.cell(row=r, column=2).font = HEADER
+r += 1
+label(ws, r, 2, "Flujo Levered (Cash Flow to Equity)", bold=True)
+for col in range(3, 9):
+    todo_cell(ws, r, col, CURRENCY)
+r += 2
+
+label(ws, r, 2, "Cash on Cash Ano 1 = (NOI1 - Interes) / Equity Investment")
+todo_cell(ws, r, 3, PERCENT)
+r += 1
+label(ws, r, 2, "TIR Levered (usa =TIR() sobre el flujo levered)")
+todo_cell(ws, r, 3, PERCENT)
+r += 1
+label(ws, r, 2, "¿Hay palanca positiva? (TIR Unlevered vs. Tasa de interes)")
+todo_cell(ws, r, 3)
+ws.merge_cells(start_row=r, start_column=3, end_row=r, end_column=5)
+
+# ============================================================
+# SHEET 3 - CASO C - COST APPROACH
+# ============================================================
+ws = wb.create_sheet("Caso C - Cost Approach")
+set_col_widths(ws, [3, 46, 20, 3])
+title_bar(ws, "CASO C — Reconciliacion de las 3 Metodologias", 4)
+
+r = 3
+ws.merge_cells(start_row=r, start_column=2, end_row=r, end_column=4)
+ws.cell(row=r, column=2, value=(
+    "Una bodega en Escobedo, NL ya fue valuada por Comparables y por Ingresos. Te falta calcular el valor por "
+    "Costo de Reemplazo, y despues decidir que valor final recomendarias."
+)).font = BLACK
+ws.cell(row=r, column=2).alignment = Alignment(wrap_text=True)
+ws.row_dimensions[r].height = 32
+
+r += 2
+section(ws, r, 2, "Datos para el Cost Approach", span=2)
+r += 1
+rows_c = [
+    ("Costo de Reemplazo Nuevo (terreno + construccion)", 9200000, CURRENCY),
+    ("Deterioro Fisico estimado", 650000, CURRENCY),
+    ("Obsolescencia Funcional estimada", 300000, CURRENCY),
+    ("Obsolescencia Externa estimada", 0, CURRENCY),
+]
+for name, val, fmt in rows_c:
+    label(ws, r, 2, name)
+    input_cell(ws, r, 3, val, fmt)
+    r += 1
+
+r += 1
+label(ws, r, 2, "Valor por Cost Approach = Costo de Reemplazo - (Deterioro + Obs. Funcional + Obs. Externa)")
+todo_cell(ws, r, 3, CURRENCY)
+ws.row_dimensions[r].height = 28
+ws.cell(row=r, column=2).alignment = Alignment(wrap_text=True)
+r += 2
+
+section(ws, r, 2, "Valores ya obtenidos por las otras 2 metodologias (dato dado)", span=2)
+r += 1
+label(ws, r, 2, "Valor por Sales/Comparables Approach")
+input_cell(ws, r, 3, 8100000, CURRENCY)
+r += 1
+label(ws, r, 2, "Valor por Income Approach")
+input_cell(ws, r, 3, 8350000, CURRENCY)
+r += 2
+
+label(ws, r, 2, "Reconciliacion: ¿que valor final recomendarias para esta bodega y por que? (usa lo que vimos de cuando conviene mas cada metodologia)")
+ws.row_dimensions[r].height = 30
+ws.cell(row=r, column=2).alignment = Alignment(wrap_text=True)
+todo_cell(ws, r, 3)
+ws.merge_cells(start_row=r, start_column=3, end_row=r, end_column=4)
+
+wb.save(r"C:\Users\cesar\OneDrive\Desktop\AMIB\Caso_Practico_Bienes_Raices.xlsx")
+print("saved")

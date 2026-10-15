@@ -1,0 +1,175 @@
+$ErrorActionPreference="Stop"
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1000
+}
+if($wb -eq $null){ throw "ABORTO: libro no encontrado" }
+$er=$wb.Worksheets.Item("Expected Returns")
+$cm=$wb.Worksheets.Item("Consolidated Model")
+$d =$wb.Worksheets.Item("DCF")
+
+# ---------- GUARDAS ----------
+if([string]$er.Range("B11").Text -ne "Current Stock Price"){ throw "ABORTO: B11 no es 'Current Stock Price'" }
+if([string]$er.Range("B21").Text -ne "Exit Year"){ throw "ABORTO: B21 no es 'Exit Year'" }
+if([string]$cm.Range("L378").Formula -eq ""){ throw "ABORTO: r378 no existe, corre fix1 primero" }
+if([string]$cm.Cells.Item(253,2).Text+[string]$cm.Cells.Item(253,3).Text+[string]$cm.Cells.Item(253,4).Text -notlike "*Debt*"){
+  Write-Output ("AVISO: etiqueta de r253 = '"+[string]$cm.Cells.Item(253,3).Text+"'") }
+if([string]$d.Range("C8").Text -ne "Jun 2027"){ throw "ABORTO: DCF C8 no es Jun 2027" }
+Write-Output "guardas OK"
+
+$FMT_N='#,##0;(#,##0);"-"'
+$FMT_P='0.0;(0.0);"-"'
+$FMT_X='0.0"x"'
+$FMT_PC='0.0%;(0.0%);"-"'
+$BLUE=16711680      # entradas duras
+$GREEN=5287936      # vinculos a otras hojas
+
+$xl.Calculation=-4135
+$xl.ScreenUpdating=$false
+$er.Range("B9:N54").Clear() | Out-Null
+
+# ============ encabezados de seccion: copiar el estilo del DCF ============
+foreach($r in 9,23,30,40,50){
+  $d.Range("B29:I29").Copy() | Out-Null
+  $er.Range("B"+$r+":I"+$r).PasteSpecial(-4122) | Out-Null
+}
+$xl.CutCopyMode=0
+$er.Range("B9").Value2="Entry Assumptions"
+$er.Range("B23").Value2="Entry Valuation"
+$er.Range("B30").Value2="Exit Valuation"
+$er.Range("B40").Value2="Cash Flows to Investor (GBP 000s)"
+$er.Range("B50").Value2="Returns"
+
+# ============ 1) supuestos de entrada ============
+$er.Range("B11").Value2="Current Stock Price (p)"
+$er.Range("C11").Formula="=+DCF!E40"
+$er.Range("B12").Value2="Shares Outstanding (000s)"
+$er.Range("C12").Formula="=+DCF!E39"
+$er.Range("B13").Value2="Market Capitalisation"
+$er.Range("C13").Formula="=+C11*C12/100"
+$er.Range("B15").Value2="Entry Stock Price (p)"
+$er.Range("C15").Value2=235
+$er.Range("B16").Value2="Implied Premium / (Discount) to Market"
+$er.Range("C16").Formula="=+IFERROR(C15/C11-1,0)"
+$er.Range("B17").Value2="% of the Company Acquired"
+$er.Range("C17").Value2=0.05
+$er.Range("B18").Value2="Total Invested"
+$er.Range("C18").Formula="=+C15*C12/100*C17"
+$er.Range("B19").Value2="Total Invested (USD 000s)"
+$er.Range("C19").Formula="=+C18*C20"
+$er.Range("B20").Value2="GBP / USD Exchange Rate"
+$er.Range("C20").Value2=1.34
+$er.Range("B21").Value2="Exit Year (FY)"
+$er.Range("C21").Value2=2032
+
+# ============ 2) valuacion de entrada ============
+$er.Range("B24").Value2="Net Debt at Entry (FY2026)"
+$er.Range("C24").Formula="=+'Consolidated Model'!K253-'Consolidated Model'!K126"
+$er.Range("B25").Value2="Enterprise Value at Entry"
+$er.Range("C25").Formula="=+C15*C12/100+C24"
+$er.Range("B26").Value2="FY2026 Adj. EBITDA"
+$er.Range("C26").Formula="=+'Consolidated Model'!K53"
+$er.Range("B27").Value2="Entry EV / EBITDA"
+$er.Range("C27").Formula="=+IFERROR(C25/C26,0)"
+$er.Range("B28").Value2="Entry Dividend Yield (FY2026 DPS)"
+$er.Range("C28").Formula="=+IFERROR('Consolidated Model'!K43/C15,0)"
+
+# ============ 3) valuacion de salida ============
+$er.Range("B31").Value2="Exit Year Adj. EBITDA (post-divestiture)"
+$er.Range("C31").Formula='=+IFERROR(INDEX(''Consolidated Model''!$L$53:$Q$53,MATCH($C$21,$D$42:$I$42,0)),0)'
+$er.Range("B32").Value2="Exit EV / EBITDA (held at entry multiple)"
+$er.Range("C32").Formula="=+C27"
+$er.Range("B33").Value2="Implied Exit Enterprise Value"
+$er.Range("C33").Formula="=+C31*C32"
+$er.Range("B34").Value2="(-) Net Debt at Exit"
+$er.Range("C34").Formula='=+IFERROR(INDEX(''Consolidated Model''!$L$253:$Q$253,MATCH($C$21,$D$42:$I$42,0))-INDEX(''Consolidated Model''!$L$126:$Q$126,MATCH($C$21,$D$42:$I$42,0)),0)'
+$er.Range("B35").Value2="Exit Equity Value"
+$er.Range("C35").Formula="=+C33-C34"
+$er.Range("B36").Value2="Exit Price per Share (p)"
+$er.Range("C36").Formula="=+IFERROR(C35/C12*100,0)"
+$er.Range("B37").Value2="Investor's Share of Exit Equity"
+$er.Range("C37").Formula="=+C35*C17"
+
+# ============ 4) flujos al inversionista ============
+$L=@{4="C";5="D";6="E";7="F";8="G";9="H";10="I"}
+$CMC=@{5="L";6="M";7="N";8="O";9="P";10="Q"}
+$DC =@{5="C";6="D";7="E";8="F";9="G";10="H"}
+$er.Range("B41").Value2="Period End Date"
+$er.Range("C41").Formula="=+`$B`$4"
+$er.Range("B42").Value2="Fiscal Year"
+$er.Range("C42").Value2="Entry"
+$er.Range("B43").Value2="Entry Investment"
+$er.Range("C43").Formula="=-C18"
+$er.Range("B44").Value2="Ordinary Dividends"
+$er.Range("B45").Value2="Extraordinary Dividend (excess cash sweep)"
+$er.Range("B46").Value2="Special Dividend from Divestiture"
+$er.Range("B47").Value2="Exit Proceeds"
+$er.Range("B48").Value2="Total Cash Flow to Investor"
+$er.Range("C44").Value2=0; $er.Range("C45").Value2=0; $er.Range("C46").Value2=0; $er.Range("C47").Value2=0
+foreach($c in 5,6,7,8,9,10){
+  $x=$L[$c]; $k=$CMC[$c]; $dd=$DC[$c]
+  $er.Range($x+"41").Formula="=+DCF!"+$dd+"8"
+  $er.Range($x+"42").Formula="=+VALUE(RIGHT('Consolidated Model'!"+$k+"9,4))"
+  $er.Range($x+"43").Value2=0
+  $er.Range($x+"44").Formula="=+IF("+$x+"`$42<=`$C`$21,-'Consolidated Model'!"+$k+"198*`$C`$17,0)"
+  $er.Range($x+"45").Formula="=+IF("+$x+"`$42<=`$C`$21,(-'Consolidated Model'!"+$k+"199-'Consolidated Model'!"+$k+"378)*`$C`$17,0)"
+  $er.Range($x+"46").Formula="=+IF("+$x+"`$42<=`$C`$21,'Consolidated Model'!"+$k+"378*`$C`$17,0)"
+  $er.Range($x+"47").Formula="=+IF("+$x+"`$42=`$C`$21,`$C`$37,0)"
+}
+foreach($c in 4,5,6,7,8,9,10){ $x=$L[$c]; $er.Range($x+"48").Formula="=+SUM("+$x+"43:"+$x+"47)" }
+
+# ============ 5) retornos ============
+$er.Range("B51").Value2="Total Dividends Received"
+$er.Range("C51").Formula="=+SUM(D44:I46)"
+$er.Range("B52").Value2="Exit Proceeds Received"
+$er.Range("C52").Formula="=+SUM(D47:I47)"
+$er.Range("B53").Value2="Gross Money Multiple (MoIC)"
+$er.Range("C53").Formula="=+IFERROR((C51+C52)/-C43,0)"
+$er.Range("B54").Value2="IRR"
+$er.Range("C54").Formula="=+IFERROR(XIRR(C48:I48,C41:I41),0)"
+
+# ============ formatos ============
+$er.Range("B11:B54").HorizontalAlignment=-4131
+$er.Range("C11:I54").HorizontalAlignment=-4152
+foreach($a in "C13","C18","C19","C24","C25","C26","C33","C34","C35","C37","C51","C52"){ $er.Range($a).NumberFormat=$FMT_N }
+$er.Range("D43:I48").NumberFormat=$FMT_N
+$er.Range("C43:C48").NumberFormat=$FMT_N
+foreach($a in "C11","C15","C31","C36"){ $er.Range($a).NumberFormat=$FMT_P }
+$er.Range("C12").NumberFormat=$FMT_N
+$er.Range("C31").NumberFormat=$FMT_N
+foreach($a in "C16","C17","C28","C54"){ $er.Range($a).NumberFormat=$FMT_PC }
+foreach($a in "C27","C32","C53"){ $er.Range($a).NumberFormat=$FMT_X }
+$er.Range("C20").NumberFormat="0.00"
+$er.Range("C21").NumberFormat="0"
+$er.Range("C41:I41").NumberFormat="mmm yyyy"
+$er.Range("D42:I42").NumberFormat="0"
+$er.Range("C42").HorizontalAlignment=-4152
+
+# fuentes: azul = entrada dura, verde = vinculo a otra hoja
+foreach($a in "C15","C17","C20","C21"){ $er.Range($a).Font.Color=$BLUE }
+foreach($a in "C11","C12","C24","C26","C28","C31","C34"){ $er.Range($a).Font.Color=$GREEN }
+$er.Range("D44:I47").Font.Color=$GREEN
+# linea superior en los totales
+$er.Range("C48:I48").Borders.Item(8).LineStyle=1
+$er.Range("C48:I48").Font.Bold=$true
+$er.Range("C53:C54").Font.Bold=$true
+$er.Range("C41:I42").Font.Bold=$true
+
+$xl.Calculation=-4105
+$xl.CalculateFullRebuild(); $xl.CalculateFullRebuild()
+$xl.ScreenUpdating=$true
+$wb.Save()
+
+Write-Output ""
+Write-Output "=========== EXPECTED RETURNS (modulo apagado) ==========="
+for($r=9;$r -le 54;$r++){
+  $lab=[string]$er.Cells.Item($r,2).Text
+  $v=""
+  foreach($c in 3,4,5,6,7,8,9){ $v+=([string]$er.Cells.Item($r,$c).Text).PadLeft(12) }
+  if(($lab+$v).Trim() -ne ""){ Write-Output ("r"+([string]$r).PadRight(4)+$lab.PadRight(44)+$v) }
+}
+$e=0; try{ $e=[int]$er.UsedRange.SpecialCells(-4123,16).Count }catch{}
+Write-Output ("  celdas con error en la pestana: "+$e)

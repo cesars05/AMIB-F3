@@ -1,0 +1,85 @@
+import sys, re
+sys.stdout.reconfigure(encoding='utf-8')
+p = r'C:\Users\cesar\Downloads\PE\08_Proyecto_Final\PLAN_V2_PROMPT_Y_WORKFLOW.md'
+t = open(p, encoding='utf-8').read()
+L = t.split('\n')
+
+
+def idx(prefix):
+    h = [i for i, l in enumerate(L) if l.startswith(prefix)]
+    assert len(h) == 1, (prefix, h)
+    return h[0]
+
+
+def cells(line):
+    return [c.strip() for c in line.strip().strip('|').split('|')]
+
+
+def row(*c):
+    return '| ' + ' | '.join(c) + ' |'
+
+
+i8 = idx("| 8 | **Roadmap a 10 años")
+i9 = idx("| 9 | **A dónde va cada dólar**")
+i10 = idx("| 10 | **A quién invertimos")
+i11 = idx("| 11 | **Caso de inversión")
+i12 = idx("| 12 | **Retorno:")
+i13 = idx("| 13 | **Cómo recuperamos")
+i14 = idx("| 14 | **Cómo protegemos")
+i15 = idx("| 15 | **Riesgos y mitigaciones")
+
+
+def renum(i, n):
+    c = cells(L[i])
+    c[0] = str(n)
+    return row(*c)
+
+
+new8 = row("8", "**Llamadas de capital: mínimos, máximos y calendario**", "2 El fondo", "Ryerson 7",
+           "3 bloques a la izquierda (años 1 a 3, 4 a 5, 6 a 10); panel con mínimos y máximos (monto de cada llamada 5% a 25% del compromiso, aviso 10 días hábiles, 4 llamadas por año, tope 100%, primer cierre US$40M, tope US$100M, compromiso por LP US$1M a 20%); **columnas apiladas de 10 años** (inversión, fees, gastos) con el tramo proyectado en recuadro punteado y saldo por llamar; mora y recomposición en una caja", "`Llamadas_Capital`")
+new9 = row("9", "**Roadmap del fondo a 10 años**", "2 El fondo", "tc:18",
+           "Carretera con **7 pines** (año 0 primer cierre; año 1 tres entradas; año 2 tres entradas; año 3 dos entradas y primeros follow-on; años 4 y 5 follow-on y fin del periodo de inversión con cambio de comisión; años 6 a 9 salidas; año 10 liquidación); franja inferior de 10 columnas con llamadas y distribuciones; ficha lateral con el calendario de entradas por empresa", "`Hoja1_Portafolio`, `Curva_J`")
+new15 = row("15", "**Riesgos y protecciones al LP**", "Riesgos", "Howmet 6 + Ryerson 6 + tc:4",
+            "**Dos columnas.** Izquierda, **riesgos**: 6 filas con bloque de etiqueta y línea en rojo (salida, tres empresas que fallan y concentración de clientes, regulatorio, mercado, persona clave, tipo de cambio) más un mapa de calor pequeño de probabilidad e impacto. Derecha, **protecciones**: pirámide de capas (LPAC, key man, tope de 15% por empresa, clawback, aportación del GP de al menos 2%, cascada europea con hurdle de 8%, informes y auditoría) con una frase cada una; flechas finas que unen cada riesgo con su protección", "Excel, memo")
+
+out = []
+for i, l in enumerate(L):
+    if i == i8:
+        out += [new8, new9]
+    elif i == i9:
+        out.append(renum(i, 10))
+    elif i == i10:
+        out.append(renum(i, 11))
+    elif i == i11:
+        out.append(renum(i, 12))
+    elif i == i12:
+        out.append(renum(i, 13))
+    elif i == i13:
+        out.append(renum(i, 14))
+    elif i == i14:
+        continue
+    elif i == i15:
+        out.append(new15)
+    else:
+        out.append(l)
+t = '\n'.join(out)
+
+
+def rep(old, new):
+    global t
+    n = t.count(old)
+    if n != 1:
+        print("COUNT", n, old[:70])
+    t = t.replace(old, new)
+
+
+rep("Roadmap (lám. 8), A quién invertimos (lám. 10), anexo F", "Roadmap (lám. 9), A quién invertimos (lám. 11), anexo F")
+rep("Retorno (lám. 12), riesgos (lám. 15), anexo A", "Retorno (lám. 13), riesgos y protecciones (lám. 15), anexo A")
+rep("| Punto de retorno esperado, con tabla de rangos | Lámina 12 |", "| Punto de retorno esperado, con tabla de rangos | Lámina 13 |")
+rep("Lámina 3 (mapa de oportunidad) y lámina 10 (mapa del portafolio)", "Lámina 3 (mapa de oportunidad) y lámina 11 (mapa del portafolio)")
+rep("| Punto de economía del fondo (comisiones y gastos) | Lámina 9 |", "| Punto de economía del fondo (comisiones y gastos) | Lámina 10 |")
+rep("| Puntos de gobierno, LPAC, key man, concentración | Láminas 10 y 14 |", "| Puntos de gobierno, LPAC, key man, concentración | Láminas 11 y 15 |")
+rep("3. ~~¿Equipo fusionado con \"por qué este equipo\"?~~ **Resuelto por el equipo: van separadas** (láminas 5 y 6); para cumplir el tope de 15, \"Llamadas de capital\" y \"Roadmap\" se funden en la lámina 8.",
+    "3. ~~¿Equipo fusionado con \"por qué este equipo\"?~~ **Resuelto por el equipo: van separadas** (láminas 5 y 6). Para cumplir el tope de 15, **riesgos y protecciones al LP se funden en la lámina 15** (riesgos de un lado y protecciones del otro); \"Llamadas de capital\" (8) y \"Roadmap\" (9) quedan cada una en su lámina.")
+open(p, 'w', encoding='utf-8').write(t)
+print("ok")

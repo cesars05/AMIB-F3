@@ -1,0 +1,45 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 40;$k++){ try{ return & $sb }catch{ Start-Sleep -Milliseconds 1200 } }; return "??" }
+$xl=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); break }catch{ Start-Sleep -Milliseconds 900 } }
+$wb=$null; foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("Segment Beta") }
+$d=T { $wb.Worksheets.Item("DCF") }
+
+Write-Output "=== formulas de las filas de promedio (el usuario cambio MEDIAN por AVERAGE?) ==="
+foreach($r in 18,22,29){
+  Write-Output ("  r"+$r+" D="+[string](T { $s.Cells.Item($r,4).Text }))
+  foreach($c in 9,10,11,12,13){ Write-Output ("      col"+$c+" = "+[string](T { $s.Cells.Item($r,$c).Text })+"   frm="+[string](T { $s.Cells.Item($r,$c).Formula })) }
+}
+Write-Output ""
+Write-Output "=== resumen actual ==="
+for($r=33;$r -le 37;$r++){
+  $line=([string](T { $s.Cells.Item($r,4).Text })).PadRight(40)
+  foreach($c in 5,6,7){ $line+=([string](T { $s.Cells.Item($r,$c).Text })).PadLeft(14) }
+  Write-Output ("r"+([string]$r).PadRight(3)+" "+$line)
+}
+Write-Output ("  G34 frm = "+[string](T { $s.Cells.Item(34,7).Formula }))
+Write-Output ""
+Write-Output "=== inputs de Ke / WACC en el DCF ==="
+foreach($a in "R12","R13","R14","R15","R16","R20","P16","P17","P18","P19"){
+  Write-Output ("  DCF!"+$a.PadRight(4)+" = "+[string](T { $d.Range($a).Text })+"   ("+[string](T { $d.Range($a).Value2 })+")")
+}
+Write-Output ""
+Write-Output "=== beta bottom-up implicita para el grupo (ponderada por ventas FY2026) ==="
+$sm=T { $wb.Worksheets.Item("Segment Model") }
+$wm=[double](T { $sm.Cells.Item(13,11).Value2 }); $be=[double](T { $sm.Cells.Item(14,11).Value2 }); $hp=[double](T { $sm.Cells.Item(15,11).Value2 })
+$tot=$wm+$be+$hp
+$bu1=[double](T { $s.Cells.Item(18,11).Value2 }); $bu2=[double](T { $s.Cells.Item(22,11).Value2 }); $bu3=[double](T { $s.Cells.Item(29,11).Value2 })
+$bw=($wm*$bu1+$be*$bu2+$hp*$bu3)/$tot
+$de=[double](T { $s.Cells.Item(12,9).Value2 }); $tx=[double](T { $s.Cells.Item(12,13).Value2 })
+Write-Output ("  pesos: WM "+[string][math]::Round($wm/$tot*100,1)+"%  BE "+[string][math]::Round($be/$tot*100,1)+"%  HP "+[string][math]::Round($hp/$tot*100,1)+"%")
+Write-Output ("  betaU ponderada = "+[string][math]::Round($bw,3))
+Write-Output ("  re-apalancada   = "+[string][math]::Round($bw*(1+(1-$tx)*$de),3)+"   vs beta propia de Alumasc 0.98")
+$rf=[double](T { $d.Range("R13").Value2 }); $erp=[double](T { $d.Range("R14").Value2 }); $sp=[double](T { $d.Range("R15").Value2 })
+$kd=[double](T { $d.Range("R20").Value2 }); $dc=[double](T { $d.Range("P17").Value2 })
+foreach($x in @(@("WM",34),@("BE",35),@("HP",36))){
+  $ke=[double](T { $s.Cells.Item($x[1],7).Value2 })
+  $wacc=$dc*$kd+(1-$dc)*$ke
+  Write-Output ("  WACC implicito "+$x[0]+" = "+[string][math]::Round($wacc*100,2)+"%")
+}
+Write-Output ("  WACC del grupo en el DCF = "+[string](T { $d.Range("P16").Text }))

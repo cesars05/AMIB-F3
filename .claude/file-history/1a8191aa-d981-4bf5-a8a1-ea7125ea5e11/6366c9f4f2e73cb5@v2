@@ -1,0 +1,15 @@
+---
+name: use-slide-construction-skill-for-decks
+description: "Any deck for this user must follow the slide-construction house playbook (house.py), not the generic pptx/pptxgenjs skill"
+metadata:
+  node_type: memory
+  type: feedback
+  originSessionId: 1a8191aa-d981-4bf5-a8a1-ea7125ea5e11
+  modified: 2026-10-10T00:56:25.448Z
+---
+
+For any presentation request, load the `slide-construction` skill first (style-systems → adaptation → slide-catalog → grid-typography → rotation-qc) and build with `house.py` (python-pptx). For class/team decks use the `femsa` system with a brand swap (`make_brand_system`) from the subject's logo colors.
+
+**Why:** On the e₹ (Equipo 10, Actividad 3) deck I first built a generic pptxgenjs deck; the user rejected it because it ignored "el formato que diseñamos" (title + rule + quantified subtitle, conclusion bars, structural diagrams, source line on every slide).
+
+**How to apply:** Also "usa solo fuentes oficiales" means RBI / PIB / government docs only — skip consultancy (EY) and journal papers even if the user attached them, and say so. Save outputs under `Downloads\tareas\<actividad>\`.

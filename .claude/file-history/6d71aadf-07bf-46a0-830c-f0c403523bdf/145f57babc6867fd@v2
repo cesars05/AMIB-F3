@@ -1,0 +1,105 @@
+import os, time, pickle, math, shutil
+import win32com.client as w
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"build_names.py"),encoding="utf-8").read().split("x=P(w.DispatchEx")[0].split("shutil.copy(SRC,WORK)")[0])  # helpers only
+def hdrfmt(rg):
+    rg.Interior.Color=bgr('002060'); rg.Font.Color=0xFFFFFF; rg.Font.Bold=True; rg.WrapText=True; rg.HorizontalAlignment=-4108; rg.VerticalAlignment=-4108
+import pywintypes
+BUSY=(-2147418111,-2147417846,-2146777998)
+def _retry(fn):
+    for i in range(600):
+        try: return fn()
+        except pywintypes.com_error as e:
+            code=e.args[0]; inner=e.args[2][5] if (len(e.args)>2 and e.args[2] and len(e.args[2])>5) else None
+            if code in BUSY or inner in BUSY: time.sleep(1); continue
+            raise
+def _unwrap(v): return object.__getattribute__(v,"_o") if isinstance(v,P) else v
+def _wrap(v):
+    if hasattr(v,"_oleobj_"): return P(v)
+    if callable(v): return lambda *a,**k: _wrap(_retry(lambda: v(*[_unwrap(x) for x in a],**{kk:_unwrap(vv) for kk,vv in k.items()})))
+    return v
+class P:
+    def __init__(self,o): object.__setattr__(self,"_o",o)
+    def __getattr__(self,n): return _wrap(_retry(lambda: getattr(object.__getattribute__(self,"_o"),n)))
+    def __setattr__(self,n,v): _retry(lambda: setattr(object.__getattribute__(self,"_o"),n,_unwrap(v)))
+    def __call__(self,*a,**k): return _wrap(_retry(lambda: object.__getattribute__(self,"_o")(*[_unwrap(x) for x in a],**{kk:_unwrap(vv) for kk,vv in k.items()})))
+S=os.path.dirname(os.path.abspath(__file__)); WORK=os.path.join(S,"AZTD Names.xlsx")
+meta=pickle.load(open(os.path.join(S,"names_meta.pkl"),"rb")); SER=meta["SER"]; G0=meta["G0"]; LASTROW=meta["LASTROW"]
+x=P(w.DispatchEx("Excel.Application")); x.Visible=False; x.DisplayAlerts=False
+import atexit
+def _cl():
+    try:
+        for i in range(x.Workbooks.Count,0,-1): x.Workbooks(i).Close(False)
+    except Exception: pass
+    try: x.Quit()
+    except Exception: pass
+atexit.register(_cl)
+tmp=x.Workbooks.Add(); x.Calculation=-4135
+wb=x.Workbooks.Open(WORK,UpdateLinks=0); tmp.Close(False)
+wt=wb.Worksheets("Top 5 by ETF"); T="'Top 5 by ETF'"
+# country short form
+for R in range(7,LASTROW+1):
+    f=wt.Range(f"F{R}").Formula
+    if f.startswith("=IFERROR(XLOOKUP"):
+        wt.Range(f"F{R}").Formula='=SUBSTITUTE(SUBSTITUTE('+f[1:]+',"United States of America","United States"),"United Kingdom","UK")'
+wt.Columns("F").ColumnWidth=14
+# ---------- Graph: 4 charts (one per sector), peers vs AZTD
+wg=wb.Worksheets("Graph")
+gr=SER[-1][2]
+wg.Range(f"J{G0-1}:K{G0-1}").Value=[["X peers","X AZTD"]]; hdrfmt(wg.Range(f"J{G0-1}:K{G0-1}"))
+for R in range(G0,gr+1):
+    wg.Range(f"J{R}").Formula=f'=IF($I{R}="Yes",NA(),$E{R})'
+    wg.Range(f"K{R}").Formula=f'=IF($I{R}="Yes",$E{R},NA())'
+wg.Range(f"J{G0}:K{gr}").NumberFormat="0.0%"; wg.Columns("J").ColumnWidth=10; wg.Columns("K").ColumnWidth=10
+base=wg.ChartObjects(1)
+W_,H_=615,345; pos=[(20,30),(20+W_+15,30),(20,30+H_+15),(20+W_+15,30+H_+15)]
+cos=[base]
+for k in range(3):
+    d=base.Duplicate(); cos.append(d)
+x.Calculation=-4105; x.Calculate(); time.sleep(3)
+for k,(s,a,b) in enumerate(SER):
+    co=cos[k]; co.Left,co.Top=pos[k]; co.Width=W_; co.Height=H_
+    ch=co.Chart
+    while ch.SeriesCollection().Count>2: ch.SeriesCollection(ch.SeriesCollection().Count).Delete()
+    s1=ch.SeriesCollection(1); s2=ch.SeriesCollection(2)
+    s1.Formula=f'=SERIES("Peers\' top 5",Graph!$J${a}:$J${b},Graph!$F${a}:$F${b},1,Graph!$G${a}:$G${b})'
+    s2.Formula=f'=SERIES("AZTD top 5",Graph!$K${a}:$K${b},Graph!$F${a}:$F${b},2,Graph!$G${a}:$G${b})'
+    try:
+        s2.Format.Fill.ForeColor.RGB=bgr("F5C400"); s2.Format.Fill.BackColor.RGB=bgr("B38F00")
+    except Exception as e: print("fill",e)
+    ch.ChartGroups(1).BubbleScale=45
+    ch.HasTitle=True; ch.ChartTitle.Text=s; ch.ChartTitle.Font.Size=12; ch.ChartTitle.Font.Bold=True; ch.ChartTitle.Font.Name="Arial"
+    xs=[c[0] for c in wg.Range(f"E{a}:E{b}").Value if isinstance(c[0],float)]
+    lo=min(xs+[0]); hi=max(xs)
+    ax=ch.Axes(1); ax.MinimumScale=math.floor((lo-0.05)*10)/10; ax.MaximumScale=math.ceil((hi+0.08)*10)/10; ax.MajorUnit=0.1
+    ax.HasTitle=True; ax.AxisTitle.Text="EPS CAGR 2025A-2028E"; ax.TickLabels.NumberFormat="0%"
+    ay=ch.Axes(2); ay.MinimumScale=0; ay.MaximumScale=1.05; ay.MajorUnit=0.2; ay.HasTitle=True; ay.AxisTitle.Text="Model 1.1"; ay.TickLabels.NumberFormat="0.0"
+    ay.CrossesAt=0
+    try: ax.CrossesAt=ax.MinimumScale
+    except Exception: pass
+    for si,col_ in ((1,"J"),(2,"K")):
+        se=ch.SeriesCollection(si)
+        try: se.DataLabels().Delete()
+        except Exception: pass
+        se.HasDataLabels=True
+        for kk in range(b-a+1):
+            R=a+kk
+            try:
+                dl=se.Points(kk+1).DataLabel; dl.Formula=f"=Graph!$H${R}"; dl.Position=-4152; dl.Font.Size=7; dl.Font.Name="Arial"; dl.Font.Bold=(si==2)
+            except Exception: pass
+    ch.HasLegend=True; ch.Legend.Position=-4107
+wg.Range("B2").Value="Model 1.1 vs EPS CAGR 2025A-2028E - top 5 names of each ETF by sector (bubble size = market cap; AZTD in gold)"; wg.Range("B2").Font.Bold=True; wg.Range("B2").Font.Size=14
+# ---------- Analysis row heights
+wa=wb.Worksheets("Analysis")
+vals=wa.Range("C4:C43").Value
+for i,v in enumerate(vals):
+    wa.Rows(4+i).RowHeight=95 if (v[0] not in (None,"")) else 15
+wa.Columns("F").ColumnWidth=20
+# ---------- market caps for the deck
+d=wb.Worksheets("Data"); n=d.Range("B5").End(-4121).Row
+mc={r[0]:r[3] for r in d.Range(f"B5:E{n}").Value}
+pickle.dump(mc,open(os.path.join(S,"mktcap_names.pkl"),"wb"))
+wb.Worksheets("Top 5 by ETF").Activate()
+wb.Save()
+for nme in ["Graph","Analysis","Top 5 by ETF"]:
+    wb.Worksheets(nme).ExportAsFixedFormat(0,os.path.join(S,"uv",f"names_{nme.replace(' ','_')}.pdf"))
+print("fixed",len(mc))

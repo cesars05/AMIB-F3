@@ -1,0 +1,251 @@
+"""Portafolio personal.
+
+  portafolio/MatrizPortafolio.png  -- cada posicion x periodo (1W/MTD/QTD/YTD)
+  portafolio/VsBenchmark.png       -- canasta equiponderada vs S&P 500, base 100
+  portafolio/Contribucion.png      -- contribucion al retorno YTD, en pp
+
+ADVERTENCIA SOBRE PESOS
+-----------------------
+No tengo las ponderaciones reales de la cuenta, asi que la canasta y la
+contribucion asumen EQUIPONDERACION (1/N). Eso no es el retorno del
+portafolio: con pesos reales el numero cambia, y cambia mucho si alguna
+posicion es grande. Para el retorno de verdad hay que capturar los pesos.
+
+Si tienes los pesos, ponlos en PESOS abajo y el script los usa en vez de 1/N.
+
+Retorno de precio, sin dividendos ni movimientos de caja.
+"""
+import sys
+sys.path.append(r"C:\Users\cesar\OneDrive\Desktop\News\Templates\Graphs")
+
+import json
+import os
+import warnings
+import lseg.data as ld
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+from datetime import datetime, timedelta
+from grafico_banquero import (configurar_estilo_banquero, PALETA, matriz_calor,
+                              linea_referencia, ejes_limpios, colores_por_signo)
+
+warnings.filterwarnings("ignore")
+configurar_estilo_banquero()
+ld.open_session()
+
+SALIDA = "portafolio"
+os.makedirs(SALIDA, exist_ok=True)
+
+# Posiciones (Interactive Brokers). ORLA cotiza en NYSE American: ORLA.N
+# (ORLA.TO devuelve vacio en esta licencia).
+POSICIONES = {
+    "MU.OQ": "Micron", "AMZN.OQ": "Amazon", "GOOGL.OQ": "Alphabet",
+    "META.OQ": "Meta", "MSFT.OQ": "Microsoft", "CRWD.OQ": "CrowdStrike",
+    "FSLR.OQ": "First Solar", "ORLA.N": "Orla Mining",
+}
+
+# Pesos reales. Vacio = equiponderado (1/N). Ej: {"MU.OQ": 0.25, ...}
+PESOS = {}
+
+BENCHMARK = (".SPX", "S&P 500")
+
+hoy = datetime.now()
+inicio_ytd = f"{hoy.year}-01-01"
+inicio_descarga = f"{hoy.year - 1}-12-01"
+fin = hoy.strftime("%Y-%m-%d")
+
+trimestre = (hoy.month - 1) // 3 * 3 + 1
+PERIODOS = {
+    "1W":  (hoy - timedelta(days=7)).strftime("%Y-%m-%d"),
+    "MTD": hoy.replace(day=1).strftime("%Y-%m-%d"),
+    "QTD": hoy.replace(month=trimestre, day=1).strftime("%Y-%m-%d"),
+    "YTD": inicio_ytd,
+}
+
+
+def valor_base(serie, antes_de):
+    """Ultimo cierre estrictamente anterior al inicio del periodo."""
+    previos = serie[serie.index < antes_de]
+    return previos.iloc[-1] if not previos.empty else serie.iloc[0]
+
+
+print("Bajando posiciones...")
+rics = list(POSICIONES) + [BENCHMARK[0]]
+d = ld.get_history(universe=rics, fields=["TRDPRC_1"], interval="daily",
+                    start=inicio_descarga, end=fin)
+
+series = {}
+for ric in rics:
+    try:
+        s = (d[ric]["TRDPRC_1"] if isinstance(d.columns, pd.MultiIndex)
+             else d[ric]).astype(float).dropna()
+        if len(s) > 5:
+            series[ric] = s
+        else:
+            print(f"  -- {ric} serie corta")
+    except Exception:
+        print(f"  -- {ric} sin datos")
+
+# --- Fallback para RICs sin historico entitled --------------------------
+# ORLA.N responde a get_data (precio 9.41, mkt cap 3.3B) pero get_history
+# devuelve vacio: la serie diaria no esta en la licencia, el snapshot si.
+# TR.PriceClose con SDate puntual si funciona, asi que se arman los retornos
+# de periodo pidiendo el cierre en cada fecha base. Alcanza para la matriz y
+# la contribucion; no para la linea diaria de la canasta.
+sin_historico = [r for r in POSICIONES if r not in series]
+ret_puntual = {}
+for ric in sin_historico:
+    try:
+        def cierre(fecha=None):
+            kw = {"parameters": {"SDate": fecha}} if fecha else {}
+            return float(ld.get_data(universe=[ric], fields=["TR.PriceClose"],
+                                     **kw).iloc[0, 1])
+        ult = cierre()
+        # La base de cada periodo es el ultimo habil ANTES del inicio
+        bases = {p: (datetime.strptime(i, "%Y-%m-%d") - timedelta(days=1)
+                     ).strftime("%Y-%m-%d") for p, i in PERIODOS.items()}
+        ret_puntual[POSICIONES[ric]] = {p: (ult / cierre(b) - 1) * 100
+                                        for p, b in bases.items()}
+        print(f"  {POSICIONES[ric]}: sin historico, retornos por fecha puntual")
+    except Exception as e:
+        print(f"  -- {POSICIONES[ric]} tampoco por fecha puntual: {str(e)[:50]}")
+
+# ---------------------------------------------------------------------------
+# 1. Matriz de retornos por posicion
+# ---------------------------------------------------------------------------
+filas = {}
+for ric, nombre in POSICIONES.items():
+    if ric not in series:
+        continue
+    s = series[ric]
+    ult = float(s.iloc[-1])
+    filas[nombre] = {p: (ult / float(valor_base(s, i)) - 1) * 100
+                     for p, i in PERIODOS.items()}
+
+s_bmk = series[BENCHMARK[0]]
+ult_b = float(s_bmk.iloc[-1])
+fila_bmk = {p: (ult_b / float(valor_base(s_bmk, i)) - 1) * 100
+            for p, i in PERIODOS.items()}
+
+filas.update(ret_puntual)
+df = pd.DataFrame(filas).T[list(PERIODOS)].sort_values("YTD", ascending=False)
+df_con_bmk = pd.concat([df, pd.DataFrame({BENCHMARK[1]: fila_bmk}).T])
+
+fig, ax = plt.subplots(figsize=(3.20, 0.32 * len(df_con_bmk) + 0.35), dpi=300)
+matriz_calor(ax, df_con_bmk)
+fig.savefig(f"{SALIDA}/MatrizPortafolio.png", dpi=300, bbox_inches="tight",
+            pad_inches=0.04)
+plt.close(fig)
+
+# ---------------------------------------------------------------------------
+# 2. Canasta vs benchmark, base 100
+# ---------------------------------------------------------------------------
+# Los pesos se reparten entre TODAS las posiciones, incluidas las que solo
+# tienen retorno puntual: dejarlas fuera inflaria el peso de las demas.
+pesos = pd.Series({r: PESOS.get(r, 1 / len(POSICIONES)) for r in POSICIONES})
+pesos = pesos / pesos.sum()
+etiqueta_peso = "equal weighted" if not PESOS else "actual weights"
+
+# La linea diaria solo puede trazarse con los que tienen serie completa
+activos = [r for r in POSICIONES if r in series]
+pesos_linea = pesos[activos] / pesos[activos].sum()
+precios = pd.DataFrame({r: series[r] for r in activos}).ffill().dropna()
+precios = precios[precios.index >= inicio_ytd]
+# Cada posicion base 100 y luego se pondera: asi la canasta arranca en 100
+norm = precios / precios.iloc[0] * 100
+canasta = (norm * pesos_linea).sum(axis=1)
+
+bmk = s_bmk[s_bmk.index >= inicio_ytd]
+bmk100 = bmk / bmk.iloc[0] * 100
+
+fig, ax = plt.subplots(figsize=(6.20, 2.90), dpi=300)
+ejes_limpios(ax, labelsize=6.5)
+linea_referencia(ax, 100)
+ax.plot(bmk100.index, bmk100.values, color=PALETA["claro"], linewidth=1.4,
+        label=BENCHMARK[1], zorder=3)
+ax.plot(canasta.index, canasta.values, color=PALETA["primario"], linewidth=1.6,
+        label=(f"Portfolio ({etiqueta_peso}"
+               + (f", {len(activos)}/{len(POSICIONES)} names)" if sin_historico else ")")),
+        zorder=4)
+
+primeros = canasta.index.to_series().groupby(canasta.index.to_period("M")).first()
+ax.set_xticks(primeros.values)
+ax.set_xticklabels([x.strftime("%b") for x in primeros.index.to_timestamp()])
+ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:.0f}"))
+ax.margins(x=0)
+ax.legend(loc="upper left", frameon=False, fontsize=6.5, handlelength=1.5,
+          borderpad=0.2)
+for serie, color in ((bmk100, PALETA["claro"]), (canasta, PALETA["primario"])):
+    ax.annotate(f"{serie.iloc[-1]:.0f}", xy=(serie.index[-1], serie.iloc[-1]),
+                xytext=(4, 0), textcoords="offset points", va="center", ha="left",
+                fontsize=6.5, fontweight="bold", color=color, annotation_clip=False)
+fig.savefig(f"{SALIDA}/VsBenchmark.png", dpi=300, bbox_inches="tight", pad_inches=0.02)
+plt.close(fig)
+
+# ---------------------------------------------------------------------------
+# 3. Contribucion al retorno YTD (pp), no el retorno de cada nombre
+# ---------------------------------------------------------------------------
+# Se calcula desde los retornos YTD de la matriz (no desde la serie diaria)
+# para que entren tambien las posiciones de retorno puntual.
+peso_por_nombre = {POSICIONES[r]: pesos[r] for r in POSICIONES}
+contrib = pd.Series({n: df.loc[n, "YTD"] * peso_por_nombre[n]
+                     for n in df.index}).sort_values()
+etiquetas = list(contrib.index)
+
+fig, ax = plt.subplots(figsize=(4.25, 2.27), dpi=300)
+ax.barh(range(len(contrib)), contrib.values,
+        color=colores_por_signo(contrib.values), height=0.7, zorder=3)
+ax.axvline(0, color=PALETA["eje"], linewidth=0.9, zorder=4)
+for lado in ("top", "right", "bottom", "left"):
+    ax.spines[lado].set_visible(False)
+ax.set_xticks([])
+ax.set_yticks(range(len(contrib)))
+ax.set_yticklabels(etiquetas, fontsize=6.5)
+ax.tick_params(axis="y", length=0, labelcolor=PALETA["texto"])
+
+rango = contrib.max() - min(contrib.min(), 0)
+margen = rango * 0.02
+for y, v in enumerate(contrib.values):
+    ax.text(v + (margen if v >= 0 else -margen), y, f"{v:+.1f}pp", va="center",
+            ha="left" if v >= 0 else "right", fontsize=6, fontweight="bold",
+            color=PALETA["texto"])
+ax.set_xlim(min(contrib.min(), 0) - rango * 0.25, contrib.max() + rango * 0.25)
+fig.savefig(f"{SALIDA}/Contribucion.png", dpi=300, bbox_inches="tight", pad_inches=0.02)
+plt.close(fig)
+
+# ---------------------------------------------------------------------------
+# El retorno de cabecera es el de TODAS las posiciones (suma de contribuciones).
+# La linea diaria solo cubre las que tienen serie, asi que su nivel final
+# difiere; se reporta aparte para que los dos numeros no se confundan.
+ret_port = float(contrib.sum())
+ret_linea = float(canasta.iloc[-1]) - 100
+ret_bmk = float(bmk100.iloc[-1]) - 100
+resumen = {
+    "ponderacion": etiqueta_peso,
+    "advertencia": ("Equiponderado 1/N: NO es el retorno real del portafolio. "
+                    "Cargar los pesos en PESOS para el numero correcto."
+                    if not PESOS else "Pesos reales cargados."),
+    "retorno_ytd_pct": round(ret_port, 2),
+    "retorno_ytd_solo_linea_pct": round(ret_linea, 2),
+    "nota_linea": (f"La linea cubre {len(activos)}/{len(POSICIONES)} nombres "
+                   f"(sin historico: {', '.join(POSICIONES[r] for r in sin_historico)})"
+                   if sin_historico else "La linea cubre todas las posiciones"),
+    "benchmark_ytd_pct": round(ret_bmk, 2),
+    "exceso_pp": round(ret_port - ret_bmk, 2),
+    "posiciones": df.round(2).to_dict("index"),
+    "contribucion_ytd_pp": {n: round(float(v), 2) for n, v in contrib.items()},
+    "retorno_ytd_ponderado_pct": round(float(contrib.sum()), 2),
+}
+with open("datos_portafolio.json", "w", encoding="utf-8") as f:
+    json.dump(resumen, f, indent=2, ensure_ascii=False)
+
+print()
+print(df_con_bmk.round(1).to_string())
+print(f"\nCanasta ({etiqueta_peso}) YTD: {ret_port:+.1f}%   "
+      f"{BENCHMARK[1]}: {ret_bmk:+.1f}%   exceso: {ret_port - ret_bmk:+.1f}pp")
+print("\nContribucion YTD (pp):")
+for n, v in contrib.sort_values(ascending=False).items():
+    print(f"  {n:14s} {v:+6.2f}")
+print(f"  {'TOTAL':14s} {contrib.sum():+6.2f}")
+print(f"\nListo: {SALIDA}/ (3 graficos), datos_portafolio.json")
+ld.close_session()

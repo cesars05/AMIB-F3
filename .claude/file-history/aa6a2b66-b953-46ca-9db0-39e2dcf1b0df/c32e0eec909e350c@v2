@@ -1,0 +1,215 @@
+import re, openpyxl, unicodedata
+D = r'C:\Users\cesar\AppData\Local\Temp\claude\C--Users-cesar-OneDrive---Instituto-Tecnologico-y-de-Estudios-Superiores-de-Monterrey-CFA\aa6a2b66-b953-46ca-9db0-39e2dcf1b0df\scratchpad'
+
+def num(s):
+    s = s.strip()
+    if s in ('-', '–', '($0)', '$0'): return 0.0
+    neg = s.startswith('(') or s.startswith('-') or s.startswith('($')
+    x = re.sub(r'[^\d.]', '', s)
+    if x == '': return None
+    v = float(x)
+    if s.endswith('%'): v = v / 100
+    return -v if neg else v
+
+def isnum(s):
+    s = s.strip()
+    return bool(re.fullmatch(r'\(?-?\$?\(?[\d,]+(\.\d+)?%?x?\)?%?x?|-|–|\(\$0\)', s))
+
+def parse(page, reverse):
+    lines = [l for l in open(f'{D}\\pdf_p{page}.txt', encoding='utf-8').read().splitlines() if l.strip()]
+    toks = []
+    for l in lines:
+        parts = l.split()
+        if len(parts) > 1 and all(isnum(p) for p in parts): toks += parts
+        else: toks.append(l)
+    out = {}; i = 0
+    while i < len(toks):
+        if not isnum(toks[i]) and i + 6 < len(toks) + 1 and all(isnum(t) for t in toks[i+1:i+7]):
+            vals = [num(t) for t in toks[i+1:i+7]]
+            if reverse: vals = vals[::-1]
+            lab = toks[i].strip()
+            k = lab; n = 2
+            while k in out: k = f'{lab}#{n}'; n += 1
+            out[k] = vals; i += 7
+        else: i += 1
+    return out
+
+src = {}
+src['p13'] = parse(13, False)
+src['p21'] = parse(21, True)
+src['p22'] = parse(22, True)
+src['p23'] = parse(23, True)
+src['p24'] = parse(24, True)
+src['p25'] = parse(25, True)
+for k, v in src.items(): print(k, len(v), 'filas')
+
+wb = openpyxl.load_workbook(f'{D}\\audit.xlsx', data_only=True)
+m = wb['Modelo SETSA']
+labels = {}
+for r in range(1, m.max_row + 1):
+    lab = m.cell(r, 3).value
+    if lab and str(lab) not in labels: labels[str(lab)] = r
+def mrow(lab, nth=1):
+    hits = [r for r in range(1, m.max_row + 1) if str(m.cell(r, 3).value) == lab]
+    return hits[nth - 1] if len(hits) >= nth else None
+def mvals(r): return [m.cell(r, c).value for c in range(4, 10)]
+
+PER = ['2021', '2022', '2023', '2024', '2025', '1S26']
+results = []
+def compare(tag, srcvals, model_label, sign=1, tol=2.0, nth=1, pct=False):
+    r = mrow(model_label, nth)
+    if r is None: results.append((tag, model_label, 'FILA NO ENCONTRADA EN MODELO', '')); return
+    mv = mvals(r)
+    for i, (s, v) in enumerate(zip(srcvals, mv)):
+        if s is None: continue
+        v = 0.0 if v in (None, '') else v
+        if isinstance(v, str): results.append((tag, model_label, PER[i], f'texto en modelo: {v}')); continue
+        diff = v - sign * s
+        t = (0.0015 if pct else tol)
+        if abs(diff) > t:
+            results.append((tag, f'{model_label} (fila {r})', PER[i], f'presentacion={sign*s:,.4f} modelo={v:,.4f} dif={diff:,.4f}'))
+    results.append((tag, f'{model_label} (fila {r})', 'OK' if not any(x[1].startswith(model_label) and x[2] in PER for x in results) else 'REVISAR', ''))
+
+def S(page, lab_start):
+    for k, v in src[page].items():
+        if k.startswith(lab_start): return v
+    raise KeyError(f'{page}: {lab_start}')
+
+# ---------- Estado de resultados (lámina 13) ----------
+compare('ER', S('p13', 'Ingresos totales'), 'Ingresos Totales')
+compare('ER', S('p13', 'Costo de venta'), '(-) Costo de Venta y/o Servicio', sign=-1)
+compare('ER', S('p13', 'Costo de venta'), 'Costo de Venta Reportado (lámina 13)', sign=-1)
+compare('ER', S('p13', 'Utilidad bruta'), '(=) Utilidad Bruta')
+compare('ER', S('p13', 'Gastos generales'), '(-) Gastos Generales Total', sign=-1)
+compare('ER', S('p13', 'Gastos generales'), 'Gastos Generales Reportados (lámina 13)', sign=-1)
+compare('ER', S('p13', 'Utilidad de operaci'), 'Utilidad de Operación (EBIT)')
+compare('ER', S('p13', 'Gastos financieros'), '(-) Gastos Financieros', sign=-1)
+compare('ER', S('p13', 'Resultado neto'), 'Resultado Neto')
+compare('ER', S('p13', 'EBITDA'), 'EBITDA')
+compare('ER', S('p13', 'EBITDA'), 'EBITDA Reportado (lámina 14)')
+
+# ---------- Gastos por concepto (lámina 24) ----------
+g = src['p24']
+gmap = [('Combustibles', 'Combustibles'), ('Gastos De Mantenimiento', 'Mantenimiento'), ('Depreciaciones', 'Depreciaciones'),
+        ('Seguros Y Fianzas', 'Seguros y Fianzas'), ('Impuestos, derechos, placas', 'Impuestos, Derechos, Placas y Tenencias'),
+        ('Honorarios A Consejeros', 'Honorarios a Consejeros'), ('Honorarios A Profesionistas', 'Honorarios a Profesionistas y Personas Físicas'),
+        ('Arrendamientos', 'Arrendamientos'), ('Gastos De Oficina', 'Gastos de Oficina'), ('Gastos De Software', 'Gastos de Software'),
+        ('Gastos De Viaje', 'Gastos de Viaje'), ('Servicios públicos', 'Servicios Públicos (teléfono, luz, agua, internet)'), ('Otros', 'Otros')]
+for s_lab, m_lab in gmap: compare('GASTOS', S('p24', s_lab), m_lab, sign=-1)
+perc = S('p24', 'Percepciones de trabajadores'); imss = S('p24', 'Gastos De Impuestos Y Cuotas')
+compare('GASTOS', [a + b for a, b in zip(perc, imss)], 'Nómina Total: Percepciones + Cuotas IMSS', sign=-1)
+tot24 = S('p24', 'TOTAL COSTOS + GASTOS')
+# total costos + gastos del modelo = costo + gastos
+rC = mrow('(-) Costo de Venta y/o Servicio'); rG = mrow('(-) Gastos Generales Total')
+for i in range(6):
+    v = -(m.cell(rC, 4 + i).value + m.cell(rG, 4 + i).value)
+    if abs(v - tot24[i]) > 3: results.append(('GASTOS', 'Total costos+gastos vs lámina 24', PER[i], f'pres={tot24[i]:,.0f} modelo={v:,.0f}'))
+fin24 = S('p24', 'Gastos financieros (intereses')
+compare('GASTOS', fin24, '(-) Gastos Financieros', sign=-1)
+
+# ---------- Balance (láminas 21-22) ----------
+bmap = [('Efectivo y Bancos', 'Efectivo y Bancos'), ('Clientes', 'Clientes'), ('Reserva de cuentas incobrables', 'Reserva de Cuentas Incobrables'),
+        ('Deudores diversos', 'Deudores Diversos'), ('Pagos anticipados', 'Pagos Anticipados'), ('Impuestos a favor', 'Impuestos a Favor'),
+        ('Inventarios', 'Inventarios'), ('Anticipo a proveedores', 'Anticipo a Proveedores'), ('Total activo circulante', 'Total Activo Circulante'),
+        ('Maquinaria y equipo', 'Maquinaria y Equipo'), ('Autos, autobuses', 'Autos, Autobuses, Camiones y Tractocamiones'),
+        ('Mobiliario y equipo', 'Mobiliario y Equipo de Oficina'), ('Equipo de cómputo', 'Equipo de Cómputo'), ('Equipo de comunicación', 'Equipo de Comunicación'),
+        ('Adaptaciones y mejoras', 'Adaptaciones y Mejoras'), ('Depreciación acumulada', 'Depreciación Acumulada'), ('Depósitos en garantía', 'Depósitos en Garantía'),
+        ('Total activo fijo y otros', 'Total Activo Fijo y Otros')]
+for s_lab, m_lab in bmap: compare('BALANCE', S('p21', s_lab), m_lab)
+ta = S('p21', 'TOTAL ACTIVO') if any(k.startswith('TOTAL ACTIVO') for k in src['p21']) else None
+pmap = [('Proveedores', 'Proveedores'), ('Cuentas por pagar a corto plazo', 'Cuentas por Pagar a Corto Plazo'), ('Acreedores diversos', 'Acreedores Diversos'),
+        ('Impuestos por pagar', 'Impuestos por Pagar'), ('Provisión de sueldos', 'Provisión de Sueldos y Fondo de Ahorro'), ('Fondo de ahorro por pagar', 'Fondo de Ahorro por Pagar'),
+        ('PTU por pagar', 'PTU por Pagar'), ('Otros pasivos a corto plazo', 'Otros Pasivos a Corto Plazo'), ('Total pasivo circulante', 'Total Pasivo Circulante'),
+        ('Acreedores diversos largo plazo', 'Acreedores Diversos Largo Plazo'), ('Cuentas por pagar a largo plazo', 'Cuentas por Pagar a Largo Plazo'),
+        ('Total pasivo a largo plazo', 'Total Pasivo a Largo Plazo'), ('TOTAL PASIVO', 'TOTAL PASIVO'),
+        ('Capital social', 'Capital Social'), ('Reserva legal', 'Reserva Legal'), ('Resultado de ejercicios anteriores', 'Resultado de Ejercicios Anteriores'),
+        ('Otras cuentas de capital', 'Otras Cuentas de Capital (dividendos acumulados)'), ('Resultado del ejercicio', 'Resultado del Ejercicio'),
+        ('TOTAL CAPITAL CONTABLE', 'TOTAL CAPITAL CONTABLE')]
+for s_lab, m_lab in pmap:
+    try: compare('BALANCE', S('p22', s_lab), m_lab)
+    except KeyError as e: results.append(('BALANCE', m_lab, 'NO PARSEADO', str(e)))
+print('p21 keys', list(src['p21'].keys()))
+print('p22 keys', list(src['p22'].keys()))
+
+# ---------- Indicadores (lámina 23) ----------
+imap = [('Razón circulante', 'Razón Circulante Reportada'), ('Apalancamiento', 'Pasivo / Capital Reportado'), ('Margen bruto', 'Margen Bruto (%)'),
+        ('Margen operativo', 'Margen Operativo (%)'), ('Margen neto', 'Margen Neto (%)'), ('ROE', 'ROE (resultado neto / capital)'),
+        ('ROA', 'ROA (resultado neto / activo)'), ('Margen EBITDA', 'Margen EBITDA (%)')]
+print('p23 keys', list(src['p23'].keys()))
+for s_lab, m_lab in imap:
+    try:
+        sv = S('p23', s_lab)
+        r = mrow(m_lab)
+        if r is None: results.append(('INDICADORES', m_lab, 'FILA NO ENCONTRADA', '')); continue
+        for i in range(6):
+            v = m.cell(r, 4 + i).value
+            if v is None or sv[i] is None: continue
+            tol = 0.006 if 'x' not in str(m.cell(r, 4 + i).number_format) else 0.006
+            # razones en x vienen como 1.77 ; porcentajes como 0.3528
+            if abs(v - sv[i]) > (0.011 if 'Razón' in m_lab or 'Pasivo' in m_lab else 0.0011):
+                results.append(('INDICADORES', f'{m_lab} (fila {r})', PER[i], f'pres={sv[i]:.4f} modelo={v:.4f}'))
+    except KeyError as e: results.append(('INDICADORES', m_lab, 'NO PARSEADO', str(e)))
+
+# ---------- Cartera por cliente (lámina 25) ----------
+c25 = src['p25']
+for k, v in c25.items():
+    mm = re.match(r'Cliente (\d\d)', k)
+    if mm and '#' not in k and 'concurso' not in k:
+        code = mm.group(1)
+        lab = f'Cliente {code}'
+        r = mrow(f'Cliente {code} (concurso mercantil)') or mrow(lab)
+        if r is None: results.append(('CARTERA', lab, 'FILA NO ENCONTRADA', '')); continue
+        compare('CARTERA', v, m.cell(r, 3).value)
+compare('CARTERA', S('p25', 'Total cartera de clientes'), 'Total Reportado en el Anexo (lámina 25)')
+print('p25 extra keys', [k for k in c25 if not k.startswith('Cliente')])
+
+
+# reserva (lámina 25)
+compare('RESERVA', S('p25','Cliente 25 (cartera'), 'Cliente 25', nth=1)
+compare('RESERVA', S('p25','Cliente 01 (cartera'), 'Cliente 01', nth=1)
+compare('RESERVA', S('p25','Cartera diversa de imposible'), 'Cartera Diversa de Imposible Recuperación')
+compare('RESERVA', S('p25','Total estimación incobrables'), "Total 'Estimación' de Incobrables")
+# ROE / ROA (lámina 23)
+for s_lab, m_lab in [('ROE','ROE (resultado neto / capital)'),('ROA','ROA (resultado neto / activo)')]:
+    sv=S('p23',s_lab); r=mrow(m_lab)
+    for i in range(6):
+        v=m.cell(r,4+i).value
+        if abs(v-sv[i])>0.0011: results.append(('INDICADORES',m_lab,PER[i],f'pres={sv[i]:.4f} modelo={v:.4f}'))
+    results.append(('INDICADORES',m_lab,'OK',''))
+# indicadores sin fila en el modelo: recalcular con el balance del modelo
+g=lambda lab,i: m.cell(mrow(lab),4+i).value
+for i in range(6):
+    tac=g('Total Activo Circulante',i); tpc=g('Total Pasivo Circulante',i); inv=g('Inventarios',i)
+    ta_=g('TOTAL ACTIVO',i); tp=g('TOTAL PASIVO',i)
+    chk=[('Prueba del ácido',(tac-inv)/tpc,0.011),('Capital de trabajo',tac-tpc,3),('Solvencia',ta_/tp,0.011),('Endeudamiento',tp/ta_,0.0011),('EBITDA',g('EBITDA',i),3)]
+    for lab,v,tol in chk:
+        sv=S('p23',lab)[i]
+        if abs(v-sv)>tol: results.append(('INDICADORES',lab,PER[i],f'pres={sv} modelo={v}'))
+results.append(('INDICADORES','Prueba ácido / Capital de trabajo / Solvencia / Endeudamiento / EBITDA','OK',''))
+# notas lámina 27 y extraordinarias lámina 24
+rdiv=mrow('Dividendos Pagados a Socios')
+divs=-sum((m.cell(rdiv,c).value or 0) for c in range(5,10))
+results.append(('LAMINA 27','Dividendos 2022-jun26 = 21,304,573.79', 'OK' if abs(divs-21304573.79)<3 else 'DIF', f'modelo={divs:,.2f}'))
+life=-m.cell(mrow('Otras Cuentas de Capital (dividendos acumulados)'),9).value
+results.append(('LAMINA 27','Dividendos acumulados vida = 73,574,537.72','OK' if abs(life-73574537.72)<1 else 'DIF',f'modelo={life:,.2f}'))
+ind=m.cell(mrow('(+) Indemnización Laboral (30 años de antigüedad)'),8).value; pla=m.cell(mrow('(+) Placas y Tenencias Atrasadas (4 ejercicios)'),8).value
+results.append(('LAMINA 24','Extraordinarias 2025: 4,843,975 + 4,439,387 = 9,283,362','OK' if ind==4843975 and pla==4439387 else 'DIF',f'modelo={ind:,.0f} + {pla:,.0f}'))
+# integración de deuda (tabla del usuario)
+img={'CP':32350698.21,'LP':32549984.20,'Total':64900682.41}
+rT=mrow('Total Deuda Financiera')
+cp,lp,tt=[m.cell(rT,c).value for c in (4,5,6)]
+results.append(('INTEGRACION','Total deuda CP/LP/Total','OK' if abs(cp-img['CP'])<0.01 and abs(lp-img['LP'])<0.01 and abs(tt-img['Total'])<0.02 else 'DIF',f'{cp:,.2f} / {lp:,.2f} / {tt:,.2f}'))
+rA=mrow('Total Acreedores Diversos'); av=m.cell(rA,4).value
+results.append(('INTEGRACION','Total acreedores 1,255,146.94','OK' if abs(av-1255146.94)<0.01 else 'DIF',f'{av:,.2f}'))
+lines=[(164135.07,0),(1088649.80,0),(3453443.85,1568420.61),(8660287.60,9850813.93),(4973184.47,11480617.11),(3750005.26,4375000.00),(193905.99,452559.52),(516634.76,1205780.04),(516634.76,1205780.04),(1033816.65,2411012.95),(8000000.00,0)]
+r0=mrow('Acreedor')
+bad_l=[k for k,(a,b) in enumerate(lines) if abs((m.cell(r0+1+k,4).value or 0)-a)>0.01 or abs((m.cell(r0+1+k,5).value or 0)-b)>0.01]
+results.append(('INTEGRACION','11 creditos linea por linea','OK' if not bad_l else 'DIF',str(bad_l)))
+# ---------- imprimir ----------
+bad = [x for x in results if x[2] not in ('OK',) and x[2] != 'REVISAR']
+for x in results:
+    if x[0] in ('LAMINA 27','LAMINA 24','INTEGRACION','RESERVA') and x[2]=='OK': print('  OK', x[0], x[1], x[3])
+okc = [x for x in results if x[2] == 'OK']
+print('\n==== FILAS OK:', len(okc))
+print('==== DIFERENCIAS / PROBLEMAS:', len(bad))
+for x in bad: print(' ', x)

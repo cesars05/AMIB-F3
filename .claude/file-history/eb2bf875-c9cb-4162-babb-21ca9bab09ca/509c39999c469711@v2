@@ -1,0 +1,42 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$xl=$null
+for($t=0;$t -lt 30;$t++){ try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application"); break }catch{ Start-Sleep -Milliseconds 900 } }
+$wb=$null; foreach($w in $xl.Workbooks){ if($w.Name -match "Alumasc"){ $wb=$w } }
+$s=T { $wb.Worksheets.Item("Segment Beta") }
+$dst=Join-Path "C:\Users\cesar\OneDrive\Desktop\Alumasc & Peers\Alumasc\Financials" ("BACKUP_PRE_SEGBETA_"+(Get-Date -Format "yyyyMMdd_HHmmss")+"_"+$wb.Name)
+$wb.SaveCopyAs($dst)
+Write-Output ("Libro: "+$wb.Name+"   Backup: "+(Split-Path $dst -Leaf))
+
+# ---- guards ----
+if(([string](T { $s.Cells.Item(11,3).Text })) -ne "RIC"){ throw "r11c3 no es RIC" }
+if(([string](T { $s.Cells.Item(12,3).Text })) -ne "ALUG.L"){ throw "r12 no es ALUG.L" }
+if(([string](T { $s.Cells.Item(11,34).Text })) -notmatch "Tax Rate"){ throw "col 34 no es Tax Rate" }
+if(([string](T { $s.Cells.Item(11,31).Text })) -notmatch "Beta"){ throw "col 31 no es Beta" }
+Write-Output "Guards OK"
+
+$xl.Calculation=-4135
+$xl.DisplayAlerts=$false
+
+# ---- 1. borrar columnas que no se usan (de derecha a izquierda) ----
+# se quedan: 3 RIC, 4 Name, 5 MktCap, 7 Leases, 8 TotDebt, 10 Cash, 29 D/E, 31 Beta, 32 BetaU, 33 BetaRe, 34 Tax
+$borrar=@(30,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,9,6)
+foreach($c in $borrar){ T { $s.Columns.Item($c).Delete() | Out-Null } }
+Write-Output ("  "+$borrar.Count+" columnas eliminadas")
+
+# ---- verificar el nuevo mapa ----
+Write-Output "  mapa nuevo de columnas:"
+for($c=3;$c -le 14;$c++){
+  $h=[string](T { $s.Cells.Item(11,$c).Text }) -replace "`n"," "
+  if($h.Trim() -ne ""){ Write-Output ("     col "+$c+" = "+$h) }
+}
+
+# ---- 2. copiar una fila de datos limpia (r15) a las filas que faltan ----
+T { $s.Rows.Item(15).Copy() | Out-Null }
+foreach($r in 21,25,26,27,28){ T { $s.Rows.Item($r).PasteSpecial(-4104) | Out-Null } }
+T { $xl.CutCopyMode=$false }
+Write-Output "  fila de datos replicada a r21, r25:r28"
+
+$xl.Calculation=-4105
+$wb.Save()
+Write-Output "etapa 1 lista"

@@ -1,0 +1,46 @@
+$ErrorActionPreference="Stop"
+function T($sb){ for($k=0;$k -lt 20;$k++){ try{ return & $sb }catch{ $m=$_.Exception.Message; if($m -match "0x80010001|RPC_E_CALL|rejected|0x800AC472"){ Start-Sleep -Milliseconds 900 } else { throw } } }; throw "Excel ocupado" }
+$wb=$null
+for($t=0;$t -lt 30;$t++){
+  try{ $xl=[System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    foreach($w in $xl.Workbooks){ if([string]$w.Name -match "Alumasc"){ $wb=$w } }
+  }catch{}
+  if($wb -ne $null){ break }; Start-Sleep -Milliseconds 1200
+}
+$su=T { $wb.Worksheets.Item("Summary") }
+$d =T { $wb.Worksheets.Item("DCF") }
+$xl.Calculation=-4135
+$n=0
+for($r=14;$r -le 16;$r++){
+  $snap=$r+16          # r14->30, r15->31, r16->32
+  foreach($c in 4,5,6){
+    $f=[string](T { $su.Cells.Item($r,$c).Formula })
+    $old='$D'+$snap+':$J'+$snap
+    $new='$D'+$snap+':$I'+$snap
+    if($f.Contains($old)){ T { $su.Cells.Item($r,$c).Formula=$f.Replace($old,$new) }; $n++ }
+  }
+}
+$xl.Calculation=-4105
+T { $xl.CalculateFullRebuild() }; T { $xl.CalculateFullRebuild() }
+$wb.Save()
+Write-Output ("formulas corregidas: "+$n+" (esperado 9)")
+Write-Output ("  D14 frm= "+[string](T { $su.Range("D14").Formula }))
+Write-Output ""
+Write-Output "==================== FOOTBALL FIELD ===================="
+Write-Output ("        "+"".PadRight(27)+"Low".PadLeft(11)+"Target".PadLeft(11)+"High".PadLeft(11))
+for($r=12;$r -le 25;$r++){
+  $lab=[string](T { $su.Cells.Item($r,3).Text })
+  if($lab.Trim() -eq "" -or $r -eq 12 -or $r -eq 23){ continue }
+  if($lab.Length -gt 26){ $lab=$lab.Substring(0,26) }
+  Write-Output ("  r"+([string]$r).PadRight(4)+$lab.PadRight(27)+([string](T { $su.Cells.Item($r,4).Text })).PadLeft(11)+([string](T { $su.Cells.Item($r,5).Text })).PadLeft(11)+([string](T { $su.Cells.Item($r,6).Text })).PadLeft(11))
+}
+Write-Output ""
+Write-Output ("  CONTROL: DCF!E41 = "+[string](T { $d.Range("E41").Text })+"    Summary E14 (Base, Target) = "+[string](T { $su.Range("E14").Text })+"   <- deben ser casi iguales (E24=10.6% vs DCF 10.6%)")
+$tot=0
+foreach($nm in "Assumptions","Segment Model","Consolidated Model","DCF","EPV","SOTP","Summary"){
+  $s=T { $wb.Worksheets.Item($nm) }
+  $e=0; try{ $e=[int]$s.UsedRange.SpecialCells(-4123,16).Count }catch{}
+  if($e -gt 0){ Write-Output ("  ERRORES en "+$nm+": "+$e) }
+  $tot+=$e
+}
+Write-Output ("  celdas con error en el libro: "+$tot)
