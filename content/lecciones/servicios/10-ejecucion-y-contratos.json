@@ -1,0 +1,153 @@
+{
+  "id": "servicios.ejecucion-y-contratos",
+  "area": "servicios",
+  "materia": "Servicios de Inversión",
+  "subtemaId": "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados",
+  "objetivoIds": [
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o17",
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o19",
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o20",
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o21",
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o22",
+    "servicios.servicios-de-inversion.reportes-de-analisis.o01"
+  ],
+  "orden": 10,
+  "titulo": "Ejecución de Operaciones y Contratos Mixtos",
+  "resumen": "Las reglas para ejecutar operaciones según el tipo de servicio, el manejo de órdenes encontradas en cuentas nuevas y las disposiciones sobre contratos mixtos que incluyan servicios no regulados por la CNBV.",
+  "duracionMin": 40,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [69, 70, 71, 72]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "ejecucion-operaciones",
+      "titulo": "Ejecución de operaciones según tipo de servicio",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las Entidades Financieras o los Asesores en Inversiones deben ejecutar las operaciones de acuerdo con el tipo de servicio contratado por el cliente."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. **Servicios de Inversión Asesorados**: solo pueden ejecutar operaciones que hayan sido previamente recomendadas y aprobadas por el cliente, siguiendo la política de diversificación y los límites máximos establecidos.",
+            "2. **Servicios de Inversión No Asesorados (ejecución solo)**: pueden ejecutar operaciones que el cliente haya instruido directamente, sin necesidad de recomendación previa, siempre que estén dentro de los límites permitidos por la normativa.",
+            "3. **Servicios de Inversión Mixtos**: deben distinguir claramente qué operaciones provienen de asesoría y cuáles de instrucción directa del cliente."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "En servicios asesorados, no se pueden ejecutar operaciones que no hayan sido recomendadas y aprobadas previamente por el cliente. La ejecución solo sigue instrucciones directas."
+        }
+      ],
+      "ampliada": "La distinción entre asesorados y no asesorados es fundamental para la responsabilidad. En asesorados, el cliente aprueba la recomendación antes de la ejecución.",
+      "paginas": [69]
+    },
+    {
+      "id": "ordenes-en-cuentas-nuevas",
+      "titulo": "Manejo de órdenes encontradas en cuentas nuevas",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Cuando se abra una cuenta nueva y se encuentren órdenes pendientes de ejecución, existen reglas específicas para su manejo."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. **Verificar la vigencia** de la orden: debe estar dentro del plazo establecido por el cliente o por la normativa aplicable.",
+            "2. **Confirmar con el cliente** si desea mantener, modificar o cancelar la orden antes de ejecutarla.",
+            "3. **Documentar la decisión** del cliente y actuar en consecuencia.",
+            "4. Si el cliente no puede ser contactado, **no ejecutar** la orden hasta obtener su confirmación explícita."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "No se puede ejecutar una orden encontrada sin confirmación explícita del cliente, incluso si parece beneficiosa. La confirmación debe ser documentada."
+        }
+      ],
+      "ampliada": "El principio es claro: ninguna orden se ejecuta sin confirmación actual del cliente. Esto protege contra operaciones no autorizadas en cuentas recién abiertas.",
+      "paginas": [69, 70]
+    },
+    {
+      "id": "contratos-mixtos",
+      "titulo": "Contratos mixtos: servicios regulados y no regulados",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los contratos que incluyan Servicios de Inversión regulados por la CNBV junto con servicios no regulados (como servicios legales, contables o de otro tipo) deben cumplir reglas específicas."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. **Separación contable y operativa**: los aspectos regulados deben manejarse de acuerdo con las disposiciones de la CNBV, sin mezcla con los servicios no regulados.",
+            "2. **Información clara al cliente**: debe especificarse claramente qué parte del contrato está regulada por la CNBV y qué parte no lo está.",
+            "3. **Responsabilidad limitada**: la CNBV solo responde por la parte regulada del servicio; la parte no regulada queda bajo otras normativas aplicables.",
+            "4. **Prohibición de vinculación indebida**: no se puede usar la parte regulada para persuadir la contratación de la parte no regulada, ni viceversa."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La CNBV solo supervisa la parte regulada del contrato mixto. La parte no regulada (legal, contable, etc.) no está bajo su supervisión, aunque esté en el mismo contrato."
+        }
+      ],
+      "ampliada": "La separación es esencial para mantener la claridad regulatoria. El cliente debe saber exactamente qué está protegido por la CNBV y qué no.",
+      "paginas": [70, 71]
+    },
+    {
+      "id": "reporte-analisis-responsabilidades",
+      "titulo": "Responsabilidades en la elaboración de Reportes de Análisis",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las Entidades Financieras o los Asesores en Inversiones que elaboren Reportes de Análisis tienen responsabilidades específicas respecto de su contenido y divulgación."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. **Objetividad e independencia**: el análisis debe reflejar exclusivamente el punto de vista de los analistas responsables, sin influencia indebida de áreas de estructuración o colocación.",
+            "2. **Divulgación de intereses**: debe revelarse si analistas, consejeros o directivos mantienen inversiones en los valores analizados.",
+            "3. **Claridad en limitaciones**: se deben mencionar explícitamente los supuestos, limitaciones y rango de validez del análisis.",
+            "4. **Prohibición de inducción al error**: no se puede incluir información falsa o inducir a error sobre características, riesgos o desempeño de los valores analizados."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La independencia del analista es clave: no debe haber compensación de entidades distintas a la que elabora el reporte, salvo pertenecientes al mismo grupo financiero bajo condiciones estrictas."
+        }
+      ],
+      "ampliada": "El Reporte de Análisis debe ser una herramienta de información objetiva, no de persucripción. Sus limitaciones y supuestos deben estar claramente divulgados.",
+      "paginas": [71, 72]
+    }
+  ],
+  "puntosClave": [
+    "En servicios asesorados, solo se ejecutan operaciones previamente recomendadas y aprobadas por el cliente. En servicios no asesorados, se siguen instrucciones directas del cliente.",
+    "Órdenes encontradas en cuentas nuevas requieren verificación de vigencia y confirmación explícita del cliente antes de su ejecución.",
+    "Los contratos mixtos deben mantener separación contable y operativa entre servicios regulados y no regulados, con información clara al cliente sobre qué está supervisado por la CNBV.",
+    "Los Reportes de Análisis deben ser objetivos e independientes, divulgando intereses de analistas y limitaciones del análisis, sin inducir al error.",
+    "La CNBV solo supervisa la parte regulada de los servicios; en contratos mixtos, la parte no regulada queda bajo otras normativas."
+  ],
+  "practica": [
+    "g.servicios.l10.q01",
+    "g.servicios.l10.q02",
+    "g.servicios.l10.q03",
+    "g.servicios.l10.q04",
+    "g.servicios.l10.q05"
+  ],
+  "miniExamen": [
+    "g.servicios.l10.q06",
+    "g.servicios.l10.q07",
+    "g.servicios.l10.q08",
+    "g.servicios.l10.q09",
+    "g.servicios.l10.q10"
+  ],
+  "reto": [
+    "g.servicios.l10.q11",
+    "g.servicios.l10.q12",
+    "g.servicios.l10.q13",
+    "g.servicios.l10.q14",
+    "g.servicios.l10.q15"
+  ]
+}

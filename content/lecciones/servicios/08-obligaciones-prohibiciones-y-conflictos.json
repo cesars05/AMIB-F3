@@ -1,0 +1,262 @@
+{
+  "id": "servicios.obligaciones-prohibiciones-y-conflictos",
+  "area": "servicios",
+  "materia": "Servicios de Inversión",
+  "subtemaId": "servicios.servicios-de-inversion.obligaciones-prohibiciones-conflictos-de-interes-y-conducta-de-negocios",
+  "objetivoIds": [
+    "servicios.servicios-de-inversion.obligaciones-prohibiciones-conflictos-de-interes-y-conducta-de-negocios.o01",
+    "servicios.servicios-de-inversion.obligaciones-prohibiciones-conflictos-de-interes-y-conducta-de-negocios.o04",
+    "servicios.servicios-de-inversion.obligaciones-prohibiciones-conflictos-de-interes-y-conducta-de-negocios.o05",
+    "servicios.servicios-de-inversion.obligaciones-prohibiciones-conflictos-de-interes-y-conducta-de-negocios.o06",
+    "servicios.servicios-de-inversion.obligaciones-prohibiciones-conflictos-de-interes-y-conducta-de-negocios.o07"
+  ],
+  "orden": 8,
+  "titulo": "Obligaciones, prohibiciones y conflictos de interés",
+  "resumen": "Las obligaciones generales en la prestación de Servicios de Inversión, las prohibiciones, los supuestos de conflicto de interés para entidades no independientes y para Asesores en Inversiones personas físicas, y las conductas contrarias a los sanos usos bursátiles.",
+  "duracionMin": 50,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "obligaciones-generales",
+      "titulo": "Obligaciones generales de la prestación",
+      "bloques": [
+        {
+          "tipo": "lista",
+          "items": [
+            "1. **Proporcionar la Guía de Servicios de Inversión** (contenido en la lección de Guía y Registro).",
+            "2. Señalar el **nombre e información de contacto** de la persona que proporcionará el servicio, y documentar cualquier sustitución.",
+            "3. Implementar y divulgar mecanismos y procedimientos para la **difusión de información** relacionada con los servicios.",
+            "4. Mantener **listas actualizadas** de todos los clientes con número de cuenta, tipo de servicio y tipo de cliente; a disposición de la CNBV.",
+            "5. Cuando se proporcione información para contratar con una entidad financiera del exterior del mismo tipo, **llevar un registro** de dichos clientes y contar con procedimientos documentados."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La lista de clientes está a disposición de la **CNBV**, no del cliente. La guía se entrega **previo** a la prestación del servicio, no al contratar."
+        }
+      ],
+      "ampliada": "Las obligaciones están en la p. 53. La sustitución de la persona que presta el servicio debe documentarse; si fue a solicitud del cliente, se debe asentar.",
+      "paginas": [53]
+    },
+    {
+      "id": "prohibiciones",
+      "titulo": "Prohibiciones en la prestación de Servicios de Inversión",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las Entidades Financieras no podrán celebrar contratos de intermediación bursátil o de administración de valores en los que sean **cotitulares** de las cuentas de sus clientes."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. No pueden ser cotitulares los **apoderados** para celebrar operaciones con el público y operadores de bolsa de las propias Entidades Financieras.",
+            "2. No pueden ser cotitulares los **Asesores en Inversiones** que proporcionen sus servicios a los clientes de dichas Entidades Financieras."
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Además, las Entidades Financieras o los Asesores en Inversiones tendrán **prohibido realizar cualquiera de las actividades siguientes**, salvo que el cliente haya contratado el servicio de Asesoría de Inversiones."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Proporcionar **elementos de opinión** o juicios de valor respecto de Productos Financieros, en relación con el cliente.",
+            "2. Utilizar **expresiones o términos** que inviten al cliente a tomar decisiones de inversión respecto de Productos Financieros.",
+            "3. Emplear vocablos o expresiones como **la mejor opción en interés del cliente**, o aquella que pudiera satisfacer sus necesidades de inversión en particular."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Las tres prohibiciones de opinión y sugerencia solo no aplican cuando existe **Asesoría de Inversiones** contratada. Fuera de ese servicio, son actividades vedadas."
+        }
+      ],
+      "ampliada": "Las prohibiciones de cotitularidad impiden conflictos patrimoniales internos. Las prohibiciones de opinión y sugerencia solo ceden cuando hay Asesoría de Inversiones, que es el servicio habilitante para recomendaciones personalizadas.",
+      "paginas": [55]
+    },
+    {
+      "id": "prohibiciones-colocacion",
+      "titulo": "Prohibiciones en colocación y distribución de valores",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las Entidades Financieras que actúen como **Líderes Colocadores**, miembros del sindicato colocador o participen en la distribución de valores tienen reglas estrictas."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. No pueden realizar o ejecutar operaciones **por cuenta propia** respecto de valores objeto de oferta pública cuando existan instrucciones u órdenes de sus clientes pendientes de realizar o ejecutar sobre los mismos valores, salvo que se realicen en **igualdad de condiciones** o se trate de subastas sin acceso directo del gran público inversionista.",
+            "2. No pueden asignar valores a precio **distinto** del de la oferta pública inicial, salvo valores emitidos o garantizados por los Estados Unidos Mexicanos o por el Banco de México.",
+            "3. No pueden obtener un **diferencial** entre la tasa determinada por la emisora y la acordada con el cliente."
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Regla de tres noes:",
+          "texto": "No cuenta propia contra clientes, no precio distinto al de la OPI salvo valores gubernamentales y Banxico, y no diferencial entre tasa emisora y tasa cliente."
+        }
+      ],
+      "ampliada": "Estas prohibiciones protegen la paridad de condiciones en el mercado primario. La excepción de valores gubernamentales y Banxico se justifica porque su colocación responde a política monetaria y de deuda pública, no a dinámica de mercado abierto.",
+      "paginas": [55]
+    },
+    {
+      "id": "conflicto-no-independencia",
+      "titulo": "Conflictos de interés por no independencia",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Se presume conflicto de interés cuando Entidades Financieras o Asesores en Inversiones **no independientes** incurren en los siguientes supuestos y no cuentan con políticas o no se apegan a ellas."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Proporcionar Servicios de Inversión Asesorados sobre valores **emitidos por la propia Entidad Financiera** o por personas relacionadas (directamente o por fideicomisos), colocados por la casa de bolsa, cuando la tenencia entre sus propios clientes exceda el **20 %** del total de la emisión, salvo Clientes Sofisticados asesorados.",
+            "2. Proporcionar Servicios de Inversión Asesorados sobre valores emitidos por **personas no relacionadas**, colocados por la casa de bolsa, cuando la tenencia entre sus propios clientes exceda el **40 %** del total de la emisión, salvo Clientes Sofisticados asesorados.",
+            "3. Proporcionar Servicios de Inversión Asesorados sobre valores en oferta pública donde la Entidad Financiera actúa como **Líder Colocador**, miembro del sindicato o participante, que excedan el 40 % y cuyos recursos se destinen a pagar obligaciones de la Entidad Financiera o su grupo, o sean valores respaldados por activos de la Entidad Financiera o su grupo, o estén en su posición propia.",
+            "4. Proporcionar Servicios de Inversión Asesorados o Comercialización o Promoción sobre valores en cuya **estructuración** participó la Entidad Financiera o Asesor no independiente.",
+            "5. Proporcionar Servicios de Inversión Asesorados sobre **valores objeto de oferta pública** emitidos por la propia Entidad Financiera o de su grupo, con tenencia hasta el 20 %, salvo Clientes Sofisticados asesorados."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Los umbrales son **20 %** para valores propios o de relacionadas y **40 %** para valores de terceros, pero cuando esos terceros se vinculan con la oferta (recursos para pagar a la Entidad, o activos de la Entidad, o posición propia), el límite aplicable es **40 %** con condiciones adicionales."
+        }
+      ],
+      "ampliada": "La regla busca evitar la concentración de emisiones relacionadas en la cartera de clientes. Los Clientes Sofisticados asesorados quedan exceptuados del conflicto, pero la documentación es obligatoria.",
+      "paginas": [56, 57, 58, 59]
+    },
+    {
+      "id": "conflicto-diversificacion",
+      "titulo": "Conflicto por no cumplir la diversificación de la emisión",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las Entidades Financieras o Asesores en Inversiones no independientes incurren en conflicto por **no haber cumplido con la diversificación de la emisión** en estos supuestos."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Servicios Asesorados sobre valores en oferta pública cuya colocación entre sus propios clientes exceda del **20 %** del total de la emisión, si son valores de la propia Entidad Financiera o de relacionadas.",
+            "2. Servicios Asesorados sobre valores en oferta pública de personas no relacionadas que excedan el **40 %**, si la Entidad actúa como Líder Colocador o los recursos se destinan al pago de obligaciones a favor de la Entidad o su grupo, o son valores respaldados por activos de la Entidad o su grupo, o están en posición propia y en la OPI actuó como Líder Colocador o sindicado."
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Se considerará que **no** incurren en conflicto de interés cuando se cumpla cualquiera de las siguientes condiciones."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Autorización previa del Comité, órgano equivalente o persona responsable, por emisión o programa de colocación.",
+            "2. Valores con calificación **AAA o AA** (o equivalente).",
+            "3. Valores estructurados con plazo total igual o menor a **un año** que obliguen a liquidar al menos el principal.",
+            "4. En títulos opcionales, si la Entidad mantiene hasta el vencimiento un portafolio de cobertura entre **95 % y 105 %** de la exposición de la emisora, medida por el delta, con ajuste en dos días hábiles si se desvía."
+          ]
+        }
+      ],
+      "ampliada": "La excepción de los títulos opcionales exige cobertura delta neutral en el intervalo 95 % a 105 %, documentada por el Comité. La autorización debe constar en minuta.",
+      "paginas": [57, 58, 59, 60]
+    },
+    {
+      "id": "conflicto-personas-fisicas",
+      "titulo": "Conflictos de interés de Asesores en Inversiones personas físicas",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los Asesores en Inversiones que sean personas físicas deben contar con **políticas y lineamientos** para evitar incurrir en conflictos de interés."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Se considera conflicto obtener **beneficio no económico** (incluyendo reportes o análisis) de una Entidad Financiera a cambio de ejecutar las órdenes de sus clientes con dicha Entidad o por cualquier otro arreglo, y **no revelarlo** a sus clientes.",
+            "2. Recomendar un contrato de intermediación bursátil o de administración de valores en una Entidad Financiera cuando el Asesor es **accionista** de institución de crédito, casa de bolsa, operadora, distribuidora, calificadora o entidad del exterior, o es miembro del consejo, directivo, gerente, apoderado, empleado o participa en la administración de dichas instituciones, y **no revelarlo** a sus clientes.",
+            "3. Si el Asesor **sí revela** esta situación, no se considera conflicto, pero debe explicar las razones de su recomendación."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La revelación no solo libera de conflicto: también obliga a **explicar las razones** de la recomendación. La revelación simple no basta."
+        }
+      ],
+      "ampliada": "Los supuestos son enunciativos, no limitativos. El beneficio no económico (como recibir reportes) es tan grave como el económico si no se revela.",
+      "paginas": [60, 61]
+    },
+    {
+      "id": "supuestos-adicionales",
+      "titulo": "Supuestos adicionales de conflicto para no independientes",
+      "bloques": [
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Proporcionar Servicios de Inversión Asesorados sobre instrumentos de capital de emisoras que forman parte del **mismo Consorcio o Grupo empresarial** que la Entidad Financiera o Asesor no independiente.",
+            "2. Obtener para sí, para un cliente o para cualquier tercero, un **beneficio financiero** o evitar una pérdida, en perjuicio de los intereses de sus clientes."
+          ]
+        }
+      ],
+      "ampliada": "Estos supuestos complementan los anteriores: el conflicto por grupo y el beneficio en perjuicio del cliente son conductas vedadas sin necesidad de prueba adicional.",
+      "paginas": [61, 62]
+    },
+    {
+      "id": "sanoy-usos",
+      "titulo": "Conductas contrarias a los sanos usos bursátiles",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Se considera contrario a un sano uso o práctica bursátil que el personal de las Entidades Financieras o Asesores en Inversiones, o los propios Asesores en Inversiones personas físicas, actúen en cualquiera de los siguientes supuestos."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Revelar a los clientes información que induzca al error o falsa, con **dolo o negligencia**, sobre características o riesgos de un Producto Financiero, reportes de rendimientos, comisiones, precios, tasas, desempeño de valores o estimaciones futuras, aportaciones adicionales, valuaciones, calidad crediticia, conflictos de interés, liquidez, o requisitos para operar.",
+            "2. Actuar en contra del interés del cliente.",
+            "3. Manipular, modificar, alterar o inducir cambios en los resultados de la **evaluación del cliente** o del análisis del Producto Financiero.",
+            "4. No dar **cabal cumplimiento** a las normas para identificar y realizar operaciones que no provengan de Servicios de Inversión Asesorados.",
+            "5. No cumplir con la política para la **diversificación** de la cartera.",
+            "6. Realizar operaciones por recomendaciones que **excedan los límites máximos** de diversificación: se consideran operaciones no razonables en contravención al artículo 189, tercer párrafo, de la Ley del Mercado de Valores."
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Sano uso:",
+          "texto": "Mentir con dolo o negligencia, ir contra el cliente, manipular perfiles, ignorar reglas de identificación de operaciones, violar diversificación o exceder límites: todo es contrario al sano uso bursátil."
+        }
+      ],
+      "ampliada": "El artículo 189 de la Ley del Mercado de Valores sanciona las conductas contrarias a los sanos usos. La consecuencia de exceder límites de diversificación es la calificación de la operación como no razonable.",
+      "paginas": [62, 63]
+    }
+  ],
+  "puntosClave": [
+    "Prohibida la **cotitularidad** de apoderados, operadores y Asesores en Inversiones en las cuentas de clientes.",
+    "Prohibido dar opinión, invitar a decidir o emplear \"mejor opción\" fuera de la **Asesoría de Inversiones**.",
+    "En colocación, no hay operaciones por cuenta propia contra clientes, no precio distinto al de la OPI salvo valores gubernamentales y Banxico, y no diferencial entre tasa emisora y tasa cliente.",
+    "El límite de concentración es **20 %** para valores propios o relacionados y **40 %** para valores de terceros en Asesoría a no sofisticados.",
+    "No hay conflicto si hay autorización previa del Comité y se trata de valores AAA o AA, o de valores estructurados a un año con protección de principal, o de títulos opcionales con cobertura delta 95 % a 105 %.",
+    "Los Asesores personas físicas tienen conflicto si reciben beneficios no revelados o recomiendan intermediarios donde participan, sin revelarlo; si lo revelan, deben explicar las razones.",
+    "Es contrario al sano uso mentir con dolo o negligencia, ir contra el cliente, manipular perfiles o exceder los límites de diversificación."
+  ],
+  "practica": [
+    "g.servicios.l8.q01",
+    "g.servicios.l8.q02",
+    "g.servicios.l8.q03",
+    "g.servicios.l8.q04",
+    "g.servicios.l8.q05"
+  ],
+  "miniExamen": [
+    "g.servicios.l8.q06",
+    "g.servicios.l8.q07",
+    "g.servicios.l8.q08",
+    "g.servicios.l8.q09",
+    "g.servicios.l8.q10"
+  ],
+  "reto": [
+    "g.servicios.l8.q11",
+    "g.servicios.l8.q12",
+    "g.servicios.l8.q13",
+    "g.servicios.l8.q14",
+    "g.servicios.l8.q15"
+  ]
+}

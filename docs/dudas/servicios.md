@@ -1,0 +1,5 @@
+1. ¿El objetivoId `servicios.servicios-de-inversion.reportes-de-analisis.o01` debería estar en la lección 06 (gestion-de-inversiones) o en la lección 09 (guia-registro-y-comisiones)? Actualmente lo puse en ambas por precaución, pero según el orden del manual tal vez corresponda solo a la lección 06 donde se trata el contenido mínimo de los reportes.
+2. En la lección 05 (razonabilidad-y-comercializacion), el objetivo o13 (informacion-del-personal) podría estar mejor ubicado en otra lección, pero lo mantuve aquí por seguir el orden del manual tal como está en la taxonomía.
+3. Verificar que las páginas citadas en las fuentes correspondan exactamente al contenido del manual AMD 1, especialmente para los temas de comisiones y reportes de análisis que están en páginas 63-68.
+4. Confirmar que el umbral de 3,000,000 UDIS para Cliente Sofisticado sigue siendo vigente según el manual más reciente (no hay indicaciones de cambio en el material consultado).
+5. Revisar que la lista cerrada de valores para comercialización a no sofisticados (páginas 38-39) esté correctamente interpretada y no haya omisiones o inclusiones erróneas.

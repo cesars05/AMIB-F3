@@ -1,0 +1,184 @@
+{
+  "id": "servicios.perfil-del-producto",
+  "area": "servicios",
+  "materia": "Servicios de Inversión",
+  "subtemaId": "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados",
+  "objetivoIds": [
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o06",
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o18"
+  ],
+  "orden": 4,
+  "titulo": "Perfil del Producto Financiero",
+  "resumen": "El análisis obligatorio de cada Producto Financiero en Asesoría de Inversiones: los trece elementos mínimos basados en información pública, los elementos adicionales para valores complejos y el perfilado más simple exigible en Comercialización o Promoción.",
+  "duracionMin": 40,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [36, 37, 45]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "analisis-obligatorio",
+      "titulo": "El análisis del Producto Financiero: regla general",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las Entidades Financieras y los Asesores en Inversiones que proporcionen **Asesoría de Inversiones** deben efectuar un análisis de **cada Producto Financiero**. El resultado es el **perfil del Producto Financiero**, que debe ser congruente con todos los elementos que lo integran."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "El análisis se hace, como mínimo, con **información pública**. No se exige información privilegiada ni interna de la emisora; la fuente obligatoria es pública."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La trampa clásica: afirmar que se puede usar información privilegiada o que el análisis solo aplica a valores nuevos. La norma exige información pública y aplica a cada Producto Financiero que se recomiende."
+        }
+      ],
+      "ampliada": "El perfil del producto es el espejo del perfil del cliente: sin perfil de producto no hay razonabilidad posible. El manual (p. 36) exige congruencia interna del perfil resultante.",
+      "paginas": [36]
+    },
+    {
+      "id": "elementos-minimos",
+      "titulo": "Los trece elementos mínimos",
+      "bloques": [
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Las necesidades de inversión que pudieran satisfacer.",
+            "2. Los objetivos y especificaciones.",
+            "3. Los riesgos asociados: **crédito, liquidez y mercado**, así como la evaluación de los riesgos inherentes a los subyacentes.",
+            "4. Su liquidez, la existencia de un mercado secundario y las opciones de negociación; además, si su distribución es entre el gran público inversionista.",
+            "5. La situación financiera actual e histórica de la emisora del valor, contraparte o proveedor del instrumento financiero derivado.",
+            "6. La volatilidad de su precio.",
+            "7. Los costos de operación asociados, incluyendo comisiones y compensaciones que deberán pagarse.",
+            "8. La calidad de los custodios, fiduciarios, administradores de activos o garantes asociados.",
+            "9. El precio en función de los riesgos del Producto Financiero.",
+            "10. La información sobre sus características.",
+            "11. La prelación en su pago, en el evento de concurso mercantil de la emisora o contraparte.",
+            "12. Para valores representativos de capital: si son objeto de oferta pública inicial o si son considerados para el cálculo de algún índice bursátil.",
+            "13. Para valores estructurados, respaldados por activos, fiduciarios y demás emitidos al amparo de fideicomisos; valores emitidos en el extranjero; instrumentos de capital computables; ciertos ETF; hedge funds; derivados y otros productos complejos: evaluación adicional de subyacentes y estructura."
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen trece elementos:",
+          "texto": "Necesidades, objetivos, riesgos, liquidez, emisora, volatilidad, costos, terceros, precio, características, prelación, capital (OPI o índice) y, para productos complejos, subyacentes y estructura."
+        }
+      ],
+      "ampliada": "El manual (pp. 36 y 37) enumera los elementos del I al XIII. Respecto de valores calificados, las Entidades Financieras deben considerar elementos adicionales a la calificación para determinar el riesgo de crédito: la calificación no basta.",
+      "paginas": [36, 37]
+    },
+    {
+      "id": "productos-complejos",
+      "titulo": "Productos que exigen evaluación adicional",
+      "bloques": [
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Valores estructurados, valores respaldados por activos, certificados bursátiles fiduciarios y demás valores emitidos al amparo de fideicomisos.",
+            "2. Valores emitidos en el extranjero.",
+            "3. Instrumentos de capital que puedan considerarse para la integración del capital.",
+            "4. ETF que inviertan menos del 80 % de su patrimonio en activos del índice, que sean de gestión activa, que tengan créditos o préstamos a cargo del vehículo, que tomen posiciones cortas, que reproduzcan de forma inversa o exponencial el índice, cuyos índices replicados sean inversos o exponenciales de otros, o cuyos índices no tengan metodología pública.",
+            "5. Hedge funds.",
+            "6. Instrumentos financieros derivados.",
+            "7. Otros productos financieros complejos."
+          ]
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Qué se evalúa en estos productos",
+          "filas": [
+            ["Subyacentes", "Los activos subyacentes o componentes de los que dependen los flujos de efectivo asociados"],
+            ["Estructura", "Flujos de efectivo, forma en que los riesgos se mitigan o acrecentan, y funciones y responsabilidades de terceras partes"],
+            ["Información", "Disponibilidad y relevancia de la información del valor y de sus subyacentes en el mercado donde se negocia"],
+            ["Calidad del análisis", "Que el análisis de los subyacentes se haya realizado con información relevante sobre ellos"]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Para los ETF la frontera es el **80 %** del patrimonio invertido en activos del índice: por debajo de ese umbral, el ETF se trata como producto complejo. La gestión pasiva tradicional queda por arriba del umbral."
+        }
+      ],
+      "ampliada": "La lista es cerrada y apunta a la complejidad estructural o a la opacidad del producto. El umbral del 80 % en ETF se refiere a la inversión directa o indirecta en activos que formen parte del índice.",
+      "paginas": [37]
+    },
+    {
+      "id": "actualizacion-perfil-producto",
+      "titulo": "Actualización permanente del perfil del producto",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las Entidades Financieras o los Asesores en Inversiones deben asegurarse de que el perfilamiento se encuentre **actualizado en todo momento**. Están obligadas a considerar cualquier cambio en los elementos previstos, así como los **eventos relevantes** de las emisoras."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "No hay periodicidad fija como en el perfil del cliente (dos años): el perfil del producto se actualiza **en todo momento**, con cada cambio de los elementos y con cada evento relevante."
+        }
+      ],
+      "ampliada": "La actualización del perfil del producto es continua, mientras que la del perfil del cliente es periódica (cada dos años) o por cambios reportados. La diferencia es una trampa frecuente.",
+      "paginas": [37]
+    },
+    {
+      "id": "perfil-en-comercializacion",
+      "titulo": "Perfilado simplificado en Comercialización o Promoción",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "En **Comercialización o Promoción** también hay perfilado del producto, pero con un análisis razonable de contenido menor."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Las características del valor o instrumento financiero derivado.",
+            "2. El plazo que se estima adecuado para que el cliente mantenga su inversión.",
+            "3. En su caso, su liquidez y la existencia de un mercado secundario.",
+            "4. Las comisiones y compensaciones que deberán pagarse.",
+            "5. Los riesgos asociados."
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen comercialización:",
+          "texto": "Cinco elementos: características, plazo estimado, liquidez y mercado secundario, comisiones y riesgos. Si se menciona desempeño histórico, se debe aclarar si se consideraron costos y advertir que rendimientos pasados no garantizan el futuro."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Si se hace referencia al desempeño histórico, el rendimiento debe calcularse **descontando** gastos de intermediación y otros costos reales, nunca con base en estimaciones, y hay que advertir que rendimientos pasados no garantizan el desempeño futuro."
+        }
+      ],
+      "ampliada": "La Comercialización o Promoción es una recomendación generalizada: por eso el perfilado es del producto, no del cliente. La regla del desempeño histórico neto de costos está en la p. 45.",
+      "paginas": [45]
+    }
+  ],
+  "puntosClave": [
+    "En Asesoría de Inversiones se analiza **cada Producto Financiero** con, como mínimo, **información pública**.",
+    "El perfil del producto descansa en trece elementos: necesidades, objetivos, riesgos, liquidez, emisora, volatilidad, costos, terceros, precio, características, prelación, capital y, para complejos, subyacentes y estructura.",
+    "Respecto de valores calificados, la calificación **no basta**: se requieren elementos adicionales para el riesgo de crédito.",
+    "Los ETF que inviertan **menos del 80 %** del patrimonio en activos del índice se tratan como producto complejo.",
+    "El perfil del producto debe estar actualizado **en todo momento**; no hay periodicidad fija.",
+    "En Comercialización o Promoción el análisis mínimo tiene **cinco elementos**: características, plazo, liquidez, comisiones y riesgos.",
+    "El desempeño histórico citado debe ser **neto de costos**, sin estimaciones, con la advertencia de que rendimientos pasados no garantizan el futuro."
+  ],
+  "practica": [
+    "g.servicios.l4.q01",
+    "g.servicios.l4.q02",
+    "g.servicios.l4.q03",
+    "g.servicios.l4.q04",
+    "g.servicios.l4.q05"
+  ],
+  "miniExamen": [
+    "g.servicios.l4.q06",
+    "g.servicios.l4.q07",
+    "g.servicios.l4.q08",
+    "g.servicios.l4.q09",
+    "g.servicios.l4.q10"
+  ],
+  "reto": [
+    "g.servicios.l4.q11",
+    "g.servicios.l4.q12",
+    "g.servicios.l4.q13",
+    "g.servicios.l4.q14",
+    "g.servicios.l4.q15"
+  ]
+}

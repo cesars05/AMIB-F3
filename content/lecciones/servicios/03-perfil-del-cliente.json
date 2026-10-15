@@ -1,0 +1,263 @@
+{
+  "id": "servicios.perfil-del-cliente",
+  "area": "servicios",
+  "materia": "Servicios de Inversión",
+  "subtemaId": "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados",
+  "objetivoIds": [
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o04",
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o06"
+  ],
+  "orden": 3,
+  "titulo": "Perfil del cliente en Servicios de Inversión Asesorados",
+  "resumen": "Los tres elementos obligatorios de la evaluación (conocimientos y experiencia, situación y capacidad financiera, objetivos de inversión), las reglas de actualización, las obligaciones adicionales para Clientes Sofisticados y lo que sucede cuando no hay información suficiente.",
+  "duracionMin": 40,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [32, 33, 34, 35, 36]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "tres-elementos",
+      "titulo": "Los tres elementos de la evaluación",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "La evaluación para determinar el **perfil del cliente** debe incluir tres aspectos básicos. No son opcionales ni intercambiables: forman el mínimo regulatorio."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. **Conocimientos y experiencia** del cliente",
+            "2. **Situación y capacidad financiera** del cliente",
+            "3. **Objetivos de inversión** del cliente, respecto de los montos invertidos en la cuenta"
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Regla de tres:",
+          "texto": "Toda recomendación razonable descansa en la congruencia entre el **perfil del cliente** y el **perfil del Producto Financiero**. Sin los tres elementos, no hay perfil válido."
+        }
+      ],
+      "ampliada": "El manual (p. 32) enumera los tres aspectos básicos. El resultado de la evaluación debe guardar congruencia interna: no puede concluirse un perfil agresivo si los objetivos son conservadores.",
+      "paginas": [32, 36]
+    },
+    {
+      "id": "conocimientos-experiencia",
+      "titulo": "Elemento 1: Conocimientos y experiencia",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Este elemento busca saber si el cliente entiende lo que va a contratar. El manual exige revisar su historial y su formación."
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Qué se evalúa",
+          "filas": [
+            ["Formación y trayectoria", "Nivel de estudios, edad, ocupación, actividad profesional actual y, en su caso, las ocupaciones o actividades profesionales anteriores relevantes"],
+            ["Historial de inversión", "Valores e instrumentos financieros derivados en que haya invertido, con frecuencia, plazo y volumen; tipo de valor o instrumento"],
+            ["Tipos de valores considerados", "Deuda gubernamental, deuda de personas morales o fideicomisos, acciones de sociedades de inversión, valores estructurados, valores respaldados por activos, certificados bursátiles fiduciarios, acciones de SABs o SAPIBs de alta, media, baja o nula bursatilidad, valores extranjeros y vehículos de inversión colectiva listados"],
+            ["Estrategias y servicios", "Estrategias de inversión de las operaciones realizadas y los Servicios de Inversión que conozca"],
+            ["Conocimiento general", "Nivel general de conocimientos financieros sobre las operaciones realizadas y sobre los servicios asesorados a contratar"]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El historial se limita a los últimos **dos años** y no se pueden tomar en cuenta **operaciones aisladas**. El examen suele preguntar si basta una operación esporádica hace cinco años: no."
+        }
+      ],
+      "ampliada": "El manual (p. 32) detalla que la experiencia se mide en los últimos dos años y que las operaciones aisladas no generan experiencia. La categoría de vehículos de inversión colectiva corresponde a los ETF listados que buscan reproducir índices o parámetros de referencia.",
+      "paginas": [32]
+    },
+    {
+      "id": "situacion-financiera",
+      "titulo": "Elemento 2: Situación y capacidad financiera",
+      "bloques": [
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Origen y porcentaje aproximado de los ingresos y activos que se destinarán a las operaciones de los Servicios de Inversión.",
+            "2. Porcentaje de los compromisos financieros que el cliente asuma en la contratación, en relación con su patrimonio.",
+            "3. Porcentaje que los recursos invertidos en la Entidad Financiera representa, en relación con los invertidos en otras."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Se pide el **porcentaje** de los ingresos, compromisos y recursos, no el monto absoluto. La trampa es ofrecer opciones con cifras exactas cuando la norma exige proporciones."
+        }
+      ],
+      "ampliada": "La situación financiera se mide con porcentajes relativos al patrimonio y a la concentración de recursos en la Entidad Financiera. No se pide una auditoría, sino una evaluación razonable.",
+      "paginas": [32]
+    },
+    {
+      "id": "objetivos-inversion",
+      "titulo": "Elemento 3: Objetivos de inversión",
+      "bloques": [
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Propósito de la inversión.",
+            "2. Duración prevista para la inversión.",
+            "3. Nivel de tolerancia al riesgo del cliente por cada objetivo de inversión.",
+            "4. Limitantes y restricciones para la inversión, por voluntad del cliente."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La **tolerancia al riesgo** se evalúa **por objetivo de inversión**, no como un número único para toda la cuenta. El examen suele presentar opciones que tratan el perfil como monolítico."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "El perfil puede **particularizarse** en cada una de las cuentas que el cliente mantenga, conforme a los distintos objetivos de inversión respecto de los montos invertidos en cada una."
+        }
+      ],
+      "ampliada": "El manual permite la multiplicidad de perfiles dentro de una misma relación cliente-entidad, siempre que cada cuenta tenga objetivos claros. La tolerancia al riesgo se asocia a cada objetivo, no al cliente en abstracto.",
+      "paginas": [32, 33]
+    },
+    {
+      "id": "informacion-insuficiente",
+      "titulo": "Cuando falta información: las presunciones negativas",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Si la Entidad Financiera o el Asesor en Inversiones no cuentan con elementos suficientes, o el cliente no proporciona información, deben **asumir** tres cosas."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. El cliente **no tiene conocimientos ni experiencia** previos en materia financiera.",
+            "2. El cliente **no ha invertido** en valores o instrumentos financieros derivados.",
+            "3. Su nivel de tolerancia al riesgo es el **más conservador** o el de mayor aversión al riesgo."
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Regla de conservación:",
+          "texto": "Sin información, el cliente es novato y conservador. No se puede presumir experiencia ni tolerancia alta."
+        }
+      ],
+      "ampliada": "Las presunciones negativas son obligatorias, no discrecionales. La finalidad es proteger al cliente que no informa: se le trata como el más vulnerable.",
+      "paginas": [32]
+    },
+    {
+      "id": "obligaciones-adicionales",
+      "titulo": "Obligaciones adicionales y actualización del perfil",
+      "bloques": [
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Informar el perfil",
+              "cuando": "Una vez efectuada la evaluación",
+              "texto": "Las Entidades Financieras o los Asesores en Inversiones deben informar al cliente el perfil resultante, explicando detalladamente su significado para obtener su **conformidad**."
+            },
+            {
+              "titulo": "Sin conformidad",
+              "cuando": "Si el cliente no da su conformidad",
+              "texto": "Se debe solicitar más información para determinar un perfil aceptable. Si el cliente no aporta mayores elementos pero quiere un perfil más riesgoso, interviene el responsable de supervisar el cumplimiento, el contralor normativo o la persona encargada del control interno, quien debe verificar que se le informen los riesgos."
+            },
+            {
+              "titulo": "Sin conformidad, no hay servicio",
+              "cuando": "Si no se obtiene la conformidad",
+              "texto": "La Entidad Financiera o el Asesor en Inversiones **no podrá proporcionar** Servicios de Inversión Asesorados."
+            },
+            {
+              "titulo": "Actualización periódica",
+              "cuando": "Por lo menos una vez cada **dos años**",
+              "texto": "Se debe pedir al cliente que confirme que los elementos utilizados para determinar su perfil no han sufrido cambios significativos."
+            }
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La actualización es **cada dos años**, no anual. Y si el cliente no da conformidad, no se puede seguir asesorando."
+        }
+      ],
+      "ampliada": "La conformidad del cliente es un requisito de prestación, no un trámite. La intervención del responsable de supervisar es el mecanismo de control cuando el cliente presiona por un perfil más riesgoso sin sustento.",
+      "paginas": [33, 34]
+    },
+    {
+      "id": "sofisticados-y-cuestionarios",
+      "titulo": "Clientes Sofisticados y buenas prácticas de evaluación",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Para los **Clientes Sofisticados**, las Entidades Financieras únicamente están obligadas a conocer sus **objetivos de inversión** para elaborar el perfil."
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Cuando se usen entrevistas o cuestionarios, hay reglas de conducta estricta."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. No pueden inducir al cliente a responder de una determinada manera.",
+            "2. No pueden contener respuestas referidas solamente a escalas numéricas sin estar asociadas a elementos cualitativos.",
+            "3. No pueden dar la posibilidad de que se generen varias respuestas para el mismo cliente respecto de la misma cuenta.",
+            "4. Deben contener preguntas claras y de fácil comprensión."
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Las categorías de perfiles no pueden ser seleccionadas por el cliente; deben asociarse a variables cuantitativas y cualitativas, explicar las diferencias con lenguaje claro y reflejar la relación riesgo-rendimiento."
+        }
+      ],
+      "ampliada": "La simplificación para Clientes Sofisticados es enorme: solo se conocen objetivos. Las reglas de los cuestionarios evitan manipulación y subjetividad excesiva.",
+      "paginas": [33, 34]
+    },
+    {
+      "id": "sistemas-y-documentacion",
+      "titulo": "Sistemas electrónicos, soporte y designación de responsables",
+      "bloques": [
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Los sistemas o medios electrónicos deben utilizarse en las circunstancias y mercados para los que fueron diseñados.",
+            "2. Las Entidades Financieras o Asesores en Inversiones personas morales deben cerciorarse de que el personal conozca los sistemas utilizados.",
+            "3. Se debe determinar el alcance de los sistemas y contar con herramientas para validar sus resultados.",
+            "4. Se debe conservar **soporte documental** de la evaluación, con fecha, como parte del expediente del cliente.",
+            "5. Se debe identificar y designar a las personas, áreas u órganos colegiados responsables de la evaluación y de los sistemas."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El soporte documental no es opcional: es parte integrante del expediente. La omisión documental invalida la evaluación a efectos regulatorios."
+        }
+      ],
+      "ampliada": "El uso de sistemas automatizados no elimina la responsabilidad humana. Las Entidades Financieras y Asesores en Inversiones deben validar los resultados y documentar todo.",
+      "paginas": [34, 35]
+    }
+  ],
+  "puntosClave": [
+    "La evaluación del perfil del cliente tiene tres elementos: **conocimientos y experiencia**, **situación y capacidad financiera**, **objetivos de inversión**.",
+    "El historial de inversión se limita a los últimos **dos años** y excluye operaciones aisladas.",
+    "Los objetivos de inversión incluyen propósito, duración, tolerancia al riesgo **por objetivo** y limitantes del cliente.",
+    "Sin información suficiente se presume: no conocimientos, no experiencia y tolerancia **más conservadora**.",
+    "El perfil debe informarse al cliente y obtener su **conformidad**; sin conformidad no hay Servicios de Inversión Asesorados.",
+    "La actualización del perfil es **cada dos años** por lo menos.",
+    "Para Clientes Sofisticados basta conocer los **objetivos de inversión**.",
+    "Los cuestionarios no pueden inducir respuestas, ser solo escalas numéricas ni dar varias respuestas para la misma cuenta."
+  ],
+  "practica": [
+    "g.servicios.l3.q01",
+    "g.servicios.l3.q02",
+    "g.servicios.l3.q03",
+    "g.servicios.l3.q04",
+    "g.servicios.l3.q05"
+  ],
+  "miniExamen": [
+    "g.servicios.l3.q06",
+    "g.servicios.l3.q07",
+    "g.servicios.l3.q08",
+    "g.servicios.l3.q09",
+    "g.servicios.l3.q10"
+  ],
+  "reto": [
+    "g.servicios.l3.q11",
+    "g.servicios.l3.q12",
+    "g.servicios.l3.q13",
+    "g.servicios.l3.q14",
+    "g.servicios.l3.q15"
+  ]
+}

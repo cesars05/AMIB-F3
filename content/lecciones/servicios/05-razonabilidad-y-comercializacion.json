@@ -1,0 +1,187 @@
+{
+  "id": "servicios.razonabilidad-y-comercializacion",
+  "area": "servicios",
+  "materia": "Servicios de Inversión",
+  "subtemaId": "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados",
+  "objetivoIds": [
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o07",
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o08",
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o09",
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o10",
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o11",
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o12",
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o13"
+  ],
+  "orden": 5,
+  "titulo": "Razonabilidad, diversificación y obligaciones en la Asesoría de Inversiones",
+  "resumen": "La evaluación de razonabilidad previa a cada recomendación, los valores que pueden comercializarse a no sofisticados, la justificación de estrategias, las cuentas transferidas y la información que debe conocer el personal.",
+  "duracionMin": 50,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [37, 38, 39, 40, 41]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "razonabilidad",
+      "titulo": "Razonabilidad: la verificación previa a cada recomendación",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "**Previo a cada recomendación**, consejo o sugerencia personalizada, la Entidad Financiera o el Asesor en Inversiones debe asegurarse de que son **razonables** para el cliente y la cuenta de que se trate."
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Doble verificación de la razonabilidad",
+          "filas": [
+            ["Congruencia", "Entre el **perfil del cliente** y el **perfil del Producto Financiero**"],
+            ["Límites", "Cumplimiento de los **límites máximos** establecidos por el Comité Responsable del Análisis de los Productos Financieros, órgano equivalente o persona responsable, conforme a la política de diversificación de la cartera"]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La razonabilidad **no garantiza** el resultado, el éxito ni los rendimientos de las inversiones. Además, respecto de valores objeto de Comercialización o Promoción, no se exige la evaluación de razonabilidad."
+        }
+      ],
+      "ampliada": "La razonabilidad se verifica antes de cada recomendación, no una vez al firmar el contrato. La excepción de Comercialización o Promoción se explica porque ahí la recomendación es generalizada, no personalizada.",
+      "paginas": [37, 38]
+    },
+    {
+      "id": "valores-comercializacion",
+      "titulo": "Qué se puede comercializar a clientes no sofisticados",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las Entidades Financieras solo pueden comercializar o promover a clientes **no sofisticados** los valores siguientes."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Valores gubernamentales con plazo a vencimiento igual o menor a **tres años**.",
+            "2. Valores de captación bancaria inscritos en el RNV con calificación **AAA**, o su equivalente; valores con calificación **AAA**; y títulos opcionales de entidades del mismo grupo con calificación **AAA** cuando sean responsables finales del pago, siempre que el plazo sea igual o menor a **un año** y obliguen a liquidar al menos el principal.",
+            "3. Valores estructurados con plazo igual o menor a **un año** que obliguen a liquidar al menos el principal, con respaldo de entidad calificada **AAA**.",
+            "4. Instrumentos de deuda de personas morales o fideicomisos con plazo igual o menor a **un año** y calificación **AAA**.",
+            "5. Acciones de sociedades de inversión cuyos activos sean exclusivamente los valores de las fracciones anteriores, o sociedades de inversión en instrumentos de deuda clasificadas como de **corto o mediano plazo**.",
+            "6. Certificados bursátiles fiduciarios indizados referenciados a valores gubernamentales o garantizados por los Estados Unidos Mexicanos, gestionados por Entidades Financieras y Asesores en Inversiones."
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Regla de la lista cerrada:",
+          "texto": "Fuera de esta lista, solo se puede comercializar a **Clientes Sofisticados**. El plazo y la calificación AAA son la puerta de entrada."
+        }
+      ],
+      "ampliada": "La lista es limitativa. Los plazos máximos son tres años para valores gubernamentales y un año para el resto. La calificación exigida es AAA o equivalente, otorgada por una institución calificadora de valores.",
+      "paginas": [38, 39]
+    },
+    {
+      "id": "recomendaciones-estrategias",
+      "titulo": "Recomendaciones de estrategias: la justificación obligatoria",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Cuando se presta Asesoría de Inversiones a clientes que **no sean** Inversionistas Institucionales o Clientes Sofisticados, se pueden recomendar clases o categorías de valores o la **adopción de una estrategia de inversión o composición de la cartera**, incluyendo una justificación de que la recomendación resulta razonable."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. La justificación se elabora y entrega al cliente.",
+            "2. Debe precisar las clases o categorías de valores que podrán adquirirse.",
+            "3. Debe señalar los porcentajes máximos de inversión por clase o categoría, conforme al perfil del cliente.",
+            "4. Debe incorporar los criterios de diversificación correspondientes.",
+            "5. Debe establecer los límites máximos propuestos para la inversión en valores."
+          ]
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Recomendaciones específicas sin estrategia previa",
+          "filas": [
+            ["Situación", "Se recomienda en específico una operación sin haber formulado antes la recomendación general"],
+            ["Contenido de la justificación", "Características del valor o instrumento, límite de inversión aplicable y perfil del cliente correspondiente"],
+            ["Frecuencia", "Por **cada recomendación** que se efectúe"]
+          ]
+        }
+      ],
+      "ampliada": "La justificación documenta que la recomendación es razonable para ese cliente y esa cuenta. Si se hace una recomendación puntual sin estrategia previa, la justificación es individual y debe contener los tres elementos listados.",
+      "paginas": [40]
+    },
+    {
+      "id": "cuentas-transferidas",
+      "titulo": "Cuentas transferidas de otra Entidad Financiera",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Cuando una cuenta se forma en todo o en parte con valores o instrumentos transferidos de otra Entidad Financiera, o cuando la cuenta no había sido objeto de Asesoría de Inversiones por la propia Entidad Financiera, existen obligaciones especiales."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. **Identificar** dichas cuentas.",
+            "2. Contar con mecanismos o procedimientos determinados por el Comité Responsable del Análisis de los Productos Financieros, órgano equivalente o persona responsable, para su manejo y ajuste progresivo a las disposiciones.",
+            "3. Identificar los valores o instrumentos de la cartera que se recibieron de otra Entidad Financiera o que no provienen de la Asesoría de Inversiones propia.",
+            "4. Los Asesores en Inversiones personas físicas deben establecer y documentar previamente dichos mecanismos."
+          ]
+        }
+      ],
+      "ampliada": "La regla evita que valores heredados de otra relación se contaminen con recomendaciones posteriores. El tratamiento es progresivo: no se exige la venta inmediata, pero sí la identificación y el plan de ajuste.",
+      "paginas": [40, 41]
+    },
+    {
+      "id": "informacion-del-personal",
+      "titulo": "Información y capacitación del personal",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El personal que participe en la Asesoría de Inversiones debe tener **pleno conocimiento** del perfil de los Productos Financieros ofrecidos y del perfil de sus clientes."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Además de las tablas de especificaciones elaboradas por el Comité, el personal debe conocer los documentos de oferta, prospectos o folletos informativos autorizados.",
+            "2. Debe conocer las disposiciones aplicables que regulan los Servicios de Inversión Asesorados.",
+            "3. Debe conocer toda la información relativa al perfil de los Productos Financieros.",
+            "4. La Entidad Financiera o el Asesor en Inversiones debe capacitar al personal sobre las características de los productos y del propio servicio asesorado.",
+            "5. Se deben comunicar oportunamente las políticas al personal relacionado con la prestación de servicios."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La capacitación no es solo inicial: se deben comunicar oportunamente las políticas de manera continua. Y los Asesores en Inversiones personas físicas no capacitan a otros, pero están obligados a conocer la información."
+        }
+      ],
+      "ampliada": "La regla busca que quien recomienda entienda qué recomienda y a quién. La capacitación y la comunicación oportuna de políticas son obligaciones permanentes.",
+      "paginas": [41]
+    }
+  ],
+  "puntosClave": [
+    "La razonabilidad se verifica **previo a cada recomendación**, no solo al inicio.",
+    "La verificación de razonabilidad exige congruencia entre perfil del cliente y perfil del producto, más el cumplimiento de los límites de diversificación.",
+    "Respecto de valores objeto de Comercialización o Promoción **no se exige** evaluación de razonabilidad.",
+    "A clientes no sofisticados solo se puede comercializar valores gubernamentales a **tres años**, valores AAA a **un año** y los demás supuestos de la lista cerrada.",
+    "La justificación de estrategia debe incluir clases de valores, porcentajes máximos, criterios de diversificación y límites de inversión.",
+    "Las cuentas transferidas de otra Entidad Financiera deben identificarse y manejarse con mecanismos de ajuste progresivo.",
+    "El personal debe conocer prospectos autorizados, disposiciones aplicables y el perfil de los Productos Financieros; la capacitación es obligatoria."
+  ],
+  "practica": [
+    "g.servicios.l5.q01",
+    "g.servicios.l5.q02",
+    "g.servicios.l5.q03",
+    "g.servicios.l5.q04",
+    "g.servicios.l5.q05"
+  ],
+  "miniExamen": [
+    "g.servicios.l5.q06",
+    "g.servicios.l5.q07",
+    "g.servicios.l5.q08",
+    "g.servicios.l5.q09",
+    "g.servicios.l5.q10"
+  ],
+  "reto": [
+    "g.servicios.l5.q11",
+    "g.servicios.l5.q12",
+    "g.servicios.l5.q13",
+    "g.servicios.l5.q14",
+    "g.servicios.l5.q15"
+  ]
+}

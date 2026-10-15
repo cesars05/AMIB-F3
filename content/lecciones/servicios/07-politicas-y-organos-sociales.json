@@ -1,0 +1,205 @@
+{
+  "id": "servicios.politicas-y-organos-sociales",
+  "area": "servicios",
+  "materia": "Servicios de Inversión",
+  "subtemaId": "servicios.servicios-de-inversion.responsabilidades-de-los-organos-sociales",
+  "objetivoIds": [
+    "servicios.servicios-de-inversion.responsabilidades-de-los-organos-sociales.o01"
+  ],
+  "orden": 7,
+  "titulo": "Políticas y lineamientos: órganos sociales responsables",
+  "resumen": "Quién aprueba las políticas: Consejo de Administración; qué debe contener elComité Responsable del Análisis de los Productos Financieros; la persona responsable de supervisar el cumplimiento y sus funciones; y los sistemas de remuneración alineados al interés del cliente.",
+  "duracionMin": 45,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [48, 49, 50, 51, 52, 53]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "aprobacion-politicas",
+      "titulo": "Quién aprueba las políticas y lineamientos",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "El **Consejo de Administración** de las Entidades Financieras, u órgano equivalente o persona encargada de la administración (en Asesores en Inversiones personas morales), debe aprobar las políticas y lineamientos para cuatro materias."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Evaluación para determinar los **perfiles de los clientes**.",
+            "2. Análisis de los **Productos Financieros** para ser ofrecidos, atendiendo a su complejidad y al servicio asesorado a proporcionar.",
+            "3. Evaluación de la **razonabilidad** de las recomendaciones u operaciones.",
+            "4. Parámetros de actuación para quienes proporcionan Servicios de Inversión, que deben contener al menos límites en la compra o venta de valores y la relación adecuada entre plazos promedio de vencimiento y necesidades de liquidez del cliente.",
+            "5. **Difusión** a los clientes de la información relativa a los Productos Financieros, actividades, servicios y comisiones cobradas."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Las políticas y lineamientos de las fracciones I a IV se deben presentar a la **CNBV** en un plazo de **diez días hábiles** contados a partir de su aprobación. La CNBV puede ordenar correcciones en cualquier tiempo."
+        }
+      ],
+      "ampliada": "El Consejo de Administración es el órgano aprobador. En Asesores en Inversiones personas físicas no hay Consejo, pero deben **documentar** las políticas y lineamientos que definan sobre los mismos aspectos. La presentación a la CNBV se cumple en diez días hábiles.",
+      "paginas": [48]
+    },
+    {
+      "id": "comite-responsable",
+      "titulo": "Comité Responsable del Análisis de los Productos Financieros",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "titulo": "Comité Responsable del Análisis de los Productos Financieros",
+          "filas": [
+            ["Quién lo integra", "Las Entidades Financieras **deben contar** con él; en instituciones de crédito y casas de bolsa sus miembros deben ser **independientes** de las áreas de estructuración"],
+            ["Apoyo técnico", "Debe apoyarse en la **Unidad para la Administración Integral de Riesgos** u otras áreas técnicas, según la naturaleza de la función"],
+            ["Documentación", "Minutas circunstanciadas de cada sesión, con comentarios de asistentes, presentaciones y anexos, firmadas por los asistentes; se conservan **cinco años** y se mantienen a disposición de la CNBV"],
+            ["Asesores personas morales", "No están obligados a tener comité, pero deben tener un **órgano equivalente** o designar una **persona responsable** que asuma las funciones"],
+            ["Asesores personas físicas", "Deben llevar a cabo las actividades de las fracciones II a VI"]
+          ]
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Funciones del Comité, órgano equivalente o persona responsable:",
+            "1. Elaborar políticas para la entrega de información sobre Productos Financieros, incluyendo prospecto de información o colocación autorizado por la CNBV.",
+            "2. Definir políticas de **diversificación** de carteras.",
+            "3. Regular el manejo de cuentas con valores transferidos de otra Entidad Financiera.",
+            "4. Revisar periódicamente el **marco general de actuación**.",
+            "5. Implementar y divulgar mecanismos de difusión de información.",
+            "6. Establecer políticas para evitar **conflictos de interés**.",
+            "7. Establecer las **comisiones** que se pretendan cobrar.",
+            "8. Analizar y dar seguimiento a **reclamaciones** y acciones judiciales.",
+            "9. Aprobar el tipo de perfil de inversión para el cual resulte razonable invertir en determinado Producto Financiero.",
+            "10. Establecer **límites máximos** para la composición de las carteras conforme a la política de diversificación.",
+            "11. Autorizar el ofrecimiento al mercado o la adquisición de **nuevos Productos Financieros** (salvo valores emitidos por los Estados Unidos Mexicanos o el Banco de México).",
+            "12. Para analizar el precio de nuevos productos o los que determine, considerar el **precio actualizado para valuación** del proveedor de precios.",
+            "13. Dar seguimiento periódico al desempeño de los Productos Financieros, respecto de su riesgo en relación con el rendimiento efectivamente pagado.",
+            "14. **Aprobar la guía** de Servicios de Inversión elaborada, de manera previa a su utilización."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Los miembros del Comité de instituciones de crédito y casas de bolsa deben ser independientes de las áreas de estructuración, pero los funcionarios de esas áreas pueden asistir a las sesiones **con voz, pero sin voto**."
+        }
+      ],
+      "ampliada": "El Comité es el órgano técnico central. La independencia de sus miembros en instituciones de crédito y casas de bolsa es clave. Los Asesores en Inversiones personas morales pueden sustituirlo con un órgano equivalente o persona responsable. Las funciones están en las pp. 48 a 50.",
+      "paginas": [48, 49, 50]
+    },
+    {
+      "id": "supervisar-cumplimiento",
+      "titulo": "Persona responsable de supervisar el cumplimiento",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "titulo": "Perfil y nombramiento",
+          "filas": [
+            ["Designación", "Por el **Consejo de Administración**"],
+            ["Requisitos", "Independencia, recursos, conocimientos y experiencia necesarios; acceso a toda la información relacionada con los Servicios de Inversión"],
+            ["Restricción", "**No puede participar** en la prestación de Servicios de Inversión ni en la estructuración de Productos Financieros"],
+            ["Reporte", "Al Consejo de Administración, en su caso a través del **Comité de Auditoría**"]
+          ]
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Funciones principales:",
+            "1. Vigilar permanentemente el cumplimiento de las disposiciones relativas a la prestación de los Servicios de Inversión.",
+            "2. Vigilar, cuando menos a través de **muestras estadísticamente significativas**, las comisiones que cobra la Entidad Financiera o el Asesor en Inversiones (persona moral).",
+            "3. Verificar la existencia de **mecanismos de control interno** e infraestructura adecuados.",
+            "4. Evaluar el cumplimiento de políticas para evitar conflictos de interés, detectar cualquier conflicto y dar **aviso inmediato** al Consejo de Administración, órgano equivalente o persona encargada.",
+            "5. Resolver las consultas que le presenten las áreas que proporcionan los Servicios de Inversión.",
+            "6. Evaluar y revisar continuamente la conducta de las personas que proporcionan Servicios de Inversión, tanto en operaciones propias como de clientes.",
+            "7. Llevar un **registro de todas las reclamaciones** recibidas, así como de las acciones judiciales interpuestas, con la información requerida.",
+            "8. Enviar **trimestralmente** a la CNBV los reportes regulatorios de Servicios de Inversión."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La conservación del registro de cada reclamación o acción judicial es por **tres años** a partir de que se resuelva o la sentencia sea cosa juzgada. No es cinco años como las minutas del Comité."
+        }
+      ],
+      "ampliada": "La persona responsable de supervisar tiene un perfil de independencia estricta. En sociedades operadoras y distribuidoras de fondos, estas funciones pueden ejercerse por el **contralor normativo**. En Asesores en Inversiones personas morales, conforme a su manual de conducta deben tener una persona responsable con acceso a toda la información.",
+      "paginas": [50, 51]
+    },
+    {
+      "id": "supervision-asesorados",
+      "titulo": "Supervisión específica de Servicios de Inversión Asesorados",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Tratándose de Servicios de Inversión Asesorados, las Entidades Financieras deben contar con una **persona encargada de supervisar el cumplimiento** de las disposiciones aplicables a dichos servicios, con al menos los mismos requisitos que la persona responsable de supervisar el cumplimiento general. Puede ser la **misma persona**."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "Funciones de la supervisión de asesorados:",
+            "1. Verificar el cumplimiento de las disposiciones relativas al **perfil de los clientes** y de los Productos Financieros, así como la suficiencia de la evaluación y análisis razonable.",
+            "2. Supervisar el apego a las políticas y lineamientos establecidos por el Consejo de Administración y revisarlas periódicamente; supervisar el cumplimiento de las relativas a la razonabilidad.",
+            "3. Revisar que la **frecuencia de las operaciones** se justifique en atención a los intereses del cliente. Si no encuentra justificación, debe analizar las causas, dar aviso inmediato al director general o persona equivalente **y a la CNBV** si fueran relevantes, y recomendar medidas correctivas."
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "El director general o persona equivalente debe **ordenar la implementación** de las medidas necesarias e informar de ello al responsable de supervisar."
+        }
+      ],
+      "ampliada": "La supervisión de asesorados tiene una función específica de revisión de frecuencia de operaciones: si no se justifica el número de operaciones, hay aviso inmediato al director general y, si es relevante, a la CNBV. Está en la p. 51.",
+      "paginas": [51]
+    },
+    {
+      "id": "sistemas-remuneracion",
+      "titulo": "Sistemas de remuneración: alinear intereses",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las casas de bolsa e instituciones de banca múltiple deben incluir en su sistema de remuneración criterios que propicien que las personas sujetas a él actúen con base en el **interés de sus clientes**."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Deben prever elementos que **incidan negativamente** en las remuneraciones extraordinarias cuando se cause daño a clientes por dolo o negligencia.",
+            "2. Las remuneraciones ordinarias y extraordinarias no deben propiciar ni privilegiar la venta de algún valor o la celebración de alguna operación en particular, en detrimento de otros de naturaleza similar.",
+            "3. Se debe **prohibir** que las remuneraciones de quienes proporcionan Servicios de Inversión Asesorados se vinculen de manera preponderante, directa o indirectamente, a los ingresos recibidos por colocar o distribuir valores o por realizar o ejecutar operaciones."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La prohibición de vinculación preponderante aplica a quienes prestan Servicios de Inversión **Asesorados**. En operadoras y distribuidoras de fondos, basta con normas que establezcan criterios para propiciar el interés del cliente; no se exige la misma prohibición expresa."
+        }
+      ],
+      "ampliada": "El objetivo es evitar incentivos perversos. La remuneración ligada a colocación de valores es la fuente clásica de conflicto de interés. En operadoras y distribuidoras el enfoque es de criterios, no de prohibición expresa.",
+      "paginas": [52, 53]
+    }
+  ],
+  "puntosClave": [
+    "El **Consejo de Administración** aprueba las políticas sobre perfiles de clientes, análisis de productos, razonabilidad, parámetros de actuación y difusión de información.",
+    "Las políticas se presentan a la **CNBV en diez días hábiles**; la CNBV puede ordenar correcciones en cualquier tiempo.",
+    "El **Comité Responsable del Análisis de los Productos Financieros** debe existir en Entidades Financieras; en bancos y casas de bolsa sus miembros son independientes de estructuración.",
+    "Las minutas del Comité se conservan **cinco años**; el registro de reclamaciones y acciones judiciales, **tres años** desde resolución o cosa juzgada.",
+    "La persona responsable de supervisar el cumplimiento es designada por el Consejo, independiente, con acceso total y **sin participar** en la prestación ni estructuración.",
+    "El supervisor de Servicios de Inversión Asesorados revisa la frecuencia de operaciones; si no se justifica, avisa al director general y, si es relevante, a la **CNBV**.",
+    "Las remuneraciones no deben vincularse de manera preponderante a los ingresos por colocar o distribuir valores en Servicios de Inversión **Asesorados**."
+  ],
+  "practica": [
+    "g.servicios.l7.q01",
+    "g.servicios.l7.q02",
+    "g.servicios.l7.q03",
+    "g.servicios.l7.q04",
+    "g.servicios.l7.q05"
+  ],
+  "miniExamen": [
+    "g.servicios.l7.q06",
+    "g.servicios.l7.q07",
+    "g.servicios.l7.q08",
+    "g.servicios.l7.q09",
+    "g.servicios.l7.q10"
+  ],
+  "reto": [
+    "g.servicios.l7.q11",
+    "g.servicios.l7.q12",
+    "g.servicios.l7.q13",
+    "g.servicios.l7.q14",
+    "g.servicios.l7.q15"
+  ]
+}

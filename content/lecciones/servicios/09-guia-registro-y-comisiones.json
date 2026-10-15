@@ -1,0 +1,218 @@
+{
+  "id": "servicios.guia-registro-y-comisiones",
+  "area": "servicios",
+  "materia": "Servicios de Inversión",
+  "subtemaId": "servicios.servicios-de-inversion.obligaciones-prohibiciones-conflictos-de-interes-y-conducta-de-negocios",
+  "objetivoIds": [
+    "servicios.servicios-de-inversion.obligaciones-prohibiciones-conflictos-de-interes-y-conducta-de-negocios.o02",
+    "servicios.servicios-de-inversion.obligaciones-prohibiciones-conflictos-de-interes-y-conducta-de-negocios.o03",
+    "servicios.servicios-de-inversion.comisiones.o01",
+    "servicios.servicios-de-inversion.reportes-de-analisis.o01"
+  ],
+  "orden": 9,
+  "titulo": "Guía de Servicios, registro de recomendaciones y comisiones",
+  "resumen": "El contenido mínimo de la Guía de Servicios de Inversión, el registro obligatorio de recomendaciones e instrucciones, los criterios para el cobro de comisiones y su divulgación, y las reglas de los estados de cuenta.",
+  "duracionMin": 45,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [53, 54, 55, 63, 64, 65]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "guia-servicios",
+      "titulo": "Guía de Servicios de Inversión: contenido mínimo",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Previo a la prestación de los Servicios de Inversión, las Entidades Financieras y los Asesores en Inversiones deben proporcionar a sus clientes potenciales una **Guía de Servicios de Inversión**, en formato estandarizado y lenguaje claro."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Los Servicios de Inversión que proporcionen.",
+            "2. Las clases o categorías de valores o instrumentos financieros derivados que puede ofrecer, especificando si están diseñados o emitidos por la propia Entidad Financiera, por Entidades Financieras del mismo Consorcio o Grupo empresarial, o si ofrece también productos de terceros. Los Asesores en Inversiones no independientes deben especificar si los valores están diseñados por la institución de crédito, casa de bolsa u operadora con la que se encuentren vinculados.",
+            "3. Las **comisiones**, así como los costos y cualquier otro cargo o contraprestación relacionados con los Servicios de Inversión.",
+            "4. Los **mecanismos para la recepción y atención de reclamaciones**, salvo tratándose de Asesores en Inversiones.",
+            "5. Las **políticas y lineamientos para evitar conflictos de interés**.",
+            "6. La **política para la diversificación de las carteras**, tratándose de Servicios de Inversión Asesorados."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Los mecanismos de reclamación no se exigen en la guía de los **Asesores en Inversiones**, solo en la de las Entidades Financieras. La exclusión es textual."
+        }
+      ],
+      "ampliada": "La guía es la carta de presentación regulatoria. La distinción entre productos propios, de grupo y de terceros es una exigencia de transparencia sobre la posible influencia en las recomendaciones.",
+      "paginas": [53, 54]
+    },
+    {
+      "id": "guia-asesores-advertencias",
+      "titulo": "Guía y publicidad de los Asesores en Inversiones",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los Asesores en Inversiones deben revelar en la guía, así como en su publicidad, propaganda e información dirigida al público y a clientes potenciales, dos datos clave."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. El **número de folio de inscripción** en el registro de Asesores en Inversiones asignado por la Comisión.",
+            "2. La advertencia de que la **CNBV supervisa exclusivamente** la prestación de servicios de administración de cartera con decisiones de inversión a nombre y por cuenta de terceros, así como los servicios de asesoría de inversión en valores, análisis y emisión de recomendaciones individualizadas; por lo que **carece de atribuciones** para supervisar cualquier otro servicio que proporcionen los Asesores en Inversiones."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La advertencia es obligatoria y literal: la CNBV **no supervisa** servicios distintos de la administración de cartera y la asesoría individualizada. El examen juega con la falsa supervisión general."
+        }
+      ],
+      "ampliada": "La transparencia sobre el alcance de la supervisión de la CNBV protege al cliente de creer que todos los servicios del Asesor están regulados.",
+      "paginas": [53]
+    },
+    {
+      "id": "registro-recomendaciones",
+      "titulo": "Registro de recomendaciones e instrucciones",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las Entidades Financieras o Asesores en Inversiones que presten Asesoría de Inversiones, o las Entidades Financieras que proporcionen Comercialización o Promoción, deben proporcionar las recomendaciones y la información del perfil de los Productos Financieros **de manera escrita o verbal** y hacerlas constar en **medios electrónicos o digitales**."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Se deben conservar en **registro electrónico, digital o magnético** la totalidad de los originales de los documentos, grabaciones de voz o cualquier otro medio que contengan las recomendaciones formuladas, la información proporcionada y las instrucciones de los clientes.",
+            "2. Los archivos se conservan **cinco años** como parte integrante de la contabilidad.",
+            "3. Se debe obtener la **autorización del cliente** para grabar su voz o la de la persona facultada, a través de medios de telecomunicación."
+          ]
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Contenido mínimo del registro de cada recomendación",
+          "filas": [
+            ["Cuenta", "Número de cuenta en la que se realizaría o ejecutaría la operación"],
+            ["Valor", "Valor y emisora de que se trate, especificando clave de pizarra o serie"],
+            ["Cantidad y precio", "Cantidad a comprar o vender, así como en su caso el precio"],
+            ["Fecha y hora", "Fecha y hora en que el cliente instruyó la operación"],
+            ["Servicio de origen", "Identificación del Servicio de Inversión del cual proviene la instrucción"]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La identificación del servicio de origen (Asesoría vs. Comercialización vs. instrucción directa) es la pieza que permite demostrar la naturaleza de la operación. Sin ella, se presume que proviene de servicios asesorados."
+        }
+      ],
+      "ampliada": "El registro es la prueba documental de la relación de servicio. Su conservación por cinco años y la autorización para grabar voz son exigencias mínimas.",
+      "paginas": [54, 55]
+    },
+    {
+      "id": "criterios-comisiones",
+      "titulo": "Criterios para el cobro de comisiones",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las casas de bolsa, sociedades operadoras de fondos de inversión, distribuidoras de acciones de fondos de inversión y los Asesores en Inversiones **solo pueden cobrar** comisiones por Servicios de Inversión que hayan sido **expresamente convenidas** con el cliente y **efectivamente prestadas**."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. El **Comité Responsable del Análisis de los Productos Financieros**, órgano equivalente o persona encargada, debe elaborar y aprobar **previamente** criterios para establecer las comisiones y sus modificaciones.",
+            "2. Los criterios deben basarse en **condiciones objetivas**: tipos de perfiles de inversión, operaciones efectuadas, su monto y frecuencia.",
+            "3. Las comisiones **no pueden comprometer la capacidad de los apoderados** para actuar con base en el interés de sus clientes.",
+            "4. Los Asesores en Inversiones personas físicas deben establecer y documentar criterios basados en condiciones objetivas dentro de sus lineamientos para difusión de información."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "No se puede cobrar comisión no convenida, ni por servicios no prestados. La aprobación de criterios es **previa** al cobro, no posterior."
+        }
+      ],
+      "ampliada": "La regla del cobro solo por lo convenido y prestado es la base de la transparencia. La objetividad de los criterios impide la discrecionalidad que generaría conflictos.",
+      "paginas": [63]
+    },
+    {
+      "id": "divulgacion-comisiones",
+      "titulo": "Divulgación de las comisiones",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las Entidades Financieras y los Asesores en Inversiones deben informar a sus clientes, **previo a la prestación** de cualquier Servicio de Inversión, las comisiones o contraprestaciones que les cobrarán."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. La divulgación se hace a través de la **Guía de Servicios de Inversión**.",
+            "2. Los conceptos deben ser **consistentes** con los que se den a conocer en los estados de cuenta.",
+            "3. Debe incluir la **forma de cálculo** de las comisiones.",
+            "4. Debe especificar los **conceptos** por los cuales se podrían cobrar comisiones: si es por Asesoría de Inversiones o por realización de la operación, con la base de cálculo.",
+            "5. Debe incluir el **límite máximo** de las comisiones o contraprestaciones que podrán cobrar.",
+            "6. En su caso, las comisiones por distribución de acciones de fondos de inversión conforme a los artículos 106, 107 y 108 de las Disposiciones de carácter general aplicables a los fondos de inversión."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La divulgación previa es a través de la guía, no del contrato. Además, la comisión de Asesoría y la comisión por operación deben estar claramente diferenciadas."
+        }
+      ],
+      "ampliada": "La Guía de Servicios de Inversión es el vehículo obligatorio de divulgación. Los estados de cuenta deben ser coherentes con lo ahí divulgado.",
+      "paginas": [63, 64]
+    },
+    {
+      "id": "estados-cuenta",
+      "titulo": "Comisiones en el estado de cuenta: los cuatro rubros",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las comisiones cobradas al cliente deben ser consistentes con lo divulgado e incluir el **IVA** concerniente a cada operación. Se clasifican en cuatro rubros."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": ["Rubro", "Incluye"],
+          "filas": [
+            ["Comisiones y Gastos de Intermediación", "Todos los importes cobrados por operaciones realizadas en el periodo, con IVA"],
+            ["Comisiones y Gastos por Servicios", "Manejo de cartera, comisiones por tipo de Servicio de Inversión, comisiones por desempeño, entre otros, con IVA"],
+            ["Comisiones y Gastos Administrativos", "Conceptos no considerados en los dos rubros anteriores: custodia de valores, recolección de cheques, intereses por saldo deudor, con IVA"],
+            ["Impuesto sobre la Renta Retenido", "Monto total de ISR retenido en términos de la legislación fiscal, en el periodo correspondiente"]
+          ],
+          "trampas": [[0, 1], [1, 1], [2, 1], [3, 1]]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Regla de cuatro rubros:",
+          "texto": "Intermediación, Servicios, Administrativos e ISR retenido. Siempre con IVA. Nunca mezclar gastos de operación con gastos de administración."
+        }
+      ],
+      "ampliada": "La clasificación en cuatro rubros es obligatoria para la presentación en estados de cuenta. El IVA se incorpora en cada rubro correspondiente.",
+      "paginas": [64, 65]
+    }
+  ],
+  "puntosClave": [
+    "La Guía de Servicios de Inversión se entrega **previo** a la prestación y debe contener servicios, clases de valores, comisiones, reclamaciones (no para Asesores en Inversiones), políticas de conflicto y política de diversificación (para asesorados).",
+    "Los Asesores en Inversiones deben revelar su **folio de inscripción** y la advertencia de que la CNBV solo supervisa administración de cartera y asesoría individualizada.",
+    "El registro de recomendaciones incluye cuenta, valor, cantidad, fecha y hora, e **identificación del Servicio de Inversión** de origen; se conserva **cinco años**.",
+    "Solo se cobran comisiones **expresamente convenidas** y **efectivamente prestadas**, con criterios previos y objetivos aprobados por el Comité.",
+    "La divulgación previa de comisiones se hace en la **Guía de Servicios de Inversión**, con forma de cálculo, conceptos, límite máximo y coherencia con el estado de cuenta.",
+    "El estado de cuenta clasifica en cuatro rubros: **Intermediación, Servicios, Administrativos e ISR retenido**, todos con IVA."
+  ],
+  "practica": [
+    "g.servicios.l9.q01",
+    "g.servicios.l9.q02",
+    "g.servicios.l9.q03",
+    "g.servicios.l9.q04",
+    "g.servicios.l9.q05"
+  ],
+  "miniExamen": [
+    "g.servicios.l9.q06",
+    "g.servicios.l9.q07",
+    "g.servicios.l9.q08",
+    "g.servicios.l9.q09",
+    "g.servicios.l9.q10"
+  ],
+  "reto": [
+    "g.servicios.l9.q11",
+    "g.servicios.l9.q12",
+    "g.servicios.l9.q13",
+    "g.servicios.l9.q14",
+    "g.servicios.l9.q15"
+  ]
+}

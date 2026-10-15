@@ -1,0 +1,155 @@
+{
+  "id": "servicios.cliente-sofisticado",
+  "area": "servicios",
+  "materia": "Servicios de Inversión",
+  "subtemaId": "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados",
+  "objetivoIds": [
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o02",
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o03"
+  ],
+  "orden": 2,
+  "titulo": "Cliente Sofisticado y Ejecución de Operaciones con asesor externo",
+  "resumen": "Las cartas de cliente sofisticado (Anexo 1, Apartados A y B), los requisitos de UDIS que las respaldan, y las obligaciones de la Entidad Financiera cuando el cliente que pide solo Ejecución de Operaciones ya cuenta con un Asesor en Inversiones o con otra Entidad Financiera que le recomienda.",
+  "duracionMin": 35,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [31, 46, 47]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "requisitos-udis",
+      "titulo": "Los dos umbrales de UDIS",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Para que una persona sea considerada **Cliente Sofisticado** basta que cumpla **uno** de los dos requisitos patrimoniales o de ingresos. El manual los fija en UDIS, no en pesos."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": ["Requisito", "Monto", "Periodo de referencia"],
+          "filas": [
+            ["Inversiones en valores", "Igual o mayor a **3,000,000 de UDIS** en promedio", "Últimos **doce meses**, en una o varias Entidades Financieras"],
+            ["Ingresos brutos anuales", "Igual o mayor a **1,000,000 de UDIS**", "En **cada uno** de los últimos dos años"]
+          ],
+          "trampas": [[0, 2], [1, 2]]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Trampa típica: plantear que se necesitan los dos requisitos. Falso: basta **cualquiera** de ellos. Otra trampa: invertir los montos (tres millones en ingresos y un millón en inversiones)."
+        }
+      ],
+      "ampliada": "Los umbrales están en las pp. 30 y 31. La alternatividad de los requisitos es textual: el manual usa la conjunción disyuntiva. Los montos son en UDIS (unidades de inversión), no en pesos ni en dólares.",
+      "paginas": [30, 31]
+    },
+    {
+      "id": "cartas-anexo-1",
+      "titulo": "Las cartas del Anexo 1: Apartados A y B",
+      "bloques": [
+        {
+          "tipo": "pasos",
+          "pasos": [
+            {
+              "titulo": "Carta del Apartado A",
+              "cuando": "Previo a la prestación de Servicios de Inversión con Clientes Sofisticados",
+              "texto": "Las personas que pretendan ser consideradas Clientes Sofisticados deberán **suscribir una carta** en el formato contenido en el Anexo 1, **Apartado A**, de las disposiciones aplicables."
+            },
+            {
+              "titulo": "Documento por separado",
+              "cuando": "Al suscribir la carta",
+              "texto": "La carta se presenta y firma en un documento **por separado** de cualquier otro requerido por las Entidades Financieras o los Asesores en Inversiones."
+            },
+            {
+              "titulo": "Conservación",
+              "cuando": "Siempre",
+              "texto": "La carta suscrita deberá conservarse en el **expediente del cliente**. No exceptúa de la evaluación para determinar el perfil cuando se trate de Servicios de Inversión Asesorados."
+            },
+            {
+              "titulo": "Carta del Apartado B",
+              "cuando": "Cuando el cliente contrató solo Ejecución de Operaciones y a su vez tiene un Asesor en Inversiones que le recomienda",
+              "texto": "La Entidad Financiera deberá recabar la carta del Anexo 1, **Apartado B**, para poder **asumir** que el cliente es Cliente Sofisticado, sin perjuicio de las responsabilidades del Asesor en Inversiones."
+            }
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El apartado A es para Clientes Sofisticados en general; el apartado B es para quien contrata **solo Ejecución de Operaciones** pero recibe recomendaciones de un tercero. No son intercambiables."
+        }
+      ],
+      "ampliada": "Las cartas tienen formatos cerrados en el Anexo 1 de las disposiciones de carácter general. La carta del Apartado A se exige previo a la prestación de cualquier Servicio de Inversión al Cliente Sofisticado; la del Apartado B se recaba cuando la Entidad Financiera presta solo Ejecución de Operaciones y el cliente recibe recomendaciones de un Asesor en Inversiones o de otra Entidad Financiera.",
+      "paginas": [31, 46, 47]
+    },
+    {
+      "id": "advertencia-ejecucion",
+      "titulo": "La advertencia obligatoria en Ejecución de Operaciones",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Cuando el cliente contrata **solo Ejecución de Operaciones** pero recibe recomendaciones de un Asesor en Inversiones o de otra Entidad Financiera, la Entidad Financiera que ejecuta tiene una obligación puntual."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. Recabar la carta del Anexo 1, Apartado B, para asumir que el cliente es Cliente Sofisticado.",
+            "2. Advertir al cliente, en el momento de la contratación, que en **ningún caso** la Entidad Financiera será responsable de las recomendaciones que le formule dicho Asesor o Entidad Financiera.",
+            "3. Conservar la carta en el expediente del cliente."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La advertencia debe hacerse **en el momento de la contratación**, no después ni al ejecutar la primera operación. La Entidad Financiera que solo ejecuta no responde por la calidad de la recomendación del tercero."
+        }
+      ],
+      "ampliada": "Esta disposición protege a la Entidad Financiera que ejecuta: sin la carta del Apartado B y sin la advertencia, no puede invocar la calidad de Cliente Sofisticado para descargar su responsabilidad. La redacción está en la p. 31.",
+      "paginas": [31, 46]
+    },
+    {
+      "id": "sintesis-cliente-sofisticado",
+      "titulo": "Síntesis: cómo se acredita la sofisticación",
+      "bloques": [
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen cliente sofisticado:",
+          "texto": "Dos requisitos alternativos en UDIS: tres millones en inversiones promedio de doce meses, o un millón de ingresos brutos anuales en cada uno de los últimos dos años. Se acredita con carta del Anexo 1: **Apartado A** si es cliente sofisticado en general, **Apartado B** si solo contrata Ejecución de Operaciones con asesor externo. Siempre se conserva en el expediente."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El manual no exige que la Entidad Financiera **verifique** el monto de UDIS; exige **recabar la carta** en el formato. La carga documental es formal, no de averiguación patrimonial."
+        }
+      ],
+      "ampliada": "La distinción práctica es que el Cliente Sofisticado se asume por declaración documentada, no por peritaje de la Entidad Financiera. El formato del Anexo 1 es el instrumento legal de la declaración.",
+      "paginas": [31, 46, 47]
+    }
+  ],
+  "puntosClave": [
+    "Cliente Sofisticado: cumple **cualquiera** de dos requisitos, no ambos.",
+    "Requisito patrimonial: inversiones en valores iguales o mayores a **3,000,000 de UDIS** en promedio durante los últimos **doce meses**.",
+    "Requisito de ingresos: ingresos brutos anuales iguales o mayores a **1,000,000 de UDIS** en **cada uno** de los últimos dos años.",
+    "Carta del Anexo 1, **Apartado A**: para quien pretenda ser considerado Cliente Sofisticado; se firma por separado y se conserva en el expediente.",
+    "Carta del Anexo 1, **Apartado B**: para quien contrata **Ejecución de Operaciones** y recibe recomendaciones de un Asesor en Inversiones o de otra Entidad Financiera.",
+    "En Ejecución de Operaciones con asesor externo, la Entidad Financiera debe advertir que **no responde** por las recomendaciones del tercero.",
+    "La carta no libera de la evaluación de perfil cuando se presten Servicios de Inversión **Asesorados**."
+  ],
+  "practica": [
+    "g.servicios.l2.q01",
+    "g.servicios.l2.q02",
+    "g.servicios.l2.q03",
+    "g.servicios.l2.q04",
+    "g.servicios.l2.q05"
+  ],
+  "miniExamen": [
+    "g.servicios.l2.q06",
+    "g.servicios.l2.q07",
+    "g.servicios.l2.q08",
+    "g.servicios.l2.q09",
+    "g.servicios.l2.q10"
+  ],
+  "reto": [
+    "g.servicios.l2.q11",
+    "g.servicios.l2.q12",
+    "g.servicios.l2.q13",
+    "g.servicios.l2.q14",
+    "g.servicios.l2.q15"
+  ]
+}

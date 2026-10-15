@@ -1,0 +1,176 @@
+{
+  "id": "servicios.conceptos-y-servicios",
+  "area": "servicios",
+  "materia": "Servicios de Inversión",
+  "subtemaId": "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados",
+  "objetivoIds": [
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o01"
+  ],
+  "orden": 1,
+  "titulo": "Conceptos fundamentales de los Servicios de Inversión",
+  "resumen": "Definiciones precisas de los quince conceptos del temario: Analista, Áreas de Negocio, Asesoría de Inversiones, Clientes Sofisticados, Comercialización o Promoción, Ejecución de Operaciones, Entidad Financiera, Estrategia de Inversión, Gestión de Inversiones, Productos Financieros, Reclamación, Reportes de Análisis, Servicios de Inversión y sus dos grandes ramas: asesorados y no asesorados.",
+  "duracionMin": 45,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [29, 30, 31]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "mapa-servicios",
+      "titulo": "El mapa de los Servicios de Inversión",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Los [[Servicios de Inversión]] son la prestación habitual y profesional a favor de clientes, de servicios de inversión **asesorados** y **no asesorados**. Esta es la puerta de entrada: todo lo que estudies en esta materia cuelga de esa clasificación."
+        },
+        {
+          "tipo": "tabla",
+          "encabezados": ["Rama", "Incluye", "Naturaleza"],
+          "filas": [
+            ["Servicios de Inversión **Asesorados**", "**Asesoría de Inversiones** y **Gestión de Inversiones**", "Recomendación personalizada o manejo discrecional"],
+            ["Servicios de Inversión **No Asesorados**", "**Comercialización o Promoción** y **Ejecución de Operaciones**", "Recomendación generalizada o simple ejecución de instrucciones"]
+          ],
+          "trampas": [[1, 1], [0, 2]]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El examen juega con la confusión entre asesorados y no asesorados. Recuerda: si hay recomendación **personalizada** o manejo **discrecional**, es asesorado. Si es generalizada o puro cumplimiento de órdenes, es no asesorado."
+        }
+      ],
+      "ampliada": "El manual (p. 29) establece que los Servicios de Inversión son la prestación habitual y profesional de servicios asesorados y no asesorados. No son actos aislados: la habitualidad y el profesionalismo son requisitos del concepto legal.",
+      "paginas": [29, 30]
+    },
+    {
+      "id": "servicios-asesorados",
+      "titulo": "Servicios de Inversión Asesorados: Asesoría y Gestión",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "titulo": "Servicios de Inversión Asesorados",
+          "filas": [
+            ["Asesoría de Inversiones", "Recomendaciones o consejos **personalizados** o **individualizados** a un cliente, que le sugieran la toma de decisiones de inversión sobre uno o más Productos Financieros; puede ser a solicitud del cliente o por iniciativa de la Entidad Financiera o Asesor en Inversiones"],
+            ["Gestión de Inversiones", "Toma de decisiones de inversión **por cuenta de los clientes** mediante la administración de cuentas (contratos de intermediación bursátil, fideicomisos, comisiones o mandatos), siempre que se pacte el **manejo discrecional**"],
+            ["Estrategia de Inversión", "Conjunto de orientaciones elaboradas para proporcionar servicios asesorados, con base en las características y condiciones de los mercados, valores e instrumentos financieros derivados"]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "Es clave: la **Asesoría de Inversiones** no es Ejecución de Operaciones, aun cuando exista una instrucción del cliente. La recomendación personalizado es el acto de asesoría; la ejecución es un acto posterior y separado."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "El manual advierte: no se entenderá que la realización de operaciones provenientes de Asesoría de Inversiones es Ejecución de Operaciones, aun cuando exista una instrucción del cliente. La naturaleza del servicio no cambia por la instrucción."
+        }
+      ],
+      "ampliada": "El servicio asesorado tiene dos variantes: la asesoría (recomendar) y la gestión (decidir por el cliente). La Estrategia de Inversión es el conjunto de orientaciones que guía ambas. El texto está en las pp. 29 a 30.",
+      "paginas": [29, 30]
+    },
+    {
+      "id": "servicios-no-asesorados",
+      "titulo": "Servicios de Inversión No Asesorados: Comercialización y Ejecución",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "titulo": "Servicios de Inversión No Asesorados",
+          "filas": [
+            ["Comercialización o Promoción", "Servicio que proporcionan las Entidades Financieras, a través de sus apoderados, para celebrar operaciones con el público y por cualquier medio, recomendaciones **generalizadas** con independencia del perfil del cliente, sobre los servicios que la propia Entidad Financiera proporcione, o bien, para realizar operaciones de compra, venta o reporto sobre los valores o instrumentos objeto de Comercialización o Promoción"],
+            ["Ejecución de Operaciones", "Recepción de instrucciones, transmisión y ejecución de órdenes, en relación con uno o más valores o instrumentos financieros derivados; la Entidad Financiera está **obligada a ejecutar exactamente en los mismos términos** en que fue instruida por el cliente"]
+          ]
+        },
+        {
+          "tipo": "parrafo",
+          "texto": "La Comercialización o Promoción es una recomendación **generalizada**: no toma en cuenta el perfil del cliente. Solo puede hacerse con **Clientes Sofisticados** cuando se trate de valores distintos a los permitidos para el público en general."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Las Entidades Financieras podrán comercializar o promover valores distintos de los permitidos a clientes no sofisticados, **siempre que se trate de Clientes Sofisticados**. No hay otra excepción."
+        }
+      ],
+      "ampliada": "En Comercialización o Promoción la Entidad Financiera actúa a través de sus apoderados para celebrar operaciones con el público. En Ejecución de Operaciones, la obligación es de resultado: ejecutar en los mismos términos instruidos.",
+      "paginas": [30, 31]
+    },
+    {
+      "id": "actores-y-conceptos",
+      "titulo": "Actores y conceptos del ecosistema",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "titulo": "Quién es quién y qué es qué",
+          "filas": [
+            ["Analista", "Persona que, ocupando un empleo, cargo o comisión en Entidades Financieras o en Asesores en Inversiones, o que prestandoles un servicio, desarrolla actividades relacionadas con la elaboración de **reportes de análisis** de emisoras, valores, instrumentos financieros derivados o mercados, que se divulguen al público"],
+            ["Reportes de Análisis", "Información dirigida al público o a la clientela en general de una Entidad Financiera o Asesor en Inversiones, que contenga análisis financieros sobre emisoras, valores o instrumentos financieros derivados, que contenga opiniones para la toma de decisiones de inversión"],
+            ["Áreas de Negocio", "Áreas responsables de: realización de ofertas públicas de valores; proporcionar Servicios de Inversión o ejecutar operaciones por cuenta propia; representación común en emisiones de valores; diseño y estructuración de planes de financiamiento y capitalización empresarial; otorgamiento de créditos bancarios de cartera comercial (excluidos los de consumo y vivienda); asesoría en fusiones, escisiones o adquisiciones; administración de activos de fondos de inversión; y distribución de acciones de fondos de inversión"],
+            ["Productos Financieros", "Los valores, instrumentos financieros derivados, estrategias de inversión o composición de la cartera de inversión"],
+            ["Reclamación", "Cualquier manifestación de inconformidad o queja **por escrito** hecha del conocimiento de una Entidad Financiera o Asesor en Inversiones, sus empleados o apoderados, realizada por un cliente y relacionada con los Servicios de Inversión"]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Los créditos bancarios que forman parte de la cartera crediticia comercial sí son Área de Negocio, pero **no** los créditos bancarios al consumo ni los destinados a la vivienda. Esta es una exclusión expresa del manual."
+        }
+      ],
+      "ampliada": "La definición de Analista exige que el reporte se divulgue al público. La definición de Áreas de Negocio es una lista cerrada con exclusiones específicas. Todo está en la p. 29.",
+      "paginas": [29]
+    },
+    {
+      "id": "cliente-y-entidad",
+      "titulo": "Cliente Sofisticado y Entidad Financiera",
+      "bloques": [
+        {
+          "tipo": "ficha",
+          "titulo": "Cliente Sofisticado",
+          "filas": [
+            ["Requisito 1", "Mantener en promedio durante los últimos **doce meses**, inversiones en valores en una o varias Entidades Financieras, por un monto igual o mayor a **3,000,000 de UDIS**"],
+            ["Requisito 2", "Haber obtenido en cada uno de los últimos **dos años**, ingresos brutos anuales iguales o mayores a **1,000,000 de UDIS**"]
+          ]
+        },
+        {
+          "tipo": "ficha",
+          "titulo": "Entidad Financiera",
+          "filas": [
+            ["Definición", "Instituciones de Crédito, Casas de Bolsa, Sociedades Operadoras de Fondos de Inversión cuando proporcionen el servicio de administración de cartera de valores en favor de terceros, así como las Sociedades Distribuidoras de Acciones de Fondos de Inversión y entidades que presten dicho servicio"]
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Para ser Cliente Sofisticado se requiere **cualquiera** de los dos requisitos (inversiones o ingresos), no ambos. Además, las sociedades operadoras solo son Entidad Financiera cuando administran cartera de valores para terceros."
+        }
+      ],
+      "ampliada": "El Cliente Sofisticado se define por umbrales de UDIS, no por conocimientos. La Entidad Financiera se define por el tipo de institución y, en el caso de operadoras, por el servicio concreto que prestan.",
+      "paginas": [30, 31]
+    }
+  ],
+  "puntosClave": [
+    "Servicios de Inversión: prestación habitual y profesional de servicios **asesorados** (Asesoría y Gestión) y **no asesorados** (Comercialización o Promoción y Ejecución de Operaciones).",
+    "Asesoría de Inversiones: recomendaciones **personalizadas**; no equivale a Ejecución de Operaciones aun cuando exista instrucción del cliente.",
+    "Gestión de Inversiones: toma de decisiones por cuenta del cliente con **manejo discrecional**.",
+    "Comercialización o Promoción: recomendaciones **generalizadas** con independencia del perfil del cliente.",
+    "Ejecución de Operaciones: ejecutar exactamente en los mismos términos instruidos por el cliente.",
+    "Cliente Sofisticado: **3 millones de UDIS** en inversiones promedio últimos 12 meses, o **1 millón de UDIS** de ingresos brutos anuales en cada uno de los últimos 2 años.",
+    "Entidad Financiera: Instituciones de Crédito, Casas de Bolsa, Operadoras de Fondos (cuando administran cartera para terceros) y Distribuidoras de Acciones de Fondos.",
+    "Áreas de Negocio: lista cerrada de ocho actividades; excluye créditos bancarios al consumo y a la vivienda."
+  ],
+  "practica": [
+    "g.servicios.l1.q01",
+    "g.servicios.l1.q02",
+    "g.servicios.l1.q03",
+    "g.servicios.l1.q04",
+    "g.servicios.l1.q05"
+  ],
+  "miniExamen": [
+    "g.servicios.l1.q06",
+    "g.servicios.l1.q07",
+    "g.servicios.l1.q08",
+    "g.servicios.l1.q09",
+    "g.servicios.l1.q10"
+  ],
+  "reto": [
+    "g.servicios.l1.q11",
+    "g.servicios.l1.q12",
+    "g.servicios.l1.q13",
+    "g.servicios.l1.q14",
+    "g.servicios.l1.q15"
+  ]
+}

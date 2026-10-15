@@ -1,6 +1,6 @@
 # Traspaso de sesión (léase primero en una conversación nueva)
 
-Este documento permite continuar el proyecto en una sesión nueva de Claude sin perder contexto ni calidad. Se actualiza en cada hito. Última actualización: 2026-10-15, v1 publicada.
+Este documento permite continuar el proyecto en una sesión nueva de Claude sin perder contexto ni calidad. Se actualiza en cada hito. Última actualización: 2026-10-15, mejora de UX y generación de áreas pendientes.
 
 ## 1. Cómo arrancar una sesión nueva
 1. Abrir una sesión sobre el repositorio `cesars05/AMIB-F3`, rama `claude/trusting-ptolemy-io4gmo` (o la rama que indique la sección 6).
@@ -33,28 +33,67 @@ App de escritorio para Windows (Electron, React, TypeScript, `node:sqlite`) para
 16. Las dudas no resueltas se documentan en `docs/dudas-v2.md` para resolverlas en la v2.
 
 ## 4. Estado actual (2026-10-15)
-**Etapa: v1 publicada.** Equivale a los hitos M1 a M4 del plan para las cuatro áreas obligatorias. Faltan las áreas no obligatorias (M5) y las extensiones.
+
+**Etapa: Generación de áreas no obligatorias.** Se ha completado la mejora de UX basada en Apple Design y se está generando contenido para las 5 áreas pendientes.
 
 **Hecho y en GitHub (rama `claude/trusting-ptolemy-io4gmo`, CI en verde):**
+
+### Mejoras de UX (2026-10-15)
+1. **Tokens de diseño mejorados** (`app/src/renderer/src/estilos/tokens.css`):
+   - Sombras escalonadas: `--shadow-sm`, `--shadow-md`, `--shadow-lg`, `--shadow-xl`, `--shadow-2xl`
+   - Sombras específicas por componente: botón, tarjeta, dropdown, modal, kpi
+   - Curvas de animación: `--ease`, `--ease-out`, `--ease-in`, `--ease-in-out`
+2. **Componentes mejorados** (`app/src/renderer/src/estilos/componentes.css`):
+   - Botones con sombras y efectos de hover: `--shadow-btn`, `--shadow-btn-hover`, `--shadow-btn-active`
+   - Paneles con efectos de profundidad al hacer hover
+   - Tarjetas de sección con elevación y feedback visual
+   - KPIs con hover suave
+3. **Animaciones nuevas** (`app/src/renderer/src/estilos/base.css`):
+   - `entrada-escala`: Fade + scale para componentes
+   - `fade-in`: Transición de opacidad suave
+   - `entrada-deslizar`: Deslizamiento lateral
+
+### Estado del contenido (2026-10-15)
 1. App Electron v1 completa:
-   1. Pantallas: onboarding, Inicio con perfil y gráficas, lecciones guiadas con notas por lámina y KaTeX local, Practicar, Diagnóstico, Simulacro (integral, módulo, modular extraordinario y rápido) y Ajustes (4 temas, 3 letras, respaldo JSON).
-   2. Seguridad endurecida tras una revisión independiente.
-   3. Instalador de Windows como artefacto de GitHub Actions.
+   - Pantallas: onboarding, Inicio con perfil y gráficas, lecciones guiadas con notas por lámina y KaTeX local, Practicar, Diagnóstico, Simulacro (integral, módulo, modular extraordinario y rápido) y Ajustes (4 temas, 3 letras, respaldo JSON).
+   - Seguridad endurecida tras una revisión independiente.
+   - Instalador de Windows como artefacto de GitHub Actions.
 2. Motor en `app/src/core/`: examen, barajado equilibrado, dominio en 5 niveles, perfil, Leitner, selector, simulacros y plan diario. Más de 390 pruebas unitarias y 13 E2E.
 3. Contenido:
-   1. Taxonomía de 465 objetivos.
-   2. 413 secciones del manual vinculadas al temario.
-   3. 75 preguntas oficiales.
-   4. 146 preguntas de repaso, con la clave del libro (p. 359) donde se pudo alinear.
-   5. **32 lecciones y 480 preguntas generadas en las cuatro áreas obligatorias**: Ética 6 lecciones, Capitales 7, Deuda 8, Derivados y Riesgos 11.
-   6. Unas 560 preguntas validadas en total.
+   - Taxonomía de 465 objetivos.
+   - 413 secciones del manual vinculadas al temario.
+   - 75 preguntas oficiales.
+   - 146 preguntas de repaso, con la clave del libro (p. 359) donde se pudo alinear.
+   - **32 lecciones y 480 preguntas generadas en las cuatro áreas obligatorias**: Ética 6 lecciones, Capitales 7, Deuda 8, Derivados y Riesgos 11.
+   - Unas 560 preguntas validadas en total.
 4. Documentación:
-   1. Plan maestro y ADR-001 y ADR-002.
-   2. Investigación de la estructura de las preguntas AMIB.
-   3. Plantillas de los agentes redactores (`docs/prompts/`).
-   4. Dudas consolidadas en `docs/dudas-v2.md`.
+   - Plan maestro y ADR-001 y ADR-002.
+   - Investigación de la estructura de las preguntas AMIB.
+   - Plantillas de los agentes redactores (`docs/prompts/`).
+   - Dudas consolidadas en `docs/dudas-v2.md`.
+   - Mejoras de UX documentadas en `docs/fichas/mejoras-ux-apple.md`.
 
-**Incompleto (no subido):** las lecciones de Servicios de Inversión, Marco Normativo, Matemáticas, Fondos y Análisis quedaron a medias en disco cuando se alcanzó el límite de gasto mensual de la API. Si esta sesión ya no existe, se regeneran desde cero con `docs/prompts/autor-lecciones.txt` y `docs/prompts/asignaciones-areas-no-obligatorias.py`.
+### Generación en curso (2026-10-15)
+**Áreas pendientes (5):**
+1. **Servicios de Inversión** (en generación): 5-6 lecciones, ~150 preguntas
+2. **Marco Normativo** (I-III): 11-12 lecciones, ~200 preguntas (se divide en 2 agentes)
+3. **Matemáticas y Portafolios**: 6-7 lecciones, ~200 preguntas (60% cálculo)
+4. **Fondos de Inversión**: 5-6 lecciones, ~150 preguntas (precios a 6 decimales)
+5. **Análisis Económico, Financiero y Técnico**: 7-8 lecciones, ~200 preguntas
+
+**Comandos para regenerar:**
+```bash
+cd docs/prompts && python asignaciones-areas-no-obligatorias.py
+# Genera prompts:
+# - prompt-servicios.txt
+# - prompt-normativo-a.txt (capítulo 3, primera mitad)
+# - prompt-normativo-b.txt (capítulo 3, segunda mitad)
+# - prompt-matematicas.txt
+# - prompt-fondos.txt
+# - prompt-analisis.txt
+```
+
+**Incompleto (no subido):** las lecciones de Servicios de Inversión, Marco Normativo, Matemáticas, Fondos y Análisis quedaron a medias en disco cuando se alcanzó el límite de gasto mensual de la API. Se regeneran con `docs/prompts/`.
 
 ## 5. Convenciones de trabajo
 1. Protocolo "pensar antes de hacer" y uso de modelos: Opus redacta contenido y diseña; Sonnet programa con TDD; Haiku hace tareas masivas.

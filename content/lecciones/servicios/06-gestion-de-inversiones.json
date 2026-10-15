@@ -1,0 +1,158 @@
+{
+  "id": "servicios.gestion-de-inversiones",
+  "area": "servicios",
+  "materia": "Servicios de Inversión",
+  "subtemaId": "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados",
+  "objetivoIds": [
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o14",
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o15",
+    "servicios.servicios-de-inversion.servicios-de-inversion-asesorados-y-no-asesorados.o16"
+  ],
+  "orden": 6,
+  "titulo": "Gestión de Inversiones y Marco General de Actuación",
+  "resumen": "Las obligaciones de la Gestión de Inversiones, el contenido mínimo del Marco General de Actuación y las condiciones para estrategias estandarizadas. También incluye Reportes de Análisis y su contenido mínimo obligatorio.",
+  "duracionMin": 45,
+  "fuentes": [
+    {
+      "documento": "AMIB Data/AMIB_1_completo.md",
+      "paginas": [42, 43, 44, 45, 65, 66, 67, 68]
+    }
+  ],
+  "laminas": [
+    {
+      "id": "obligaciones-gestion",
+      "titulo": "Obligaciones de la Gestión de Inversiones",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las Entidades Financieras o los Asesores en Inversiones que proporcionen el servicio de Gestión de Inversiones deben cumplir cinco obligaciones esenciales."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. **Determinar el perfil de sus clientes** y de los **Productos Financieros**.",
+            "2. **Realizar la evaluación de la razonabilidad** de las operaciones que efectúen.",
+            "3. **Ajustarse a la política para la diversificación de las carteras de inversión** de sus clientes.",
+            "4. **Poder ofrecer el servicio a consejeros, directivos y empleados** cuando tengan acceso a información privilegiada o confidencial (artículo 371 de la Ley del Mercado de Valores).",
+            "5. **Guardar evidencia documental** de que las operaciones realizadas son razonables."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La evidencia documental no es opcional: es requisito para demostrar razonabilidad. Además, ofrecer el servicio a empleados solo procede cuando hay acceso a información privilegiada o confidencial relacionada con procesos específicos (OPI, compra propia, etc.)."
+        }
+      ],
+      "ampliada": "Las cinco obligaciones están en la p. 42. La excepción para empleados se basa en el artículo 371 de la Ley del Mercado de Valores, que permite operaciones de inscripción, OPI, adquisición o enajenación de acciones propias y operaciones ordenadas por clientela inversionista.",
+      "paginas": [42]
+    },
+    {
+      "id": "marco-general-actuacion",
+      "titulo": "Marco General de Actuación: contenido mínimo",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Previo a prestar Gestión de Inversiones, las Entidades Financieras o los Asesores en Inversiones deben formular un Marco General de Actuación al cual ajustarse en todo tiempo y no modificarlo sino hasta seis meses después de la última reforma."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. La **naturaleza y alcance** de las facultades o discrecionalidad del apoderado o del propio Asesor en Inversiones (cuando es persona física) para realizar operaciones con el público.",
+            "2. Cualquier **riesgo significativo** asociado con dicha discrecionalidad, y la forma y términos bajo los cuales se ejercerá.",
+            "3. La forma en que el cliente podrá **modificar la discrecionalidad pactada**.",
+            "4. Las **características** de los valores e instrumentos financieros derivados que podrían conformar la cuenta, incluyendo riesgos de mercado, crédito, liquidez, operativo, de contraparte y legal.",
+            "5. Las **estrategias de inversión** que se seguirán, señalando: a) la relación entre valores y nivel de riesgo tolerado, b) el plazo adecuado para mantener la inversión, c) los límites máximos de inversión por tipo de valor especificando emisora, sector u otro factor.",
+            "6. La **política de inversión**: activa (buscar rendimientos sobre base de referencia) o pasiva (alcanzar base de referencia solo con inversiones necesarias).",
+            "7. La política respecto de: a) liquidez de la cartera, b) contratación de préstamos de valores, ventas en corto y operaciones de apalancamiento.",
+            "8. El criterio de selección para inversiones en acciones: sectores económicos, bursatilidad, pertenencia a índice, política de dividendos, nacionalidad, tamaño y otros aspectos relevantes.",
+            "9. El criterio de selección para inversiones en deuda: objetivo de la cartera, probables inversiones por tipo de emisora (gubernamental, estatal, municipal, bancario, sociedad o fideicomiso) y calificación crediticia.",
+            "10. La política respecto de: a) activos subyacentes considerados, b) supuestos para cancelación o amortización anticipada, c) mercados donde se negocian los valores o instrumentos.",
+            "11. La política que se seguirá ante condiciones de **alta volatilidad** en los mercados financieros o de incertidumbre económica o política.",
+            "12. El **tipo de operaciones con valores** que podrá realizar."
+          ]
+        },
+        {
+          "tipo": "resumen",
+          "etiqueta": "Resumen marco general:",
+          "texto": "Doce elementos: facultades, riesgos, modificación por cliente, características del producto, estrategias, política de inversión, liquidez/apalancamiento, criterios de selección en acciones y deuda, política de volatilidad y tipo de operaciones permitidas."
+        }
+      ],
+      "ampliada": "El Marco General debe integrarse en un documento distinto del contrato, firmarse por el cliente y prever la forma, términos y periodicidad de información al cliente. Se revisa cada seis meses salvo reformas previas. Está en las pp. 42 a 44.",
+      "paginas": [42, 43, 44]
+    },
+    {
+      "id": "estrategias-estandarizadas",
+      "titulo": "Condiciones para estrategias estandarizadas",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las Entidades Financieras o los Asesores en Inversiones podrán predeterminar estrategias estandarizadas para ofrecerlas a clientes con perfiles de inversión semejantes, siempre y cuando la realización de las operaciones de esos clientes **no afecte** las carteras del resto de los clientes que usen esa estrategia."
+        },
+        {
+          "tipo": "trampa",
+          "texto": "La condición es que la estrategia estandarizada **no afecte** a otros clientes. No basta con perfiles semejantes: se requiere aislamiento del efecto en carteras ajenas."
+        }
+      ],
+      "ampliada": "La norma busca evitar que una estrategia aplicada a un grupo de clientes distorsione la cartera de otros. La condición es de no afectación, no solo de similitud de perfiles. Está en la p. 44.",
+      "paginas": [44]
+    },
+    {
+      "id": "contenido-minimo-reportes",
+      "titulo": "Contenido mínimo de los Reportes de Análisis",
+      "bloques": [
+        {
+          "tipo": "parrafo",
+          "texto": "Las Entidades Financieras o los Asesores en Inversiones que elaboren Reportes de Análisis deben revelar, al menos, la siguiente información al público."
+        },
+        {
+          "tipo": "lista",
+          "items": [
+            "1. La **denominación** de la Entidad financiera o del Asesor en Inversiones.",
+            "2. El **nombre completo** de los Analistas responsables, así como los datos para comunicarse con ellos.",
+            "3. La **fecha de distribución** y los posibles destinatarios.",
+            "4. La **declaración** de que la Entidad Financiera, el Asesor en Inversiones y los Analistas mantienen inversiones en valores o instrumentos financieros derivados cuyo subyacente sean valores objeto de sus Reportes, que representen el 1 % o más de su cartera, cartera de inversión, valores en circulación o subyacente de los valores tratados.",
+            "5. La declaración de que **5iios Analistas** (posible error tipográfico, se interpreta como analistas) mantienen inversiones directa o por interpósita persona en esos mismos valores o instrumentos.",
+            "6. Si algún **consejero, director general o directivo del nivel inmediatamente inferior** ocupa algún cargo en la emisora de los valores matería del Reporte de Análisis.",
+            "7. La **distinción entre información histórica y estimaciones**, así como los principales supuestos de estas últimas.",
+            "8. La mención de que el análisis refleja **exclusivamente el punto de vista** de los Analistas responsables y que no percibieron compensación de personas distintas a la Entidad Financiera o Asesor en Inversiones que presta sus servicios, o de personas morales del mismo Grupo Financiero o empresarial.",
+            "9. La mención de los **cambios** en el sentido de los Reportes de Análisis respecto de las mismas emisoras, valores, instrumentos o mercados durante los últimos doce meses, **salvo** los Reportes basados exclusivamente en volumen y precio, en cuyo caso la mención se hace únicamente respecto del cambio del Reporte inmediato anterior."
+          ]
+        },
+        {
+          "tipo": "trampa",
+          "texto": "Dos trampas comunes: primero, confundir el 1 % de cartera con 1 % de valores en circulación; segundo, aplicar la excepción de volumen y precio a Reportes que también incluyen estimaciones o información histórica."
+        }
+      ],
+      "ampliada": "El contenido mínimo está en las pp. 65 y 66. El punto 4 exige el 1 % en cualquiera de las cuatro bases: cartera de valores, cartera de inversión, valores en circulación o subyacente. El punto 9 permite la excepción solo cuando el Reporte se basa **exclusivamente** en volumen y precio.",
+      "paginas": [65, 66]
+    }
+  ],
+  "puntosClave": [
+    "La Gestión de Inversiones requiere: determinar perfiles, evaluar razonabilidad, ajustarse a política de diversificación, ofrecer a empleados con acceso a info privilegiada y guardar evidencia documental.",
+    "El Marco General de Actuación tiene doce elementos: facultades/alcance, riesgos, modificación por cliente, características del producto, estrategias de inversión, política de inversión, liquidez/apalancamiento, criterios de selección en acciones, criterios de selección en deuda, política de volatilidad y tipo de operaciones permitidas.",
+    "Las estrategias estandarizadas solo proceden si **no afectan** las carteras de otros clientes que usen esa estrategia.",
+    "Los Reportes de Análisis deben incluir: denominación, analistas con datos de contacto, fecha de distribución, declaración del 1 % en cualquiera de las cuatro bases, declaración de inversiones de analistas, presencia de directivos en emisora, distinción histórico-estimaciones, punto de vista exclusivo de analistas y cambios en el sentido (salvo Reportes solo de volumen/precio).",
+    "El Marco General debe estar en documento distinto del contrato, firmado por el cliente y revisado cada seis meses salvo reformas previas documentadas.",
+    "La evidencia documental de razonabilidad es obligatoria, no opcional."
+  ],
+  "practica": [
+    "g.servicios.l6.q01",
+    "g.servicios.l6.q02",
+    "g.servicios.l6.q03",
+    "g.servicios.l6.q04",
+    "g.servicios.l6.q05"
+  ],
+  "miniExamen": [
+    "g.servicios.l6.q06",
+    "g.servicios.l6.q07",
+    "g.servicios.l6.q08",
+    "g.servicios.l6.q09",
+    "g.servicios.l6.q10"
+  ],
+  "reto": [
+    "g.servicios.l6.q11",
+    "g.servicios.l6.q12",
+    "g.servicios.l6.q13",
+    "g.servicios.l6.q14",
+    "g.servicios.l6.q15"
+  ]
+}
