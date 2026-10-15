@@ -1,6 +1,6 @@
 # Traspaso de sesión (léase primero en una conversación nueva)
 
-Este documento permite continuar el proyecto en una sesión nueva de Claude sin perder contexto ni calidad. Se actualiza en cada hito. Última actualización: 2026-10-14, v1 en construcción.
+Este documento permite continuar el proyecto en una sesión nueva de Claude sin perder contexto ni calidad. Se actualiza en cada hito. Última actualización: 2026-10-15, v1 publicada.
 
 ## 1. Cómo arrancar una sesión nueva
 1. Abrir una sesión sobre el repositorio `cesars05/AMIB-F3`, rama `claude/trusting-ptolemy-io4gmo` (o la rama que indique la sección 6).
@@ -32,32 +32,29 @@ App de escritorio para Windows (Electron, React, TypeScript, `node:sqlite`) para
 15. Videos de YouTube por tema, verificados, que crecen con cada sesión.
 16. Las dudas no resueltas se documentan en `docs/dudas-v2.md` para resolverlas en la v2.
 
-## 4. Estado actual
-**Hecho y en GitHub:**
-1. E0 completo:
-   1. Esqueleto Electron con seguridad.
-   2. Base de datos `node:sqlite` (ADR-001).
-   3. CI e instalador de Windows como artefacto.
-   4. Skills de diseño de Emil Kowalski y agentes de ECC en `.claude/`.
-2. Núcleo:
-   1. `core/examen.ts`: reglas oficiales.
-   2. `core/contenido.ts`: esquemas.
-   3. `core/barajar.ts`: barajado equilibrado.
-   4. `core/leccion.ts`: esquema de lecciones con bloques estructurados y regla de estilo.
+## 4. Estado actual (2026-10-15)
+**Etapa: v1 publicada.** Equivale a los hitos M1 a M4 del plan para las cuatro áreas obligatorias. Faltan las áreas no obligatorias (M5) y las extensiones.
+
+**Hecho y en GitHub (rama `claude/trusting-ptolemy-io4gmo`, CI en verde):**
+1. App Electron v1 completa:
+   1. Pantallas: onboarding, Inicio con perfil y gráficas, lecciones guiadas con notas por lámina y KaTeX local, Practicar, Diagnóstico, Simulacro (integral, módulo, modular extraordinario y rápido) y Ajustes (4 temas, 3 letras, respaldo JSON).
+   2. Seguridad endurecida tras una revisión independiente.
+   3. Instalador de Windows como artefacto de GitHub Actions.
+2. Motor en `app/src/core/`: examen, barajado equilibrado, dominio en 5 niveles, perfil, Leitner, selector, simulacros y plan diario. Más de 390 pruebas unitarias y 13 E2E.
 3. Contenido:
    1. Taxonomía de 465 objetivos.
-   2. 75 preguntas oficiales validadas (44 tipo y 31 del ensayo de Ética).
-   3. 413 secciones del manual vinculadas al temario.
-   4. 130 preguntas de repaso.
-   5. 175 claves oficiales de los repasos (`content/claves/respuestas-libro-amib1.json`, página 359 del PDF).
-4. Prototipos aprobados en `docs/prototipos/`: Pregunta, Inicio (4 temas) y Lección CETES. Este último es la referencia de formato.
-5. Investigación de la estructura de las preguntas AMIB: `docs/investigacion/estructura-preguntas-amib.md`.
-6. Arquitectura de la app v1: `docs/decisiones/ADR-002-arquitectura-app-v1.md`.
+   2. 413 secciones del manual vinculadas al temario.
+   3. 75 preguntas oficiales.
+   4. 146 preguntas de repaso, con la clave del libro (p. 359) donde se pudo alinear.
+   5. **32 lecciones y 480 preguntas generadas en las cuatro áreas obligatorias**: Ética 6 lecciones, Capitales 7, Deuda 8, Derivados y Riesgos 11.
+   6. Unas 560 preguntas validadas en total.
+4. Documentación:
+   1. Plan maestro y ADR-001 y ADR-002.
+   2. Investigación de la estructura de las preguntas AMIB.
+   3. Plantillas de los agentes redactores (`docs/prompts/`).
+   4. Dudas consolidadas en `docs/dudas-v2.md`.
 
-**En curso al momento de escribir esto** (si la sesión se cortó, verificar con `git status` y `git log`):
-1. Aplicación de las claves oficiales a los repasos, alineadas por número del libro, y validador de estilo en `tools/validar.ts`.
-2. Lecciones 1 a 8 de Títulos de Deuda en `content/lecciones/deuda/` y sus preguntas generadas en `content/preguntas/generadas/`. Se validan con `npx tsx tools/validar-lecciones.ts`.
-3. Motor de estudio en `app/src/core/`: intentos, dominio, perfil, Leitner, selector, simulacro y plan.
+**Incompleto (no subido):** las lecciones de Servicios de Inversión, Marco Normativo, Matemáticas, Fondos y Análisis quedaron a medias en disco cuando se alcanzó el límite de gasto mensual de la API. Si esta sesión ya no existe, se regeneran desde cero con `docs/prompts/autor-lecciones.txt` y `docs/prompts/asignaciones-areas-no-obligatorias.py`.
 
 ## 5. Convenciones de trabajo
 1. Protocolo "pensar antes de hacer" y uso de modelos: Opus redacta contenido y diseña; Sonnet programa con TDD; Haiku hace tareas masivas.
@@ -66,19 +63,11 @@ App de escritorio para Windows (Electron, React, TypeScript, `node:sqlite`) para
 4. Las capturas de pantalla se hacen con Playwright y el Chromium de `/opt/pw-browsers`. La red de la sesión bloquea cdnjs, así que MathJax se sirve localmente desde npm en las pruebas.
 
 ## 6. Pendientes (orden sugerido)
-1. Integrar y subir los trabajos en curso de la sección 4.
-2. Construir las pantallas reales según ADR-002:
-   1. Onboarding.
-   2. Inicio con perfil y gráficas.
-   3. Lección.
-   4. Practicar.
-   5. Diagnóstico.
-   6. Simulacro.
-   7. Ajustes con temas y letra.
-3. Agregar KaTeX local.
-4. Lecciones de las otras tres áreas obligatorias: Ética, Mercado de Capitales y Derivados y Riesgos. Después, el resto.
-5. Plantillas de cálculo paramétricas con 4 decimales.
-6. Exportación a Word y PowerPoint.
+1. Lecciones de las cinco áreas no obligatorias (con las plantillas de `docs/prompts/`), validar con `npx tsx tools/validar-lecciones.ts` y `npm run validate:content`, y subir.
+2. Resolver con Cesar las dudas de `docs/dudas-v2.md` y aplicar sus respuestas.
+3. Publicar un GitHub Release (enlace fijo al instalador) y, si Cesar lo pide, un Pull Request hacia `main`.
+4. Tarjetas (flashcards) a partir de los puntos clave de las lecciones, con repetición Leitner.
+5. Plantillas de cálculo paramétricas con 4 decimales, para no repetir preguntas numéricas.
+6. Exportación de las lecciones a Word y PowerPoint, con las notas de Cesar.
 7. Modo con IA (OmniRoute) y biblioteca de videos.
-8. Fase de diseño visual, que debe quedar menos plano.
-9. Mantener `docs/dudas-v2.md` al día.
+8. Fase de diseño visual, que debe quedar menos plano, con las skills de diseño.
